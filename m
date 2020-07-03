@@ -2,120 +2,148 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94001C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D433CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69906208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kKUS7IMN"
+	by mail.kernel.org (Postfix) with ESMTP id B2BD7208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgGCGo0 (ORCPT
+        id S1726427AbgGCGpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGCGoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:44:25 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2F4C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:44:25 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id o5so31373035iow.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=odGB8TNyWCdqWFOvUPdduy/mDuwvatkITzLXwOy1S7Q=;
-        b=kKUS7IMNGJY2+SzWhECJRvZNNLG61zPX5yQWSTMsnOPMQh1wEqANmYx1X5IwvVjZDo
-         LlF1J+5FtWC1ePNf1VvN8on1sudpcFECX9oPYqa9OdYuMACu26oR+JKAkC+IuIB5XyQm
-         FC5/vvVnssevvXfbTwP6cEKK0n6Vi5kUl2Nms2ozUsiK3CT6mcYmkmD4hxcm6/N5SP5s
-         wYYAaepu5Lo97ReO3dMVJJOa63tQMh/da8qLLsj77aRqN49f5IHWl6kgysAuRVOPU40Z
-         CgbK1UV4X2sEjNbxzoFETpcyMT6Ey3pRY29i1VePvCaMRyr/evpln+3V1+AsxqlXZZTC
-         MVow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=odGB8TNyWCdqWFOvUPdduy/mDuwvatkITzLXwOy1S7Q=;
-        b=RS8vTmUp5GTfr006b5p4DRtqUvzZpV0L6STt8ClaKzZO6IOhEll+r4P9vmHGAXewce
-         9xvl5hlnY8xXu0C7jvnbnh6mxEQ/4RYfGgPoOAWARakSAE7bs8vSEHmIsexqxNefz0qE
-         /r0it2BAyUKtWBnOwuYbNJzlXiEKJ2w5deC5MFWio9j4PwBdvq1WYYBcPnMdYgl8SLqb
-         +lVURwkD62Q0Jcy59JggqvK5vKy5SjcTkmXfbi4v1v9oRpN7QeMz/zLvnxiJnFvtazob
-         mURT4VBYHe6UVoB3iv+Skq1w9/t0gcuvH4E6Jt+PS7d22dj8xDJqA1oXWC2ZKqTRUcFR
-         9icw==
-X-Gm-Message-State: AOAM530Z91ochj6w78IDArF+VF6ig+9KxQwAsG2HXV5AyzIGIr+XsMTL
-        gvqZQwgwwxbuCTzg1a3PJ+GE6vMEgGdCntxUmcD/4A==
-X-Google-Smtp-Source: ABdhPJzPjYsVNTjPsHGn5aGpeM2rXoN818Ai/fS/PfHZI4ezHdmCt4f8T4PdyoBQUvwn6ueXUn0EW38be6NrYO+Dk9A=
-X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr11019260iow.13.1593758664519;
- Thu, 02 Jul 2020 23:44:24 -0700 (PDT)
+        Fri, 3 Jul 2020 02:45:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58278 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgGCGpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 02:45:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 81AA7AD04;
+        Fri,  3 Jul 2020 06:45:11 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
+ bool variable
+To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1593694455-31268-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <79453f85-850b-3554-c5e1-6aa763366685@suse.de>
+Date:   Fri, 3 Jul 2020 08:45:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200702221237.2517080-1-abhishekbh@google.com>
- <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
-In-Reply-To: <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
-From:   Abhishek Bhardwaj <abhishekbh@google.com>
-Date:   Thu, 2 Jul 2020 23:43:47 -0700
-Message-ID: <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Anthony Steinhauser <asteinhauser@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>, Doug Anderson <dianders@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593694455-31268-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="NBvhXxCVjwJ0JRvqb3n89VGbiE0I9oqRz"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have tried to steer away from kernel command line args for a few reasons.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--NBvhXxCVjwJ0JRvqb3n89VGbiE0I9oqRz
+Content-Type: multipart/mixed; boundary="SLBJedyK81fhBMwszy4ZnPXBndg7QdfLc";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+ airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+ alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <79453f85-850b-3554-c5e1-6aa763366685@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
+ bool variable
+References: <1593694455-31268-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1593694455-31268-1-git-send-email-tiantao6@hisilicon.com>
 
-I am paraphrasing my colleague Doug's argument here (CC'ed him as well) -
+--SLBJedyK81fhBMwszy4ZnPXBndg7QdfLc
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-- The command line args are getting unwieldy. Kernel command line
-parameters are not a scalable way to set kernel config. It's intended
-as a super limited way for the bootloader to pass info to the kernel
-and also as a way for end users who are not compiling the kernel
-themselves to tweak kernel behavior.
+Hi
 
-- Also, we know we want this setting from the start. This is a
-definite smell that it deserves to be a compile time thing rather than
-adding extra code + whatever miniscule time at runtime to pass an
-extra arg.
+thanks for improving the driver.
 
-I think this was what CONFIGS were intended for. I'm happy to add all
-this to the commit message once it's approved in spirit by the
-maintainers.
+Am 02.07.20 um 14:54 schrieb Tian Tao:
+> fixed the following warning:
+> hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
+> hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
+gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index 249c298..2fc0c97 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -294,12 +294,12 @@ static int hibmc_load(struct drm_device *dev)
+>  		goto err;
+>  	}
+> =20
+> -	priv->msi_enabled =3D 0;
+> +	priv->msi_enabled =3D false;
+>  	ret =3D pci_enable_msi(dev->pdev);
 
-On Thu, Jul 2, 2020 at 8:18 PM Anthony Steinhauser
-<asteinhauser@google.com> wrote:
->
-> Yes, this probably requires an explanation why the change is necessary
-> or useful. Without that it is difficult to give some meaningful
-> feedback.
+priv->msi_enabled is unused by the driver. Better remove it entirely. If
+the MSI flag will be required later, there's already struct
+pci_dev.msi_enabled.
+
+Apart from that, the one-by-one approach to patching is somewhat
+tedious. Could you collect patches and send them out in batches?  It
+would make reviewing easier and give reviewers an idea of where you're
+going with the driver.
+
+Best regards
+Thomas
+
+>  	if (ret) {
+>  		DRM_WARN("enabling MSI failed: %d\n", ret);
+>  	} else {
+> -		priv->msi_enabled =3D 1;
+> +		priv->msi_enabled =3D true;
+>  		ret =3D drm_irq_install(dev, dev->pdev->irq);
+>  		if (ret)
+>  			DRM_WARN("install irq failed: %d\n", ret);
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
+--SLBJedyK81fhBMwszy4ZnPXBndg7QdfLc--
 
--- 
-Abhishek
+--NBvhXxCVjwJ0JRvqb3n89VGbiE0I9oqRz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7+0/MUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiMwjQgAvUNe69g3WnJQEfYLOPn0c895abnF
+O6USnAAu63cHqyJHqygpzqGk/N6rU7bkLl4AQG3gQvlltZ3okwaofiHHFqrg8Krg
+GYNW/Ybo75ec7WPoqu3kUkG7ra1dmCsk+nygs29sVnIvgaXeZLjcpgw4Kt+liIB6
+CEIoL1LuWYpgFtrd6QlFcI2JzX7X7Ptj3AZ5jxouBtTM+dft+L+Q8SJXEGfj6CyT
+/UxsG1m/QqyJLvAd2VubnoOmRHWagKa3AqzMlvD2euy/9b9RzxwaETpOyq9IonEX
+WaAEiINOl8qAhMpS6ULWoQtb3Wvb6uNzX8MLnRlbbkeXzxmwNavE3qwT8w==
+=gyd9
+-----END PGP SIGNATURE-----
+
+--NBvhXxCVjwJ0JRvqb3n89VGbiE0I9oqRz--
