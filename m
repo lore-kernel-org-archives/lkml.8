@@ -2,101 +2,149 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D20C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D87DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EFF2070C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7D32070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7sDBYf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGCIUb (ORCPT
+        id S1726513AbgGCIVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:20:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:36058 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCIUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:20:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FEA82F;
-        Fri,  3 Jul 2020 01:20:30 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.212.212])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6624A3F73C;
-        Fri,  3 Jul 2020 01:20:27 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org,
-        v9fs-developer@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
-        Kaly.Xin@arm.com, justin.he@arm.com, jianyong.wu@arm.com,
-        wei.chen@arm.com
-Subject: [PATCH v3] 9p: retrieve fid from file when file instance exist.
-Date:   Fri,  3 Jul 2020 16:20:18 +0800
-Message-Id: <20200703082018.8160-1-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Jul 2020 04:21:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCIVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:21:08 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EBDC08C5C1;
+        Fri,  3 Jul 2020 01:21:07 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id o4so18004657lfi.7;
+        Fri, 03 Jul 2020 01:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R3DXWe/7kffwAkZY5CuO0mg5y/MW32bQD7iUuOlWvjA=;
+        b=T7sDBYf2EJVFVlZiG90k4/S+CPDEHBEarBT1uTJkaCGF3HVtF8eOi9CDQ+aHvlqnXQ
+         nm7RzyBvtVL8kBGopKyQfcImX8Srzn4+ay+GPESM+pGPewRmwhZGW7Esvu9t0Sgkwpsx
+         M146OX2cUdY43VYg30eK0+t7ggnx2vSKX/Whu0iArmHpPw0cs//ikzhcDHfOilaSQxFo
+         AelddUCc+K7bnV20ZyBuEleNfdrd0uMKIFovW1IZmLx0TUKtwEQdeNwmJyPrTcoOWY0g
+         orCeliygk/p6edAJVkTfy/39zO4RN0VBcSBCpJtzuq8gZ12vbPF8yYK4EYZQhB8RFW08
+         cIAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R3DXWe/7kffwAkZY5CuO0mg5y/MW32bQD7iUuOlWvjA=;
+        b=GVLGt8j2HzIQrIKtTj3bSESbXcx2js6JYGuhqDEMeIsDgHGumNfmN23FxiRWqQustW
+         xPHx6dIPU4vrDh262YmR5XmYbHmuAZ+fP9HQ9Z3T0Rv0m0ehtQpnjtDw/sY19uoUHQWj
+         EPu1F+HBYhXR7oUwHGpJbxsWFjQgRYKYV3LNXM39nVqNOrYCk3j817JFu5R4v2mzrjv2
+         9xjG7nIpuP+lIVagYwJSUzw8dYGdkbRzBCRkOGQE586pp3HYhoOJHQ1SNW14U5m7zQy7
+         Qn0aIOwLGAvLFSuxA6n68+Ns598knKARKxq0ePZ25q37IyV9HCA7yxfBc4sZ8Isi0TYm
+         CVhQ==
+X-Gm-Message-State: AOAM533E2LTpR+0ml0DTSDelQXdtTabUaptSxsJLcuVWqLPPzxlpJmv4
+        GjxZOgnlGTX9KXbWSZ3dWko+hpRZ4Z0=
+X-Google-Smtp-Source: ABdhPJwPnozSkJ2XzdKc+tafvTvERFYy06y/KVN/pGEFisb8WeHehrR2cSDS/OOZ4LlJ6y23zfNkPg==
+X-Received: by 2002:a05:6512:203b:: with SMTP id s27mr4115815lfs.158.1593764465014;
+        Fri, 03 Jul 2020 01:21:05 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id 203sm4396573lfh.19.2020.07.03.01.21.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 01:21:04 -0700 (PDT)
+Subject: Re: [PATCH v2] PM / devfreq: tegra: Add Dmitry as a maintainer
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CGME20200402222006epcas1p4027cd509b32ba2d2bdf90e9e84cf4bec@epcas1p4.samsung.com>
+ <20200402221723.6064-1-digetx@gmail.com>
+ <921abb5e-8c12-db8b-b345-fbe49080dc1c@samsung.com>
+ <a08f16bc-df90-2199-91c8-f2acfe0f94ad@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <33a4df9d-7642-2f64-e073-ef6091f1ca33@gmail.com>
+Date:   Fri, 3 Jul 2020 11:21:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <a08f16bc-df90-2199-91c8-f2acfe0f94ad@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current setattr implementation in 9p, fid is always retrieved
-from dentry no matter file instance exists or not. Thus, there may be
-some info related to opened file instance dropped. So it's better
-to retrieve fid from file instance when it has passed to setattr.
+03.07.2020 03:44, Chanwoo Choi пишет:
+> Dear all,
+> 
+> On 5/8/20 1:04 PM, Chanwoo Choi wrote:
+>> Hi Rafael,
+>>
+>> Could you please apply it to linux-pm directly?
+>>
+>> I think that it is better to be applied directly
+>> for preventing the possible merge conflict of MAINTAINERS file.
+>>
+>> Best Regards,
+>> Chanwoo Choi
+>>
+>> On 4/3/20 7:17 AM, Dmitry Osipenko wrote:
+>>> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+>>> want to help keep them working and evolving in the future.
+>>>
+>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v2: - Addressed review comments made by Chanwoo Choi to v1 by correcting
+>>>       git's address, making this patch standalone and adding Rafael Wysocki
+>>>       to the list of email recipients.
+>>>
+>>>  MAINTAINERS | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 245a96316636..0a694e20ea19 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -10922,6 +10922,15 @@ F:	include/linux/memblock.h
+>>>  F:	mm/memblock.c
+>>>  F:	Documentation/core-api/boot-time-mm.rst
+>>>  
+>>> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
+>>> +M:	Dmitry Osipenko <digetx@gmail.com>
+>>> +L:	linux-pm@vger.kernel.org
+>>> +L:	linux-tegra@vger.kernel.org
+>>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+>>> +S:	Maintained
+>>> +F:	drivers/devfreq/tegra20-devfreq.c
+>>> +F:	drivers/devfreq/tegra30-devfreq.c
+>>> +
+>>>  MEMORY MANAGEMENT
+>>>  M:	Andrew Morton <akpm@linux-foundation.org>
+>>>  L:	linux-mm@kvack.org
+>>>
+>>
+>>
+> 
+> I applied it to devfreq-next branch. Thanks.
 
-for example:
-fd=open("tmp", O_RDWR);
-ftruncate(fd, 10);
-
-The file context related with the fd will be lost as fid is
-retrieved from dentry, then the backend can't get the info of
-file context. It is against the original intention of user and
-may lead to bug.
-
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- fs/9p/vfs_inode.c      | 7 ++++++-
- fs/9p/vfs_inode_dotl.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index c9255d399917..7cd4b67c345b 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -1100,7 +1100,12 @@ static int v9fs_vfs_setattr(struct dentry *dentry, struct iattr *iattr)
- 
- 	retval = -EPERM;
- 	v9ses = v9fs_dentry2v9ses(dentry);
--	fid = v9fs_fid_lookup(dentry);
-+	if (iattr->ia_valid & ATTR_FILE) {
-+		fid = iattr->ia_file->private_data;
-+		WARN_ON(!fid);
-+	}
-+	if (!fid)
-+		fid = v9fs_fid_lookup(dentry);
- 	if(IS_ERR(fid))
- 		return PTR_ERR(fid);
- 
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index 60328b21c5fb..dc53fb6b3b31 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -560,7 +560,12 @@ int v9fs_vfs_setattr_dotl(struct dentry *dentry, struct iattr *iattr)
- 	p9attr.mtime_sec = iattr->ia_mtime.tv_sec;
- 	p9attr.mtime_nsec = iattr->ia_mtime.tv_nsec;
- 
--	fid = v9fs_fid_lookup(dentry);
-+	if (iattr->ia_valid & ATTR_FILE) {
-+		fid = iattr->ia_file->private_data;
-+		WARN_ON(!fid);
-+	}
-+	if (!fid)
-+		fid = v9fs_fid_lookup(dentry);
- 	if (IS_ERR(fid))
- 		return PTR_ERR(fid);
- 
--- 
-2.17.1
+Hello, Chanwoo! Thank you very much! :)
 
