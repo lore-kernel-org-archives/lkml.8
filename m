@@ -2,61 +2,83 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37965C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9787C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A6920781
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8D020781
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgGCCVs (ORCPT
+        id S1726110AbgGCC0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:21:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40310 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725915AbgGCCVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:21:48 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2DE9BE049D5EC6AD554B;
-        Fri,  3 Jul 2020 10:21:46 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 3 Jul 2020
- 10:21:44 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add GC_URGENT_LOW mode in gc_urgent
-To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-CC:     Daeho Jeong <daehojeong@google.com>
-References: <20200702041414.3017119-1-daeho43@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <8812573d-0c58-dbdb-473f-0537fc4e45ce@huawei.com>
-Date:   Fri, 3 Jul 2020 10:21:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 2 Jul 2020 22:26:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51259 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGCC0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 22:26:30 -0400
+IronPort-SDR: O7lf2elbCikiZsf1mE15oQGKyA8B7OQ6nLVtCnPPdFHe3HdR/6PJdJ9a7JRxWwAtGU7I8cljYM
+ zOYZu63i5z6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145212917"
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="145212917"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:26:29 -0700
+IronPort-SDR: 0Ve5FLC4SNoprdrxVntJ9NtWXdCSqMWN4SXOc6Mn+7Lvs65qxvNtZmIUGXSB1lmJ3/+3AL02E4
+ 8UAJk0IGGPuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="455734093"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 19:26:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] vfio-ccw: Fix a build error due to missing include of linux/slab.h
+Date:   Thu,  2 Jul 2020 19:26:28 -0700
+Message-Id: <20200703022628.6036-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200702041414.3017119-1-daeho43@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/2 12:14, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> Added a new gc_urgent mode, GC_URGENT_LOW, in which mode
-> F2FS will lower the bar of checking idle in order to
-> process outstanding discard commands and GC a little bit
-> aggressively.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+Include linux/slab.h to fix a build error due to kfree() being undefined.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Fixes: 3f02cb2fd9d2d ("vfio-ccw: Wire up the CRW irq and CRW region")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-Thanks,
+Encountered this when cross-compiling with a pretty minimal config, didn't
+bother digging into why the error only showed up in my environment.
+
+ drivers/s390/cio/vfio_ccw_chp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_chp.c
+index a646fc81c872..13b26a1c7988 100644
+--- a/drivers/s390/cio/vfio_ccw_chp.c
++++ b/drivers/s390/cio/vfio_ccw_chp.c
+@@ -8,6 +8,7 @@
+  *            Eric Farman <farman@linux.ibm.com>
+  */
+ 
++#include <linux/slab.h>
+ #include <linux/vfio.h>
+ #include "vfio_ccw_private.h"
+ 
+-- 
+2.26.0
+
