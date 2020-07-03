@@ -2,87 +2,87 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8270C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AA2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2A7206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2F8208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgGCCzZ (ORCPT
+        id S1726206AbgGCC4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGCCzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:55:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1035C08C5C1;
-        Thu,  2 Jul 2020 19:55:24 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id D86352A2D53
-Message-ID: <5ec7b0000d45ed1a4aec9fb7357e53811ec7362f.camel@collabora.com>
-Subject: Re: [PATCH 2/9] media: rkvdec: h264: Fix reference frame_num wrap
- for second field
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-Date:   Thu, 02 Jul 2020 23:55:14 -0300
-In-Reply-To: <20200701215616.30874-3-jonas@kwiboo.se>
-References: <20200701215616.30874-1-jonas@kwiboo.se>
-         <20200701215616.30874-3-jonas@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Thu, 2 Jul 2020 22:56:03 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56724 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgGCC4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 22:56:03 -0400
+IronPort-SDR: eEchHP2jU5ewE2nJW5JzqBpVM2VTXGSE16EGH8A5N6FYL0hbMEtRYiLynY+OvGXIk0OuwzKWeK
+ bA+czXMnZSgg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165137428"
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="165137428"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:56:02 -0700
+IronPort-SDR: IOKL1bFc6dUxuaYrYu+rNE+5Y1aIq/TZfWggqmQ14Gqd/acVt4L8kcvoDI2+uy59YuynQBq87+
+ +VjJ+v1rqgGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="426156694"
+Received: from skochetx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.55.66])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2020 19:55:50 -0700
+Date:   Fri, 3 Jul 2020 05:55:48 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andy Lutomirski <luto@kernel.org>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, nhorman@redhat.com,
+        npmccallum@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        sean.j.christopherson@intel.com, tglx@linutronix.de,
+        yaozhangx@google.com
+Subject: Re: [PATCH v33 12/21] x86/sgx: Allow a limited use of
+ ATTRIBUTE.PROVISIONKEY for attestation
+Message-ID: <20200703025548.GD306897@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-13-jarkko.sakkinen@linux.intel.com>
+ <20200629160242.GB32176@zn.tnic>
+ <20200703023146.GA306897@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703023146.GA306897@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
-> When decoding the second field in a complementary field pair the second
-> field is sharing the same frame_num with the first field.
+On Fri, Jul 03, 2020 at 05:32:28AM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jun 29, 2020 at 06:02:42PM +0200, Borislav Petkov wrote:
+> > On Thu, Jun 18, 2020 at 01:08:34AM +0300, Jarkko Sakkinen wrote:
+> > > Provisioning Certification Enclave (PCE), the root of trust for other
+> > > enclaves, generates a signing key from a fused key called Provisioning
+> > > Certification Key. PCE can then use this key to certify an attestation key
+> > > of a QE, e.g. we get the chain of trust down to the hardware if the Intel
+> > 
+> > What's a QE?
+> > 
+> > I don't see this acronym resolved anywhere in the whole patchset.
 > 
-> Currently the frame_num for the first field is wrapped when it matches the
-> field being decoded, this cause issues to decode the second field in a
-> complementary field pair.
-> 
-> Fix this by using inclusive comparison, less than or equal.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Quoting Enclave.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Thanks for spotting this. I updated my GIT-tree accordingly.
 
-Thanks!
-Ezequiel
-
-> ---
->  drivers/staging/media/rkvdec/rkvdec-h264.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> index 7b66e2743a4f..f0cfed84d60d 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> @@ -754,7 +754,7 @@ static void assemble_hw_rps(struct rkvdec_ctx *ctx,
->  			continue;
->  
->  		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM ||
-> -		    dpb[i].frame_num < sl_params->frame_num) {
-> +		    dpb[i].frame_num <= sl_params->frame_num) {
->  			p[i] = dpb[i].frame_num;
->  			continue;
->  		}
-
-
+/Jarkko
