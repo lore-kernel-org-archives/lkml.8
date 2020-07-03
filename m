@@ -2,80 +2,71 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91757C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F306C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF5A20885
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3951620885
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593813004;
+	bh=rCqCzu1hyIfBaoXU31J+y+i0oxUzy6aFNpuCl9XfkgY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=hpZjWXwXL5KwZ6FB8mgzr3oRbTTPOrk/nH7+aIp9jyVVxuD5MDdE+GarcRR+ulXMF
+	 YD4BBiIPO6FixFn4/KEgP86un3D80M6/DfqTRGOPb3og+WCHM6BjK5OTNoSw2FYIlS
+	 vorYEyxYHGtif08NVF4radyBZR2fFOm/T5sF0/vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgGCVqm (ORCPT
+        id S1726484AbgGCVuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 17:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgGCVqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 17:46:42 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5EBC061794;
-        Fri,  3 Jul 2020 14:46:42 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CEDB1155DE0A3;
-        Fri,  3 Jul 2020 14:46:40 -0700 (PDT)
-Date:   Fri, 03 Jul 2020 14:46:39 -0700 (PDT)
-Message-Id: <20200703.144639.1141703316199653510.davem@davemloft.net>
-To:     mcroce@linux.microsoft.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, sven.auhagen@voleatech.de, lorenzo@kernel.org,
-        brouer@redhat.com, stefanc@marvell.com, mw@semihalf.com,
-        maxime.chevallier@bootlin.com, antoine.tenart@bootlin.com,
-        thomas.petazzoni@bootlin.com, maciej.fijalkowski@intel.com,
-        rmk+kernel@armlinux.org.uk
-Subject: Re: [PATCH net-next v2 0/5] mvpp2: XDP support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200702141244.51295-1-mcroce@linux.microsoft.com>
-References: <20200702141244.51295-1-mcroce@linux.microsoft.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 Jul 2020 14:46:41 -0700 (PDT)
+        Fri, 3 Jul 2020 17:50:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgGCVuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 17:50:02 -0400
+Subject: Re: [GIT PULL] xfs: bug fixes for 5.8-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593813002;
+        bh=rCqCzu1hyIfBaoXU31J+y+i0oxUzy6aFNpuCl9XfkgY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=yUeQmf5OFBCYAtxIGlHCBbzqhNM78ec9GoFUYBNYsYpNaDh74IOELiGkXNvnj59Z6
+         0pNC3wF1rOoEWiOAc2aAsVk+De6WjwhhkaPYqHTSeE6TKDXVJNwIjJ2gJ7EJ93eiDf
+         dkshn7/rjD/n57fk7ueaOMp/fqI8V8aFvf4rHezk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200703213158.GF7606@magnolia>
+References: <20200703213158.GF7606@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200703213158.GF7606@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/xfs-5.8-fixes-1
+X-PR-Tracked-Commit-Id: c7f87f3984cfa1e6d32806a715f35c5947ad9c09
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0c7d7d1fada70420851b63f2e2669cb4976a303b
+Message-Id: <159381300236.15691.2599518654703891649.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 Jul 2020 21:50:02 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@linux.microsoft.com>
-Date: Thu,  2 Jul 2020 16:12:39 +0200
+The pull request you sent on Fri, 3 Jul 2020 14:31:58 -0700:
 
-> From: Matteo Croce <mcroce@microsoft.com>
-> 
-> From: Matteo Croce <mcroce@microsoft.com>
-> 
-> Add XDP support to mvpp2. This series converts the driver to the
-> page_pool API for RX buffer management, and adds native XDP support.
-> 
-> XDP support comes with extack error reporting and statistics as well.
-> 
-> These are the performance numbers, as measured by Sven:
-> 
-> SKB fwd page pool:
-> Rx bps     390.38 Mbps
-> Rx pps     762.46 Kpps
-> 
-> XDP fwd:
-> Rx bps     1.39 Gbps
-> Rx pps     2.72 Mpps
-> 
-> XDP Drop:
-> eth0: 12.9 Mpps
-> eth1: 4.1 Mpps
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.8-fixes-1
 
-Series applied, thank you.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0c7d7d1fada70420851b63f2e2669cb4976a303b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
