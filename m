@@ -2,57 +2,71 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F208C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF56C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7449020890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C0120BED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2gr9rVch"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="elRomxe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGCVWX (ORCPT
+        id S1727012AbgGCVXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 17:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        Fri, 3 Jul 2020 17:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbgGCVWR (ORCPT
+        with ESMTP id S1726474AbgGCVXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 17:22:17 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A37FC061794;
-        Fri,  3 Jul 2020 14:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=JXl+E0oYBWH0xWHaHqCciL9WMfvbPRZNvUr3AbrKGrY=; b=2gr9rVchUlmn8OJ2WB61HV5bpf
-        x0phGo110WDSibJTZLnvlFs3VhhcXGzcX838xwHyv4UxRO7V7QYt8lSDXp7f78fENYGRPoCl8wgrv
-        5T1CKikyRbAKjIN5laWEADItR0fjp5Rc2xEvkRy2DVhKaX+rxJ4hIeQn76Xl3m8AIfgrHVppzLNZ3
-        yvOSdyp6Fan119bHJjtCgy/VsRFx//so9Gu6/h7Et1CK19U5OFReEECBzlGvATPfkPR/bO/ztFZCi
-        tgm4QS95gseqXqLQOzLUsr7KuDmMPyz9LzrDlqoENjRppKNZNNFC/zCL6OIc2j8UkhXyAuvR06M4Y
-        HXwkLsEw==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrT8Q-0005tj-GN; Fri, 03 Jul 2020 21:22:15 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Linas Vepstas <linasvepstas@gmail.com>
-Subject: [PATCH 4/4] Documentation: PCI: pci.rst: drop doubled words
-Date:   Fri,  3 Jul 2020 14:21:56 -0700
-Message-Id: <20200703212156.30453-5-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200703212156.30453-1-rdunlap@infradead.org>
-References: <20200703212156.30453-1-rdunlap@infradead.org>
+        Fri, 3 Jul 2020 17:23:39 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C77C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 14:23:39 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id k6so28262537ili.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 14:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gx3ro+7hYW73BWz9veCWu8rMHewSiF/ZuzOQ8imNba4=;
+        b=elRomxe6h/jBmzyLMRms1Eo1Wmjjplls52Em3UQshvd5ZV7fwFe5+QzTScbvFQJWaU
+         TD5tUxrFaRikuu4NUaX4/K/vcq/caScUom3pqtTdhfmvc/PbjhnWsnI4vPCWdP0ZN1eE
+         49wom30XEmZgkJGkDiO0wdRXhX8T1E0jsu/MvtRFALXQ7fgp3iBN6OnutICOIceOI/IF
+         ubQW6iog4YqwzZo7SBTH80l44owqsmQzU16t2BS22OAS9HzcPDWSsNZeRkEU+wXWISyi
+         gGVZIh5FDMLS7k3EGp9tD4xDr5gLo50RgGI4YMEBd8o9bkwQ1BeKp/626JCPCE966O2p
+         8z0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gx3ro+7hYW73BWz9veCWu8rMHewSiF/ZuzOQ8imNba4=;
+        b=a6t0goq3k4AtbJ5y4NTGVSUT12f++m1dtEMCXUwCXwMxip7IUCeBuCgdHD9OROwWe1
+         VMDvk6LvkqELIrju4jrm5VUy3SJd9lJwX/tJWurYv4DlzEdzzRkzYUa1J3FccH4tfxU+
+         yzRsWOr7m7l01byc6HE11aXDNWhP5Q1Qrp70gWf+xqheAPCNdU2fVzyugxOf6L1RLRcF
+         3wpmpxVc/3A5AdUAV7Z7O+wVYl/j21NuTbNWNNFTgq4ZngUDDtEZ3ub6+bpQxcpM+iyO
+         H7e4jeJsonLjtAMHCvqH2VQst6nWGesj8tY2/BBJnTy7vm/LemIFnixmCScERsJvNWV8
+         zjZA==
+X-Gm-Message-State: AOAM532Uk6BEQ37oBK1nluLPqUGPDwSUXp1XJMS/t8j16ylPerCMRwWv
+        oYv8jQo1op6NWwOVUmzPq5OrVA==
+X-Google-Smtp-Source: ABdhPJwcM+deFPGS0PFDYtDoLUKkJy5L2HHjjmyFwapVXGkF6ri+O5PSIi3EReCFe9Av4KUldXtlxA==
+X-Received: by 2002:a92:50f:: with SMTP id q15mr20125796ile.38.1593811418307;
+        Fri, 03 Jul 2020 14:23:38 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id m6sm7485292ilb.39.2020.07.03.14.23.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 14:23:37 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/2] net: ipa: fix HOLB timer register use
+Date:   Fri,  3 Jul 2020 16:23:33 -0500
+Message-Id: <20200703212335.465355-1-elder@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,25 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "when".
+The function ipa_reg_init_hol_block_timer_val() generates the value
+to write into the HOL_BLOCK_TIMER endpoint configuration register,
+to represent a given timeout value (in microseconds).  It only
+supports a timer value of 0 though, in part because that's
+sufficient, but mainly because there was some confusion about
+how the register is formatted in newer hardware.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- Documentation/PCI/pci.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I got clarification about the register format, so this series fixes 
+ipa_reg_init_hol_block_timer_val() to work for any supported delay
+value.
 
---- linux-next-20200701.orig/Documentation/PCI/pci.rst
-+++ linux-next-20200701/Documentation/PCI/pci.rst
-@@ -209,7 +209,7 @@ the PCI device by calling pci_enable_dev
-    OS BUG: we don't check resource allocations before enabling those
-    resources. The sequence would make more sense if we called
-    pci_request_resources() before calling pci_enable_device().
--   Currently, the device drivers can't detect the bug when when two
-+   Currently, the device drivers can't detect the bug when two
-    devices have been allocated the same range. This is not a common
-    problem and unlikely to get fixed soon.
- 
+The delay is based on the IPA core clock, so determining the value
+to write for a given period requires access to the current core
+clock rate.  So the first patch just creates a new function to
+provide that.
+
+					-Alex
+
+Alex Elder (2):
+  net: ipa: introduce ipa_clock_rate()
+  net: ipa: fix HOLB timer calculation
+
+ drivers/net/ipa/ipa_clock.c    |  6 +++
+ drivers/net/ipa/ipa_clock.h    |  8 ++++
+ drivers/net/ipa/ipa_endpoint.c | 78 +++++++++++++++++++---------------
+ 3 files changed, 57 insertions(+), 35 deletions(-)
+
+-- 
+2.25.1
+
