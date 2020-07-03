@@ -2,222 +2,233 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13FED2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5A321531
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eah36o1+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dyJJiwGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgGCHtk (ORCPT
+        id S1726800AbgGCHtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:49:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2504 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgGCHtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:49:40 -0400
-IronPort-SDR: Zr4JrwbIxu5kKIomnAqOsIbn87jUinmHfkl9t+ALvwPwZwehOUbM37M6PyZvbW+tWS40ZVCmAT
- xCxJh83E0ULA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134568782"
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="134568782"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:49:39 -0700
-IronPort-SDR: WFthDZHBbL+ICWgQ4zh72coZAd/soDiye/oCdpLOoDeJpwB1C8o3xmelt8eBnouNGGque7nBGU
- nDO55WVrOlaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="267286151"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2020 00:49:39 -0700
-Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 7613B580784;
-        Fri,  3 Jul 2020 00:49:37 -0700 (PDT)
-Subject: [PATCH v9 15/15] perf record: introduce --control fd:ctl-fd[,ack-fd]
- options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2f860f76-7d65-d319-8727-70f59824ca59@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:49:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 3 Jul 2020 03:49:45 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:52089 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgGCHtn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:49:43 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id AACC8AF7;
+        Fri,  3 Jul 2020 03:49:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 03 Jul 2020 03:49:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=fVX1MsqXg2Pw9MNdOtGBNsefR2
+        zUW9dTgYxXjelLaUo=; b=eah36o1+1g4Q/Ss4ovV0FWa2RNRLjeXfvbngVOq6+/
+        goslYrkNfbfRhh0/gMMwJvzbG8B6G7NNernPch9osqGCOqw13uQDrglYVD8e0MUu
+        cpW52iOk3vIqPTwUg/espzpybz+LlDvXyG3bTb3CEe4gsbgc1REpoEN8mFSBONwU
+        ts0NZcMAuVdFv8nVGANznD10ifjrMg3EOYXl26KSZLhCjoFAAcmJDwDUp6fdSace
+        Tc6LA1f/zKxWbpdqO2U5HMrWQgl9GrSDgrKv8xRM6FsgcZh18AOMoWGEdRKuTsap
+        +Qx3l8mrYagp1zPEVwT0VRw97GbbOd5XY90cQcH2V7UA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fVX1MsqXg2Pw9MNdO
+        tGBNsefR2zUW9dTgYxXjelLaUo=; b=dyJJiwGkTUk3WSVT4ClLIwSVvNqqe4Q40
+        ScWiy7lCWSfWIGjjS1rcMwrV/dJesfFJNRv16t4Cuet9ojb+CL1nyyNlpVchswQv
+        c4XJz3NZ6KrIdnbgAsPFAmRGs6CUkUIKAdja7amr01970++NNS3o6y9yM5n0e0yG
+        VdXfOzGpH6s5H8g2IbvFWYpQrDJJRXS6oPanRW62OE/pMVkN0I2PwX+v2fF6+BAn
+        pLDHCXa+jb0rvfQ9MP1YUo4XIqbUPm90k1vyh1hfh5NPw19pbxBX0S7LICWFWMZA
+        hsrEM+E/+Ta1Tf4hZebKu4HqIKopmS2ui7wup5VTswoGrMHC3U//w==
+X-ME-Sender: <xms:FOP-XswLp5JIiMrjiPS7YtG6tgQWqqYwvx6cNJ7dRUYdJUONjXTuJA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgdduvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
+    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
+    hrnhepjeffheduvddvvdelhfegleelfffgieejvdehgfeijedtieeuteejteefueekjeeg
+    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:FOP-XgRqv5W8pWXW3CrDxruw-sCVE66hOhTfd3AIzOAJsacsACAE_A>
+    <xmx:FOP-XuUT0ObNM0V5AEb11L1qHTeb-2jRws8uYYRgt8a7IxUPX6ezgg>
+    <xmx:FOP-Xqiid2pYDBSYVDugLGHsa7ew0LOQKlxREx-dBsUEkMeD3St06A>
+    <xmx:FeP-XkB9pwBK3AnWgr7tB5Zy__VkN-_D3NQj0oA7p5BuFMQgvg_SFtTiOQs>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E85E83280059;
+        Fri,  3 Jul 2020 03:49:39 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] ASoC: core: Remove only the registered component in devm functions
+Date:   Fri,  3 Jul 2020 09:49:35 +0200
+Message-Id: <20200703074935.884736-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The ASoC devm_ functions that register a component
+(devm_snd_soc_register_component and devm_snd_dmaengine_pcm_register) will
+clean their component by running snd_soc_unregister_component.
 
-Introduce --control fd:ctl-fd[,ack-fd] options to pass open file
-descriptors numbers from command line. Extend perf-record.txt file
-with --control fd:ctl-fd[,ack-fd] options description. Document
-possible usage model introduced by --control fd:ctl-fd[,ack-fd]
-options by providing example bash shell script.
+snd_soc_unregister_component will then remove all the components for the
+device that was used to register the component in the first place.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+However, some drivers register several components (such as a DAI and a
+dmaengine PCM) on the same device, and if the dmaengine PCM is registered
+first, then the DAI will be cleaned up first and
+snd_dmaengine_pcm_unregister will be called next.
+
+snd_dmaengine_pcm_unregister will then lookup the dmaengine PCM component
+on the device, and if there's one unregister that component and release its
+dmaengine channels. That doesn't happen in practice though since the first
+call to snd_soc_unregister_component removed all the components, so we
+never get the chance to release the dmaengine channels.
+
+In order to fix this, instead of removing all the components for a given
+device, we can simply remove the component that was registered in the first
+place. We should have the same number of component registration than we
+have components, so it should work just fine.
+
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
 ---
- tools/perf/Documentation/perf-record.txt | 39 ++++++++++++++++++++++++
- tools/perf/builtin-record.c              | 37 ++++++++++++++++++++++
- tools/perf/util/record.h                 |  2 ++
- 3 files changed, 78 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index a84376605805..3f72d8e261f3 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -627,6 +627,45 @@ option. The -e option and this one can be mixed and matched.  Events
- can be grouped using the {} notation.
- endif::HAVE_LIBPFM[]
+This was observed on a RaspberryPi that uses the vc4_hdmi driver
+(drivers/gpu/drm/vc4/vc4_hdmi.c). This driver will register a dmaengine PCM
+and two components. If the MIPI-DSI controller is enabled, it will create
+an EPROBE_DEFER across the entire display pipeline, leading to multiple
+bind/unbind cycles in the other display drivers including vc4_hdmi, leading
+to multiple warnings since we request the same dmaengine channels on the
+same device without ever releasing them.
+
+It's not really clear to me when that bug was introduced exactly, since it
+can only be seen on a rather unusual setup, and with all the drivers
+built-in (otherwise we probably wouldn't get an EPROBE_DEFER for DSI), but
+it still looks like something that should probably go to stable?
+---
+ include/sound/soc.h                   |  2 ++
+ sound/soc/soc-core.c                  | 27 +++++++++++++++++++++++++++
+ sound/soc/soc-devres.c                |  8 +++++---
+ sound/soc/soc-generic-dmaengine-pcm.c |  2 +-
+ 4 files changed, 35 insertions(+), 4 deletions(-)
+
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index ef5dd28e10a9..0b3b31803678 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -444,6 +444,8 @@ int devm_snd_soc_register_component(struct device *dev,
+ 			 const struct snd_soc_component_driver *component_driver,
+ 			 struct snd_soc_dai_driver *dai_drv, int num_dai);
+ void snd_soc_unregister_component(struct device *dev);
++void snd_soc_unregister_component_by_driver(struct device *dev,
++			 const struct snd_soc_component_driver *component_driver);
+ struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
+ 						   const char *driver_name);
  
-+--control fd:ctl-fd[,ack-fd]
-+Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-+'disable': disable events). Measurements can be started with events disabled using
-+--delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
-+to synchronize with the controlling process. Example of bash shell script to enable and
-+disable events during measurements:
-+
-+#!/bin/bash
-+
-+ctl_dir=/tmp/
-+
-+ctl_fifo=${ctl_dir}perf_ctl.fifo
-+test -p ${ctl_fifo} && unlink ${ctl_fifo}
-+mkfifo ${ctl_fifo}
-+exec {ctl_fd}<>${ctl_fifo}
-+
-+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-+mkfifo ${ctl_ack_fifo}
-+exec {ctl_fd_ack}<>${ctl_ack_fifo}
-+
-+perf record -D -1 -e cpu-cycles -a               \
-+            --control fd:${ctl_fd},${ctl_fd_ack} \
-+            -- sleep 30 &
-+perf_pid=$!
-+
-+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-+
-+exec {ctl_fd_ack}>&-
-+unlink ${ctl_ack_fifo}
-+
-+exec {ctl_fd}>&-
-+unlink ${ctl_fifo}
-+
-+wait -n ${perf_pid}
-+exit $?
-+
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 632e61fe70bd..0718aa71b4ba 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1749,6 +1749,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		perf_evlist__start_workload(rec->evlist);
- 	}
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 7b387202c5db..9d24cbd9111f 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2571,6 +2571,33 @@ int snd_soc_register_component(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_register_component);
  
-+	if (evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack))
-+		goto out_child;
++/**
++ * snd_soc_unregister_component_by_driver - Unregister component using a given driver
++ * from the ASoC core
++ *
++ * @dev: The device to unregister
++ * @component_driver: The component driver to unregister
++ */
++void snd_soc_unregister_component_by_driver(struct device *dev,
++					    const struct snd_soc_component_driver *component_driver)
++{
++	struct snd_soc_component *component;
 +
- 	if (opts->initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 		if (opts->initial_delay > 0) {
-@@ -1895,6 +1898,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
++	if (!component_driver)
++		return;
++
++	mutex_lock(&client_mutex);
++	component = snd_soc_lookup_component_nolocked(dev, component_driver->name);
++	if (!component)
++		goto out;
++
++	snd_soc_del_component_unlocked(component);
++
++out:
++	mutex_unlock(&client_mutex);
++}
++EXPORT_SYMBOL_GPL(snd_soc_unregister_component_by_driver);
++
+ /**
+  * snd_soc_unregister_component - Unregister all related component
+  * from the ASoC core
+diff --git a/sound/soc/soc-devres.c b/sound/soc/soc-devres.c
+index a9ea172a66a7..c6364caabc0e 100644
+--- a/sound/soc/soc-devres.c
++++ b/sound/soc/soc-devres.c
+@@ -11,7 +11,9 @@
  
- out_child:
-+	evlist__finalize_ctlfd(rec->evlist);
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-@@ -2244,6 +2248,33 @@ static int record__parse_mmap_pages(const struct option *opt,
- 	return ret;
+ static void devm_component_release(struct device *dev, void *res)
+ {
+-	snd_soc_unregister_component(*(struct device **)res);
++	const struct snd_soc_component_driver **cmpnt_drv = res;
++
++	snd_soc_unregister_component_by_driver(dev, *cmpnt_drv);
  }
  
-+static int parse_control_option(const struct option *opt,
-+				const char *str,
-+				int unset __maybe_unused)
-+{
-+	char *comma = NULL, *endptr = NULL;
-+	struct record_opts *config = (struct record_opts *)opt->value;
-+
-+	if (strncmp(str, "fd:", 3))
-+		return -EINVAL;
-+
-+	config->ctl_fd = strtoul(&str[3], &endptr, 0);
-+	if (endptr == &str[3])
-+		return -EINVAL;
-+
-+	comma = strchr(str, ',');
-+	if (comma) {
-+		if (endptr != comma)
-+			return -EINVAL;
-+
-+		config->ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
-+		if (endptr == comma + 1 || *endptr != '\0')
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static void switch_output_size_warn(struct record *rec)
+ /**
+@@ -28,7 +30,7 @@ int devm_snd_soc_register_component(struct device *dev,
+ 			 const struct snd_soc_component_driver *cmpnt_drv,
+ 			 struct snd_soc_dai_driver *dai_drv, int num_dai)
  {
- 	u64 wakeup_size = evlist__mmap_size(rec->opts.mmap_pages);
-@@ -2380,6 +2411,8 @@ static struct record record = {
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-+		.ctl_fd              = -1,
-+		.ctl_fd_ack          = -1,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -2581,6 +2614,10 @@ static struct option __record_options[] = {
- 		"libpfm4 event selector. use 'perf list' to list available events",
- 		parse_libpfm_events_option),
- #endif
-+	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd]",
-+		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
-+		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
-+		      parse_control_option),
- 	OPT_END()
- };
+-	struct device **ptr;
++	const struct snd_soc_component_driver **ptr;
+ 	int ret;
  
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index da138dcb4d34..4cb72a478af1 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -70,6 +70,8 @@ struct record_opts {
- 	int	      mmap_flush;
- 	unsigned int  comp_level;
- 	unsigned int  nr_threads_synthesize;
-+	int	      ctl_fd;
-+	int	      ctl_fd_ack;
- };
+ 	ptr = devres_alloc(devm_component_release, sizeof(*ptr), GFP_KERNEL);
+@@ -37,7 +39,7 @@ int devm_snd_soc_register_component(struct device *dev,
  
- extern const char * const *record_usage;
+ 	ret = snd_soc_register_component(dev, cmpnt_drv, dai_drv, num_dai);
+ 	if (ret == 0) {
+-		*ptr = dev;
++		*ptr = cmpnt_drv;
+ 		devres_add(dev, ptr);
+ 	} else {
+ 		devres_free(ptr);
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index f728309a0833..ab600be9e69f 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -490,7 +490,7 @@ void snd_dmaengine_pcm_unregister(struct device *dev)
+ 
+ 	pcm = soc_component_to_pcm(component);
+ 
+-	snd_soc_unregister_component(dev);
++	snd_soc_unregister_component_by_driver(dev, component->driver);
+ 	dmaengine_pcm_release_chan(pcm);
+ 	kfree(pcm);
+ }
 -- 
-2.24.1
+2.26.2
 
