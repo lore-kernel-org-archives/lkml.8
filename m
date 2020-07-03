@@ -2,94 +2,191 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D80DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE799C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A4620782
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593783461;
-	bh=h4AWXK1OzAabGjzRp78Qq4E/Pvb4iF6SmMTMkbta69E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SrkuL6YsTTtiYthQ4FzS0W4ZHbpP3inwgwu/GJFFUBGMqPUwz70KrwP8laFe7kxUK
-	 KpxqXVREeqQCRgpuoWMKPZ1MLFBAVk1qpAuUGQLOoZI/1MYaZuG0lhBc30Y3eKILgH
-	 5F1oVF3ZLu6dyBkiddY5z6+bnG8CNIx28vzUJgIY=
+	by mail.kernel.org (Postfix) with ESMTP id 9030320782
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:38:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NuCxf3z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgGCNhk (ORCPT
+        id S1726304AbgGCNiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:37:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgGCNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:37:39 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF09206A1;
-        Fri,  3 Jul 2020 13:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593783459;
-        bh=h4AWXK1OzAabGjzRp78Qq4E/Pvb4iF6SmMTMkbta69E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zsco0pFHiu8uFn++3g+2aWZOGtMeDwXe2RdiKWXSiB1NAwLZTkzuswi6E4rPfoFgc
-         zQygwRBRrnKJMJ6YgutuQW39JaKYOgP2fttYqHsRZiFYssPejgjJ+6IYnBSkwhnVMp
-         cs70jkYqgCEvqEZxEg9urRaC6/8frYrllSxaMCbY=
-Date:   Fri, 3 Jul 2020 14:37:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system
- cache(LLC)
-Message-ID: <20200703133732.GD18953@willie-the-truck>
-References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
- <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
+        Fri, 3 Jul 2020 09:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgGCNiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:38:21 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D451BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 06:38:21 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so374807pfm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 06:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=VFd81vfcBlp3Es3dpBrxLjfarRsAbMK7vh/f9iOrSDw=;
+        b=NuCxf3z6WqYbYeQD/SMMZHBdiw6c5t9v2q2YxbZrv6Zaojas+kJuGUPC1ScH7uZsRR
+         nhRA4XbnmEDBnvoEL/VQb4tVkpOR+vU5/B7CoUjVkszSCSjS3uj0/hyrUqVqFQvFz9j4
+         QT+FXMZBN4nUHJPeu86Z45y33e3NPSmT2+OLc+/8MdEUhStLRgzRPTFwyMpEvmH7fV/w
+         95tZySfGDiSLOx1MtiJ9PrDDwRtQgo+nHLid4jIjTgr+SBXiNUXdvNw1Ltzth6tQgsOM
+         IjHE+gYbI63OwcA5yBDU4LFKa9ZLSzzVgCmKLlUXiMJcVdwNuHmQOtnQaRQg4cN/xmxB
+         gRIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=VFd81vfcBlp3Es3dpBrxLjfarRsAbMK7vh/f9iOrSDw=;
+        b=uGEoSBVnvKyKEWQ+3KiKU5IQqbyJl2o258w/dYMLOErjRoxSZD/9tMngihsC/np+b4
+         neaDGHeVToEOgHBxFpvFafoaeVgetgdCJJpf8+Dn7ibyc6w8fJd/3CYKQwHiipPXOXc4
+         6rzmlFVBGBVe1s3nAv3Qm4ese9G1j3nRlLsGldO9Bx9GkUbuq0Piuaz9d3KqspJyxJLE
+         j90+Ahyln6QmwTjQFQhptHvdzm2h6gC5Kqa8U52aZ8URy/4FNIiNlA1B86QCy1dqRjVL
+         NSBA81V9uZGG01fzkfXbHbzCFJS6Fra82/pm15ctVmlZX0COY6OdxprM6wCR8yHMMFKD
+         EOSg==
+X-Gm-Message-State: AOAM532neMdZ1zUgWi5Caf00/rGY90CcaIgwHnL9K13fMqyaacr0B2J6
+        u36J8ixc9xMRqmZmlCKwHis0Vs9lEND7XYqY
+X-Google-Smtp-Source: ABdhPJyfIBGoalH1o3MDckuQZrNhSkZAWShuJgSblfifU72BKYDJBrIzFNPbd90TLvmj4l57K/RIwQ==
+X-Received: by 2002:a63:db46:: with SMTP id x6mr26092809pgi.265.1593783501349;
+        Fri, 03 Jul 2020 06:38:21 -0700 (PDT)
+Received: from blackclown ([103.88.83.224])
+        by smtp.gmail.com with ESMTPSA id d9sm12219404pgv.45.2020.07.03.06.38.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jul 2020 06:38:20 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 19:08:06 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch, mripard@kernel.org
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm: connector: Indent code using tabs.
+Message-ID: <20200703133805.GA11191@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
 Content-Disposition: inline
-In-Reply-To: <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
-> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> index f455c597f76d..bd1d58229cc2 100644
-> --- a/drivers/gpu/drm/msm/msm_iommu.c
-> +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
->  		iova |= GENMASK_ULL(63, 49);
->  
->  
-> +	if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
-> +		prot |= IOMMU_SYS_CACHE_ONLY;
 
-Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then it
-looks like it should actually be a property on the domain because we never
-need to configure it on a per-mapping basis within a domain, and therefore
-it shouldn't be exposed by the IOMMU API as a prot flag.
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do you agree?
+Replace space-indents with tab-indents.
+Issues found with checkpatch.
 
-Will
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/gpu/drm/drm_connector.c | 38 ++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connecto=
+r.c
+index 00e40a26a800..441d4075dfa5 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -1906,11 +1906,11 @@ int drm_connector_set_path_property(struct drm_conn=
+ector *connector,
+ 	int ret;
+=20
+ 	ret =3D drm_property_replace_global_blob(dev,
+-	                                       &connector->path_blob_ptr,
+-	                                       strlen(path) + 1,
+-	                                       path,
+-	                                       &connector->base,
+-	                                       dev->mode_config.path_property);
++					       &connector->path_blob_ptr,
++					       strlen(path) + 1,
++					       path,
++					       &connector->base,
++					       dev->mode_config.path_property);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(drm_connector_set_path_property);
+@@ -1936,11 +1936,11 @@ int drm_connector_set_tile_property(struct drm_conn=
+ector *connector)
+=20
+ 	if (!connector->has_tile) {
+ 		ret  =3D drm_property_replace_global_blob(dev,
+-		                                        &connector->tile_blob_ptr,
+-		                                        0,
+-		                                        NULL,
+-		                                        &connector->base,
+-		                                        dev->mode_config.tile_property);
++							&connector->tile_blob_ptr,
++							0,
++							NULL,
++							&connector->base,
++							dev->mode_config.tile_property);
+ 		return ret;
+ 	}
+=20
+@@ -1951,11 +1951,11 @@ int drm_connector_set_tile_property(struct drm_conn=
+ector *connector)
+ 		 connector->tile_h_size, connector->tile_v_size);
+=20
+ 	ret =3D drm_property_replace_global_blob(dev,
+-	                                       &connector->tile_blob_ptr,
+-	                                       strlen(tile) + 1,
+-	                                       tile,
+-	                                       &connector->base,
+-	                                       dev->mode_config.tile_property);
++					       &connector->tile_blob_ptr,
++					       strlen(tile) + 1,
++					       tile,
++					       &connector->base,
++					       dev->mode_config.tile_property);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(drm_connector_set_tile_property);
+@@ -2024,10 +2024,10 @@ int drm_connector_update_edid_property(struct drm_c=
+onnector *connector,
+=20
+ 	ret =3D drm_property_replace_global_blob(dev,
+ 					       &connector->edid_blob_ptr,
+-	                                       size,
+-	                                       edid,
+-	                                       &connector->base,
+-	                                       dev->mode_config.edid_property);
++					       size,
++					       edid,
++					       &connector->base,
++					       dev->mode_config.edid_property);
+ 	if (ret)
+ 		return ret;
+ 	return drm_connector_set_tile_property(connector);
+--=20
+2.17.1
+
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl7/NL0ACgkQ+gRsbIfe
+745R2Q/+MrJ/7YsoeXHWQ5EIqUEJZeTQ0ohelFWFDlBOMNFjEWFIa9YI2+PK+zCS
+e+1Mm8vso9bcMBm42ahPUXkd42SKmUUTABQuq2FU15XQn0A7M9LOFliEqpmAnSYi
+BkOztVjxxq3rTcCM7VfGn7oytGtctu3Aruhk3MvdyvoTBzxRhLXLBuQfPfesUQoc
+ErzUBg4JAAD07erPir1XeliEQ/616qL+mozqqsnu5Ol7p9wV0zrmhLyF1uZIFYVT
+eP0V8YQEaJWOHXgplefcCY0f3kYnac971IzQgh9x13cgqYez22WTq6PmedP70/AY
+EQza2Qei/dsWHq6pUIaMjdTVes8psBnKTRriaJu68RSISID8oInueDUNcwD+tdrQ
+/gdHqppTadpozO36GjvCm72MJIQHoAveK8sqy/mF3UTWt5qucSgGk10sBMH3E7/f
+lhyGQiTRFVANRzBjPwrJu+lABL9dd0ItKJfzibydagcgs0GtKHVYIuv3hpHx5ARg
+YDzhq+tizgl6Vir8sBEPTKuywCANYRTlugutNitBO3IB/UzAmDSj8E+vUAK3XD6i
+7jFQnFeDpQNB5bAtVPXbuoioxAwXGQ49Mb3S7I6LjEJLiEXsLNftcVaTIeyhVqPb
+aMVP4fp6jfOlVu+NLMUVJLzR51e+fnAd+srKegPLDbV4OSSD4S4=
+=yF/2
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
