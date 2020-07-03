@@ -2,126 +2,112 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7381C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58FE217D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HAVFroHy"
+	by mail.kernel.org (Postfix) with ESMTP id 3559C21527
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGCHtJ (ORCPT
+        id S1726675AbgGCHtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 3 Jul 2020 03:49:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32645 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbgGCHtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 03:49:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64764 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725891AbgGCHtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:49:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593762548; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=F8C4p45eDeF3kiFralAK4R76DZV1JAilKVV14GqSHNI=; b=HAVFroHy/v2d3xKWn/W4igauHmxDUv1YjGrnV9Bhr5nDp/g6s+5Ubw+dAadsCmVGv+MtJCxu
- fTo1y7lchOM/DW+1PP6KeNdgHLep39Q9N2RavoSNcsveQfOEOH/1DNvke4hEJ1SSy9blrTpZ
- gmpuXdr9xCD/JpMhHEHP2Nj/JWo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5efee2e6117610c7ff3e9ec1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 07:48:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F366C433CB; Fri,  3 Jul 2020 07:48:54 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6199CC433CA;
-        Fri,  3 Jul 2020 07:48:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6199CC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkshah@codeaurora.org,
-        ilina@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable for google,lazor
-Date:   Fri,  3 Jul 2020 13:18:26 +0530
-Message-Id: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+IronPort-SDR: 2eo2iJ7eJlfj+zdz7wNCglZPq1Fy+f3lrWK0juC+tmOQRCsD4MESWHgZIXd5u5dtdmzovzqwAR
+ kxpKKoXmdTSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212129219"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="212129219"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:49:09 -0700
+IronPort-SDR: DKg7Hs0kvNu84Rc9qF431K802eYTWMJvAFOKUps3LZiIboOhvU/G6G4f9EsBX/eOjhHAvhkW9P
+ +8eSRSiTLk4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="426219926"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 03 Jul 2020 00:49:07 -0700
+Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
+        by linux.intel.com (Postfix) with ESMTP id EC337580784;
+        Fri,  3 Jul 2020 00:49:04 -0700 (PDT)
+Subject: [PATCH v9 14/15] perf record: implement control commands handling
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <11d03d88-ebc8-10ed-00ed-310233c50772@linux.intel.com>
+Date:   Fri, 3 Jul 2020 10:49:03 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PDC irqchip driver currently does not handle dual-edge interrupts,
-and we have google,lazor board with sc7180 designed to configure gpio28
-as a dual-edge interrupt. This interrupt is however not expected to be
-wakeup capable on this board, so an easy way to fix this, seems to be to
-make this gpio non wakeup capable and let TLMM handle it (which is capable
-of handling dual-edge irqs)
 
-To be able to do so only on this board, so other boards designed with
-this SoC can continue to use gpio28 as a wakeup capable one, make a
-copy of msm_gpio_wakeirq_map for lazor and remove gpio28 from the
-list.
+Implement handling of 'enable' and 'disable' control commands
+coming from control file descriptor.
 
-Reported-by: Jimmy Cheng-Yi Chiang <cychiang@google.com>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/pinctrl/qcom/pinctrl-sc7180.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 1b6465a..0668933 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -1135,7 +1135,24 @@ static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
- 	{117, 114}, {118, 119},
- };
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index cd1892c4844b..632e61fe70bd 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1527,6 +1527,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	bool disabled = false, draining = false;
+ 	int fd;
+ 	float ratio = 0;
++	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
  
--static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-+/* Dropped gpio28 from the map for the google,lazor board */
-+static const struct msm_gpio_wakeirq_map sc7180_lazor_pdc_map[] = {
-+	{0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
-+	{10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
-+	{24, 61}, {26, 52}, {30, 100}, {31, 33}, {32, 81},
-+	{33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
-+	{41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
-+	{52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
-+	{59, 37}, {62, 110}, {63, 111}, {64, 74}, {65, 44}, {66, 93},
-+	{67, 58}, {68, 112}, {69, 32}, {70, 54}, {72, 59}, {73, 64},
-+	{74, 71}, {78, 31}, {82, 30}, {85, 103}, {86, 38}, {87, 39},
-+	{88, 45}, {89, 46}, {90, 47}, {91, 48}, {92, 60}, {93, 49},
-+	{94, 84}, {95, 94}, {98, 65}, {101, 66}, {104, 67}, {109, 104},
-+	{110, 68}, {113, 69}, {114, 113}, {115, 108}, {116, 121},
-+	{117, 114}, {118, 119},
-+};
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+@@ -1846,6 +1847,21 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 				draining = true;
+ 		}
+ 
++		if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
++			switch (cmd) {
++			case EVLIST_CTL_CMD_ENABLE:
++				pr_info(EVLIST_ENABLED_MSG);
++				break;
++			case EVLIST_CTL_CMD_DISABLE:
++				pr_info(EVLIST_DISABLED_MSG);
++				break;
++			case EVLIST_CTL_CMD_ACK:
++			case EVLIST_CTL_CMD_UNSUPPORTED:
++			default:
++				break;
++			}
++		}
 +
-+static struct msm_pinctrl_soc_data sc7180_pinctrl = {
- 	.pins = sc7180_pins,
- 	.npins = ARRAY_SIZE(sc7180_pins),
- 	.functions = sc7180_functions,
-@@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
- 
- static int sc7180_pinctrl_probe(struct platform_device *pdev)
- {
-+	if (of_machine_is_compatible("google,lazor")) {
-+		sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
-+		sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
-+	}
- 	return msm_pinctrl_probe(pdev, &sc7180_pinctrl);
- }
- 
+ 		/*
+ 		 * When perf is starting the traced process, at the end events
+ 		 * die with the process and we wait for that. Thus no need to
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.24.1
+
 
