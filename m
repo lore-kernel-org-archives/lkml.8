@@ -6,40 +6,39 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE01C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC43C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39573206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220F1206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgGCHma (ORCPT
+        id S1726309AbgGCHnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:42:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50470 "EHLO mga04.intel.com"
+        Fri, 3 Jul 2020 03:43:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59496 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCHm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:42:28 -0400
-IronPort-SDR: nO21T2mnvmOsbrghMyAX8kKroA/JG2RivgdXqTfoN0i58EVKAQOEAndxVkrhGZBxUSnBI+wu/Z
- yY2VCGxizoJQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="144632551"
+        id S1725984AbgGCHnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:43:06 -0400
+IronPort-SDR: oRoxPi+IzPIA0RAEDk+7gbVgoK5vMz7B0GyJn4LnrtfXMjK90nipU5qARW9yzfA16+0nkE34sb
+ oOwYo/0RhNcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="208625248"
 X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="144632551"
+   d="scan'208";a="208625248"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:42:28 -0700
-IronPort-SDR: 6k6wbxWM8Gt79kK5XHdkrZnjuch3hvq0tBmUka+RQBXiXtJFtAapJdU6y5qCya95NPA4nmbYxI
- 0Cd2np4ZUosg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:43:06 -0700
+IronPort-SDR: 8Qmih3QH/RpDAcak/HvY2nMw4NcXX94scNZEqKXz0App8odjnO0Qz/20L2eG56I/CuSsihRdj8
+ expNcK/dwpQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="296142830"
+   d="scan'208";a="304511534"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 03 Jul 2020 00:42:28 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 03 Jul 2020 00:43:05 -0700
 Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 55C5D580784;
-        Fri,  3 Jul 2020 00:42:26 -0700 (PDT)
-Subject: [PATCH v9 03/15] tools/libperf: don't count nonfilterable fds by
- fdarray__filter()
+        by linux.intel.com (Postfix) with ESMTP id 7E092580784;
+        Fri,  3 Jul 2020 00:43:02 -0700 (PDT)
+Subject: [PATCH v9 04/15] perf evlist: introduce control file descriptors
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -51,8 +50,8 @@ Cc:     Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <f3ef026f-a7c9-fec6-a58a-1231e38cfe14@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:42:25 +0300
+Message-ID: <662b1c03-210a-1945-c02b-ac6c0445c7c7@linux.intel.com>
+Date:   Fri, 3 Jul 2020 10:43:00 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -66,30 +65,44 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Avoid counting of struct pollfd *entries objects with
-fdarray_prop__nonfilterable propery by fdarray__filter().
-Non-filterable objects are still processed if monitored
-events have been signaled for them.
+Define and initialize control file descriptors.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/lib/api/fd/array.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/evlist.c | 3 +++
+ tools/perf/util/evlist.h | 5 +++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index a4223f8cb1ce..e902c0260414 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -105,7 +105,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 			continue;
- 		}
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 7b1beffec6a1..ee545a122b52 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	evlist->workload.pid = -1;
+ 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
++	evlist->ctl_fd.fd = -1;
++	evlist->ctl_fd.ack = -1;
++	evlist->ctl_fd.pos = -1;
+ }
  
--		++nr;
-+		if (!(fda->prop[fd].bits & fdarray_prop__nonfilterable))
-+			++nr;
- 	}
+ struct evlist *evlist__new(void)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 38901c0d1599..2caf19fb87a8 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -74,6 +74,11 @@ struct evlist {
+ 		pthread_t		th;
+ 		volatile int		done;
+ 	} thread;
++	struct {
++		int	fd;
++		int	ack;
++		int	pos;
++	} ctl_fd;
+ };
  
- 	return nr;
+ struct evsel_str_handler {
 -- 
 2.24.1
 
