@@ -2,62 +2,121 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7687AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C91B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5671020884
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgGCTfO (ORCPT
+        id S1726852AbgGCTgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 15:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgGCTfN (ORCPT
+        Fri, 3 Jul 2020 15:36:55 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51528 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgGCTgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 15:35:13 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FCBC061794;
-        Fri,  3 Jul 2020 12:35:13 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9D780154936C1;
-        Fri,  3 Jul 2020 12:35:12 -0700 (PDT)
-Date:   Fri, 03 Jul 2020 12:35:12 -0700 (PDT)
-Message-Id: <20200703.123512.2001590063008584485.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, opendmb@gmail.com, kuba@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: bcmgenet: Allow changing carrier from
- user-space
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200703045701.18996-1-f.fainelli@gmail.com>
-References: <20200703045701.18996-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 Jul 2020 12:35:12 -0700 (PDT)
+        Fri, 3 Jul 2020 15:36:55 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 016FA804F9;
+        Fri,  3 Jul 2020 21:36:49 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 21:36:48 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Adam Ford <aford173@gmail.com>, linux-fbdev@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        stable@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
+Message-ID: <20200703193648.GA373653@ravnborg.org>
+References: <20200630182636.439015-1-aford173@gmail.com>
+ <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=sozttTNsAAAA:8
+        a=P1BnusSwAAAA:8 a=7gkXJVJtAAAA:8 a=hD80L64hAAAA:8 a=i0EeH86SAAAA:8
+        a=e5mUnYsNAAAA:8 a=0HEiEkm5zgkht_cWyOUA:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=aeg5Gbbo78KNqacMgKqU:22
+        a=D0XLA9XvdZm18NrgonBM:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Thu,  2 Jul 2020 21:57:00 -0700
+Hi Tomi.
 
-> The GENET driver interfaces with internal MoCA interface as well as
-> external MoCA chips like the BCM6802/6803 through a fixed link
-> interface. It is desirable for the mocad user-space daemon to be able to
-> control the carrier state based upon out of band messages that it
-> receives from the MoCA chip.
+On Fri, Jul 03, 2020 at 10:17:29AM +0300, Tomi Valkeinen wrote:
+> On 30/06/2020 21:26, Adam Ford wrote:
+> > The drm/omap driver was fixed to correct an issue where using a
+> > divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+> > number.  Through experimentation, it appears that 31 works, and
+> > it is consistent with the value used by the drm/omap driver.
+> > 
+> > This patch fixes the divider for fbdev driver instead of the drm.
+> > 
+> > Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> > 
+> > Cc: <stable@vger.kernel.org> #4.9+
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
+> > 
+> > The DRM version of this same fix is:
+> > e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
+> > 
+> > 
+> > diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > index 7252d22dd117..bfc5c4c5a26a 100644
+> > --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
+> >   };
+> >   static const struct dss_features omap3630_dss_feats = {
+> > -	.fck_div_max		=	32,
+> > +	.fck_div_max		=	31,
+> >   	.dss_fck_multiplier	=	1,
+> >   	.parent_clk_name	=	"dpll4_ck",
+> >   	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+> > 
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Will you apply to drm-misc?
 
-Applied, thanks.
+Note  following output from "dim fixes":
+$ dim fixes f76ee892a99e
+Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Jason Yan <yanaijie@huawei.com>
+Cc: "Andrew F. Davis" <afd@ti.com>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: <stable@vger.kernel.org> # v4.5+
+
+Here it says the fix is valid from v4.5 onwards.
+
+	Sam
+> 
+>  Tomi
+> 
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
