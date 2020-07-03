@@ -5,55 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A79EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E36208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B58720720
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSx3XLRG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dr4MWrby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgGCHUf (ORCPT
+        id S1726035AbgGCHXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:20:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58465 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726157AbgGCHUe (ORCPT
+        Fri, 3 Jul 2020 03:23:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32824 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725648AbgGCHXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:20:34 -0400
+        Fri, 3 Jul 2020 03:23:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593760832;
+        s=mimecast20190719; t=1593761018;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=w2+JCvuGQ3FMv++UvpcRPK8CzKvhFmB5mAfuHircIsg=;
-        b=BSx3XLRG5yUDigCbSWy+HalSCTSkzqmVz1ceNVsTZH2EFgyaW2BQbFhpKIf0uLBenlAgoO
-        7vNyT5+eUy8+eVkg6ays4ae3jWOgfaMnnLHqd4RdQmZUkCS7aAkcYB2a6C+RaM5oACvgrX
-        Gmnos+zdR25qa/FOli8TnKYdCZZFP7Q=
+        bh=9IrB0nwoPQg3scxw1qShp/wCtwnU4uLcL7itN2Vnaqw=;
+        b=Dr4MWrbyCHuZMVy/2Z6SBH0c6/eJaQkscoyxCyGAPUrkx8bH8SK8s7qybJpm7/P21b3ygz
+        x/SEidaHexGXMZ3ZVBMDEgDJkQNODlXJAPnFqzkyY+zAAK8ZLMFSPyza3u4LgfbxLfyQ5/
+        VBSbdUs22IKuO6kbNq60qY+7zpRCgqc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-LkdKM-TvP_mdOsX78eU64A-1; Fri, 03 Jul 2020 03:20:30 -0400
-X-MC-Unique: LkdKM-TvP_mdOsX78eU64A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-433-EbZGAn7VMRCA21lz1n8nmw-1; Fri, 03 Jul 2020 03:23:36 -0400
+X-MC-Unique: EbZGAn7VMRCA21lz1n8nmw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B04A0C00;
-        Fri,  3 Jul 2020 07:20:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB035107ACF6;
+        Fri,  3 Jul 2020 07:23:33 +0000 (UTC)
 Received: from [10.36.114.0] (ovpn-114-0.ams2.redhat.com [10.36.114.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4461C7BD40;
-        Fri,  3 Jul 2020 07:20:28 +0000 (UTC)
-Subject: Re: [PATCH RESEND] mm/page_alloc: skip setting nodemask when we are
- in interrupt
-To:     Pekka Enberg <penberg@gmail.com>,
-        Muchun Song <songmuchun@bytedance.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200703061350.94474-1-songmuchun@bytedance.com>
- <CAOJsxLGc-o1Os7HAoQmhd1DNxGWVrfbw2R8NroTQg0wHNyWX1w@mail.gmail.com>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1515010013D9;
+        Fri,  3 Jul 2020 07:23:30 +0000 (UTC)
+Subject: Re: [PATCH] mm: define pte_add_end for consistency
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        akpm@linux-foundation.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org
+References: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
+ <40362e99-a354-c44f-8645-e2326a6df680@redhat.com>
+ <20200701021113.GA51306@L-31X9LVDL-1304.local>
+ <da4a470e-f34c-fbf8-c95a-93a7d30a215b@redhat.com>
+ <20200701115441.GA4979@L-31X9LVDL-1304.local>
+ <7562991b-c1e7-4037-a3f0-124acd0669b7@redhat.com>
+ <20200703013435.GA11340@L-31X9LVDL-1304.local>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -99,81 +104,150 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <fe891223-9f83-d112-b185-643d6121712d@redhat.com>
-Date:   Fri, 3 Jul 2020 09:20:27 +0200
+Message-ID: <14e6a073-0a8c-3827-4d6f-072d08fbd6cc@redhat.com>
+Date:   Fri, 3 Jul 2020 09:23:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAOJsxLGc-o1Os7HAoQmhd1DNxGWVrfbw2R8NroTQg0wHNyWX1w@mail.gmail.com>
+In-Reply-To: <20200703013435.GA11340@L-31X9LVDL-1304.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.20 08:34, Pekka Enberg wrote:
-> On Fri, Jul 3, 2020 at 9:14 AM Muchun Song <songmuchun@bytedance.com> wrote:
+On 03.07.20 03:34, Wei Yang wrote:
+> On Thu, Jul 02, 2020 at 06:28:19PM +0200, David Hildenbrand wrote:
+>> On 01.07.20 13:54, Wei Yang wrote:
+>>> On Wed, Jul 01, 2020 at 10:29:08AM +0200, David Hildenbrand wrote:
+>>>> On 01.07.20 04:11, Wei Yang wrote:
+>>>>> On Tue, Jun 30, 2020 at 02:44:00PM +0200, David Hildenbrand wrote:
+>>>>>> On 30.06.20 05:18, Wei Yang wrote:
+>>>>>>> When walking page tables, we define several helpers to get the address of
+>>>>>>> the next boundary. But we don't have one for pte level.
+>>>>>>>
+>>>>>>> Let's define it and consolidate the code in several places.
+>>>>>>>
+>>>>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>>>>>> ---
+>>>>>>>  arch/x86/mm/init_64.c   | 6 ++----
+>>>>>>>  include/linux/pgtable.h | 7 +++++++
+>>>>>>>  mm/kasan/init.c         | 4 +---
+>>>>>>>  3 files changed, 10 insertions(+), 7 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+>>>>>>> index dbae185511cd..f902fbd17f27 100644
+>>>>>>> --- a/arch/x86/mm/init_64.c
+>>>>>>> +++ b/arch/x86/mm/init_64.c
+>>>>>>> @@ -973,9 +973,7 @@ remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end,
+>>>>>>>  
+>>>>>>>  	pte = pte_start + pte_index(addr);
+>>>>>>>  	for (; addr < end; addr = next, pte++) {
+>>>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>>>> -		if (next > end)
+>>>>>>> -			next = end;
+>>>>>>> +		next = pte_addr_end(addr, end);
+>>>>>>>  
+>>>>>>>  		if (!pte_present(*pte))
+>>>>>>>  			continue;
+>>>>>>> @@ -1558,7 +1556,7 @@ void register_page_bootmem_memmap(unsigned long section_nr,
+>>>>>>>  		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
+>>>>>>>  
+>>>>>>>  		if (!boot_cpu_has(X86_FEATURE_PSE)) {
+>>>>>>> -			next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>>>> +			next = pte_addr_end(addr, end);
+>>>>>>>  			pmd = pmd_offset(pud, addr);
+>>>>>>>  			if (pmd_none(*pmd))
+>>>>>>>  				continue;
+>>>>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>>>>> index 32b6c52d41b9..0de09c6c89d2 100644
+>>>>>>> --- a/include/linux/pgtable.h
+>>>>>>> +++ b/include/linux/pgtable.h
+>>>>>>> @@ -706,6 +706,13 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>>>>>>>  })
+>>>>>>>  #endif
+>>>>>>>  
+>>>>>>> +#ifndef pte_addr_end
+>>>>>>> +#define pte_addr_end(addr, end)						\
+>>>>>>> +({	unsigned long __boundary = ((addr) + PAGE_SIZE) & PAGE_MASK;	\
+>>>>>>> +	(__boundary - 1 < (end) - 1) ? __boundary : (end);		\
+>>>>>>> +})
+>>>>>>> +#endif
+>>>>>>> +
+>>>>>>>  /*
+>>>>>>>   * When walking page tables, we usually want to skip any p?d_none entries;
+>>>>>>>   * and any p?d_bad entries - reporting the error before resetting to none.
+>>>>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+>>>>>>> index fe6be0be1f76..89f748601f74 100644
+>>>>>>> --- a/mm/kasan/init.c
+>>>>>>> +++ b/mm/kasan/init.c
+>>>>>>> @@ -349,9 +349,7 @@ static void kasan_remove_pte_table(pte_t *pte, unsigned long addr,
+>>>>>>>  	unsigned long next;
+>>>>>>>  
+>>>>>>>  	for (; addr < end; addr = next, pte++) {
+>>>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>>>> -		if (next > end)
+>>>>>>> -			next = end;
+>>>>>>> +		next = pte_addr_end(addr, end);
+>>>>>>>  
+>>>>>>>  		if (!pte_present(*pte))
+>>>>>>>  			continue;
+>>>>>>>
+>>>>>>
+>>>>>> I'm not really a friend of this I have to say. We're simply iterating
+>>>>>> over single pages, not much magic ....
+>>>>>
+>>>>> Hmm... yes, we are iterating on Page boundary, while we many have the case
+>>>>> when addr or end is not PAGE_ALIGN.
+>>>>
+>>>> I really do wonder if not having page aligned addresses actually happens
+>>>> in real life. Page tables operate on page granularity, and
+>>>> adding/removing unaligned parts feels wrong ... and that's also why I
+>>>> dislike such a helper.
+>>>>
+>>>> 1. kasan_add_zero_shadow()/kasan_remove_zero_shadow(). If I understand
+>>>> the logic (WARN_ON()) correctly, we bail out in case we would ever end
+>>>> up in such a scenario, where we would want to add/remove things not
+>>>> aligned to PAGE_SIZE.
+>>>>
+>>>> 2. remove_pagetable()...->remove_pte_table()
+>>>>
+>>>> vmemmap_free() should never try to de-populate sub-pages. Even with
+>>>> sub-section hot-add/remove (2MB / 512 pages), with valid struct page
+>>>> sizes (56, 64, 72, 80), we always end up with full pages.
+>>>>
+>>>> kernel_physical_mapping_remove() is only called via
+>>>> arch_remove_memory(). That will never remove unaligned parts.
+>>>>
+>>>
+>>> I don't have a very clear mind now, while when you look into
+>>> remove_pte_table(), it has two cases based on alignment of addr and next.
+>>>
+>>> If we always remove a page, the second case won't happen?
 >>
->> When we are in the interrupt context, it is irrelevant to the
->> current task context. If we use current task's mems_allowed, we
->> can fair to alloc pages in the fast path and fall back to slow
->> path memory allocation when the current node(which is the current
->> task mems_allowed) does not have enough memory to allocate. In
->> this case, it slows down the memory allocation speed of interrupt
->> context. So we can skip setting the nodemask to allow any node
->> to allocate memory, so that fast path allocation can success.
+>> So, the code talks about that the second case can only happen for
+>> vmemmap, never for direct mappings.
 >>
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> ---
->>  mm/page_alloc.c | 8 +++++---
->>  1 file changed, 5 insertions(+), 3 deletions(-)
+>> I don't see a way how this could ever happen with current page sizes,
+>> even with sub-section hotadd (2MB). Maybe that is a legacy leftover or
+>> was never relevant? Or I am missing something important, where we could
+>> have sub-4k-page vmemmap data.
 >>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index b48336e20bdcd..a6c36cd557d1d 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -4726,10 +4726,12 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->>
->>         if (cpusets_enabled()) {
->>                 *alloc_mask |= __GFP_HARDWALL;
->> -               if (!ac->nodemask)
->> -                       ac->nodemask = &cpuset_current_mems_allowed;
->> -               else
->> +               if (!ac->nodemask) {
->> +                       if (!in_interrupt())
->> +                               ac->nodemask = &cpuset_current_mems_allowed;
 > 
-> If !ac->nodemask and in_interrupt() the ALLOC_CPUSET flag is not set,
-> which by-passes the __cpuset_zone_allowed() check for allocations.
-> This works fine because in the case if in_interrupt() the function
-> allows allocation on any zone/node.
+> I took a calculation on the sub-section page struct size, it is page size (4K)
+> aligned. This means you are right, which we won't depopulate a sub-page.
 > 
->> +               } else {
->>                         *alloc_flags |= ALLOC_CPUSET;
->> +               }
->>         }
-> 
-> However, if you write the condition as follows:
-> 
->         if (cpusets_enabled()) {
->                 *alloc_mask |= __GFP_HARDWALL;
->                 if (!in_interrupt() && !ac->nodemask)
->                         ac->nodemask = &cpuset_current_mems_allowed;
->                 else
->                         *alloc_flags |= ALLOC_CPUSET;
->         }
+> And yes, I am not sure all those variants would fit this case. So I would like
+> to leave as it now. How about your opinion?
 
-^ looks much cleaner as well. Do we want to add a summarizing comment?
+I'd say we clean this up and protect it by WARN_ON_ONCE(). Then, it
+won't need another round of investigation to find out that handling
+sub-pages is irrelevant.
 
-> 
-> then the code is future-proof in case of __cpuset_zone_allowed() is
-> one day extended to support IRQ context too (it probably should
-> eventually respect IRQ SMP affinity).
-
-
+If you don't want to tackle this, I can have a look. Just let me know.
 
 -- 
 Thanks,
