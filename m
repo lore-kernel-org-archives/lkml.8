@@ -2,177 +2,161 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5073DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D07C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28EE420870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808B620870
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="AeXagBY8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilCOu9gY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGCN43 (ORCPT
+        id S1726152AbgGCOA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:56:29 -0400
-Received: from mail-mw2nam12on2061.outbound.protection.outlook.com ([40.107.244.61]:6200
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726035AbgGCN42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:56:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EaManCNPlM6bCyYI9Ed8Cut1Nzm4NMEPnWcNg0W82EOvnH9ogb2RgSckXe1aVzcdmNyMYwC91fhxCB+hhVwYTSjrkTAvE1podWyE3BCkRzHUrxiUAqGfFLfHwHnYP6/bjZyTgMXb45fYKq9Zuz6PbvxHdyLQUKFdfaSneFDlKIMSOtE+NwBB5YX5UksiWTKH0HioRc41ksJusGQ4XURohofNq3RGHRkBxJYUipKsVEcdQZBh1v2E9Z158bUDKl8ipJmtet2vkHyB3Hi5ahGOHGoDXve2sGXphB2I30JiI2A1tuO8PpwbyMmETAnUZJYifKEJzWlnXAflsd5T9cIQfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1FGY4417WxzOZRswBSTPd7er1aCrtnOPiLn7y0li0js=;
- b=dHjAFeH4peOyy1ca/IpShQqhOdY7w63QySdwStkgtfdMgJxtwBdRh/sW8ymQxXyjx1IWxLgdir6hIIW7n+hAlY0curkh6hmaRcLtW3BtpbdG2h1aHKUNVnq1UIV2HykKBWMqyQQlJjU9UuwoPYGlWMjUx4EOKhumT7BS3U0Txc3EZ62076vfnqnvBmCIXNuVR5H3Df+iRl+rYjJsCHcIxKS+6TrH/GO/syc0iA5onysA7im88GbR2M6o77MyymwtyID7KqiAGokxJPHDFXNPrEQ87fPoVm2uNHquFuYmjGrGIniTu6OC3ClWeJm4JOElY5xRLdfHaPSEcDtOvlnN/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 3 Jul 2020 10:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgGCOAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:00:25 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65244C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 07:00:25 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id h1so7045462vkn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 07:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1FGY4417WxzOZRswBSTPd7er1aCrtnOPiLn7y0li0js=;
- b=AeXagBY8C2kc6jxglmvSm0p1duB/0bXl2jpmdwKtTBrFdCbvFVTLtq8KaQwzK1BkWDi8WvfXU/LLXBZ0TucM5dH/3peQ1QLseADFr+mbJX5SIJqdB5lZ7a/Q7oe38bVSYfzJWR1pGPwGHA9Hym7+rw5aBg+oGror9Y8p7NJsWco=
-Received: from SN4PR0501CA0113.namprd05.prod.outlook.com
- (2603:10b6:803:42::30) by BN7PR02MB5331.namprd02.prod.outlook.com
- (2603:10b6:408:2b::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Fri, 3 Jul
- 2020 13:56:24 +0000
-Received: from SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:42:cafe::3c) by SN4PR0501CA0113.outlook.office365.com
- (2603:10b6:803:42::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.12 via Frontend
- Transport; Fri, 3 Jul 2020 13:56:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT035.mail.protection.outlook.com (10.152.72.145) with Microsoft SMTP
- Server id 15.20.3153.24 via Frontend Transport; Fri, 3 Jul 2020 13:56:24
- +0000
-Received: from [149.199.38.66] (port=58707 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <raviteja.narayanam@xilinx.com>)
-        id 1jrM9Z-0002x8-Qa; Fri, 03 Jul 2020 06:54:57 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <raviteja.narayanam@xilinx.com>)
-        id 1jrMAy-0004WL-4w; Fri, 03 Jul 2020 06:56:24 -0700
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 063DuGSZ014470;
-        Fri, 3 Jul 2020 06:56:17 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <raviteja.narayanam@xilinx.com>)
-        id 1jrMAq-0004Te-Cr; Fri, 03 Jul 2020 06:56:16 -0700
-From:   Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-Subject: [PATCH 2/2] i2c: cadence: Clear HOLD bit at correct time in Rx path
-Date:   Fri,  3 Jul 2020 19:26:12 +0530
-Message-Id: <1593784572-21910-1-git-send-email-raviteja.narayanam@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(136003)(39860400002)(46966005)(4326008)(478600001)(426003)(186003)(82740400003)(316002)(26005)(47076004)(9786002)(6666004)(36756003)(336012)(8676002)(70586007)(7696005)(107886003)(83380400001)(8936002)(70206006)(6916009)(356005)(44832011)(81166007)(5660300002)(2906002)(82310400002)(2616005);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x5F3VEjoP3FKUljXbLKCPFmED7t6N7RsImdk24VNfSc=;
+        b=ilCOu9gYBMdqPI/WloUGvxq/+wnGHnQ1ZAHN1ZxENszq7GPp9XNKx9zUBnE+fK9TgU
+         kQxMN49VEXWiecCYQDAL/WKl0bVLcsUEfsmWRF1OqyDngNlhJxLHKL5br824jjZHpUjJ
+         7hdtRocMgi9/yp6SHT51EkOw9NH2gxFvrwG3GVZa6/L7YD+wxw1rIg9Gl4V8GOyMVAaE
+         cpP+FflthlLgMOCHyBLj9hCGNiq5UWE+L7Cd0KnzVOHXaoX++5r96myY1zSsJ810tV+B
+         fijJbiHJsmfDJ/u/k7Z4OHk1777RqOIaN0m4d2ZRnvaostA+caNpfnc2Ov0C5PnO46BU
+         +LoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x5F3VEjoP3FKUljXbLKCPFmED7t6N7RsImdk24VNfSc=;
+        b=HSPU4AemdqG0j1GCNvpVnN5qrC/ao5L2uCKWTwffviuZVPEU9pLtUXCi+ork/6BgJs
+         ULFDs8YftiKWZcbMU3AjfSBeQ1sYZIeNMK2QFwAU46HQR2RviTBTF/s+PBKDK3DgMR7V
+         1utPfvNlUtV59CpsbBz2N0XIpQs6Z3Z0F4hCypd34RbY06/GtT+k2u55lDRK4RNd6d45
+         SBgRpG91yfk+F23IKcWInPWdSxdqa78HyItA5+ig4iAJfHdaBlp+hAGimCBxS+VIjVn6
+         DO+q0TAYIhc30rU/dtcQNczUbeA0K3nljeVTAXMs0LEsOgqRufAJv+s3+sqe0BI7g+Px
+         xuGw==
+X-Gm-Message-State: AOAM531T8Uc+0acoPu3VMZTRdjp7HHnP3IlFXy/Pz/4ztGArJ8Ie+TV4
+        Kli6lFioNlaFSuk0Ceyq02Zstnz8DfAWGJjR2aqXIw==
+X-Google-Smtp-Source: ABdhPJwx16TCC0yxwEDEAWqU8RVaCCWww0gPA4ZSJHucJ6hbfJede4vfqOlpKj94dbBKxrLzf14j6uvN3giH1XMSxM4=
+X-Received: by 2002:a1f:3f05:: with SMTP id m5mr1556534vka.92.1593784823956;
+ Fri, 03 Jul 2020 07:00:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 660b7f12-ad21-4a08-7b93-08d81f58dfc2
-X-MS-TrafficTypeDiagnostic: BN7PR02MB5331:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB5331C39B0FD59F921916FEB4CA6A0@BN7PR02MB5331.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 045315E1EE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J2Hj8ZfB0XanmIkMgNEd+m/UpROHNxTqL9W6i2LqqmDRqigWLgA9RkSbQjw9LEWFNfsk1Dxq47c2i1VoK63BPBuBfz/TWaDbiksk19+II42s3XKc7yWvGbftDGT3+r5A73ClYomxrBsz+12mmTZgC3lD/NtNZKRPI12LWIRqdP5DAAT3l5aAWx7dRETmYA8d6bGnJ6xZNuOJ1gbbeWMPWZkcXxQLpvuZ3i7spXpos5LWtatAZveMRwcFyDQW0GCVXQzpzoiExuTUSXMXVWV+BbM2x6rntCB+8HqnybZhqFxeh1voO19Hm2Sh2yfGt8pqYS/qF6RqS/7OJZAedCIs31nTsEcnfcgJZQJu3D0ufuQKrIk/FsW4hRtn4MH+D3idKOx6RdrUWH1hqB20DO3TEw==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2020 13:56:24.4513
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 660b7f12-ad21-4a08-7b93-08d81f58dfc2
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5331
+References: <20200702221237.2517080-1-abhishekbh@google.com>
+ <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+ <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com> <20200703114037.GD2999146@linux.ibm.com>
+In-Reply-To: <20200703114037.GD2999146@linux.ibm.com>
+From:   Doug Anderson <dianders@google.com>
+Date:   Fri, 3 Jul 2020 07:00:11 -0700
+Message-ID: <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are few issues on Zynq SOC observed in the stress tests causing
-timeout errors. Even though all the data is received, timeout error
-is thrown. This is due to an IP bug in which the COMP bit in ISR is
-not set at end of transfer and completion interrupt is not generated.
+Hi,
 
-This bug is seen on Zynq platforms when the following condition occurs:
-Master read & HOLD bit set & Transfer size register reaches '0'.
+On Fri, Jul 3, 2020 at 4:40 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Thu, Jul 02, 2020 at 11:43:47PM -0700, Abhishek Bhardwaj wrote:
+> > We have tried to steer away from kernel command line args for a few reasons.
+> >
+> > I am paraphrasing my colleague Doug's argument here (CC'ed him as well) -
+> >
+> > - The command line args are getting unwieldy. Kernel command line
+> > parameters are not a scalable way to set kernel config. It's intended
+> > as a super limited way for the bootloader to pass info to the kernel
+> > and also as a way for end users who are not compiling the kernel
+> > themselves to tweak kernel behavior.
+>
+> Why cannot you simply add this option to CONFIG_CMDLINE at your kernel build
+> scripts?
 
-One workaround is to clear the HOLD bit before the transfer size
-register reaches '0'. The current implementation checks for this at
-the start of the loop and also only for less than FIFO DEPTH case
-(ignoring the equal to case).
+At least in the past I've seen that 'CONFIG_CMDLINE' interacts badly
+with the bootloader provided command line in some architectures.  In
+days of yore I tried to post a patch to fix this, at least on ARM
+targets, but it never seemed to go anywhere upstream.  I'm going to
+assume this is still a problem because I still see an ANDROID tagged
+patch in the Chrome OS 5.4 tree:
 
-So clear the HOLD bit when the data yet to receive is less than or
-equal to the FIFO DEPTH. This avoids the IP bug condition.
+In any case, as per my previous arguments, stuffing lots of config
+into the cmdline is a bit clunky and doesn't scale well.  You end up
+with a really long run on command line and it's hard to tell where one
+config option ends and the next one starts and if the same concept is
+there more than one time it's hard to tell and something might cancel
+out a previous config option or maybe it won't and by the time you end
+up finishing this it's hard to tell where you started.  :-)
 
-Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
----
- drivers/i2c/busses/i2c-cadence.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index e069602..e4b7f2a 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -421,20 +421,21 @@ static irqreturn_t cdns_i2c_master_isr(void *ptr)
- 		/* Read data if receive data valid is set */
- 		while (cdns_i2c_readreg(CDNS_I2C_SR_OFFSET) &
- 		       CDNS_I2C_SR_RXDV) {
--			/*
--			 * Clear hold bit that was set for FIFO control if
--			 * RX data left is less than FIFO depth, unless
--			 * repeated start is selected.
--			 */
--			if ((id->recv_count < CDNS_I2C_FIFO_DEPTH) &&
--			    !id->bus_hold_flag)
--				cdns_i2c_clear_bus_hold(id);
--
- 			if (id->recv_count > 0) {
- 				*(id->p_recv_buf)++ =
- 					cdns_i2c_readreg(CDNS_I2C_DATA_OFFSET);
- 				id->recv_count--;
- 				id->curr_recv_count--;
-+
-+				/*
-+				 * Clear hold bit that was set for FIFO control
-+				 * if RX data left is less than or equal to
-+				 * FIFO DEPTH unless repeated start is selected
-+				 */
-+				if (id->recv_count <= CDNS_I2C_FIFO_DEPTH &&
-+				    !id->bus_hold_flag)
-+					cdns_i2c_clear_bus_hold(id);
-+
- 			} else {
- 				dev_err(id->adap.dev.parent,
- 					"xfer_size reg rollover. xfer aborted!\n");
--- 
-2.7.4
+> > - Also, we know we want this setting from the start. This is a
+> > definite smell that it deserves to be a compile time thing rather than
+> > adding extra code + whatever miniscule time at runtime to pass an
+> > extra arg.
+>
+> This might be a compile time thing in your environment, but not
+> necessarily it must be the same in others. For instance, what option
+> should distro kernels select?
 
+Nothing prevents people from continuing to use the command line
+options if they want, right?  This just allows a different default.
+So if a distro is security focused and decided that it wanted a slower
+/ more secure default then it could ship that way but individual users
+could still override, right?
+
+
+> > I think this was what CONFIGS were intended for. I'm happy to add all
+> > this to the commit message once it's approved in spirit by the
+> > maintainers.
+> >
+> > On Thu, Jul 2, 2020 at 8:18 PM Anthony Steinhauser
+> > <asteinhauser@google.com> wrote:
+> > >
+> > > Yes, this probably requires an explanation why the change is necessary
+> > > or useful. Without that it is difficult to give some meaningful
+> > > feedback.
+> >
+> >
+> >
+> > --
+> > Abhishek
+>
+> --
+> Sincerely yours,
+> Mike.
