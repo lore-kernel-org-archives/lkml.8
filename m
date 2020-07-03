@@ -2,121 +2,84 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7687AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5969C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5671020884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D84A20899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Z/uCE1SW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGCTgz (ORCPT
+        id S1726756AbgGCTo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 15:36:55 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51528 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgGCTgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 15:36:55 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 016FA804F9;
-        Fri,  3 Jul 2020 21:36:49 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 21:36:48 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Adam Ford <aford173@gmail.com>, linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        stable@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
-Message-ID: <20200703193648.GA373653@ravnborg.org>
-References: <20200630182636.439015-1-aford173@gmail.com>
- <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
+        Fri, 3 Jul 2020 15:44:27 -0400
+Received: from vps.xff.cz ([195.181.215.36]:47630 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgGCTo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 15:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593805465; bh=mtS2OOnwpcAcf3Vn0Zput13XEuuefUuyocjzu7yZ8/g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z/uCE1SWpfQUPh88R+kFhV+o2GxEV223ekwDyj+jMUdO3S38oAVruYrB3/di4HNVZ
+         zLy0Cjvv8VSSpoIYnb2rJ/63E4k3VOj2ql6zYN7AZqtAsLjdlcBIqC1p88XnGs7YkH
+         3RYPXzV8vo42bRwupJHIdpCw/zcJG5POGk9TV7ks=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Icenowy Zheng <icenowy@aosc.io>, Ondrej Jirman <megous@megous.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS)
+Subject: [PATCH] iio: light: stk3310: add chip id for STK3311-X variant
+Date:   Fri,  3 Jul 2020 21:44:05 +0200
+Message-Id: <20200703194406.110855-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=sozttTNsAAAA:8
-        a=P1BnusSwAAAA:8 a=7gkXJVJtAAAA:8 a=hD80L64hAAAA:8 a=i0EeH86SAAAA:8
-        a=e5mUnYsNAAAA:8 a=0HEiEkm5zgkht_cWyOUA:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=aeg5Gbbo78KNqacMgKqU:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomi.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-On Fri, Jul 03, 2020 at 10:17:29AM +0300, Tomi Valkeinen wrote:
-> On 30/06/2020 21:26, Adam Ford wrote:
-> > The drm/omap driver was fixed to correct an issue where using a
-> > divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-> > number.  Through experimentation, it appears that 31 works, and
-> > it is consistent with the value used by the drm/omap driver.
-> > 
-> > This patch fixes the divider for fbdev driver instead of the drm.
-> > 
-> > Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-> > 
-> > Cc: <stable@vger.kernel.org> #4.9+
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
-> > 
-> > The DRM version of this same fix is:
-> > e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
-> > 
-> > 
-> > diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > index 7252d22dd117..bfc5c4c5a26a 100644
-> > --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> > @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
-> >   };
-> >   static const struct dss_features omap3630_dss_feats = {
-> > -	.fck_div_max		=	32,
-> > +	.fck_div_max		=	31,
-> >   	.dss_fck_multiplier	=	1,
-> >   	.parent_clk_name	=	"dpll4_ck",
-> >   	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
-> > 
-> 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Will you apply to drm-misc?
+The STK3311 chip has a variant called STK3311-X, which has a different
+chip id of 0x12.
 
-Note  following output from "dim fixes":
-$ dim fixes f76ee892a99e
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jason Yan <yanaijie@huawei.com>
-Cc: "Andrew F. Davis" <afd@ti.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: <stable@vger.kernel.org> # v4.5+
+Add the chip id to the driver.
 
-Here it says the fix is valid from v4.5 onwards.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ drivers/iio/light/stk3310.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Sam
-> 
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index 185c24a75ae6..1a8401d198a4 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -37,6 +37,7 @@
+ 
+ #define STK3310_CHIP_ID_VAL			0x13
+ #define STK3311_CHIP_ID_VAL			0x1D
++#define STK3311X_CHIP_ID_VAL			0x12
+ #define STK3335_CHIP_ID_VAL			0x51
+ #define STK3310_PSINT_EN			0x01
+ #define STK3310_PS_MAX_VAL			0xFFFF
+@@ -453,6 +454,7 @@ static int stk3310_init(struct iio_dev *indio_dev)
+ 
+ 	if (chipid != STK3310_CHIP_ID_VAL &&
+ 	    chipid != STK3311_CHIP_ID_VAL &&
++	    chipid != STK3311X_CHIP_ID_VAL &&
+ 	    chipid != STK3335_CHIP_ID_VAL) {
+ 		dev_err(&client->dev, "invalid chip id: 0x%x\n", chipid);
+ 		return -ENODEV;
+-- 
+2.27.0
+
