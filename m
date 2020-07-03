@@ -2,147 +2,71 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF80C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C01C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B263220737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="S7oWV+eP"
+	by mail.kernel.org (Postfix) with ESMTP id 4A9C9207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgGCLN3 (ORCPT
+        id S1726304AbgGCLPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:13:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:40748 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgGCLN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:13:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593774803; bh=PK9XQwVLZikvPIqIQvVj+rgD6Y+uR8PxJm+ULrZzNEY=;
-        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
-        b=S7oWV+ePVh3bfJXlbi+307IscRv04ljcgUCHfqikI/1D//XWGqaz4mN46BGZAazVj
-         5bdCe0vCNFUu1n/lHJ7onleN+X9HghCqqMprndSR8s+JCw/aKbIpo8LQ8SKVK0q3vR
-         b1gDz1xB4J3mN4HoEExzY3QakP/cqkk5MQuGnFsE=
-Date:   Fri, 3 Jul 2020 13:13:23 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
+        Fri, 3 Jul 2020 07:15:39 -0400
+Received: from winnie.ispras.ru ([83.149.199.91]:10186 "EHLO smtp.ispras.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726039AbgGCLPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:15:38 -0400
+Received: from home.intra.ispras.ru (unknown [10.10.165.12])
+        by smtp.ispras.ru (Postfix) with ESMTP id 8A042203C1;
+        Fri,  3 Jul 2020 14:15:33 +0300 (MSK)
+From:   Evgeny Novikov <novikov@ispras.ru>
+To:     Jean Delvare <jdelvare@suse.com>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 02/13] dt-bindings: panel: Convert rocktech,
- jh057n00900 to yaml
-Message-ID: <20200703111323.zcmv3cuo7toa4d3g@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>, Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200701162928.1638874-1-megous@megous.com>
- <20200701162928.1638874-3-megous@megous.com>
- <20200702205143.GA1670522@bogus>
- <20200702210354.562wkzpdmyrlwojx@core.my.home>
- <20200703051155.GA1685118@ravnborg.org>
- <20200703104448.iwhxk77d2hyrr3x5@core.my.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703104448.iwhxk77d2hyrr3x5@core.my.home>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org
+Subject: [PATCH] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
+Date:   Fri,  3 Jul 2020 14:15:18 +0300
+Message-Id: <20200703111518.9644-1-novikov@ispras.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 12:44:48PM +0200, megous hlavni wrote:
-> Hello Sam,
-> 
-> On Fri, Jul 03, 2020 at 07:11:55AM +0200, Sam Ravnborg wrote:
-> > Hi Ondrej.
-> > 
-> > > > My bot found errors running 'make dt_binding_check' on your patch:
-> > > > 
-> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: '#address-cells', '#size-cells', 'port@0' do not match any of the regexes: 'pinctrl-[0-9]+'
-> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'vcc-supply' is a required property
-> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'iovcc-supply' is a required property
-> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'reset-gpios' is a required property
-> > > 
-> > > Paths look bogus ^^^^
-> > > 
-> > > It should be .../rocktech,jh057n00900.yaml: ...
-> > 
-> > The example in nwl-dsi.yaml contains:
-> > 	compatible = "rocktech,jh057n00900";
-> > 
-> > So the example is checked against your updated binding.
-> > And the binding check fails because the example is no longer valid.
-> 
-> Ah, now I understand.
-> 
-> > This needs to be fixed as we do not wat to introduce new errors.
-> > Either the example or the binding needs the fix.
-> 
-> I think we can unrequire the supplies, but reset is needed really.
+aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
+If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
+a buffer overflow in
+aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
+the potential buffer overflow.
 
-Hmm, that's probably wrong kind of thinking. Panel has the supplies, and
-obviously requires them, so the dts must describe them somehow, even if
-they are the fixed supplies. So I'll not unrequire them.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-> The panel only has one port, so there should be no address/size-cells
-> in the example, and port@0 should be just port to match existing binding.
-> If it had  multiple ports, port@0 would have to be inside ports { } node
-> anyway, according to the existing binding. Then add reset-gpios to
-> the example...
-> 
-> And that should fix it.
-> 
-> I'll prepare the patch shortly.
-> 
-> regards,
-> 	o.
-> 
-> > 	Sam
-> > 
-> > 
-> > > 
-> > > regards,
-> > > 	o.
-> > > 
-> > > > 
-> > > > See https://patchwork.ozlabs.org/patch/1320690
-> > > > 
-> > > > If you already ran 'make dt_binding_check' and didn't see the above
-> > > > error(s), then make sure dt-schema is up to date:
-> > > > 
-> > > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> > > > 
-> > > > Please check and re-submit.
-> > > > 
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+---
+ drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 33fb54845bf6..3d8239fd66ed 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -851,6 +851,8 @@ static int aspeed_create_fan(struct device *dev,
+ 	ret = of_property_read_u32(child, "reg", &pwm_port);
+ 	if (ret)
+ 		return ret;
++	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
++		return -EINVAL;
+ 	aspeed_create_pwm_port(priv, (u8)pwm_port);
+ 
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
+-- 
+2.16.4
+
