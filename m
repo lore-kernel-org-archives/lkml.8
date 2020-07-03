@@ -2,208 +2,221 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E170C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27462C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E5B20771
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593755245;
-	bh=aen9lRevch+iEg8EeGdNZ6YnSxy4YmX/EVkSfzJW8xc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kI9gpAouszmlaXF1G8qvGDCk/1CzyLYFYiZBDdwncnJYWwoszvsJRY6luOmVkmgcb
-	 42uU88MaGXpVXPv9GvFxkJuLkieUPaAb3c93GeEPoApwh2a8iWb2z6nzCBF7e0y+jH
-	 FdSPEeiQE11+Gei/Gq4L3oLLl8g/P7c9g+Zg+LGw=
+	by mail.kernel.org (Postfix) with ESMTP id 01BEE20771
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:48:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAQ3NNZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgGCFrX (ORCPT
+        id S1726122AbgGCFsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:47:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42438 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgGCFrX (ORCPT
+        Fri, 3 Jul 2020 01:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgGCFsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:47:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o11so31322960wrv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 22:47:21 -0700 (PDT)
+        Fri, 3 Jul 2020 01:48:53 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03690C08C5C1;
+        Thu,  2 Jul 2020 22:48:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x3so7997095pfo.9;
+        Thu, 02 Jul 2020 22:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xggNeQQkKQTMcykW7pls8KqjnSbZo3eU0HBpywIP0Oo=;
+        b=iAQ3NNZtzHZJsUVnV6xvw5rLLHcrLPrpLBNSnPFDcHccUhrpy+2bn/nL/1C99XUGBw
+         g/Xvrp5XV20/VkAQqpTRZ1rDvJIu/F37GSBn2iAcrrOPjoo2a2Xhz2RInBOXPqwdgP51
+         JgCuvqvFzaTwR8JUN/erwRBYJlTIPehQFPBc8unMMtB+iBEZfvrxnQmbw18EJ7PhNeFc
+         eA+FDyG2d6+HNFg9YVksLXC2tsqe36/1ykDGqLvGl+2ldmeiDGCsoD1hGvOWVJnQUXcG
+         s80uM7X9CJL/lj8sHL4COK3YT0EmYelEsIsjSWch2vTvfM4xoMzZKd1yOG49biZNxk96
+         /UXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cKy2GNB5sZt8VGw0VP4MCiAH01YEwlVv0x/b4QG309E=;
-        b=mdwbn55wyeyn4yAjEwtBmQI/nxkRIJyYFoWyG7R79IvZ9kUe6pcTaBZRYN9J5glpAq
-         btzzNbmwCFgGbAG7dOWYYGWZfbEVZWYpbhv98K1wosFaM46iPPEx6cHamMaZldQH2Tqv
-         Lt9/Jgz65J6fYfVjUWhYwJzVOG4SUA1taUweE3dNrGZKqNnkMdvciT3LGLhRUoNgwl7T
-         bh0t69K2mOqhCv/rEt/tyfjD/O5QKNsBSyPzelvZjsA7Mhw2nT3EnNtt/iuV0TBe5FLM
-         cQN+BDqanzYKSSKUau5a843wmHvpCgHq8c/21kGtXvY4qF0uiT5CYopsxXuNuHOlaoPC
-         ixEQ==
-X-Gm-Message-State: AOAM530lxj4D6JGVVD3GiaqgBY7DSfce4R0NSFqInpW9bBbSL9JoXK1U
-        NwQ/hNSbZqDo8YMTKvS5Tcr1q0FMocodHbm/sM0=
-X-Google-Smtp-Source: ABdhPJxIfA6nJ+fB73wLKYzfmEtsb3jvthJEue6TzxY17BQ3lnqRMCQVo1ogahEfFKemEotBRuO3RAgP5SE2XBKZvYc=
-X-Received: by 2002:adf:fa8b:: with SMTP id h11mr34975701wrr.391.1593755240202;
- Thu, 02 Jul 2020 22:47:20 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xggNeQQkKQTMcykW7pls8KqjnSbZo3eU0HBpywIP0Oo=;
+        b=Fzw880kZfQH3bWMSrX9aRM1ictbHPEk54+YtRAv6zzubB4N1V1zrfXzzaamXbN5gx4
+         ZZJrRRz+ojOdjh+o8vwBfKBkzg6AGQljCfsiAd1p6AD4ay0I1lhPDDsHPM0FIeW/NeT6
+         seI4BfautgrX7cfepR9YTE1YxV0OlEWbvgF0nOp02R2n96Iu+6Otgtc2N+Prya3BXDv5
+         L6RuS4zubV8ucI//kaBQ38NwScKaZggUf+CKEwI+VMYu0ZgGUlFriBeTlwWc+Xx8inQ6
+         jb2H9HSPP9ylYIo76MqKXdvZ4Ngt5gNvpUIryw1Ls8DGAZcX8gq4b/UbZwCgtqQ4inPg
+         Px3g==
+X-Gm-Message-State: AOAM533okHX4JFM4+nVZuLb37Ni3Webcpc/YMtsZ2BaGrIrcY3O5nDRj
+        AthUghkwO3dmSjt0PuUMghKgnL/iLdo=
+X-Google-Smtp-Source: ABdhPJxandp0SqaiKJ6v16u8uYdHi68WYcJyPtjvXPax47gf97Oxdgr7/9JgzXuNTBFd3HF4/BMwog==
+X-Received: by 2002:a63:fc59:: with SMTP id r25mr4650294pgk.336.1593755332242;
+        Thu, 02 Jul 2020 22:48:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q14sm10197381pgk.86.2020.07.02.22.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 22:48:51 -0700 (PDT)
+Subject: Re: [PATCH 1/2] hwmon: shtc1: add support for device tree bindings
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200703034856.12846-1-chris.ruehl@gtsys.com.hk>
+ <20200703034856.12846-2-chris.ruehl@gtsys.com.hk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <94043e67-1899-8e80-064c-50489cf7e4b2@roeck-us.net>
+Date:   Thu, 2 Jul 2020 22:48:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200627133654.64863-1-changbin.du@gmail.com> <20200627133654.64863-2-changbin.du@gmail.com>
-In-Reply-To: <20200627133654.64863-2-changbin.du@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 3 Jul 2020 14:47:09 +0900
-Message-ID: <CAM9d7cib3uSvzVbyPh68=i63+_w7Pt1PHRVM-KCCb-XqH20jog@mail.gmail.com>
-Subject: Re: [PATCH v2 01/15] perf ftrace: select function/function_graph
- tracer automatically
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200703034856.12846-2-chris.ruehl@gtsys.com.hk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 7/2/20 8:48 PM, Chris Ruehl wrote:
+> Add support for DTS bindings to the shtc driver, use CONFIG_OF
+> to compile in the code if needed.
+> 
 
-On Sat, Jun 27, 2020 at 10:37 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> The '-g/-G' options have already implied function_graph tracer should be
-> used instead of function tracer. So the extra option '--tracer' can be
-> killed.
->
-> This patch changes the behavior as below:
->   - By default, function tracer is used.
->   - If '-g' or '-G' option is on, then function_graph tracer is used.
->   - The perf configuration item 'ftrace.tracer' is marked as deprecated.
->   - The option '--tracer' is marked as deprecated.
->   - The default filter for -G/-T is to trace all functions.
->
-> Here are some examples.
->
-> This will start tracing all functions using function tracer:
->   $ sudo perf ftrace
->
-> This will trace all functions using function graph tracer:
->   $ sudo perf ftrace -G
->
-> This will trace function vfs_read using function graph tracer:
->   $ sudo perf ftrace -G vfs_read
+Ah, here it is. The introducing patch should say something like "[PATCH 0/2]".
 
-As we support running a new task on the command line, it might
-confuse users whether it's an argument of -G option or a task to run.
-One can use -- to separate them but it's easy to miss..
-
-Thanks
-Namhyung
-
-
->
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
 > ---
->  tools/perf/Documentation/perf-config.txt |  5 -----
->  tools/perf/Documentation/perf-ftrace.txt |  2 +-
->  tools/perf/builtin-ftrace.c              | 19 ++++++++++++-------
->  3 files changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> index c7d3df5798e2..a25fee7de3b2 100644
-> --- a/tools/perf/Documentation/perf-config.txt
-> +++ b/tools/perf/Documentation/perf-config.txt
-> @@ -612,11 +612,6 @@ trace.*::
->                 "libbeauty", the default, to use the same argument beautifiers used in the
->                 strace-like sys_enter+sys_exit lines.
->
-> -ftrace.*::
-> -       ftrace.tracer::
-> -               Can be used to select the default tracer. Possible values are
-> -               'function' and 'function_graph'.
-> -
->  llvm.*::
->         llvm.clang-path::
->                 Path to clang. If omit, search it from $PATH.
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index b80c84307dc9..952e46669168 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -24,7 +24,7 @@ OPTIONS
->
->  -t::
->  --tracer=::
-> -       Tracer to use: function_graph or function.
-> +       Tracer to use: function_graph or function. This option is deprecated.
->
->  -v::
->  --verbose=::
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 2bfc1b0db536..c5718503eded 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -27,7 +27,6 @@
->  #include "util/cap.h"
->  #include "util/config.h"
->
-> -#define DEFAULT_TRACER  "function_graph"
->
->  struct perf_ftrace {
->         struct evlist           *evlist;
-> @@ -419,6 +418,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
->         if (strcmp(var, "ftrace.tracer"))
->                 return -1;
->
-> +       pr_warning("Configuration ftrace.tracer is deprecated\n");
->         if (!strcmp(value, "function_graph") ||
->             !strcmp(value, "function")) {
->                 ftrace->tracer = value;
-> @@ -459,7 +459,7 @@ int cmd_ftrace(int argc, const char **argv)
->  {
->         int ret;
->         struct perf_ftrace ftrace = {
-> -               .tracer = DEFAULT_TRACER,
-> +               .tracer = "function",
->                 .target = { .uid = UINT_MAX, },
->         };
->         const char * const ftrace_usage[] = {
-> @@ -469,7 +469,7 @@ int cmd_ftrace(int argc, const char **argv)
->         };
->         const struct option ftrace_options[] = {
->         OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
-> -                  "tracer to use: function_graph(default) or function"),
-> +                  "tracer to use: function or function_graph (This option is deprecated)"),
->         OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
->                    "trace on existing process id"),
->         OPT_INCR('v', "verbose", &verbose,
-> @@ -478,12 +478,14 @@ int cmd_ftrace(int argc, const char **argv)
->                     "system-wide collection from all CPUs"),
->         OPT_STRING('C', "cpu", &ftrace.target.cpu_list, "cpu",
->                     "list of cpus to monitor"),
-> -       OPT_CALLBACK('T', "trace-funcs", &ftrace.filters, "func",
-> -                    "trace given functions only", parse_filter_func),
-> +       OPT_CALLBACK_DEFAULT('T', "trace-funcs", &ftrace.filters, "func",
-> +                            "trace given functions using function tracer",
-> +                            parse_filter_func, "*"),
->         OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
->                      "do not trace given functions", parse_filter_func),
-> -       OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
-> -                    "Set graph filter on given functions", parse_filter_func),
-> +       OPT_CALLBACK_DEFAULT('G', "graph-funcs", &ftrace.graph_funcs, "func",
-> +                            "trace given functions using function_graph tracer",
-> +                            parse_filter_func, "*"),
->         OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
->                      "Set nograph filter on given functions", parse_filter_func),
->         OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
-> @@ -505,6 +507,9 @@ int cmd_ftrace(int argc, const char **argv)
->         if (!argc && target__none(&ftrace.target))
->                 ftrace.target.system_wide = true;
->
-> +       if (!list_empty(&ftrace.graph_funcs) || !list_empty(&ftrace.nograph_funcs))
-> +               ftrace.tracer = "function_graph";
+>  drivers/hwmon/shtc1.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+> index a0078ccede03..3bcabc1cbce8 100644
+> --- a/drivers/hwmon/shtc1.c
+> +++ b/drivers/hwmon/shtc1.c
+> @@ -14,6 +14,9 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/platform_data/shtc1.h>
+> +#ifdef CONFIG_OF
+
+No. Please no conditional includes.
+
+> +#include <linux/of.h>
+> +#endif
+>  
+>  /* commands (high precision mode) */
+>  static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+> @@ -196,6 +199,10 @@ static int shtc1_probe(struct i2c_client *client,
+>  	enum shtcx_chips chip = id->driver_data;
+>  	struct i2c_adapter *adap = client->adapter;
+>  	struct device *dev = &client->dev;
+> +#ifdef CONFIG_OF
+> +	struct device_node *np = dev->of_node;
+> +	u8 value;
+> +#endif
+>  
+>  	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>  		dev_err(dev, "plain i2c transactions not supported\n");
+> @@ -235,6 +242,20 @@ static int shtc1_probe(struct i2c_client *client,
+>  
+>  	if (client->dev.platform_data)
+>  		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
 > +
->         ret = target__validate(&ftrace.target);
->         if (ret) {
->                 char errbuf[512];
-> --
-> 2.25.1
->
+> +#ifdef CONFIG_OF
+
+Unnecessary ifdef. Selection of devicetree data or not can be made
+based on np != NULL. Also, if devictree data is available, platform
+data should be ignored to avoid confusion.
+
+> +	if (np) {
+> +		if (of_property_read_bool(np, "sensirion,blocking_io")) {
+> +			of_property_read_u8(np, "sensirion,blocking_io", &value);
+> +			data->setup.blocking_io = (value > 0) ? true : false;
+> +		}
+Why this complexity, and why not just make the property a boolean ?
+
+> +		if (of_property_read_bool(np, "sensicon,high_precision")) {
+> +			of_property_read_u8(np, "sensirion,high_precision", &value);
+> +			data->setup.high_precision = (value > 0) ? true : false;
+
+"sensicon,high_precision" should also be a boolean.
+
+> +		}
+> +	}
+> +#endif
+> +
+>  	shtc1_select_command(data);
+>  	mutex_init(&data->update_lock);
+>  
+> @@ -257,6 +278,15 @@ static const struct i2c_device_id shtc1_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, shtc1_id);
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id shtc1_of_match[] = {
+> +	{ .compatible = "sensirion,shtc1" },
+> +	{ .compatible = "sensirion,shtw1" },
+> +	{ .compatible = "sensirion,shtc3" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
+> +#endif
+>  static struct i2c_driver shtc1_i2c_driver = {
+>  	.driver.name  = "shtc1",
+>  	.probe        = shtc1_probe,
+> 
+Not sure how this works without setting of_match_table. I guess it just works
+accidentally because .id_table also provides a devicetree match. Still,
+of_match_table should be set.
+
+Guenter
+
