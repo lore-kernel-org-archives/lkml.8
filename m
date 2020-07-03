@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC95DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 395CB21556
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D002088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593795786;
-	bh=VtVahXR24bIQ7uZKPTBuNdjH+qDT1E7QMPYElGUQZMk=;
+	s=default; t=1593795790;
+	bh=m3e/FHb743juz8MYek0OvVhLTMbLckgasucbPdaxygo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sx6XJrn5brbH/WpOBtQnvDCIT4rNXKrgRm2Ba5iQYHp7QUk89whJ9BWU+8zl1RhsI
-	 GVOXMMoacfxvz8n9sdDoa4ly8FJhdb15nv9BX+6idN15mQFKMUJydQMR/KgUz8EW6g
-	 cckm2OX2xxJ3s1Kqice03QLLw/6WybIGPsQd3GJQ=
+	b=W0I9vrn2FcKWu2LqFYpUQqM7tHPhUwm/I0wpyRzc1yom804KcNddApkUdw7X8ZO6f
+	 wQFSrIN3Ta4kR5c18HGC2zkMIIWOe8I4I5i2sZtZKVxo6vRyWoDymt8hmJLIlEoyQp
+	 L9ylIH32PmbXSBLBceyIUWr17FnM/uXlkIPHgsmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGCRDF (ORCPT
+        id S1726800AbgGCRDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 13:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgGCRDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:03:02 -0400
+        id S1726768AbgGCRDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:03:05 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6E9208E4;
-        Fri,  3 Jul 2020 17:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0774620870;
+        Fri,  3 Jul 2020 17:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593795782;
-        bh=VtVahXR24bIQ7uZKPTBuNdjH+qDT1E7QMPYElGUQZMk=;
+        s=default; t=1593795785;
+        bh=m3e/FHb743juz8MYek0OvVhLTMbLckgasucbPdaxygo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jkXxwqjFMdCLzXd+2SYBs7TngFpP2CmsJ0N15TpRaVpAXyx37y36pzLGo/NlHUhtV
-         A/6SzgfAbFnAiv/hMjayfwaw7RwPjeMoptxhu0gjp1z0RKRi7E1TEn9veXi6ppILQ2
-         19Rmaj3jrboNkq+yyWqpEL+Pd51Cl+4MSIssZMRE=
+        b=VWcP9iqyLBv+86u0kYw4lUSLm+N0UmdFgSu2iLSK/GNJbApYwyDnhINaz+bNEs1p7
+         hMN7C4m0zSYIchwEG8Qlg7Nybl2H9E5LR33crsBr5uZqjHRo4Lrdk7IdDIhVUPkoSE
+         iyuR325fUMzGJ+5l9/AFowXNnZBgraNpJFaIUuF4=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     x86@kernel.org
 Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
         Juergen Gross <jgross@suse.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH entry v2 1/6] x86/entry/compat: Clear RAX high bits on Xen PV SYSENTER
-Date:   Fri,  3 Jul 2020 10:02:53 -0700
-Message-Id: <9d33b3f3216dcab008070f1c28b6091ae7199969.1593795633.git.luto@kernel.org>
+Subject: [PATCH entry v2 5/6] x86/ldt: Disable 16-bit segments on Xen PV
+Date:   Fri,  3 Jul 2020 10:02:57 -0700
+Message-Id: <92b2975459dfe5929ecf34c3896ad920bd9e3f2d.1593795633.git.luto@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1593795633.git.luto@kernel.org>
 References: <cover.1593795633.git.luto@kernel.org>
@@ -58,55 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the cleari the high bits of RAX after Xen PV joins the SYSENTER
-path so that Xen PV doesn't skip it.
+Xen PV doesn't implement ESPFIX64, so they don't work right.  Disable
+them.  Also print a warning the first time anyone tries to use a
+16-bit segment on a Xen PV guest that would otherwise allow it
+to help people diagnose this change in behavior.
 
-Arguably we should delete this code instead, but that would belong
-in the merge window.
+This gets us closer to having all x86 selftests pass on Xen PV.
 
-Fixes: ffae641f5747 ("x86/entry/64/compat: Fix Xen PV SYSENTER frame setup")
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/entry/entry_64_compat.S | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/x86/kernel/ldt.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64_compat.S b/arch/x86/entry/entry_64_compat.S
-index 381a6de7de9c..541fdaf64045 100644
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -57,15 +57,6 @@ SYM_CODE_START(entry_SYSENTER_compat)
+diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
+index 8748321c4486..34e918ad34d4 100644
+--- a/arch/x86/kernel/ldt.c
++++ b/arch/x86/kernel/ldt.c
+@@ -29,6 +29,8 @@
+ #include <asm/mmu_context.h>
+ #include <asm/pgtable_areas.h>
  
- 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
- 
--	/*
--	 * User tracing code (ptrace or signal handlers) might assume that
--	 * the saved RAX contains a 32-bit number when we're invoking a 32-bit
--	 * syscall.  Just in case the high bits are nonzero, zero-extend
--	 * the syscall number.  (This could almost certainly be deleted
--	 * with no ill effects.)
--	 */
--	movl	%eax, %eax
--
- 	/* Construct struct pt_regs on stack */
- 	pushq	$__USER32_DS		/* pt_regs->ss */
- 	pushq	$0			/* pt_regs->sp = 0 (placeholder) */
-@@ -80,6 +71,16 @@ SYM_CODE_START(entry_SYSENTER_compat)
- 	pushq	$__USER32_CS		/* pt_regs->cs */
- 	pushq	$0			/* pt_regs->ip = 0 (placeholder) */
- SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
++#include <xen/xen.h>
 +
+ /* This is a multiple of PAGE_SIZE. */
+ #define LDT_SLOT_STRIDE (LDT_ENTRIES * LDT_ENTRY_SIZE)
+ 
+@@ -543,6 +545,37 @@ static int read_default_ldt(void __user *ptr, unsigned long bytecount)
+ 	return bytecount;
+ }
+ 
++static bool allow_16bit_segments(void)
++{
++	if (!IS_ENABLED(CONFIG_X86_16BIT))
++		return false;
++
++#ifdef CONFIG_XEN_PV
 +	/*
-+	 * User tracing code (ptrace or signal handlers) might assume that
-+	 * the saved RAX contains a 32-bit number when we're invoking a 32-bit
-+	 * syscall.  Just in case the high bits are nonzero, zero-extend
-+	 * the syscall number.  (This could almost certainly be deleted
-+	 * with no ill effects.)
++	 * Xen PV does not implement ESPFIX64, which means that 16-bit
++	 * segments will not work correctly.  Until either Xen PV implements
++	 * ESPFIX64 and can signal this fact to the guest or unless someone
++	 * provides compelling evidence that allowing broken 16-bit segments
++	 * is worthwhile, disallow 16-bit segments under Xen PV.
 +	 */
-+	movl	%eax, %eax
++	if (xen_pv_domain()) {
++		static DEFINE_MUTEX(xen_warning);
++		static bool warned;
 +
- 	pushq	%rax			/* pt_regs->orig_ax */
- 	pushq	%rdi			/* pt_regs->di */
- 	pushq	%rsi			/* pt_regs->si */
++		mutex_lock(&xen_warning);
++		if (!warned) {
++			pr_info("Warning: 16-bit segments do not work correctly in a Xen PV guest\n");
++			warned = true;
++		}
++		mutex_unlock(&xen_warning);
++
++		return false;
++	}
++#endif
++
++	return true;
++}
++
+ static int write_ldt(void __user *ptr, unsigned long bytecount, int oldmode)
+ {
+ 	struct mm_struct *mm = current->mm;
+@@ -574,7 +607,7 @@ static int write_ldt(void __user *ptr, unsigned long bytecount, int oldmode)
+ 		/* The user wants to clear the entry. */
+ 		memset(&ldt, 0, sizeof(ldt));
+ 	} else {
+-		if (!IS_ENABLED(CONFIG_X86_16BIT) && !ldt_info.seg_32bit) {
++		if (!ldt_info.seg_32bit && !allow_16bit_segments()) {
+ 			error = -EINVAL;
+ 			goto out;
+ 		}
 -- 
 2.25.4
 
