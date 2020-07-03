@@ -2,129 +2,187 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E92C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3816DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 128A120723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CE52073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MCK1vOn6";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="taKPPMfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgGCJXu (ORCPT
+        id S1726408AbgGCJYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCJXu (ORCPT
+        Fri, 3 Jul 2020 05:24:03 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:45979 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgGCJYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:23:50 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE240C08C5C1;
-        Fri,  3 Jul 2020 02:23:49 -0700 (PDT)
-Received: from [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f] (unknown [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7F7042A62F5;
-        Fri,  3 Jul 2020 10:23:48 +0100 (BST)
-Subject: Re: [PATCH 1/2] dt-bindings: sound: fsl-asoc-card: add new compatible
- for I2S slave
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        Fabio Estevam <festevam@gmail.com>
-References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
- <20200702141114.232688-2-arnaud.ferraris@collabora.com>
- <20200702143145.GG4483@sirena.org.uk>
- <5de5ea5b-0716-8ed1-28b0-9ad3da7a2d47@collabora.com>
- <20200702154207.GK4483@sirena.org.uk>
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
- 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
- xZQG6fKWuIur3RI=
-Message-ID: <fe4e71b2-2304-647d-f737-dd7e8f2e0657@collabora.com>
-Date:   Fri, 3 Jul 2020 11:23:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200702154207.GK4483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
+        Fri, 3 Jul 2020 05:24:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593768241; x=1625304241;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=5RRDDc553eO+hW1ui0XqMbC2EZuqrcJelHLE3D27X6c=;
+  b=MCK1vOn6jzAlxR1tmE8J03zAYbjUDTDG5FmfCOkDpM5dpA8iwwyzlLxm
+   9lMqVzcgVmoNDKw/u6PQp6w8DZZccgZRN1MoY90h/3A4dmLbc6n+u6B/D
+   K0mxXyoneoz2GKXJzhDAYpoNxl9kE4vqpzd/QK4WeSp6pRpc+bgfFe7hO
+   NYdXMTf/DZuA4YABpAuSpFKyvCp1mp+D/qgoNKCOqQRrLqw9jask2QnKr
+   UQiUWLI3dJLTovuhiDiOP467U2bgIspXYWthgkRXYnd7At1R053Cmeu5a
+   X31kqoRnRxxlpktYEmuXUfe5b6vAWIkfSQpXDex4cBnprRretP660+7D3
+   w==;
+IronPort-SDR: tjQnKMQ8wdEWGrFN/sgqWcTqi8xnS/yevtDBUBT8CyrWk/Q0kqJ2Te4+dBB+mvD+0pu/kk9zGL
+ m2LvYk5WfH933cpo4f2sWg+IL0bH7pPK2hNWfF8cKTuxPpcXNPvkOhedrsRo7LKiKx1yg1H0nv
+ CaYm/9r5IfL35ji0IhASmKPiLt+P9ThKFotfTuYVu6lsqvlcjXhXDc98L3aRHqHIayGqJc2c06
+ ckHOb1UYD13HID3U9dZlW/ybR5yr6fxPWsNreE69w1VaBkky6CPQaH9owYbPcuZfP+YIvavN8j
+ dgw=
+X-IronPort-AV: E=Sophos;i="5.75,307,1589212800"; 
+   d="scan'208";a="142911590"
+Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2020 17:23:59 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EnmTh6QpEkOAbsDVT+Rdv8cK25fEABGAqPuxcUpxLD0PbAviAO87s8fGpw2vsrJ9f1D5u1x+g6jKCFP8E8iE8r6IgqZhm1tPd7Lu7NRwrjS1IJe8KvBuSxnRv2HVWGl7nJd0U4UTgcXpj0zH/ddRRWNhO1ttQQ0MmF8rMJQHyFpv4T2Gzm8w1miKYpyg74zr0fqFc2pFE1U2vFrGUpl0IEvztVw9294EKuifxJCQsCMe41qENH7OYkAUQ/UnBl1Xizblu+QErO43pEbgIY52fsu4cqJh+P6ou6BhMtMf/Tl5hvsV/iO7a/Gv2/WZkPBSPe9kqPw0f66P3s75hziscg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wJ1qNHUOhykYDN293J5yXrC80m7swQRsB9T8yIfPCGQ=;
+ b=hLWGscA9L1UoKrH3H1ltLbdQHitQ2e0ruFTV+XpJ0TaAUTO8urJVLijJBKl2eMiyw8fIXPnb75AdxXPhFtEl3LZzJjIW7Ai882ArHbjSf8ZnDbH5bpnHDri/jv5ExrO/jZdmW9wQ3UrFuHh4XPJtdWz0uo91VPAqtZFWF211tRmu+cM+bakhwd/OLxNzA3ZhVVjLkIk0i13/teXTsSVGey5bSeJBE4UwRFhisL43dMqPbg1NQXnJXdbQqV7BPO4uDSraP231ggwhtjFjdTtuONmYeOSB2gecrAh/GnX/0mwQl4YmJO71zB+41zTVX7lAXkfrYAeP756qEIKGJakb1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wJ1qNHUOhykYDN293J5yXrC80m7swQRsB9T8yIfPCGQ=;
+ b=taKPPMfGJ/2bZlpPmbT8gTebPDeFIPa860KnlnpL8GKi8G04IUJO/+XiBMiHIiR6aqvspYWNRtF+Wzq+yiKpGKU47dMViCyra+x02MdubT1NECj8bxllHS+tlOZD3E0DzBkreSHO6dfeH8P0eZwvRFiyVXK9620zWWzSo6NpRG0=
+Received: from BYAPR04MB5112.namprd04.prod.outlook.com (2603:10b6:a03:45::10)
+ by BYAPR04MB3829.namprd04.prod.outlook.com (2603:10b6:a02:ab::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 3 Jul
+ 2020 09:23:56 +0000
+Received: from BYAPR04MB5112.namprd04.prod.outlook.com
+ ([fe80::a442:4836:baba:c84b]) by BYAPR04MB5112.namprd04.prod.outlook.com
+ ([fe80::a442:4836:baba:c84b%6]) with mapi id 15.20.3153.028; Fri, 3 Jul 2020
+ 09:23:55 +0000
+From:   Niklas Cassel <Niklas.Cassel@wdc.com>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+CC:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        =?iso-8859-1?Q?Javier_Gonz=E1lez?= <javier@javigon.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] block: add max_open_zones to blk-sysfs
+Thread-Topic: [PATCH v2 1/2] block: add max_open_zones to blk-sysfs
+Thread-Index: AQHWUJ1jh+E7Ih03MkW/NOTP37wCxaj1lhuA
+Date:   Fri, 3 Jul 2020 09:23:55 +0000
+Message-ID: <20200703092353.GA33841@localhost.localdomain>
+References: <20200702181922.24190-1-niklas.cassel@wdc.com>
+ <20200702181922.24190-2-niklas.cassel@wdc.com>
+ <SN4PR0401MB359886C77E3711DAF16D9B9F9B6A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+In-Reply-To: <SN4PR0401MB359886C77E3711DAF16D9B9F9B6A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: wdc.com; dkim=none (message not signed)
+ header.d=none;wdc.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [85.224.200.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b3e9fd44-0c0f-435b-bf35-08d81f32cf3b
+x-ms-traffictypediagnostic: BYAPR04MB3829:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB38291132D01F69977F6C12EFF26A0@BYAPR04MB3829.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 045315E1EE
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bFjqWROSy2D7WmhgxniYnkzie7+UipmD2JdwtMXzdbE8jgX6IbrU1zoGUafCO1UbjFN9t4mUcasnzm1m3wHzjVOvLts7fH01asizl8ib/MLWPDa/X/E/SEYr/4UlPY5eAQ757APu5bMVnjVEyRJG4KnrZ821WStURlcg8pB5rgqy5KiFA2KgBqhBQis/UUQ7vPPtahe/M3htZs0hu1DWsfKbXZZgo6QZ128aHK9fMoa13t8xJoyO3ASx2jBah7tRpP3oErx/vSowNSTKKcGXO3WDxkkeKSRIXA40hhuUe7/xEK+URBTiMoI9U2yA0mRsKYH4eVUOU04CKF6CJKcMkg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB5112.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(376002)(396003)(39860400002)(136003)(54906003)(186003)(316002)(8676002)(71200400001)(2906002)(1076003)(6486002)(478600001)(9686003)(66556008)(66476007)(66946007)(64756008)(66446008)(6512007)(76116006)(33656002)(91956017)(8936002)(5660300002)(4326008)(6506007)(6636002)(26005)(6862004)(53546011)(86362001)(83380400001)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 32H4xPJ3L2YlZh9qgtgerAfts/5hwAhNUagsJ+aXnY5dielELAh5MoQCKvyEcf9guIPA++3H7XGJESiJpulk1klPoUZ3xaYQDzs21OOtzdRFjDFt95De70nQYDh47Qf1gRVEdqXsEWOx6D672D+Spv8l8j+I8Nvgtk3/CPjBrq5QTl6RZwQ2WhaItGZjy39qDk4u/7G9AvK4ipThAQ6Ax6DwXw7jE47kA08S3M3xAV9DttbQPh0i9micEIZAkkROaoUmFfBOxB13yIvynOCjm2aSj0S+Fir5AugBM6ghfagYZOUB9Vfj//FDFrWG2kmvoqYVAbFMpwuCrO6HknJWtj5essLkQbDXULkZBeWo8FEjAiUX3GGHWF6TrzdfegdI/5NTR79yXliJOkGtY8TYK+9Azme9Ke4q4KSrioUCsm+NczQYxnNLplXgTTzMkWXfwYNj4TFl9x9Atr+BJ/Ikas+A7+c8j7FSYHqx53yQzG4D1vhpWUljVb1SIs1wu0dz
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <39B52203871A9645AF607E0FAD048CBA@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB5112.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3e9fd44-0c0f-435b-bf35-08d81f32cf3b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 09:23:55.6941
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 82BdjeNZOMJXtUTaeev0lDrmyaREjwsr5Cd324KrWLuVMPIx+BVKzUJeDeXamL3oe5mpMXDOs7QM9fpD2I1bxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 08:22:45AM +0000, Johannes Thumshirn wrote:
+> On 02/07/2020 20:20, Niklas Cassel wrote:
+> > Documentation/block/queue-sysfs.rst |  7 +++++++
+> >  block/blk-sysfs.c                   | 15 +++++++++++++++
+> >  drivers/nvme/host/zns.c             |  1 +
+> >  drivers/scsi/sd_zbc.c               |  4 ++++
+> >  include/linux/blkdev.h              | 16 ++++++++++++++++
+> >  5 files changed, 43 insertions(+)
+>=20
+> Sorry I haven't noticed before, but you forgot null_blk.
+
+Hello Johannes,
+
+Actually, I haven't forgotten about null_blk :)
+
+The problem with null_blk is that, compared to these simple patches that
+simply exposes the Max Open Zones/Max Active Zones, null_blk additionally
+has to keep track of all the zone accounting, and give an error if any
+of these limits are exceeded.
+
+null_blk right now follows neither the ZBC nor the ZNS specification
+(even though it is almost compliant with ZBC). However, since null_blk
+is really great to test with, we want it to support Max Active Zones,
+even if that concept does not exist in the ZBC standard.
+
+To add to the problem, open() does not work exactly the same in ZBC and
+ZNS. In ZBC, the device always tries to close an implicit zone to make
+room for an explicit zone. In ZNS, a controller that doesn't do this is
+fully compliant with the spec.
+
+So now for null_blk, you have things like zones being implicit closed when
+a new zone is opened. And now we will have an additional limit (Max Active
+Zones), that we need to consider before we can even try to close a zone.
 
 
-Le 02/07/2020 à 17:42, Mark Brown a écrit :
-> On Thu, Jul 02, 2020 at 05:28:03PM +0200, Arnaud Ferraris wrote:
->> Le 02/07/2020 à 16:31, Mark Brown a écrit :
-> 
->>> Why require that the CODEC be clock master here - why not make this
->>> configurable, reusing the properties from the generic and audio graph
->>> cards?
-> 
->> This is partly because I'm not sure how to do it (yet), but mostly
->> because I don't have the hardware to test this (the 2 CODECs present on
->> my only i.MX6 board are both clock master)
-> 
-> Take a look at what the generic cards are doing, it's a library function 
-> asoc_simple_parse_daifmt().  It's not the end of the world if you can't
-> test it properly - if it turns out it's buggy somehow someone can always
-> fix the code later but an ABI is an ABI so we can't change it.
-> 
+I've spent a couple of days trying to implement this already, and I think
+that I have a way forward. However, considering that vacations are coming
+up, and that I have a bunch of other stuff that I need to do before then,
+I'm not 100% sure that I will be able to finish it in time for the coming
+merge window.
 
-Thanks for the hints, I'll look into it.
+Therefore, I was hoping that we could merge this series as is, and I will
+send out the null_blk changes when they are ready, which might or might
+not make it for this merge window.
 
-Regards,
-Arnaud
+In the meantime, MAR/MOR properties for null_blk will be exposed as 0,
+which means "no limit". (Which is the case when a zoned block device driver
+doesn't do an explicit call to blk_queue_max_{open,active}_zones()).
+
+
+Kind regards,
+Niklas=
