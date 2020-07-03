@@ -2,85 +2,84 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33182C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001B2208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593761641;
-	bh=4X8EptKuVmIRHczWnGAk4f5jxz5Jmp/CxW9Qyr7SLlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=To5CVYRAG+dqVvut98iK6n1Ck5ba9+HbU3T4R+wJf1zCrxqlGNydccMtqVbk2SZiq
-	 52Ait7xujfiMh0pVaHKe1iNPegndiYndi5KAFOL94kvTAv8WJPaR6HtB8Y+cStt2nb
-	 sNVIzsMqd0tAPIo78DnN4fkIgcUDhlYsug2N3amI=
+	by mail.kernel.org (Postfix) with ESMTP id B917420890
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgGCHd7 (ORCPT
+        id S1726265AbgGCHes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCHd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:33:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC4C20890;
-        Fri,  3 Jul 2020 07:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593761638;
-        bh=4X8EptKuVmIRHczWnGAk4f5jxz5Jmp/CxW9Qyr7SLlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xP29TgNt/OYLTmQo4oRy8S8lE2ZUB06r1jDPmGiiEtKUFwINtTBM6t81FaTmkRTna
-         nV00EPBneiU/XK5Wb3wHVip36XEc45M/PDr2kZtuGUs1wao1Sb4zJtQtOnMh+1rFqw
-         1wv7QzdDVlHsueI0F4hJsDqJecy8t439djzKwkzw=
-Date:   Fri, 3 Jul 2020 09:34:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Peter Korsgaard <jacmet@sunsite.dk>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH 28/30] usb: c67x00: c67x00-hcd: Demote obvious misuse of
- kerneldoc to standard comment blocks
-Message-ID: <20200703073402.GA2336858@kroah.com>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
- <20200702144625.2533530-29-lee.jones@linaro.org>
+        Fri, 3 Jul 2020 03:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgGCHer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:34:47 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2144C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:34:47 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1jrGDc-0003cT-Da; Fri, 03 Jul 2020 09:34:44 +0200
+Subject: Re: [PATCH v2] clk: at91: add sama5d3 pmc driver
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Karl_Rudb=c3=a6k_Olsen?= <karl@micro-technic.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200110223033.1261791-1-alexandre.belloni@bootlin.com>
+ <37d11358-d3b5-10a1-72a3-93a03a6c1ea6@pengutronix.de>
+ <20200622214759.GK131826@piout.net>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <043970b9-6cc6-e5c6-b5b1-e0f1a9799ae1@pengutronix.de>
+Date:   Fri, 3 Jul 2020 09:34:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702144625.2533530-29-lee.jones@linaro.org>
+In-Reply-To: <20200622214759.GK131826@piout.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:46:23PM +0100, Lee Jones wrote:
-> No attempt has been made to document any of the functions here.
+Hello Alexandre,
+
+On 6/22/20 11:47 PM, Alexandre Belloni wrote:
+> Hi,
 > 
-> Fixes the following W=1 kernel build warning(s):
+> On 22/06/2020 23:24:45+0200, Ahmad Fatoum wrote:
+>>> +	regmap = syscon_node_to_regmap(np);
+>>
+>> Shouldn't this be device_node_to_regmap for the same reasons outlined in your
+>> 6956eb33 ("clk: at91: fix possible deadlock") commit?
+>>
+>> Same question for at91sam9g45.c, sam9x60.c and at91sam9n12.c.
+>>
 > 
->  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'sie' not described in 'c67x00_hcd_irq'
->  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'int_status' not described in 'c67x00_hcd_irq'
->  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'msg' not described in 'c67x00_hcd_irq'
->  drivers/usb/c67x00/c67x00-hcd.c:267: warning: Function parameter or member 'hcd' not described in 'c67x00_hcd_start'
->  drivers/usb/c67x00/c67x00-hcd.c:279: warning: Function parameter or member 'hcd' not described in 'c67x00_hcd_stop'
-> 
-> Cc: Peter Korsgaard <jacmet@sunsite.dk>
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/usb/c67x00/c67x00-hcd.c | 6 +++---
->  drivers/usb/class/cdc-wdm.c     | 2 +-
+> Agreed, I guess you can send a patch fixing all the instances.
 
-You also tried to fix up the cdc-wdm.c whitespace error in this patch :(
+I just sent out a patch for those 4 files. I don't know if this issue is equally
+applicable to the dt-compat.c code, so I left that one as is.
 
-I've dropped this one from the queue as well.
+Cheers,
+Ahmad
 
-thanks,
-
-greg k-h
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
