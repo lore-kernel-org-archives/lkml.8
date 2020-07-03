@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B115C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5837FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23155208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D42E208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGCDyN (ORCPT
+        id S1726442AbgGCDyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:54:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7366 "EHLO huawei.com"
+        Thu, 2 Jul 2020 23:54:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7364 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726338AbgGCDyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:54:02 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0D2316C849A0024B651F;
-        Fri,  3 Jul 2020 11:54:00 +0800 (CST)
+        id S1725915AbgGCDyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:54:18 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DF5AA8E37ECDC634B836;
+        Fri,  3 Jul 2020 11:53:59 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 11:53:53 +0800
+ 14.3.487.0; Fri, 3 Jul 2020 11:53:49 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>, <dyoung@redhat.com>,
         <bhe@redhat.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
@@ -38,9 +38,9 @@ CC:     <guohanjun@huawei.com>, <xiexiuqi@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH v10 5/5] kdump: update Documentation about crashkernel on arm64
-Date:   Fri, 3 Jul 2020 11:58:16 +0800
-Message-ID: <20200703035816.31289-6-chenzhou10@huawei.com>
+Subject: [PATCH v10 2/5] arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+Date:   Fri, 3 Jul 2020 11:58:13 +0800
+Message-ID: <20200703035816.31289-3-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200703035816.31289-1-chenzhou10@huawei.com>
 References: <20200703035816.31289-1-chenzhou10@huawei.com>
@@ -54,91 +54,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we support crashkernel=X,[low] on arm64, update the Documentation.
-We could use parameters "crashkernel=X crashkernel=Y,low" to reserve
+Crashkernel=X tries to reserve memory for the crash dump kernel under
+4G. If crashkernel=X,low is specified simultaneously, reserve spcified
+size low memory for crash kdump kernel devices firstly and then reserve
 memory above 4G.
+
+Suggested by James, just introduced crashkernel=X,low to arm64. As memtioned
+above, if crashkernel=X,low is specified simultaneously, reserve spcified
+size low memory for crash kdump kernel devices firstly and then reserve
+memory above 4G, which is much simpler.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 ---
- Documentation/admin-guide/kdump/kdump.rst       | 14 ++++++++++++--
- Documentation/admin-guide/kernel-parameters.txt | 17 +++++++++++++++--
- 2 files changed, 27 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/setup.c |  8 +++++++-
+ arch/arm64/mm/init.c      | 31 +++++++++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 2da65fef2a1c..e80fc9e28a9a 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -299,7 +299,15 @@ Boot into System Kernel
-    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
-    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 93b3844cf442..4dc51a2ac012 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -238,7 +238,13 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		/*
++		 * Userspace will find "Crash kernel" region in /proc/iomem.
++		 * Note: the low region is renamed as Crash kernel (low).
++		 */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++				crashk_low_res.end <= res->end)
++			request_resource(res, &crashk_low_res);
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e93cfc7c47a..ce7ced85f5fb 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -81,6 +81,7 @@ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size;
+ 	int ret;
++	phys_addr_t crash_max = arm64_dma32_phys_limit;
  
--   On x86 and x86_64, use "crashkernel=64M@16M".
-+   On x86 use "crashkernel=64M@16M".
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+@@ -88,12 +89,38 @@ static void __init reserve_crashkernel(void)
+ 	if (ret || !crash_size)
+ 		return;
+ 
++	ret = reserve_crashkernel_low();
++	if (!ret && crashk_low_res.end) {
++		/*
++		 * If crashkernel=X,low specified, there may be two regions,
++		 * we need to make some changes as follows:
++		 *
++		 * 1. rename the low region as "Crash kernel (low)"
++		 * In order to distinct from the high region and make no effect
++		 * to the use of existing kexec-tools, rename the low region as
++		 * "Crash kernel (low)".
++		 *
++		 * 2. change the upper bound for crash memory
++		 * Set MEMBLOCK_ALLOC_ACCESSIBLE upper bound for crash memory.
++		 *
++		 * 3. mark the low region as "nomap"
++		 * The low region is intended to be used for crash dump kernel
++		 * devices, just mark the low region as "nomap" simply.
++		 */
++		const char *rename = "Crash kernel (low)";
 +
-+   On x86_64, use "crashkernel=Y" to select a region under 4G first, and
-+   fall back to reserve region above 4G.
-+   We can also use "crashkernel=X,high" to select a region above 4G, which
-+   also tries to allocate at least 256M below 4G automatically and
-+   "crashkernel=Y,low" can be used to allocate specified size low memory.
-+   Use "crashkernel=Y@X" if we really have to reserve memory from specified
-+   start address X.
++		crashk_low_res.name = rename;
++		crash_max = MEMBLOCK_ALLOC_ACCESSIBLE;
++		memblock_mark_nomap(crashk_low_res.start,
++				    resource_size(&crashk_low_res));
++	}
++
+ 	crash_size = PAGE_ALIGN(crash_size);
  
-    On ppc64, use "crashkernel=128M@32M".
- 
-@@ -316,8 +324,10 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
--   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   On arm64, use "crashkernel=Y[@X]". Note that the start address of
-    the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-+   If crashkernel=Z,low is specified simultaneously, reserve spcified size
-+   low memory firstly and then reserve memory above 4G.
- 
- Load the Dump-capture Kernel
- ============================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..58a731eed011 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -722,6 +722,9 @@
- 			[KNL, x86_64] select a region under 4G first, and
- 			fall back to reserve region above 4G when '@offset'
- 			hasn't been specified.
-+			[KNL, arm64] If crashkernel=X,low is specified, reserve
-+			spcified size low memory firstly, and then reserve memory
-+			above 4G.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
-@@ -746,13 +749,23 @@
- 			requires at least 64M+32K low memory, also enough extra
- 			low memory is needed to make sure DMA buffers for 32-bit
- 			devices won't run out. Kernel would try to allocate at
--			at least 256M below 4G automatically.
-+			least 256M below 4G automatically.
- 			This one let user to specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
--
-+			[KNL, arm64] range under 4G.
-+			This one let user to specify own low range under 4G
-+			for crash dump kernel instead.
-+			Be different from x86_64, kernel reserves specified size
-+			physical memory region only when this parameter is specified
-+			instead of trying to reserve at least 256M below 4G
-+			automatically.
-+			Use this parameter along with crashkernel=X when we want
-+			to reserve crashkernel above 4G. If there are devices
-+			need to use ZONE_DMA in crash dump kernel, it is also
-+			a good choice.
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
- 
+ 	if (crash_base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+-				crash_size, SZ_2M);
++		crash_base = memblock_find_in_range(0, crash_max, crash_size,
++				SZ_2M);
+ 		if (crash_base == 0) {
+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 				crash_size);
 -- 
 2.20.1
 
