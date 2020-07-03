@@ -2,224 +2,155 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97146C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F65920826
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5D9206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jSKPhcUS"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="LX8rAXw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgGCJa1 (ORCPT
+        id S1726374AbgGCJdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGCJa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:30:26 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599E6C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:30:26 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id b24so2344500uak.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 02:30:26 -0700 (PDT)
+        Fri, 3 Jul 2020 05:33:11 -0400
+Received: from mail-am6eur05on2086.outbound.protection.outlook.com ([40.107.22.86]:52608
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725764AbgGCJdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:33:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IQB8lmj5TmOpxVPAcAE8EVLdEDuBqDG7uM5uolZIsCf+6fEhV0f3ZnWOGwlBc0JC7A8H1uq1ZBtM8hEhGlVzvxDHLRPybsl1WN+5KOyRE/Gj7oYuzIdgY3TXQAZvtMslajUB2EK5f40O/gCTmDPnXVddZwIdwi8IiFyGzhf2q+nDxO8bZzuxBwuJMmgp7E3bqTMuINYdEZ9e4CIrKpChudbolBP4Pslxoy0dVCFhg7s1//Lx+7P1ArrdNKXhke+Vslvtx+xZFqhlfsGc7pKKVbkbl4JmeIdQhtjo9E37sdHdRyJAjNsjbDeGoPpclEgt6HgfHOBW0Tp2qT7d7mRGFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7g2mmyzLQlUP83pMVvKeJyFpaXTOgi8ncEVyGIcGU7U=;
+ b=PzEz8y+nLYiRUh0e4PR37QbJm/fBf25jLXzZARa/yZNeIcj4iyxf/GTjc9ZlB+wfPzjDJVnPMrWKP2LSx1yh9fflv5cVXyXYq6A0I1FIzJBO7xBCB2+nyyCNq/tUQj800uMu3Uy4Aq2AvASbhgf0ZD6N1VwXaDZA7pmxoG81PU5jy7xXHuT+co9Xgyre/eMpyzzqJEFa17G4rtv/FwVtjX9ty4bR9fb5hX1KfwM4wx2//IKfnjl+Tf6SeluWk0DjKP4k7iMFcGoPFZ7b8kfFcFB5KBcI9I1P5cmStylboOpySSvuxLSR6sf1RI/tMrJlZKl1A8h3z2BPQV3rH+cccQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xcsxPutAbHr/mERBmd96crXO04cWIJ7hy0vhKC8AGU0=;
-        b=jSKPhcUSHMEypMHqbJIvmqOdB6MoqhYFP+UdXIWdtUaD5gMAGiBLLVSSk6x6AL3TWl
-         6KStgsjU4ggE96icmj3wUf04KgjO16HfJNYs0ErJB0WVNxka5bVctbuzetiOh2qTRYOc
-         ztOOijNjZdXAobpi0yRAXmIN4H2k9op/m1EKS5In5/rCwbH0zH2U2KGLrvxfmy1CaCRO
-         4roXMw790D/JRbOYPzdxliRtoxjOO9nqC3+sG1bnMtygejon4ygJn4bkjuHizMEJclXA
-         NGe+IuRrwNrtpLhjztRDVB+0oFultaE3bLqLytJIGj+VmnyUXSw82Zx82PaZeS7oybez
-         gvYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xcsxPutAbHr/mERBmd96crXO04cWIJ7hy0vhKC8AGU0=;
-        b=FCs0lfTE3FVYLl8USEalrwRoiawSp2BQTifinnvbKkweiE5kWqh5GtmabeHq/RX2aN
-         JXSVjtEq9+G7hLh7DVGHEhkaFwMhyqwYTWmpOHg8IPeHI01dwfwlxSs5iAEqWLtRYziS
-         sfqDgqxNrRy98W1diVtxt0xmxAG60V4gvGpMhFu1dox8g+r8fz8m8OX6PEVmkQcckBQY
-         uZ8r+WalakvgNIv4zGi1McOhwzFXoor28cWHhZrmE+qMBTUxAtJP4nRFhHIMmZtTS2q4
-         SiRJr2vSdSJ8W/EiCrVPEiYnsSp13AXP/3aQvFWiGtOHfjhJtxUnkwSpvik/N3mqDUH7
-         1oAQ==
-X-Gm-Message-State: AOAM53364eBvYE4JQ1RZC6gFsHtxZHygtAXEqItA3tHfJE6AjpSrzYtc
-        qVwGFdlZP2zYTrs3AbqN5JL8rzgVdsMqZR0VbIcgdg==
-X-Google-Smtp-Source: ABdhPJw9s0J0hfM2gTo7WpZ1wTpHvdFC6pFKsOmZ7sp1LL+8H/6oQSpOVgupyqgG9KWLLbaasxoM8UImu03yB5/tEbQ=
-X-Received: by 2002:ab0:6c4b:: with SMTP id q11mr23540206uas.94.1593768625138;
- Fri, 03 Jul 2020 02:30:25 -0700 (PDT)
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7g2mmyzLQlUP83pMVvKeJyFpaXTOgi8ncEVyGIcGU7U=;
+ b=LX8rAXw9IGUqPghmIwhx5bq74Pey9+ed2vzfFSfkC2aEZfa67hd3THlu/38nlPrQLBTvu9LrIWmwhjUMsWF/dRB2ZPmYI+0JL2ay/TPzHbeYlgWQFpBTFyWbyhmjMs3ZfSXQKbWGlBng1JjCUUW2fGmM6bAR3WPhZn6tD07CK6M=
+Received: from DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:65::9)
+ by DB8PR10MB3768.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:148::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Fri, 3 Jul
+ 2020 09:33:07 +0000
+Received: from DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::314b:f930:76b1:11c5]) by DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::314b:f930:76b1:11c5%10]) with mapi id 15.20.3131.029; Fri, 3 Jul 2020
+ 09:33:06 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 04/11] ASoC: codecs: da7219: fix 'defined but not used'
+ warning
+Thread-Topic: [PATCH 04/11] ASoC: codecs: da7219: fix 'defined but not used'
+ warning
+Thread-Index: AQHWT9TglCRPh6aF50mArntijWazBaj1l1Kw
+Date:   Fri, 3 Jul 2020 09:33:06 +0000
+Message-ID: <DB6PR1001MB1096535996028B7DE0D136DC806A0@DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200701182422.81496-1-pierre-louis.bossart@linux.intel.com>
+ <20200701182422.81496-5-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20200701182422.81496-5-pierre-louis.bossart@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none
+ header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.64]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 379ba017-6421-494b-ec74-08d81f341774
+x-ms-traffictypediagnostic: DB8PR10MB3768:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR10MB3768C708CEF52F084651389FA76A0@DB8PR10MB3768.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:200;
+x-forefront-prvs: 045315E1EE
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wcyr+VA/mh7RjNH1rv+VoPU5FAOsLzV6gmXSZK5mW1DhByxvYAuruWbqvWALloIBWZdyI8LJLqmIC2vfl97L84yP8THDPjoSZaCas+EMaJF0k/I9Eg5wHS5a5eBx9MvYQ8xVYFS9vpu9aC2Hc6zzif8LXaFILSNfCgReIbimzcI5a8Y3QAondCg/F35ZBpFqHDwVleD+7riKrFnen7PFWwY8oZ7ZzApbd7e8zbxmubpPJEqT1AwKY8CF4B6flXe08noFjzDQVljdM8SRw9JRT+bc4ZTwRfkyhOwsmOmrMU51qohTuBA2sGlurCwZPM+c1PH24YdNI/OEnRIuVHPtOg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(86362001)(83380400001)(316002)(4326008)(55016002)(478600001)(9686003)(110136005)(33656002)(71200400001)(54906003)(26005)(8936002)(66476007)(7696005)(66946007)(66446008)(64756008)(66556008)(186003)(5660300002)(76116006)(2906002)(8676002)(52536014)(6506007)(53546011)(55236004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: VMmVviWtJ3R6R4fKWadIRAv/6x+1GzyhD6+6MatwpLhGPut3XpvWr8se80dUfYJiyMxfYAOER9AvVKBDZPFXfXGQk/n9qPtwysXIsNJyjy28zF9CulIYbli5woaN02/X2aY2uWVmm91ejChxc8E6qlQwe4T1mN0UBRPoTzieLIgKNBxlkyGZtcW8tBlr38IbZrmHxFNXKEkiCpjSG3eU0USosbb/qHI4hib5s/ro8BNpLcskKcRxon+qMLMi5BW+4V8ypJhTuDpTvnLEquyESlZ1PvJbOlzT9PUXiufLUnzbw/TPMDn1ZBqPQo3RxmreOitpwv5YMxyWzi08gFzs8idrmvY1fBs1gOd+x4/yUUo1kTCn/I6n6RI6yPHEwbVyZLtphGhF+COlYTcQKPlmxeVKd5OTwXlGxPO5DnUHZOjJDwvHTQNvfmFUOolZTG+T4HjjLy1hA4EY1ZZ8snz79jh/wdHqzOxXLNcsS7kG61A=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200703085309.32166-1-daniel.lezcano@linaro.org> <20200703085309.32166-4-daniel.lezcano@linaro.org>
-In-Reply-To: <20200703085309.32166-4-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 3 Jul 2020 15:00:14 +0530
-Message-ID: <CAHLCerPicxHbx1K+riKeuDkXQ4yNDAimrK0TN780c3SsXL7q6g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] thermal: core: Add notifications call in the framework
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 379ba017-6421-494b-ec74-08d81f341774
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 09:33:06.3385
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qoYziLgV34Y2c7edlV0PbsveeSRUVB5bER2lMVYxyI0X1lunKX+MTnguBLfk05WP2W6f3qskd1xM1rNJSihWt6gHx4ujZlFoJIHbq+kWqv4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 2:23 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> The generic netlink protocol is implemented but the different
-> notification functions are not yet connected to the core code.
->
-> These changes add the notification calls in the different
-> corresponding places.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On 01 July 2020 19:24, Pierre-Louis Bossart wrote:
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
+> fix W=3D1 warning
+>=20
+> sound/soc/codecs/da7219.c:1711:36: warning: 'da7219_acpi_match'
+> defined but not used [-Wunused-const-variable=3D]
+>  1711 | static const struct acpi_device_id da7219_acpi_match[] =3D {
+>       |                                    ^~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com=
+>
 > ---
->  drivers/thermal/thermal_core.c    | 21 +++++++++++++++++++++
->  drivers/thermal/thermal_helpers.c | 11 +++++++++--
->  drivers/thermal/thermal_sysfs.c   | 15 ++++++++++++++-
->  3 files changed, 44 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 5fae1621fb01..25ef29123f72 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -215,6 +215,8 @@ int thermal_zone_device_set_policy(struct thermal_zone_device *tz,
->         mutex_unlock(&tz->lock);
->         mutex_unlock(&thermal_governor_lock);
->
-> +       thermal_notify_tz_gov_change(tz->id, policy);
-> +
->         return ret;
->  }
->
-> @@ -406,12 +408,25 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
->  static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
->  {
->         enum thermal_trip_type type;
-> +       int trip_temp, hyst = 0;
->
->         /* Ignore disabled trip points */
->         if (test_bit(trip, &tz->trips_disabled))
->                 return;
->
-> +       tz->ops->get_trip_temp(tz, trip, &trip_temp);
->         tz->ops->get_trip_type(tz, trip, &type);
-> +       if (tz->ops->get_trip_hyst)
-> +               tz->ops->get_trip_hyst(tz, trip, &hyst);
-> +
-> +       if (tz->last_temperature != THERMAL_TEMP_INVALID) {
-> +               if (tz->last_temperature < trip_temp &&
-> +                   tz->temperature >= trip_temp)
-> +                       thermal_notify_tz_trip_up(tz->id, trip);
-> +               if (tz->last_temperature >= trip_temp &&
-> +                   tz->temperature < (trip_temp - hyst))
-> +                       thermal_notify_tz_trip_down(tz->id, trip);
-> +       }
->
->         if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
->                 handle_critical_trips(tz, trip, type);
-> @@ -443,6 +458,8 @@ static void update_temperature(struct thermal_zone_device *tz)
->         mutex_unlock(&tz->lock);
->
->         trace_thermal_temperature(tz);
-> +
-> +       thermal_genl_sampling_temp(tz->id, temp);
->  }
->
->  static void thermal_zone_device_init(struct thermal_zone_device *tz)
-> @@ -1405,6 +1422,8 @@ thermal_zone_device_register(const char *type, int trips, int mask,
->         if (atomic_cmpxchg(&tz->need_update, 1, 0))
->                 thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
->
-> +       thermal_notify_tz_create(tz->id, tz->type);
-> +
->         return tz;
->
->  unregister:
-> @@ -1476,6 +1495,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
->         ida_destroy(&tz->ida);
->         mutex_destroy(&tz->lock);
->         device_unregister(&tz->device);
-> +
-> +       thermal_notify_tz_delete(tz->id);
->  }
->  EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
->
-> diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
-> index 87b1256fa2f2..53dd92ccfd19 100644
-> --- a/drivers/thermal/thermal_helpers.c
-> +++ b/drivers/thermal/thermal_helpers.c
-> @@ -175,6 +175,14 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
->         mutex_unlock(&tz->lock);
->  }
->
-> +void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev, int target)
-> +{
-> +       if (cdev->ops->set_cur_state(cdev, target))
-> +               return;
-> +       thermal_notify_cdev_update(cdev->id, target);
-> +       thermal_cooling_device_stats_update(cdev, target);
-> +}
-> +
->  void thermal_cdev_update(struct thermal_cooling_device *cdev)
->  {
->         struct thermal_instance *instance;
-> @@ -197,8 +205,7 @@ void thermal_cdev_update(struct thermal_cooling_device *cdev)
->                         target = instance->target;
->         }
->
-> -       if (!cdev->ops->set_cur_state(cdev, target))
-> -               thermal_cooling_device_stats_update(cdev, target);
-> +       thermal_cdev_set_cur_state(cdev, target);
->
->         cdev->updated = true;
->         mutex_unlock(&cdev->lock);
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> index aa99edb4dff7..ff449943f757 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -124,7 +124,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
->  {
->         struct thermal_zone_device *tz = to_thermal_zone(dev);
->         int trip, ret;
-> -       int temperature;
-> +       int temperature, hyst = 0;
-> +       enum thermal_trip_type type;
->
->         if (!tz->ops->set_trip_temp)
->                 return -EPERM;
-> @@ -139,6 +140,18 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
->         if (ret)
->                 return ret;
->
-> +       if (tz->ops->get_trip_hyst) {
-> +               ret = tz->ops->get_trip_hyst(tz, trip, &hyst);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       ret = tz->ops->get_trip_type(tz, trip, &type);
-> +       if (ret)
-> +               return ret;
-> +
-> +       thermal_notify_tz_trip_change(tz->id, trip, type, temperature, hyst);
-> +
->         thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
->
->         return count;
+>  sound/soc/codecs/da7219.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
+> index f2520a6c7875..153ea30b5a8f 100644
+> --- a/sound/soc/codecs/da7219.c
+> +++ b/sound/soc/codecs/da7219.c
+> @@ -1708,11 +1708,13 @@ static const struct of_device_id da7219_of_match[=
+] =3D
+> {
+>  };
+>  MODULE_DEVICE_TABLE(of, da7219_of_match);
+>=20
+> +#ifdef CONFIG_ACPI
+>  static const struct acpi_device_id da7219_acpi_match[] =3D {
+>  	{ .id =3D "DLGS7219", },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, da7219_acpi_match);
+> +#endif
+
+I think this will break non-ACPI builds as this symbol is used in the
+declaration of 'da7219_i2c_driver', without conditional compilation surroun=
+ding
+it. Unless of course I'm missing something. Could we instead use
+'__maybe_unused' to avoid this warning?
+
+>=20
+>  static enum da7219_micbias_voltage
+>  	da7219_fw_micbias_lvl(struct device *dev, u32 val)
 > --
-> 2.17.1
->
+> 2.25.1
+
