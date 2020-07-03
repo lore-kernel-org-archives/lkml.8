@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B53DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA39C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53BFF206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E1E206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r7qfMZ01";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cG+dYnX8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R55UeEch";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sIkFaEVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgGCIBi (ORCPT
+        id S1726336AbgGCIBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:01:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57394 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgGCIBb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 04:01:31 -0400
-Date:   Fri, 03 Jul 2020 08:01:27 -0000
+Received: from Galois.linutronix.de ([193.142.43.55]:57378 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGCIBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:01:30 -0400
+Date:   Fri, 03 Jul 2020 08:01:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593763288;
+        s=2020; t=1593763287;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=o+EOf4ghmSHvy38jI0Ooj7OEVAUc9M2kU2mJVgBXnCQ=;
-        b=r7qfMZ01hETV7KqQ48Vil62aLtX5RJfBB/jJUPBMKPX9Rh895S2zJy+xNR1oOi7T2qhs9P
-        3KEgm0ZqrJxnwRFO/iCWHFx0EE9r4IW5Hyt4siAUgjUm5yH5L+uTLcGHyrUA1EeT/uirLM
-        oadKtL5RibBoVJpfB3F0eZJipev7IMYASBnVdrySBrLgJzrqmchkiurl6SBwSanwNDxk6Z
-        ZB0tqfiR20wFkXVxqqL+gJiiwctymL8GIsOq/qOigyb/UCxm3ic3/G7fb9zarBGMFJQjAq
-        GObjp5kNMKuPNTrE9pqIz51vWL7lCIIwk9weVhXgb9oa8Ntk624eRaf/Q5IKzQ==
+        bh=oy4WReyZBoVmzASbvO7rtP53h0E1pKoAmkXDqRED9lA=;
+        b=R55UeEchtpQOBCcV8s6UaKXeF3DBEW+0N/QdF1JYwrbDEQKs2dXJ5oTlQswy8YmmXntZFU
+        nEzm/vUz4/BiPaTo3UwhArQlHX48cT+h3JP+e8LHWGAlklN37sfIaj42gaW+dLFdDDkQMJ
+        BS0dF45XlpIyAsWUzeb+8lqzn+8ywx4WaGeL/nK/h9f9kDQ1O2yp5hw4WfSGyIujuN5klp
+        B1Z129bQBANM7tt0tahY3rKR1dKkmd0XdIXgSyKaV833ypuoUvEzZnNOgCleARbPgSx/OO
+        ssVdRtdnvkcmC1ScO8v0dN9LiOK1YhXqUgAGOcmJPoLU2U9q0TVwAbeOYvpS3Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593763288;
+        s=2020e; t=1593763287;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=o+EOf4ghmSHvy38jI0Ooj7OEVAUc9M2kU2mJVgBXnCQ=;
-        b=cG+dYnX8UTqwA9gXflnO5xnizpmRLVNctYwQm4G87L/QmJPmQPDDAGfi7351I6RETJAYwK
-        DYbe1oJIKin7OPAg==
+        bh=oy4WReyZBoVmzASbvO7rtP53h0E1pKoAmkXDqRED9lA=;
+        b=sIkFaEVzORdGBcVg+snmvJx50H8YEdsSg3bmWyJ3Jtp2uKp6TVvNXOWYBMUav6F6a6KKSm
+        reN8apMA2LLhY0Ag==
 From:   "tip-bot2 for Like Xu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/core: Refactor hw->idx checks and cleanup
+Subject: [tip: perf/core] perf/x86: Add constraint to create guest LBR event
+ without hw counter
 Cc:     Like Xu <like.xu@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200613080958.132489-3-like.xu@linux.intel.com>
-References: <20200613080958.132489-3-like.xu@linux.intel.com>
+In-Reply-To: <20200514083054.62538-5-like.xu@linux.intel.com>
+References: <20200514083054.62538-5-like.xu@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159376328782.4006.14997679073110012561.tip-bot2@tip-bot2>
+Message-ID: <159376328664.4006.3096246262316423436.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,223 +71,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     027440b5d426a51f33b515bbd236cc479d1e051f
-Gitweb:        https://git.kernel.org/tip/027440b5d426a51f33b515bbd236cc479d1e051f
+Commit-ID:     097e4311cda952dfb047f2a49d35aa5de500d474
+Gitweb:        https://git.kernel.org/tip/097e4311cda952dfb047f2a49d35aa5de500d474
 Author:        Like Xu <like.xu@linux.intel.com>
-AuthorDate:    Sat, 13 Jun 2020 16:09:47 +08:00
+AuthorDate:    Sat, 13 Jun 2020 16:09:49 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Thu, 02 Jul 2020 15:51:46 +02:00
 
-perf/x86/core: Refactor hw->idx checks and cleanup
+perf/x86: Add constraint to create guest LBR event without hw counter
 
-For intel_pmu_en/disable_event(), reorder the branches checks for hw->idx
-and make them sorted by probability: gp,fixed,bts,others.
+The hypervisor may request the perf subsystem to schedule a time window
+to directly access the LBR records msrs for its own use. Normally, it would
+create a guest LBR event with callstack mode enabled, which is scheduled
+along with other ordinary LBR events on the host but in an exclusive way.
 
-Clean up the x86_assign_hw_event() by converting multiple if-else
-statements to a switch statement.
-
-To skip x86_perf_event_update() and x86_perf_event_set_period(),
-it's generic to replace "idx == INTEL_PMC_IDX_FIXED_BTS" check with
-'!hwc->event_base' because that should be 0 for all non-gp/fixed cases.
-
-Wrap related bit operations into intel_set/clear_masks() and make the main
-path more cleaner and readable.
-
-No functional changes.
+To avoid wasting a counter for the guest LBR event, the perf tracks its
+hw->idx via INTEL_PMC_IDX_FIXED_VLBR and assigns it with a fake VLBR
+counter with the help of new vlbr_constraint. As with the BTS event,
+there is actually no hardware counter assigned for the guest LBR event.
 
 Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Original-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200613080958.132489-3-like.xu@linux.intel.com
+Link: https://lkml.kernel.org/r/20200514083054.62538-5-like.xu@linux.intel.com
 ---
- arch/x86/events/core.c       | 25 ++++++----
- arch/x86/events/intel/core.c | 85 ++++++++++++++++++-----------------
- 2 files changed, 62 insertions(+), 48 deletions(-)
+ arch/x86/events/core.c            |  1 +
+ arch/x86/events/intel/core.c      | 18 ++++++++++++++++++
+ arch/x86/events/intel/lbr.c       |  4 ++++
+ arch/x86/events/perf_event.h      |  1 +
+ arch/x86/include/asm/perf_event.h | 22 +++++++++++++++++++++-
+ 5 files changed, 45 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4103665..15cb7af 100644
+index 15cb7af..d740c86 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -71,10 +71,9 @@ u64 x86_perf_event_update(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	int shift = 64 - x86_pmu.cntval_bits;
- 	u64 prev_raw_count, new_raw_count;
--	int idx = hwc->idx;
- 	u64 delta;
+@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(struct perf_event *event,
  
--	if (idx == INTEL_PMC_IDX_FIXED_BTS)
-+	if (unlikely(!hwc->event_base))
- 		return 0;
- 
- 	/*
-@@ -1097,22 +1096,30 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 				struct cpu_hw_events *cpuc, int i)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-+	int idx;
- 
--	hwc->idx = cpuc->assign[i];
-+	idx = hwc->idx = cpuc->assign[i];
- 	hwc->last_cpu = smp_processor_id();
- 	hwc->last_tag = ++cpuc->tags[i];
- 
--	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
-+	switch (hwc->idx) {
-+	case INTEL_PMC_IDX_FIXED_BTS:
+ 	switch (hwc->idx) {
+ 	case INTEL_PMC_IDX_FIXED_BTS:
++	case INTEL_PMC_IDX_FIXED_VLBR:
  		hwc->config_base = 0;
  		hwc->event_base	= 0;
--	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
-+		break;
-+
-+	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS-1:
- 		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
--		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
--		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
--	} else {
-+		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-+				(idx - INTEL_PMC_IDX_FIXED);
-+		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-+		break;
-+
-+	default:
- 		hwc->config_base = x86_pmu_config_addr(hwc->idx);
- 		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
- 		hwc->event_base_rdpmc = x86_pmu_rdpmc_index(hwc->idx);
-+		break;
- 	}
- }
- 
-@@ -1233,7 +1240,7 @@ int x86_perf_event_set_period(struct perf_event *event)
- 	s64 period = hwc->sample_period;
- 	int ret = 0, idx = hwc->idx;
- 
--	if (idx == INTEL_PMC_IDX_FIXED_BTS)
-+	if (unlikely(!hwc->event_base))
- 		return 0;
- 
- 	/*
+ 		break;
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ca35c8b..8dac4c6 100644
+index 8dac4c6..51e1fba 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2136,8 +2136,35 @@ static inline void intel_pmu_ack_status(u64 ack)
- 	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
+@@ -2621,6 +2621,20 @@ intel_bts_constraints(struct perf_event *event)
+ 	return NULL;
  }
  
--static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
-+static inline bool event_is_checkpointed(struct perf_event *event)
++/*
++ * Note: matches a fake event, like Fixed2.
++ */
++static struct event_constraint *
++intel_vlbr_constraints(struct perf_event *event)
 +{
-+	return unlikely(event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
++	struct event_constraint *c = &vlbr_constraint;
++
++	if (unlikely(constraint_match(c, event->hw.config)))
++		return c;
++
++	return NULL;
 +}
 +
-+static inline void intel_set_masks(struct perf_event *event, int idx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	if (event->attr.exclude_host)
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-+	if (event->attr.exclude_guest)
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-+	if (event_is_checkpointed(event))
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-+}
-+
-+static inline void intel_clear_masks(struct perf_event *event, int idx)
+ static int intel_alt_er(int idx, u64 config)
  {
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-+}
-+
-+static void intel_pmu_disable_fixed(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
- 	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
- 	u64 ctrl_val, mask;
+ 	int alt_idx = idx;
+@@ -2811,6 +2825,10 @@ __intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ {
+ 	struct event_constraint *c;
  
-@@ -2148,31 +2175,22 @@ static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
- 	wrmsrl(hwc->config_base, ctrl_val);
++	c = intel_vlbr_constraints(event);
++	if (c)
++		return c;
++
+ 	c = intel_bts_constraints(event);
+ 	if (c)
+ 		return c;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 2ed3f2a..d285d26 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1363,3 +1363,7 @@ int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+ 	return 0;
  }
+ EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
++
++struct event_constraint vlbr_constraint =
++	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
++			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index eb37f6c..77a6dd6 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -990,6 +990,7 @@ void release_ds_buffers(void);
+ void reserve_ds_buffers(void);
  
--static inline bool event_is_checkpointed(struct perf_event *event)
--{
--	return (event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
--}
--
- static void intel_pmu_disable_event(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int idx = hwc->idx;
+ extern struct event_constraint bts_constraint;
++extern struct event_constraint vlbr_constraint;
  
--	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
-+	if (idx < INTEL_PMC_IDX_FIXED) {
-+		intel_clear_masks(event, idx);
-+		x86_pmu_disable_event(event);
-+	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
-+		intel_clear_masks(event, idx);
-+		intel_pmu_disable_fixed(event);
-+	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
- 		intel_pmu_disable_bts();
- 		intel_pmu_drain_bts_buffer();
--		return;
- 	}
+ void intel_pmu_enable_bts(u64 config);
  
--	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
--
--	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
--		intel_pmu_disable_fixed(hwc);
--	else
--		x86_pmu_disable_event(event);
--
- 	/*
- 	 * Needs to be called after x86_pmu_disable_event,
- 	 * so we don't trigger the event without PEBS bit set.
-@@ -2238,33 +2256,22 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- static void intel_pmu_enable_event(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--
--	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
--		if (!__this_cpu_read(cpu_hw_events.enabled))
--			return;
--
--		intel_pmu_enable_bts(hwc->config);
--		return;
--	}
--
--	if (event->attr.exclude_host)
--		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
--	if (event->attr.exclude_guest)
--		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
--
--	if (unlikely(event_is_checkpointed(event)))
--		cpuc->intel_cp_status |= (1ull << hwc->idx);
-+	int idx = hwc->idx;
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 5d2c30f..2df7073 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -192,10 +192,30 @@ struct x86_pmu_capability {
+ #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+ #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+ #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+-#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
++#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
++#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
+ #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
  
- 	if (unlikely(event->attr.precise_ip))
- 		intel_pmu_pebs_enable(event);
+ /*
++ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
++ *
++ * We choose bit 58 because it's used to indicate LBR stack frozen state
++ * for architectural perfmon v4, also we unconditionally mask that bit in
++ * the handle_pmi_common(), so it'll never be set in the overflow handling.
++ *
++ * With this fake counter assigned, the guest LBR event user (such as KVM),
++ * can program the LBR registers on its own, and we don't actually do anything
++ * with then in the host context.
++ */
++#define INTEL_PMC_IDX_FIXED_VLBR	(GLOBAL_STATUS_LBRS_FROZEN_BIT)
++
++/*
++ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
++ * since it would claim bit 58 which is effectively Fixed26.
++ */
++#define INTEL_FIXED_VLBR_EVENT	0x1b00
++
++/*
+  * Adaptive PEBS v4
+  */
  
--	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+	if (idx < INTEL_PMC_IDX_FIXED) {
-+		intel_set_masks(event, idx);
-+		__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
-+	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
-+		intel_set_masks(event, idx);
- 		intel_pmu_enable_fixed(event);
--		return;
-+	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
-+		if (!__this_cpu_read(cpu_hw_events.enabled))
-+			return;
-+		intel_pmu_enable_bts(hwc->config);
- 	}
--
--	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
- }
- 
- static void intel_pmu_add_event(struct perf_event *event)
