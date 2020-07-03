@@ -2,243 +2,188 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E38CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B0C20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="cNaVziwX"
+	by mail.kernel.org (Postfix) with ESMTP id 119EA20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593775509;
+	bh=fJRaNyAeb84nWoNN6LiVp9hepWCKtTyjL/1CsYFY0ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YARvLQrYqRDBVlCN6h9H4Rp4rs4VdSjPUkMtGJ1oHnzI+4VfPSb4WKfmenTRLqPq/
+	 757SnxAjWT+rutVrLA+h5Os715MUkqZM3lmtJW6KjF/BZ+xfV56Kh2h5Nfy/lSQGig
+	 aN7upbdEbcMuHuQDByySFuO+4hZ7qiqWjZjCI1o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGCLYb (ORCPT
+        id S1726415AbgGCLZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGCLYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:24:30 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4891CC08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 04:24:30 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c11so18241382lfh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 04:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
-        b=cNaVziwXP/FXl51uLD6P9SDqfM10xutFUrENHOk8xP7BmYZk+IWUPzeVhnaZQf9gvc
-         vxjGSLQIWpuBQfzo3o5bSoGUxFVJoZJ+ddZCWpOZTdGDg4ZTM6iHWWpMIycrEdxDjLOA
-         vmG5JZBPh8P6Kz+iwAHXiP4l9H8Z+T1SQpQa1c/s5/RCne8EgFXmQLHsH2L2jNGdkCz/
-         CX59J9EmjTO1g7YeQqxM/A0p57k3gU5y0rpUgm+GyfXUFvWU+HQJ6C7AvsG1olSZ5Wf2
-         RAH10ZnURTCqLtuTWy+hNEYQhv56R45INNiRlKhkTKPC2FJSuXDDeCOnYALAyOYuJ8NM
-         9Flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
-        b=X/XGMdGN9odnQqCOHYClPPQhDnvY/H3wlD2uOo0i6hAmLtMjh/k1Nu5Y5hHVmJj3q3
-         Z35uLWHASsOwOjqYRcgmJ0udh/TW1BXXFLR2B2eqBcDjBqFDB6ta+QmERGNNiol7wPqE
-         DIOp3EJ2BbnYqn//qj6wsdWLLTp1PKkD+TytqM64An2QBMdYjHjf+ucx92lV92FYur0w
-         e+d0Nhb0efIkfLxEyHDqXzVMhjs1M63eBYHhJWqd2xPekkA8AhJ9KT4TCniEO3ydOkhs
-         aOurVn2WflxIsOTmYhHEyaJLtwRWzZD7kGWy83IKzVZDh7cwSDmdo1mv48Xv6t6naFwZ
-         QENw==
-X-Gm-Message-State: AOAM531ujbs5ekmEocEvfxZdRUjl/59UTsIPRtH4wNRJEgtMtFJjW6Bo
-        8E8ma8s16WRvQi2wNbU9YitMsg==
-X-Google-Smtp-Source: ABdhPJwSnB2E+9qDy3UvGZ3TOCAmeByNzVFr4FH7BTY3Q5sjfcRDicXgAigg7pUSQRkrPg0kxImDPQ==
-X-Received: by 2002:ac2:5e29:: with SMTP id o9mr20757726lfg.196.1593775468529;
-        Fri, 03 Jul 2020 04:24:28 -0700 (PDT)
-Received: from [192.168.1.9] ([83.68.95.66])
-        by smtp.googlemail.com with ESMTPSA id g7sm4539921lfe.62.2020.07.03.04.24.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 04:24:27 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] iommu/arm-smmu: Workaround for Marvell
- Armada-AP806 SoC erratum #582743
-To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
-        hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200702201633.22693-1-tn@semihalf.com>
- <20200702201633.22693-3-tn@semihalf.com>
- <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
-From:   Tomasz Nowicki <tn@semihalf.com>
-Message-ID: <8fb0f73f-35ca-d8ec-43b8-ae89e9a21d0c@semihalf.com>
-Date:   Fri, 3 Jul 2020 13:24:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 07:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGCLZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:25:07 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.162.131.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06888207FF;
+        Fri,  3 Jul 2020 11:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593775506;
+        bh=fJRaNyAeb84nWoNN6LiVp9hepWCKtTyjL/1CsYFY0ks=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CLLdsH9vXBEC1yJF+aZOoALDT7ouoy8gJ2QE5BuE1vcRq5c11pIrF0DDbNVI2Tely
+         VAcjzK8Oxd30n59JAlbjAuItqkMmJHXn6ZlaOZmnI3MliZnaSTC3fKxkNHjdYhH+Zf
+         sMmHKjCoLswn8eg1x/4EZarNwMIpEu+JG7RVIOsE=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AEAC3405FF; Fri,  3 Jul 2020 08:25:03 -0300 (-03)
+Date:   Fri, 3 Jul 2020 08:25:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH 1/3] perf intel-pt: Fix recording PEBS-via-PT with
+ registers
+Message-ID: <20200703112503.GB1320@kernel.org>
+References: <20200630133935.11150-1-adrian.hunter@intel.com>
+ <20200630133935.11150-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630133935.11150-2-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, Jun 30, 2020 at 04:39:33PM +0300, Adrian Hunter escreveu:
+> When recording PEBS-via-PT, the kernel will not accept the intel_pt event
+> with register sampling e.g.
+> 
+>  # perf record --kcore -c 10000 -e '{intel_pt/branch=0/,branch-loads/aux-output/ppp}' -I -- ls -l
+>  Error:
+>  intel_pt/branch=0/: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+> 
+> Fix by suppressing register sampling on the intel_pt evsel.
+
+Next time please inform what is the hardware that supports PEBS-via-PT,
+I tried this on a:
+
+[    0.245654] smpboot: CPU0: Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz (family: 0x6, model: 0x8e, stepping: 0xa)
+[    0.245791] Performance Events: PEBS fmt3+, Skylake events, 32-deep LBR, full-width counters, Intel PMU driver.
+
+And even after this fix I get:
+
+[root@quaco ~]# perf record --kcore -c 10000 -e '{intel_pt/branch=0/,branch-loads/aux-output/ppp}' -I -- ls -l
+Error:
+branch-loads: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+[root@quaco ~]#
+
+Further details:
+
+[root@quaco ~]# perf record -vv --kcore -c 10000 -e '{intel_pt/branch=0/,branch-loads/aux-output/ppp}' -I -- ls -l
+Using CPUID GenuineIntel-6-8E-A
+intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+Attempting to add event pmu 'intel_pt' with 'branch,' that may result in non-fatal errors
+After aliases, add event pmu 'intel_pt' with 'branch,' that may result in non-fatal errors
+nr_cblocks: 0
+affinity: SYS
+mmap flush: 1
+comp level: 0
+------------------------------------------------------------
+perf_event_attr:
+  type                             8
+  size                             120
+  config                           0x300c601
+  { sample_period, sample_freq }   10000
+  sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+  read_format                      ID
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  sample_id_all                    1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 11131  cpu 0  group_fd -1  flags 0x8 = 5
+sys_perf_event_open: pid 11131  cpu 1  group_fd -1  flags 0x8 = 6
+sys_perf_event_open: pid 11131  cpu 2  group_fd -1  flags 0x8 = 7
+sys_perf_event_open: pid 11131  cpu 3  group_fd -1  flags 0x8 = 9
+sys_perf_event_open: pid 11131  cpu 4  group_fd -1  flags 0x8 = 10
+sys_perf_event_open: pid 11131  cpu 5  group_fd -1  flags 0x8 = 11
+sys_perf_event_open: pid 11131  cpu 6  group_fd -1  flags 0x8 = 12
+sys_perf_event_open: pid 11131  cpu 7  group_fd -1  flags 0x8 = 13
+------------------------------------------------------------
+perf_event_attr:
+  type                             3
+  size                             120
+  config                           0x5
+  { sample_period, sample_freq }   10000
+  sample_type                      IP|TID|TIME|IDENTIFIER|REGS_INTR
+  read_format                      ID
+  inherit                          1
+  precise_ip                       3
+  sample_id_all                    1
+  exclude_guest                    1
+  aux_output                       1
+  sample_regs_intr                 0xff0fff
+------------------------------------------------------------
+sys_perf_event_open: pid 11131  cpu 0  group_fd 5  flags 0x8
+sys_perf_event_open failed, error -95
+Error:
+branch-loads: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+[root@quaco ~]#
 
 
-On 03.07.2020 11:03, Robin Murphy wrote:
-> On 2020-07-02 21:16, Tomasz Nowicki wrote:
->> From: Hanna Hawa <hannah@marvell.com>
->>
->> Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
->> ARM SMMUv2 registers.
->>
->> Provide implementation relevant hooks:
->> - split the writeq/readq to two accesses of writel/readl.
->> - mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format (but
->> only AARCH32_L) since with AArch64 format 32 bits access is not 
->> supported.
->>
->> Note that separate writes/reads to 2 is not problem regards to
->> atomicity, because the driver use the readq/writeq while initialize
->> the SMMU, report for SMMU fault, and use spinlock in one
->> case (iova_to_phys).
+
+
+ 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 9e64cefe4335b ("perf intel-pt: Process options for PEBS event synthesis")
+> ---
+>  tools/perf/arch/x86/util/intel-pt.c | 1 +
+>  tools/perf/util/evsel.c             | 4 ++--
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> The comment about the spinlock seems to be out of date, and TBH that 
-> whole sentence is a bit unclear - how about something like:
-> 
-> "Note that most 64-bit registers like TTBRn can be accessed as two 
-> 32-bit halves without issue, and AArch32 format ensures that the 
-> register writes which must be atomic (for TLBI etc.) need only be 32-bit."
-> 
->> Signed-off-by: Hanna Hawa <hannah@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
->> ---
->>   Documentation/arm64/silicon-errata.rst |  3 ++
->>   drivers/iommu/arm-smmu-impl.c          | 52 ++++++++++++++++++++++++++
->>   2 files changed, 55 insertions(+)
->>
->> diff --git a/Documentation/arm64/silicon-errata.rst 
->> b/Documentation/arm64/silicon-errata.rst
->> index 936cf2a59ca4..157214d3abe1 100644
->> --- a/Documentation/arm64/silicon-errata.rst
->> +++ b/Documentation/arm64/silicon-errata.rst
->> @@ -125,6 +125,9 @@ stable kernels.
->>   | Cavium         | ThunderX2 Core  | #219            | 
->> CAVIUM_TX2_ERRATUM_219      |
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->> +| Marvell        | ARM-MMU-500     | #582743         | 
->> N/A                         |
->> ++----------------+-----------------+-----------------+-----------------------------+ 
->>
->> ++----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   | Freescale/NXP  | LS2080A/LS1043A | A-008585        | 
->> FSL_ERRATUM_A008585         |
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->> diff --git a/drivers/iommu/arm-smmu-impl.c 
->> b/drivers/iommu/arm-smmu-impl.c
->> index c75b9d957b70..c1fc5e1b8193 100644
->> --- a/drivers/iommu/arm-smmu-impl.c
->> +++ b/drivers/iommu/arm-smmu-impl.c
->> @@ -147,6 +147,53 @@ static const struct arm_smmu_impl arm_mmu500_impl 
->> = {
->>       .reset = arm_mmu500_reset,
->>   };
->> +static u64 mrvl_mmu500_readq(struct arm_smmu_device *smmu, int page, 
->> int off)
->> +{
->> +    u64 val;
->> +
->> +    /*
->> +     * Marvell Armada-AP806 erratum #582743.
->> +     * Split all the readq to double readl
->> +     */
->> +    val = (u64)readl_relaxed(arm_smmu_page(smmu, page) + off + 4) << 32;
->> +    val |= readl_relaxed(arm_smmu_page(smmu, page) + off);
-> 
-> Even though io-64-nonatomic-hi-lo.h doesn't override readq() etc. for 
-> 64-bit builds, you can still use hi_lo_readq_relaxed() directly.
-> 
->> +
->> +    return val;
->> +}
->> +
->> +static void mrvl_mmu500_writeq(struct arm_smmu_device *smmu, int 
->> page, int off,
->> +                   u64 val)
->> +{
->> +    /*
->> +     * Marvell Armada-AP806 erratum #582743.
->> +     * Split all the writeq to double writel
->> +     */
->> +    writel_relaxed(upper_32_bits(val), arm_smmu_page(smmu, page) + 
->> off + 4);
->> +    writel_relaxed(lower_32_bits(val), arm_smmu_page(smmu, page) + off);
-> 
-> Similarly, hi_lo_writeq_relaxed().
-> 
->> +}
->> +
->> +static u32 mrvl_mmu500_cfg_id2_fixup(u32 id)
->> +{
->> +
->> +    /*
->> +     * Armada-AP806 erratum #582743.
->> +     * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
->> +     * formats altogether and allow using 32 bits access on the
->> +     * interconnect.
->> +     */
->> +    id &= ~(ARM_SMMU_ID2_PTFS_4K | ARM_SMMU_ID2_PTFS_16K |
->> +        ARM_SMMU_ID2_PTFS_64K);
->> +
->> +    return id;
->> +}
->> +
->> +static const struct arm_smmu_impl mrvl_mmu500_impl = {
->> +    .read_reg64 = mrvl_mmu500_readq,
->> +    .write_reg64 = mrvl_mmu500_writeq,
->> +    .cfg_id2_fixup = mrvl_mmu500_cfg_id2_fixup,
->> +    .reset = arm_mmu500_reset,
->> +};
->> +
->>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device 
->> *smmu)
->>   {
->> @@ -160,6 +207,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct 
->> arm_smmu_device *smmu)
->>        */
->>       switch (smmu->model) {
->>       case ARM_MMU500:
->> +        if (of_device_is_compatible(smmu->dev->of_node,
-> 
-> Nit: there's a local "np" variable now.
-> 
->> +                        "marvell,ap806-smmu-500")) {
->> +            smmu->impl = &mrvl_mmu500_impl;
->> +            return smmu;
->> +        }
-> 
-> Please put this with the other integration checks below the switch 
-> statement. Yes, it means we'll end up assigning smmu->impl twice for 
-> this particular case, but that's the intended pattern.
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index 839ef52c1ac2..6ce451293634 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -641,6 +641,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>  			}
+>  			evsel->core.attr.freq = 0;
+>  			evsel->core.attr.sample_period = 1;
+> +			evsel->no_aux_samples = true;
+>  			intel_pt_evsel = evsel;
+>  			opts->full_auxtrace = true;
+>  		}
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a68ac3632ae6..ef802f6d40c1 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1014,12 +1014,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	if (callchain && callchain->enabled && !evsel->no_aux_samples)
+>  		evsel__config_callchain(evsel, opts, callchain);
+>  
+> -	if (opts->sample_intr_regs) {
+> +	if (opts->sample_intr_regs && !evsel->no_aux_samples) {
+>  		attr->sample_regs_intr = opts->sample_intr_regs;
+>  		evsel__set_sample_bit(evsel, REGS_INTR);
+>  	}
+>  
+> -	if (opts->sample_user_regs) {
+> +	if (opts->sample_user_regs && !evsel->no_aux_samples) {
+>  		attr->sample_regs_user |= opts->sample_user_regs;
+>  		evsel__set_sample_bit(evsel, REGS_USER);
+>  	}
+> -- 
+> 2.17.1
 > 
 
-Thanks, all above comments do make sense and will be fixed in next spin.
+-- 
 
-Thanks,
-Tomasz
+- Arnaldo
