@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0293D206BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4EC206BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Aux0VBi+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DazCLmVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGCORo (ORCPT
+        id S1726432AbgGCOSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:17:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19072 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgGCORo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:17:44 -0400
+        Fri, 3 Jul 2020 10:18:03 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16318 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbgGCOSD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:18:03 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593785863; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=BhNeirievu7ABUQ2mRSmIu+sWUN4ihC6bWjNuJCyjvc=; b=Aux0VBi+/00i4v5koV+p8fC4XCX198bWO9OTkNbdjh5aeLzGsoZDIDopI8RaRA1ED5D/Nh48
- Ql+PdC0CnftPneLphYnpCdNBBpv91CVZlTrioULLBu+4rp9Pe677fPH/Zqhp3r6ICF8QghKc
- ZsOwOqwAR7pN4FBPpdG2Jrshf00=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1593785882; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=XI/M6Pcw+RwtbXFkwoRsxR1H4DU4dG64igoe60J1Q3o=; b=DazCLmVvZRX24CJfpHUaUgpGk3Uzoy3/0NGvtmDVelgOGXk1wmbKX4ixwqsZZerq70G7/lyc
+ 817jZVv0HIvBv3Ikd9d3mrEtDUzFlLWaxQywyP0gQgWt6uwLWgQhdXml2UaR7ycdbWZHm2MN
+ PKMVX3YcNCyA7tNtgC3muXVeVUQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5eff3dff0206ad41d103726e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 14:17:35
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5eff3e0386de6ccd448d89cc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 14:17:39
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55E9BC433C6; Fri,  3 Jul 2020 14:17:34 +0000 (UTC)
+        id 1F0ABC43391; Fri,  3 Jul 2020 14:17:39 +0000 (UTC)
 Received: from vjitta-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: vjitta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A908C433C8;
-        Fri,  3 Jul 2020 14:17:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A908C433C8
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E77C0C433C6;
+        Fri,  3 Jul 2020 14:17:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E77C0C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
 From:   vjitta@codeaurora.org
@@ -51,10 +53,12 @@ To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
 Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
         vjitta@codeaurora.org
-Subject: [PATCH 1/2] iommu/iova: Retry from last rb tree node if iova search fails
-Date:   Fri,  3 Jul 2020 19:47:14 +0530
-Message-Id: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
+Subject: [PATCH 2/2] iommu/iova: Free global iova rcache on iova alloc failure
+Date:   Fri,  3 Jul 2020 19:47:15 +0530
+Message-Id: <1593785835-27250-2-git-send-email-vjitta@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
+References: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,83 +66,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vijayanand Jitta <vjitta@codeaurora.org>
 
-When ever a new iova alloc request comes iova is always searched
-from the cached node and the nodes which are previous to cached
-node. So, even if there is free iova space available in the nodes
-which are next to the cached node iova allocation can still fail
-because of this approach.
+When ever an iova alloc request fails we free the iova
+ranges present in the percpu iova rcaches and then retry
+but the global iova rcache is not freed as a result we could
+still see iova alloc failure even after retry as global
+rcache is holding the iova's which can cause fragmentation.
+So, free the global iova rcache as well and then go for the
+retry.
 
-Consider the following sequence of iova alloc and frees on
-1GB of iova space
-
-1) alloc - 500MB
-2) alloc - 12MB
-3) alloc - 499MB
-4) free -  12MB which was allocated in step 2
-5) alloc - 13MB
-
-After the above sequence we will have 12MB of free iova space and
-cached node will be pointing to the iova pfn of last alloc of 13MB
-which will be the lowest iova pfn of that iova space. Now if we get an
-alloc request of 2MB we just search from cached node and then look
-for lower iova pfn's for free iova and as they aren't any, iova alloc
-fails though there is 12MB of free iova space.
-
-To avoid such iova search failures do a retry from the last rb tree node
-when iova search fails, this will search the entire tree and get an iova
-if its available.
-
+Change-Id: Ib8236dc88ba5516b73d4fbf6bf8e68bbf09bbad2
 Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
 ---
- drivers/iommu/iova.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/iommu/iova.c | 23 +++++++++++++++++++++++
+ include/linux/iova.h |  6 ++++++
+ 2 files changed, 29 insertions(+)
 
 diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 49fc01f..4e77116 100644
+index 4e77116..5836c87 100644
 --- a/drivers/iommu/iova.c
 +++ b/drivers/iommu/iova.c
-@@ -184,8 +184,9 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 	struct rb_node *curr, *prev;
- 	struct iova *curr_iova;
- 	unsigned long flags;
--	unsigned long new_pfn;
-+	unsigned long new_pfn, low_pfn_new;
- 	unsigned long align_mask = ~0UL;
-+	unsigned long high_pfn = limit_pfn, low_pfn = iovad->start_pfn;
- 
- 	if (size_aligned)
- 		align_mask <<= fls_long(size - 1);
-@@ -198,15 +199,25 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 
- 	curr = __get_cached_rbnode(iovad, limit_pfn);
- 	curr_iova = rb_entry(curr, struct iova, node);
-+	low_pfn_new = curr_iova->pfn_hi + 1;
-+
-+retry:
- 	do {
--		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
--		new_pfn = (limit_pfn - size) & align_mask;
-+		high_pfn = min(high_pfn, curr_iova->pfn_lo);
-+		new_pfn = (high_pfn - size) & align_mask;
- 		prev = curr;
- 		curr = rb_prev(curr);
- 		curr_iova = rb_entry(curr, struct iova, node);
--	} while (curr && new_pfn <= curr_iova->pfn_hi);
--
--	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
-+	} while (curr && new_pfn <= curr_iova->pfn_hi && new_pfn >= low_pfn);
-+
-+	if (high_pfn < size || new_pfn < low_pfn) {
-+		if (low_pfn == iovad->start_pfn && low_pfn_new < limit_pfn) {
-+			high_pfn = limit_pfn;
-+			low_pfn = low_pfn_new;
-+			curr = &iovad->anchor.node;
-+			curr_iova = rb_entry(curr, struct iova, node);
-+			goto retry;
-+		}
- 		iovad->max32_alloc_size = size;
- 		goto iova32_full;
+@@ -442,6 +442,7 @@ struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn)
+ 		flush_rcache = false;
+ 		for_each_online_cpu(cpu)
+ 			free_cpu_cached_iovas(cpu, iovad);
++		free_global_cached_iovas(iovad);
+ 		goto retry;
  	}
+ 
+@@ -1055,5 +1056,27 @@ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
+ 	}
+ }
+ 
++/*
++ * free all the IOVA ranges of global cache
++ */
++void free_global_cached_iovas(struct iova_domain *iovad)
++{
++	struct iova_rcache *rcache;
++	unsigned long flags;
++	int i, j;
++
++	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
++		rcache = &iovad->rcaches[i];
++		spin_lock_irqsave(&rcache->lock, flags);
++		for (j = 0; j < rcache->depot_size; ++j) {
++			iova_magazine_free_pfns(rcache->depot[j], iovad);
++			iova_magazine_free(rcache->depot[j]);
++			rcache->depot[j] = NULL;
++		}
++		rcache->depot_size = 0;
++		spin_unlock_irqrestore(&rcache->lock, flags);
++	}
++}
++
+ MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/iova.h b/include/linux/iova.h
+index a0637ab..a905726 100644
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -163,6 +163,7 @@ int init_iova_flush_queue(struct iova_domain *iovad,
+ struct iova *split_and_remove_iova(struct iova_domain *iovad,
+ 	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
+ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
++void free_global_cached_iovas(struct iova_domain *iovad);
+ #else
+ static inline int iova_cache_get(void)
+ {
+@@ -270,6 +271,11 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
+ 					 struct iova_domain *iovad)
+ {
+ }
++
++static inline void free_global_cached_iovas(struct iova_domain *iovad)
++{
++}
++
+ #endif
+ 
+ #endif
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 1.9.1
