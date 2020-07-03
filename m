@@ -2,148 +2,176 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B661A20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6C3208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Spxc942G"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l7xLiC+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGCPOY (ORCPT
+        id S1726178AbgGCPRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
+        Fri, 3 Jul 2020 11:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgGCPOX (ORCPT
+        with ESMTP id S1726039AbgGCPRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:14:23 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A8EC08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:14:22 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f5so21532029ljj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:14:22 -0700 (PDT)
+        Fri, 3 Jul 2020 11:17:22 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE97C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:17:21 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so12755719plo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JY/HxR/lzMyO9Wjlc8f/yOCn5j+ZOolLev0KN/zmiSw=;
-        b=Spxc942GydXokLEKbdsV45nNrRpyII0YD3U6yuW20ePwhBt9xJH86Q7DrZ+NINojiy
-         CY5H0W4kpekk6qTXLXWYgt5CR2fcGycdo4OE6MW0f5DL5BhZKj4wYZQi4Gkd1RsAa6CH
-         pZYLzEnTp65PWJJFtTI8RSKmVlywpeJN/b5ZG+GlRQtcMDTGTh1yjvpCmNkaWRHgHKmB
-         AH30tdrLa8PYaJ9hnQKNIF789/xrwnGp3ZIWVa3cTW4skrVF2pdiGeO2MoXejPge4Pat
-         nxS3/EmrC8YuSGlAH5asyQJg4aQEooFoc7XsZqQyd58QM1hF8Kxo3Rvl1DcrBPiASZJS
-         KkIg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QQoaO14EaS5b6YMbPDUFuhJJwubGyeInK0Uhm2izrow=;
+        b=l7xLiC+VmsoAXhSSr0rdkXYOoj+xiWLpO56jPFrD69RJQtZKS/rNAmFgtTsmPJikDz
+         BqV6CMRbgamYaauOgxS5v1msuiCTTA/ReDj14RbFbSxW+YE2r1lSgqTt2Ini4nlJOx3t
+         dkLn1EiRv8VHIySFfWJXdNjajyjQCEdw2Sb9w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JY/HxR/lzMyO9Wjlc8f/yOCn5j+ZOolLev0KN/zmiSw=;
-        b=O96AIw7/PvBvV+VwFJX5OhfmG0qxMmhfssg8nEU8E99BlBkzP7b+JR7IuQMlGldOlf
-         kuwxwItrVT5ylAPma0cO0ZZUiVKEPkZD/50rGhZQjKYqG2BbcG+6NPjqqLjvjO1jXIOi
-         2Cis4TrNLRVQY42BZDTjtClFIvxNo88DeO1HxYEKD9LGEe4RbrxjqM4gKznBWydA8PyH
-         bYMPvFydsuVRX6oan4dAtbNoT8H67NXlDRgVWZhfFmMhTMrsbqicyFg+eAHAbHDaxJq9
-         gWLubAsnUsurBtNnRwL+IL7AlYNa48sHmPw9KM47QC1MadV8T11h1kmIgL6QpotEUfSs
-         PVXA==
-X-Gm-Message-State: AOAM531C/F7VxWEFlkCwwFpn/xI9o7PgU8FCie/JoxI673DukV5JZUhh
-        iNXmw3nv4p9NnI3WkfJUJMh+Bg==
-X-Google-Smtp-Source: ABdhPJyaVnogxmsT+T7//bOE1AeRzHfMq9P4/Z/lXVvreWW1uRmrFoOMQjfiI4kp6DHWX5BznXIpgQ==
-X-Received: by 2002:a2e:b607:: with SMTP id r7mr13854086ljn.5.1593789261361;
-        Fri, 03 Jul 2020 08:14:21 -0700 (PDT)
-Received: from [192.168.1.211] ([94.25.229.165])
-        by smtp.gmail.com with ESMTPSA id x30sm4727523lfn.3.2020.07.03.08.14.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 08:14:20 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 00/13] Enable GPU for SM8150 and SM8250
-To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Deepak Katragadda <dkatraga@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
-References: <20200629211725.2592-1-jonathan@marek.ca>
- <011a1f99-46bb-12f2-ee07-8cd14d891947@linaro.org>
- <1887f23d-57ef-c83a-4eaf-a8f8d5024ebf@marek.ca>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <a82bd8ed-fc8f-ea94-7687-cdc17190900a@linaro.org>
-Date:   Fri, 3 Jul 2020 18:14:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QQoaO14EaS5b6YMbPDUFuhJJwubGyeInK0Uhm2izrow=;
+        b=iw59fJXLtFSceqn18POdypKXaSFBJcuXa7cpwWbL6AQtup6LW22WTyFS3iqnjXd2TK
+         1WDiHqZtJb0NbVuz3e+Ai9v+cZb6jZfjcL7WD1FgQJ+rjZaad5I4mtTKngao81j4EmCE
+         x8DfrZ2qWxTSPvUzAIXVgmBTzWRj8BLX6Vr+AlLFUICqFXt4CTcmZ7ZlVIue4m+7doTs
+         HHQQg1ypBr3QjMG0vDKUtxTRmtaQQH6Rwt/nREGoMVh11RbqPrux0KJ0LqsC7H4BQuT1
+         QXj2rFQawy4WunPGJHBcx3mg8K59MsBlEd3kbmAtBnVYFf7nlkJn5iFv/PxrkuDEwKej
+         iOWQ==
+X-Gm-Message-State: AOAM5317dsLuJj0aJrrlo7AFEtjd3pSC5RHceKILAqveOlBES97orJ06
+        0y25CbqFh3LkDwcve53NJpKibQ==
+X-Google-Smtp-Source: ABdhPJwOn1ig28sc0JHhO/23CWki6UHs8oGqQpPZltv+FYmKOj0IBYRrjHfKUvPmhcSVmqEpPiwqSA==
+X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr30123847pls.204.1593789441351;
+        Fri, 03 Jul 2020 08:17:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d18sm11149170pjz.11.2020.07.03.08.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 08:17:20 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 08:17:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Keno Fischer <keno@juliacomputing.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: ptrace: seccomp: Return value when the call was already invalid
+Message-ID: <202007030815.744AAB35D@keescook>
+References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
+ <20200703083914.GA18516@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <1887f23d-57ef-c83a-4eaf-a8f8d5024ebf@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703083914.GA18516@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2020 18:08, Jonathan Marek wrote:
-> On 7/3/20 11:03 AM, Dmitry Baryshkov wrote:
->> On 30/06/2020 00:17, Jonathan Marek wrote:
->>> This series adds the missing clock drivers and dts nodes to enable
->>> the GPU on both SM8150 and SM8250.
->>>
->>> Note an extra patch [1] is still required for GPU to work on SM8250.
->>>
->>> Changes in V2:
->>> * Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the 
->>> newly added
->>>    SM8150 GPU gcc clocks
->>> * Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove 
->>> unused/incorrect PLL_CAL_VAL"
->>> * Added yaml schemas to gpucc dt-bindings patches
->>> * Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc 
->>> drivers" and changed
->>>    gpucc patches to use it.
->>> * Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
->>> * Added missing rpmh regulator level for sm8250 GPU clock levels
->>> * Use sm8150/sm8250 iommu compatibles in dts
->>> * Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks 
->>> in dts
->>>
->>> [1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
->>
->> With your patches applied:
->>
->> [   56.751977] msm msm: [drm:adreno_request_fw] loaded 
->> qcom/a650_sqe.fw from new location
->> [   56.760166] msm msm: [drm:adreno_request_fw] loaded 
->> qcom/a650_gmu.bin from new location
->> [   56.768485] arm-smmu 3da0000.iommu: genpd_runtime_resume()
->> [   56.774196] PM: gpu_cx_gdsc: Power-on latency exceeded, new value 
->> 49531 ns
->> [   56.781730] arm-smmu 3da0000.iommu: resume latency exceeded, 462604 ns
->> [   56.799559] platform 3d6a000.gmu: [drm:a6xx_gmu_resume] *ERROR* GMU 
->> firmware initialization timed out
->> [   56.809260] arm-smmu 3da0000.iommu: genpd_runtime_suspend()
->> [   56.813062] msm msm: [drm:adreno_load_gpu] *ERROR* Couldn't power 
->> up the GPU: -110
->>
->>
+On Fri, Jul 03, 2020 at 09:39:14AM +0100, Will Deacon wrote:
+> Hi Keno,
 > 
-> Do you have your branch published somewhere so I can see what could've 
-> went wrong?
+> On Fri, May 22, 2020 at 09:01:01PM -0400, Keno Fischer wrote:
+> > I'm seeing the following while porting a ptracer from
+> > x86_64 to arm64 (cc'ing arm64 folks, but in this case
+> > x86_64 is the odd one out, I think other archs would
+> > be consistent with arm64).
+> > 
+> > Consider userspace code like the following:
+> > ```
+> > int ret = syscall(-10, 0);
+> > assert(ret == -ENOSYS);
+> > ```
+> > 
+> > (Never mind the fact that this is something userspace
+> > shouldn't do, I saw this in our test suite that tests
+> > corner cases where the ptracer shouldn't affect behavior).
+> > 
+> > Now, if we have a seccomp filter that simply does
+> > SECCOMP_RET_TRACE, and a ptracer that simply
+> > does PTRACE_CONT
+> 
+> Ok, so this means that we're _skipping_ the system call, right?
+> 
+> > then the assert will fire/fail on arm64, but not on x86_64.
+> 
+> It feels weird to me that skipping the system call has any effect on the
+> tracee registers...
+> 
+> > Interestingly, arm64 does do something different
+> > if the syscall is -1 rather than -10, where early
+> > in the ptrace stop it does.
+> > ```
+> > /* set default errno for user-issued syscall(-1) */
+> > if (scno == NO_SYSCALL)
+> >     regs->regs[0] = -ENOSYS;
+> 
+> ... so I think this should be fixed too. How about the diff below?
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> index 68b7f34a08f5..cb3f653c9688 100644
+> --- a/arch/arm64/kernel/ptrace.c
+> +++ b/arch/arm64/kernel/ptrace.c
+> @@ -1833,12 +1833,12 @@ int syscall_trace_enter(struct pt_regs *regs)
+>  	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
+>  		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
+>  		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
+> -			return -1;
+> +			return -ENOSYS;
+>  	}
+>  
+>  	/* Do the secure computing after ptrace; failures should be fast. */
+>  	if (secure_computing() == -1)
+> -		return -1;
+> +		return -ENOSYS;
+>  
+>  	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+>  		trace_sys_enter(regs, regs->syscallno);
+> @@ -1846,7 +1846,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+>  	audit_syscall_entry(regs->syscallno, regs->orig_x0, regs->regs[1],
+>  			    regs->regs[2], regs->regs[3]);
+>  
+> -	return regs->syscallno;
+> +	return 0;
+>  }
+>  
+>  void syscall_trace_exit(struct pt_regs *regs)
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index 5f5b868292f5..a13661f44818 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
+>  	user_exit();
+>  
+>  	if (has_syscall_work(flags)) {
+> -		/* set default errno for user-issued syscall(-1) */
+> -		if (scno == NO_SYSCALL)
+> -			regs->regs[0] = -ENOSYS;
+> -		scno = syscall_trace_enter(regs);
+> -		if (scno == NO_SYSCALL)
+> +		if (syscall_trace_enter(regs))
+>  			goto trace_exit;
+> +
+> +		scno = regs->syscallno;
+>  	}
+>  
+>  	invoke_syscall(regs, scno, sc_nr, syscall_table);
 
-I've applied your patches (this series + the extra one for gpu/drm/msm) 
-on top of 
-https://git.linaro.org/landing-teams/working/qualcomm/kernel.git branch 
-integration-linux-qcomlt .
-
+What effect do either of these patches have on the existing seccomp
+selftests: tools/testing/selftests/seccomp/seccomp_bpf ?
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
