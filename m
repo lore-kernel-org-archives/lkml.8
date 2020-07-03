@@ -2,222 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82132C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3697BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5160420771
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCLm88+v"
+	by mail.kernel.org (Postfix) with ESMTP id 1A789208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgGCGy3 (ORCPT
+        id S1726148AbgGCGyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgGCGy3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:54:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2381AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:54:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b92so13598897pjc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wrm96WwHAY7NcmiKOn3dljT8L1OhqnpuLxqvg48PumA=;
-        b=sCLm88+vkuRQY6ys7VFVSVrDtAebX7oYvKYStBKqLq8LA5KxvoGDVYpPxCe6DAM2KK
-         gVkbR/39VlRkxGe3FM2wbraa2c9DL3PhOF7wK4yJO8HLUX/Zd+la/1ZR9WDjfbF/r8nY
-         KSiV6Sb2Aed1W4EdtxNjwhQrpgU6JNuUIOJ7pgpNrTO4LJG/XdlER0j4Bamrrqq80R9B
-         S4rIwSUXSDqRheVC3LNh7h4qlZlqOmA7PejkOLL0DBvunpvdPOawNJD0QnT/Ai7h/ErG
-         vOBBU5fnZMFJbeG683ybX6Rr8ewBx6FjQPc4AgCAWzShkoINhWPM8QfB7I05KoHY+Jek
-         H4Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wrm96WwHAY7NcmiKOn3dljT8L1OhqnpuLxqvg48PumA=;
-        b=Yz1b1ttDcPu9MWwwCVbxnyYJU/K3c54EBGQ3+hDRscb735bsJjQPJ9u0loqFhH5R9Y
-         V21j2J1XjxJ6rvLDwuCDDjMkckBsLLjUtuB97ap3pXQQSd/0CJMjX6kRz7DZwHdHehGT
-         5/z6J2R3pOvEUQQEd6ZZdPqc7MZL5eiuThp9iCs55GBs9D9FNo3Ba9Kz3VaOwoi1IHhe
-         dpxnbqLPeaIU71qanRBPcr/5DVNSQuHXGcgCXZk6eIedZairb7kqKWPz+1NW+ZA8eYOp
-         hXtbfnBeEQ1dv1KfJdbYsctTXOeOHV01ti5HZI6+rrwKPpZTgfoZn3QM2f5Evfig8A1O
-         Gf4Q==
-X-Gm-Message-State: AOAM5327yml0Y0mpxop2LC5nuzY+VO25iOfJcN+tjowc140vetuKLrUP
-        MQFJP+kLKMlu3Zxf0bnhML4prVvA4XU=
-X-Google-Smtp-Source: ABdhPJzaaweCWAO9H20DaJW4o6GMcuLpt1uhD39YL08FGVQMNekiW2THDFuGNU+a2KJ8950pygM/pw==
-X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr2277820plo.308.1593759268136;
-        Thu, 02 Jul 2020 23:54:28 -0700 (PDT)
-Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
-        by smtp.gmail.com with ESMTPSA id s188sm10295612pfb.118.2020.07.02.23.54.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 23:54:27 -0700 (PDT)
-From:   Daeho Jeong <daeho43@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH v3] f2fs: add symbolic link to kobject in sysfs
-Date:   Fri,  3 Jul 2020 15:54:20 +0900
-Message-Id: <20200703065420.3544269-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+        Fri, 3 Jul 2020 02:54:54 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36348 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725648AbgGCGyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 02:54:54 -0400
+Received: from [10.130.0.66] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf90x1v5eeQZPAA--.832S3;
+        Fri, 03 Jul 2020 14:54:42 +0800 (CST)
+Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
+ enic_init_affinity_hint()
+To:     Jakub Kicinski <kuba@kernel.org>,
+        "Christian Benvenuti (benve)" <benve@cisco.com>
+References: <20200623.143311.995885759487352025.davem@davemloft.net>
+ <20200623.152626.2206118203643133195.davem@davemloft.net>
+ <7533075e-0e8e-2fde-c8fa-72e2ea222176@loongson.cn>
+ <20200623.202324.442008830004872069.davem@davemloft.net>
+ <70519029-1cfa-5fce-52f3-cfb13bf00f7d@loongson.cn>
+ <BYAPR11MB37994715A3DD8259DF16A34DBA950@BYAPR11MB3799.namprd11.prod.outlook.com>
+ <20200624095903.71a01271@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "_govind@gmx.com" <_govind@gmx.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lixuefeng@loongson.cn" <lixuefeng@loongson.cn>,
+        "yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>
+From:   Kaige Li <likaige@loongson.cn>
+Message-ID: <71243f6a-561f-4fa1-be03-3e1589497ea4@loongson.cn>
+Date:   Fri, 3 Jul 2020 14:54:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624095903.71a01271@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxf90x1v5eeQZPAA--.832S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFWkXFy8CFW5Wr47KryrCrg_yoW8WF48pF
+        sYgayrKF40qr1kXw4DCw18C3y2ya1jk34DGw45Z3s29F4DXr9FgryUtr43WFWUuFW7Jr17
+        Jwn7Aa4Ivayjv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
+        IFyTuYvjfUnc_TUUUUU
+X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daeho Jeong <daehojeong@google.com>
 
-Added a symbolic link to directory of sysfs. It will
-create a symbolic link such as "mount_0" and "mount_1" to
-each f2fs mount in the order of mounting filesystem. But
-once one mount point was umounted, that sequential number
-@x in "mount_@x" could be reused by later newly mounted
-point. It will provide easy access to sysfs node even if
-not knowing the specific device node name like sda19 and
-dm-3.
+On 06/25/2020 12:59 AM, Jakub Kicinski wrote:
+> On Wed, 24 Jun 2020 06:32:36 +0000 Christian Benvenuti (benve) wrote:
+>> We/Cisco will also look into it, hopefully a small code reorg will be sufficient.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- Documentation/filesystems/f2fs.rst | 13 ++++++++++++-
- fs/f2fs/f2fs.h                     |  4 ++++
- fs/f2fs/sysfs.c                    | 31 ++++++++++++++++++++++++++----
- 3 files changed, 43 insertions(+), 5 deletions(-)
+Hi, Christian:
 
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 535021c46260..916956d433b2 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -279,7 +279,18 @@ Sysfs Entries
- 
- Information about mounted f2fs file systems can be found in
- /sys/fs/f2fs.  Each mounted filesystem will have a directory in
--/sys/fs/f2fs based on its device name (i.e., /sys/fs/f2fs/sda).
-+/sys/fs/f2fs based on its device name (i.e., /sys/fs/f2fs/sda),
-+or mount_#x (#x is the number representing the order of mounting).
-+But once one mount point was umounted, that sequential number @x
-+in "mount_@x" could be reused by later newly mounted point.
-+
-+Here is an example of this.
-+
-+mount dev0 mount0 (mount_0 -> dev0)
-+mount dev1 mount1 (mount_1 -> dev1)
-+umount mount0
-+mount dev2 (mount_0 -> dev2)
-+
- The files in each per-device directory are shown in table below.
- 
- Files in /sys/fs/f2fs/<devname>
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 4b28fd42fdbc..7d6c5f8ce16b 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1419,6 +1419,8 @@ struct decompress_io_ctx {
- #define MAX_COMPRESS_LOG_SIZE		8
- #define MAX_COMPRESS_WINDOW_SIZE	((PAGE_SIZE) << MAX_COMPRESS_LOG_SIZE)
- 
-+#define MOUNT_NAME_SIZE			20
-+
- struct f2fs_sb_info {
- 	struct super_block *sb;			/* pointer to VFS super block */
- 	struct proc_dir_entry *s_proc;		/* proc entry */
-@@ -1599,6 +1601,8 @@ struct f2fs_sb_info {
- 	/* For sysfs suppport */
- 	struct kobject s_kobj;
- 	struct completion s_kobj_unregister;
-+	int s_mount_id;
-+	char s_mount_name[MOUNT_NAME_SIZE];
- 
- 	/* For shrinker support */
- 	struct list_head s_list;
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 2a140657fc4d..703d9f460d03 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -18,6 +18,7 @@
- #include <trace/events/f2fs.h>
- 
- static struct proc_dir_entry *f2fs_proc_root;
-+static struct ida f2fs_mount_ida;
- 
- /* Sysfs support for f2fs */
- enum {
-@@ -908,6 +909,9 @@ int __init f2fs_init_sysfs(void)
- 	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
- 	}
-+
-+	ida_init(&f2fs_mount_ida);
-+
- 	return ret;
- }
- 
-@@ -917,6 +921,7 @@ void f2fs_exit_sysfs(void)
- 	kset_unregister(&f2fs_kset);
- 	remove_proc_entry("fs/f2fs", NULL);
- 	f2fs_proc_root = NULL;
-+	ida_destroy(&f2fs_mount_ida);
- }
- 
- int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
-@@ -928,12 +933,22 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err) {
--		kobject_put(&sbi->s_kobj);
--		wait_for_completion(&sbi->s_kobj_unregister);
--		return err;
-+	if (err)
-+		goto err1;
-+
-+	sbi->s_mount_id = ida_simple_get(&f2fs_mount_ida, 0, 0, GFP_KERNEL);
-+	if (sbi->s_mount_id < 0) {
-+		err = sbi->s_mount_id;
-+		goto err1;
- 	}
- 
-+	snprintf(sbi->s_mount_name, MOUNT_NAME_SIZE, "mount_%d",
-+			sbi->s_mount_id);
-+	err = sysfs_create_link(&f2fs_kset.kobj, &sbi->s_kobj,
-+			sbi->s_mount_name);
-+	if (err)
-+		goto err2;
-+
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
- 
-@@ -948,6 +963,12 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 				victim_bits_seq_show, sb);
- 	}
- 	return 0;
-+err2:
-+	ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
-+err1:
-+	kobject_put(&sbi->s_kobj);
-+	wait_for_completion(&sbi->s_kobj_unregister);
-+	return err;
- }
- 
- void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
-@@ -959,6 +980,8 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
- 		remove_proc_entry("victim_bits", sbi->s_proc);
- 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
- 	}
-+	sysfs_remove_link(&f2fs_kset.kobj, sbi->s_mount_name);
-+	ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
- 	kobject_del(&sbi->s_kobj);
- 	kobject_put(&sbi->s_kobj);
- }
--- 
-2.27.0.383.g050319c2ae-goog
+I have seen some submissions and codes, and feel that spin_lock is unnecessary in enci_reset.<https://lore.kernel.org/patchwork/project/lkml/list/?submitter=28441>
+
+<https://lore.kernel.org/patchwork/project/lkml/list/?submitter=28441>
+
+Some key submissions are as follows.
+
+Tue Sep 16 00:17:11 2008
+
+git show 01f2e4ead. we can see that spin_lock is just in here:
+
++       spin_lock(&enic->devcmd_lock);
+
++       vnic_dev_hang_notify(enic->vdev);
+
++       spin_unlock(&enic->devcmd_lock);
+
+
+
+Sat Aug 17 06:47:40 2013
+
+git show 0b038566c: Add an interface for USNIC to interact with firmware.
+
+Before commit-id: 0b038566c, spin_lock is not used in enic_reset. rtnl_lock() is enough. And 0b038566c add a interface: enic_api_devcmd_proxy_by_index.
+
+Enic_api_devcmd_proxy_by_index is just used in ./drivers/infiniband/hw/usnic/usnic_fwd.c:50, which is added in 2183b990.
+
++       spin_lock(&enic->enic_api_lock);
+
+         enic_dev_hang_notify(enic);
+
+
+         enic_dev_set_ig_vlan_rewrite_mode(enic);
+
+         enic_open(enic->netdev);
+
++       spin_unlock(&enic->enic_api_lock);
+
+By analyzing enic_api_lock, it's mainly used for locking vnic_dev_cmd(vdev, cmd, a0, a1, wait). And enic_reset didn't call to vnic_dev_cmd.
+
+So, I think spin_lock may be deleted in enci_reset. What do you think? Or you have better advice.
+
+Thank you.
+
+> Make sure you enable CONFIG_DEBUG_ATOMIC_SLEEP when you test.
 
