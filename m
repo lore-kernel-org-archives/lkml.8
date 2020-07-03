@@ -2,124 +2,97 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E44C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A61620A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F7420A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgGCDV2 (ORCPT
+        id S1726116AbgGCD2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:21:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37664 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgGCDV1 (ORCPT
+        Thu, 2 Jul 2020 23:28:17 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:33582 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725937AbgGCD2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:21:27 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 1A8CB2A054D
-Message-ID: <d34520b6799ddf84d9bd6de1cc6352f28c665c9a.camel@collabora.com>
-Subject: Re: [PATCH 7/9] media: rkvdec: h264: Use bytesperline and buffer
- height to calculate stride
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-Date:   Fri, 03 Jul 2020 00:21:17 -0300
-In-Reply-To: <20200701215616.30874-8-jonas@kwiboo.se>
-References: <20200701215616.30874-1-jonas@kwiboo.se>
-         <20200701215616.30874-8-jonas@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jul 2020 23:28:17 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
+        with SMTP; 3 Jul 2020 06:28:14 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 0633SEnp006777;
+        Fri, 3 Jul 2020 06:28:14 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 0633SEk3006654;
+        Fri, 3 Jul 2020 06:28:14 +0300
+Received: (from moshe@localhost)
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 0633SEDZ006653;
+        Fri, 3 Jul 2020 06:28:14 +0300
+From:   Moshe Shemesh <moshe@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
+Subject: [PATCH net-next v2 0/7] Add devlink-health support for devlink ports
+Date:   Fri,  3 Jul 2020 06:27:31 +0300
+Message-Id: <1593746858-6548-1-git-send-email-moshe@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+Implement support for devlink health reporters on per-port basis. First
+part in the series prepares common functions parts for health reporter
+implementation. Second introduces required API to devlink-health and
+mlx5e ones demonstrate its usage and effectively implement the feature
+for mlx5 driver.
+The per-port reporter functionality is achieved by adding a list of
+devlink_health_reporters to devlink_port struct in a manner similar to
+existing device infrastructure. This is the only major difference and
+it makes possible to fully reuse device reporters operations.
+The effect will be seen in conjunction with iproute2 additions and
+will affect all devlink health commands. User can distinguish between
+device and port reporters by looking at a devlink handle. Port reporters
+have a port index at the end of the address and such addresses can be
+provided as a parameter in every place where devlink-health accepted it.
+These can be obtained from devlink port show command.
+For example:
+$ devlink health show
+pci/0000:00:0a.0:
+  reporter fw
+    state healthy error 0 recover 0 auto_dump true
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 500 auto_recover true auto_dump true
+$ devlink health set pci/0000:00:0a.0/1 reporter tx grace_period 1000 \
+auto_recover false auto_dump false
+$ devlink health show pci/0000:00:0a.0/1 reporter tx
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 1000 auto_recover flase auto_dump false
 
-On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
-> Use bytesperline and buffer height to calculate the strides configured.
-> 
-> This does not really change anything other than ensuring the bytesperline
-> that is signaled to userspace matches was is configured in HW.
-> 
+Changes v1 -> v2:
+Fixed functions comment to match parameters list.
 
-Are you seeing any issue due to this?
+Vladyslav Tarasiuk (7):
+  devlink: Refactor devlink health reporter constructor
+  devlink: Rework devlink health reporter destructor
+  devlink: Create generic devlink health reporter search function
+  devlink: Implement devlink health reporters on per-port basis
+  devlink: Add devlink health port reporters API
+  net/mlx5e: Move devlink port register and unregister calls
+  net/mlx5e: Move devlink-health rx and tx reporters to devlink port
 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  drivers/staging/media/rkvdec/rkvdec-h264.c | 27 +++++++++++++---------
->  1 file changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> index 9c8e49642cd9..1cb6af590138 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> @@ -891,10 +891,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
->  	dma_addr_t rlc_addr;
->  	dma_addr_t refer_addr;
->  	u32 rlc_len;
-> -	u32 hor_virstride = 0;
-> -	u32 ver_virstride = 0;
-> -	u32 y_virstride = 0;
-> -	u32 yuv_virstride = 0;
-> +	u32 hor_virstride;
-> +	u32 ver_virstride;
-> +	u32 y_virstride;
-> +	u32 uv_virstride;
-> +	u32 yuv_virstride;
->  	u32 offset;
->  	dma_addr_t dst_addr;
->  	u32 reg, i;
-> @@ -904,16 +905,20 @@ static void config_registers(struct rkvdec_ctx *ctx,
->  
->  	f = &ctx->decoded_fmt;
->  	dst_fmt = &f->fmt.pix_mp;
-> -	hor_virstride = (sps->bit_depth_luma_minus8 + 8) * dst_fmt->width / 8;
-> -	ver_virstride = round_up(dst_fmt->height, 16);
-> +	hor_virstride = dst_fmt->plane_fmt[0].bytesperline;
-> +	ver_virstride = dst_fmt->height;
->  	y_virstride = hor_virstride * ver_virstride;
->  
+ .../ethernet/mellanox/mlx5/core/en/reporter_rx.c   |   9 +-
+ .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |  13 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  15 +-
+ include/net/devlink.h                              |  11 +
+ net/core/devlink.c                                 | 244 ++++++++++++++++-----
+ 5 files changed, 216 insertions(+), 76 deletions(-)
 
-So far so good.
-
-> -	if (sps->chroma_format_idc == 0)
-> -		yuv_virstride = y_virstride;
-> -	else if (sps->chroma_format_idc == 1)
-> -		yuv_virstride += y_virstride + y_virstride / 2;
-> +	if (sps->chroma_format_idc == 1)
-> +		uv_virstride = y_virstride / 2;
->  	else if (sps->chroma_format_idc == 2)
-> -		yuv_virstride += 2 * y_virstride;
-> +		uv_virstride = y_virstride;
-> +	else if (sps->chroma_format_idc == 3)
-> +		uv_virstride = 2 * y_virstride;
-> +	else
-> +		uv_virstride = 0;
-> +
-> +	yuv_virstride = y_virstride + uv_virstride;
->  
-
-Is the chunk above related to the patch, or mostly
-cleaning/improving the code?
-
-Thanks,
-Ezequiel
-
->  	reg = RKVDEC_Y_HOR_VIRSTRIDE(hor_virstride / 16) |
->  	      RKVDEC_UV_HOR_VIRSTRIDE(hor_virstride / 16) |
-
+-- 
+1.8.3.1
 
