@@ -2,74 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E697CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58DA32084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE18206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgGCJ3L (ORCPT
+        id S1726475AbgGCJaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:29:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6816 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgGCJ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:29:10 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 180C814964524D981A9D;
-        Fri,  3 Jul 2020 17:29:09 +0800 (CST)
-Received: from huawei.com (10.175.113.25) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Jul 2020
- 17:29:02 +0800
-From:   Zheng Zengkai <zhengzengkai@huawei.com>
-To:     <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>,
-        <zhengzengkai@huawei.com>
-Subject: [PATCH -next] perf util: Fix memory leak in __parse_regs()
-Date:   Fri, 3 Jul 2020 17:33:44 +0800
-Message-ID: <20200703093344.189450-1-zhengzengkai@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Jul 2020 05:30:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61960 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgGCJaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:30:11 -0400
+IronPort-SDR: dgShyHnAEW8DJdWyrcGPldNDGlytC122C5vXdQK4npdqcJyOrZ7IgS+xQV9GVAm7ftU5ihWsU1
+ C2hkQABmOBnw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="231986881"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="231986881"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 02:30:11 -0700
+IronPort-SDR: l31gYcmKNMh0jJgY194TtzUizoIW0DpsWBdZeEs9ROHqsohAxscc7OynGyejlLP/6GMDUzY+XA
+ s5mLMPhfEedg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="278387141"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga003.jf.intel.com with ESMTP; 03 Jul 2020 02:30:09 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <yang.shi@linux.alibaba.com>, <rientjes@google.com>,
+        <dan.j.williams@intel.com>
+Subject: Re: [RFC][PATCH 8/8] mm/numa: new reclaim mode to enable reclaim-based migration
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+        <20200629234517.A7EC4BD3@viggo.jf.intel.com>
+Date:   Fri, 03 Jul 2020 17:30:09 +0800
+In-Reply-To: <20200629234517.A7EC4BD3@viggo.jf.intel.com> (Dave Hansen's
+        message of "Mon, 29 Jun 2020 16:45:17 -0700")
+Message-ID: <87imf5djz2.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when using perf record option '-I' or '--user-regs='
-along with argument '?' to list available register names,
-memory of variable 'os' allocated by strdup() needs to be released
-before __parse_regs() returns, otherwise memory leak will occur.
+Dave Hansen <dave.hansen@linux.intel.com> writes:
+> +/*
+> + * React to hotplug events that might online or offline
+> + * NUMA nodes.
+> + *
+> + * This leaves migrate-on-reclaim transiently disabled
+> + * between the MEM_GOING_OFFLINE and MEM_OFFLINE events.
+> + * This runs whether RECLAIM_MIGRATE is enabled or not.
+> + * That ensures that the user can turn RECLAIM_MIGRATE
+> + * without needing to recalcuate migration targets.
+> + */
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +static int __meminit migrate_on_reclaim_callback(struct notifier_block *self,
+> +						 unsigned long action, void *arg)
+> +{
+> +	switch (action) {
+> +	case MEM_GOING_OFFLINE:
+> +		/*
+> +		 * Make sure there are not transient states where
+> +		 * an offline node is a migration target.  This
+> +		 * will leave migration disabled until the offline
+> +		 * completes and the MEM_OFFLINE case below runs.
+> +		 */
+> +		disable_all_migrate_targets();
+> +		break;
+> +	case MEM_OFFLINE:
+> +	case MEM_ONLINE:
+> +		/*
+> +		 * Recalculate the target nodes once the node
+> +		 * reaches its final state (online or offline).
+> +		 */
+> +		set_migration_target_nodes();
+> +		break;
+> +	case MEM_CANCEL_OFFLINE:
+> +		/*
+> +		 * MEM_GOING_OFFLINE disabled all the migration
+> +		 * targets.  Reenable them.
+> +		 */
+> +		set_migration_target_nodes();
+> +		break;
+> +	case MEM_GOING_ONLINE:
+> +	case MEM_CANCEL_ONLINE:
+> +		break;
 
-Fixes: bcc84ec65ad1 ("perf record: Add ability to name registers to record")
-Signed-off-by: Zheng Zengkai <zhengzengkai@huawei.com>
----
- tools/perf/util/parse-regs-options.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think we need to call
+disable_all_migrate_targets()/set_migration_target_nodes() for CPU
+online/offline event too.  Because that will influence node_state(nid,
+N_CPU).  Which will influence node demotion relationship.
 
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index e687497b3aac..a4a100425b3a 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -54,7 +54,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- #endif
- 				fputc('\n', stderr);
- 				/* just printing available regs */
--				return -1;
-+				goto error;
- 			}
- #ifdef HAVE_PERF_REGS_SUPPORT
- 			for (r = sample_reg_masks; r->name; r++) {
--- 
-2.20.1
+> +	}
+> +
+> +	return notifier_from_errno(0);
+>  }
+> +
 
+Best Regards,
+Huang, Ying
