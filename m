@@ -2,140 +2,88 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F38EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA80C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354282084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB562084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGCJEu (ORCPT
+        id S1726363AbgGCJFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:04:50 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38702 "EHLO mga07.intel.com"
+        Fri, 3 Jul 2020 05:05:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:39880 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgGCJEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:04:49 -0400
-IronPort-SDR: gOx/e53kru2QXxcGrCkwR5SHVbOdWD8h0ljxwyZ4z9zZw8uJy78Q7gODaakgUf3MKbpussjkDp
- 1AZkBpFjGLfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212138636"
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="212138636"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 02:04:49 -0700
-IronPort-SDR: 7kxNk0o4XkdReLoS7Rl97nsKf0zg7Ab68OgR5Wx67aNMO4qoIBQDUUukFpNPR5EfNPNwg23b7O
- HMVaUxlgUUVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="267299967"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2020 02:04:44 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.c.chen@intel.com>, Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH] intel_idle: Customize IceLake server support
-Date:   Fri,  3 Jul 2020 17:02:42 +0800
-Message-Id: <20200703090242.5564-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725764AbgGCJFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:05:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDBA52F;
+        Fri,  3 Jul 2020 02:05:41 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB4763F68F;
+        Fri,  3 Jul 2020 02:05:39 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] dt-bindings: arm-smmu: add compatible string for
+ Marvell Armada-AP806 SMMU-500
+To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org, joro@8bytes.org,
+        gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+References: <20200702201633.22693-1-tn@semihalf.com>
+ <20200702201633.22693-4-tn@semihalf.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3172ec21-d773-7fcb-f1ee-f557f72f20c5@arm.com>
+Date:   Fri, 3 Jul 2020 10:05:38 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200702201633.22693-4-tn@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On ICX platform, the CPU frequency will slowly ramp up
-when woken up from C-states deeper than/equals to C1E,
-and since C1E auto-promotion is enabled by default,
-this might cause unexpected result.
+On 2020-07-02 21:16, Tomasz Nowicki wrote:
+> Add specific compatible string for Marvell usage due to errata of
+> accessing 64bits registers of ARM SMMU, in AP806.
+> 
+> AP806 SoC uses the generic ARM-MMU500, and there's no specific
+> implementation of Marvell, this compatible is used for errata only.
+> 
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
+> ---
+>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index d7ceb4c34423..7beca9c00b12 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -38,6 +38,11 @@ properties:
+>                 - qcom,sc7180-smmu-500
+>                 - qcom,sdm845-smmu-500
+>             - const: arm,mmu-500
+> +      - description: Marvell SoCs implementing "arm,mmu-500"
+> +        items:
+> +          - enum:
+> +              - marvell,ap806-smmu-500
 
-Thus this patch disables C1E auto-promotion and expose
-C1E as a separate idle state, so that the C1E and C6 can
-be disabled via sysfs when necessary.
+Isn't a single-valued enum just a constant? :P
 
-Besides C1 and C1E, the exit latency of C6 was measured
-by a dedicated tool. However the exit latency(41us) exposed
-by _CST is much smaller than the one measured(128us). This
-is probably due to the _CST uses the exit latency when woken
-up from PC0+C6, rather than PC6+C6 when C6 was measured.
+Robin.
 
-Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Acked-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/idle/intel_idle.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index f4495841bf68..1eab606d858b 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -752,6 +752,35 @@ static struct cpuidle_state skx_cstates[] __initdata = {
- 		.enter = NULL }
- };
- 
-+static struct cpuidle_state icx_cstates[] __initdata = {
-+	{
-+		.name = "C1",
-+		.desc = "MWAIT 0x00",
-+		.flags = MWAIT2flg(0x00),
-+		.exit_latency = 1,
-+		.target_residency = 1,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.name = "C1E",
-+		.desc = "MWAIT 0x01",
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
-+		.exit_latency = 4,
-+		.target_residency = 4,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.name = "C6",
-+		.desc = "MWAIT 0x20",
-+		.flags = MWAIT2flg(0x20) | CPUIDLE_FLAG_TLB_FLUSHED,
-+		.exit_latency = 128,
-+		.target_residency = 384,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.enter = NULL }
-+};
-+
- static struct cpuidle_state atom_cstates[] __initdata = {
- 	{
- 		.name = "C1E",
-@@ -1056,6 +1085,12 @@ static const struct idle_cpu idle_cpu_skx __initconst = {
- 	.use_acpi = true,
- };
- 
-+static const struct idle_cpu idle_cpu_icx __initconst = {
-+	.state_table = icx_cstates,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
-+
- static const struct idle_cpu idle_cpu_avn __initconst = {
- 	.state_table = avn_cstates,
- 	.disable_promotion_to_c1e = true,
-@@ -1110,6 +1145,7 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&idle_cpu_bxt),
--- 
-2.17.1
-
+> +          - const: arm,mmu-500
+>         - items:
+>             - const: arm,mmu-500
+>             - const: arm,smmu-v2
+> 
