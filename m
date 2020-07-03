@@ -2,195 +2,128 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8352C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8BB20884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux-powerpc-org.20150623.gappssmtp.com header.i=@linux-powerpc-org.20150623.gappssmtp.com header.b="De8MqE6o"
+	by mail.kernel.org (Postfix) with ESMTP id BB021208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgGCQS1 (ORCPT
+        id S1726660AbgGCQSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgGCQS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:18:26 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358E2C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 09:18:26 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p20so34789175ejd.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 09:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-powerpc-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=qiEZaKZ9FC6yDmrpUiBYeXNjpNa2H+Da4zGNKkrzBmA=;
-        b=De8MqE6obLkfjvoFPW9CRmvzox7ddURkpzlnlbuIHhuhT1ugHuW25ywzcQfHfRQFRf
-         dXOm3vwqSpxXpMngdWyV5KB4W1cVUJC+A7VcC+MIV8qVStAJSY4lE4K6n1/czDejlJhF
-         LK7H2rqhTlcl6dKw2adPgEJwvOqC/bK/52/T78IKh3IiCUDGdlkk2cAoQSKORZdwFMsH
-         n06pPHDrAhU/v4uc+Dz35b+pIg0aCfMLnSy/1bub8Uwf/xrhhOVX3VXgCvSWxA4d7edq
-         mZdTDGKBawOcplvf7HTh3glcWRRanARemg+Vr8567Qn105IeVxQC7IoP5U+dmSXI+ZdP
-         BQKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=qiEZaKZ9FC6yDmrpUiBYeXNjpNa2H+Da4zGNKkrzBmA=;
-        b=Fj8m+eDsYzCxY/HM7OM9j5HaUdm0kwiTzpVdhIYxJcL6XNf+DXS5XNsXUpDusZxZAr
-         DaDBZ33035RMVHpdtJ2LnPTmsSLgFnjHSZ3i1ziX0WAZHNPBkHtMubG3uq7qsEyxFd51
-         HgI9b4z8FDOFPanvukrZ0fnAp6rBRPDuuIulAV2FbaqQx5GMN3mmN3qbPtx1mmWjZthh
-         zb/wvVlj8hniVhUdpzSAEb1kqUoh9lVS9bCj1ChRxrwQb0Dasu/LTQ9IOvkwDWyDEXjX
-         wryBqWHVUAVp8OxWOWmCN6R7N8xtmHskvC8QRR21ABUIpRQaKkL8tzXzx1uZqwC16qNp
-         xwKA==
-X-Gm-Message-State: AOAM531274oXjWc+tl+YBi7MbVbSypXLn0suqEmFm9k71rsbRZZFjeaK
-        G7LZ7ddX0WilO7hHmX1gGk7CgjCaheml49aUiiUxXA==
-X-Google-Smtp-Source: ABdhPJzNQSVXnsqFLLCySL5wP60ViOog3L1iCfEO8JhHHdp4TE/25m2500UQlvy/RsLvr8DPsk5X+QCQrIVMvUtuToA=
-X-Received: by 2002:a17:906:6897:: with SMTP id n23mr31801112ejr.473.1593793104893;
- Fri, 03 Jul 2020 09:18:24 -0700 (PDT)
+        Fri, 3 Jul 2020 12:18:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40504 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbgGCQSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:18:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CCE0DAB98;
+        Fri,  3 Jul 2020 16:18:50 +0000 (UTC)
+Subject: Re: [PATCH v3 8/8] mm/page_alloc: remove a wrapper for
+ alloc_migration_target()
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592892828-1934-9-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <fe0df827-e9d0-ec92-f4e1-99cfc6a6b9e9@suse.cz>
+Date:   Fri, 3 Jul 2020 18:18:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Received: by 2002:a50:3a1b:0:0:0:0:0 with HTTP; Fri, 3 Jul 2020 09:18:24 -0700 (PDT)
-X-Originating-IP: [5.35.13.201]
-In-Reply-To: <20200701165057.667799-7-vaibhavgupta40@gmail.com>
-References: <20200701165057.667799-1-vaibhavgupta40@gmail.com> <20200701165057.667799-7-vaibhavgupta40@gmail.com>
-From:   Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Fri, 3 Jul 2020 19:18:24 +0300
-Message-ID: <CAOJe8K0aYeba0fOpSz6dzgWUwAP8FTyOpQc8rckWO=RPTKiprw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] sundance: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Dillow <dave@thedillows.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Jon Mason <jdmason@kudzu.us>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1592892828-1934-9-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20, Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> With legacy PM, drivers themselves were responsible for managing the
-> device's power states and takes care of register states.
->
-> After upgrading to the generic structure, PCI core will take care of
-> required tasks and drivers should do only device-specific operations.
->
-> Thus, there is no need to call the PCI helper functions like
-> pci_enable/disable_device(), pci_save/restore_sate() and
-> pci_set_power_state().
->
-> Compile-tested only.
->
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+On 6/23/20 8:13 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> There is a well-defined standard migration target callback.
+> Use it directly.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Should be fine. I'll try to test it in the upcoming weekend
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+But you could move this to patch 5/8 to reduce churn. And do the same with
+mm/memory-failure.c new_page() there really, to drop the simple wrappers. Only
+new_node_page() is complex enough.
+Hm wait, new_node_page() is only called by do_migrate_range() which is only
+called by __offline_pages() with explicit test that all pages are from a single
+zone, so the nmask could also be setup just once and not per each page, making
+it possible to remove the wrapper.
+
+But for new_page() you would have to define that mtc->nid == NUMA_NO_NODE means
+alloc_migrate_target() does page_to_nid(page) by itself.
+
+
 
 > ---
->  drivers/net/ethernet/dlink/sundance.c | 27 ++++++++-------------------
->  1 file changed, 8 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/net/ethernet/dlink/sundance.c
-> b/drivers/net/ethernet/dlink/sundance.c
-> index dc566fcc3ba9..ca97e321082d 100644
-> --- a/drivers/net/ethernet/dlink/sundance.c
-> +++ b/drivers/net/ethernet/dlink/sundance.c
-> @@ -1928,11 +1928,9 @@ static void sundance_remove1(struct pci_dev *pdev)
+>  mm/page_alloc.c     |  9 +++++++--
+>  mm/page_isolation.c | 11 -----------
+>  2 files changed, 7 insertions(+), 13 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 9808339..884dfb5 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8359,6 +8359,11 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
+>  	unsigned long pfn = start;
+>  	unsigned int tries = 0;
+>  	int ret = 0;
+> +	struct migration_target_control mtc = {
+> +		.nid = zone_to_nid(cc->zone),
+> +		.nmask = &node_states[N_MEMORY],
+> +		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+> +	};
+>  
+>  	migrate_prep();
+>  
+> @@ -8385,8 +8390,8 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
+>  							&cc->migratepages);
+>  		cc->nr_migratepages -= nr_reclaimed;
+>  
+> -		ret = migrate_pages(&cc->migratepages, alloc_migrate_target,
+> -				    NULL, 0, cc->mode, MR_CONTIG_RANGE);
+> +		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
+> +				NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE);
 >  	}
+>  	if (ret < 0) {
+>  		putback_movable_pages(&cc->migratepages);
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index adba031..242c031 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -306,14 +306,3 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+>  
+>  	return pfn < end_pfn ? -EBUSY : 0;
 >  }
->
-> -#ifdef CONFIG_PM
 > -
-> -static int sundance_suspend(struct pci_dev *pci_dev, pm_message_t state)
-> +static int __maybe_unused sundance_suspend(struct device *dev_d)
->  {
-> -	struct net_device *dev = pci_get_drvdata(pci_dev);
-> +	struct net_device *dev = dev_get_drvdata(dev_d);
->  	struct netdev_private *np = netdev_priv(dev);
->  	void __iomem *ioaddr = np->base;
->
-> @@ -1942,30 +1940,24 @@ static int sundance_suspend(struct pci_dev *pci_dev,
-> pm_message_t state)
->  	netdev_close(dev);
->  	netif_device_detach(dev);
->
-> -	pci_save_state(pci_dev);
->  	if (np->wol_enabled) {
->  		iowrite8(AcceptBroadcast | AcceptMyPhys, ioaddr + RxMode);
->  		iowrite16(RxEnable, ioaddr + MACCtrl1);
->  	}
-> -	pci_enable_wake(pci_dev, pci_choose_state(pci_dev, state),
-> -			np->wol_enabled);
-> -	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
-> +
-> +	device_set_wakeup_enable(dev_d, np->wol_enabled);
->
->  	return 0;
->  }
->
-> -static int sundance_resume(struct pci_dev *pci_dev)
-> +static int __maybe_unused sundance_resume(struct device *dev_d)
->  {
-> -	struct net_device *dev = pci_get_drvdata(pci_dev);
-> +	struct net_device *dev = dev_get_drvdata(dev_d);
->  	int err = 0;
->
->  	if (!netif_running(dev))
->  		return 0;
->
-> -	pci_set_power_state(pci_dev, PCI_D0);
-> -	pci_restore_state(pci_dev);
-> -	pci_enable_wake(pci_dev, PCI_D0, 0);
+> -struct page *alloc_migrate_target(struct page *page, unsigned long private)
+> -{
+> -	struct migration_target_control mtc = {
+> -		.nid = page_to_nid(page),
+> -		.nmask = &node_states[N_MEMORY],
+> -		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+> -	};
 > -
->  	err = netdev_open(dev);
->  	if (err) {
->  		printk(KERN_ERR "%s: Can't resume interface!\n",
-> @@ -1979,17 +1971,14 @@ static int sundance_resume(struct pci_dev *pci_dev)
->  	return err;
->  }
->
-> -#endif /* CONFIG_PM */
-> +static SIMPLE_DEV_PM_OPS(sundance_pm_ops, sundance_suspend,
-> sundance_resume);
->
->  static struct pci_driver sundance_driver = {
->  	.name		= DRV_NAME,
->  	.id_table	= sundance_pci_tbl,
->  	.probe		= sundance_probe1,
->  	.remove		= sundance_remove1,
-> -#ifdef CONFIG_PM
-> -	.suspend	= sundance_suspend,
-> -	.resume		= sundance_resume,
-> -#endif /* CONFIG_PM */
-> +	.driver.pm	= &sundance_pm_ops,
->  };
->
->  static int __init sundance_init(void)
-> --
-> 2.27.0
->
->
+> -	return alloc_migration_target(page, (unsigned long)&mtc);
+> -}
+> 
+
