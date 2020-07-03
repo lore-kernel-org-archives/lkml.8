@@ -2,101 +2,121 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62E5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECEE320724
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPAjz1hR"
+	by mail.kernel.org (Postfix) with ESMTP id A136C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgGCJfi (ORCPT
+        id S1726063AbgGCJiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgGCJfi (ORCPT
+        Fri, 3 Jul 2020 05:38:02 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:38927 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbgGCJiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:35:38 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C69C08C5C1;
-        Fri,  3 Jul 2020 02:35:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f5so20312765ljj.10;
-        Fri, 03 Jul 2020 02:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oLmfy2pnBy37MmMuk79InOyFQOgM0OuGfW1lA5Bezns=;
-        b=dPAjz1hRA/nWCvLhxUJ7uccVaEcwWGHbKTb44GQgl9LbzS4P6iJHC9rTS2nlOv1sFZ
-         ilJIhJrVs4lZNtbBpljQqJaP52MEfvlFZWtrFyCKDaq8EB9QBGfWgXivYQhySdghuDCw
-         xZbaZmTj+muqQhER3JHXJChUNdRVKAhEkYeYPBrFKKpz8vH/HepPR1Qgy/gOVXbF2G4l
-         UsEIzzrg4hjteJT84C6pImwA9mxXVrU3dpYN/25xEPNBPlqBmCOyoTaYqNyGzJBIlQFy
-         LoQyMyb7o49jAxi6ONh68RAoHketLxFTY9OgrDp8JB4d/gGx1DRmECcpXfDsRYBpEBgI
-         RnWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oLmfy2pnBy37MmMuk79InOyFQOgM0OuGfW1lA5Bezns=;
-        b=OXRfnojiGdwe6lfW+/4932mWpfQxyLbbeN7Z+ntgQvrRWLKFVSR5us3yn/Et/xF0Vi
-         w1323nbTY+XiPV1Wd1FCBb40dNFofTFMu7xSlUSvBfXGWBunnWY63P49pR5PIE2/rqzp
-         edE744BnBEVLyoGADqWlk22q1BsqGU1kX3luMJpV1LJrSqHfG6+nXymenA4Q6ftakGb7
-         Yf0eTtQKdecB9xk4vShPch48HgGgytBzA1it89bx6Cs5fJePTC8/+alojhha5MeEKcaj
-         SLN9f4ZOc1wYVJcejjxeN7kJu6dwWyFhYKWzPqVg3gobFiZMt+WoPVYwg5+Agn5Uq80A
-         Vnxw==
-X-Gm-Message-State: AOAM533dQ+mPrPfaRIcf27ijYdhK932Ve4j74Tx7os/SXugA68cl2aUN
-        7JkhnX6jEzThR2Su9vG8gtE+/HA4JsLRHBWlQIA=
-X-Google-Smtp-Source: ABdhPJw1fRvCdmWXz1y7V1BJUhyPLgKVAwcYywSD36PjOkR8Vultjf9a5oAIaozxkYLgP29FTGmHL6QlT3bDv1jwa/A=
-X-Received: by 2002:a2e:9e87:: with SMTP id f7mr19865475ljk.44.1593768936347;
- Fri, 03 Jul 2020 02:35:36 -0700 (PDT)
+        Fri, 3 Jul 2020 05:38:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U1ZX3m._1593769072;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U1ZX3m._1593769072)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 03 Jul 2020 17:37:53 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
+ objects
+To:     Pekka Enberg <penberg@gmail.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+ <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
+Date:   Fri, 3 Jul 2020 17:37:52 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de>
- <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
- <20200702135054.GA29240@lst.de> <CANiq72=8facdt7HBtoUZiJW5zfki-gYYESJzxjXf7wK7dYLm1Q@mail.gmail.com>
- <d7c902f9eecffc51f3a5761fa343bedad89dff7e.camel@perches.com>
-In-Reply-To: <d7c902f9eecffc51f3a5761fa343bedad89dff7e.camel@perches.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 3 Jul 2020 11:35:25 +0200
-Message-ID: <CANiq72=LekNWFbK8_+88T2oGSqA5A0fjnvn28cY-tEOfKbSqdw@mail.gmail.com>
-Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method calls
- to seq_read_iter
-To:     Joe Perches <joe@perches.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 9:44 AM Joe Perches <joe@perches.com> wrote:
->
-> And I'd generally not bother with 80 column rewrapping
+On 2020/7/2 PM 7:59, Pekka Enberg wrote:
+> On Thu, Jul 2, 2020 at 11:32 AM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
+>> The node list_lock in count_partial() spend long time iterating
+>> in case of large amount of partial page lists, which can cause
+>> thunder herd effect to the list_lock contention, e.g. it cause
+>> business response-time jitters when accessing "/proc/slabinfo"
+>> in our production environments.
+> 
+> Would you have any numbers to share to quantify this jitter? I have no
 
-Thanks for the quick answer Joe -- here I was referring to the cases
-where one needs to move all the `=`s to the right like:
+We have HSF RT(High-speed Service Framework Response-Time) monitors, the
+RT figures fluctuated randomly, then we deployed a tool detecting "irq
+off" and "preempt off" to dump the culprit's calltrace, capturing the
+list_lock cost up to 100ms with irq off issued by "ss", this also caused
+network timeouts.
 
- static const struct file_operations memtype_fops = {
-  .open    = memtype_seq_open,
-- .read    = seq_read,
-+ .read_iter    = seq_read_iter,
-  .llseek  = seq_lseek,
-  .release = seq_release,
- };
+> objections to this approach, but I think the original design
+> deliberately made reading "/proc/slabinfo" more expensive to avoid
+> atomic operations in the allocation/deallocation paths. It would be
+> good to understand what is the gain of this approach before we switch
+> to it. Maybe even run some slab-related benchmark (not sure if there's
+> something better than hackbench these days) to see if the overhead of
+> this approach shows up.
 
-(I don't think there is any/many cases of 80-column rewrapping here).
+I thought that before, but most atomic operations are serialized by the
+list_lock. Another possible way is to hold list_lock in __slab_free(),
+then these two counters can be changed from atomic to long.
 
-Cheers,
-Miguel
+I also have no idea what's the standard SLUB benchmark for the
+regression test, any specific suggestion?
+
+> 
+>> This patch introduces two counters to maintain the actual number
+>> of partial objects dynamically instead of iterating the partial
+>> page lists with list_lock held.
+>>
+>> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
+>> The main operations are under list_lock in slow path, its performance
+>> impact is minimal.
+>>
+>> Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
+>> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+>> ---
+>>  mm/slab.h |  2 ++
+>>  mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
+>>  2 files changed, 39 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/slab.h b/mm/slab.h
+>> index 7e94700..5935749 100644
+>> --- a/mm/slab.h
+>> +++ b/mm/slab.h
+>> @@ -616,6 +616,8 @@ struct kmem_cache_node {
+>>  #ifdef CONFIG_SLUB
+>>         unsigned long nr_partial;
+>>         struct list_head partial;
+>> +       atomic_long_t pfree_objects; /* partial free objects */
+>> +       atomic_long_t ptotal_objects; /* partial total objects */
+> 
+> You could rename these to "nr_partial_free_objs" and
+> "nr_partial_total_objs" for readability.
+
+Sounds good.
+
+Thanks!
+
+> 
+> - Pekka
+> 
