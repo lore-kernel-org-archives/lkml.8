@@ -2,316 +2,130 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE732088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC0D2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqQzhKHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGCPDg (ORCPT
+        id S1726800AbgGCPD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:03:36 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:33702 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGCPDf (ORCPT
+        Fri, 3 Jul 2020 11:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgGCPD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:03:35 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BE4BC804EB;
-        Fri,  3 Jul 2020 17:03:31 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 17:03:30 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinay Simha BN <simhavcs@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Fri, 3 Jul 2020 11:03:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5ADC08C5DF
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:03:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so22655384ljl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XiN8AHTEZpKcIkUcY5Ag518B1TWxGfBcPRGyhGmTdOg=;
+        b=qqQzhKHn5URSX6FPZQiis7MXQSa6PtMenlonovuzdGI4l8WTvYJT95+Y4JGJmYiwzC
+         J+o4aO/whzQlX5kHFr3KcroexvVeWzBwE8cRCj1r/U8r/DMGWjNxGkZafQPCqV90wPek
+         hnqch4vSSK7bdY9p9euYr0/YUPNV99Pdcg6Xw37mE22B+FWslmYjTXoIqmBuUeO4WY30
+         c8d11hyEmRpSictv6U0MoJbN8Vs4VwK8D9gk0jKEoG4J6hY2ts2EjqrOBgYjFMxLaq6O
+         QIMb3aGSlGkNp9LAbB2zLUfE2zocA1YxI2sR2eLh24/+Fv7bac2MaR4W3bPWyqrE3bzX
+         y/2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XiN8AHTEZpKcIkUcY5Ag518B1TWxGfBcPRGyhGmTdOg=;
+        b=Q0+48D8EUr2CkDCqnLTfjccVA79C6n5jRFx3toHlGGpSP1W/Oi0kYOhZ5oXA2Sfh0X
+         DM0rSBp+AbPYymEuqzAm3WOja0FBEoi5ARth3lc4XIzZOO9qzbO8cy4c+aArvIqnTEeY
+         b4WiBSxTCKmFqgD8onjvtdUKnwZZY9eE18mAq4Xg5Cr1xuHJEmabwwss8jbAxixEsbdO
+         SypoLKBnUZOrjco4+D15P81CkaXfFU4d3ttVXIgQ6YIT/eMGLi/qK2f2D6idfrknHCoC
+         u2N36B2LOwroV+wusJjm0wneNEfNhyBtRJkJhHokzkE6vQSRPdVqfVjkYDghJVWCa1Au
+         G8jw==
+X-Gm-Message-State: AOAM530T6vguEi6UuRNRdEocRNxg3jaL5PSwj+qq68R5KEYybe9m80F5
+        eaXJHE8f/f+lpDMjrGIQWLSVeQ==
+X-Google-Smtp-Source: ABdhPJzCk+UBWfJxrbrsI+ayi1PqnpX1K3N3fB85MVaEeUGq/660GDdjHB3Kv/HObDJ8c7k5t4fI+g==
+X-Received: by 2002:a2e:9f13:: with SMTP id u19mr17473543ljk.427.1593788635055;
+        Fri, 03 Jul 2020 08:03:55 -0700 (PDT)
+Received: from [192.168.1.211] ([94.25.229.165])
+        by smtp.gmail.com with ESMTPSA id y13sm4182807ljd.20.2020.07.03.08.03.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 08:03:54 -0700 (PDT)
+Subject: Re: [RESEND PATCH v2 00/13] Enable GPU for SM8150 and SM8250
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Message-ID: <20200703150330.GC25632@ravnborg.org>
-References: <20200702123651.12177-1-simhavcs@gmail.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+References: <20200629211725.2592-1-jonathan@marek.ca>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <011a1f99-46bb-12f2-ee07-8cd14d891947@linaro.org>
+Date:   Fri, 3 Jul 2020 18:03:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702123651.12177-1-simhavcs@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=e5mUnYsNAAAA:8 a=0rtKju-ii_ScJ6bGwYQA:9 a=Hzqs4R5-i81yDW6c:21
-        a=rITfdrKO3DDOFrQW:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200629211725.2592-1-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay.
+On 30/06/2020 00:17, Jonathan Marek wrote:
+> This series adds the missing clock drivers and dts nodes to enable
+> the GPU on both SM8150 and SM8250.
+> 
+> Note an extra patch [1] is still required for GPU to work on SM8250.
+> 
+> Changes in V2:
+> * Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the newly added
+>    SM8150 GPU gcc clocks
+> * Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL"
+> * Added yaml schemas to gpucc dt-bindings patches
+> * Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers" and changed
+>    gpucc patches to use it.
+> * Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
+> * Added missing rpmh regulator level for sm8250 GPU clock levels
+> * Use sm8150/sm8250 iommu compatibles in dts
+> * Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks in dts
+> 
+> [1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
 
-On Thu, Jul 02, 2020 at 06:06:33PM +0530, Vinay Simha BN wrote:
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> 
-> ---
-> v1:
->  Initial version wast .txt file
-> 
-> v2:
->  From txt to yaml file format
-> 
-> v3:
-> * Andrzej Hajda review comments incorporated
->   dual port lvds implemented
-> 
-> * Laurent Pinchart review comments incorporated
->   dsi lanes property removed and it is dynamically
->   picked from the dsi ports
->   VESA/JEIDA format picked from panel-lvds dts
-> 
-> v4:
-> * Sam Ravnborg review comments incorporated
->   }' is indented properly in examples data-lanes
->   description for single-link and dual-link lvds
+With your patches applied:
 
-If you add a proper changelog then this patch is:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+[   56.751977] msm msm: [drm:adreno_request_fw] loaded qcom/a650_sqe.fw 
+from new location
+[   56.760166] msm msm: [drm:adreno_request_fw] loaded qcom/a650_gmu.bin 
+from new location
+[   56.768485] arm-smmu 3da0000.iommu: genpd_runtime_resume()
+[   56.774196] PM: gpu_cx_gdsc: Power-on latency exceeded, new value 
+49531 ns
+[   56.781730] arm-smmu 3da0000.iommu: resume latency exceeded, 462604 ns
+[   56.799559] platform 3d6a000.gmu: [drm:a6xx_gmu_resume] *ERROR* GMU 
+firmware initialization timed out
+[   56.809260] arm-smmu 3da0000.iommu: genpd_runtime_suspend()
+[   56.813062] msm msm: [drm:adreno_load_gpu] *ERROR* Couldn't power up 
+the GPU: -110
 
-	Sam
-> ---
->  .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
->  1 file changed, 215 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> new file mode 100644
-> index 000000000000..9ddd63bee403
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> @@ -0,0 +1,215 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toshiba TC358775 DSI to LVDS bridge bindings
-> +
-> +maintainers:
-> + - Vinay Simha BN <simhavcs@gmail.com>
-> +
-> +description: |
-> + This binding supports DSI to LVDS bridge TC358775
-> +
-> + MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
-> + Video frame size:
-> + Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display panel
-> + limited by 135 MHz LVDS speed
-> + Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS display
-> + panel, limited by 270 MHz LVDS speed.
-> +
-> +properties:
-> +  compatible:
-> +    const: toshiba,tc358775
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: i2c address of the bridge, 0x0f
-> +
-> +  vdd-supply:
-> +    maxItems: 1
-> +    description:  1.2V LVDS Power Supply
-> +
-> +  vddio-supply:
-> +    maxItems: 1
-> +    description: 1.8V IO Power Supply
-> +
-> +  stby-gpios:
-> +    maxItems: 1
-> +    description: Standby pin, Low active
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: Hardware reset, Low active
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing input and output port nodes with endpoint definitions
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          DSI Input. The remote endpoint phandle should be a
-> +          reference to a valid mipi_dsi_host device node.
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS output (panel or connector).
-> +
-> +      port@2:
-> +        type: object
-> +        description: |
-> +          Video port for Dual link LVDS output (panel or connector).
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - vdd-supply
-> + - vddio-supply
-> + - stby-gpios
-> + - reset-gpios
-> + - ports
-> +
-> +examples:
-> + - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    /* For single-link LVDS display panel */
-> +
-> +    i2c@78b8000 {
-> +        /* On High speed expansion */
-> +        label = "HS-I2C2";
-> +        reg = <0x078b8000 0x500>;
-> +        clock-frequency = <400000>; /* fastmode operation */
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        tc_bridge: bridge@f {
-> +            compatible = "toshiba,tc358775";
-> +            reg = <0x0f>;
-> +
-> +            vdd-supply = <&pm8916_l2>;
-> +            vddio-supply = <&pm8916_l6>;
-> +
-> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    d2l_in_test: endpoint {
-> +                        remote-endpoint = <&dsi0_out>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    lvds_out: endpoint {
-> +                        remote-endpoint = <&panel_in>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +    dsi@1a98000 {
-> +        reg = <0x1a98000 0x25c>;
-> +        reg-names = "dsi_ctrl";
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            port@1 {
-> +                reg = <1>;
-> +                dsi0_out: endpoint {
-> +                    remote-endpoint = <&d2l_in_test>;
-> +                    data-lanes = <0 1 2 3>;
-> +                };
-> +             };
-> +         };
-> +     };
-> +
-> + - |
-> +    /* For dual-link LVDS display panel */
-> +
-> +    i2c@78b8000 {
-> +        /* On High speed expansion */
-> +        label = "HS-I2C2";
-> +        reg = <0x078b8000 0x500>;
-> +        clock-frequency = <400000>; /* fastmode operation */
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        tc_bridge_dual: bridge@f {
-> +            compatible = "toshiba,tc358775";
-> +            reg = <0x0f>;
-> +
-> +            vdd-supply = <&pm8916_l2>;
-> +            vddio-supply = <&pm8916_l6>;
-> +
-> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    d2l_in_dual: endpoint {
-> +                        remote-endpoint = <&dsi0_out_dual>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    lvds0_out: endpoint {
-> +                        remote-endpoint = <&panel_in0>;
-> +                    };
-> +                };
-> +
-> +                port@2 {
-> +                    reg = <2>;
-> +                    lvds1_out: endpoint {
-> +                        remote-endpoint = <&panel_in1>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +    dsi@1a98000 {
-> +        reg = <0x1a98000 0x25c>;
-> +        reg-names = "dsi_ctrl";
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            port@1 {
-> +                reg = <1>;
-> +                dsi0_out_dual: endpoint {
-> +                    remote-endpoint = <&d2l_in_dual>;
-> +                    data-lanes = <0 1 2 3>;
-> +                };
-> +             };
-> +         };
-> +     };
-> +...
-> -- 
-> 2.17.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+With best wishes
+Dmitry
