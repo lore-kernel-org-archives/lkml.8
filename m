@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADE2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA51C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A2B20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E072520870
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593795792;
-	bh=SfszQdFlwgIl5YnSYxbpqXbdU9F4IbKjUsx0yCBOSgE=;
+	s=default; t=1593795795;
+	bh=aoOg10QirbcC8zOGZUWIfDtYifxpxqzURqnegZXBqPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ASTqC8SgqEClCUOEz9BS80iaKCWZFiJ35gxGnSlUzNr1qgvI2MvKhX3x8B82AwMyT
-	 baccS+ppVXUg8P34VO2ew6BzB7Zo0oqTMuIy9VvWaXacMkHTn0UlY58GZnWLhBdYp4
-	 Ifmc/oJrzpZOGBjQHOvORNwdI2QG1QWUaiKwZIHE=
+	b=vnhP0xlVgeBbv63qJWGshQLyNi2yqXQYCAW0vycUFWNMqXPI7/qxm/SKD3Ob4Mapp
+	 fUJNR6S32R9Hjjp4iQ9GimSwZS4E70iT6oS/ltWmpOhhs19gLXwQuhM7jepfK0LXHL
+	 PpZpXLxFc+FsRxG5T1bXitoHVQ5ZMuGlQsreW1ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGCRDK (ORCPT
+        id S1726832AbgGCRDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:03:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60972 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 13:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgGCRDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:03:05 -0400
+        id S1726148AbgGCRDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:03:07 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C952100A;
-        Fri,  3 Jul 2020 17:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAAA1208E4;
+        Fri,  3 Jul 2020 17:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593795784;
-        bh=SfszQdFlwgIl5YnSYxbpqXbdU9F4IbKjUsx0yCBOSgE=;
+        s=default; t=1593795785;
+        bh=aoOg10QirbcC8zOGZUWIfDtYifxpxqzURqnegZXBqPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrRRcb68Q/MtXYb8Xa5cBiEkW8x9eqW4Wzwy7bDGMwtASMHNqF9RB4vuW//AI/3wP
-         Q4yNLGThF0KAY9DeUeWWuQ+9jIv6izEst4isa/vTbGjEZD4v7nRhSRYnyancnB6UiB
-         dDplEVt+Di6xZZE92spDJ0Wxcrn8PSrZ7NtfhMwA=
+        b=rGNmRlJk3p0RNxMg0O2FsFuxmT+WwBgpDn6okIzGDzgqaIoiKXIUvmQyL+dCNuGwq
+         LOQCDZR4+ahfDdmEkMX2Ovq4IwsvlBB3KyHCQNU1SBIEA1H9vPmJDt5C/ntcchwsx3
+         Q8ceEN9anjeNm6eJlwWBVkUCP41HDX0fSJmBFSp0=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     x86@kernel.org
 Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
         Juergen Gross <jgross@suse.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH entry v2 4/6] x86/entry/32: Fix #MC and #DB wiring on x86_32
-Date:   Fri,  3 Jul 2020 10:02:56 -0700
-Message-Id: <9e90a7ee8e72fd757db6d92e1e5ff16339c1ecf9.1593795633.git.luto@kernel.org>
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH entry v2 6/6] x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtentry_enter/exit()
+Date:   Fri,  3 Jul 2020 10:02:58 -0700
+Message-Id: <247fc67685263e0b673e1d7f808182d28ff80359.1593795633.git.luto@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1593795633.git.luto@kernel.org>
 References: <cover.1593795633.git.luto@kernel.org>
@@ -59,129 +58,371 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DEFINE_IDTENTRY_MCE and DEFINE_IDTENTRY_DEBUG were wired up as non-RAW
-on x86_32, but the code expected them to be RAW.
+They were originally called _cond_rcu because they were special
+versions with conditional RCU handling.  Now they're the standard
+entry and exit path, so the _cond_rcu part is just confusing.  Drop
+it.
 
-Get rid of all the macro indirection for them on 32-bit and just use
-DECLARE_IDTENTRY_RAW and DEFINE_IDTENTRY_RAW directly.
+Also change the signature to make them more extensible and more
+foolproof.
 
-Also add a warning to make sure that we only hit the _kernel paths
-in kernel mode.
+This patch makes no functional change -- it's pure refactoring.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/include/asm/idtentry.h | 23 +++++++++++++----------
- arch/x86/kernel/cpu/mce/core.c  |  4 +++-
- arch/x86/kernel/traps.c         |  2 +-
- 3 files changed, 17 insertions(+), 12 deletions(-)
+ arch/x86/entry/common.c         | 50 ++++++++++++++++++---------------
+ arch/x86/include/asm/idtentry.h | 28 ++++++++++--------
+ arch/x86/kernel/kvm.c           |  6 ++--
+ arch/x86/kernel/traps.c         |  6 ++--
+ arch/x86/mm/fault.c             |  6 ++--
+ kernel/time/tick-sched.c        |  1 +
+ 6 files changed, 54 insertions(+), 43 deletions(-)
 
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index e83b3f14897c..0521546022cb 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -559,8 +559,7 @@ SYSCALL_DEFINE0(ni_syscall)
+ }
+ 
+ /**
+- * idtentry_enter_cond_rcu - Handle state tracking on idtentry with conditional
+- *			     RCU handling
++ * idtentry_enter - Handle state tracking on ordinary idtentries
+  * @regs:	Pointer to pt_regs of interrupted context
+  *
+  * Invokes:
+@@ -572,6 +571,9 @@ SYSCALL_DEFINE0(ni_syscall)
+  *  - The hardirq tracer to keep the state consistent as low level ASM
+  *    entry disabled interrupts.
+  *
++ * As a precondition, this requires that the entry came from user mode,
++ * idle, or a kernel context in which RCU is watching.
++ *
+  * For kernel mode entries RCU handling is done conditional. If RCU is
+  * watching then the only RCU requirement is to check whether the tick has
+  * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
+@@ -585,18 +587,21 @@ SYSCALL_DEFINE0(ni_syscall)
+  * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
+  * would not be possible.
+  *
+- * Returns: True if RCU has been adjusted on a kernel entry
+- *	    False otherwise
++ * Returns: An opaque object that must be passed to idtentry_exit()
+  *
+- * The return value must be fed into the rcu_exit argument of
+- * idtentry_exit_cond_rcu().
++ * The return value must be fed into the state argument of
++ * idtentry_exit().
+  */
+-bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
++idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
+ {
++	idtentry_state_t ret = {
++		.exit_rcu = false,
++	};
++
+ 	if (user_mode(regs)) {
+ 		check_user_regs(regs);
+ 		enter_from_user_mode();
+-		return false;
++		return ret;
+ 	}
+ 
+ 	/*
+@@ -634,7 +639,8 @@ bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
+ 		trace_hardirqs_off_finish();
+ 		instrumentation_end();
+ 
+-		return true;
++		ret.exit_rcu = true;
++		return ret;
+ 	}
+ 
+ 	/*
+@@ -649,7 +655,7 @@ bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
+ 	trace_hardirqs_off();
+ 	instrumentation_end();
+ 
+-	return false;
++	return ret;
+ }
+ 
+ static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+@@ -667,10 +673,9 @@ static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+ }
+ 
+ /**
+- * idtentry_exit_cond_rcu - Handle return from exception with conditional RCU
+- *			    handling
++ * idtentry_exit - Handle return from exception that used idtentry_enter()
+  * @regs:	Pointer to pt_regs (exception entry regs)
+- * @rcu_exit:	Invoke rcu_irq_exit() if true
++ * @state:	Return value from matching call to idtentry_enter()
+  *
+  * Depending on the return target (kernel/user) this runs the necessary
+  * preemption and work checks if possible and reguired and returns to
+@@ -679,10 +684,10 @@ static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+  * This is the last action before returning to the low level ASM code which
+  * just needs to return to the appropriate context.
+  *
+- * Counterpart to idtentry_enter_cond_rcu(). The return value of the entry
+- * function must be fed into the @rcu_exit argument.
++ * Counterpart to idtentry_enter(). The return value of the entry
++ * function must be fed into the @state argument.
+  */
+-void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
++void noinstr idtentry_exit(struct pt_regs *regs, idtentry_state_t state)
+ {
+ 	lockdep_assert_irqs_disabled();
+ 
+@@ -695,7 +700,7 @@ void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
+ 		 * carefully and needs the same ordering of lockdep/tracing
+ 		 * and RCU as the return to user mode path.
+ 		 */
+-		if (rcu_exit) {
++		if (state.exit_rcu) {
+ 			instrumentation_begin();
+ 			/* Tell the tracer that IRET will enable interrupts */
+ 			trace_hardirqs_on_prepare();
+@@ -714,7 +719,7 @@ void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
+ 		 * IRQ flags state is correct already. Just tell RCU if it
+ 		 * was not watching on entry.
+ 		 */
+-		if (rcu_exit)
++		if (state.exit_rcu)
+ 			rcu_irq_exit();
+ 	}
+ }
+@@ -800,9 +805,10 @@ static void __xen_pv_evtchn_do_upcall(void)
+ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ {
+ 	struct pt_regs *old_regs;
+-	bool inhcall, rcu_exit;
++	bool inhcall;
++	idtentry_state_t state;
+ 
+-	rcu_exit = idtentry_enter_cond_rcu(regs);
++	state = idtentry_enter(regs);
+ 	old_regs = set_irq_regs(regs);
+ 
+ 	instrumentation_begin();
+@@ -812,13 +818,13 @@ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ 	set_irq_regs(old_regs);
+ 
+ 	inhcall = get_and_clear_inhcall();
+-	if (inhcall && !WARN_ON_ONCE(rcu_exit)) {
++	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
+ 		instrumentation_begin();
+ 		idtentry_exit_cond_resched(regs, true);
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
+-		idtentry_exit_cond_rcu(regs, rcu_exit);
++		idtentry_exit(regs, state);
+ 	}
+ }
+ #endif /* CONFIG_XEN_PV */
 diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 94333ac3092b..eeac6dc2adaa 100644
+index eeac6dc2adaa..7227225cf45d 100644
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -353,10 +353,6 @@ static __always_inline void __##func(struct pt_regs *regs)
+@@ -13,8 +13,12 @@
+ void idtentry_enter_user(struct pt_regs *regs);
+ void idtentry_exit_user(struct pt_regs *regs);
  
- #else	/* CONFIG_X86_64 */
+-bool idtentry_enter_cond_rcu(struct pt_regs *regs);
+-void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
++typedef struct idtentry_state {
++	bool exit_rcu;
++} idtentry_state_t;
++
++idtentry_state_t idtentry_enter(struct pt_regs *regs);
++void idtentry_exit(struct pt_regs *regs, idtentry_state_t state);
  
--/* Maps to a regular IDTENTRY on 32bit for now */
--# define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
--# define DEFINE_IDTENTRY_IST		DEFINE_IDTENTRY
--
  /**
-  * DECLARE_IDTENTRY_DF - Declare functions for double fault 32bit variant
-  * @vector:	Vector number (ignored for C)
-@@ -387,16 +383,18 @@ __visible noinstr void func(struct pt_regs *regs,			\
- #endif	/* !CONFIG_X86_64 */
- 
- /* C-Code mapping */
-+#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_RAW
-+#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_RAW
-+
-+#ifdef CONFIG_X86_64
- #define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
- 
--#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_RAW
--#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_RAW
--
- #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
-+#endif
- 
- #else /* !__ASSEMBLY__ */
- 
-@@ -443,9 +441,6 @@ __visible noinstr void func(struct pt_regs *regs,			\
- # define DECLARE_IDTENTRY_MCE(vector, func)				\
- 	DECLARE_IDTENTRY(vector, func)
- 
--# define DECLARE_IDTENTRY_DEBUG(vector, func)				\
--	DECLARE_IDTENTRY(vector, func)
--
- /* No ASM emitted for DF as this goes through a C shim */
- # define DECLARE_IDTENTRY_DF(vector, func)
- 
-@@ -549,7 +544,11 @@ DECLARE_IDTENTRY_RAW(X86_TRAP_BP,		exc_int3);
- DECLARE_IDTENTRY_RAW_ERRORCODE(X86_TRAP_PF,	exc_page_fault);
- 
- #ifdef CONFIG_X86_MCE
-+#ifdef CONFIG_X86_64
- DECLARE_IDTENTRY_MCE(X86_TRAP_MC,	exc_machine_check);
-+#else
-+DECLARE_IDTENTRY_RAW(X86_TRAP_MC,	exc_machine_check);
-+#endif
- #endif
- 
- /* NMI */
-@@ -559,7 +558,11 @@ DECLARE_IDTENTRY_RAW(X86_TRAP_NMI,	xenpv_exc_nmi);
- #endif
- 
- /* #DB */
-+#ifdef CONFIG_X86_64
- DECLARE_IDTENTRY_DEBUG(X86_TRAP_DB,	exc_debug);
-+#else
-+DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	exc_debug);
-+#endif
- #ifdef CONFIG_XEN_PV
- DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	xenpv_exc_debug);
- #endif
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index ce9120c4f740..a6a90b5d7c83 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1901,6 +1901,8 @@ void (*machine_check_vector)(struct pt_regs *) = unexpected_machine_check;
- 
- static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+@@ -54,12 +58,12 @@ static __always_inline void __##func(struct pt_regs *regs);		\
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++	idtentry_state_t state = idtentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__##func (regs);						\
+ 	instrumentation_end();						\
+-	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++	idtentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs)
+@@ -101,12 +105,12 @@ static __always_inline void __##func(struct pt_regs *regs,		\
+ __visible noinstr void func(struct pt_regs *regs,			\
+ 			    unsigned long error_code)			\
+ {									\
+-	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++	idtentry_state_t state = idtentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__##func (regs, error_code);					\
+ 	instrumentation_end();						\
+-	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++	idtentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs,		\
+@@ -199,7 +203,7 @@ static __always_inline void __##func(struct pt_regs *regs, u8 vector);	\
+ __visible noinstr void func(struct pt_regs *regs,			\
+ 			    unsigned long error_code)			\
+ {									\
+-	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++	idtentry_state_t state = idtentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	irq_enter_rcu();						\
+@@ -207,7 +211,7 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ 	__##func (regs, (u8)error_code);				\
+ 	irq_exit_rcu();							\
+ 	instrumentation_end();						\
+-	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++	idtentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+@@ -241,7 +245,7 @@ static void __##func(struct pt_regs *regs);				\
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++	idtentry_state_t state = idtentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	irq_enter_rcu();						\
+@@ -249,7 +253,7 @@ __visible noinstr void func(struct pt_regs *regs)			\
+ 	run_on_irqstack_cond(__##func, regs, regs);			\
+ 	irq_exit_rcu();							\
+ 	instrumentation_end();						\
+-	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++	idtentry_exit(regs, state);					\
+ }									\
+ 									\
+ static noinline void __##func(struct pt_regs *regs)
+@@ -270,7 +274,7 @@ static __always_inline void __##func(struct pt_regs *regs);		\
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++	idtentry_state_t state = idtentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__irq_enter_raw();						\
+@@ -278,7 +282,7 @@ __visible noinstr void func(struct pt_regs *regs)			\
+ 	__##func (regs);						\
+ 	__irq_exit_raw();						\
+ 	instrumentation_end();						\
+-	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++	idtentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs)
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index df63786e7bfa..3f78482d9496 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -233,7 +233,7 @@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_apf_flags);
+ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
  {
-+	WARN_ON_ONCE(user_mode(regs));
-+
+ 	u32 reason = kvm_read_and_reset_apf_flags();
+-	bool rcu_exit;
++	idtentry_state_t state;
+ 
+ 	switch (reason) {
+ 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+@@ -243,7 +243,7 @@ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+ 		return false;
+ 	}
+ 
+-	rcu_exit = idtentry_enter_cond_rcu(regs);
++	state = idtentry_enter(regs);
+ 	instrumentation_begin();
+ 
  	/*
- 	 * Only required when from kernel mode. See
- 	 * mce_check_crashing_cpu() for details.
-@@ -1954,7 +1956,7 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+@@ -264,7 +264,7 @@ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+ 	}
+ 
+ 	instrumentation_end();
+-	idtentry_exit_cond_rcu(regs, rcu_exit);
++	idtentry_exit(regs, state);
+ 	return true;
  }
- #else
- /* 32bit unified entry point */
--DEFINE_IDTENTRY_MCE(exc_machine_check)
-+DEFINE_IDTENTRY_RAW(exc_machine_check)
- {
- 	unsigned long dr7;
  
 diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index c17f9b57171f..6ed8cc5fbe8f 100644
+index 6ed8cc5fbe8f..de75e531cdd2 100644
 --- a/arch/x86/kernel/traps.c
 +++ b/arch/x86/kernel/traps.c
-@@ -925,7 +925,7 @@ DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
- }
- #else
- /* 32 bit does not have separate entry points. */
--DEFINE_IDTENTRY_DEBUG(exc_debug)
-+DEFINE_IDTENTRY_RAW(exc_debug)
- {
- 	unsigned long dr6, dr7;
+@@ -218,7 +218,7 @@ static inline void handle_invalid_op(struct pt_regs *regs)
  
+ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ {
+-	bool rcu_exit;
++	idtentry_state_t state;
+ 
+ 	/*
+ 	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
+@@ -251,11 +251,11 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ 		 */
+ 	}
+ 
+-	rcu_exit = idtentry_enter_cond_rcu(regs);
++	state = idtentry_enter(regs);
+ 	instrumentation_begin();
+ 	handle_invalid_op(regs);
+ 	instrumentation_end();
+-	idtentry_exit_cond_rcu(regs, rcu_exit);
++	idtentry_exit(regs, state);
+ }
+ 
+ DEFINE_IDTENTRY(exc_coproc_segment_overrun)
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 1ead568c0101..5e41949453cc 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1377,7 +1377,7 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
+ {
+ 	unsigned long address = read_cr2();
+-	bool rcu_exit;
++	idtentry_state_t state;
+ 
+ 	prefetchw(&current->mm->mmap_lock);
+ 
+@@ -1412,11 +1412,11 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
+ 	 * code reenabled RCU to avoid subsequent wreckage which helps
+ 	 * debugability.
+ 	 */
+-	rcu_exit = idtentry_enter_cond_rcu(regs);
++	state = idtentry_enter(regs);
+ 
+ 	instrumentation_begin();
+ 	handle_page_fault(regs, error_code, address);
+ 	instrumentation_end();
+ 
+-	idtentry_exit_cond_rcu(regs, rcu_exit);
++	idtentry_exit(regs, state);
+ }
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 3e2dc9b8858c..6aa0daca0dd2 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -921,6 +921,7 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+ 		    (local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK)) {
+ 			pr_warn("NOHZ: local_softirq_pending %02x\n",
+ 				(unsigned int) local_softirq_pending());
++			WARN_ON_ONCE(1);
+ 			ratelimit++;
+ 		}
+ 		return false;
 -- 
 2.25.4
 
