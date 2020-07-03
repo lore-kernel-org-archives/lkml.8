@@ -2,105 +2,94 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A40C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80BA720884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2LHPoy/"
+	by mail.kernel.org (Postfix) with ESMTP id EA2F320884
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGCPqi (ORCPT
+        id S1726336AbgGCPtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:46:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29134 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgGCPqh (ORCPT
+        Fri, 3 Jul 2020 11:49:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44968 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726035AbgGCPtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:46:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593791195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kZamksu9q4RTlXzhEF7oeFMOgoJ1Qb6qWkOIgdiQa7I=;
-        b=F2LHPoy/ikCLvo0s1d72nWd28RN64dszEs7ihUpMT/FcwiSvjN3iGuwsoIq0MHsTmYJavi
-        wQrl0nyPHGQaEAFAfg0Ok3LTsZ4V66QXRWa1VOkhn1fiS9Oyt7/h/AKrDBLoC87U3TYVH7
-        F14PHyOj8vJSfWZAnEdX3uTXlCNg5W4=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-qyKEGxILOF26Ily46xh4yQ-1; Fri, 03 Jul 2020 11:46:34 -0400
-X-MC-Unique: qyKEGxILOF26Ily46xh4yQ-1
-Received: by mail-qv1-f69.google.com with SMTP id r19so20686082qvz.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:46:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=kZamksu9q4RTlXzhEF7oeFMOgoJ1Qb6qWkOIgdiQa7I=;
-        b=ZENqXioCIEkm27aeRWgRL+epKFkqG/f6Tg1l/weme7hqT+6nguV1XE/dS2d/mhr0xL
-         FcuehKw5bGmcseSUXhvJv4UNOD53lXfsG63M38eZAe+qqVzlzRhxDXToSKrGG1s/dSgM
-         UObOAQiqskWUdGrKpa0n0lYHef3Ie1NENHuFOZcRsO5vzPa7Ho67QRqWyqfkcCC76Xb4
-         HhYroL4skeWTVpLUjAAEcLpioKscgCbkNYCuZlh8nkFvMNet5A6Ti+9EymvMUs1P2YVd
-         pU/QLcBg3G+6tzoSmnxalUHoj3DiYg6Z5UYBNvJlbw86Rm4OPNpb174mr3uCXE8Jd8Q6
-         ycow==
-X-Gm-Message-State: AOAM532nfr14GJQT9WHujJkbHYthHdT9PcxzUglNwqyvgHGBMuNiF6oe
-        4CsndrQy8oTcZm3yGYghkpo8K6VwQKz2zZehufjDxYzUqL3Mg91EBINJgYQCsrXK/siCwrCOu/J
-        xB9ar8iiKwct5QhkS250F87GF
-X-Received: by 2002:a05:6214:884:: with SMTP id cz4mr21705039qvb.3.1593791193268;
-        Fri, 03 Jul 2020 08:46:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwPFteIG/zDmV9OhkFZB+1yp9sGcAuhAQc+YY9Q88SZ8CcE37BbpMKtTkvgBPVirzToeV7QFw==
-X-Received: by 2002:a05:6214:884:: with SMTP id cz4mr21705023qvb.3.1593791193050;
-        Fri, 03 Jul 2020 08:46:33 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k45sm13334427qtc.62.2020.07.03.08.46.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 08:46:32 -0700 (PDT)
-Subject: Re: [PATCH] mm: initialize return of vm_insert_pages
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200703145202.10629-1-trix@redhat.com>
- <20200703145454.GH25523@casper.infradead.org>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <7b6eb14b-bbdc-dedb-c989-5e705cb9a453@redhat.com>
-Date:   Fri, 3 Jul 2020 08:46:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Jul 2020 11:49:06 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063FXnLq004740;
+        Fri, 3 Jul 2020 11:49:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 321ng24h09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 11:49:03 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063FmlGB095920;
+        Fri, 3 Jul 2020 11:49:03 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 321ng24gyh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 11:49:02 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063Fjb7m005437;
+        Fri, 3 Jul 2020 15:49:01 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 3217b01u7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 15:49:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063Fmw6r40304668
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jul 2020 15:48:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8474D11C04A;
+        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C9F511C050;
+        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
+Received: from osiris (unknown [9.171.46.77])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
+Date:   Fri, 3 Jul 2020 17:48:56 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+Message-ID: <20200703154856.GA5294@osiris>
+References: <20200703133917.39045-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200703145454.GH25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703133917.39045-1-david@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_10:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ cotscore=-2147483648 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=517 bulkscore=0 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=5 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
+> This series is based on the latest s390/features branch [1]. It implements
+> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
+> - Freeing empty page tables (now also done for idendity mapping).
+> - Handling cases where the vmemmap of a section does not fill huge pages
+>   completely.
 
-On 7/3/20 7:54 AM, Matthew Wilcox wrote:
-> On Fri, Jul 03, 2020 at 07:52:02AM -0700, trix@redhat.com wrote:
->> From: Tom Rix <trix@redhat.com>
->>
->> clang static analysis reports a garbage return
->>
->> In file included from mm/memory.c:84:
->> mm/memory.c:1612:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
->>         return err;
->>         ^~~~~~~~~~
->>
->> The setting of err depends on a loop executing.
->> So initialize err.
-> I'd argue that returning zero is wrong.  If someone's asked to insert
-> zero pages, that's a nonsense thing to do so it should return -EINVAL..
->
-good point, i'll respin.
+Nice! You implemented some things I "always wanted to do". Maybe I
+should just do nothing and wait until patches appear ;)
 
-
+Will take a look at the series next week. Thanks!
