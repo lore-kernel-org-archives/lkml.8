@@ -2,172 +2,222 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBCE20836
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144A62084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="m9yY+6aq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7T3av6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGCJ5w (ORCPT
+        id S1726163AbgGCJ7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:57:52 -0400
-Received: from mail-eopbgr40053.outbound.protection.outlook.com ([40.107.4.53]:14567
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726035AbgGCJ5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:57:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bZVc0dN2a+bfYjVdXC+PxGT6Sy2j+vky6hwhlyPuAtyksPW5Y7O/k4k29GYLYecgbjfx1p/j+iq3gz2m4N33zOHGBh/lsAMSgJB+4lhgUGx8N5PNYCS8R5VOdD2+MMeChqaezg4Td3ZbzBFkMQB5lQpTM+JUFqD1j34FL/4IeYRI2Y0PYHoPazAXADN7ePPA1erFmkbXNqreLs1x7pdxUsQqClWopkG2v3PXylYxmvQrXVdQAFZnyG9x+rdt4XfQWKorTFxtgR1Yy5+6z3pB/YOUyPBFfcxkFW1D5QNc5x6NA3AtkZvVYZ4QgjlB/d3V14LlJqwo8GfNvd/WdEdMzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zAeCWJy/4dcXeO7h3OplAjBLd/M2k0+W9TTTnglCcLc=;
- b=CdWMZyVpw7Pgs3ghvLN4mhn3drkCjuIUoZxzb/yhreVpzteTII92VYmPslanwsKe0wntL3/ViE5S4ViQCMTXaxvS+PfavyVP0zeJ4zeZ14RaxQK2Y2ItXg51LFoSwy8zN5Jn/XKNuR3Xlvakp76ZaXpVePVazH7k33pDZSAnhlvyxg57UwYJVvKije9ZumPsaWMIwNfIZ6htES2+usj2cZCN9Y9MXGPqWHERbVSlqe0xt6aMxgKfECuA3p0xQZFPIzG8XSXbAbxMy1Pg8g7g0KEyf7qd2uViat1/MGzpmyOzK9p2sPQyZfbQtX89Pcna8Bam4fNBf4wr50y4+B7+nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Fri, 3 Jul 2020 05:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgGCJ7H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:59:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B786C08C5C1;
+        Fri,  3 Jul 2020 02:59:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so31463427wmh.4;
+        Fri, 03 Jul 2020 02:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zAeCWJy/4dcXeO7h3OplAjBLd/M2k0+W9TTTnglCcLc=;
- b=m9yY+6aqcVTyAnOvTimck6WW7P3bX05TIzMIQbIVnN0Nt5BiGsxWYUT8tLO3PlOCeFp+hNzp/i4oxEmga+2Z53oOSGEl0YeQmwUN3i0ZyKnzkircrCQAsWQarS05egA2VrZuoNv6KmoDymtHk3fm7IsqOS70z6czK7WDSnfKNVs=
-Received: from DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:65::9)
- by DB6PR1001MB1144.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:63::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 3 Jul
- 2020 09:57:46 +0000
-Received: from DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::314b:f930:76b1:11c5]) by DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::314b:f930:76b1:11c5%10]) with mapi id 15.20.3131.029; Fri, 3 Jul 2020
- 09:57:46 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "tiwai@suse.de" <tiwai@suse.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 04/11] ASoC: codecs: da7219: fix 'defined but not used'
- warning
-Thread-Topic: [PATCH 04/11] ASoC: codecs: da7219: fix 'defined but not used'
- warning
-Thread-Index: AQHWT9TglCRPh6aF50mArntijWazBaj1l1KwgAAIcQA=
-Date:   Fri, 3 Jul 2020 09:57:46 +0000
-Message-ID: <DB6PR1001MB1096D4378397C76A4CFEAF28806A0@DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200701182422.81496-1-pierre-louis.bossart@linux.intel.com>
- <20200701182422.81496-5-pierre-louis.bossart@linux.intel.com>
- <DB6PR1001MB1096535996028B7DE0D136DC806A0@DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM>
-In-Reply-To: <DB6PR1001MB1096535996028B7DE0D136DC806A0@DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: diasemi.com; dkim=none (message not signed)
- header.d=none;diasemi.com; dmarc=none action=none header.from=diasemi.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.64]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d6659de3-9f97-473d-cea9-08d81f3789bf
-x-ms-traffictypediagnostic: DB6PR1001MB1144:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR1001MB11440485C077558648CCD16DA76A0@DB6PR1001MB1144.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:147;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XE5b8DO1/Yln1IXel+YK4uz5THtSk+9vZLkjiKZ9fcfg0uI3hKZg/9QkImlY/yX18K/10Ql+cI6kR+A/JPkK2kVRRMJ1pYY3FDbG25uNPWFCLlI58MLMdQd9smIyAUyAmh600RWzokzKiiZRXGWS50Spb33eVSgwgZmUKhf4cE4MOfsgbBlf6Jb8WEp498l/DKCu5yIDf+KgOduywmpLCyyvQSXGDZYpjJILZYKX0PAeVvpImHRFbli5FUnYN68OBaRs8k56Ut84K/QA9s92QDBEH6cf2C38Vc2xSNrscPmpKWLq7h5LHYYjStG2StyPwu1c0kSVA1nT8E+/625U3g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(2940100002)(83380400001)(33656002)(52536014)(4326008)(55236004)(86362001)(26005)(6506007)(5660300002)(53546011)(7696005)(186003)(54906003)(8676002)(8936002)(110136005)(9686003)(71200400001)(478600001)(64756008)(55016002)(66446008)(2906002)(66476007)(76116006)(66556008)(316002)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: M7WeRRdt4tkPXyIvXIyTtu41PDfqMS7wYlS/D/CQcvp93WxBqEIyhihYSrzuCD+u+c2hsgRclG+GO1yYnjrvCXCtGMgDWfv87cves6yP7864GCJOiy/XtZigaDtVr9aLXDbpze5DFD47pwtnfifNI5YQDzW1Bc77Yc5BhMs2Kug4SJ+k8/ED55+X6wn0ywmbGJSA9cBSjxTUtE6Oc9gdP3eySeux/x+qEYyRZ0rMxFyGRvNSrTiiDaIzdvmE1zB32VO6XFoj/oJxTwsE8oLFNbo8QgZYfcwcfPleYL/KCOOZWb4B+HQxIj6uMoSSN7nYaI0dbh2gGawTWNhxFd/iPnFXc7s0vWMbzdw2b6mbixs5dT8Z5J2YGsjiCJvMti++7VZGjbhhq96plch7QgA8AZdF+89dL74j07C0QH/+g9t6z1xO+bRuAXzutW/3Zu2VWdoW8XiSalDfEvZ+1ZHpmB7Olq7dfy+N4szGjv29oVI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QUEUp6b8vPDcIaWddrAW3ZEk4ffVMz6gDvJ97V6JC3I=;
+        b=s7T3av6Zlf5LjNrAlTJRA/DPxA46Drkl8vngBzMoKPYFaKzxUCVL2uIUWNUJ5W1jGh
+         u3MRA5hewnpD7T6n3k22zJBGdg1QLXyq6T4oq57RIl/2EzjkGZnc4dPqxSHDnf5KLpxO
+         Dys9uPs8RhVjo2UK3QPe14QRzGNFIR0RFgniZB1Lzd2Xu+OhNRMumiBS16o90jnzSsNT
+         u4F0TefJjTDfNL0h+VepvzhDJjXY+1p68Wnu+e8GJhoDOhWWQj47RocEzpcW17cBP2Tu
+         T807cj0Nw4S1ALktlqHnsMnzVcdzp9GZylj7exjeeycf5Fl/khg5Zbv2imP/WNCC9uEj
+         5GuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QUEUp6b8vPDcIaWddrAW3ZEk4ffVMz6gDvJ97V6JC3I=;
+        b=DviFCZ6wfkx0lHwmmzXXFQb1tfu7aTj8E+fmnhmsRC+ZTgGenqtcqiCMcBgEQddeDY
+         RuNeuTbGN03Erh45hKrqr1WLUSRfTcgpsC+M4+WOoL82F6R71tnv6OA8XbVdL+noqjDP
+         C9bfn/Jp1FzOeA0DrJ4gP4ZzRdBDTejZlLgFzPuQYomptfovN9QY2B8Q3rtEeRE6LlfV
+         A7Vy0QvZqDN6R+zQM7uoc0z5SM1jTsR5HTtzqqVpJEnf7jc9KzcGu4JYcJZbqVymXcBr
+         INp6sRncuIksSaaO5yBECC0Nv7Z5FYBcPQKXlDDreRc44pQi+GbQBIMYd0dA3/XyZfyi
+         i5nw==
+X-Gm-Message-State: AOAM5315ss6QGcVPCXDabfXxthKctjMGw/WRuTrB+lyiw7p724hOParY
+        l6zciRVDTWzgF4nbvnhxwd4=
+X-Google-Smtp-Source: ABdhPJx9V3qkXxE6+xfAnBW+gkh8aYYsqnhCRO2ir1LYp4KS6eyYLQGPC4beUpoKXhlPxe9nr7Xy3w==
+X-Received: by 2002:a1c:f30a:: with SMTP id q10mr35060334wmq.3.1593770345218;
+        Fri, 03 Jul 2020 02:59:05 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id l1sm851038wrb.12.2020.07.03.02.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 02:59:04 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 10:59:02 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 02/14] iommu: Report domain nesting info
+Message-ID: <20200703095902.GA178149@stefanha-x1.localdomain>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+ <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
+ <20200629092448.GB31392@stefanha-x1.localdomain>
+ <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
+ <MWHPR11MB1645B09EBDC76514ADC897A68C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR1001MB1096.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6659de3-9f97-473d-cea9-08d81f3789bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 09:57:46.6526
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iN3bPhffLRutYkJwRh5m7B0lQLOvhlhNY2oN34mhcFq8Ic29jRJcPcAlM75GfKOzyv3nSMOw0oFFWWqKptnAQI8tfMJb9yh/FnCiEuFnMXs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB1144
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <MWHPR11MB1645B09EBDC76514ADC897A68C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03 July 2020 10:33, Adam Thomson wrote
 
-> On 01 July 2020 19:24, Pierre-Louis Bossart wrote:
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 30, 2020 at 02:00:49AM +0000, Tian, Kevin wrote:
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Monday, June 29, 2020 8:23 PM
+> >=20
+> > Hi Stefan,
+> >=20
+> > > From: Stefan Hajnoczi <stefanha@gmail.com>
+> > > Sent: Monday, June 29, 2020 5:25 PM
+> > >
+> > > On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
+> > > > +/*
+> > > > + * struct iommu_nesting_info - Information for nesting-capable IOM=
+MU.
+> > > > + *				user space should check it before using
+> > > > + *				nesting capability.
+> > > > + *
+> > > > + * @size:	size of the whole structure
+> > > > + * @format:	PASID table entry format, the same definition with
+> > > > + *		@format of struct iommu_gpasid_bind_data.
+> > > > + * @features:	supported nesting features.
+> > > > + * @flags:	currently reserved for future extension.
+> > > > + * @data:	vendor specific cap info.
+> > > > + *
+> > > > + * +---------------+----------------------------------------------=
+------+
+> > > > + * | feature       |  Notes                                       =
+      |
+> > > > + *
+> > >
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =3D=3D=3D=3D
+> > > =3D+
+> > > > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs
+> > used  |
+> > > > + * |               |  in the system should be allocated by host ke=
+rnel  |
+> > > > + * +---------------+----------------------------------------------=
+------+
+> > > > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID co=
+uld   |
+> > > > + * |               |  either be a host PASID passed in bind reques=
+t or  |
+> > > > + * |               |  default PASIDs (e.g. default PASID of aux-do=
+main) |
+> > > > + * +---------------+----------------------------------------------=
+------+
+> > > > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU
+> > |
+> > > > + * +---------------+----------------------------------------------=
+------+
+> > >
+> > > This feature description is vague about what CACHE_INVLD does and how
+> > to
+> > > use it. If I understand correctly, the presence of this feature means
+> > > that VFIO_IOMMU_NESTING_OP_CACHE_INVLD must be used?
+> > >
+> > > The same kind of clarification could be done for SYSWIDE_PASID and
+> > > BIND_PGTBL too.
+> >=20
+> > For SYSWIDE_PASID and BIND_PGTBL, yes, presence of the feature bit
+> > means must use. So the two are requirements to user space if it wants
+> > to setup nesting. While for CACHE_INVLD, it's kind of availability
+> > here. How about removing CACHE_INVLD as presence of BIND_PGTBL should
+> > indicates support of CACHE_INVLD?
+> >=20
 >=20
-> > fix W=3D1 warning
-> >
-> > sound/soc/codecs/da7219.c:1711:36: warning: 'da7219_acpi_match'
-> > defined but not used [-Wunused-const-variable=3D]
-> >  1711 | static const struct acpi_device_id da7219_acpi_match[] =3D {
-> >       |                                    ^~~~~~~~~~~~~~~~~
-> >
-> > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.c=
-om>
-> > ---
-> >  sound/soc/codecs/da7219.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-> > index f2520a6c7875..153ea30b5a8f 100644
-> > --- a/sound/soc/codecs/da7219.c
-> > +++ b/sound/soc/codecs/da7219.c
-> > @@ -1708,11 +1708,13 @@ static const struct of_device_id da7219_of_matc=
-h[]
-> =3D
-> > {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, da7219_of_match);
-> >
-> > +#ifdef CONFIG_ACPI
-> >  static const struct acpi_device_id da7219_acpi_match[] =3D {
-> >  	{ .id =3D "DLGS7219", },
-> >  	{ }
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, da7219_acpi_match);
-> > +#endif
+> So far this assumption is correct but it may not be true when thinking fo=
+rward.
+> For example, a vendor might find a way to allow the owner of 1st-level pa=
+ge
+> table to directly invalidate cache w/o going through host IOMMU driver. F=
+rom
+> this angle I feel explicitly reporting this capability is more robust.
 >=20
-> I think this will break non-ACPI builds as this symbol is used in the
-> declaration of 'da7219_i2c_driver', without conditional compilation surro=
-unding
-> it. Unless of course I'm missing something. Could we instead use
-> '__maybe_unused' to avoid this warning?
-
-Obviously a slow start to the day for my brain. You've obviously built test=
- this
-given the intention behind this is for non-ACPI builds. Will get more coffe=
-e
-shortly.
-
-Still wonder if '__maybe_unused' might be nicer as per suspend/resume funct=
-ions
-on platforms which don't include PM_OPS. Either way though:
-
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
+> Regarding to the description, what about below?
 >=20
-> >
-> >  static enum da7219_micbias_voltage
-> >  	da7219_fw_micbias_lvl(struct device *dev, u32 val)
-> > --
-> > 2.25.1
+> --
+> SYSWIDE_PASID: PASIDs are managed in system-wide, instead of per device.
+> When a device is assigned to userspace or VM, proper uAPI (provided by=20
+> userspace driver framework, e.g. VFIO) must be used to allocate/free PASI=
+Ds
+> for the assigned device.
+>=20
+> BIND_PGTBL: The owner of the first-level/stage-1 page table must explicit=
+ly=20
+> bind the page table to associated PASID (either the one specified in bind=
+=20
+> request or the default PASID of the iommu domain), through VFIO_IOMMU
+> _NESTING_OP
+>=20
+> CACHE_INVLD: The owner of the first-level/stage-1 page table must
+> explicitly invalidate the IOMMU cache through VFIO_IOMMU_NESTING_OP,
+> according to vendor-specific requirement when changing the page table.
+> --
 
+Mentioning the API to allocate/free PASIDs and VFIO_IOMMU_NESTING_OP has
+made this clearer. This lets someone reading the documentation know
+where to look for further information on using these features.
+
+Thank you!
+
+Stefan
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7/AWYACgkQnKSrs4Gr
+c8gjgAf+Nal5JGppiGxNvF8o+N4PQxI9ucEsipPeQkGzfMdGwEPBPWyLHEhwTEKG
+4sbBPMw8FjPaBGk54Za1CxjNMXuIAFIaFV/srTfaHYVHrZq4CeUOlR02+bKqTnb6
+bGjUkIQ3GNb3zwGsi2FFeamD0WeKl4ccQ1CrVH0vpMXqF7m9mEa5YXx1VUyN9p0A
+VyranfGTurVQctbIa0iG02d5iMqGPPHKhFhRFpsQ66cS0m3yMXO72z+nFJs8tBCy
+ezdnCkNMkeBXEHQrpdm1HnOtcMCUxZV13jPs7advb1Xv+oZnEQrfMzwzmG5N3z2w
+PHoBHT/EpP06jcjIcGOcBFS8KVXJ6w==
+=1OHs
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
