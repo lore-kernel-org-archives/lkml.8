@@ -2,181 +2,114 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD78DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05570C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B760F20826
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA42207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiGOeYGC"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="jE5FAgWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgGCKqk (ORCPT
+        id S1726178AbgGCKtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
+        Fri, 3 Jul 2020 06:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGCKqj (ORCPT
+        with ESMTP id S1725915AbgGCKtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:46:39 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BF2C08C5C1;
-        Fri,  3 Jul 2020 03:46:39 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 5so24369508oty.11;
-        Fri, 03 Jul 2020 03:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0c5wHg9VNJDHK0sa3QsCKAxp+om6hYF0jilSpO9w9y4=;
-        b=BiGOeYGCax7/oPiLMt4Z6w4thxBd15Pucyb6wzwm9ayylbBXjPbKcPMn3l4US3gxKl
-         3a9P3ymozjwGGbmCmfJkcEWBPFCjum2ytt4KF/NMM2a+TMkIMUhOZRBvmaQSrdWe8HxO
-         SRA4YAcWn4+aGzYPu5ia7biJCoQ+g6NwB+pdnRvO6KDOxZGLv4ZJfBEkege93pDsNm9m
-         0YqE+A6uO1o/11+Qz7Enq7db/XzHol53RA4CjLs66Tx931mv0sYxpPecF3a8vBdKkmdr
-         FxxjTK46Z4H86QU0qoCCgFxUuB9imHVi4fnVs1DbXo8twCcjvc6LU0+FKz1ErihB+eHF
-         1rgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0c5wHg9VNJDHK0sa3QsCKAxp+om6hYF0jilSpO9w9y4=;
-        b=nva5cordZ1UAt1popQZRQSUg8Sfy8F9457zQgOqtyBhq/Apj+LU539VxnIKeRFZisd
-         Md+235uYrIJ+EMCD9w7cAeOORNOKSL82jHmdTyU379aZQU4pR/lXxojBlFL8V2Ym2Fam
-         OKjtDhkKf5ZWHOjqtt1TqJJDJ/7c6AUMGM2cbfRqZD0FB1g5zFeLRMkjkSMR6IbWcNIt
-         caZUEbVL+W1RzNICzDZoRJVNp9c7QY7Ie8wjdZ2iYO6Ba5wY+s0MLldztFjRZGdrIXjo
-         L+ETTrqmpMvE19N7+La12C23bfGN/z8imm31knkNGB4ngLrjSMmnVLW+IuqXRLrGn8zd
-         8mXQ==
-X-Gm-Message-State: AOAM533+KXASeDeyGOPn6KsmgCaxae02VPom6JzKY3vfIPOkbZwe11jS
-        JLDKdXsvxQWqvd3jYXxXO0Fiij18BhzY+eSORIA=
-X-Google-Smtp-Source: ABdhPJy21MyHS89arWOkjOjzCKkhAW8rJyKdTPBlC3SxBSlhm8uBhnJ/okQbnyg8Agy85BzoVoq1mGIP+zq0w/SMlmA=
-X-Received: by 2002:a05:6830:1510:: with SMTP id k16mr10884514otp.336.1593773198367;
- Fri, 03 Jul 2020 03:46:38 -0700 (PDT)
+        Fri, 3 Jul 2020 06:49:51 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5EBC08C5C1;
+        Fri,  3 Jul 2020 03:49:51 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49ysDD0gdYz9sSy;
+        Fri,  3 Jul 2020 20:49:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1593773388;
+        bh=RfcGFiZqerkVV2+Xy8mk+CmXEwgXM5XeAEZk9tVyLEo=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=jE5FAgWTrhkfhhz6BYzecTvfdbDagKlkEWrYP3L0gbYhUVcSmlNc1lC6f2ixexXfj
+         QMnhT3le4DAgIHjrdKH22ewB074mqgaY+h4/qPtQCqXxPj1aL8oLqf9cRSSFg+ZpER
+         kOBkntxdcz0tYKdN5N9tEC3tWly5GI/no1ixwSUH2ll5U30V57HbQBu863Xoilh+tH
+         faLA8P2ykdWIk2tfZCnjGNmZvES09DuT2hr7WHCNOOgcbnej88JykIeo5CrGmWKVP4
+         mhpmHq+ygewJ07zs3nF7tn1T8SdxHp2Y2ozRdDw+CH0ePoLytwGYkTSssCCGuyHwKH
+         P9M8prScLig4Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 5/8] powerpc/64s: implement queued spinlocks and rwlocks
+In-Reply-To: <1593686722.w9psaqk7yp.astroid@bobo.none>
+References: <20200702074839.1057733-1-npiggin@gmail.com> <20200702074839.1057733-6-npiggin@gmail.com> <20200702080219.GB16113@willie-the-truck> <1593685459.r2tfxtfdp6.astroid@bobo.none> <20200702103506.GA16418@willie-the-truck> <1593686722.w9psaqk7yp.astroid@bobo.none>
+Date:   Fri, 03 Jul 2020 20:52:02 +1000
+Message-ID: <878sg07twt.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200629201845.28138-1-ruslan.bilovol@gmail.com> <20200630015843.GB12443@b29397-desktop>
-In-Reply-To: <20200630015843.GB12443@b29397-desktop>
-From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Date:   Fri, 3 Jul 2020 13:46:27 +0300
-Message-ID: <CAB=otbSnP7ecO9W5osxqSHSa4JRCUU4KR-g2BjBweDBUwjWobA@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: gadget: epautoconf: claim smallest endpoints first
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 4:58 AM Peter Chen <peter.chen@nxp.com> wrote:
+Nicholas Piggin <npiggin@gmail.com> writes:
+> Excerpts from Will Deacon's message of July 2, 2020 8:35 pm:
+>> On Thu, Jul 02, 2020 at 08:25:43PM +1000, Nicholas Piggin wrote:
+>>> Excerpts from Will Deacon's message of July 2, 2020 6:02 pm:
+>>> > On Thu, Jul 02, 2020 at 05:48:36PM +1000, Nicholas Piggin wrote:
+>>> >> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
+>>> >> new file mode 100644
+>>> >> index 000000000000..f84da77b6bb7
+>>> >> --- /dev/null
+>>> >> +++ b/arch/powerpc/include/asm/qspinlock.h
+>>> >> @@ -0,0 +1,20 @@
+>>> >> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> >> +#ifndef _ASM_POWERPC_QSPINLOCK_H
+>>> >> +#define _ASM_POWERPC_QSPINLOCK_H
+>>> >> +
+>>> >> +#include <asm-generic/qspinlock_types.h>
+>>> >> +
+>>> >> +#define _Q_PENDING_LOOPS	(1 << 9) /* not tuned */
+>>> >> +
+>>> >> +#define smp_mb__after_spinlock()   smp_mb()
+>>> >> +
+>>> >> +static __always_inline int queued_spin_is_locked(struct qspinlock *lock)
+>>> >> +{
+>>> >> +	smp_mb();
+>>> >> +	return atomic_read(&lock->val);
+>>> >> +}
+>>> > 
+>>> > Why do you need the smp_mb() here?
+>>> 
+>>> A long and sad tale that ends here 51d7d5205d338
+>>> 
+>>> Should probably at least refer to that commit from here, since this one 
+>>> is not going to git blame back there. I'll add something.
+>> 
+>> Is this still an issue, though?
+>> 
+>> See 38b850a73034 (where we added a similar barrier on arm64) and then
+>> c6f5d02b6a0f (where we removed it).
+>> 
 >
-> On 20-06-29 23:18:45, Ruslan Bilovol wrote:
-> > UDC hardware may have endpoints with different maxpacket
-> > size. Current endpoint matching code takes first matching
-> > endpoint from the list.
-> >
-> > It's always possible that gadget allocates endpoints for
-> > small transfers (maxpacket size) first, then larger ones.
-> > That works fine if all matching UDC endpoints have same
-> > maxpacket size or are big enough to serve that allocation.
-> >
-> > However, some UDCs have first endpoints in the list with
-> > bigger maxpacket size, whereas last endpoints are much
-> > smaller. In this case endpoint allocation will fail for
-> > the gadget (which allocates smaller endpoints first) on
-> > final endpoint allocations.
-> >
-> > To make endpoint allocation fair, pick up smallest
-> > matching endpoints first, leaving bigger ones for
-> > heavier applications.
-> >
-> > Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
-> > ---
-> >
-> > v2: rebased onto latest balbi/next branch
-> >
-> >  drivers/usb/gadget/epautoconf.c | 23 ++++++++++++++++++-----
-> >  1 file changed, 18 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
-> > index 1eb4fa2e623f..6c453b5d87bb 100644
-> > --- a/drivers/usb/gadget/epautoconf.c
-> > +++ b/drivers/usb/gadget/epautoconf.c
-> > @@ -66,7 +66,7 @@ struct usb_ep *usb_ep_autoconfig_ss(
-> >       struct usb_ss_ep_comp_descriptor *ep_comp
-> >  )
-> >  {
-> > -     struct usb_ep   *ep;
-> > +     struct usb_ep   *ep, *ep_min = NULL;
-> >
-> >       if (gadget->ops->match_ep) {
-> >               ep = gadget->ops->match_ep(gadget, desc, ep_comp);
-> > @@ -74,14 +74,27 @@ struct usb_ep *usb_ep_autoconfig_ss(
-> >                       goto found_ep;
-> >       }
-> >
-> > -     /* Second, look at endpoints until an unclaimed one looks usable */
-> > +     /*
-> > +      * Second, look at endpoints until an unclaimed one looks usable.
-> > +      * Try to find one with smallest maxpacket limit, leaving larger
-> > +      * endpoints for heavier applications
-> > +      */
-> >       list_for_each_entry (ep, &gadget->ep_list, ep_list) {
-> > -             if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp))
-> > -                     goto found_ep;
-> > +             if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp)) {
-> > +                     if (desc->wMaxPacketSize == 0)
-> > +                             goto found_ep;
->
-> Why you do special handling for this? You still could give the smallest
-> maxpacket_limit EP for it, right?
+> Oh nice, I didn't know that went away. Thanks for the heads up.
 
-Of course it's technically possible. However in case "wMaxPacketSize == 0"
-gadget driver wants to get maximum possible wMaxPacketSize from endpoint
-configuration and I was thinking about avoiding regressions if we always provide
-smaller endpoints.
+Argh! I spent so much time chasing that damn bug in the ipc code.
 
-As I can see, providing smallest endpoint that matches requested wMaxPacketSize
-is OK, but if gadget driver just wants autoconf core to use it with
-maximum possible
-value, I'm thinking now if we can even change this part and if wMaxPacketSize
-is zero, find endpoint with maximum possible wMaxPacketSize
+> I'm going to say I'm too scared to remove it while changing the
+> spinlock algorithm, but I'll open an issue and we should look at 
+> removing it.
 
-Does it make sense?
+Sounds good.
 
-Thanks
-Ruslan
-
->
-> Peter
->
-> > +                     else if (!ep_min)
-> > +                             ep_min = ep;
-> > +                     else if (ep->maxpacket_limit < ep_min->maxpacket_limit)
-> > +                             ep_min = ep;
-> > +             }
-> >       }
-> >
-> >       /* Fail */
-> > -     return NULL;
-> > +     if (!ep_min)
-> > +             return NULL;
-> > +
-> > +     ep = ep_min;
-> >  found_ep:
-> >
-> >       /*
-> > --
-> > 2.17.1
-> >
->
-> --
->
-> Thanks,
-> Peter Chen
+cheers
