@@ -2,110 +2,153 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A077C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D70F20781
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA0A215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgGCCc3 (ORCPT
+        id S1726183AbgGCCgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:32:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24277 "EHLO mga12.intel.com"
+        Thu, 2 Jul 2020 22:36:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:52027 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGCCc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:32:28 -0400
-IronPort-SDR: YA7Xnsze6pmgAkxD8RK3+hjz/2ED5jehk5TuOwIZw/2BR5uiWGyuLuh+yCnoAjUTUsfoU3gGNF
- F11/4KeSPUnA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126682907"
+        id S1725915AbgGCCgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 22:36:05 -0400
+IronPort-SDR: T9V2w7ZbFRO40T3LLRpSOHxsZuBJ58XiXiy9R/Yl6xwsikJaW6bqJHuy6lKFwshGaAghMr9UW0
+ mXu/VoZHx3Iw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145213957"
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="126682907"
+   d="scan'208";a="145213957"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:32:28 -0700
-IronPort-SDR: nNQGXlodZBsiyF7oNmMJC04fBdPJEqP6YcTfyXBJqnlbD2TiZfMJqMh12whCQxg4wZhnlMP8ud
- KxH23C3FwspA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:04 -0700
+IronPort-SDR: T2DxoJ+6pDgQH7e5SIxXyTgQ9QkegMOBSCNjFHu7YUc0H8gIQqRN5KQHpGrfYlDlqtc8ESDZ15
+ OICltGe0pc2w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="278294996"
-Received: from skochetx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.55.66])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:32:17 -0700
-Date:   Fri, 3 Jul 2020 05:32:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Andy Lutomirski <luto@kernel.org>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, nhorman@redhat.com,
-        npmccallum@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        sean.j.christopherson@intel.com, tglx@linutronix.de,
-        yaozhangx@google.com
-Subject: Re: [PATCH v33 12/21] x86/sgx: Allow a limited use of
- ATTRIBUTE.PROVISIONKEY for attestation
-Message-ID: <20200703023146.GA306897@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-13-jarkko.sakkinen@linux.intel.com>
- <20200629160242.GB32176@zn.tnic>
+   d="scan'208";a="278295716"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Gardon <bgardon@google.com>,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: [PATCH v3 00/21] KVM: Cleanup and unify kvm_mmu_memory_cache usage
+Date:   Thu,  2 Jul 2020 19:35:24 -0700
+Message-Id: <20200703023545.8771-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629160242.GB32176@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:02:42PM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:34AM +0300, Jarkko Sakkinen wrote:
-> > Provisioning Certification Enclave (PCE), the root of trust for other
-> > enclaves, generates a signing key from a fused key called Provisioning
-> > Certification Key. PCE can then use this key to certify an attestation key
-> > of a QE, e.g. we get the chain of trust down to the hardware if the Intel
-> 
-> What's a QE?
-> 
-> I don't see this acronym resolved anywhere in the whole patchset.
+The only interesting delta from v2 is that patch 18 is updated to handle
+a conflict with arm64's p4d rework.  Resolution was straightforward
+(famous last words).
 
-Quoting Enclave.
 
-> 
-> > signed PCE is used.
-> > 
-> > To use the needed keys, ATTRIBUTE.PROVISIONKEY is required but should be
-> > only allowed for those who actually need it so that only the trusted
-> > parties can certify QE's.
-> > 
-> > Obviously the attestation service should know the public key of the used
-> > PCE and that way detect illegit attestation, but whitelisting the legit
-> > users still adds an additional layer of defence.
-> > 
-> > Add new device file called /dev/sgx/provision. The sole purpose of this
-> > file is to provide file descriptors that act as privilege tokens to allow
-> > to build enclaves with ATTRIBUTE.PROVISIONKEY set. A new ioctl called
-> > SGX_IOC_ENCLAVE_SET_ATTRIBUTE is used to assign this token to an enclave.
-> 
-> So I'm sure I'm missing something here: what controls which
-> enclave can open /dev/sgx/provision and thus pass the FD to
-> SGX_IOC_ENCLAVE_SET_ATTRIBUTE?
-> 
-> And in general, how does that whole flow look like: what calls
-> SGX_IOC_ENCLAVE_SET_ATTRIBUTE when?
+This series resurrects Christoffer Dall's series[1] to provide a common
+MMU memory cache implementation that can be shared by x86, arm64 and MIPS.
 
-I've documented it in the Remote Attestation section:
+It also picks up a suggested change from Ben Gardon[2] to clear shadow
+page tables during initial allocation so as to avoid clearing entire
+pages while holding mmu_lock.
 
-https://github.com/jsakkine-intel/linux-sgx/blob/master/Documentation/x86/sgx.rst
+The front half of the patches do house cleaning on x86's memory cache
+implementation in preparation for moving it to common code, along with a
+fair bit of cleanup on the usage.  The middle chunk moves the patches to
+common KVM, and the last two chunks convert arm64 and MIPS to the common
+implementation.
 
-/Jarkko
+Fully tested on x86 only.  Compile tested patches 14-21 on arm64, MIPS,
+s390 and PowerPC.
+
+v3:
+  - Rebased to kvm/queue, commit a037ff353ba6 ("Merge ... into HEAD")
+  - Collect more review tags. [Ben]
+
+v2:
+  - Rebase to kvm-5.8-2, commit 49b3deaad345 ("Merge tag ...").
+  - Use an asm-generic kvm_types.h for s390 and PowerPC instead of an
+    empty arch-specific file. [Marc]
+  - Explicit document "GFP_PGTABLE_USER == GFP_KERNEL_ACCOUNT | GFP_ZERO"
+    in the arm64 conversion patch. [Marc]
+  - Collect review tags. [Ben]
+
+Sean Christopherson (21):
+  KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
+  KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
+  KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
+  KVM: x86/mmu: Remove superfluous gotos from mmu_topup_memory_caches()
+  KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
+  KVM: x86/mmu: Move fast_page_fault() call above
+    mmu_topup_memory_caches()
+  KVM: x86/mmu: Topup memory caches after walking GVA->GPA
+  KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+  KVM: x86/mmu: Separate the memory caches for shadow pages and gfn
+    arrays
+  KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
+  KVM: x86/mmu: Zero allocate shadow pages (outside of mmu_lock)
+  KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU
+    topups
+  KVM: x86/mmu: Prepend "kvm_" to memory cache helpers that will be
+    global
+  KVM: Move x86's version of struct kvm_mmu_memory_cache to common code
+  KVM: Move x86's MMU memory cache helpers to common KVM code
+  KVM: arm64: Drop @max param from mmu_topup_memory_cache()
+  KVM: arm64: Use common code's approach for __GFP_ZERO with memory
+    caches
+  KVM: arm64: Use common KVM implementation of MMU memory caches
+  KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
+  KVM: MIPS: Account pages used for GPA page tables
+  KVM: MIPS: Use common KVM implementation of MMU memory caches
+
+ arch/arm64/include/asm/kvm_host.h  |  11 ---
+ arch/arm64/include/asm/kvm_types.h |   8 ++
+ arch/arm64/kvm/arm.c               |   2 +
+ arch/arm64/kvm/mmu.c               |  56 +++----------
+ arch/mips/include/asm/kvm_host.h   |  11 ---
+ arch/mips/include/asm/kvm_types.h  |   7 ++
+ arch/mips/kvm/mmu.c                |  44 ++--------
+ arch/powerpc/include/asm/Kbuild    |   1 +
+ arch/s390/include/asm/Kbuild       |   1 +
+ arch/x86/include/asm/kvm_host.h    |  14 +---
+ arch/x86/include/asm/kvm_types.h   |   7 ++
+ arch/x86/kvm/mmu/mmu.c             | 129 +++++++++--------------------
+ arch/x86/kvm/mmu/paging_tmpl.h     |  10 +--
+ include/asm-generic/kvm_types.h    |   5 ++
+ include/linux/kvm_host.h           |   7 ++
+ include/linux/kvm_types.h          |  19 +++++
+ virt/kvm/kvm_main.c                |  55 ++++++++++++
+ 17 files changed, 176 insertions(+), 211 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_types.h
+ create mode 100644 arch/mips/include/asm/kvm_types.h
+ create mode 100644 arch/x86/include/asm/kvm_types.h
+ create mode 100644 include/asm-generic/kvm_types.h
+
+-- 
+2.26.0
+
