@@ -2,634 +2,172 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A11C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC77620772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BCD204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PBkD/F97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgGCGUv (ORCPT
+        id S1726142AbgGCGXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:20:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28878 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbgGCGUu (ORCPT
+        Fri, 3 Jul 2020 02:23:55 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:53571 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgGCGXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:20:50 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06363VHq134101;
-        Fri, 3 Jul 2020 02:20:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3212au54gx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 02:20:38 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0636GYPO186974;
-        Fri, 3 Jul 2020 02:20:38 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3212au54g3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 02:20:37 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0636JSpW004827;
-        Fri, 3 Jul 2020 06:20:36 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 320wfkr2f7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 06:20:36 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0636KZWW9503600
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 06:20:35 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DA88AC05B;
-        Fri,  3 Jul 2020 06:20:35 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C10C6AC05F;
-        Fri,  3 Jul 2020 06:20:29 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.63.144])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jul 2020 06:20:29 +0000 (GMT)
-Subject: Re: [RFC 1/3] perf jevents: Add support for parsing perchip/percore
- events
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Paul Clarke <pc@us.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20200625114718.229911-1-kjain@linux.ibm.com>
- <20200625114718.229911-2-kjain@linux.ibm.com>
- <CAP-5=fWG9rxObKJ38dQ=VUf3_mQbNDCTzgU1kkyw=9uVfBa+qw@mail.gmail.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <512670c2-bb61-7c2f-68bc-7752499300c6@linux.ibm.com>
-Date:   Fri, 3 Jul 2020 11:50:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 02:23:54 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200703062353epoutp03c0428d2d1436096de3d08641a3b6b5bf~eKfD3DiIV2919929199epoutp03j
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 06:23:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200703062353epoutp03c0428d2d1436096de3d08641a3b6b5bf~eKfD3DiIV2919929199epoutp03j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593757433;
+        bh=wf+fydZyBcX1y3wQWBM/V8mRpwY1GdNat8dvYrhiqAQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PBkD/F97m2A4l2lIIPz8RiaaLJZi07Rmo6G1BaCNJuDdrShUo3l1chv+UjgaL0Fs2
+         X819Nwyyu7E7ciyi/3Pwgroz7KM/Jti/QNx7iZruxtETtFBV510Ucf9ehINKqBIJvF
+         0smpzmtIb+LL+aFb1PG5KNBLStsbqvt+ecowrcIQ=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200703062352epcas5p25738828f4392f22d6038f378461d3048~eKfDaJNDR1329713297epcas5p2c;
+        Fri,  3 Jul 2020 06:23:52 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        25.99.09703.8FECEFE5; Fri,  3 Jul 2020 15:23:52 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200703062352epcas5p18d1fdaa1c52e3607dee464b6bdd8240f~eKfC-QTa60667506675epcas5p1D;
+        Fri,  3 Jul 2020 06:23:52 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200703062352epsmtrp10b72ed0e345ed0f533408f527e7a7f67~eKfC_n0pw2823328233epsmtrp1l;
+        Fri,  3 Jul 2020 06:23:52 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-e9-5efecef81535
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        36.03.08303.7FECEFE5; Fri,  3 Jul 2020 15:23:51 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200703062350epsmtip26f4e374480b820059f7862f038499f0d~eKfBoKnIg2126121261epsmtip2m;
+        Fri,  3 Jul 2020 06:23:50 +0000 (GMT)
+Date:   Fri, 3 Jul 2020 11:50:55 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>, Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH 1/2] block: fix error code for zone-append
+Message-ID: <20200703062055.GA26058@test-zns>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fWG9rxObKJ38dQ=VUf3_mQbNDCTzgU1kkyw=9uVfBa+qw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_01:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
- mlxlogscore=999 suspectscore=2 lowpriorityscore=0 mlxscore=0 adultscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007030045
+In-Reply-To: <CY4PR04MB3751B8037BE65D573667A6D5E76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+9273d0Jy9tMPCmtWlls0tTUuEUvqGiI9qCH9Foud/M915Zm
+        L1hFqVkamqKjzGBZPrJaNkpT7IoNNUOxp5U500VlYQq1Flpt16D/Pud8zzlfvj9+JC4u5/uT
+        idoDjF6rTpESXjxri0y20PlkQhXSYQmgq9/mE/SprO8YXVnditHv34wJ6AL2OaIbe4PonvqL
+        BG39dRmnPzvbiFVCZU9nutJSlUMoG14ZCWVeXRVSjlkkyqzmXGwjscNrmYZJScxg9MErYr0S
+        HGUFhG7IO7Pvjg0Z0SXRGSQkgQqHyis1vDPIixRTDQhuVHfjXDGK4HnJaz5XjCFw2L79VUjP
+        yiPzFq5fjyDr7U+MKxwI8mxm5B7iUfPAmYO5kaBk0FWY7nabTsmhoumr5yZODWNw6qEVdws+
+        1AooHijz3BdRC4GtOeRui6hp0FY6yHOzkNoNX66V8t3sS82FZqvNYwtUEQlGy28BF2cNFFd2
+        T7IPfLLVTbI/fMw/PckGcL1pxbnlbAQvjKU8TlgJ3Q/GMTfjVAK0/2AFHE+Fc78GMS68CLJP
+        i7nxOdBXMMTn2A/sJeZJVsKofYDg3sSMQX9NO/88kpj+C2T6z4LjpZAzcoJv+muBUwFwbYLk
+        UAY364PLEb8KzWB0htR4xhChW6RlDioM6lRDujZeEZeWakGeTySPvIfs/SMKFmEkYhGQuHS6
+        KDZwQiUWadSHDjP6tD369BTGwKIAkif1E0mdj1ViKl59gElmGB2j/6dipNDfiJ2vlzwNKhwp
+        3l3UmBQWma07tsC8ZNa8H8SrcQt+POKB3L/DtHRR6jft4uFdXVf3kXWKrJfh9qG216udrmDi
+        LovlCnjfcTrm7mKVKzGpfKcudvaUoqrI0tqxTsnmgRL6XtlwRmZQSK450PvnpqEb7Z8GVWvD
+        XbdsaR9NvjOjrifej12iKE8jMjdIwhwRe56Ndj07/r4wZyDJr/ZxnlFU8SVas73B5GBP8qOb
+        jfm2vfvLPsevz2gObKvoiumUfYhJttGbBEdCrE3ysz3CNYWaVnsvW5B5tYgYv3CpcWryNtfR
+        I726UJ+tOxK++q7TRMbINvhFhbUsFzTF1S6YP/jusPdtKc+QoA6V43qD+g+7dlekswMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvO73c//iDI7ft7FYfbefzaK1/RuT
+        xcrVR5ksHt/5zG4x6dA1Rou9t7QtLu+aw2ax7fd8ZovXP06yOXB6XD5b6rFpVSebx+6bDWwe
+        fVtWMXp83iTn0X6gmymALYrLJiU1J7MstUjfLoErY1bPZbaC6bwVS8+9ZWpgfMnVxcjBISFg
+        InFsSUgXIxeHkMAORokFT7ezdDFyAsXFJZqv/WCHsIUlVv57DmYLCTxhlGh7xw7SyyKgIvGj
+        kwnEZBPQlLgwuRSkQkRAS2LZvnesICOZBd4xSVxfeIAJJCEsYCcx7dE8ZpB6XgFdiUNrKiEm
+        LmGSWNRmDWLzCghKnJz5BOwCZgEziXmbH4KVMwtISyz/xwES5hSIlXi7fCYriC0qoCxxYNtx
+        pgmMgrOQdM9C0j0LoXsBI/MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgqNDS2sG4
+        Z9UHvUOMTByMhxglOJiVRHgTVP/FCfGmJFZWpRblxxeV5qQWH2KU5mBREuf9OmthnJBAemJJ
+        anZqakFqEUyWiYNTqoFpKYeRg5O12eUttXO23IpY3CW32tR3zawHpRa3LvGpyW7aFD0zcetB
+        qYV9TkGcU74FyvE+/eCxK0Zjlev17rvhloxRJ07c+XRAtWFq0cm1nrwlPmkKOms59gfp/5Sp
+        5ri94cPyVX3CpmcElxuLFZmeVfxcv+wu87fd87hyu/+t32Eyr+j3S9OCZ5EtLX6b2Y1OdQdl
+        3RLv/L2DR+DpRe72OcbrFeN2+x1a83nO8jNTOT5umPO9W6BV51lYlnh/0MoZk7yXz2bicKq1
+        Sru4SGHdlYSusoPJb55EOQsb8LJ/O/hqmfkW/xkbmbvmd/tvyLF8cf+ajs8p86z2aSFf0/64
+        uDFMfJ/kYHmo89mF+Z9ilViKMxINtZiLihMBMhlxePkCAAA=
+X-CMS-MailID: 20200703062352epcas5p18d1fdaa1c52e3607dee464b6bdd8240f
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_c4a69_"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200702154208epcas5p39fe202f642a9d5c8dde9b911645c594c
+References: <1593704330-11540-1-git-send-email-joshi.k@samsung.com>
+        <CGME20200702154208epcas5p39fe202f642a9d5c8dde9b911645c594c@epcas5p3.samsung.com>
+        <1593704330-11540-2-git-send-email-joshi.k@samsung.com>
+        <CY4PR04MB3751B8037BE65D573667A6D5E76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_c4a69_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-
-On 6/25/20 7:38 PM, Ian Rogers wrote:
-> On Thu, Jun 25, 2020 at 4:47 AM Kajol Jain <kjain@linux.ibm.com> wrote:
+On Fri, Jul 03, 2020 at 05:29:50AM +0000, Damien Le Moal wrote:
+>On 2020/07/03 0:42, Kanchan Joshi wrote:
+>> avoid returning success when it should report failure, preventing
+>> odd behavior in caller.
+>
+>You can be more precise here: the odd behavior is an infinite loop in
+>bio_iov_iter_get_pages() whcih is is the only user of __bio_iov_append_get_pages().
+Sure. Kept that in cover letter, but missed here.
 >>
->> Set up the "PerChip" field  so that perf knows they are
->> per chip events.
->>
->> Set up the "PerCore" field  so that perf knows they are
->> per core events and add these fields to pmu_event structure.
->>
->> Similar to the way we had "PerPkg field
->> to specify perpkg events.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>> Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
 >> ---
->>  tools/perf/pmu-events/jevents.c    | 34 ++++++++++++++++++++++++------
->>  tools/perf/pmu-events/jevents.h    |  3 ++-
->>  tools/perf/pmu-events/pmu-events.h |  2 ++
->>  3 files changed, 32 insertions(+), 7 deletions(-)
+>>  block/bio.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index fa86c5f997cc..21fd7990ded5 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -323,7 +323,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
->>                                     char *pmu, char *unit, char *perpkg,
->>                                     char *metric_expr,
->>                                     char *metric_name, char *metric_group,
->> -                                   char *deprecated, char *metric_constraint)
->> +                                   char *deprecated, char *perchip, char *percore,
->> +                                   char *metric_constraint)
->>  {
->>         struct perf_entry_data *pd = data;
->>         FILE *outfp = pd->outfp;
->> @@ -357,6 +358,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
->>                 fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
->>         if (deprecated)
->>                 fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
->> +       if (perchip)
->> +               fprintf(outfp, "\t.perchip = \"%s\",\n", perchip);
->> +       if (percore)
->> +               fprintf(outfp, "\t.percore = \"%s\",\n", percore);
->>         if (metric_constraint)
->>                 fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
->>         fprintf(outfp, "},\n");
->> @@ -378,6 +383,8 @@ struct event_struct {
->>         char *metric_group;
->>         char *deprecated;
->>         char *metric_constraint;
->> +       char *perchip;
->> +       char *percore;
->>  };
+>> diff --git a/block/bio.c b/block/bio.c
+>> index a7366c0..0cecdbc 100644
+>> --- a/block/bio.c
+>> +++ b/block/bio.c
+>> @@ -1044,7 +1044,7 @@ static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
+>>  	size_t offset;
 >>
->>  #define ADD_EVENT_FIELD(field) do { if (field) {               \
->> @@ -406,6 +413,8 @@ struct event_struct {
->>         op(metric_name);                                        \
->>         op(metric_group);                                       \
->>         op(deprecated);                                         \
->> +       op(perchip);                                            \
->> +       op(percore);                                            \
->>  } while (0)
+>>  	if (WARN_ON_ONCE(!max_append_sectors))
+>> -		return 0;
+>> +		return -EINVAL;
 >>
->>  static LIST_HEAD(arch_std_events);
->> @@ -425,7 +434,8 @@ static int save_arch_std_events(void *data, char *name, char *event,
->>                                 char *desc, char *long_desc, char *pmu,
->>                                 char *unit, char *perpkg, char *metric_expr,
->>                                 char *metric_name, char *metric_group,
->> -                               char *deprecated, char *metric_constraint)
->> +                               char *deprecated, char *perchip, char *percore,
->> +                               char *metric_constraint)
->>  {
->>         struct event_struct *es;
+>>  	/*
+>>  	 * Move page array up in the allocated memory for the bio vecs as far as
 >>
->> @@ -489,7 +499,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
->>           char **name, char **long_desc, char **pmu, char **filter,
->>           char **perpkg, char **unit, char **metric_expr, char **metric_name,
->>           char **metric_group, unsigned long long eventcode,
->> -         char **deprecated, char **metric_constraint)
->> +         char **deprecated, char **perchip, char **percore,
->> +         char **metric_constraint)
->>  {
->>         /* try to find matching event from arch standard values */
->>         struct event_struct *es;
->> @@ -518,7 +529,8 @@ int json_events(const char *fn,
->>                       char *pmu, char *unit, char *perpkg,
->>                       char *metric_expr,
->>                       char *metric_name, char *metric_group,
->> -                     char *deprecated, char *metric_constraint),
->> +                     char *deprecated, char *perchip, char *percore,
->> +                     char *metric_constraint),
->>           void *data)
->>  {
->>         int err;
->> @@ -548,6 +560,8 @@ int json_events(const char *fn,
->>                 char *metric_name = NULL;
->>                 char *metric_group = NULL;
->>                 char *deprecated = NULL;
->> +               char *perchip = NULL;
->> +               char *percore = NULL;
->>                 char *metric_constraint = NULL;
->>                 char *arch_std = NULL;
->>                 unsigned long long eventcode = 0;
->> @@ -629,6 +643,10 @@ int json_events(const char *fn,
->>                                 addfield(map, &perpkg, "", "", val);
->>                         } else if (json_streq(map, field, "Deprecated")) {
->>                                 addfield(map, &deprecated, "", "", val);
->> +                       } else if (json_streq(map, field, "PerChip")) {
->> +                               addfield(map, &perchip, "", "", val);
->> +                       } else if (json_streq(map, field, "PerCore")) {
->> +                               addfield(map, &percore, "", "", val);
->>                         } else if (json_streq(map, field, "MetricName")) {
->>                                 addfield(map, &metric_name, "", "", val);
->>                         } else if (json_streq(map, field, "MetricGroup")) {
->> @@ -676,13 +694,15 @@ int json_events(const char *fn,
->>                                         &long_desc, &pmu, &filter, &perpkg,
->>                                         &unit, &metric_expr, &metric_name,
->>                                         &metric_group, eventcode,
->> -                                       &deprecated, &metric_constraint);
->> +                                       &deprecated, &perchip, &percore,
->> +                                       &metric_constraint);
->>                         if (err)
->>                                 goto free_strings;
->>                 }
->>                 err = func(data, name, real_event(name, event), desc, long_desc,
->>                            pmu, unit, perpkg, metric_expr, metric_name,
->> -                          metric_group, deprecated, metric_constraint);
->> +                          metric_group, deprecated, perchip, percore,
->> +                          metric_constraint);
->>  free_strings:
->>                 free(event);
->>                 free(desc);
->> @@ -693,6 +713,8 @@ int json_events(const char *fn,
->>                 free(filter);
->>                 free(perpkg);
->>                 free(deprecated);
->> +               free(perchip);
->> +               free(percore);
->>                 free(unit);
->>                 free(metric_expr);
->>                 free(metric_name);
->> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->> index 2afc8304529e..3c439ecdac7c 100644
->> --- a/tools/perf/pmu-events/jevents.h
->> +++ b/tools/perf/pmu-events/jevents.h
->> @@ -8,7 +8,8 @@ int json_events(const char *fn,
->>                                 char *pmu,
->>                                 char *unit, char *perpkg, char *metric_expr,
->>                                 char *metric_name, char *metric_group,
->> -                               char *deprecated, char *metric_constraint),
->> +                               char *deprecated, char *perchip, char *percore,
->> +                               char *metric_constraint),
->>                 void *data);
->>  char *get_cpu_str(void);
->>
->> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
->> index c8f306b572f4..13d96b732963 100644
->> --- a/tools/perf/pmu-events/pmu-events.h
->> +++ b/tools/perf/pmu-events/pmu-events.h
->> @@ -19,6 +19,8 @@ struct pmu_event {
->>         const char *metric_group;
->>         const char *deprecated;
->>         const char *metric_constraint;
->> +       const char *perchip;
->> +       const char *percore;
-> 
-> (In general this looks good! Some nits)
-> Could we document perchip and percore? Agreed that the style here is
-> not to comment.
-> I'm a little confused as to why these need to be const char* and can't
-> just be a bool? Perhaps other variables shouldn't be const char* too.
-> Is there ever a case where both perchip and percore could be true?
-> Would something like an enum capture this better? I can imagine other
-> cases uncore and it seems a little strange to add a new "const char*"
-> each time 
-> 
-> I'm wondering if there needs to be a glossary of terms, so that the
-> use of terms like core, chip, thread, socket, cpu, package is kept
-> consistent. It's not trivially clear what the difference between a
-> chip and a socket is, for example. Mapping terms to other vendors
-> commonly used terms, such as "complex" would also be useful.
-> 
+>
+>Note: the odd behavior mentioned in the commit message cannot currently be
+>triggered since only zonefs issues REQ_OP_ZONE_APPEND BIOs so we are guaranteed
+>that max_append_sectors is not 0 in that case. But this fix certainly makes
+>things more solid. So:
+Yes, zonefs will not run into this. Future users of zone-append may. I
+encountered this endless loop while testing user zone-append path.
+>Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+>
+>-- 
+>Damien Le Moal
+>Western Digital Research
+>
 
-Hi Ian,
-     Thanks for reviewing the patchset. You are right adding new parameter
-each time will not be good way to go. So, there won't be a case where both
-perchip/percore will be enabled. Hence we can add something like enum to
-capture the data.
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_c4a69_
+Content-Type: text/plain; charset="utf-8"
 
-I work on prototype of adding all terms like percore, perchip, perpkg as
-part of enum. Now in future if we need to add new terms like thread, cpu etc. We just need
-to add that part in enum without creating new parameter each time.
-Please let me know any reviews on that.
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index d4870074f14c..5220b28a35a1 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -47,8 +47,11 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 	return bufp;
- }
- 
--int arch_get_runtimeparam(void)
-+int arch_get_runtimeparam(struct pmu_event *pe)
- {
- 	int count;
--	return sysfs__read_int("/devices/hv_24x7/interface/sockets", &count) < 0 ? 1 : count;
-+	char path[PATH_MAX] = "/devices/hv_24x7/interface/";
-+
-+	atoi(pe->event_class_type) == PerChip ? strcat(path, "sockets") : strcat(path, "coresperchip");
-+	return sysfs__read_int(path, &count) < 0 ? 1 : count;
- }
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-index c121e526442a..2819ea041c78 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -3,17 +3,26 @@
-         "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-         "MetricName": "Memory_RD_BW_Chip",
-         "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+        "ScaleUnit": "1.6e-2MB",
-+	"EventClassType": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-         "MetricName": "Memory_WR_BW_Chip",
-         "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+        "ScaleUnit": "1.6e-2MB",
-+	"EventClassType": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-         "MetricName": "PowerBUS_Frequency",
--        "ScaleUnit": "2.5e-7GHz"
--    }
-+        "ScaleUnit": "2.5e-7GHz",
-+	"EventClassType": "PerChip"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@CPM_CS_32MHZ_CYC\\,domain\\=3\\,core\\=?@ )",
-+        "MetricName": "CPM_CS_32MHZ_CYC",
-+        "ScaleUnit": "1MHz",
-+	"EventClassType": "PerCore"
-+     }
- ]
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index fa86c5f997cc..dd2b14cc147c 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -53,6 +53,23 @@
- int verbose;
- char *prog;
- 
-+enum event_class {
-+	PerChip = 0,
-+	PerPkg = 1,
-+	PerCore = 2
-+};
-+
-+enum event_class convert(const char* event_class_type) {
-+
-+	if (!strcmp(event_class_type, "PerCore"))
-+		return PerCore;
-+	else if (!strcmp(event_class_type, "PerChip"))
-+		return PerChip;
-+	else if (!strcmp(event_class_type, "PerPkg"))
-+		return PerPkg;
-+	return -1;
-+}
-+
- int eprintf(int level, int var, const char *fmt, ...)
- {
- 
-@@ -320,7 +337,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
- 
- static int print_events_table_entry(void *data, char *name, char *event,
- 				    char *desc, char *long_desc,
--				    char *pmu, char *unit, char *perpkg,
-+				    char *pmu, char *unit, char *event_class_type,
- 				    char *metric_expr,
- 				    char *metric_name, char *metric_group,
- 				    char *deprecated, char *metric_constraint)
-@@ -345,10 +362,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 		fprintf(outfp, "\t.long_desc = \"%s\",\n", long_desc);
- 	if (pmu)
- 		fprintf(outfp, "\t.pmu = \"%s\",\n", pmu);
-+	if (event_class_type)
-+		fprintf(outfp, "\t.event_class_type = \"%d\",\n", convert(event_class_type));
- 	if (unit)
- 		fprintf(outfp, "\t.unit = \"%s\",\n", unit);
--	if (perpkg)
--		fprintf(outfp, "\t.perpkg = \"%s\",\n", perpkg);
- 	if (metric_expr)
- 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", metric_expr);
- 	if (metric_name)
-@@ -372,7 +389,7 @@ struct event_struct {
- 	char *long_desc;
- 	char *pmu;
- 	char *unit;
--	char *perpkg;
-+	char *event_class_type;
- 	char *metric_expr;
- 	char *metric_name;
- 	char *metric_group;
-@@ -401,7 +418,7 @@ struct event_struct {
- 	op(long_desc);						\
- 	op(pmu);						\
- 	op(unit);						\
--	op(perpkg);						\
-+	op(event_class_type);			\
- 	op(metric_expr);					\
- 	op(metric_name);					\
- 	op(metric_group);					\
-@@ -423,7 +440,7 @@ static void free_arch_std_events(void)
- 
- static int save_arch_std_events(void *data, char *name, char *event,
- 				char *desc, char *long_desc, char *pmu,
--				char *unit, char *perpkg, char *metric_expr,
-+				char *unit, char *event_class_type, char *metric_expr,
- 				char *metric_name, char *metric_group,
- 				char *deprecated, char *metric_constraint)
- {
-@@ -487,7 +504,7 @@ static char *real_event(const char *name, char *event)
- static int
- try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- 	  char **name, char **long_desc, char **pmu, char **filter,
--	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
-+	  char **event_class_type, char **unit, char **metric_expr, char **metric_name,
- 	  char **metric_group, unsigned long long eventcode,
- 	  char **deprecated, char **metric_constraint)
- {
-@@ -515,7 +532,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- int json_events(const char *fn,
- 	  int (*func)(void *data, char *name, char *event, char *desc,
- 		      char *long_desc,
--		      char *pmu, char *unit, char *perpkg,
-+		      char *pmu, char *unit, char *event_class_type,
- 		      char *metric_expr,
- 		      char *metric_name, char *metric_group,
- 		      char *deprecated, char *metric_constraint),
-@@ -542,7 +559,7 @@ int json_events(const char *fn,
- 		char *extra_desc = NULL;
- 		char *pmu = NULL;
- 		char *filter = NULL;
--		char *perpkg = NULL;
-+		char *event_class_type = NULL;
- 		char *unit = NULL;
- 		char *metric_expr = NULL;
- 		char *metric_name = NULL;
-@@ -625,8 +642,8 @@ int json_events(const char *fn,
- 				addfield(map, &filter, "", "", val);
- 			} else if (json_streq(map, field, "ScaleUnit")) {
- 				addfield(map, &unit, "", "", val);
--			} else if (json_streq(map, field, "PerPkg")) {
--				addfield(map, &perpkg, "", "", val);
-+			} else if (json_streq(map, field, "EventClassType")) {
-+				addfield(map, &event_class_type, "", "", val);
- 			} else if (json_streq(map, field, "Deprecated")) {
- 				addfield(map, &deprecated, "", "", val);
- 			} else if (json_streq(map, field, "MetricName")) {
-@@ -673,7 +690,7 @@ int json_events(const char *fn,
- 			 * fixup any unassigned values.
- 			 */
- 			err = try_fixup(fn, arch_std, &event, &desc, &name,
--					&long_desc, &pmu, &filter, &perpkg,
-+					&long_desc, &pmu, &filter, &event_class_type,
- 					&unit, &metric_expr, &metric_name,
- 					&metric_group, eventcode,
- 					&deprecated, &metric_constraint);
-@@ -681,7 +698,7 @@ int json_events(const char *fn,
- 				goto free_strings;
- 		}
- 		err = func(data, name, real_event(name, event), desc, long_desc,
--			   pmu, unit, perpkg, metric_expr, metric_name,
-+			   pmu, unit, event_class_type, metric_expr, metric_name,
- 			   metric_group, deprecated, metric_constraint);
- free_strings:
- 		free(event);
-@@ -691,7 +708,7 @@ int json_events(const char *fn,
- 		free(extra_desc);
- 		free(pmu);
- 		free(filter);
--		free(perpkg);
-+		free(event_class_type);
- 		free(deprecated);
- 		free(unit);
- 		free(metric_expr);
-diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-index 2afc8304529e..f399ab47cfa4 100644
---- a/tools/perf/pmu-events/jevents.h
-+++ b/tools/perf/pmu-events/jevents.h
-@@ -6,7 +6,7 @@ int json_events(const char *fn,
- 		int (*func)(void *data, char *name, char *event, char *desc,
- 				char *long_desc,
- 				char *pmu,
--				char *unit, char *perpkg, char *metric_expr,
-+				char *unit, char *event_class_type, char *metric_expr,
- 				char *metric_name, char *metric_group,
- 				char *deprecated, char *metric_constraint),
- 		void *data);
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index c8f306b572f4..079af277da47 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -2,6 +2,7 @@
- #ifndef PMU_EVENTS_H
- #define PMU_EVENTS_H
- 
-+enum event_class { PerChip = 0, PerPkg, PerCore};
- /*
-  * Describe each PMU event. Each CPU has a table of PMU events.
-  */
-@@ -13,7 +14,7 @@ struct pmu_event {
- 	const char *long_desc;
- 	const char *pmu;
- 	const char *unit;
--	const char *perpkg;
-+	const char *event_class_type;
- 	const char *metric_expr;
- 	const char *metric_name;
- 	const char *metric_group;
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index ab64b4a4e284..df91aa6fe0e6 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -206,10 +206,10 @@ static int test_pmu_event_table(void)
- 				return -1;
- 			}
- 
--			if (!is_same(table->perpkg, te->perpkg)) {
--				pr_debug2("testing event table %s: mismatched perpkg, %s vs %s\n",
--					  table->name, table->perpkg,
--					  te->perpkg);
-+			if (!is_same(table->event_class_type, te->event_class_type)) {
-+				pr_debug2("testing event table %s: mismatched event_class_type, %s vs %s\n",
-+					  table->name, table->event_class_type,
-+					  te->event_class_type);
- 				return -1;
- 			}
- 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 9e21aa767e41..c06166ec64d6 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -15,7 +15,6 @@
- #include "rblist.h"
- #include <string.h>
- #include <errno.h>
--#include "pmu-events/pmu-events.h"
- #include "strlist.h"
- #include <assert.h>
- #include <linux/ctype.h>
-@@ -547,7 +546,7 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
- 	return false;
- }
- 
--int __weak arch_get_runtimeparam(void)
-+int __weak arch_get_runtimeparam(struct pmu_event *pe __maybe_unused)
- {
- 	return 1;
- }
-@@ -634,7 +633,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 			} else {
- 				int j, count;
- 
--				count = arch_get_runtimeparam();
-+				count = arch_get_runtimeparam(pe);
- 
- 				/* This loop is added to create multiple
- 				 * events depend on count value and add
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 287850bcdeca..c0bf77514343 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -5,6 +5,7 @@
- #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <stdbool.h>
-+#include "pmu-events/pmu-events.h"
- 
- struct evsel;
- struct option;
-@@ -37,5 +38,5 @@ int metricgroup__parse_groups(const struct option *opt,
- void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
- bool metricgroup__has_metric(const char *metric);
--int arch_get_runtimeparam(void);
-+int arch_get_runtimeparam(struct pmu_event *pe __maybe_unused);
- #endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 93fe72a9dc0b..cc18a4c7cfc3 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -306,7 +306,7 @@ static bool perf_pmu_merge_alias(struct perf_pmu_alias *newalias,
- static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 				 char *desc, char *val,
- 				 char *long_desc, char *topic,
--				 char *unit, char *perpkg,
-+				 char *unit, char *event_class_type,
- 				 char *metric_expr,
- 				 char *metric_name,
- 				 char *deprecated)
-@@ -378,7 +378,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 			return -1;
- 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
- 	}
--	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
-+	alias->per_pkg = event_class_type && sscanf(event_class_type, "%d", &num) == 1 && num == 1;
- 	alias->str = strdup(newval);
- 
- 	if (deprecated)
-@@ -776,7 +776,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
- 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
- 				(char *)pe->desc, (char *)pe->event,
- 				(char *)pe->long_desc, (char *)pe->topic,
--				(char *)pe->unit, (char *)pe->perpkg,
-+				(char *)pe->unit, (char *)pe->event_class_type,
- 				(char *)pe->metric_expr,
- 				(char *)pe->metric_name,
- 				(char *)pe->deprecated);
---
-2.26.2
-
-Thanks,
-Kajol Jain
-> Thanks,
-> Ian
-> 
->>  };
->>
->>  /*
->> --
->> 2.26.2
->>
+------FBC7EIImzEv-3WQrgwRbJYn4xAlwhlhWWV1zALX9mq8rjZSB=_c4a69_--
