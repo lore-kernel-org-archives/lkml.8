@@ -2,134 +2,96 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DECC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A85C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C4A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4D4208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EmuP6Jyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgGCI7A (ORCPT
+        id S1726035AbgGCJCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:59:00 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39501 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgGCI7A (ORCPT
+        Fri, 3 Jul 2020 05:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgGCJCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:59:00 -0400
-X-Originating-IP: 86.202.118.225
-Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E9876E0012;
-        Fri,  3 Jul 2020 08:58:55 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 10:58:55 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>, kernel@pengutronix.de,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: at91: fix possible dead lock in new drivers
-Message-ID: <20200703085855.GD6538@piout.net>
-References: <20200703073236.23923-1-a.fatoum@pengutronix.de>
+        Fri, 3 Jul 2020 05:02:36 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA74C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TR87TYbOJPVddeAI363WO0ZDHvRAdSQLPveW9L3ReRs=; b=EmuP6JyoP5AddLYU++0xWDDucU
+        ntbrGzdXGCS+xNvFO2WA2oLfnCSWM59oEAJdgE8sCJEIrspjrt4r3m0NOB6EzSXlGA+dAmzuzodmM
+        Risqb2jO4BoCCPefwNMFL32Cx2Q/ZNPsIYm96WFV/JEiLyYIVt3iHWwDr6dKMync+U5njxwb+/oXL
+        m1ixu1aMg4OZfZMuN1FoM4YLX966QDH0W0RT6HN8/H5HlsUh3BYBc/aQySqYc/9Fiypp9liLJjhYS
+        k+ujxk6zguXFzNNZyIY0wjdELxtX6OWT4UPVaPK3jQN3bLTKAkwXfMfGsVbLMv/CESw4BFRzMlw/x
+        elNKp5qg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrHaY-0003ar-1J; Fri, 03 Jul 2020 09:02:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 318E8301124;
+        Fri,  3 Jul 2020 11:02:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 18CAB2010865A; Fri,  3 Jul 2020 11:02:26 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 11:02:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Dave Jones <davej@codemonkey.org.uk>,
+        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: weird loadavg on idle machine post 5.7
+Message-ID: <20200703090226.GV4800@hirez.programming.kicks-ass.net>
+References: <20200702171548.GA11813@codemonkey.org.uk>
+ <20200702213627.GF3183@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703073236.23923-1-a.fatoum@pengutronix.de>
+In-Reply-To: <20200702213627.GF3183@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2020 09:32:35+0200, Ahmad Fatoum wrote:
-> syscon_node_to_regmap() will make the created regmap get and enable the
-> first clock it can parse from the device tree. This clock is not needed to
-> access the registers and should not be enabled at that time.
-> 
-> Use device_node_to_regmap to resolve this as it looks up the regmap in
-> the same list but doesn't care about the clocks. This issue is detected
-> by lockdep when booting the sama5d3 with a device tree containing the
-> new clk bindings.
-> 
-> This fix already happened in 6956eb33abb5 ("clk: at91: fix possible
-> deadlock") for the drivers that had been migrated to the new clk binding
-> back then. This does the same for the new drivers as well.
-> 
-> Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Thu, Jul 02, 2020 at 10:36:27PM +0100, Mel Gorman wrote:
 
-> ---
-> Only boot tested on the sama5d3.
-> ---
->  drivers/clk/at91/at91sam9g45.c | 2 +-
->  drivers/clk/at91/at91sam9n12.c | 2 +-
->  drivers/clk/at91/sam9x60.c     | 2 +-
->  drivers/clk/at91/sama5d3.c     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 9873b583c260..fe9d391adeba 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -111,7 +111,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  		return;
->  	mainxtal_name = of_clk_get_parent_name(np, i);
->  
-> -	regmap = syscon_node_to_regmap(np);
-> +	regmap = device_node_to_regmap(np);
->  	if (IS_ERR(regmap))
->  		return;
->  
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 630dc5d87171..4aa97e672bd6 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -124,7 +124,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  		return;
->  	mainxtal_name = of_clk_get_parent_name(np, i);
->  
-> -	regmap = syscon_node_to_regmap(np);
-> +	regmap = device_node_to_regmap(np);
->  	if (IS_ERR(regmap))
->  		return;
->  
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index 3e20aa68259f..2b4c67485eee 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -178,7 +178,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  		return;
->  	mainxtal_name = of_clk_get_parent_name(np, i);
->  
-> -	regmap = syscon_node_to_regmap(np);
-> +	regmap = device_node_to_regmap(np);
->  	if (IS_ERR(regmap))
->  		return;
->  
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 5e4e44dd4c37..5609b04e6565 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -121,7 +121,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  		return;
->  	mainxtal_name = of_clk_get_parent_name(np, i);
->  
-> -	regmap = syscon_node_to_regmap(np);
-> +	regmap = device_node_to_regmap(np);
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -- 
-> 2.27.0
-> 
+> > commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
+> > Author: Peter Zijlstra <peterz@infradead.org>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Peter, I'm not supremely confident about this but could it be because
+> "p->sched_contributes_to_load = !!task_contributes_to_load(p)" potentially
+> happens while a task is still being dequeued? In the final stages of a
+> task switch we have
+> 
+>         prev_state = prev->state;
+>         vtime_task_switch(prev);
+>         perf_event_task_sched_in(prev, current);
+>         finish_task(prev);
+> 
+> finish_task is when p->on_cpu is cleared after the state is updated.
+> With the patch, we potentially update sched_contributes_to_load while
+> p->state is transient so if the check below is true and ttwu_queue_wakelist
+> is used then sched_contributes_to_load was based on a transient value
+> and potentially wrong.
+
+I'm not seeing it. Once a task hits schedule(), p->state doesn't change,
+except through wakeup.
+
+And while dequeue depends on p->state, it doesn't change it.
+
+At this point in ttwu() we know p->on_rq == 0, which implies dequeue has
+started, which means we've (at least) stopped executing the task -- we
+started or finished schedule().
+
+Let me stare at this more...
