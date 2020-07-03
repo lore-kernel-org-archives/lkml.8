@@ -4,214 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53349C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E79F208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD1F208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593758604;
-	bh=GlTbo91iaum/QYEAGRUluZDnSS3O0GVn2A5VjYtNGko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gfanHofJNC0wVe10PNExj6MVj52QNJ9Wr9bhQwOHOmOeMx6qTvEdMlrCsmDZDRN1g
-	 6s2TKG49OW86pz1QqmW7UrIE3lE4L0wPknFKlztfrc3MJlZ10RUitmhTHQx76kdSVX
-	 Uf+Qm6Mjw7CJb5ZCHFCVUaGtrxU756DD2wc6fF0k=
+	s=default; t=1593758639;
+	bh=v1FMDcY5Pi9fs6iVelxUUQh7Wuc4woj4RWY6/kUjJOc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HOI7ZPMncKHOvM2BdhLrL71r37inYpIkINyhpNUuvHsalffcm/Cnp2Pp8lRTRhSzW
+	 QBqb3gqNCzZlh2TrrPMXY1pNWL6HR0KBMcKrjmkiguJFu5zDQR9nK+arCmHDs2srgd
+	 1XJd+gWGA0kmjNJzuDPh//eDp16aV9nFbkxJPx08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGCGnX (ORCPT
+        id S1726406AbgGCGn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:43:23 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33169 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCGnW (ORCPT
+        Fri, 3 Jul 2020 02:43:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40106 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgGCGn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:43:22 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h28so26722873edz.0;
-        Thu, 02 Jul 2020 23:43:20 -0700 (PDT)
+        Fri, 3 Jul 2020 02:43:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f2so3475430wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:43:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HpfdR+Nz+v/JEE+ucLnGmelRBm4qsJ9pvagHJ29kthQ=;
-        b=eysVhJuGf3OTRpgw/Nl3OaBKK6K5s/0vAL+8U4RkTQvLgiQmJtG0eLjyOe8hu/BBBv
-         nOxRoySjgjZcJLWYV+38qL+5EAHdQv2y/K6dvEjutxYjIbqFmi4aqpTg/9FnXwYS1JBL
-         7vRjAvb0cKTG1jvjn0iPEAZCpJ6U492a/yIinKgE28FKaI1QvM6IUlfCT99a0L4pGRcl
-         JTknb3OLshto2L0sKs4vrU9VCeyvivcb0qqiEsCT9Vt5oRoOYH2Jb0WvuRkjdH0b+KvX
-         ezEV0gI1UliGXC891Y4Qnk9TxVIM/UznmHwDgN9bjeY8q+/Ka1kHzChk8H0v5M5dAjXk
-         31BQ==
-X-Gm-Message-State: AOAM533dLvHu/Nv+mQfF0N63lUQgKTL+jX0eaTp8rFhS1YFskRHmZuvE
-        gI3jrnHQ4ACntM1nAWoUPU0=
-X-Google-Smtp-Source: ABdhPJzIbM1HDccc2+Gu9mfkPL6JsrAMgw+HPHk5MHQoT5Fi3KlkQtt6vK8FLBLUpPzyNfwb9V1APw==
-X-Received: by 2002:a50:9f22:: with SMTP id b31mr39686145edf.24.1593758599991;
-        Thu, 02 Jul 2020 23:43:19 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id f16sm8608536ejr.0.2020.07.02.23.43.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 23:43:19 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 08:43:18 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] mm/memcontrol: Fix OOPS inside
- mem_cgroup_get_nr_swap_pages()
-Message-ID: <20200703064318.GN18446@dhcp22.suse.cz>
-References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
- <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
- <20200702060024.GA18446@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MZq9MpoAdPD5UWC2CLSSHKSsbw3XN/pMdjELns1KMFw=;
+        b=sEI8wb0hQJcZPG9WsqrQS5qN++mvDXOlA9DGBKG9FXAKqMJpCG7LgrFaxB0EDYGzxj
+         Tc7zZYg2VCch5o0fJg21MmzFiqGSkO+dkU6xo9LlXYj8JrmtGDniWbZjyOJhm0pMTOSY
+         uOemfL4wHAh/TAKCEWKMa3ca3FuywBxanJH/BfpgmAyduWQFk0qTcI3Z9EfileeyLjvJ
+         c6hEjReVYvmqPaxbC4JvGTA3Tvj+xSedyK+9l//9ABTbgkj7lPywNvua6gytPGDsWUeR
+         Bs+bvZ+avsELrlSxm8ON8sw8i1fXKUFJcpi2MVF+aWpW9aA/doaOJGL4dPZS5ZtoKGK/
+         5Vog==
+X-Gm-Message-State: AOAM531/69o8tBGG9vwNlfqT5q8jFjilG/ajHw5Zo588pM6Y5eduiJaq
+        O8i3azOg9mydhB98ZphWzg7krjzTRnIhWnavKxM=
+X-Google-Smtp-Source: ABdhPJxuhT9W2xGcHsDH1JWwuABOtsDWSgcmlBIq3P3mL01+aHBdqvcPuCv03qdlhFQg8mSUXnCvUy4dfBbE8UiEiP8=
+X-Received: by 2002:adf:fcc5:: with SMTP id f5mr39041360wrs.60.1593758635438;
+ Thu, 02 Jul 2020 23:43:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702060024.GA18446@dhcp22.suse.cz>
+References: <20200627133654.64863-1-changbin.du@gmail.com> <20200627133654.64863-12-changbin.du@gmail.com>
+In-Reply-To: <20200627133654.64863-12-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 3 Jul 2020 15:43:38 +0900
+Message-ID: <CAM9d7ciOwcviSnDra4WL2d3CrF6FsReuxz8VEZszJvqnNGPRjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/15] perf ftrace: add support for trace option funcgraph-irqs
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Andrew - the patch is http://lkml.kernel.org/r/1593641660-13254-2-git-send-email-bhsharma@redhat.com]
+On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> This adds an option '--graph-noirqs' to filter out functions executed
+> in irq context.
 
-On Thu 02-07-20 08:00:27, Michal Hocko wrote:
-> On Thu 02-07-20 03:44:19, Bhupesh Sharma wrote:
-> > Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
-> > function in a corner case seen on some arm64 boards when kdump kernel
-> > runs with "cgroup_disable=memory" passed to the kdump kernel via
-> > bootargs.
-> > 
-> > The root-cause behind the same is that currently mem_cgroup_swap_init()
-> > function is implemented as a subsys_initcall() call instead of a
-> > core_initcall(), this means 'cgroup_memory_noswap' still
-> > remains set to the default value (false) even when memcg is disabled via
-> > "cgroup_disable=memory" boot parameter.
-> > 
-> > This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
-> > function in corner cases:
-> > 
-> >   [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
-> >   [    0.274495] Mem abort info:
-> >   [    0.277311]   ESR = 0x96000006
-> >   [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
-> >   [    0.285751]   SET = 0, FnV = 0
-> >   [    0.288830]   EA = 0, S1PTW = 0
-> >   [    0.291995] Data abort info:
-> >   [    0.294897]   ISV = 0, ISS = 0x00000006
-> >   [    0.298765]   CM = 0, WnR = 0
-> >   [    0.301757] [0000000000000188] user address but active_mm is swapper
-> >   [    0.308174] Internal error: Oops: 96000006 [#1] SMP
-> >   [    0.313097] Modules linked in:
-> >   <..snip..>
-> >   [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
-> >   [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
-> >   [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
-> >   [    0.347564] sp : fffffe0012b6f800
-> >   [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
-> >   [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
-> >   [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
-> >   [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
-> >   [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
-> >   [    0.377720] x19: 0000000000000000 x18: 0000000000000010
-> >   [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
-> >   [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
-> >   [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
-> >   [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
-> >   [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
-> >   [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
-> >   [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
-> >   [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
-> >   [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
-> >   [    0.431346] Call trace:
-> >   [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
-> >   [    0.438735]  shrink_lruvec+0x404/0x4f8
-> >   [    0.442516]  shrink_node+0x1a8/0x688
-> >   [    0.446121]  do_try_to_free_pages+0xe8/0x448
-> >   [    0.450429]  try_to_free_pages+0x110/0x230
-> >   [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
-> >   [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
-> >   [    0.464938]  alloc_page_interleave+0x20/0x90
-> >   [    0.469246]  alloc_pages_current+0xdc/0xf8
-> >   [    0.473379]  atomic_pool_expand+0x60/0x210
-> >   [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
-> >   [    0.481910]  dma_atomic_pool_init+0xac/0x158
-> >   [    0.486220]  do_one_initcall+0x50/0x218
-> >   [    0.490091]  kernel_init_freeable+0x22c/0x2d0
-> >   [    0.494489]  kernel_init+0x18/0x110
-> >   [    0.498007]  ret_from_fork+0x10/0x18
-> >   [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
-> >   [    0.507770] ---[ end trace 9795948475817de4 ]---
-> >   [    0.512429] Kernel panic - not syncing: Fatal exception
-> >   [    0.517705] Rebooting in 10 seconds..
-> > 
-> > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: cgroups@vger.kernel.org
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: kexec@lists.infradead.org
-> 
-> Fixes: eccb52e78809 ("mm: memcontrol: prepare swap controller setup for integration")
-> 
-> > Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> 
-> This is subtle as hell, I have to say. I find the ordering in the init
-> calls very unintuitive and extremely hard to follow. The above commit
-> has introduced the problem but the code previously has worked mostly by
-> a luck because our default was flipped.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> > ---
-> >  mm/memcontrol.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 19622328e4b5..8323e4b7b390 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
-> >  	{ },	/* terminate */
-> >  };
-> >  
-> > +/*
-> > + * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
-> > + * instead of a core_initcall(), this could mean cgroup_memory_noswap still
-> > + * remains set to false even when memcg is disabled via "cgroup_disable=memory"
-> > + * boot parameter. This may result in premature OOPS inside 
-> > + * mem_cgroup_get_nr_swap_pages() function in corner cases.
-> > + */
-> >  static int __init mem_cgroup_swap_init(void)
-> >  {
-> >  	/* No memory control -> no swap control */
-> > @@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
-> >  
-> >  	return 0;
-> >  }
-> > -subsys_initcall(mem_cgroup_swap_init);
-> > +core_initcall(mem_cgroup_swap_init);
-> >  
-> >  #endif /* CONFIG_MEMCG_SWAP */
-> > -- 
-> > 2.7.4
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+Ditto.
 
--- 
-Michal Hocko
-SUSE Labs
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>
+> ---
+> v2: option name '--nofuncgraph-irqs' -> '--graph-noirqs'.
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt |  3 +++
+>  tools/perf/builtin-ftrace.c              | 20 ++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index a3000436f80b..b616e05d5156 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -107,6 +107,9 @@ OPTIONS
+>  --graph-nosleep-time::
+>         Measure on-CPU time only for function_graph tracer.
+>
+> +--graph-noirqs::
+> +       Ignore functions that happen inside interrupt for function_graph tracer.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1], linkperf:perf-trace[1]
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index eba125a60820..876c8e800425 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -43,6 +43,7 @@ struct perf_ftrace {
+>         bool                    inherit;
+>         bool                    func_stack_trace;
+>         bool                    graph_nosleep_time;
+> +       bool                    graph_noirqs;
+>  };
+>
+>  struct filter_entry {
+> @@ -202,6 +203,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+>         write_tracing_option_file("function-fork", "0");
+>         write_tracing_option_file("func_stack_trace", "0");
+>         write_tracing_option_file("sleep-time", "1");
+> +       write_tracing_option_file("funcgraph-irqs", "1");
+>  }
+>
+>  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> @@ -393,6 +395,17 @@ static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
+>         return 0;
+>  }
+>
+> +static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
+> +{
+> +       if (!ftrace->graph_noirqs)
+> +               return 0;
+> +
+> +       if (write_tracing_option_file("funcgraph-irqs", "0") < 0)
+> +               return -1;
+> +
+> +       return 0;
+> +}
+> +
+>  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  {
+>         char *trace_file;
+> @@ -477,6 +490,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>                 goto out_reset;
+>         }
+>
+> +       if (set_tracing_funcgraph_irqs(ftrace) < 0) {
+> +               pr_err("failed to set tracing option funcgraph-irqs\n");
+> +               goto out_reset;
+> +       }
+
+Why not add set_tracing_options() which calls these individual functions
+to handle option processing altogether?  It seems consistent to its
+'reset' counterpart.
+
+Thanks
+Namhyung
+
+
+> +
+>         if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+>                 pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+>                 goto out_reset;
+> @@ -658,6 +676,8 @@ int cmd_ftrace(int argc, const char **argv)
+>                     "trace children processes"),
+>         OPT_BOOLEAN(0, "graph-nosleep-time", &ftrace.graph_nosleep_time,
+>                     "measure on-CPU time only for function_graph tracer"),
+> +       OPT_BOOLEAN(0, "graph-noirqs", &ftrace.graph_noirqs,
+> +                   "ignore functions that happen inside interrupt for function_graph tracer"),
+>         OPT_END()
+>         };
+>
+> --
+> 2.25.1
+>
