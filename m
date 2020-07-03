@@ -2,75 +2,109 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEADC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5F920890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8EC20781
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XTuzQY6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgGCDEl (ORCPT
+        id S1726144AbgGCDFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:04:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbgGCDEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:04:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 22DB6E5DE6A194980ED4;
-        Fri,  3 Jul 2020 11:04:37 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 11:04:27 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] ASoC: ti: j721e-evm: Fix missing unlock on error in j721e_audio_hw_params()
-Date:   Fri, 3 Jul 2020 03:09:10 +0000
-Message-ID: <20200703030910.75047-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 2 Jul 2020 23:05:21 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56924 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726033AbgGCDFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:05:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593745519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nT5nUdX/XIXMp0SEBuIisefVG98qior59Pb7SabULTU=;
+        b=XTuzQY6/AwCBPgMjLylAFwmB6wLqvfstaxNdLyFXTHFafO7WR07pOjsJsUSXZ0xhnneB2s
+        uO4LtMmP+Ts68RUScq8SVb7oqbT5PhzZ2wCud4GT6oimv7fUnPfdPvmDOJyScR9cny9gnJ
+        ubleCbUUIAsvgifkmCAXy3W3bWjrYgE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-1z8sNEliMLCBosM8IsGV_g-1; Thu, 02 Jul 2020 23:05:17 -0400
+X-MC-Unique: 1z8sNEliMLCBosM8IsGV_g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0CE07BFC0;
+        Fri,  3 Jul 2020 03:05:15 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-82.rdu2.redhat.com [10.10.112.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D402612BA;
+        Fri,  3 Jul 2020 03:05:11 +0000 (UTC)
+Subject: Re: [PATCH v5] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
+References: <20200702005923.10064-1-longman@redhat.com>
+ <20200703010720.GH5369@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <85cbaacf-6986-d363-5c80-530be9a6fa63@redhat.com>
+Date:   Thu, 2 Jul 2020 23:05:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200703010720.GH5369@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing unlock before return from function j721e_audio_hw_params()
-in the error handling case.
+On 7/2/20 9:07 PM, Dave Chinner wrote:
+> On Wed, Jul 01, 2020 at 08:59:23PM -0400, Waiman Long wrote:
+>> Suggested-by: Dave Chinner <david@fromorbit.com>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   fs/xfs/xfs_super.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+>> index 379cbff438bc..dcc97bad950a 100644
+>> --- a/fs/xfs/xfs_super.c
+>> +++ b/fs/xfs/xfs_super.c
+>> @@ -913,11 +913,21 @@ xfs_fs_freeze(
+>>   	struct super_block	*sb)
+>>   {
+>>   	struct xfs_mount	*mp = XFS_M(sb);
+>> +	unsigned long		pflags;
+>> +	int			ret;
+>>   
+>> +	/*
+>> +	 * Disable fs reclaim in memory allocation for fs freeze to avoid
+>> +	 * causing a possible circular locking dependency lockdep splat
+>> +	 * relating to fs reclaim.
+>> +	 */
+> 	/*
+> 	 * The filesystem is now frozen far enough that memory reclaim
+> 	 * cannot safely operate on the filesystem. Hence we need to
+> 	 * set a GFP_NOFS context here to avoid recursion deadlocks.
+> 	 */
+>
+>> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+> memalloc_nofs_save/restore(), please.
 
-Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- sound/soc/ti/j721e-evm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the comments, I will make the suggested change.
 
-diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
-index 3a2a8b1f3aa3..174306cf53ad 100644
---- a/sound/soc/ti/j721e-evm.c
-+++ b/sound/soc/ti/j721e-evm.c
-@@ -330,7 +330,7 @@ static int j721e_audio_hw_params(struct snd_pcm_substream *substream,
- 		ret = snd_soc_dai_set_tdm_slot(codec_dai, 0x3, 0x3, 2,
- 					       slot_width);
- 		if (ret && ret != -ENOTSUPP)
--			return ret;
-+			goto out;
- 	}
- 
- 	ret = j721e_configure_refclk(priv, domain_id, params_rate(params));
-
-
+Cheers,
+Longman
 
