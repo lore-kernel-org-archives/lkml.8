@@ -2,84 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AADC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73379C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B917420890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E96206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sx/HrLI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgGCHes (ORCPT
+        id S1726152AbgGCHfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        Fri, 3 Jul 2020 03:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCHer (ORCPT
+        with ESMTP id S1725764AbgGCHf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:34:47 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2144C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:34:47 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1jrGDc-0003cT-Da; Fri, 03 Jul 2020 09:34:44 +0200
-Subject: Re: [PATCH v2] clk: at91: add sama5d3 pmc driver
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Karl_Rudb=c3=a6k_Olsen?= <karl@micro-technic.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200110223033.1261791-1-alexandre.belloni@bootlin.com>
- <37d11358-d3b5-10a1-72a3-93a03a6c1ea6@pengutronix.de>
- <20200622214759.GK131826@piout.net>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <043970b9-6cc6-e5c6-b5b1-e0f1a9799ae1@pengutronix.de>
-Date:   Fri, 3 Jul 2020 09:34:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 03:35:29 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F973C08C5C1;
+        Fri,  3 Jul 2020 00:35:29 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l6so10456250pjq.1;
+        Fri, 03 Jul 2020 00:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbRBeJ+XIbof8SsSnUrtwZgJ/aiu8Z+x8SsI7+GEKqo=;
+        b=Sx/HrLI1gUrhnhruDmTnduBJm6i1u2AFd+QouTv/vb5YltoyihE6ABJowb0MWAz6Pf
+         +uXGTwzRxR7b4k3wQmaA6naeh+y4u9Y2BAoN9vb0ulKlIyhXQw/raf4qDDowv+9P3vx6
+         YEPSk+sNOeSOK0Umr8u1rPFcNnN5aW+kfalo8IP036e6NWdMYadk5NZDPS8fvt9SB2tQ
+         sSHyx3urEWcOP26k/GNZ3LLNVlsem7fH+NdDgB53nCrQVtn+Jf6XtQEbLD4BdcW+QJ5v
+         JucXQVQ44J3p+gLsA04oOXln9Ypjb4MyUkxCDnJOZein/EaL7mal3GVQ2TRMyoqf03c/
+         2E4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbRBeJ+XIbof8SsSnUrtwZgJ/aiu8Z+x8SsI7+GEKqo=;
+        b=Q0830cjYwVR6THe5bTLC3oqxXtXYXiz+hYMVYj9RT+KUxSTjthyQz/XnxI/ebtfytB
+         SSY0SqzZysJNtfJsAVgjD7wUmOY8fnPMp7UIlmWrJw8Xivd7CpowM+HjRrdlkaiy97in
+         QM6vfkyqE3ARcnd/SyhzpusgMk7cr1sZCyh/Ck2YKYpAJIALgePaNEqswmSwCfOwq9V4
+         wg2kZOT3fOAUbWan18X8QBJNxIwIH6FEiEkxsVOy/6hlcl9naKxzF4Uz7CJan7JMxnQU
+         PDuzLnWqnOVKs+GAhvqJHTfX04fTLpDC3K1/94YGm8Tear55IY2zg7cwLHQO6gHTibw1
+         0QcA==
+X-Gm-Message-State: AOAM532OyqNG7thfLvANgDDRRQ5kOl+szRkkokvrhTakJOheF+EGY7yD
+        NOyv3NUobJ3GePW08hobM4A=
+X-Google-Smtp-Source: ABdhPJxGGr/T+DMbaejYqpR0giBM8nZ8ynq17VDv7uveaGsjhL5t6fMWI9MQnFOkBe6Nr0BI89jHMg==
+X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr5957942pjx.169.1593761728886;
+        Fri, 03 Jul 2020 00:35:28 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
+        by smtp.gmail.com with ESMTPSA id y7sm10218499pgk.93.2020.07.03.00.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 00:35:28 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v2 0/6] powerpc: queued spinlocks and rwlocks
+Date:   Fri,  3 Jul 2020 17:35:10 +1000
+Message-Id: <20200703073516.1354108-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200622214759.GK131826@piout.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Alexandre,
+v2 is updated to account for feedback from Will, Peter, and
+Waiman (thank you), and trims off a couple of RFC and unrelated
+patches.
 
-On 6/22/20 11:47 PM, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 22/06/2020 23:24:45+0200, Ahmad Fatoum wrote:
->>> +	regmap = syscon_node_to_regmap(np);
->>
->> Shouldn't this be device_node_to_regmap for the same reasons outlined in your
->> 6956eb33 ("clk: at91: fix possible deadlock") commit?
->>
->> Same question for at91sam9g45.c, sam9x60.c and at91sam9n12.c.
->>
-> 
-> Agreed, I guess you can send a patch fixing all the instances.
+Thanks,
+Nick
 
-I just sent out a patch for those 4 files. I don't know if this issue is equally
-applicable to the dt-compat.c code, so I left that one as is.
+Nicholas Piggin (6):
+  powerpc/powernv: must include hvcall.h to get PAPR defines
+  powerpc/pseries: move some PAPR paravirt functions to their own file
+  powerpc: move spinlock implementation to simple_spinlock
+  powerpc/64s: implement queued spinlocks and rwlocks
+  powerpc/pseries: implement paravirt qspinlocks for SPLPAR
+  powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
+    lock hint
 
-Cheers,
-Ahmad
+ arch/powerpc/Kconfig                          |  13 +
+ arch/powerpc/include/asm/Kbuild               |   2 +
+ arch/powerpc/include/asm/atomic.h             |  28 ++
+ arch/powerpc/include/asm/paravirt.h           |  89 +++++
+ arch/powerpc/include/asm/qspinlock.h          |  80 +++++
+ arch/powerpc/include/asm/qspinlock_paravirt.h |   5 +
+ arch/powerpc/include/asm/simple_spinlock.h    | 292 +++++++++++++++++
+ .../include/asm/simple_spinlock_types.h       |  21 ++
+ arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
+ arch/powerpc/include/asm/spinlock_types.h     |  17 +-
+ arch/powerpc/lib/Makefile                     |   3 +
+ arch/powerpc/lib/locks.c                      |  12 +-
+ arch/powerpc/platforms/powernv/pci-ioda-tce.c |   1 +
+ arch/powerpc/platforms/pseries/Kconfig        |   5 +
+ arch/powerpc/platforms/pseries/setup.c        |   6 +-
+ include/asm-generic/qspinlock.h               |   4 +
+ 16 files changed, 564 insertions(+), 322 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/paravirt.h
+ create mode 100644 arch/powerpc/include/asm/qspinlock.h
+ create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
+ create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
+ create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.23.0
+
