@@ -2,105 +2,93 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C04C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8DF32088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CB32070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ibf9qUvz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=0upti.me header.i=@0upti.me header.b="d2mK9Umm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGCOeN (ORCPT
+        id S1726669AbgGCOfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:34:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:40015 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726631AbgGCOeN (ORCPT
+        Fri, 3 Jul 2020 10:35:10 -0400
+Received: from forward105o.mail.yandex.net ([37.140.190.183]:46066 "EHLO
+        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgGCOfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:34:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593786852; h=Message-ID: Subject: Cc: To: From: Date:
- Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
- bh=FRH1WL7dNGYlUrzjhSeDlO2/E0xxcXcZoxCJBRIgKXY=; b=Ibf9qUvzqg8c9DUFKanLs9OYXxLmYfPn7kZuLssU5CPCGraY1DJ0ThQUPZp+KsXrX+iGiUC0
- lwkjQ18/zJCgJYVWmrIJiIdZ2qLtLIv0nWAk6uokYRt8pmp0+0mw+99qevVApB1ZVDvVaXSy
- RErV/tM70QdI0o28mq4qMa9rlDw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5eff41dd6f2ee827da3f6db3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 14:34:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C038C433CB; Fri,  3 Jul 2020 14:34:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1ABBC433CA;
-        Fri,  3 Jul 2020 14:34:04 +0000 (UTC)
+        Fri, 3 Jul 2020 10:35:10 -0400
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward105o.mail.yandex.net (Yandex) with ESMTP id 8B9774200493;
+        Fri,  3 Jul 2020 17:35:02 +0300 (MSK)
+Received: from mxback6q.mail.yandex.net (mxback6q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:9de5:975f])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id 866EF7080004;
+        Fri,  3 Jul 2020 17:35:02 +0300 (MSK)
+Received: from vla4-a16f3368381d.qloud-c.yandex.net (vla4-a16f3368381d.qloud-c.yandex.net [2a02:6b8:c17:d85:0:640:a16f:3368])
+        by mxback6q.mail.yandex.net (mxback/Yandex) with ESMTP id E269mwZcaK-Z1o0TsiZ;
+        Fri, 03 Jul 2020 17:35:02 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0upti.me; s=mail; t=1593786902;
+        bh=3iIKvw2ppjCYbURmdtj5btpA2K4wROtQeBCxp2WzzO0=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=d2mK9UmmoWpov3A53LirjWxLCgXRAbIgS43FuENcNE1saBvTlxyOKxmhLsVBbhwEy
+         tswEJG2T8X1YBcMsDfN+isum+6IkdcF2hGiUUQyqWTT2Sj2ZtJu0geuTj+XRjE2PKP
+         wLXQJC94o4EGU4RrCgmF3AR0vU4lixUfRG/I58ak=
+Authentication-Results: mxback6q.mail.yandex.net; dkim=pass header.i=@0upti.me
+Received: by vla4-a16f3368381d.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id talXmZQtkQ-Z0lS1w8t;
+        Fri, 03 Jul 2020 17:35:01 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   K900 <me@0upti.me>
+Cc:     Ilya Katsnelson <me@0upti.me>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Gaurav Agrawal <agrawalgaurav@gnome.org>,
+        Yussuf Khalil <dev@pp3345.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Dennis Kadioglu <denk@eclipso.email>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Joe Perches <joe@perches.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] input/synaptics: enable InterTouch for ThinkPad X1E 1st gen
+Date:   Fri,  3 Jul 2020 17:34:55 +0300
+Message-Id: <20200703143457.132373-1-me@0upti.me>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jul 2020 20:04:04 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH 3/3] arm64: Add KRYO4XX silver CPU cores to erratum list
- 1530923 and 1024718
-Message-ID: <7335e7fa1303a56a5e60339ed0c5d619@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+From: Ilya Katsnelson <me@0upti.me>
 
-On 2020-07-03 19:25, Will Deacon wrote:
-> On Tue, Jun 30, 2020 at 11:30:55PM +0530, Sai Prakash Ranjan wrote:
->> KRYO4XX silver/LITTLE CPU cores with revision r1p0 are affected by
->> erratum 1530923 and 1024718, so add them to the respective list.
->> The variant and revision bits are implementation defined and are
->> different from the their Cortex CPU counterparts on which they are
->> based on, i.e., r1p0 is equivalent to rdpe.
-> 
-> So just to confirm, revisions prior to rdpe are unaffected, or do those
-> parts simply not exist?
-> 
+Tested on my own laptop, touchpad feels slightly more responsive with
+this on, though it might just be placebo.
 
-There is one revision prior to this r0p1(r7pc) which has a different 
-part
-number and are used in v1 of SoCs which are limited to only internal 
-test
-platforms in the early stages of bringup and not used in actual devices 
-out
-there, so I did not add it to the list but they are affected. Plus we 
-would
-need to add another MIDR_QCOM_KRYO_4XX_SILVER_V1 if we are supporting 
-them
-which I thought was not worth it when devices with those CPUs are not 
-available.
+Signed-off-by: Ilya Katsnelson <me@0upti.me>
+---
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Sai
-
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 758dae8d6500..4b81b2d0fe06 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
++	"LEN0099", /* X1 Extreme 1st */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
+ 	"LEN2044", /* L470  */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.27.0
+
