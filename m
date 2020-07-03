@@ -2,108 +2,95 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC43C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220F1206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3525620890
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NpMfzUwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGCHnG (ORCPT
+        id S1726237AbgGCHnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:43:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:59496 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGCHnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:43:06 -0400
-IronPort-SDR: oRoxPi+IzPIA0RAEDk+7gbVgoK5vMz7B0GyJn4LnrtfXMjK90nipU5qARW9yzfA16+0nkE34sb
- oOwYo/0RhNcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="208625248"
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="208625248"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:43:06 -0700
-IronPort-SDR: 8Qmih3QH/RpDAcak/HvY2nMw4NcXX94scNZEqKXz0App8odjnO0Qz/20L2eG56I/CuSsihRdj8
- expNcK/dwpQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="304511534"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Jul 2020 00:43:05 -0700
-Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 7E092580784;
-        Fri,  3 Jul 2020 00:43:02 -0700 (PDT)
-Subject: [PATCH v9 04/15] perf evlist: introduce control file descriptors
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <662b1c03-210a-1945-c02b-ac6c0445c7c7@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:43:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 3 Jul 2020 03:43:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55376 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgGCHnt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:43:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0637hkXL045469;
+        Fri, 3 Jul 2020 02:43:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593762226;
+        bh=h5djLFPsArRTkD/MPeDP9hPD0238gUacEpCc7VkMb0s=;
+        h=From:To:CC:Subject:Date;
+        b=NpMfzUwh3I8Sx9KcPc/KarS4kGCWCGrJc2+O36vhr0KDyNrsB0O4X8yCfj/oLBM+L
+         BfgcPiL8VvoBEm9+uOtELpj3Pvo2o+KdrUsVkV/DOftJDH0OYvdfRH1KsI15/3CyLA
+         1j8p7BT0gM9e5Zgm9xhDwKrP/UWfK21ZB5P34aKo=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0637hjhk069397
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Jul 2020 02:43:45 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
+ 2020 02:43:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 3 Jul 2020 02:43:45 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637hhdo098446;
+        Fri, 3 Jul 2020 02:43:43 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>
+CC:     <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>
+Subject: [PATCH v2 0/2] arm64: dts: ti: k3-j721e-common-proc-board: Enable audio support
+Date:   Fri, 3 Jul 2020 10:44:41 +0300
+Message-ID: <20200703074443.27142-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Define and initialize control file descriptors.
+Change since v1:
+- not including dt-bindings/sound/ti-mcasp.h as it is not needed
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+the DT binding document and the driver is now in linux-next:
+https://lore.kernel.org/lkml/159364215574.10630.2058528286314798186.b4-ty@kernel.org/
+
+Before adding the audio support, first fix up the DTS file by removing the
+duplicated main_i2c1_exp4_pins_default.
+
+Regards,
+Peter
 ---
- tools/perf/util/evlist.c | 3 +++
- tools/perf/util/evlist.h | 5 +++++
- 2 files changed, 8 insertions(+)
+Peter Ujfalusi (2):
+  arm64: dts: ti: k3-j721e-common-proc-board: Remove duplicated
+    main_i2c1_exp4_pins_default
+  arm64: dts: ti: j721e-common-proc-board: Analog audio support
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 7b1beffec6a1..ee545a122b52 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
-+	evlist->ctl_fd.fd = -1;
-+	evlist->ctl_fd.ack = -1;
-+	evlist->ctl_fd.pos = -1;
- }
- 
- struct evlist *evlist__new(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 38901c0d1599..2caf19fb87a8 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -74,6 +74,11 @@ struct evlist {
- 		pthread_t		th;
- 		volatile int		done;
- 	} thread;
-+	struct {
-+		int	fd;
-+		int	ack;
-+		int	pos;
-+	} ctl_fd;
- };
- 
- struct evsel_str_handler {
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 136 +++++++++++++++++-
+ 1 file changed, 133 insertions(+), 3 deletions(-)
+
 -- 
-2.24.1
+Peter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
