@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F025208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D770F208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgGCDyE (ORCPT
+        id S1726416AbgGCDyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:54:04 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7365 "EHLO huawei.com"
+        Thu, 2 Jul 2020 23:54:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7363 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725915AbgGCDyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:54:02 -0400
+        id S1726336AbgGCDyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:54:04 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E918989A71871D4C76B0;
+        by Forcepoint Email with ESMTP id D5DBBCE13F66E4650422;
         Fri,  3 Jul 2020 11:53:59 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 11:53:51 +0800
+ 14.3.487.0; Fri, 3 Jul 2020 11:53:52 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>, <dyoung@redhat.com>,
         <bhe@redhat.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
@@ -38,9 +38,9 @@ CC:     <guohanjun@huawei.com>, <xiexiuqi@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH v10 3/5] arm64: kdump: add memory for devices by DT property linux,usable-memory-range
-Date:   Fri, 3 Jul 2020 11:58:14 +0800
-Message-ID: <20200703035816.31289-4-chenzhou10@huawei.com>
+Subject: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA reintroduced
+Date:   Fri, 3 Jul 2020 11:58:15 +0800
+Message-ID: <20200703035816.31289-5-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200703035816.31289-1-chenzhou10@huawei.com>
 References: <20200703035816.31289-1-chenzhou10@huawei.com>
@@ -54,105 +54,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we want to reserve crashkernel above 4G, we could use parameters
-"crashkernel=X crashkernel=Y,low", in this case, specified size low
-memory is reserved for crash dump kernel devices and never mapped by
-the first kernel. This memory range is advertised to crash dump kernel
-via DT property under /chosen,
-	linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+broken the arm64 kdump. If the memory reserved for crash dump kernel
+falled in ZONE_DMA32, the devices in crash dump kernel need to use
+ZONE_DMA will alloc fail.
 
-We reused the DT property linux,usable-memory-range and made the low
-memory region as the second range "BASE2 SIZE2", which keeps compatibility
-with existing user-space and older kdump kernels.
-
-Crash dump kernel reads this property at boot time and call memblock_add()
-to add the low memory region after memblock_cap_memory_range() has been
-called.
+This patch addressed the above issue based on "reserving crashkernel
+above 4G". Originally, we reserve low memory below 4G, and now just need
+to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
+if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
+in crash dump kernel, it is a good choice to use parameters
+"crashkernel=X crashkernel=Y,low".
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 ---
- arch/arm64/mm/init.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+ kernel/crash_core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index ce7ced85f5fb..f5b31e8f1f34 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -69,6 +69,15 @@ EXPORT_SYMBOL(vmemmap);
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- static phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index a7580d291c37..e8ecbbc761a3 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
+ 	unsigned long long base, low_base = 0, low_size = 0;
+ 	unsigned long total_low_mem;
+ 	int ret;
++	phys_addr_t crash_max = 1ULL << 32;
  
-+/*
-+ * The main usage of linux,usable-memory-range is for crash dump kernel.
-+ * Originally, the number of usable-memory regions is one. Now crash dump
-+ * kernel support at most two regions, low region and high region.
-+ * To make compatibility with existing user-space and older kdump, the low
-+ * region is always the last range of linux,usable-memory-range if exist.
-+ */
-+#define MAX_USABLE_RANGES	2
-+
- #ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-@@ -272,9 +281,9 @@ early_param("mem", early_mem);
- static int __init early_init_dt_scan_usablemem(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
--	struct memblock_region *usablemem = data;
--	const __be32 *reg;
--	int len;
-+	struct memblock_region *usable_rgns = data;
-+	const __be32 *reg, *endp;
-+	int len, nr = 0;
+ 	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
  
- 	if (depth != 1 || strcmp(uname, "chosen") != 0)
- 		return 0;
-@@ -283,22 +292,36 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
- 		return 1;
+@@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
+ 			return 0;
+ 	}
  
--	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+	endp = reg + (len / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		usable_rgns[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		usable_rgns[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+		if (++nr >= MAX_USABLE_RANGES)
-+			break;
-+	}
- 
- 	return 1;
- }
- 
- static void __init fdt_enforce_memory_region(void)
- {
--	struct memblock_region reg = {
--		.size = 0,
-+	struct memblock_region usable_rgns[MAX_USABLE_RANGES] = {
-+		{ .size = 0 },
-+		{ .size = 0 }
- 	};
- 
--	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &usable_rgns);
- 
--	if (reg.size)
--		memblock_cap_memory_range(reg.base, reg.size);
-+	/*
-+	 * The first range of usable-memory regions is for crash dump
-+	 * kernel with only one region or for high region with two regions,
-+	 * the second range is dedicated for low region if exist.
-+	 */
-+	if (usable_rgns[0].size)
-+		memblock_cap_memory_range(usable_rgns[0].base, usable_rgns[0].size);
-+	if (usable_rgns[1].size)
-+		memblock_add(usable_rgns[1].base, usable_rgns[1].size);
- }
- 
- void __init arm64_memblock_init(void)
+-	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
++#ifdef CONFIG_ARM64
++	if (IS_ENABLED(CONFIG_ZONE_DMA))
++		crash_max = arm64_dma_phys_limit;
++#endif
++	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
+ 	if (!low_base) {
+ 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+ 		       (unsigned long)(low_size >> 20));
 -- 
 2.20.1
 
