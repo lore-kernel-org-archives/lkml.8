@@ -2,101 +2,192 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E71620674
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A4820836
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593775365;
+	bh=6n28vpx/soKyjVr4Qm0kMEuzFjiXcM8KUitLv0Cgf/0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lYea1RBZxW9sUWIAQlV4ZQ35GfXsxH+le0vx9Lt5nvN1mlKJRJh9r4KL5q7u2Fp3U
+	 dkK09PefqBMdgwMpVfuf+NGhsz0JMitwhLJeQJgqTwariIRQWb9jtsxyqQFVVPWaeO
+	 JGqokka7gNw5T/bW8UDAdjCVDCvVvcaelFFqJzJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgGCLVg (ORCPT
+        id S1726435AbgGCLWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:21:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35605 "EHLO mga01.intel.com"
+        Fri, 3 Jul 2020 07:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbgGCLVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:21:35 -0400
-IronPort-SDR: M5v14p1woQHQFp+SHNmdrIfn2aX5Kt/PtWm7NlD1gO6pcK55Bq6bCoAB/zCf1cm/UzKqIp1bD2
- nniqYCCKOQGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165197804"
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="165197804"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 04:21:35 -0700
-IronPort-SDR: zZJdcdf/ZIZzX2VlNvLNUGgbUu8fpS3tce0x2rXTEoH9EyKSu5f9Pu3sUKrCCXuS3gpSgbvEkN
- TTdW1NmEOEQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="296186000"
-Received: from mylly.fi.intel.com (HELO [10.237.72.153]) ([10.237.72.153])
-  by orsmga002.jf.intel.com with ESMTP; 03 Jul 2020 04:21:31 -0700
-Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
- power
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     aaron.ma@canonical.com, admin@kryma.net,
-        andriy.shevchenko@linux.intel.com, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
-        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
-        wsa@kernel.org
-References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
- <20200616154951.3050-1-sultan@kerneltoast.com>
- <37ceaf7a-3421-e305-4355-a6b40ae54843@linux.intel.com>
- <20200629174328.GB1646@sultan-box.localdomain>
- <ef949533-c614-7afb-f206-5c54d827deac@linux.intel.com>
- <20200701150007.GA2141@sultan-book.localdomain>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <b3b751fc-668d-91e2-220b-0d7edd231e01@linux.intel.com>
-Date:   Fri, 3 Jul 2020 14:18:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726039AbgGCLWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:22:43 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA7F720674;
+        Fri,  3 Jul 2020 11:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593775362;
+        bh=6n28vpx/soKyjVr4Qm0kMEuzFjiXcM8KUitLv0Cgf/0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nQjxyVEI2yn5VgxkwVOEe2ufkTUTzgWidEE+rLTENbUwAvmEEZ4owS02JW0bP0d6f
+         +UCXbi2HQ+GyTycjMd2X+QcR6iOy0z4/jGPopVqgr273u8IGlLt5yEpLsImBk/8jTN
+         QgdT444JVHCw/x+Y2/yx/BX5NdIfdDvQawc/EMAE=
+Received: by pali.im (Postfix)
+        id 7B291121B; Fri,  3 Jul 2020 13:22:40 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: Fix reporting 'operation not supported' error code
+Date:   Fri,  3 Jul 2020 13:21:51 +0200
+Message-Id: <20200703112151.18917-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200701150007.GA2141@sultan-book.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+ENOTSUPP (double PP) is internal linux kernel code 524 available only in
+kernel include file linux/errno.h and not exported to userspace.
 
-On 7/1/20 6:00 PM, Sultan Alsawaf wrote:
-> On Wed, Jul 01, 2020 at 11:04:01AM +0300, Jarkko Nikula wrote:
->> On 6/29/20 8:43 PM, Sultan Alsawaf wrote:
->>> Hmm, for some reason in 5.8 I get the same problem, but 5.7 is fine. Could you
->>> try this on 5.7 and see if it works?
->>>
->>> In the meantime I'll bisect 5.8 to see why it's causing problems for me...
->>>
->> I see the same issue on top of v5.7:
-> 
-> Try reverting my "i2c: designware: Only check the first byte for SMBus block
-> read length" patch and apply the following change instead:
-> 
-This combination (the diff and this HID patch) works on top of v5.7.
+EOPNOTSUPP (OP; double PP) is standard code 95 for reporting 'operation not
+supported' available via kernel include file uapi/asm-generic/errno.h.
 
-I tried also these other combinations:
+ENOTSUP (single P) is alias for EOPNOTSUPP defined only in userspace
+include file bits/errno.h and not available in kernel.
 
-v5.7
-- HID patch + this diff -> ok
-- HID patch -> not ok
-- HID + acked i2c-dw patch -> acked i2c-dw patch doesn't apply
+Because Linux kernel does not support ENOTSUP (single P) and because
+userspace does not support ENOTSUPP (double PP), report error code for
+'operation not supported' via EOPNOTSUPP macro.
 
-v5.8-rc3
-- acked i2c-dw patch -> ok
-- HID patch -> nok
-- HID patch + acked i2c-dw patch -> nok
-- HID patch + this diff -> diff doesn't apply
+This patch fixes problem that mwifiex kernel driver sends to userspace
+unsupported error codes like: "failed: -524 (No error information)".
+After applying this patch userspace see: "failed: -95 (Not supported)".
 
-Hopefully gives some glue. I'll be out of office for a few weeks and 
-unfortunately cannot test patches meanwhile.
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ .../net/wireless/marvell/mwifiex/cfg80211.c    | 18 +++++++++---------
+ drivers/net/wireless/marvell/mwifiex/main.c    |  2 +-
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c |  4 ++--
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-Jarkko
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 867b5cf385a8..96848fa0e417 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -3727,11 +3727,11 @@ mwifiex_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
+ 	int ret;
+ 
+ 	if (!(wiphy->flags & WIPHY_FLAG_SUPPORTS_TDLS))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	/* make sure we are in station mode and connected */
+ 	if (!(priv->bss_type == MWIFIEX_BSS_TYPE_STA && priv->media_connected))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	switch (action_code) {
+ 	case WLAN_TDLS_SETUP_REQUEST:
+@@ -3799,11 +3799,11 @@ mwifiex_cfg80211_tdls_oper(struct wiphy *wiphy, struct net_device *dev,
+ 
+ 	if (!(wiphy->flags & WIPHY_FLAG_SUPPORTS_TDLS) ||
+ 	    !(wiphy->flags & WIPHY_FLAG_TDLS_EXTERNAL_SETUP))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	/* make sure we are in station mode and connected */
+ 	if (!(priv->bss_type == MWIFIEX_BSS_TYPE_STA && priv->media_connected))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	mwifiex_dbg(priv->adapter, MSG,
+ 		    "TDLS peer=%pM, oper=%d\n", peer, action);
+@@ -3833,7 +3833,7 @@ mwifiex_cfg80211_tdls_oper(struct wiphy *wiphy, struct net_device *dev,
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR,
+ 			    "tdls_oper: operation not supported\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	return mwifiex_tdls_oper(priv, peer, action);
+@@ -3914,11 +3914,11 @@ mwifiex_cfg80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
+ 
+ 	if (!(params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER)))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	/* make sure we are in station mode and connected */
+ 	if ((priv->bss_type != MWIFIEX_BSS_TYPE_STA) || !priv->media_connected)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	return mwifiex_tdls_oper(priv, mac, MWIFIEX_TDLS_CREATE_LINK);
+ }
+@@ -4151,11 +4151,11 @@ mwifiex_cfg80211_change_station(struct wiphy *wiphy, struct net_device *dev,
+ 
+ 	/* we support change_station handler only for TDLS peers*/
+ 	if (!(params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER)))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	/* make sure we are in station mode and connected */
+ 	if ((priv->bss_type != MWIFIEX_BSS_TYPE_STA) || !priv->media_connected)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	priv->sta_params = params;
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index 529099137644..9ee5600351a7 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -953,7 +953,7 @@ int mwifiex_set_mac_address(struct mwifiex_private *priv,
+ 	} else {
+ 		/* Internal mac address change */
+ 		if (priv->bss_type == MWIFIEX_BSS_TYPE_ANY)
+-			return -ENOTSUPP;
++			return -EOPNOTSUPP;
+ 
+ 		mac_addr = old_mac_addr;
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index 8bd355d7974e..d3a968ef21ef 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -1723,7 +1723,7 @@ mwifiex_cmd_tdls_config(struct mwifiex_private *priv,
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR,
+ 			    "Unknown TDLS configuration\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	le16_unaligned_add_cpu(&cmd->size, len);
+@@ -1849,7 +1849,7 @@ mwifiex_cmd_tdls_oper(struct mwifiex_private *priv,
+ 		break;
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS operation\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	le16_unaligned_add_cpu(&cmd->size, config_len);
+-- 
+2.20.1
+
