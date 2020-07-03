@@ -2,92 +2,98 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD05C2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF7B20771
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wVwI8lqO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTZ5dEkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgGCFz4 (ORCPT
+        id S1726236AbgGCF45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        Fri, 3 Jul 2020 01:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCFzz (ORCPT
+        with ESMTP id S1725764AbgGCF44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:55:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80017C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 22:55:55 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k6so31338374wrn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 22:55:55 -0700 (PDT)
+        Fri, 3 Jul 2020 01:56:56 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC1BC08C5C1;
+        Thu,  2 Jul 2020 22:56:56 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f5so19639888ljj.10;
+        Thu, 02 Jul 2020 22:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N2oW/lSzMEnmi80ieRgaOd15NbgL+GSvOlUfcPQg7eg=;
-        b=wVwI8lqOxF+fugSZ99h3jsyyb7+aebTN0QG92MEnWOR57eXVvMlpXP/6Ksv3goJRes
-         Hk/RdoTyJ4GAgomn8lHi+v1Cny3kuRgvMzmDZkbw6XJ7i/GbIaPettIiImsdR0HIpLCE
-         RMjvdrjtQv4r1+ynmbw1G6Z9VGHIKnscmzCXfqFOylwq/m6O8k1wHz0QnmZlsevGNHad
-         /SfTWTlFRGTq3GXff0JHK3oYikOysv3ZBg0g8/nDfQruPVOXB/sDW4dBDjRmVM1WqHAn
-         EqcQCkyQfVCT41h6sZgjYKAV3yqLVK2TRP7J4nugh5k3T/P2x4Vw9ktqHJvDfxAkMEuD
-         6D0A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t7CQxovl3Hx2iIZDORMrEAXuVQ/rY3OF1nxqZdqV2k8=;
+        b=KTZ5dEkqWXKE70lBn85URIGJkMh9ILNp0ubPQROgWkS6+Jol3qJeCDg3q1i70405Uo
+         fsw88NSiztL5DV07QesyOFz8Ho9CWlY6DbsDl/YihghSpDztPZi7Svwq4/bYvjn4qtRf
+         1LF/crilyKMVlkMYTQ67qzwS7/AHdRQFSfHhvD/AMZYZtFiezzH3fly0sHs2XwUyU6FD
+         JYTVPWvIoReCmfXVWjkTKtBlIt0jTKdWwGYOh7PqbfkKeSWWb1srzjuJTxzdQccxjkQD
+         CFCtCBvmyPFQt+/SWuQfj8KF2oswEkQrSvmPWzT50JZ5+xxRRuqlz9lvtnlYvHTQatsX
+         PEyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N2oW/lSzMEnmi80ieRgaOd15NbgL+GSvOlUfcPQg7eg=;
-        b=DiMqTozBVjA5PSbmj7FUmNkWWfnDpM4KsaJ5UQpZ5ZJ1a5ogSZx/2lvAmWo1buOlMi
-         KM5G/UoT62DHFO2UsxvfwdSECygIvyQmtqae2KId/MXNqlgAwRndFI9fjns6Hw88RQG0
-         PwZKez7bvN5zexmsYk0Njn256+1ZMSLDu0WzWDZCb5i07H/pLdz4ZcSyfc61JgzJWjye
-         jpq4yNt94Q7CgCAy95RHUR6xEt3Q88jV5hKSM76tT3+WdKbqwv4jAldFDzb8UomWAuKn
-         xAVktd3rP5wuBAoknsE5A3BXyAtzHb8AmtNYMb9PCwi4fOi3zEvVRBJd0oQGGyRmYjxG
-         oeow==
-X-Gm-Message-State: AOAM530gNBxrkJsz3YrvDo5zhQAmluXS4AF8o6D0p//qgTCa8Fi6eynO
-        b1TmgrDgglsz0Si5NQCk1XbRZw==
-X-Google-Smtp-Source: ABdhPJz87XgK4fztr/Mz+d1gwH7Nrxy0cHppk3kVltJaNtv0HrPH1jz09Cdks4Fc+n/fjEYZ6G4V/Q==
-X-Received: by 2002:a5d:4283:: with SMTP id k3mr34321391wrq.322.1593755754196;
-        Thu, 02 Jul 2020 22:55:54 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id u10sm12283538wml.29.2020.07.02.22.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 22:55:53 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 07:55:51 +0200
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH] sparc: sparc64_defconfig: add necessary configs for qemu
-Message-ID: <20200703055551.GA14096@Red>
-References: <1593694973-34113-1-git-send-email-clabbe@baylibre.com>
- <275363bb-2f36-f7f3-aa7e-4a2fc6901d63@ilande.co.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t7CQxovl3Hx2iIZDORMrEAXuVQ/rY3OF1nxqZdqV2k8=;
+        b=UEMzg4NgvtFq4/6Sbide+UuOliWcqfhI1kVyuugxW3IqgkHe0UK1awntdnkVpbjU+s
+         jXIVQd0oigX8JYplgIp4rGGBUg4EanR26kGtQEL234PY7sLbsC9Wvy3jh4odz3n4gzu3
+         5YaKUWIPf5tgKKSdi4br7/v5QigZ/RwK7NzbxDeJjF3cwPqXdBmQvbxbn/6iFQ82J5D/
+         SqIek1wS/ekDc9OoZ8NzKDsfLzfNOoTb04FSANRah7rpVxPEO7PLJLZa25Q1tK4Gq4tq
+         BmfT0WNuteyxwMsJI//mcR1Ml79CW/jnALMYZTidy1To9ip08BYcoBCJXZJsIR+0KKsr
+         Fzpg==
+X-Gm-Message-State: AOAM531bz2Wv7DFDqUUhVbzocTipYrgO51eQ6bE3z15NCh7dRfYj1sXG
+        6wzlbjdwzD5PfWJMCMBCKEXzcO0PEu8VVl+kMf4=
+X-Google-Smtp-Source: ABdhPJzmUp+Q1RFlDtjUTNfJ2/hHjmOHR7r2DMT/PxDFyOs/hWMku5oY5XNK/cNQA0SEx6xtpSX6q4UN7xzR7dii0Uw=
+X-Received: by 2002:a05:651c:102d:: with SMTP id w13mr11831459ljm.29.1593755814556;
+ Thu, 02 Jul 2020 22:56:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <275363bb-2f36-f7f3-aa7e-4a2fc6901d63@ilande.co.uk>
+References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de>
+ <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com> <20200702135054.GA29240@lst.de>
+In-Reply-To: <20200702135054.GA29240@lst.de>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 3 Jul 2020 07:56:43 +0200
+Message-ID: <CANiq72=8facdt7HBtoUZiJW5zfki-gYYESJzxjXf7wK7dYLm1Q@mail.gmail.com>
+Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method calls
+ to seq_read_iter
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:58:40PM +0100, Mark Cave-Ayland wrote:
-> On 02/07/2020 14:02, Corentin Labbe wrote:
-> 
-> > The sparc64 qemu machines uses pcnet32 network hardware by default, so for
-> > simple boot testing using qemu, having PCNET32 is useful.
-> > Same for its storage which is a PATA_CMD64.
-> 
-> Which version of QEMU are you using? qemu-system-sparc64 switched to using a hme NIC
-> by default in version 2.11 (see
-> https://wiki.qemu.org/Documentation/Platforms/SPARC#Changes_to_sun4u_machine_from_2.11_onwards)
-> which is well over 2 years ago...
-> 
+On Thu, Jul 2, 2020 at 3:50 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Do you have a suggestion for an automated replacement which does?
+> I'll happily switch over to that.
 
-You are right, I verfied in the code and it is sunhme by default.
-So I will verify it works and send a v2.
+I guess I'd simply find the unique set of cases that occur and create
+a replacement for each manually. A handful of them or so may already
+cover the majority of cases. CC'ing Joe since he deals with this sort
+of stuff all the time.
+
+Some cannot be handled with replacements, e.g. re-aligning the full
+list is required to fit the longer `_iter` -- if you want to cover
+those cases too, applying `clang-format` to the initializer may be a
+good approach.
+
+Cheers,
+Miguel
