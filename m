@@ -2,113 +2,116 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D9620899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D5C2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bs3NE8v8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgGCOmg (ORCPT
+        id S1726427AbgGCOp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:42:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:40346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgGCOmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:42:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2925931B;
-        Fri,  3 Jul 2020 07:42:34 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE9E03F73C;
-        Fri,  3 Jul 2020 07:42:32 -0700 (PDT)
-Subject: Re: [RFC PATCH] perf/smmuv3: Fix shared interrupt handling
-To:     Will Deacon <will@kernel.org>
-Cc:     mark.rutland@arm.com, tuanphan@os.amperecomputing.com,
-        john.garry@huawei.com, linux-kernel@vger.kernel.org,
-        shameerali.kolothum.thodi@huawei.com, harb@amperecomputing.com,
-        linux-arm-kernel@lists.infradead.org
-References: <d73dd8c3579fbf713d6215317404549aede8ad2d.1586363449.git.robin.murphy@arm.com>
- <b7d056f7-3a3d-568d-ea6d-24bb30b4761b@arm.com>
- <20200624125045.GC6270@willie-the-truck>
- <dfa3fc60-dc6c-4ede-341e-24645e01b722@arm.com>
- <20200703134213.GE18953@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6099af78-0fd8-77de-fe50-be40b239f06e@arm.com>
-Date:   Fri, 3 Jul 2020 15:42:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200703134213.GE18953@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Jul 2020 10:45:28 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34988 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgGCOp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:45:28 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 063EgWdT010532;
+        Fri, 3 Jul 2020 14:44:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=jAlHI7nujQDcm+MewjBseorEgs8Y6kyiq354ZRlVCiw=;
+ b=bs3NE8v8ixykeBj9AT5ZGqzepRu/JZ6TkFw8fRgAwlAqStI/NVDd/ZWRImHnb8djDx6c
+ nt9r9EOFgtE3g6kc4Q2yX9nQMVdd1FV+nWA/ztJHAk1aBvDr+ziGKqRfnOCm6zhF4kwz
+ OCvu5UlhknguTwCpO9ZDnJ4XHlblbRf/GPng4hsd/Tay0cCWwh+4hcCMFThWbGnUIK0E
+ FkAPjbY5bLEuaQCPQycp0S1S6BVY7E0GIrBztEase6+ryuAdsZWQIC4clh1qh6xYRtKg
+ 4gzSoW2RBb6UehzKcbBTWCpXcpVaQrRHIMXZXEygUyGaSvg3Eqqr6IzTXQ60RqI118Zl qg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31xx1eawxs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 03 Jul 2020 14:44:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 063Egsfw193726;
+        Fri, 3 Jul 2020 14:44:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31xg1cjytw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jul 2020 14:44:42 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 063Eie7P013218;
+        Fri, 3 Jul 2020 14:44:40 GMT
+Received: from localhost.uk.oracle.com (/10.175.204.239)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jul 2020 14:44:40 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
+        daniel@iogearbox.net
+Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH bpf-next 0/2] bpf: fix use of trace_printk() in BPF
+Date:   Fri,  3 Jul 2020 15:44:26 +0100
+Message-Id: <1593787468-29931-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007030102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011 adultscore=0
+ suspectscore=0 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007030102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-03 14:42, Will Deacon wrote:
-> On Wed, Jun 24, 2020 at 02:08:30PM +0100, Robin Murphy wrote:
->> On 2020-06-24 13:50, Will Deacon wrote:
->>> On Wed, Jun 24, 2020 at 12:48:14PM +0100, Robin Murphy wrote:
->>>> On 2020-04-08 17:49, Robin Murphy wrote:
->>>>> IRQF_SHARED is dangerous, since it allows other agents to retarget the
->>>>> IRQ's affinity without migrating PMU contexts to match, breaking the way
->>>>> in which perf manages mutual exclusion for accessing events. Although
->>>>> this means it's not realistically possible to support PMU IRQs being
->>>>> shared with other drivers, we *can* handle sharing between multiple PMU
->>>>> instances with some explicit affinity bookkeeping and manual interrupt
->>>>> multiplexing.
->>>>>
->>>>> RCU helps us handle interrupts efficiently without having to worry about
->>>>> fine-grained locking for relatively-theoretical race conditions with the
->>>>> probe/remove/CPU hotplug slow paths. The resulting machinery ends up
->>>>> looking largely generic, so it should be feasible to factor out with a
->>>>> "system PMU" base class for similar multi-instance drivers.
->>>>>
->>>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>>>> ---
->>>>>
->>>>> RFC because I don't have the means to test it, and if the general
->>>>> approach passes muster then I'd want to tackle the aforementioned
->>>>> factoring-out before merging anything anyway.
->>>>
->>>> Any comments on whether it's worth pursuing this?
->>>
->>> Sorry, I don't really get the problem that it's solving. Is there a crash
->>> log somewhere I can look at? If all the users of the IRQ are managed by
->>> this driver, why is IRQF_SHARED dangerous?
->>
->> Because as-is, multiple PMU instances may make different choices about which
->> CPU they associate with, change the shared IRQ affinity behind each others'
->> backs, and break the "IRQ handler runs on event->cpu" assumption that perf
->> core relies on for correctness. I'm not sure how likely it would be to
->> actually crash rather than just lead to subtle nastiness, but wither way
->> it's not good, and since people seem to be tempted to wire up system PMU
->> instances this way we could do with a general approach for dealing with it.
-> 
-> Ok, thanks for the explanation. If we're just talking about multiple
-> instances of the same driver, why is it not sufficient to have a static
-> atomic_t initialised to -1 which tracks the current affinity and then just
-> CAS that during probe()? Hotplug notifiers can just check whether or not
-> it points to an online CPU
+Steven suggested a way to resolve the appearance of the warning banner
+that appears as a result of using trace_printk() in BPF [1].
+Applying the patch and testing reveals all works as expected; we
+can call bpf_trace_printk() and see the trace messages in
+/sys/kernel/debug/tracing/trace_pipe and no banner message appears.
 
-Yeah, forcing *all* PMUs owned by a driver to be affine to the same CPU 
-is another way to go about it, however it slightly penalises systems 
-that are wired up sensibly and *would* otherwise be able to distribute 
-non-shared affinities around in a balanced manner (optimising the 
-initial pmu->cpu selection in the face of NUMA is an exercise still on 
-the table in some cases).
+Also add a test prog to verify basic bpf_trace_printk() helper behaviour.
 
-And we'd still have to have all the "has another instance already 
-requested this IRQ or not yet?" logic (the general condition is "1 <= 
-number of IRQs <= number of PMUs"), plus some way for the global 
-affinity to migrate all the PMU contexts and IRQs at once in a 
-controlled and race-free manner, so things wouldn't be *massively* 
-simpler even then.
+Possible future work: ftrace supports trace instances, and one thing
+that strikes me is that we could make use of these in BPF to separate
+BPF program bpf_trace_printk() output from output of other tracing
+activities.
 
-Robin.
+I was thinking something like a sysctl net.core.bpf_trace_instance,
+defaulting to an empty value signifying we use the root trace
+instance.  This would preserve existing behaviour while giving a
+way to separate BPF tracing output from other tracing output if wanted.
+
+[1]  https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
+
+Alan Maguire (2):
+  bpf: use dedicated bpf_trace_printk event instead of trace_printk()
+  selftests/bpf: add selftests verifying bpf_trace_printk() behaviour
+
+ kernel/trace/Makefile                              |  2 +
+ kernel/trace/bpf_trace.c                           | 41 +++++++++++--
+ kernel/trace/bpf_trace.h                           | 34 +++++++++++
+ .../selftests/bpf/prog_tests/trace_printk.c        | 71 ++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/trace_printk.c   | 21 +++++++
+ 5 files changed, 165 insertions(+), 4 deletions(-)
+ create mode 100644 kernel/trace/bpf_trace.h
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk.c
+ create mode 100644 tools/testing/selftests/bpf/progs/trace_printk.c
+
+-- 
+1.8.3.1
+
