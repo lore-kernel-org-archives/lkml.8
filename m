@@ -2,95 +2,102 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3285DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7496CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F9B20747
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5269420747
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gf70XC+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGCBKS (ORCPT
+        id S1726396AbgGCBLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 21:10:18 -0400
-Received: from mga18.intel.com ([134.134.136.126]:33118 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGCBKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 21:10:18 -0400
-IronPort-SDR: ZcNxe+KN403AQeSQTJXcLlyHYxK++nSgMNegoxzU22R/WfL3+n6Cp5rrbfpu22BfftMnem+f7t
- ylFjeywgE8/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134523863"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="134523863"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 18:10:17 -0700
-IronPort-SDR: hhzfnRppsSt1HZlwFkl+A9lSroPpFTv/+m1cEBZgvi+zT05eg3cgffRKVE4QVyqI/qYcDGTZQX
- tb4Z/KJkQrzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="265844749"
-Received: from xpf-desktop.sh.intel.com ([10.239.13.107])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2020 18:10:15 -0700
-Date:   Fri, 3 Jul 2020 09:20:06 +0800
-From:   Pengfei Xu <pengfei.xu@intel.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Heng Su <heng.su@intel.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai Svahn <kai.svahn@intel.com>
-Subject: Re: [PATCH v4] selftests: tpm: upgrade TPM2 tests from Python 2 to
- Python 3
-Message-ID: <20200703012005.GA23276@xpf-desktop.sh.intel.com>
-References: <20200626034052.25263-1-pengfei.xu@intel.com>
- <20200702194435.GA28988@linux.intel.com>
- <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
+        Thu, 2 Jul 2020 21:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGCBLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 21:11:48 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08925C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 18:11:48 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o13so11349280pgf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 18:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GR99GIZZjMuYiZzLF19Koiioj28kl/2jLD/QPVbsMmo=;
+        b=Gf70XC+FENM8wk9LD/IhT3t17C7HyY4bCdWxH2/yBHTDClzfDME3YPjnA3reqYxscT
+         tan/vmiTxI4TScYutZAEUAubtTfmezTcSfcMxG8/xTshXGM4haDnyswOHyd4QuZXFPwT
+         FPrSXRYFiRANfbKgOi9wsvCyIvCwZ/PkLVkqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GR99GIZZjMuYiZzLF19Koiioj28kl/2jLD/QPVbsMmo=;
+        b=ozaP9521sbGUhSkT7zGjWFYy9fDS0EOAxjMoQPGuPQW0mohHumgi0zGSTRZwdqqeYx
+         KcD9kfxi/JirJwXCZZo5jDH6g3JsxxtU8aOetUboWMUWgKAETzAPopTdAk5wyOtG9sXP
+         IUbOFKwI6a3OAcPc1UU2ACjK+h4WGOqyY5OsPO2n4tRi0ENwi0e3HDN8fqbupEHTtqcf
+         h8PdmiyqHqh5g0+Q2vo3aN5ZaEO8nAqb89lxveloxL0tIVrBxVZvRLoZr2kZR9iXTGzy
+         Ao3VMFVgUxGRCOrphEY5vGUX5buRbXbcbGOUOqJ1o8hsRicJXCPnQzHI5yqK9rSrUbpZ
+         op2g==
+X-Gm-Message-State: AOAM530Al51G8tdu2i7YOu1kkUbf//LZWZbulXST8y3O5Cl95FNoBdpt
+        cF1g/X6JB6uXwekpZx1ls/g7hQ==
+X-Google-Smtp-Source: ABdhPJytWvIWeK1ATDg3B20v4sgj59qnn+uhC1n/GMs05mdtVBs9Gt4NyvBkIjNx6BlJ/vdoEyr9xQ==
+X-Received: by 2002:a62:cdc4:: with SMTP id o187mr9910453pfg.200.1593738707606;
+        Thu, 02 Jul 2020 18:11:47 -0700 (PDT)
+Received: from josephsih-z840.tpe.corp.google.com ([2401:fa00:1:10:de4a:3eff:fe7d:ff5f])
+        by smtp.gmail.com with ESMTPSA id e12sm9662721pfd.69.2020.07.02.18.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 18:11:47 -0700 (PDT)
+From:   Joseph Hwang <josephsih@chromium.org>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com
+Cc:     josephsih@google.com, chromeos-bluetooth-upstreaming@chromium.org,
+        Joseph Hwang <josephsih@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btusb: add Realtek 8822CE to blacklist_table
+Date:   Fri,  3 Jul 2020 09:11:32 +0800
+Message-Id: <20200703091124.1.I63705bf6abab9cb79c14f7959a59b201af2b8827@changeid>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks a lot Jarkko and Shuah!
+This patch adds the Realtek 8822CE controller to the blacklist_table
+to support the wideband speech capability.
 
-BR.
-Thanks!
+Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+---
 
-On 2020-07-02 at 15:32:49 -0600, Shuah Khan wrote:
-> On 7/2/20 1:44 PM, Jarkko Sakkinen wrote:
-> > On Fri, Jun 26, 2020 at 11:40:52AM +0800, Pengfei Xu wrote:
-> > > Python 2 is no longer supported by the Python upstream project, so
-> > > upgrade TPM2 tests to Python 3.
-> > > 
-> > > Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
-> > 
-> > I think that it's perfect now. Thank you.
-> > 
-> > Also
-> > 
-> > 1. I checked that scripts/checkpatch.pl did not report any errors.
-> > 2. sudo python3 -m unittest -v tpm2_tests.SmokeTest
-> > 3. sudo python3 -m unittest -v tpm2_tests.SpaceTest
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > 
-> > Shuah, I could pick this up after your PR (with my earlier fixes) lands
-> > to mainline, and sort out possible merge conflicts if they uprise. Is
-> > this fine by you?
-> > 
-> 
-> Yes. I will apply them as soon as PR clears and hopefully they can go
-> into rc5.
-> 
-> thanks,
-> -- Shuah
-> 
+ drivers/bluetooth/btusb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0e143c0cecf2a1..34a84c64e4c83e 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -359,6 +359,10 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
+ 	  .driver_info = BTUSB_IGNORE },
+ 
++	/* Realtek 8822CE Bluetooth devices */
++	{ USB_DEVICE(0x0bda, 0xb00c), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
++
+ 	/* Realtek Bluetooth devices */
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
+ 	  .driver_info = BTUSB_REALTEK },
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
