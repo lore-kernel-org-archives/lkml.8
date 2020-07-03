@@ -2,175 +2,131 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD23DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B29EB206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CA820674
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Gwv8vE+v";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ebrHPaP8"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Ug/CemuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgGCF3y (ORCPT
+        id S1726111AbgGCFa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:29:54 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:46781 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCF3x (ORCPT
+        Fri, 3 Jul 2020 01:30:29 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:10992 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgGCFa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:29:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593754210; x=1625290210;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=5JsOPSej7+aFHAOy3nfrb03Rbf49T7CSImDWLuyjDYw=;
-  b=Gwv8vE+vmcsS0saJWZqPZbmhhrZjqTETtiOd+dnAbuJOE+TianVCpOtb
-   Hggpccso2wWBfRd1rT5PS90SeTpZo9NAUAHnE1JOWpKDhaQIcfWmlFiiP
-   1DLSSDzf0iSVdk3KD7QM2IUqu9CP7GlP8/s4NaAxiB/FX8odNm5ZgQG82
-   VRrijOhTzToh5zJaVxyqyCqFQ9QqtPME72vg7YmtMlC/aER97HA4lSr/N
-   VQfS06sd4hMdhgm6DWfwQQ4uyAAx9Srr01Z9jxuacEU3DzNahEgBr7u6S
-   xF9BCke30DFodF7CKIxBhUz2P8cfj1Zwpu3ytz0t3oKEc5pQP8QCwB1Dq
-   A==;
-IronPort-SDR: Sinpw/FSKkRAGruNjnYc5LcspgTMhy8rpqzlrlxYGAQqcsMBy+6Q0is6gV3Sa7R3ppclbYeNt+
- U3YZUCltgJlFLUsIOUqNnKiRgVoQCa1EAMInm96F6vRpja8mwWqKKT6NAAm0emzEuzDb5OuJyC
- AbncRQEwjmP8NcmenUWtcZ4+Lgz3jXxG5fVAdHxSuiSKmSFZup3cHVdfKUEdTfzKTJEahGf3yW
- Gp5EZVMcK4hLvj/lONk1iRSoss1Txr6mHEo2m0Vp7kmCO5n7NJv2NlRpDpjKTXR7wtPQ6VHCpm
- UWo=
-X-IronPort-AV: E=Sophos;i="5.75,307,1589212800"; 
-   d="scan'208";a="244567997"
-Received: from mail-dm6nam10lp2108.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.108])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2020 13:30:09 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LGgymS+5EfL1OxMeVScesrOxFGKFc3Ap76zvH85qULfz9joroXlJ1zNZN4IE50hC9+RWgxjb1ZZN3s8+r/qBQ+wWxZyHoNHEeOIkI5zU08qELTqdQEc/zLMr6lOIZn7S6GMPPEIV8BaY90AmfuGLv0rV1f7EHQVNsKmOkQod2mTpjbXJKjtcxXe/UIZpl+XazeLO6LKjqi0YCAbm3JuqWg/vRJ23UVru9ulbieWShu58VhFL4KhF/W3zJeJIGev6n/ejyD+NhZwLcQuaDAHy7McLUc0Km66K4L1UrPumvqh6sprSmPXCd6ij/Juva+G3gsGJFmYQ9B73aIeclULgbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4SxIR3OSup4huqNfKep53XN7RB3z2hMtK8hMabVd7Bw=;
- b=eNypSUsewzZrKpWOJpo8jutRQYxQv157secIcKK5x43b2BAP3DoHRaZ4y8Vu9G7ldpEG79si7Q4ZtF8daVct7l2w+TyRCR53qvpVlVf47paAz5S1KpvLELsjZVUNsc6Ai7q8k/NAzjkXQkh2QCnv11XyEc6xjtYLNQkK6qSViIuOEne3DBmhPx0rffsHmStXWqmENyOB0iUg9CepYJaSTkljP4zGA1aZnwWxTZT9YGKWCpujjCOIfNW9hGbbmhPpRO3I8peN9wBO22YeZjCoe/q9IaX0G1HfqJht/s5Dz5zZJMbVvvWkI93IHFdqO29eApEE/tnPOxYdP3R4sFz1tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4SxIR3OSup4huqNfKep53XN7RB3z2hMtK8hMabVd7Bw=;
- b=ebrHPaP8VIJ5XcjvOzNdwKlPQAd2+0SuwbWajMjVmzt4TlewliBjHHK/EtH6ZLm1+uVw9w6bKdxyAFc9VWkMPMG2uEx/Awex1GYfKmY23v6OKazsv5Ph7/tXI//N+7lq3NYdsxAh7AnCo8hi65UDs0fQSNHBlia6Vnyz3kG/wus=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB1031.namprd04.prod.outlook.com (2603:10b6:910:51::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 3 Jul
- 2020 05:29:50 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3153.022; Fri, 3 Jul 2020
- 05:29:50 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Kanchan Joshi <joshi.k@samsung.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "kbusch@kernel.org" <kbusch@kernel.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 1/2] block: fix error code for zone-append
-Thread-Topic: [PATCH 1/2] block: fix error code for zone-append
-Thread-Index: AQHWUIdcNaHZ5okuAE6oiVJHNmJMWw==
-Date:   Fri, 3 Jul 2020 05:29:50 +0000
-Message-ID: <CY4PR04MB3751B8037BE65D573667A6D5E76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <1593704330-11540-1-git-send-email-joshi.k@samsung.com>
- <CGME20200702154208epcas5p39fe202f642a9d5c8dde9b911645c594c@epcas5p3.samsung.com>
- <1593704330-11540-2-git-send-email-joshi.k@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ef4f625b-90cf-4ba2-2d8b-08d81f121b92
-x-ms-traffictypediagnostic: CY4PR04MB1031:
-x-microsoft-antispam-prvs: <CY4PR04MB10315FEE5EA741C3FF0AEC59E76A0@CY4PR04MB1031.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AeCmm5hAc+nBIG76ZKes+0C3acaMhlE15qWG+1qNpwuO0P0GZeeKwNBdIg74MmC5dveZyUbFPaCYkGDNA9pfJfa7g0ma9FqpcxMf6fIlkgvsMsIFe3b34niv3n3c2D3wVhPEI7lLKSVmxUl+LtJldU47ybgTcMq2Vo5i6/I9g2BNw6FKxcsZ7cJnLt7z5TkmqOXefU5jwduYaqLYss1aBFYn7f/BByuIPFd5gzhhKtsZVjAbSWtOalG5I0P/r+8jZU+C8/O7lXzE5hyjUfzMjfOQ42dAJ59gI2Tcyf8SI6tk96h3tDt6gNsUWkzqpNE+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(8676002)(53546011)(5660300002)(6506007)(26005)(52536014)(2906002)(186003)(8936002)(33656002)(66556008)(64756008)(66446008)(66476007)(86362001)(66946007)(76116006)(91956017)(478600001)(316002)(71200400001)(55016002)(83380400001)(9686003)(4326008)(110136005)(54906003)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: JXmDoRBZaw9VbI065zh1BGcV4csd/8+EOVQIboepkewaCApQ/fxJDEBbZ0n5VL0wucZ2fVDv15GZqYQ4vU88w4AkQlsG6rgu0LkS/imYE9baqMZ84ZGELEYt2b8VHkaVnHaUqSJC7G3F4lzAyXRK4nhBBBk+MCDUvgErm+i2+tViEV/bi8jcmmoHoXAMSusmCR64ggou5qVN7BuUPOrnIGbaUG7IYuoTMK3tCjLVP5JCxAOroCGOfsaMVt04Ec9i2BdiPqX7U/jxkHeOteMQ0ns0T0xkUU3+yPTHtMzs9DAXmuuqk2fMAZ8JNQdED4Ekayiw6ORWdNFbjJfPusVwAk4KO1rWC/swjkHZVKj2YlieaJUq3RhMFdQFCdME2Qww1qcdFknVYdop1+9nJn270r0QNU+quGxPeFZVoCfdSZzBDxoVDY13WSx3+VOvmqKmreuNXvUoCv6mq73pWnVL3+m5drHjiWFOmLXtNyZn0eQDzlWGrryEsYEhzX4aeqF3
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Jul 2020 01:30:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=xo/yFsIAH0GxZVvWQN4dcotC0B+sVKlHywCMEHdZj84=;
+        b=Ug/CemuDgKYvlu2Qx6uhDhWVfr1VGAy0fE7F3Ummi3+E+e/Fajw29wFtWCRnLeOOPDwC
+        dAqUtKFb6Q9Y35WrwYnzyxrHVoDnMSDi5r1tEwqiiupfxBQ2OzLzP9tLuzYQMHguEAqe+y
+        g498jJG33HAuScDN6VDmrfrGLGCVle2AI=
+Received: by filterdrecv-p3iad2-5b55dcd864-htmgx with SMTP id filterdrecv-p3iad2-5b55dcd864-htmgx-19-5EFEC273-3E
+        2020-07-03 05:30:27.459439939 +0000 UTC m=+562871.433873292
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
+        id cXBFHwICSHqXLOSNxkTYEw
+        Fri, 03 Jul 2020 05:30:26.947 +0000 (UTC)
+Subject: Re: [PATCH 1/9] media: rkvdec: h264: Support profile and level
+ controls
+References: <20200701215616.30874-1-jonas@kwiboo.se>
+ <20200701215616.30874-2-jonas@kwiboo.se>
+ <8daa49704a14764bfe0797cbf802bad3d64ede17.camel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <75d272ab-2d48-6dc6-3b60-22d5922ffd1e@kwiboo.se>
+Date:   Fri, 03 Jul 2020 05:30:27 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef4f625b-90cf-4ba2-2d8b-08d81f121b92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 05:29:50.3853
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jl1tZqvNAmy0k39hTYjXWFOvEi91XCYrnGGTZgCh8NjX7cjMxhqIRsDviFR+/nrj6bonAc6gOPjGrhb1kyK9hQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1031
+In-Reply-To: <8daa49704a14764bfe0797cbf802bad3d64ede17.camel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h4Z+dcM8ZpwQOxt2G?=
+ =?us-ascii?Q?ICtVrzf2oTwZNCSv0ks9a+2RgvuYykgsmzmux9o?=
+ =?us-ascii?Q?Qfdih03syJU216qxX4s2inLWcN4rbDWdoudUPJ1?=
+ =?us-ascii?Q?JxCCerFk=2Fo5hWfK1N6uCullDeEducn3Ds8hZfqW?=
+ =?us-ascii?Q?YRGFUtD5IWFIMOwqMtQcmtucuKCPWlBoO9Kkm4s?=
+ =?us-ascii?Q?Ddy8hdY4r6pGHIRv+3ECg=3D=3D?=
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/03 0:42, Kanchan Joshi wrote:=0A=
-> avoid returning success when it should report failure, preventing=0A=
-> odd behavior in caller.=0A=
-=0A=
-You can be more precise here: the odd behavior is an infinite loop in=0A=
-bio_iov_iter_get_pages() whcih is is the only user of __bio_iov_append_get_=
-pages().=0A=
-=0A=
-> =0A=
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>=0A=
-> Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>=0A=
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>=0A=
-> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>=0A=
-> ---=0A=
->  block/bio.c | 2 +-=0A=
->  1 file changed, 1 insertion(+), 1 deletion(-)=0A=
-> =0A=
-> diff --git a/block/bio.c b/block/bio.c=0A=
-> index a7366c0..0cecdbc 100644=0A=
-> --- a/block/bio.c=0A=
-> +++ b/block/bio.c=0A=
-> @@ -1044,7 +1044,7 @@ static int __bio_iov_append_get_pages(struct bio *b=
-io, struct iov_iter *iter)=0A=
->  	size_t offset;=0A=
->  =0A=
->  	if (WARN_ON_ONCE(!max_append_sectors))=0A=
-> -		return 0;=0A=
-> +		return -EINVAL;=0A=
->  =0A=
->  	/*=0A=
->  	 * Move page array up in the allocated memory for the bio vecs as far a=
-s=0A=
-> =0A=
-=0A=
-Note: the odd behavior mentioned in the commit message cannot currently be=
-=0A=
-triggered since only zonefs issues REQ_OP_ZONE_APPEND BIOs so we are guaran=
-teed=0A=
-that max_append_sectors is not 0 in that case. But this fix certainly makes=
-=0A=
-things more solid. So:=0A=
-=0A=
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On 2020-07-03 04:54, Ezequiel Garcia wrote:
+> On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
+>> The Rockchip Video Decoder used in RK3399 supports H.264 profiles from
+>> Baseline to High 4:2:2 up to Level 5.1, except for the Extended profile.
+>>
+>> Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE and the
+>> V4L2_CID_MPEG_VIDEO_H264_LEVEL control, so that userspace can query the
+>> driver for the list of supported profiles and level.
+>>
+>> In current state only Baseline to High profile is supported by the driver.
+>>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> 
+> I think the patch is good so:
+> 
+> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+> 
+> However, feel free to just drop this patch and support the profiles
+> and levels at the end of the patchset, once High 10 and High 422
+> support is there.
+
+Sure, that makes more sense, will move to end in v2.
+
+Regards,
+Jonas
+
+> 
+> Thanks,
+> Ezequiel
+> 
+>> ---
+>>  drivers/staging/media/rkvdec/rkvdec.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+>> index 0f81b47792f6..b1de55aa6535 100644
+>> --- a/drivers/staging/media/rkvdec/rkvdec.c
+>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+>> @@ -94,6 +94,19 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>>  		.cfg.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>  		.cfg.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>  	},
+>> +	{
+>> +		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+>> +		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+>> +		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+>> +		.cfg.menu_skip_mask =
+>> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+>> +		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+>> +	},
+>> +	{
+>> +		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+>> +		.cfg.min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
+>> +		.cfg.max = V4L2_MPEG_VIDEO_H264_LEVEL_5_1,
+>> +	},
+>>  };
+>>  
+>>  static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
+> 
+> 
