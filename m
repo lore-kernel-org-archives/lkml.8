@@ -2,295 +2,254 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF278C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1958206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D33206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:39:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JE791qR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgGCHin (ORCPT
+        id S1726140AbgGCHjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:38:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16574 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGCHin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:38:43 -0400
-IronPort-SDR: TmCt8/qdbXhrQE7kAh9YKEQyQvk4v0XfmTQAoDh/rr9yXgXQFKj9+EYU1UbuGA9wdyCJJduUiK
- Yrq8QKHE1mgA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165175971"
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="165175971"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:38:26 -0700
-IronPort-SDR: vmsmTtMR+r5+DUypUAXSD/2US0FQ3EGHXNQTEIjIlruBddiga+edBju0Eqw3Dy0VZXpqENe1X4
- NNbN1Btn9+1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="313257163"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 03 Jul 2020 00:38:26 -0700
-Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 10D95580784;
-        Fri,  3 Jul 2020 00:38:23 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v9 00/15] perf: support enable and disable commands in stat
- and record modes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:38:22 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 3 Jul 2020 03:39:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60805 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725960AbgGCHjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:39:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593761981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=COuTBdKKfATNGseQylBEQ8M25EUASJk469Iefivx6yI=;
+        b=JE791qR6G8o9hBNDoP62w50s6IoKAZiuTpUM0xx9w4DBP1JA05BeQVP0nzDDhDPGvZU3qt
+        7XFvTJPcQr1kAr2LVji7dQuJpy8YKYOcna1lE+lLvVFAU0O5HL77NnnXj6x82vChwPawcY
+        l9KlA29eSfH/UGJ8gxSFSwmhQ8rP7cg=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-9_lFwrC2M6CJ-gy_mr8EiQ-1; Fri, 03 Jul 2020 03:39:36 -0400
+X-MC-Unique: 9_lFwrC2M6CJ-gy_mr8EiQ-1
+Received: by mail-qk1-f199.google.com with SMTP id k16so7908668qkh.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:39:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=COuTBdKKfATNGseQylBEQ8M25EUASJk469Iefivx6yI=;
+        b=c2WJqfySVL1To9RdyUBgLkA5Yxjbyx6jHl6mGoIh3+fffzbTxfScvsQ9CAQ5sqqRSY
+         LHlzFOwgpzU0DnD+ilS5LyZbTxTBI87MZ1jXvoHAY65Sq7grf6TnTuKWZRKXeSVXw20v
+         DdY2hV9CXOR8X3MEU/cDpE9pVGD4u60QHJs3yZcT1y+/hSl+w2yZuCN9jHb9wt/7o3TO
+         vmYjBbKQoZwemkSirktlSC6Df4BRU3ctd2RkLbQaVHfRsFwGdRlg17cqd3uj1Xl8+YtY
+         MXDzeLMNHwfZh3Amkly66KdcujKIGXbuDBaLT+HoqLpWfWMSiXi42kcw7UkcT7KFeSfX
+         BfIw==
+X-Gm-Message-State: AOAM5333albVqq33Pg8Yvf6MW7P5YtSzBDOHSv+oDpDZHDh63fsUIOjs
+        f/xZS8C9QoRe4npMpV22khaMbcqBhopKtLtzf4RAbi0b3A9m0uswpeJN2AGB8QC4JaQmYxND8EJ
+        acwVnv4GqYbEobtP/8uNjZbyukO2nNXtBhOelCEZA
+X-Received: by 2002:a37:bd84:: with SMTP id n126mr33758497qkf.310.1593761975755;
+        Fri, 03 Jul 2020 00:39:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwHgpJU6xl99XnSU6tgodTRM4YjrBd79yydUZARWkn88G6I+upL/qhXsI08qb09PHJ2W0dWQoLAitLw0ltIpM8=
+X-Received: by 2002:a37:bd84:: with SMTP id n126mr33758477qkf.310.1593761975397;
+ Fri, 03 Jul 2020 00:39:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ <1593641660-13254-3-git-send-email-bhsharma@redhat.com> <20200702075001.GA16113@willie-the-truck>
+ <CACi5LpPn4QUjC692G=5UxLchpi+ZL+xFCcxqLbFvgvvcso28ww@mail.gmail.com> <eeea529a-14cd-3e2f-7a1c-c4c940967749@huawei.com>
+In-Reply-To: <eeea529a-14cd-3e2f-7a1c-c4c940967749@huawei.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Fri, 3 Jul 2020 13:09:23 +0530
+Message-ID: <CACi5LpOTwu-xYbPA2PDY3m-jKU50iO9UvkkkjuMb7wUit7Kpdg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: Allocate crashkernel always in ZONE_DMA
+To:     chenzhou <chenzhou10@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+        linux-mm@kvack.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chen,
 
-Changes in v9:
-- avoided screwing of fds by fdarray__filter() to fix staleness of pos returned by fdarray__add()
-- implemented notion of properties for fds kept by fdarray object and introduced nonfilterable
-  property for control fd
-- avoided counting of nonfilterable fds by fdarray__filter()
-- replaced strlen() with sizeof(str)-1 for CMD_TAGS
-- avoided mixing timeout and interval processing in one function
-- renamed child to child_exited variable
-- processed time_to_sleep < time_diff condition
-- placed evlist__ctlfd_process() call after evlist__poll() and evlist__filter_pollfd()
-  calls in record mode
+On Fri, Jul 3, 2020 at 10:54 AM chenzhou <chenzhou10@huawei.com> wrote:
+>
+> Hi Bhupesh,
+>
+>
+> On 2020/7/3 3:22, Bhupesh Sharma wrote:
+> > Hi Will,
+> >
+> > On Thu, Jul 2, 2020 at 1:20 PM Will Deacon <will@kernel.org> wrote:
+> >> On Thu, Jul 02, 2020 at 03:44:20AM +0530, Bhupesh Sharma wrote:
+> >>> commit bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in
+> >>> ZONE_DMA32") allocates crashkernel for arm64 in the ZONE_DMA32.
+> >>>
+> >>> However as reported by Prabhakar, this breaks kdump kernel booting in
+> >>> ThunderX2 like arm64 systems. I have noticed this on another ampere
+> >>> arm64 machine. The OOM log in the kdump kernel looks like this:
+> >>>
+> >>>   [    0.240552] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+> >>>   [    0.247713] swapper/0: page allocation failure: order:1, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+> >>>   <..snip..>
+> >>>   [    0.274706] Call trace:
+> >>>   [    0.277170]  dump_backtrace+0x0/0x208
+> >>>   [    0.280863]  show_stack+0x1c/0x28
+> >>>   [    0.284207]  dump_stack+0xc4/0x10c
+> >>>   [    0.287638]  warn_alloc+0x104/0x170
+> >>>   [    0.291156]  __alloc_pages_slowpath.constprop.106+0xb08/0xb48
+> >>>   [    0.296958]  __alloc_pages_nodemask+0x2ac/0x2f8
+> >>>   [    0.301530]  alloc_page_interleave+0x20/0x90
+> >>>   [    0.305839]  alloc_pages_current+0xdc/0xf8
+> >>>   [    0.309972]  atomic_pool_expand+0x60/0x210
+> >>>   [    0.314108]  __dma_atomic_pool_init+0x50/0xa4
+> >>>   [    0.318504]  dma_atomic_pool_init+0xac/0x158
+> >>>   [    0.322813]  do_one_initcall+0x50/0x218
+> >>>   [    0.326684]  kernel_init_freeable+0x22c/0x2d0
+> >>>   [    0.331083]  kernel_init+0x18/0x110
+> >>>   [    0.334600]  ret_from_fork+0x10/0x18
+> >>>
+> >>> This patch limits the crashkernel allocation to the first 1GB of
+> >>> the RAM accessible (ZONE_DMA), as otherwise we might run into OOM
+> >>> issues when crashkernel is executed, as it might have been originally
+> >>> allocated from either a ZONE_DMA32 memory or mixture of memory chunks
+> >>> belonging to both ZONE_DMA and ZONE_DMA32.
+> >> How does this interact with this ongoing series:
+> >>
+> >> https://lore.kernel.org/r/20200628083458.40066-1-chenzhou10@huawei.com
+> >>
+> >> (patch 4, in particular)
+> > Many thanks for having a look at this patchset. I was not aware that
+> > Chen had sent out a new version.
+> > I had noted in the v9 review of the high/low range allocation
+> > <https://lists.gt.net/linux/kernel/3726052#3726052> that I was working
+> > on a generic solution (irrespective of the crashkernel, low and high
+> > range allocation) which resulted in this patchset.
+> >
+> > The issue is two-fold: OOPs in memcfg layer (PATCH 1/2, which has been
+> > Acked-by memcfg maintainer) and OOM in the kdump kernel due to
+> > crashkernel allocation in ZONE_DMA32 regions(s) which is addressed by
+> > this PATCH.
+> >
+> > I will have a closer look at the v10 patchset Chen shared, but seems
+> > it needs some rework as per Dave's review comments which he shared
+> > today.
+> > IMO, in the meanwhile this patchset  can be used to fix the existing
+> > kdump issue with upstream kernel.
+> Thanks for your work.
+> There is no progress on the issue for long time, so i sent my solution in v8 comments
+> and sent v9 recently.
 
-v8: https://lore.kernel.org/lkml/0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com/
+Thanks a lot for your inputs. Well, I was working on the OOPs seen
+with cgroups layer even when the memory cgroup is disabled via kdump
+command line. As the cgroup maintainer also noted during the review of
+PATCH 1/2 of this series, it's quite a corner case and hence hard to
+debug. Hence the delay in sending out this series.
 
-Changes in v8:
-- avoided moving of fds at fdarray__filter() call
-- skipped counting of fds with zeroed revents at fdarray__filter() call
-- converted explicit --ctl-fd[-ack] into --control fd:ctl-fd[,ack-fd option 
-- updated docs to accommodate --control fd:ctl-fd[,ack-fd] option
+> I think direct limiting the crashkernel in ZONE_DMA isn't a good idea:
+> 1. For parameter "crashkernel=Y", reserving crashkernel in first 1G memory will increase
+> the probability of memory allocation failure.
+> Previous discuss from https://lkml.org/lkml/2019/10/21/725:
+>     "With ZONE_DMA=y, this config will fail to reserve 512M CMA on a server"
 
-v7: https://lore.kernel.org/lkml/5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com/
+That is correct. However, we have limited options anyways at the
+moment, hence the need for the crashkernel hi/low support series which
+you are already working on. Unfortunately as I noted in the review of
+the v10 series today, it still needs rework to fix
+the OOM issue seen on ThunderX2 and ampere boards with crashkernel=X
+kind of format.
 
-Changes in v7:
-- added missing perf-record.txt changes 
-- adjusted docs wording for --ctl-fd,ctl-fd-ack options 
-  to additionally mention --delay=-1 effect
+See <http://lists.infradead.org/pipermail/kexec/2020-July/020825.html>
+ for details.
 
-v6: https://lore.kernel.org/lkml/f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com/
+So, to workaround the issue (while the crashkernel hi/lo support
+series is reworked), the idea is to have similar kdump behaviour as we
+were having on these boards before ZONE_DMA32 changes were introduced.
 
-Changes in v6:
-- split re-factoring of events handling loops for stat mode
-  into smaller incremental parts
-- added parts missing at v5
-- corrected v5 runtime issues
+I am also working on fixing the '__dma_atomic_pool_init' behaviour
+itself (inside 'kernel/dma/pool.c') to adapt to ZONE_DMA and
+ZONE_DMA32 range availability in the kdump kernel, but this is a
+complex implementation and requires thorough checks (especially with
+drivers which can only work within ZONE_DMA memory regions in the
+kdump kernel). Hence it might take some iterations to share a RFC
+patch on the same.
 
-v5: https://lore.kernel.org/lkml/e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com/
+I will send a v2 addressing Will's inputs shortly.
 
-Changes in v5:
-- split re-factoring of events handling loops for stat mode
-  into smaller incremental parts
+Thanks,
+Bhupesh
 
-v4: https://lore.kernel.org/lkml/653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com/
+> 2. For parameter "crashkernel=Y@X", limiting the crashkernel in ZONE_DMA is unreasonable
+> for someone really want to reserve crashkernel from specified start address.
+>
+> I have sent v10: https://www.spinics.net/lists/arm-kernel/msg819408.html, any commets are welcome.
+>
+> Thanks,
+> Chen Zhou
+> >
+> >>> Fixes: bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in ZONE_DMA32")
+> >>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> >>> Cc: Michal Hocko <mhocko@kernel.org>
+> >>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> >>> Cc: James Morse <james.morse@arm.com>
+> >>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>> Cc: Will Deacon <will@kernel.org>
+> >>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >>> Cc: cgroups@vger.kernel.org
+> >>> Cc: linux-mm@kvack.org
+> >>> Cc: linux-arm-kernel@lists.infradead.org
+> >>> Cc: linux-kernel@vger.kernel.org
+> >>> Cc: kexec@lists.infradead.org
+> >>> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> >>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> >>> ---
+> >>>  arch/arm64/mm/init.c | 16 ++++++++++++++--
+> >>>  1 file changed, 14 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> >>> index 1e93cfc7c47a..02ae4d623802 100644
+> >>> --- a/arch/arm64/mm/init.c
+> >>> +++ b/arch/arm64/mm/init.c
+> >>> @@ -91,8 +91,15 @@ static void __init reserve_crashkernel(void)
+> >>>       crash_size = PAGE_ALIGN(crash_size);
+> >>>
+> >>>       if (crash_base == 0) {
+> >>> -             /* Current arm64 boot protocol requires 2MB alignment */
+> >>> -             crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+> >>> +             /* Current arm64 boot protocol requires 2MB alignment.
+> >>> +              * Also limit the crashkernel allocation to the first
+> >>> +              * 1GB of the RAM accessible (ZONE_DMA), as otherwise we
+> >>> +              * might run into OOM issues when crashkernel is executed,
+> >>> +              * as it might have been originally allocated from
+> >>> +              * either a ZONE_DMA32 memory or mixture of memory
+> >>> +              * chunks belonging to both ZONE_DMA and ZONE_DMA32.
+> >>> +              */
+> >> This comment needs help. Why does putting the crashkernel in ZONE_DMA
+> >> prevent "OOM issues"?
+> > Sure, I can work on adding more details in the comment so that it
+> > explains the potential OOM issue(s) better.
+> >
+> > Thanks,
+> > Bhupesh
+> >
+> >
+> > .
+> >
+>
+>
 
-Changes in v4:
-- made checking of ctlfd state unconditional in record trace streaming loop
-- introduced static poll fds to keep evlist__filter_pollfd() unaffected
-- handled ret code of evlist__initialize_ctlfd() where need
-- renamed and structured handle_events() function
-- applied anonymous structs where needed
-
-v3: https://lore.kernel.org/lkml/eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com/
-
-Changes in v3:
-- renamed functions and types from perf_evlist_ to evlist_ to avoid
-  clash with libperf code;
-- extended commands to be strings of variable length consisting of
-  command name and also possibly including command specific data;
-- merged docs update with the code changes;
-- updated docs for -D,--delay=-1 option for stat and record modes;
-
-v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
-
-Changes in v2:
-- renamed resume and pause commands to enable and disable ones, renamed
-  CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
-  to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
-  ioctl;
-- factored out event handling loop into a handle_events() for stat mode;
-- separated -D,--delay=-1 into separate patches for stat and record modes;
-
-v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
-
-repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-
-The patch set implements handling of 'start disabled', 'enable' and 'disable'
-external control commands which can be provided for stat and record modes
-of the tool from an external controlling process. 'start disabled' command
-can be used to postpone enabling of events in the beginning of a monitoring
-session. 'enable' and 'disable' commands can be used to enable and disable
-events correspondingly any time after the start of the session.
-
-The 'start disabled', 'enable' and 'disable' external control commands can be
-used to focus measurement on specially selected time intervals of workload
-execution. Focused measurement reduces tool intrusion and influence on
-workload behavior, reduces distortion and amount of collected and stored
-data, mitigates data accuracy loss because measurement and data capturing
-happen only during intervals of interest.
-
-A controlling process can be a bash shell script [1], native executable or
-any other language program that can directly work with file descriptors,
-e.g. pipes [2], and spawn a process, specially the tool one.
-
--D,--delay <val> option is extended with -1 value to skip events enabling
-in the beginning of a monitoring session ('start disabled' command).
---control fd:ctl-fd[,ack-fd] command line option is introduced to provide the
-tool with a pair of file descriptors to listen to control commands and reply
-to the controlling process on the completion of received commands.
-
-The tool reads control command message from ctl-fd descriptor, handles the
-command and optionally replies acknowledgement message to ack-fd descriptor,
-if it is specified on the command line. 'enable' command is recognized as
-'enable' string message and 'disable' command is recognized as 'disable'
-string message both received from ctl-fd descriptor. Completion message is
-'ack\n' and sent to ack-fd descriptor.
-
-Example bash script demonstrating simple use case follows:
-
-#!/bin/bash
-
-ctl_dir=/tmp/
-
-ctl_fifo=${ctl_dir}perf_ctl.fifo
-test -p ${ctl_fifo} && unlink ${ctl_fifo}
-mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
-
-ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
-
-perf stat -D -1 -e cpu-cycles -a -I 1000       \
-          --control fd:${ctl_fd},${ctl_fd_ack} \
-          -- sleep 40 &
-perf_pid=$!
-
-sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
-sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
-
-exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
-exec {ctl_fd}>&- && unlink ${ctl_fifo}
-
-wait -n ${perf_pid}
-exit $?
-
-
-Script output:
-
-[root@host dir] example
-Events disabled
-#           time             counts unit events
-     1.001101062      <not counted>      cpu-cycles                                                  
-     2.002994944      <not counted>      cpu-cycles                                                  
-     3.004864340      <not counted>      cpu-cycles                                                  
-     4.006727177      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(ack)
-     4.993808464          3,124,246      cpu-cycles                                                  
-     5.008597004          3,325,624      cpu-cycles                                                  
-     6.010387483         83,472,992      cpu-cycles                                                  
-     7.012266598         55,877,621      cpu-cycles                                                  
-     8.014175695         97,892,729      cpu-cycles                                                  
-     9.016056093         68,461,242      cpu-cycles                                                  
-    10.017937507         55,449,643      cpu-cycles                                                  
-    11.019830154         68,938,167      cpu-cycles                                                  
-    12.021719952         55,164,101      cpu-cycles                                                  
-    13.023627550         70,535,720      cpu-cycles                                                  
-    14.025580995         53,240,125      cpu-cycles                                                  
-disabled(ack)
-    14.997518260         53,558,068      cpu-cycles                                                  
-Events disabled
-    15.027216416      <not counted>      cpu-cycles                                                  
-    16.029052729      <not counted>      cpu-cycles                                                  
-    17.030904762      <not counted>      cpu-cycles                                                  
-    18.032073424      <not counted>      cpu-cycles                                                  
-    19.033805074      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(ack)
-    20.001279097          3,021,022      cpu-cycles                                                  
-    20.035044381          6,434,367      cpu-cycles                                                  
-    21.036923813         89,358,251      cpu-cycles                                                  
-    22.038825169         72,516,351      cpu-cycles                                                  
-#           time             counts unit events
-    23.040715596         55,046,157      cpu-cycles                                                  
-    24.042643757         78,128,649      cpu-cycles                                                  
-    25.044558535         61,052,428      cpu-cycles                                                  
-    26.046452785         62,142,806      cpu-cycles                                                  
-    27.048353021         74,477,971      cpu-cycles                                                  
-    28.050241286         61,001,623      cpu-cycles                                                  
-    29.052149961         61,653,502      cpu-cycles                                                  
-disabled(ack)
-    30.004980264         82,729,640      cpu-cycles                                                  
-Events disabled
-    30.053516176      <not counted>      cpu-cycles                                                  
-    31.055348366      <not counted>      cpu-cycles                                                  
-    32.057202097      <not counted>      cpu-cycles                                                  
-    33.059040702      <not counted>      cpu-cycles                                                  
-    34.060843288      <not counted>      cpu-cycles                                                  
-    35.000888624      <not counted>      cpu-cycles                                                  
-[root@host dir]# 
-
-[1] http://man7.org/linux/man-pages/man1/bash.1.html
-[2] http://man7.org/linux/man-pages/man2/pipe.2.html
-
----
-Alexey Budankov (15):
-  tools/libperf: avoid fds moving by fdarray__filter()
-  tools/libperf: add properties to struct pollfd *entries objects
-  tools/libperf: don't count nonfilterable fds by fdarray__filter()
-  perf evlist: introduce control file descriptors
-  perf evlist: implement control command handling functions
-  perf stat: factor out body of event handling loop for system wide
-  perf stat: move target check to loop control statement
-  perf stat: factor out body of event handling loop for fork case
-  perf stat: factor out event handling loop into dispatch_events()
-  perf stat: extend -D,--delay option with -1 value
-  perf stat: implement control commands handling
-  perf stat: introduce --control fd:ctl-fd[,ack-fd] options
-  perf record: extend -D,--delay option with -1 value
-  perf record: implement control commands handling
-  perf record: introduce --control fd:ctl-fd[,ack-fd] options
-
- tools/lib/api/fd/array.c                 |  31 ++--
- tools/lib/api/fd/array.h                 |  18 ++-
- tools/lib/perf/evlist.c                  |  10 +-
- tools/lib/perf/include/internal/evlist.h |   2 +-
- tools/perf/Documentation/perf-record.txt |  44 +++++-
- tools/perf/Documentation/perf-stat.txt   |  44 +++++-
- tools/perf/builtin-record.c              |  65 ++++++++-
- tools/perf/builtin-stat.c                | 174 ++++++++++++++++++-----
- tools/perf/builtin-trace.c               |   2 +-
- tools/perf/tests/fdarray.c               |  22 +--
- tools/perf/util/evlist.c                 | 139 +++++++++++++++++-
- tools/perf/util/evlist.h                 |  25 ++++
- tools/perf/util/record.h                 |   4 +-
- tools/perf/util/stat.h                   |   4 +-
- 14 files changed, 489 insertions(+), 95 deletions(-)
-
--- 
-2.24.1
