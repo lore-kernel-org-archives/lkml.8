@@ -2,40 +2,39 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C651FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBAB20B80
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBAB20B80
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgGCMxd (ORCPT
+        id S1726504AbgGCMxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:53:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25720 "EHLO mga18.intel.com"
+        Fri, 3 Jul 2020 08:53:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25717 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgGCMxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726157AbgGCMxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 08:53:31 -0400
-IronPort-SDR: 4lP42NYOto2LbT5bfJYhyyL2x9HHiRkhXvte8dpb9HxDxJFXG7xCkeanHaA9cyM0Yf+tnF7X3W
- EbGS/qZWWmYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134598354"
+IronPort-SDR: lPHCwnVRl6eSDEBbz+lwyb9rTrsons5ijn7H5zGDTkDZesNWlXrsjiaC5KIidLkquX7OOdUaZ1
+ pUYp0LsJM9lQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134598342"
 X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="134598354"
+   d="scan'208";a="134598342"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 05:53:29 -0700
-IronPort-SDR: X2qUcr0EVNnDqrwNHI5wb9OjQPBbWA5gC3X9p0qrieTbNk2BQ0APhvjk4PTM+xu8SSJHPnEJlg
- JLruLDrRNxkg==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 05:53:23 -0700
+IronPort-SDR: RaMeLViFuUxgaxwmtBst/jtelGt5d425GJTjfFrHoyF6/MPbNBHR+0It7his7OhYDal/ria3CH
+ fI3cQq8S43ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="265963975"
+   d="scan'208";a="265963951"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 05:53:28 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 05:53:22 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -47,12 +46,10 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, wei.w.wang@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 04/23] perf/x86/intel/lbr: Add the function pointers for LBR save and restore
-Date:   Fri,  3 Jul 2020 05:49:10 -0700
-Message-Id: <1593780569-62993-5-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V3 00/23] Support Architectural LBR
+Date:   Fri,  3 Jul 2020 05:49:06 -0700
+Message-Id: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
-References: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,195 +57,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The MSRs of Architectural LBR are different from previous model-specific
-LBR. Perf has to implement different functions to save and restore them.
+Changes since V2:
+- Rebase on top of perf/vlbr
+- Drop the patch "Check Arch LBR MSRs", which is unnecessary.
+- Replace the variables for the full CPUID leaf in structure x86_pmu
+  with the variables for the available enumeration bits, which save
+  the space and make the code more readable.
+- Clear FEATURE_ARCH_LBR if the check for Architectural LBR fails.
+  Use static_cpu_has(X86_FEATURE_ARCH_LBR) to instead of
+  x86_pmu.arch_lbr.
+- Mark the {rd,wr}lbr_{to,from,info,all} wrappers,
+  lbr_is_reset_in_cstate(), and task_context_opt() __always_inline
 
-The function pointers for LBR save and restore are introduced. Perf
-should initialize the corresponding functions at boot time.
+Changes since V1:
+- Move the union for CPUID enumeration bits to asm/perf_event.h
+- Union the lbr_ctl_map and lbr_sel_map
+- Rename ARCH_LBR_INFO_* to LBR_INFO_*
+- Remove the function pointers of lbr_enable/disable. Architectural
+  LBR and the model-specific LBR share the same functions for
+  lbr_enable/disable now.
+- Factor out common codes for lbr_read, lbr_save and lbr_restore to
+  reduce the duplicate codes.
+- Export copy_fpregs_to_fpstate instead of xfeatures_mask_all
+- Add a padding to guarantee the required alignment
+- Simplify the intel_pmu_arch_lbr_read_xsave()
 
-The generic optimizations, e.g. avoiding restore LBR if no one else
-touched them, still apply for Architectural LBRs. The related codes are
-not moved to model-specific functions.
+LBR (Last Branch Records) enables recording of software path history
+by logging taken branches and other control flows within architectural
+registers. Intel CPUs have had model-specific LBRs for quite some time
+but this evolves them into an architectural feature now.
 
-Current model-specific LBR functions are set as default.
+The main advantages for the users are:
+- Faster context switching due to XSAVES support and faster reset of
+  LBR MSRs via the new DEPTH MSR
+- Faster LBR read for a non-PEBS event due to XSAVES support, which
+  lowers the overhead of the NMI handler. (For a PEBS event, the LBR
+  information is recorded in the PEBS records. There is no impact on
+  the PEBS event.)
+- Linux kernel can support the LBR features without knowing the model
+  number of the current CPU.
+- Clean exposure of LBRs to guests without relying on model-specific
+  features. (An improvement for KVM. Not included in this patch series.)
+- Supports for running with a smaller number of LBRs than the full 32,
+  to lower overhead (currently not exposed, however)
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/core.c |  4 +++
- arch/x86/events/intel/lbr.c  | 79 +++++++++++++++++++++++++++-----------------
- arch/x86/events/perf_event.h |  6 ++++
- 3 files changed, 59 insertions(+), 30 deletions(-)
+The key improvements for the perf kernel in this patch series include,
+- Doesn't require a model check. The capabilities of Architectural LBR
+  can be enumerated by CPUID.
+- Each LBR record or entry is still comprised of three MSRs,
+  IA32_LBR_x_FROM_IP, IA32_LBR_x_TO_IP and IA32_LBR_x_TO_IP, but they
+  become architectural MSRs.
+- Architectural LBR is stack-like now. Entry 0 is always the youngest
+  branch, entry 1 the next youngest... The TOS MSR has been removed.
+- A new IA32_LBR_CTL MSR is introduced to enable and configure LBRs,
+  which replaces the IA32_DEBUGCTL[bit 0] and the LBR_SELECT MSR.
+- The possible LBR depth can be retrieved from CPUID enumeration. The
+  max value is written to the new MSR_ARCH_LBR_DEPTH as the number of
+  LBR entries.
+- Faster LBR MSRs reset via the new DEPTH MSR, which avoids touching
+  potentially nearly a hundred MSRs.
+- XSAVES and XRSTORS are used to read, save/restore LBR related MSRs
+- Faster direct reporting of the branch type with the LBR without needing
+  access to the code
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 6414b47..50cb3c6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3981,6 +3981,8 @@ static __initconst const struct x86_pmu core_pmu = {
- 
- 	.lbr_reset		= intel_pmu_lbr_reset_64,
- 	.lbr_read		= intel_pmu_lbr_read_64,
-+	.lbr_save		= intel_pmu_lbr_save,
-+	.lbr_restore		= intel_pmu_lbr_restore,
- };
- 
- static __initconst const struct x86_pmu intel_pmu = {
-@@ -4029,6 +4031,8 @@ static __initconst const struct x86_pmu intel_pmu = {
- 
- 	.lbr_reset		= intel_pmu_lbr_reset_64,
- 	.lbr_read		= intel_pmu_lbr_read_64,
-+	.lbr_save		= intel_pmu_lbr_save,
-+	.lbr_restore		= intel_pmu_lbr_restore,
- };
- 
- static __init void intel_clovertown_quirk(void)
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index b8943f4..b2b8dc9 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -323,31 +323,13 @@ static inline u64 rdlbr_to(unsigned int idx)
- 	return val;
- }
- 
--static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
-+void intel_pmu_lbr_restore(void *ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct x86_perf_task_context *task_ctx = ctx;
- 	int i;
- 	unsigned lbr_idx, mask;
--	u64 tos;
--
--	if (task_ctx->lbr_callstack_users == 0 ||
--	    task_ctx->lbr_stack_state == LBR_NONE) {
--		intel_pmu_lbr_reset();
--		return;
--	}
--
--	tos = task_ctx->tos;
--	/*
--	 * Does not restore the LBR registers, if
--	 * - No one else touched them, and
--	 * - Did not enter C6
--	 */
--	if ((task_ctx == cpuc->last_task_ctx) &&
--	    (task_ctx->log_id == cpuc->last_log_id) &&
--	    rdlbr_from(tos)) {
--		task_ctx->lbr_stack_state = LBR_NONE;
--		return;
--	}
-+	u64 tos = task_ctx->tos;
- 
- 	mask = x86_pmu.lbr_nr - 1;
- 	for (i = 0; i < task_ctx->valid_lbrs; i++) {
-@@ -368,24 +350,48 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- 	}
- 
- 	wrmsrl(x86_pmu.lbr_tos, tos);
--	task_ctx->lbr_stack_state = LBR_NONE;
- 
- 	if (cpuc->lbr_select)
- 		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
- }
- 
--static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-+static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	unsigned lbr_idx, mask;
--	u64 tos, from;
--	int i;
-+	u64 tos;
- 
--	if (task_ctx->lbr_callstack_users == 0) {
-+	if (task_ctx->lbr_callstack_users == 0 ||
-+	    task_ctx->lbr_stack_state == LBR_NONE) {
-+		intel_pmu_lbr_reset();
-+		return;
-+	}
-+
-+	tos = task_ctx->tos;
-+	/*
-+	 * Does not restore the LBR registers, if
-+	 * - No one else touched them, and
-+	 * - Did not enter C6
-+	 */
-+	if ((task_ctx == cpuc->last_task_ctx) &&
-+	    (task_ctx->log_id == cpuc->last_log_id) &&
-+	    rdlbr_from(tos)) {
- 		task_ctx->lbr_stack_state = LBR_NONE;
- 		return;
- 	}
- 
-+	x86_pmu.lbr_restore(task_ctx);
-+
-+	task_ctx->lbr_stack_state = LBR_NONE;
-+}
-+
-+void intel_pmu_lbr_save(void *ctx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct x86_perf_task_context *task_ctx = ctx;
-+	unsigned lbr_idx, mask;
-+	u64 tos, from;
-+	int i;
-+
- 	mask = x86_pmu.lbr_nr - 1;
- 	tos = intel_pmu_lbr_tos();
- 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
-@@ -400,13 +406,26 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
- 	}
- 	task_ctx->valid_lbrs = i;
- 	task_ctx->tos = tos;
-+
-+	if (cpuc->lbr_select)
-+		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
-+}
-+
-+static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	if (task_ctx->lbr_callstack_users == 0) {
-+		task_ctx->lbr_stack_state = LBR_NONE;
-+		return;
-+	}
-+
-+	x86_pmu.lbr_save(task_ctx);
-+
- 	task_ctx->lbr_stack_state = LBR_VALID;
- 
- 	cpuc->last_task_ctx = task_ctx;
- 	cpuc->last_log_id = ++task_ctx->log_id;
--
--	if (cpuc->lbr_select)
--		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
- }
- 
- void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 312d27f..6d11813 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -695,6 +695,8 @@ struct x86_pmu {
- 
- 	void		(*lbr_reset)(void);
- 	void		(*lbr_read)(struct cpu_hw_events *cpuc);
-+	void		(*lbr_save)(void *ctx);
-+	void		(*lbr_restore)(void *ctx);
- 
- 	/*
- 	 * Intel PT/LBR/BTS are exclusive
-@@ -1090,6 +1092,10 @@ void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc);
- 
- void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc);
- 
-+void intel_pmu_lbr_save(void *ctx);
-+
-+void intel_pmu_lbr_restore(void *ctx);
-+
- void intel_pmu_lbr_init_core(void);
- 
- void intel_pmu_lbr_init_nhm(void);
+The existing LBR capabilities, such as CPL filtering, Branch filtering,
+Call stack, Mispredict information, cycles information, Branch Type
+information, are still kept for Architectural LBRs.
+
+XSAVES and XRSTORS improvements:
+
+In perf with call stack mode, LBR information is used to reconstruct
+a call stack. To get a complete call stack, perf has to save and restore
+all LBR registers during a context switch. However, the number of LBR
+registers is huge. To reduce the overhead, LBR state component is
+introduced with architectural LBR. Perf subsystem will use XSAVES/XRSTORS
+to save/restore LBRs during a context switch.
+
+LBR call stack mode is not always enabled. Perf subsystem only needs to
+save/restore an LBR state on demand. To avoid unnecessary save/restore of
+the LBR state at a context switch, a software concept, dynamic supervisor
+state, is introduced, which
+- does not allocate a buffer in each task->fpu;
+- does not save/restore a state component at each context switch;
+- sets the bit corresponding to a dynamic supervisor feature in
+  IA32_XSS at boot time, and avoids setting it at run time;
+- dynamically allocates a specific buffer for a state component
+  on demand, e.g. only allocate a LBR-specific XSAVE buffer when LBR is
+  enabled in perf. (Note: The buffer has to include the LBR state
+  component, legacy region and XSAVE header.)
+- saves/restores a state component on demand, e.g. manually invoke
+  the XSAVES/XRSTORS instruction to save/restore the LBR state
+  to/from the buffer when perf is active and a call stack is required.
+
+The specification of Architectural LBR can be found in the latest Intel
+Architecture Instruction Set Extensions and Future Features Programming
+Reference, 319433-038.
+
+Kan Liang (23):
+  x86/cpufeatures: Add Architectural LBRs feature bit
+  perf/x86/intel/lbr: Add a function pointer for LBR reset
+  perf/x86/intel/lbr: Add a function pointer for LBR read
+  perf/x86/intel/lbr: Add the function pointers for LBR save and restore
+  perf/x86/intel/lbr: Factor out a new struct for generic optimization
+  perf/x86/intel/lbr: Use dynamic data structure for task_ctx
+  x86/msr-index: Add bunch of MSRs for Arch LBR
+  perf/x86: Expose CPUID enumeration bits for arch LBR
+  perf/x86/intel/lbr: Support LBR_CTL
+  perf/x86/intel/lbr: Unify the stored format of LBR information
+  perf/x86/intel/lbr: Mark the {rd,wr}lbr_{to,from} wrappers
+    __always_inline
+  perf/x86/intel/lbr: Factor out rdlbr_all() and wrlbr_all()
+  perf/x86/intel/lbr: Factor out intel_pmu_store_lbr
+  perf/x86/intel/lbr: Support Architectural LBR
+  perf/core: Factor out functions to allocate/free the task_ctx_data
+  perf/core: Use kmem_cache to allocate the PMU specific data
+  perf/x86/intel/lbr: Create kmem_cache for the LBR context data
+  perf/x86: Remove task_ctx_size
+  x86/fpu: Use proper mask to replace full instruction mask
+  x86/fpu/xstate: Support dynamic supervisor feature for LBR
+  x86/fpu/xstate: Add helpers for LBR dynamic supervisor feature
+  perf/x86/intel/lbr: Support XSAVES/XRSTORS for LBR context switch
+  perf/x86/intel/lbr: Support XSAVES for arch LBR read
+
+ arch/x86/events/core.c              |   2 +-
+ arch/x86/events/intel/core.c        |  18 +
+ arch/x86/events/intel/ds.c          |   4 +-
+ arch/x86/events/intel/lbr.c         | 683 ++++++++++++++++++++++++++++++------
+ arch/x86/events/perf_event.h        | 119 ++++++-
+ arch/x86/include/asm/cpufeatures.h  |   1 +
+ arch/x86/include/asm/fpu/internal.h |  47 +--
+ arch/x86/include/asm/fpu/types.h    |  27 ++
+ arch/x86/include/asm/fpu/xstate.h   |  36 ++
+ arch/x86/include/asm/msr-index.h    |  16 +
+ arch/x86/include/asm/perf_event.h   |  46 ++-
+ arch/x86/kernel/fpu/core.c          |  39 ++
+ arch/x86/kernel/fpu/xstate.c        |  89 ++++-
+ include/linux/perf_event.h          |   5 +-
+ kernel/events/core.c                |  25 +-
+ 15 files changed, 972 insertions(+), 185 deletions(-)
+
 -- 
 2.7.4
 
