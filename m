@@ -2,160 +2,140 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7024DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F38EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CEF207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="p+gagi02"
+	by mail.kernel.org (Postfix) with ESMTP id 354282084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgGCJD4 (ORCPT
+        id S1726418AbgGCJEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:03:56 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:39070 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725764AbgGCJDz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:03:55 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0638w0L1000510;
-        Fri, 3 Jul 2020 02:03:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=a9wF/+uUiRveHVijX6qjBA2kDHqt8RJI3osEo4twyUk=;
- b=p+gagi02dQbAhvZDIeeUFHe9KxHpzMAS+gsJCCawPjrrImKFPnBR9ftOFAeKZRhX+YSc
- G+ZcRjU+Wi6+WtkOvwn09lkggbQpvedjUbwM9LK0iRO4gsvO9tauJuW1U/Y1z1olbJlW
- 0FxyijcJqPVIRSqe36GtIFfRCm9gE0XKj0q4/DodhlWC/4sfl6gV33b2912FoP4D9Ju7
- T5+H5f1VNJf1LVo/45HJ11N1kHt5It+gA5IaAfl/J5Mjt05OtjRVPDO2NR5ytvo6kYkg
- NOTmF3rpzko/5I2wN2idnOBnIkGy+oZ/EmmOLNcZGIUdI16KE/Zu2V3nEX+Trj3ojwq7 Rg== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 31x5mp1475-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 02:03:50 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jul
- 2020 02:03:48 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 3 Jul 2020 02:03:48 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 8DE283F703F;
-        Fri,  3 Jul 2020 02:03:45 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: qed: prevent buffer overflow when collecting debug data
-Date:   Fri, 3 Jul 2020 12:02:58 +0300
-Message-ID: <20200703090258.2076-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_03:2020-07-02,2020-07-03 signatures=0
+        Fri, 3 Jul 2020 05:04:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38702 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725764AbgGCJEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:04:49 -0400
+IronPort-SDR: gOx/e53kru2QXxcGrCkwR5SHVbOdWD8h0ljxwyZ4z9zZw8uJy78Q7gODaakgUf3MKbpussjkDp
+ 1AZkBpFjGLfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212138636"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="212138636"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 02:04:49 -0700
+IronPort-SDR: 7kxNk0o4XkdReLoS7Rl97nsKf0zg7Ab68OgR5Wx67aNMO4qoIBQDUUukFpNPR5EfNPNwg23b7O
+ HMVaUxlgUUVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="267299967"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2020 02:04:44 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Len Brown <lenb@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen Yu <yu.c.chen@intel.com>, Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH] intel_idle: Customize IceLake server support
+Date:   Fri,  3 Jul 2020 17:02:42 +0800
+Message-Id: <20200703090242.5564-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When generating debug dump, driver firstly collects all data in binary
-form, and then performs per-feature formatting to human-readable if it
-is supported.
-The size of the new formatted data is often larger than the raw's. This
-becomes critical when user requests dump via ethtool (-d/-w), as output
-buffer size is strictly determined (by ethtool_ops::get_regs_len() etc),
-as it may lead to out-of-bounds writes and memory corruption.
+On ICX platform, the CPU frequency will slowly ramp up
+when woken up from C-states deeper than/equals to C1E,
+and since C1E auto-promotion is enabled by default,
+this might cause unexpected result.
 
-To not go past initial lengths, add a flag to return original,
-non-formatted debug data, and set it in such cases. Also set data type
-in regdump headers, so userland parsers could handle it.
+Thus this patch disables C1E auto-promotion and expose
+C1E as a separate idle state, so that the C1E and C6 can
+be disabled via sysfs when necessary.
 
-Fixes: c965db444629 ("qed: Add support for debug data collection")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Besides C1 and C1E, the exit latency of C6 was measured
+by a dedicated tool. However the exit latency(41us) exposed
+by _CST is much smaller than the one measured(128us). This
+is probably due to the _CST uses the exit latency when woken
+up from PC0+C6, rather than PC6+C6 when C6 was measured.
+
+Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Acked-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- drivers/net/ethernet/qlogic/qed/qed.h       |  2 ++
- drivers/net/ethernet/qlogic/qed/qed_debug.c | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/idle/intel_idle.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index a49743d56b9c..6c2f9ff4a53e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -876,6 +876,8 @@ struct qed_dev {
- 	struct qed_dbg_feature dbg_features[DBG_FEATURE_NUM];
- 	u8 engine_for_debug;
- 	bool disable_ilt_dump;
-+	bool				dbg_bin_dump;
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index f4495841bf68..1eab606d858b 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -752,6 +752,35 @@ static struct cpuidle_state skx_cstates[] __initdata = {
+ 		.enter = NULL }
+ };
+ 
++static struct cpuidle_state icx_cstates[] __initdata = {
++	{
++		.name = "C1",
++		.desc = "MWAIT 0x00",
++		.flags = MWAIT2flg(0x00),
++		.exit_latency = 1,
++		.target_residency = 1,
++		.enter = &intel_idle,
++		.enter_s2idle = intel_idle_s2idle, },
++	{
++		.name = "C1E",
++		.desc = "MWAIT 0x01",
++		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
++		.exit_latency = 4,
++		.target_residency = 4,
++		.enter = &intel_idle,
++		.enter_s2idle = intel_idle_s2idle, },
++	{
++		.name = "C6",
++		.desc = "MWAIT 0x20",
++		.flags = MWAIT2flg(0x20) | CPUIDLE_FLAG_TLB_FLUSHED,
++		.exit_latency = 128,
++		.target_residency = 384,
++		.enter = &intel_idle,
++		.enter_s2idle = intel_idle_s2idle, },
++	{
++		.enter = NULL }
++};
 +
- 	DECLARE_HASHTABLE(connections, 10);
- 	const struct firmware		*firmware;
+ static struct cpuidle_state atom_cstates[] __initdata = {
+ 	{
+ 		.name = "C1E",
+@@ -1056,6 +1085,12 @@ static const struct idle_cpu idle_cpu_skx __initconst = {
+ 	.use_acpi = true,
+ };
  
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index 81e8fbe4a05b..cb80863d5a77 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -7506,6 +7506,12 @@ static enum dbg_status format_feature(struct qed_hwfn *p_hwfn,
- 	if (p_hwfn->cdev->print_dbg_data)
- 		qed_dbg_print_feature(text_buf, text_size_bytes);
- 
-+	/* Just return the original binary buffer if requested */
-+	if (p_hwfn->cdev->dbg_bin_dump) {
-+		vfree(text_buf);
-+		return DBG_STATUS_OK;
-+	}
++static const struct idle_cpu idle_cpu_icx __initconst = {
++	.state_table = icx_cstates,
++	.disable_promotion_to_c1e = true,
++	.use_acpi = true,
++};
 +
- 	/* Free the old dump_buf and point the dump_buf to the newly allocagted
- 	 * and formatted text buffer.
- 	 */
-@@ -7733,7 +7739,9 @@ int qed_dbg_mcp_trace_size(struct qed_dev *cdev)
- #define REGDUMP_HEADER_SIZE_SHIFT		0
- #define REGDUMP_HEADER_SIZE_MASK		0xffffff
- #define REGDUMP_HEADER_FEATURE_SHIFT		24
--#define REGDUMP_HEADER_FEATURE_MASK		0x3f
-+#define REGDUMP_HEADER_FEATURE_MASK		0x1f
-+#define REGDUMP_HEADER_BIN_DUMP_SHIFT		29
-+#define REGDUMP_HEADER_BIN_DUMP_MASK		0x1
- #define REGDUMP_HEADER_OMIT_ENGINE_SHIFT	30
- #define REGDUMP_HEADER_OMIT_ENGINE_MASK		0x1
- #define REGDUMP_HEADER_ENGINE_SHIFT		31
-@@ -7771,6 +7779,7 @@ static u32 qed_calc_regdump_header(struct qed_dev *cdev,
- 			  feature, feature_size);
- 
- 	SET_FIELD(res, REGDUMP_HEADER_FEATURE, feature);
-+	SET_FIELD(res, REGDUMP_HEADER_BIN_DUMP, 1);
- 	SET_FIELD(res, REGDUMP_HEADER_OMIT_ENGINE, omit_engine);
- 	SET_FIELD(res, REGDUMP_HEADER_ENGINE, engine);
- 
-@@ -7794,6 +7803,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		omit_engine = 1;
- 
- 	mutex_lock(&qed_dbg_lock);
-+	cdev->dbg_bin_dump = true;
- 
- 	org_engine = qed_get_debug_engine(cdev);
- 	for (cur_engine = 0; cur_engine < cdev->num_hwfns; cur_engine++) {
-@@ -7993,6 +8003,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		       QED_NVM_IMAGE_MDUMP, "QED_NVM_IMAGE_MDUMP", rc);
- 	}
- 
-+	cdev->dbg_bin_dump = false;
- 	mutex_unlock(&qed_dbg_lock);
- 
- 	return 0;
+ static const struct idle_cpu idle_cpu_avn __initconst = {
+ 	.state_table = avn_cstates,
+ 	.disable_promotion_to_c1e = true,
+@@ -1110,6 +1145,7 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
+ 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&idle_cpu_bxt),
 -- 
-2.25.1
+2.17.1
 
