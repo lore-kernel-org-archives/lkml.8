@@ -2,185 +2,81 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE550C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F49D21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276E22192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UxWfa4HS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bvB//3vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgGCWag (ORCPT
+        id S1726766AbgGCWbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 18:30:36 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:45110 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgGCWaf (ORCPT
+        Fri, 3 Jul 2020 18:31:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35838 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgGCWbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 18:30:35 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jrUCR-000708-Gl; Fri, 03 Jul 2020 16:30:27 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jrUCQ-0005eV-HO; Fri, 03 Jul 2020 16:30:27 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-        <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
-        <87eepwzqhd.fsf@x220.int.ebiederm.org>
-        <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
-        <87pn9euks9.fsf@x220.int.ebiederm.org>
-        <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
-        <87h7upucqi.fsf@x220.int.ebiederm.org>
-        <d0266a24-dfab-83d0-e178-aa67c9f5ebc0@i-love.sakura.ne.jp>
-Date:   Fri, 03 Jul 2020 17:25:49 -0500
-In-Reply-To: <d0266a24-dfab-83d0-e178-aa67c9f5ebc0@i-love.sakura.ne.jp>
-        (Tetsuo Handa's message of "Fri, 3 Jul 2020 22:19:17 +0900")
-Message-ID: <87lfk0nslu.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 3 Jul 2020 18:31:03 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593815461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e6HM5KalB3cdRfA4Hps7INNFh9eeE6yz+RhORK/ferw=;
+        b=UxWfa4HS6S7NQAyS/jMl4fjxbcCv1prvRSCKbsDllp1+dzc5z4T7inYWBkJ3FhkaGfHaTZ
+        vAGLgP5gEjwFC1sgShElbTjfY3RehAdz/I6E1I+msYo1HdhV615kK2pihe8pCXeOFCgX9E
+        WONDkzZJl/h8MJnEGa00LKFRZ09tDewa4sRXfvLgaYEAaDe0ATeTslGCTtHWH9CNJoVLkl
+        62KdtDowVoLPx/rBXkQleegbyC+nJxPWzpcyu6WdZgfHKU6pXPFzpUBtldeZBQuvTSrj0p
+        EV6miUZEF3v9PMDvUvKVJnZHJUh9rLNxNz7hdtwPUXED6ouA+tE72u89gRISxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593815461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e6HM5KalB3cdRfA4Hps7INNFh9eeE6yz+RhORK/ferw=;
+        b=bvB//3vcFyKBqGU4jVbTlAhUCfJaMSN/jkN+tpi1wI9XzIYrvfyn0Bmgf8ATogOTaNPtl2
+        DSyT7KFiHbveqTBg==
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     X86 ML <x86@kernel.org>
+Subject: Re: FSGSBASE seems to be busted on Xen PV
+In-Reply-To: <e78d2ee5-66cf-2ed8-c04f-71dd92efdfe1@citrix.com>
+References: <CALCETrVfi1Rnt5nnrHNivdxE7MqRPiLXvon4-engqo=LCKiojA@mail.gmail.com> <e78d2ee5-66cf-2ed8-c04f-71dd92efdfe1@citrix.com>
+Date:   Sat, 04 Jul 2020 00:31:00 +0200
+Message-ID: <87eepss02j.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1jrUCQ-0005eV-HO;;;mid=<87lfk0nslu.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19gJkekNuulipNZ4g9GUrgrQKnIVKDpx4I=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
-
-> On 2020/07/02 22:08, Eric W. Biederman wrote:
->>> By the way, commit 4a9d4b024a3102fc ("switch fput to task_work_add") says
->>> that use of flush_delayed_fput() has to be careful. Al, is it safe to call
->>> flush_delayed_fput() from blob_to_mnt() from umd_load_blob() (which might be
->>> called from both kernel thread and from process context (e.g. init_module()
->>> syscall by /sbin/insmod )) ?
->> 
->> And __fput_sync needs to be even more careful.
->> umd_load_blob is called in these changes without any locks held.
+Andrew Cooper <andrew.cooper3@citrix.com> writes:
+> On 03/07/2020 18:10, Andy Lutomirski wrote:
+>> If you can't get this fixed in upstream Xen reasonably quickly, we may
+>> need to disable FSGSBASE in a Xen PV guest in Linux.
 >
-> But where is the guarantee that a thread which called flush_delayed_fput() waits for
-> the completion of processing _all_ "struct file" linked into delayed_fput_list ?
-> If some other thread or delayed_fput_work (scheduled by fput_many()) called
-> flush_delayed_fput() between blob_to_mnt()'s fput(file) and flush_delayed_fput()
-> sequence? blob_to_mnt()'s flush_delayed_fput() can miss the "struct file" which
-> needs to be processed before execve(), can't it?
-
-As a module the guarantee is we call task_work_run.
-Built into the kernel the guarantee as best I can trace it is that
-kthreadd hasn't started, and as such nothing that is scheduled has run
-yet.
-
-> Also, I don't know how convoluted the dependency of all "struct file" linked into
-> delayed_fput_list might be, for there can be "struct file" which will not be a
-> simple close of tmpfs file created by blob_to_mnt()'s file_open_root() request.
+> This has come up several times before, but if its actually breaking
+> userspace then Xen needs to change.
 >
-> On the other hand, although __fput_sync() cannot be called from !PF_KTHREAD threads,
-> there is a guarantee that __fput_sync() waits for the completion of "struct file"
-> which needs to be flushed before execve(), isn't there?
+> I'll see about making something which is rather more robust.
 
-There is really not a good helper or helpers, and this code suggests we
-have something better.  Right now I have used the existing helpers to
-the best of my ability.  If you or someone else wants to write a better
-version of flushing so that exec can happen be my guest.
+You mean disabling XEN PV completely? That would be indeed very robust
+and allows us to get rid of lots of obscure code. Feel free to add my
+Acked-by :)
 
-As far as I can tell what I have is good enough.
+Thanks,
 
->> We fundamentally AKA in any correct version of this code need to flush
->> the file descriptor before we call exec or exec can not open it a
->> read-only denying all writes from any other opens.
->> 
->> The use case of flush_delayed_fput is exactly the same as that used
->> when loading the initramfs.
->
-> When loading the initramfs, the number of threads is quite few (which
-> means that the possibility of hitting the race window and convoluted
-> dependency is small).
-
-But the reality is the code run very early, before the initramfs is
-initialized in practice.
-
-> But like EXPORT_SYMBOL_GPL(umd_load_blob) indicates, blob_to_mnt()'s
-> flush_delayed_fput() might be called after many number of threads already
-> started running.
-
-At which point the code probably won't be runnig from a kernel thread
-but instead will be running in a thread where task_work_run is relevant.
-
-At worst it is a very small race, where someone else in another thread
-starts flushing the file.  Which means the file could still be
-completely close before exec.   Even that is not necessarily fatal,
-as the usermode driver code has a respawn capability.
-
-Code that is used enough that it hits that race sounds like a very
-good problem to have from the perspective of the usermode driver code.
-
-> Do we really need to mount upon umd_load_blob() and unmount upon umd_unload_blob() ?
-> LSM modules might prefer only one instance of filesystem for umd
-> blobs.
-
-It is simple. People are free to change it, but a single filesystem
-seems like a very good place to start with this functionality.
-
-> For pathname based LSMs, since that filesystem is not visible from mount tree, only
-> info->driver_name can be used for distinction. Therefore, one instance of filesystem
-> with files created with file_open_root(O_CREAT | O_WRONLY | O_EXCL)
-> might be preferable.
-
-I took a quick look and the creation and removal of files with the
-in-kernel helpers is not particularly easy.  Certainly it is more work
-and thus a higher likelyhood of bugs than what I have done.
-
-A directory per driver does sound tempting.  Just more work that I am
-willing to do.
-
-> For inode based LSMs, reusing one instance of filesystem created upon early boot might
-> be convenient for labeling.
->
-> Also, we might want a dedicated filesystem (say, "umdfs") instead of regular tmpfs in
-> order to implement protections without labeling files. Then, we might also be able to
-> implement minimal protections without LSMs.
-
-All valid points.  Nothing sets this design in stone.
-Nothing says this is the endpoint of the evolution of this code.
-
-The entire point of this patchset for me is that I remove the
-unnecessary special cases from exec and do_exit, so I don't have to deal
-with the usermode driver code anymore.
-
-Eric
+        tglx
