@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E333C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB189207E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF55F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgGCCG2 (ORCPT
+        id S1726169AbgGCCGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:06:28 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46867 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbgGCCGS (ORCPT
+        Thu, 2 Jul 2020 22:06:24 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:50766 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726032AbgGCCGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:06:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U1WwZ34_1593741975;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1WwZ34_1593741975)
+        Thu, 2 Jul 2020 22:06:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U1X8AZ._1593741976;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1X8AZ._1593741976)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jul 2020 10:06:15 +0800
+          Fri, 03 Jul 2020 10:06:16 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
 To:     rostedt@goodmis.org, mingo@redhat.com
 Cc:     linux-kernel@vger.kernel.org,
         Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: [PATCH 3/5] tracing: save one trace_event->type by using __TRACE_LAST_TYPE
-Date:   Fri,  3 Jul 2020 10:06:10 +0800
-Message-Id: <20200703020612.12930-3-richard.weiyang@linux.alibaba.com>
+Subject: [PATCH 4/5] tracing: use NULL directly to create root level tracefs
+Date:   Fri,  3 Jul 2020 10:06:11 +0800
+Message-Id: <20200703020612.12930-4-richard.weiyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200703020612.12930-1-richard.weiyang@linux.alibaba.com>
 References: <20200703020612.12930-1-richard.weiyang@linux.alibaba.com>
@@ -42,38 +42,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Static defined trace_event->type stops at (__TRACE_LAST_TYPE - 1) and
-dynamic trace_event->type starts from (__TRACE_LAST_TYPE + 1).
+tracing_init_dentry() has two types of return value:
 
-To save one trace_event->type index, let's use __TRACE_LAST_TYPE.
+  * NULL if succeed
+  * IS_ERR() if failed
+
+If the function return error, the following check would return from the
+function. So we are sure d_tracer passed in here is NULL.
+
+This is a preparation for following cleanup.
 
 Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 ---
- kernel/trace/trace_output.c | 4 ++--
+ kernel/trace/trace_events.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b704b3ef4264..818f0c9d10c5 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -20,7 +20,7 @@ DECLARE_RWSEM(trace_event_sem);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index f6f55682d3e2..8b3aa57dcea6 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3446,7 +3446,7 @@ __init int event_trace_init(void)
+ 	if (IS_ERR(d_tracer))
+ 		return 0;
  
- static struct hlist_head event_hash[EVENT_HASHSIZE] __read_mostly;
+-	entry = tracefs_create_file("available_events", 0444, d_tracer,
++	entry = tracefs_create_file("available_events", 0444, NULL,
+ 				    tr, &ftrace_avail_fops);
+ 	if (!entry)
+ 		pr_warn("Could not create tracefs 'available_events' entry\n");
+@@ -3457,7 +3457,7 @@ __init int event_trace_init(void)
+ 	if (trace_define_common_fields())
+ 		pr_warn("tracing: Failed to allocate common fields");
  
--static int next_event_type = __TRACE_LAST_TYPE + 1;
-+static int next_event_type = __TRACE_LAST_TYPE;
+-	ret = early_event_add_tracer(d_tracer, tr);
++	ret = early_event_add_tracer(NULL, tr);
+ 	if (ret)
+ 		return ret;
  
- enum print_line_t trace_print_bputs_msg_only(struct trace_iterator *iter)
- {
-@@ -675,7 +675,7 @@ static LIST_HEAD(ftrace_event_list);
- static int trace_search_list(struct list_head **list)
- {
- 	struct trace_event *e;
--	int next = __TRACE_LAST_TYPE + 1;
-+	int next = __TRACE_LAST_TYPE;
- 
- 	if (list_empty(&ftrace_event_list)) {
- 		*list = &ftrace_event_list;
 -- 
 2.20.1 (Apple Git-117)
 
