@@ -2,250 +2,121 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE86EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0128D206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBFC206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOjpfDnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgGCHn4 (ORCPT
+        id S1726505AbgGCHn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:43:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11644 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgGCHnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:43:52 -0400
-IronPort-SDR: KA+Xs+hbJMaabQ6zTRtuBJku/AO4SVjvF7JJYaQykWowl1Jy8slVWDFv2bVyazsugS8K8go5qh
- RcvEIowvQhbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="135389433"
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="135389433"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:43:51 -0700
-IronPort-SDR: k50JRPDidDd44Syss+uY6Td3LNhfXXMH1gg2a5WOkxgfkrXD/bs33TfwFp70OcOB0bpDWIo1uY
- k8obntHKymdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="313257995"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 03 Jul 2020 00:43:51 -0700
-Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 7BFAE580784;
-        Fri,  3 Jul 2020 00:43:49 -0700 (PDT)
-Subject: [PATCH v9 05/15] perf evlist: implement control command handling
- functions
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 3 Jul 2020 03:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgGCHn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:43:57 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F37C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:43:57 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m22so4357537pgv.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YMA1iG2DR+aP68KXSdCOsvrFA0oomq7Nb72Iy6OynAc=;
+        b=eOjpfDnUhW2ER3jbX+CxmRW1kTHS4ha9+B04YjM9WkSWY+zXrVbJT2nho+GrVniC88
+         BnCjbPqTEu6VpWFtFGMj8bLBasFsETuYhAbwBNQCzQFS7/Vb+t1pLMbXFG835Zj+IsRL
+         0W4UyF6ZzUUbTTsMtdXLYyxRplXcQDfKVICAn/Few/slDEK1DkowMQLsI/xXyPvDgh5c
+         l5elsPzMyrdTcr9fRdsfHJcByOUqB70ZECB//QgmXcR/LBlYIPBy314lkiaUv/SDGmeh
+         hiuDlBOP9XLlVd7AXYw11Cei7ORRt06qDlfLL14hhhgAbJmIEOQbm9V+1tOSQeCRD51I
+         TVvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YMA1iG2DR+aP68KXSdCOsvrFA0oomq7Nb72Iy6OynAc=;
+        b=BMpKpLoO0OaQhiAmzPMqOYwallHr/tei0YheaRcp1WZOVkHHBr2jhrMuuFGT6lLp7O
+         nLHPPm2c93E3tf3S3joYcmiNa6Md1Wk4aZgh1OUfmbRREd20J2BLlwaP7M6br61ch/rs
+         77Izi6F/3bZ0c/BSjA2lq100b05L9t4FMIJ3MgltO1395/flOyip5nqK8O+TrY7j1yzZ
+         o85mxUVcOdilksLvOXOh5aeNk5FZqgh9yPvhV7F3vxg2p6k7tvOzVWwIQHCacc/mPnZW
+         wRv1byojkzQWp2aggGC0UrN55VmgiSRTEXK///U9wblhORMkkR6HroM9ymK8HaWbeePR
+         JMmA==
+X-Gm-Message-State: AOAM5338fByE2Kba0AovQ57vLPJcAYOErRAuMCELqy+Gq0+9YG355mUQ
+        tAJjZjNcas6Ua8CxEEIAjl02aA==
+X-Google-Smtp-Source: ABdhPJxs34VyOJKNvK67gXc9kQBjJa6obMlUr6G9NDi43bUnL4tffZoy9+osusLsDh0iM0haQ0giAQ==
+X-Received: by 2002:a65:63c4:: with SMTP id n4mr15600593pgv.230.1593762236641;
+        Fri, 03 Jul 2020 00:43:56 -0700 (PDT)
+Received: from localhost ([122.172.40.201])
+        by smtp.gmail.com with ESMTPSA id 73sm10987491pfy.24.2020.07.03.00.43.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jul 2020 00:43:55 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 13:13:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <bb5a8e97-ab15-41fa-99f2-dc781d4ddc71@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:43:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [FOR-STABLE-3.9+] sched/rt: Show the 'sched_rr_timeslice'
+ SCHED_RR timeslice tuning knob in milliseconds
+Message-ID: <20200703074354.btmylgn5mxhbxywc@vireshk-i7>
+References: <ffdfb849a11b9cd66e0aded2161869e36aec7fc0.1593757471.git.viresh.kumar@linaro.org>
+ <20200703074025.GA2390868@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703074025.GA2390868@kroah.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03-07-20, 09:40, Greg KH wrote:
+> On Fri, Jul 03, 2020 at 12:54:04PM +0530, Viresh Kumar wrote:
+> > From: Shile Zhang <shile.zhang@nokia.com>
+> > 
+> > We added the 'sched_rr_timeslice_ms' SCHED_RR tuning knob in this commit:
+> > 
+> >   ce0dbbbb30ae ("sched/rt: Add a tuning knob to allow changing SCHED_RR timeslice")
+> > 
+> > ... which name suggests to users that it's in milliseconds, while in reality
+> > it's being set in milliseconds but the result is shown in jiffies.
+> > 
+> > This is obviously confusing when HZ is not 1000, it makes it appear like the
+> > value set failed, such as HZ=100:
+> > 
+> >   root# echo 100 > /proc/sys/kernel/sched_rr_timeslice_ms
+> >   root# cat /proc/sys/kernel/sched_rr_timeslice_ms
+> >   10
+> > 
+> > Fix this to be milliseconds all around.
+> > 
+> > Cc: <stable@vger.kernel.org> # v3.9+
+> > Signed-off-by: Shile Zhang <shile.zhang@nokia.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Mike Galbraith <efault@gmx.de>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Link: http://lkml.kernel.org/r/1485612049-20923-1-git-send-email-shile.zhang@nokia.com
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> What is the git commit id of this patch in Linus's tree?
 
-Implement functions of initialization, finalization and processing
-of control command messages coming from control file descriptors.
-Allocate control file descriptor as descriptor at struct pollfd
-object of evsel_list for atomic poll() operation.
+I am really sorry for missing the only thing I was required to do :(
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/evlist.c | 134 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  17 +++++
- 2 files changed, 151 insertions(+)
+commit 975e155ed8732cb81f55c021c441ae662dd040b5 upstream.
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ee545a122b52..bd0b2efa2e4a 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1714,3 +1714,137 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 	}
- 	return leader;
- }
-+
-+int evlist__initialize_ctlfd(struct evlist *evlist, int fd, int ack)
-+{
-+	if (fd == -1) {
-+		pr_debug("Control descriptor is not initialized\n");
-+		return 0;
-+	}
-+
-+	evlist->ctl_fd.pos = perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN,
-+						     fdarray_prop__nonfilterable);
-+	if (evlist->ctl_fd.pos < 0) {
-+		evlist->ctl_fd.pos = -1;
-+		pr_err("Failed to add ctl fd entry: %m\n");
-+		return -1;
-+	}
-+
-+	evlist->ctl_fd.fd = fd;
-+	evlist->ctl_fd.ack = ack;
-+
-+	return 0;
-+}
-+
-+int evlist__finalize_ctlfd(struct evlist *evlist)
-+{
-+	struct pollfd *entries = evlist->core.pollfd.entries;
-+
-+	if (evlist->ctl_fd.pos == -1)
-+		return 0;
-+
-+	entries[evlist->ctl_fd.pos].fd = -1;
-+	entries[evlist->ctl_fd.pos].events = 0;
-+	entries[evlist->ctl_fd.pos].revents = 0;
-+
-+	evlist->ctl_fd.pos = -1;
-+	evlist->ctl_fd.ack = -1;
-+	evlist->ctl_fd.fd = -1;
-+
-+	return 0;
-+}
-+
-+static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
-+			      char *cmd_data, size_t data_size)
-+{
-+	int err;
-+	char c;
-+	size_t bytes_read = 0;
-+
-+	memset(cmd_data, 0, data_size--);
-+
-+	do {
-+		err = read(evlist->ctl_fd.fd, &c, 1);
-+		if (err > 0) {
-+			if (c == '\n' || c == '\0')
-+				break;
-+			cmd_data[bytes_read++] = c;
-+			if (bytes_read == data_size)
-+				break;
-+		} else {
-+			if (err == -1)
-+				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd.fd);
-+			break;
-+		}
-+	} while (1);
-+
-+	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
-+		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
-+
-+	if (err > 0) {
-+		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
-+			     (sizeof(EVLIST_CTL_CMD_ENABLE_TAG)-1))) {
-+			*cmd = EVLIST_CTL_CMD_ENABLE;
-+		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
-+				    (sizeof(EVLIST_CTL_CMD_DISABLE_TAG)-1))) {
-+			*cmd = EVLIST_CTL_CMD_DISABLE;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static int evlist__ctlfd_ack(struct evlist *evlist)
-+{
-+	int err;
-+
-+	if (evlist->ctl_fd.ack == -1)
-+		return 0;
-+
-+	err = write(evlist->ctl_fd.ack, EVLIST_CTL_CMD_ACK_TAG,
-+		    sizeof(EVLIST_CTL_CMD_ACK_TAG));
-+	if (err == -1)
-+		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd.ack);
-+
-+	return err;
-+}
-+
-+int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
-+{
-+	int err = 0;
-+	char cmd_data[EVLIST_CTL_CMD_MAX_LEN];
-+	int ctlfd_pos = evlist->ctl_fd.pos;
-+	struct pollfd *entries = evlist->core.pollfd.entries;
-+
-+	if (ctlfd_pos == -1 || !entries[ctlfd_pos].revents)
-+		return 0;
-+
-+	if (entries[ctlfd_pos].revents & POLLIN) {
-+		err = evlist__ctlfd_recv(evlist, cmd, cmd_data,
-+					 EVLIST_CTL_CMD_MAX_LEN);
-+		if (err > 0) {
-+			switch (*cmd) {
-+			case EVLIST_CTL_CMD_ENABLE:
-+				evlist__enable(evlist);
-+				break;
-+			case EVLIST_CTL_CMD_DISABLE:
-+				evlist__disable(evlist);
-+				break;
-+			case EVLIST_CTL_CMD_ACK:
-+			case EVLIST_CTL_CMD_UNSUPPORTED:
-+			default:
-+				pr_debug("ctlfd: unsupported %d\n", *cmd);
-+				break;
-+			}
-+			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
-+				evlist__ctlfd_ack(evlist);
-+		}
-+	}
-+
-+	if (entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
-+		evlist__finalize_ctlfd(evlist);
-+	else
-+		entries[ctlfd_pos].revents = 0;
-+
-+	return err;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 2caf19fb87a8..7e7abc621366 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -359,4 +359,21 @@ void perf_evlist__force_leader(struct evlist *evlist);
- struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
- 						 struct evsel *evsel,
- 						bool close);
-+#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
-+#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
-+#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
-+
-+#define EVLIST_CTL_CMD_MAX_LEN 64
-+
-+enum evlist_ctl_cmd {
-+	EVLIST_CTL_CMD_UNSUPPORTED = 0,
-+	EVLIST_CTL_CMD_ENABLE,
-+	EVLIST_CTL_CMD_DISABLE,
-+	EVLIST_CTL_CMD_ACK
-+};
-+
-+int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
-+int evlist__finalize_ctlfd(struct evlist *evlist);
-+int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
-+
- #endif /* __PERF_EVLIST_H */
 -- 
-2.24.1
-
-
+viresh
