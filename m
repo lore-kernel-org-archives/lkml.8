@@ -2,109 +2,79 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A818DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E0820782
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:34:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593808498;
-	bh=AH0GTCbSop8eZujnaf/Z85LbZvsVu310x9dmthGY7qo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mMyhPI3LlvUcl6wfnMTs7z6INqQLgkYptsuMZHciYzfzWZUbZ+aHBgaVUn7fpifEB
-	 nN7bFsfK9F8NOPdE5or82n2mqjHke+GELOiSfTojykjtjyPwmkzKOsAo0O4zdf1wvr
-	 NzagUrdIUf4VGSs41SKIuhNU291q5oB3GjnnTcyA=
+	by mail.kernel.org (Postfix) with ESMTP id D796C20884
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A52+28Ey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGCUev (ORCPT
+        id S1726826AbgGCUvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 16:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgGCUeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 16:34:50 -0400
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA09B208B8;
-        Fri,  3 Jul 2020 20:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593808490;
-        bh=AH0GTCbSop8eZujnaf/Z85LbZvsVu310x9dmthGY7qo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BFUne6XCpVnoyuqdrs3695kjpBOdZDUJ6qdF/ujE3reI8k51V2jxyLOZHtrVSH6NE
-         HCzS8dlXg8SxwgXOHxM889bNowfBijmo7DGGxDxEZgASlaJuI7nQ446I+kOoyfDIWk
-         O6rM8YRYO+CSSymMjoDVm5bN03/DwHRpUzfG77Bg=
-Received: by mail-lj1-f172.google.com with SMTP id f5so22503272ljj.10;
-        Fri, 03 Jul 2020 13:34:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533G/p/QIL90dAuvzMwW4ug2D5vFtkPh4nE2ayjeS5dG6qf9u09V
-        9z8BndmUCeha6Uc2O72HsLDf1scGy3Czjy6GgY8=
-X-Google-Smtp-Source: ABdhPJzJ1IRgn3b/usnN9r+/avS3HfXMB23+RrbrqwAzGjub3iwXzVKFekPat3URzO7ASd63Wf+D4X6k3nsjOOsLpuc=
-X-Received: by 2002:a2e:88c6:: with SMTP id a6mr16546043ljk.27.1593808488121;
- Fri, 03 Jul 2020 13:34:48 -0700 (PDT)
+        Fri, 3 Jul 2020 16:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgGCUvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 16:51:23 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A06C061794;
+        Fri,  3 Jul 2020 13:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=9vglfDNb8sJvxMdBu5yH0RgAYAdcTUlgWbZL6Tj+A58=; b=A52+28EypBEZGuTr7BP7GqEsyl
+        tWOvIpH4YqJ2Orzr9AyvRhaGaiFwmeDK76FvJLi97P/3NSbraERU7QttmCB//ksQlRPHZxqLzK+eY
+        HlvfsnszrcoxKJJwzQFOjys9QDNM6PiNv9K0rGKlqBwhXot7byBPIvcYizHFwWftv/ICSURzKQYjD
+        V8EcFQY4l7jN1JC8Da7v4vk/425QDmvcKgN2XijhaXVIWnYYKOAU5j1pLqNaU3YB2YMapwwIKMuXk
+        Z6L7h8iCvCHxZkFf0TXQaLI8AHU47Y9S9vBVQk++9htorQyKc0B7sqqEARuMSZpo+yvM0joIM0O8o
+        S7b6347Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrSeT-0001yn-JD; Fri, 03 Jul 2020 20:51:18 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: [PATCH 0/3] Documentation: arm64: eliminate duplicated words
+Date:   Fri,  3 Jul 2020 13:51:07 -0700
+Message-Id: <20200703205110.29873-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200703100810.12304-1-cw00.choi@samsung.com> <CGME20200703095657epcas1p187b7f90a4a33da7791a83a78760f3a91@epcas1p1.samsung.com>
- <20200703100810.12304-3-cw00.choi@samsung.com> <6027cf29-ea6f-0a27-3e39-a80c24b80bb8@gmail.com>
-In-Reply-To: <6027cf29-ea6f-0a27-3e39-a80c24b80bb8@gmail.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sat, 4 Jul 2020 05:34:11 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH1uWaSHW5+URTj3SjvxRRZqF9WtMfofe+8X7BHCrk3R0g@mail.gmail.com>
-Message-ID: <CAGTfZH1uWaSHW5+URTj3SjvxRRZqF9WtMfofe+8X7BHCrk3R0g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PM / devfreq: Add governor flags to clarify the features
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>, lukasz.luba@arm.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        jonathanh@nvidia.com, Abel Vesa <abel.vesa@nxp.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Drop doubled words in Documentation/arm64/.
 
-On Fri, Jul 3, 2020 at 7:46 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 03.07.2020 13:08, Chanwoo Choi =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra3=
-0-devfreq.c
-> > index e94a27804c20..620ecd250d7c 100644
-> > --- a/drivers/devfreq/tegra30-devfreq.c
-> > +++ b/drivers/devfreq/tegra30-devfreq.c
-> > @@ -765,10 +765,12 @@ static int tegra_governor_event_handler(struct de=
-vfreq *devfreq,
-> >
-> >  static struct devfreq_governor tegra_devfreq_governor =3D {
-> >       .name =3D "tegra_actmon",
-> > +     .flag =3D DEVFREQ_GOV_FLAG_ATTR_COMMON
-> > +             | DEVFREQ_GOV_FLAG_ATTR_POLLING_INTERVAL,
->
-> Hello, Chanwoo!
->
-> There is a typo here, it should be ".attr =3D ".
 
-Ah. Sorry. After changed the name, I didn't test COMPILE_TEST.
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Dave Martin <Dave.Martin@arm.com>
 
->
-> > +     .flag =3D DEVFREQ_GOV_FLAG_FLAG_IMMUTABLE,
-> > +             | DEVFREQ_GOV_FLAG_FLAG_IRQ_DRIVEN,
->
-> There is a typo here too FLAG_FLAG ^
-
-Thanks.
-
---=20
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+ Documentation/arm64/acpi_object_usage.rst |    2 +-
+ Documentation/arm64/arm-acpi.rst          |    2 +-
+ Documentation/arm64/sve.rst               |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
