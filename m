@@ -2,283 +2,136 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F665C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C7E20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF5420674
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="FFDA2TjL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LZOMf0ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgGCDr4 (ORCPT
+        id S1726196AbgGCDs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:47:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61509 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbgGCDr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:47:56 -0400
-IronPort-SDR: XfM7A3AEY2xfrxmhfjmrEsWUvldkCw52mPk1l/MJ7cZSSeA0WMR53cJG/fu4wBVobLGxL0bBrT
- h+bYmJKgbKEg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165143696"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="165143696"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 20:47:55 -0700
-IronPort-SDR: NHlSew2WVAObW6PUwpn6BR0RxDE1nGnYjgIdOYdNI1WXq5+oDDCQbOcMtLaDy2Co6qcqvr2Rz0
- X7Fqr/X9QAaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="322296027"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga007.jf.intel.com with ESMTP; 02 Jul 2020 20:47:55 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jul 2020 20:47:54 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX159.amr.corp.intel.com (10.22.240.24) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jul 2020 20:47:54 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 2 Jul 2020 20:47:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CxIQqYduZOymK5ePbSS7KZ7f5J+RI3oMI/5CwLZf5Yxa78/uLO6r01pQeq+xADoA6Yna9T9KxZfxlD1vsd2evGgjJpMoqYiS3/foAD++m2brpY0t23FK18bXDsQOJKLFg4e9Ql9AtvQCkMC26aq9+1ZcvWePKOkYZReJqJqL2cVP9oOJQi/N6pw1HN2+3DL7ZRrtPPJBAgvKr9wOoy0W6sgLghzkHGCzGJLpVHEBmVs+4iIQ8hJtqQN5r3akCnqVJ9FVFuKhYP2FvHNa/MOYlbycbrikCWr2jWdOIhaa6OoLRx4VCeV87mw2HOsDMY1foqNoK52qACCdPq5XbinFfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPCx35ypU/85vmciz/rik3BuObPJp1GVePHAzBnEGyY=;
- b=HP5ZV31+T+v4+4Zeibb3bVUCtk2hfLvBOT7LRX6GIbS8GLdUwRO7QFITJyUxYnDWqEH8kp7LuIHUFRiM1LR5sg1rjUDXEEx/EzC6uhsUE/Jxqoa4SCzur+SFRWnzJRj2TYdFE92iVbKg1hyqjzQ6eMSICSGtjTtdr5Z1k39cueCv8C67mTAyfE7xadgq5x+uKJLmLv1pKQA5lJcrH68ofVRuA3+8xGwOjLlOq6dKnZmrZrFkXmLk072B6drMbJuatVS0Cix9hhTgoBqFm6Z2XuZBHgjizkJZ3CDuGErXQSgDzHvSBynXccIp7MvEvBBhL87BHT7tGPGcZlG+SF71cQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPCx35ypU/85vmciz/rik3BuObPJp1GVePHAzBnEGyY=;
- b=FFDA2TjLycvLM3jcAMoClv0fycT6Pmeq2TDRBKgR0X9bp36lcadP0StvlH/6erhKKthQZP8GRGgzNzLtfdvZiQroxfVtxQ3A8Kuzuz8hMMPsthYHOcehcwvrTrndltBLqKt+7Pf+H0NMZ78WpF4DSi3MX+lPMfXA7OldTmGSn/U=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB4076.namprd11.prod.outlook.com (2603:10b6:5:197::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.28; Fri, 3 Jul 2020 03:47:53 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.033; Fri, 3 Jul 2020
- 03:47:53 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 10/14] vfio/type1: Allow invalidating first-level/stage
- IOMMU cache
-Thread-Topic: [PATCH v3 10/14] vfio/type1: Allow invalidating
- first-level/stage IOMMU cache
-Thread-Index: AQHWSgRSMvsXtUpGHUCWFHE3eZ3aa6j02QoAgABsIQA=
-Date:   Fri, 3 Jul 2020 03:47:52 +0000
-Message-ID: <DM5PR11MB1435819B92E97F5EC08EBC17C36A0@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-11-git-send-email-yi.l.liu@intel.com>
- <20200702151958.430a979d@x1.home>
-In-Reply-To: <20200702151958.430a979d@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 204832c0-9804-4b19-d5ac-08d81f03dd53
-x-ms-traffictypediagnostic: DM6PR11MB4076:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB407642678A229D9BD1A313C9C36A0@DM6PR11MB4076.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W5BJfzt/O7qE6xXgtyIG0n3aCLyMaBmzH83cc7yLAXLbZyyACFo7MvgrJYQ9WJOfYNhHjcWBY+EDB9INSXLAtGOH+8OJ2yZiTeQbu9w6eM2Wb+ziML3J3WgiEWj5SVmBwQQ3EE/TCiDfYCIPSv0Q1telGjQ4uzfEpHKC1sTApCR9b3HE3Jom0bprQ/rjUlOH1XktjHpLXITPpKyzhg+80pzZ/S1mC4+B3s5tYy832x3y1tF+vkNOJvzgBbH44QPKz07GA285LowfvbEmhZxu9rQsgduMFXbW9rVapJO3TSE1eYmD/as9knWZtEWZaXfUgZA0FhVVzRtHk3wGlV1gkg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(52536014)(7696005)(186003)(76116006)(2906002)(54906003)(86362001)(66476007)(5660300002)(316002)(66946007)(478600001)(33656002)(66446008)(64756008)(66556008)(6506007)(26005)(8676002)(6916009)(8936002)(83380400001)(7416002)(55016002)(71200400001)(9686003)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: n3CDPsyNqjYNAgCE94TlALuXwAWh5fw6+K788pkVt5GvaxAmq48ZLWYACmP2W9gOYjhHN1+eiH1reqly1Xh8rE6P3TKPJa+svc+l+ZLZ2EAIft3cRY3HMpRzC9TaBl+M7KaYqFPCC/PY8dLcrexlZBVKI4/XVIgTLk/IRGeKmq1eDIDoBKYqiLNbHSGnsZMvyxxYA8e4HFPD6ThItRsgnGEymVYEaSHosG8PJvBSICUvh1JkBBwUp6HSq7MQkFxQNIkM9vZ1+BNWaY9vq+Xq/172zMKoUB1Aa/sh24uQgajS6tKQ3bOPkv0kkYw4OXhHjnKgCfkzl9TlWhPpSCJWtImrtJVVeRT9T0r6wJ4hx4zDBdNIW2u02wn+obvpZmqSDq24ahAkfLYXeqdCLTHmOGJVdg6vM9l8B7YLywpsQDMf/YFO5wK8Jso27q3u3OwGZ1qYRWZD3S/MVCqDxanHYPd0X8Cq3Zt4lB+3NA7MBzwAQNTXefGZVg14RJubtYUv
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Jul 2020 23:48:27 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:15665 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgGCDs1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:48:27 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200703034824epoutp04f43ce522e1e445af0ea3be3f7564a276~eIXULQznD0995309953epoutp042
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 03:48:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200703034824epoutp04f43ce522e1e445af0ea3be3f7564a276~eIXULQznD0995309953epoutp042
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593748104;
+        bh=9M/jRjyxIXIkR1YB5wepBcKlizq7fz3fWUwETG8pLLQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=LZOMf0rue4NRALRmaEvk18X4XT2z0GvPJWqJ2uFCp6K9zwC+H/0jFsgZkKGjdUtFF
+         srzEGYXT36fT725OaF4Vg2/mcyllPXwht6YIj9aUGEX+zBZblfiKmUOYqyB7g9uCOf
+         4uLK5M5Y2SDdkAf8iRztk0eHtpugJ5ZZX/EZPuAo=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200703034824epcas1p15cfac27f72276e148bef37419348b1dd~eIXThD6U-2607726077epcas1p11;
+        Fri,  3 Jul 2020 03:48:24 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49ygsy4yWRzMqYkk; Fri,  3 Jul
+        2020 03:48:22 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8F.C3.28578.68AAEFE5; Fri,  3 Jul 2020 12:48:22 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200703034821epcas1p34be0eecdeb0fe1143cc21216504d276f~eIXRl7cCL1577515775epcas1p3_;
+        Fri,  3 Jul 2020 03:48:21 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200703034821epsmtrp26ef4b00445db63759e094d93f68b8ae2~eIXRk1myM1054010540epsmtrp2Z;
+        Fri,  3 Jul 2020 03:48:21 +0000 (GMT)
+X-AuditID: b6c32a39-8dfff70000006fa2-bc-5efeaa861924
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9F.9E.08382.58AAEFE5; Fri,  3 Jul 2020 12:48:21 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200703034821epsmtip1cd2e670501a613b10a8a6f02d2c45dbf~eIXRZLDwV2880628806epsmtip1v;
+        Fri,  3 Jul 2020 03:48:21 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <000001d65069$3a78c5f0$af6a51d0$@samsung.com>
+Subject: RE: [PATCH v2] exfat: optimize exfat_zeroed_cluster()
+Date:   Fri, 3 Jul 2020 12:48:21 +0900
+Message-ID: <003b01d650ec$cbeab970$63c02c50$@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 204832c0-9804-4b19-d5ac-08d81f03dd53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 03:47:52.9817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: la1GVbMa3ImeL5r6UEAuuOgJE6vFWWTLLh8Kclc3Y/2i+zKKD/IJ2i6RN8KJL2qCUMAPrPXYLE6B6lvD58XHGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4076
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIesF+OtlZHZt+xlFHZAmUunjWjpQK9BQUgA5/FWZioMZJeQA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmnm7bqn9xBo8aVC1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
+        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
+        0MDAyBSoMiEn48eiScwFi5kqZmwwbmB8z9jFyMkhIWAiceJOO2sXIxeHkMAORolPP5aygiSE
+        BD4xSrSvcoJIfGOU+LrsMjNMx7trdxkhivYySqy8oAJR9JJR4vuZaywgCTYBXYl/f/azgdgi
+        AtESx3acZwQpYha4wijx4NEsJpAEp4CVxM0zL8DWCQvYSdzufQTWzCKgInHn9x6wZl4BS4kV
+        DftZIWxBiZMzn4DVMAvIS2x/OwfqIgWJn0+XAdVwAC1zkmh7Fg5RIiIxu7ONGWSvhMBMDolT
+        e2eyQ9S7SOxbeY4NwhaWeHV8C1RcSuLzu71sIHMkBKolPu6HGt/BKPHiuy2EbSxxc/0GsFXM
+        ApoS63fpQ4QVJXb+nssIsZZP4t3XHlaIKbwSHW1CECWqEn2XDjNB2NISXe0f2CcwKs1C8tcs
+        JH/NQvLALIRlCxhZVjGKpRYU56anFhsWmCLH9CZGcCLVstzBOP3tB71DjEwcjIcYJTiYlUR4
+        E1T/xQnxpiRWVqUW5ccXleakFh9iNAWG9ERmKdHkfGAqzyuJNzQ1MjY2tjAxMzczNVYS53Wy
+        vhAnJJCeWJKanZpakFoE08fEwSnVwMT1skR7afnxW5Yfg9bwavrpZ29fVOz/Y0aywLvKMwp3
+        dqk5H9kg4/WzesbTtzdUzsXEm2XWhG01+MC5crG2r3uPRtAD/3O94lPMb97b8sDq4JeZv7uS
+        eJuWt76UPVeo+CFz7v8jF5/wPVnpumrrEgb3/TKbmpfWv1C8vz39s8ORytg94Xvt9bQVL2ps
+        q87vuVC/a/VTsa3BDDL3z8s3C0veeflgxuVTVicTz0X19p7eu7r1044nbI9+mlwVXLJHWPkc
+        d7zJ9tRJJ3Tmxe+ylXGobNU5sPaEUvDXbRH7a354zpoU0+ZtuKn0joQAa1VEFqtazyWziX9f
+        t9+ZKdxqbDZDJVLtmeznNfeEJGdzVSorsRRnJBpqMRcVJwIAzf8+Sy0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJTrd11b84g3VLTC1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBbFZZOSmpNZllqkb5fAlfFj0STmgsVMFTM2GDcwvmfsYuTkkBAwkXh37S6QzcUh
+        JLCbUWLz5fesEAlpiWMnzjB3MXIA2cIShw8XQ9Q8Z5Roa/kBVsMmoCvx789+NhBbRCBa4urf
+        vywgNrPANUaJ79OzIRp2MEoc/QqxjVPASuLmmRdgzcICdhK3ex+BNbAIqEjc+b0HbBCvgKXE
+        iob9rBC2oMTJmU+ghmpL9D5sZYSw5SW2v53DDHGogsTPp8tYQQ4VEXCSaHsWDlEiIjG7s415
+        AqPwLCSTZiGZNAvJpFlIWhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAiOKi3N
+        HYzbV33QO8TIxMF4iFGCg1lJhDdB9V+cEG9KYmVValF+fFFpTmrxIUZpDhYlcd4bhQvjhATS
+        E0tSs1NTC1KLYLJMHJxSDUwu/3mnJfFM7d97Y+HuO4pmxzXzqptd3922UOHOuWrFeXpPqdSS
+        yY4zDkzd9upS3hZr5RRnziamMOm7jYfVdhasrlhTlsC+4ZT0mR8q+6J6Wk2qcy/6fvf9qPBK
+        a0XRw8P///GasKgo25wpv64Q5MbNOzH32YrZ8Q8uBS02f/U08Frw0Q1C2ZGat2ccqTl/qDL6
+        kY6cq8quKZFWL8JV4ifv2jmVb/LXolP1CSuXsW2T+idVmNtvt3ZpzDULHanfklfmvFh8Y8Lp
+        PW5dovxXXG8XzrrYaPIt6dQUC8WnqkcC2EJCP3SsCXzms1VpvuD3VtM+Y6Y3yfNqpy9zsT4+
+        oy/h8OOUmjfp8zKamrdVVIcrsRRnJBpqMRcVJwIAxMpAExkDAAA=
+X-CMS-MailID: 20200703034821epcas1p34be0eecdeb0fe1143cc21216504d276f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200624023050epcas1p1f794fee8957367322d27f828aead2ebc
+References: <CGME20200624023050epcas1p1f794fee8957367322d27f828aead2ebc@epcas1p1.samsung.com>
+        <20200624023041.30247-1-kohada.t2@gmail.com>
+        <000001d65069$3a78c5f0$af6a51d0$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Williamson < alex.williamson@redhat.com >
-> Sent: Friday, July 3, 2020 5:20 AM
->=20
-> On Wed, 24 Jun 2020 01:55:23 -0700
-> Liu Yi L <yi.l.liu@intel.com> wrote:
->=20
-> > This patch provides an interface allowing the userspace to invalidate
-> > IOMMU cache for first-level page table. It is required when the first
-> > level IOMMU page table is not managed by the host kernel in the nested
-> > translation setup.
+> > Replace part of exfat_zeroed_cluster() with exfat_update_bhs().
+> > And remove exfat_sync_bhs().
 > >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> > v1 -> v2:
-> > *) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
-> > *) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
-> > *) vfio_dev_cache_inv_fn() always successful
-> > *) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse
-> VFIO_IOMMU_NESTING_OP
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 52
-> +++++++++++++++++++++++++++++++++++++++++
-> >  include/uapi/linux/vfio.h       |  3 +++
-> >  2 files changed, 55 insertions(+)
-> >
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c index 5926533..4c21300 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -3080,6 +3080,53 @@ static long vfio_iommu_handle_pgtbl_op(struct
-> vfio_iommu *iommu,
-> >  	return ret;
-> >  }
-> >
-> > +static int vfio_dev_cache_invalidate_fn(struct device *dev, void
-> > +*data) {
-> > +	struct domain_capsule *dc =3D (struct domain_capsule *)data;
-> > +	unsigned long arg =3D *(unsigned long *) dc->data;
-> > +
-> > +	iommu_cache_invalidate(dc->domain, dev, (void __user *) arg);
-> > +	return 0;
-> > +}
-> > +
-> > +static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
-> > +					unsigned long arg)
-> > +{
-> > +	struct domain_capsule dc =3D { .data =3D &arg };
-> > +	struct vfio_group *group;
-> > +	struct vfio_domain *domain;
-> > +	int ret =3D 0;
-> > +	struct iommu_nesting_info *info;
-> > +
-> > +	mutex_lock(&iommu->lock);
-> > +	/*
-> > +	 * Cache invalidation is required for any nesting IOMMU,
-> > +	 * so no need to check system-wide PASID support.
-> > +	 */
-> > +	info =3D iommu->nesting_info;
-> > +	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
-> > +		ret =3D -ENOTSUPP;
-> > +		goto out_unlock;
-> > +	}
-> > +
-> > +	group =3D vfio_find_nesting_group(iommu);
-> > +	if (!group) {
-> > +		ret =3D -EINVAL;
-> > +		goto out_unlock;
-> > +	}
-> > +
-> > +	domain =3D list_first_entry(&iommu->domain_list,
-> > +				      struct vfio_domain, next);
-> > +	dc.group =3D group;
-> > +	dc.domain =3D domain->domain;
-> > +	iommu_group_for_each_dev(group->iommu_group, &dc,
-> > +				 vfio_dev_cache_invalidate_fn);
-> > +
-> > +out_unlock:
-> > +	mutex_unlock(&iommu->lock);
-> > +	return ret;
-> > +}
-> > +
-> >  static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
-> >  					unsigned long arg)
-> >  {
-> > @@ -3102,6 +3149,11 @@ static long vfio_iommu_type1_nesting_op(struct
-> vfio_iommu *iommu,
-> >  	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
-> >  		ret =3D vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
-> >  		break;
-> > +	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
-> > +	{
-> > +		ret =3D vfio_iommu_invalidate_cache(iommu, arg + minsz);
-> > +		break;
-> > +	}
->=20
->=20
-> Why the {} brackets?  Thanks,
-
-should be removed. will do it.
-
-Regards,
-Yi Liu
-
-> Alex
->=20
->=20
-> >  	default:
-> >  		ret =3D -EINVAL;
-> >  	}
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 2c9def8..7f8678e 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -1213,6 +1213,8 @@ struct vfio_iommu_type1_pasid_request {
-> >   * +-----------------+-----------------------------------------------+
-> >   * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
-> >   *
-> > +-----------------+-----------------------------------------------+
-> > + * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
-> > + *
-> > + +-----------------+-----------------------------------------------+
-> >   *
-> >   * returns: 0 on success, -errno on failure.
-> >   */
-> > @@ -1225,6 +1227,7 @@ struct vfio_iommu_type1_nesting_op {
-> >
-> >  #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
-> >  #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
-> > +#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
-> >
-> >  #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE,
-> VFIO_BASE + 19)
-> >
+> > Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+> 
+> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+> 
+> Looks good. Thanks.
+Pushed it into exfat #dev.
+Thanks!
 
