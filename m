@@ -2,75 +2,71 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A10FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03412C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1BD207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA7E207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Laus+5j3"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Xld7pf9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGCIID (ORCPT
+        id S1726488AbgGCIIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
+        Fri, 3 Jul 2020 04:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgGCIHp (ORCPT
+        with ESMTP id S1726022AbgGCIIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:07:45 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2019AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 01:07:45 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so31125561wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 01:07:45 -0700 (PDT)
+        Fri, 3 Jul 2020 04:08:49 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B0CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 01:08:49 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m22so4386794pgv.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 01:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LrAaYs53s/z1iv5bVLRtnzC+1Oun/iXiyK2qaKijDuU=;
-        b=Laus+5j3YNevclRYYUCi4YVDK91XWl8BUwxhii80Ed/v0IggUlAan8JZ4E8+3CFXli
-         X3Cygr/7qIG41o4kOs9ipx+mQpAjiaxoWIYVeZ0ZNDopMdGXNycAi4MNSdDBi7UybeX2
-         JYBvxGgGQXs+jSZYUdf7eYviqIag8z5oU68CnZFA+EOCqnurd+VJK46c6jAAtJz1wtxC
-         EwKSuQZl49S+L4VGV8Q9qdtb+7Y+w4BeRCXqvUuiciKd1JXZam39V/Y1W3M0D0UOYsnL
-         yw+yGjxKoyJI6iQlxzTVYDBQsBysHuz4Ip5U3FzVra5M8WnW/ITD/PoOKyBcv3hcAcVV
-         9rvA==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LopYcBReotgDbclY6Ugi+8EmAR3M5tNcqkkP14Z9nTg=;
+        b=Xld7pf9N8UfN4jsDJAe6Hh2FF4L9lb6K+ue4w+tAfAhL+MRotWDvoia9rVLGVgyso8
+         Koy0WouCABcH6Jl10YYmNuAkOXiCVECGQMRRftSQk6+AD/5ItW45Y2TqY/pZhzXEo0KP
+         Izu+ASc4AJ13gdCQnkXVZ+YIw7JbOY87mwwejNf0jXfz8v+Bbdah8qavy6oaSkaMZlCX
+         LJ/vQGOCgCdYUuSaS1dALl/gL3sMNJyDfJhMvj1hUF/2FHHr8UUVDCfez4C2jrQNWEJK
+         Se2c/f20NK8h9rEY3y2QKS5xqaNS7+Z62CoCG833UHCFYEm8lNyi6dsC4ct03KlyiJCX
+         ecyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LrAaYs53s/z1iv5bVLRtnzC+1Oun/iXiyK2qaKijDuU=;
-        b=ZHwQuJFEearL5ikSV0GIdHD7jVYMy/aWNO98ocLM3qHY1yOTbnHjq2/h7JXOMfteWR
-         GCojNl06FYKhkYOcwALelqd68lAzssmo2Y7gxUA2+1lN+7NqQVfZ/458y0Z4gWZrYA51
-         Z+dybpMKVAY8kSj0wHEips52BQTsLJooMUnNicQkXbr/93/9x1s8sj8qkAi9D+EtU8ew
-         dt/vr184doP/Kr9QKbmLPZ/nsTnv3d+uJgoeUa0pciK5xXiqJTUTP6GhJDvmbcKFfWnX
-         c2awPMuw4yuwt/IwhLKyHSHaJoDrrrzmCpS9HwuQykq/T3XHomj6V0DeFrY0Drvyadlt
-         wn+w==
-X-Gm-Message-State: AOAM532AyGd4Tje7X4AycWrzxtQG8YWXHj415FKiS8O4EenGvZeE46sC
-        HAzN+GK67bLbJvgxuw46DW+Dlw==
-X-Google-Smtp-Source: ABdhPJzX5k1i5r8s9fDNvSWDNAPPRelDlrCD79abcF4sbtYxOfHwj8r0iEmeXN9k9vmXsKp9KAMilw==
-X-Received: by 2002:a1c:2906:: with SMTP id p6mr35885064wmp.68.1593763663665;
-        Fri, 03 Jul 2020 01:07:43 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:6959:e617:6562:cabf])
-        by smtp.gmail.com with ESMTPSA id 1sm12682403wmf.0.2020.07.03.01.07.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LopYcBReotgDbclY6Ugi+8EmAR3M5tNcqkkP14Z9nTg=;
+        b=KlLWcS3YvqG+UiFvr5ewNXAio2x7ATk0KfULaorZxjcAYzCJzU1QsA454VhVK//afu
+         SIGDUy3Oe0ZP2+fbzHbHz31MXUlMcAIZ8hrGOLVhSwalwQc8EwFP6kQ7NW11F4Hc1Bm5
+         gLl7ml24LjmlzBEJjUNECJ0J9SB8wDcrv1M32qHEwxln5rpTzE72ZKSqAGQtUKlNbUNJ
+         yfBGsdWsn5lwDcsvY3iDxoFlw295OL97JG1g2OP1sbx0eGUIDxjnN9sywwBsNzWgr27u
+         3vrN4Pk0qGEqsCJRWtDUnvKx4yfZn6ZqPIv3AJ1Ovmdk3qqKe51qk9848ZzcND4JrmP1
+         A0cg==
+X-Gm-Message-State: AOAM532DPNfpN60JgaOX0LKnIYgPFKvnjWZI3C39QVLdf6+GNS9s+3f2
+        f4JVKPD6J7QjJQ9UF0Eipa3CzcwOYxQ=
+X-Google-Smtp-Source: ABdhPJwnYnV9njrlub0/lwcAaqAnvuBLHb2JW8nngjF9lqyE5Ss1u8InN5KxnculbcWRKRVlJn1kGA==
+X-Received: by 2002:a62:c584:: with SMTP id j126mr8539951pfg.213.1593763729126;
+        Fri, 03 Jul 2020 01:08:49 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id n63sm11079988pfd.209.2020.07.03.01.08.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 01:07:42 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
-Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v9 4/6] drm/meson: overlay: setup overlay for Amlogic FBC Memory Saving mode
-Date:   Fri,  3 Jul 2020 10:07:26 +0200
-Message-Id: <20200703080728.25207-5-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200703080728.25207-1-narmstrong@baylibre.com>
-References: <20200703080728.25207-1-narmstrong@baylibre.com>
+        Fri, 03 Jul 2020 01:08:48 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     joe@perches.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH] scripts/Lindent: increase the maximum line length to 100
+Date:   Fri,  3 Jul 2020 16:08:44 +0800
+Message-Id: <050476a0ee608046569588936394159d650ab535.1593763492.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,84 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup the Amlogic FBC decoder for the VD1 video overlay plane to use
-a different superblock size for the Memory Saving mode.
+As the patch 'bdc48fa11e46 ("checkpatch/coding-style: deprecate
+80-column warning")', increase the default limit to 100 characters,
+we also increase the maximum line length to 100 for indent script.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- drivers/gpu/drm/meson/meson_overlay.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ scripts/Lindent | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index 293f606ba164..1566a887d482 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -486,6 +486,10 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 					  AFBC_HOLD_LINE_NUM(8) |
- 					  AFBC_BURST_LEN(2);
+diff --git a/scripts/Lindent b/scripts/Lindent
+index 1688c44c2df6..11f14a4f2048 100755
+--- a/scripts/Lindent
++++ b/scripts/Lindent
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
  
-+		if (fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC(0,
-+						AMLOGIC_FBC_OPTION_MEM_SAVING))
-+			priv->viu.vd1_afbc_mode |= AFBC_BLK_MEM_MODE;
-+
- 		priv->viu.vd1_afbc_en = 0x1600 | AFBC_DEC_ENABLE;
+-PARAM="-npro -kr -i8 -ts8 -sob -l80 -ss -ncs -cp1"
++PARAM="-npro -kr -i8 -ts8 -sob -l100 -ss -ncs -cp1"
  
- 		priv->viu.vd1_afbc_conv_ctrl = AFBC_CONV_LBUF_LEN(256);
-@@ -671,12 +675,17 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 	}
- 
- 	if (priv->viu.vd1_afbc) {
-+		/* Default mode is 4k per superblock */
-+		unsigned long block_size = 4096;
- 		unsigned long body_size;
- 
--		/* Default mode is 4k per superblock */
-+		/* 8bit mem saving mode is 3072bytes per superblock */
-+		if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
-+			block_size = 3072;
-+
- 		body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
- 			    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
--			    4096;
-+			    block_size;
- 
- 		priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
- 
-@@ -734,6 +743,9 @@ static bool meson_overlay_format_mod_supported(struct drm_plane *plane,
- 		unsigned int layout = modifier &
- 			DRM_FORMAT_MOD_AMLOGIC_FBC(
- 				__fourcc_mod_amlogic_layout_mask, 0);
-+		unsigned int options =
-+			(modifier >> __fourcc_mod_amlogic_options_shift) &
-+			__fourcc_mod_amlogic_options_mask;
- 
- 		if (format != DRM_FORMAT_YUV420_8BIT &&
- 		    format != DRM_FORMAT_YUV420_10BIT) {
-@@ -748,6 +760,13 @@ static bool meson_overlay_format_mod_supported(struct drm_plane *plane,
- 			return false;
- 		}
- 
-+		if (options &&
-+		    options != AMLOGIC_FBC_OPTION_MEM_SAVING) {
-+			DRM_DEBUG_KMS("%llx invalid layout %x\n",
-+				      modifier, layout);
-+			return false;
-+		}
-+
- 		return true;
- 	}
- 
-@@ -781,6 +800,8 @@ static const uint32_t supported_drm_formats[] = {
- };
- 
- static const uint64_t format_modifiers[] = {
-+	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_BASIC,
-+				   AMLOGIC_FBC_OPTION_MEM_SAVING),
- 	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_BASIC, 0),
- 	DRM_FORMAT_MOD_LINEAR,
- 	DRM_FORMAT_MOD_INVALID,
+ RES=`indent --version | cut -d' ' -f3`
+ if [ "$RES" = "" ]; then
 -- 
-2.22.0
+2.27.0
 
