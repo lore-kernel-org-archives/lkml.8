@@ -2,148 +2,457 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A66AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A7C20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A2F20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VujydwWY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGunTuFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgGCMZq (ORCPT
+        id S1726291AbgGCM14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:25:46 -0400
-Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:32903
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbgGCMZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:25:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KISnJZAD3dt2ctIK72hUbLB7kA2RdjjR7h2cvytfftybTHbRQTUzhU6IIs1adP81R7aKXPoTI0wdM7QgvEf85zFcfrnEfRGwfGIohT7a8Z0+0df9h+RWWRts6+bghDAkf+WUFbPgO5q59KxIrnBoG2Vtt0voPoJTWjvgL9yYef/uqpOm4DYmgdLipwnrZWEm6C41XrxLX94hHHqlQxacB6YqTCKgNf4FQZOCjBATmt9DPZNOMvSLy/HLgjuVsuVJ74R+angFNyDHq25owLbJo0KMjvlUs0drHyZ5r+oMoVcmHnaQ2As2Iu2hDM+QeCdOOgudmHimNvDJDHxOktwT1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rAnxmv0gifNu+EdEzoGFUwOj40qZa2qTIFDHaF5GV6s=;
- b=ClxlVu9dAvB4ltm5VOGFQJy8RoLmW87vV+b+sEpGjJDkJvYw4j3xvXgNmZLuBCJQzyqWkG24sBeU2gY0B+SwncrHNily060AEem3cak2yQofUBYgXXcP8hzYorJQtA/KElJH0T+nvvatwC2jzzuFNt9Qo3fs3QxiqxXUvITPKb0NTxNiAScaCSIbhT/XEx1rFu0oRf9/S92CswHNnOL2+ABj2MB/DXaoVMNbuXVLUnV7mTCmGnh3V1gisUage6SwWNj0uFSyVvMHqum00jWdXsnztxGw+nDha14zAIpDJKlsNdJMck1sSMlKrI3h9aMhEA+Zzv0PeDABQGWmLr7lGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rAnxmv0gifNu+EdEzoGFUwOj40qZa2qTIFDHaF5GV6s=;
- b=VujydwWY8h34Hmy4/I2o/ZKTwr4GxeumnvJbEcGVbdwVxijtbcvGmyRtfyBQOXCoZxq6q+E3X5JKdKpCn6ZSN09KwUkGkG6AjaZ6+y85aF8J1D/uVvBIEWitUDFxotAZDx3um9db+zyS+2PpX50IhTUe92ky9xSfZqJ143fozhg=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0401MB2536.eurprd04.prod.outlook.com (2603:10a6:4:36::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27; Fri, 3 Jul
- 2020 12:25:40 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3131.034; Fri, 3 Jul 2020
- 12:25:40 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "info@metux.net" <info@metux.net>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "git@andred.net" <git@andred.net>, Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "cphealy@gmail.com" <cphealy@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alison Wang <alison.wang@nxp.com>
-Subject: RE: [PATCH V3 0/3] ARM: imx: move cpu code to drivers/soc/imx
-Thread-Topic: [PATCH V3 0/3] ARM: imx: move cpu code to drivers/soc/imx
-Thread-Index: AQHWLmwVB15qTPGFOECbIUd7NuMlQaj10h0AgAA6/5A=
-Date:   Fri, 3 Jul 2020 12:25:40 +0000
-Message-ID: <DB6PR0402MB27604DD8AF73824C3972BC90886A0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1589953889-30955-1-git-send-email-peng.fan@nxp.com>
- <fd6a7452-25f6-4ced-7b3f-4aa92388ad09@nxp.com>
-In-Reply-To: <fd6a7452-25f6-4ced-7b3f-4aa92388ad09@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [49.73.172.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 51560536-1402-4b05-d697-08d81f4c330b
-x-ms-traffictypediagnostic: DB6PR0401MB2536:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB2536A6D7B719653BCDB2AF5C886A0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UzzVkRdV1LHWCwW/T8fjn3Os83TZIA3nFH7h2UEU/plqYDsxWa0yAH6FMC+3N0yCoIYPAFiwWmZ4dKV2hA99DCuHiY2lStWNBps1Od7LJUfIqXBiIDofxwZe21SrzWI7rq7cDJeNax8Yo+zRd5bm5/XuEkoPPlQvBr6omOgkxUgv2doNW8NpZE7mtRULb5R63oMWKoxLB3Dx5eKu739Zj8VCBtvMIGacc4/3N/j9H99tQZ1I8rpC8KR0npAIs/lK5xKuM6IolyUBjOxikmTM02F2ZQvym4u983K/MffixVQyShrafZ3BL17q7SdvWda0EzBTUvKh4b2QHJbmQv8En0zGl7grPA+sS2eGzWUz2jd3QNmn35CQ0gM7nIUVRNRUUsQ4QTsCGEvXvebpEcxYqA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(186003)(6506007)(26005)(55016002)(76116006)(9686003)(71200400001)(4326008)(53546011)(66556008)(64756008)(66446008)(33656002)(2906002)(66946007)(44832011)(66476007)(5660300002)(316002)(966005)(52536014)(7696005)(478600001)(54906003)(110136005)(86362001)(8936002)(7416002)(8676002)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2qISt5sus51smqIewGBzhRqfd3qf1Tnw0V0RmMaBZa7T2Xqrc/QhvL79BcPZfMaO3jLj+c3FMZrdyq90MlwSWxpDRn/Q9w/2SEACSwZ8R+RF3uFa8NSx4ietypENV+ixmQn0bEJLRKfHcRuFaMpTCl8WXsKyABLQ0fkPbyPatje2xaIpxsDsJYZ3kKveLfWv4PXnaPGJHCZ3zp1woS0TvM1DOIrYH0GgLwIiPWB6W0dt3S5aIv21WrLyKi0n1KgxW9iTk+dQ1jiAZfs811goBVQgUggx9TXHbjidYqiBSqDykgrpa9/Ay95+dCrxCHJDST2hXh6kRABdtDZEFPz89Htf6JJW9ax+mLlYU5Rr8YkpD5Eb3/CmY/9lpvnVLDw55GBrE1491uSrBqMiyTqCkxwOyoHnm3ZVyphZvA0RoIic6urV22lZwgPiuVU4mWJxOqJQTanIGO9BKBkXlc1Law7FaRiJt8SwO5Mw5nG+LmQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 3 Jul 2020 08:27:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54429 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726108AbgGCM1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:27:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593779273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k8FsKINI339UZrU/oISxQvJFnsDPNC351mA1ujb4MAM=;
+        b=iGunTuFOUfbdMoPIc0meJOBeQig+dpoJrVMNLibW74egaNouTyPPEl9TA16mvh7HDUAHXZ
+        qVs9FgYJP6ZJvvNc4/9MYc+RW5EV7OdtrVbwFkkv0zLtt6T7wfqLueCibG74xIifTfPhp2
+        ijSCwzw9I5yzCtrIZaWpoODon/QRctQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-f5P9q1RpP020SACtZi65Hw-1; Fri, 03 Jul 2020 08:27:51 -0400
+X-MC-Unique: f5P9q1RpP020SACtZi65Hw-1
+Received: by mail-wm1-f69.google.com with SMTP id o13so34827089wmh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 05:27:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k8FsKINI339UZrU/oISxQvJFnsDPNC351mA1ujb4MAM=;
+        b=LWRKZuhH9j3dj7JURutaOjlGOF/JsZPYCsLvDGoVGo8SQTfIypEJx0Xt/A/OFdrfBI
+         rb7VvhWowCu2XihjkjTiG3Czsmqv9RLMFkO08dIg8+Ys3JB+r+K4Fk9vUrvDdTZqlrM5
+         inFQPEK12sWnYaGqE1NHfh2o1V4NFv3iCYuILXKkH4Q10O6ObAiRykymJiioigsjkP53
+         6C28kpuRxyX6TyVVGJnX7ifVK6JHqpNW0FycMjeCG35Dk4QE9E/eXsbmcdTVREJqjScJ
+         b6WwI1tHkTDFWx7U3YOf/40qT/EinjnRFstUDAwH9G5zY8pKQy6haCSxBo4j3ptC8vL0
+         VF7Q==
+X-Gm-Message-State: AOAM530plIRrBHQX+9ik0GyyKYMRFO1VCDjE9uel8Uunkqx+F2fl+plC
+        iBI7MFxCgispFnoHDdNhcO5LNnmbz3r6BQPdLlZxbat/GdHx5lPI67Wo/ToRryPX4tkQ+NY7AQX
+        NqjV1tgPtvjyVSHKia2oIx7jO
+X-Received: by 2002:a5d:5587:: with SMTP id i7mr35121927wrv.314.1593779270175;
+        Fri, 03 Jul 2020 05:27:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyacO7Cnh24I5mFjgVYuy1Gs64LAoxkwJjvoTKZD1wTJ5/lk9xQhXJ7xx8dV5f/m/xhVnZ7NA==
+X-Received: by 2002:a5d:5587:: with SMTP id i7mr35121877wrv.314.1593779269672;
+        Fri, 03 Jul 2020 05:27:49 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id u8sm13357771wrt.28.2020.07.03.05.27.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 05:27:49 -0700 (PDT)
+Subject: Re: [PATCH v3] HID: i2c-hid: Enable touchpad wakeup from
+ Suspend-to-Idle
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        Pavel Balan <admin@kryma.net>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200618145515.5055-1-kai.heng.feng@canonical.com>
+ <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
+ <FAF68BF5-FCBC-4D08-AF0F-98EEA209BB86@canonical.com>
+ <1f96c309-cd64-6b84-1240-e67849637a50@redhat.com>
+ <791C12EA-2A27-4BB1-9754-61C2198E7C27@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3eafb89f-b711-0505-e7a7-a84d2901c57a@redhat.com>
+Date:   Fri, 3 Jul 2020 14:27:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51560536-1402-4b05-d697-08d81f4c330b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 12:25:40.5815
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r7gUU2/55O5Bnm07G2S94XUNAEIeBb4LtC6uSIF9WCHIj6O1vNShyf+piA+lBcmvTVsBB+Fpmq2nvHO3oCZwIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2536
+In-Reply-To: <791C12EA-2A27-4BB1-9754-61C2198E7C27@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDAvM10gQVJNOiBpbXg6IG1vdmUgY3B1IGNvZGUgdG8g
-ZHJpdmVycy9zb2MvaW14DQo+IA0KPiBPbiA1LzIwLzIwMjAgOTowMSBBTSwgUGVuZyBGYW4gd3Jv
-dGU6DQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4NCj4gPiBWMzoN
-Cj4gPiAgUmViYXNlZCB0byBsYXRlc3QgbmV4dCB0cmVlDQo+ID4gIFJlc29sdmVkIHRoZSBjb25m
-bGljdHMgd2l0aCB2ZjYxMCBzb2MgcGF0Y2gNCj4gPg0KPiA+IFYyOg0KPiA+ICBLZWVwIGkuTVgx
-LzIvMy81IGNwdSB0eXBlIGZvciBjb21wbGV0bmVzcyAgQ29ycmVjdCByZXR1cm4gdmFsdWUgaW4N
-Cj4gPiBwYXRjaCAxLzMgIHVzZSBDT05GSUdfQVJNIHRvIGd1YXJkIGNvbXBpbGUgc29jLWlteC5j
-IGluIHBhdGNoIDMvMw0KPiA+DQo+ID4gVjE6DQo+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9jb3Zlci8xMTQzMzY4OS8NCj4gPiBSRkMgdmVyc2lvbiA6DQo+ID4gaHR0cHM6Ly9wYXRj
-aHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMTMzNjQzMy8NCj4gPg0KPiA+IE5vdGhpbmcgY2hhbmdl
-ZCBpbiB2MSwganVzdCByZW5hbWUgdG8gZm9ybWFsIHBhdGNoZXMNCj4gPg0KPiA+IFNoYXduLA0K
-PiA+ICBUaGUgb3JpZ2luYWwgY29uY2VybiBoYXMgYmVlbiBlbGltaW5hdGVkIGluIFJGQyBkaXNj
-dXNzaW9uLCAgc28gdGhpcw0KPiA+IHBhdGNoc2V0IGlzIHJlYWR5IHRvIGJlIGluIG5leHQuDQo+
-ID4gVGhhbmtzLg0KPiA+DQo+ID4gRm9sbG93IGkuTVg4LCBtb3ZlIHRoZSBzb2MgZGV2aWNlIHJl
-Z2lzdGVyIGNvZGUgdG8gZHJpdmVycy9zb2MvaW14IHRvDQo+ID4gc2ltcGxpZnkgYXJjaC9hcm0v
-bWFjaC1pbXgvY3B1LmMNCj4gPg0KPiA+IEkgcGxhbm5lZCB0byB1c2Ugc2ltaWxhciBsb2dpYyBh
-cyBzb2MtaW14OG0uYyB0byByZXN0cnVjdHVyZSBzb2MtaW14LmMNCj4gPiBhbmQgbWVyZ2VkIHRo
-ZSB0d28gZmlsZXMgaW50byBvbmUuIEJ1dCBub3Qgc3VyZSwgc28gc3RpbGwga2VlcCB0aGUNCj4g
-PiBsb2dpYyBpbiBjcHUuYy4NCj4gPg0KPiA+IFRoZXJlIGlzIG9uZSBjaGFuZ2UgaXMgdGhlIHBs
-YXRmb3JtIGRldmljZXMgYXJlIG5vdCB1bmRlcg0KPiA+IC9zeXMvZGV2aWNlcy9zb2MwIGFmdGVy
-IHBhdGNoIDEvNC4gQWN0dWFsbHkgQVJNNjQgcGxhdGZvcm0gZGV2aWNlcyBhcmUNCj4gPiBub3Qg
-dW5kZXIgL3N5cy9kZXZpY2VzL3NvYzAsIHN1Y2ggYXMgaS5NWDgvOE0uDQo+ID4gU28gaXQgc2hv
-dWxkIG5vdCBodXJ0IHRvIGxldCB0aGUgcGxhdGZvcm0gZGV2aWNlcyB1bmRlciBwbGF0Zm9ybSBk
-aXIuDQo+ID4NCj4gPiBQZW5nIEZhbiAoMyk6DQo+ID4gICBBUk06IGlteDogdXNlIGRldmljZV9p
-bml0Y2FsbCBmb3IgaW14X3NvY19kZXZpY2VfaW5pdA0KPiA+ICAgQVJNOiBpbXg6IG1vdmUgY3B1
-IGRlZmluaXRpb25zIGludG8gYSBoZWFkZXINCj4gPiAgIHNvYzogaW14OiBtb3ZlIGNwdSBjb2Rl
-IHRvIGRyaXZlcnMvc29jL2lteA0KPiA+DQo+IFRoaXMgcGF0Y2ggc2VyaWVzIGhhcyB0aGUgc2lk
-ZSBlZmZlY3Qgb2YgTFMxMDIxQSBwbGF0Zm9ybSBub3cgcmVwb3J0aW5nIHRoYXQNCj4gaXQncyBw
-YXJ0IG9mICJpLk1YIGZhbWlseSIuDQo+IA0KPiBjYWFtIGRyaXZlciByZWxpZXMgb24gdGhlIFNv
-QyBidXMgLyBTb0MgYXR0cmlidXRlcyAoSUQsIGZhbWlseSkgdG8gZGV0ZXJtaW5lIGlmDQo+IGl0
-J3MgcnVubmluZyBvbiBhbiBpLk1YIFNvQyBvciBvdGhlciAoTGF5ZXJzY2FwZSwgUW9ySVEpLg0K
-DQpTb3JyeSB0byBicmVhayBMUzEwMjFBLiBCdXQgSSB3b25kZXIgd2h5IGkuTVggY29kZSB3b3Vs
-ZCBhZmZlY3QgTFM/DQoNClJlZ2FyZHMsDQpQZW5nLg0KDQo+IA0KPiBXaXRoIHRoaXMgcGF0Y2gg
-c2V0LCBkcml2ZXIgZmFpbHMgdG8gcHJvYmUgb24gTFMxMDIxQToNCj4gWyAgICA1Ljk5ODkyOF0g
-Y2FhbSAxNzAwMDAwLmNyeXB0bzogTm8gY2xvY2sgZGF0YSBwcm92aWRlZCBmb3IgaS5NWCBTb0MN
-Cj4gWyAgICA2LjAwNTMwNl0gY2FhbTogcHJvYmUgb2YgMTcwMDAwMC5jcnlwdG8gZmFpbGVkIHdp
-dGggZXJyb3IgLTIyDQo+IA0KPiBIb3JpYQ0K
+Hi,
+
+On 7/1/20 8:46 AM, Kai-Heng Feng wrote:
+> 
+> 
+>> On Jun 19, 2020, at 17:56, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 6/19/20 6:16 AM, Kai-Heng Feng wrote:
+>>> Hi,
+>>>> On Jun 18, 2020, at 23:28, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 6/18/20 4:55 PM, Kai-Heng Feng wrote:
+>>>>> Many laptops can be woken up from Suspend-to-Idle by touchpad. This is
+>>>>> also the default behavior on other OSes.
+>>>>> So let's enable the wakeup support if the system defaults to
+>>>>> Suspend-to-Idle.
+>>>>
+>>>> I have been debugging a spurious wakeup issue on an Asus T101HA,
+>>>> where the system would not stay suspended when the lid was closed.
+>>>>
+>>>> The issue turns out to be that the touchpad is generating touch
+>>>> events when the lid/display gets close to the touchpad. In this case
+>>>> wakeup is already enabled by default because it is an USB device.
+>>> Sounds like a mechanical/hardware issue to me.
+>>
+>> Nope, the laptop is pretty much in new state.
+> 
+> Ack.
+> 
+>>
+>>> I've seen some old laptops have the same issue.
+>>> Swollen battery can push up the touchpad, makes it contact to touchscreen, and wakes up the system.
+>>
+>> This is a 2-in-1 with a detachable keyboard, which is why the
+>> kbd/touchpad is a USB device rather then i2c-hid. Even if the
+>> battery were swollen this would push up the back cover of the
+>> tablet.
+> 
+> What's the behavior on Windows?
+> I wonder if Windows has a different wakeup policy?
+> Like disable remote wakeup for USB touchpad and touchscreen?
+
+I'm afraid I no longer have Windows on the device, so I cannot
+test this. I guess that Windows disables the builtin touchpad and
+touchscreenn when the lid is closed. That is sensible to do from
+a power-management pov even when not suspending, but just closing
+the lid and using an external monitor + kbd.
+
+>>>> So I do not believe that this is a good idea, most current devices
+>>>> with a HID multi-touch touchpad use i2c-hid and also use S2idle,
+>>>> so this will basically enable wakeup by touchpad on almost all
+>>>> current devices.
+>>> However, it's really handy to wake up the system from touchpad.
+>>
+>> I agree this is somewhat handy, but the keyboard (space-bar) is
+>> usually sitting right next to it. So we can live without it,
+>> we really need to fix the spurious wakeup issue first, once
+>> that is fixed I'm fine with enabling wakeup by touchpad.
+> 
+> That's true. Spacebar is a good enough alternative.
+> 
+>>
+>>>> There will likely be other devices with the same issue as the T101HA,
+>>>> but currently we are not seeing this issue because by default i2c-hid
+>>>> devices do not have wakeup enabled. This change will thus likely cause
+>>>> new spurious wakeup issues on more devices. So this seems like a
+>>>> bad idea.
+>>> But only under lid is closed?
+>>
+>> Right.
+>>
+>>> I wonder if it's okay to handle the case in s2idle_loop() or in userspace?
+>>> Lid close -> Wakeup event from touchpad -> Found the lid is closed
+>>> -> Turn off touchpad wakeup -> continue suspend.
+>>
+>> I've discussed doing something about the spurious wakeup issue in
+>> the kernel with the the kernel input maintainer (Dmitry) here:
+>>
+>> https://lore.kernel.org/linux-acpi/964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com/
+>>
+>> He was quite clear that this must be fixed in userspace. We did
+>> come up with a plan for fixing this in userspace:
+>>
+>> 1) Have udev-rules setting using hwdb for quirks which tags
+>> some input devices as "input-disable-wake-on-closed-lid".
+>> A simple udev rule could tag all i2c-hid touchpads with this and
+>> for the detachable USB keyboards with builtin touchpad some
+>> 2-in-1s have we can then use quirks in hwdb to set the tag
+>> on those.
+> 
+> Maybe we can avoid using quirks in hwdb, external USB devices should have "Removable" bit set (i.e. it's external).
+
+At the USB level there only is a somewhat reliable "removal" bit
+for storage devices, defined at the storage protocol level.
+
+For other devices there is:
+
+cat /sys/bus/usb/devices/1-8/removable
+
+This comes from the ACPI tables parsed by:
+drivers/usb/core/usb-acpi.c
+
+Which set the port's connect_type variable.
+
+I've tested this on a bunch of 2-in-1s with detachable USB
+keyboards and it is almost completely random and not at
+all related to the reality (both for the kbd-dock connector
+and for other USB ports) this info is so unreliable it is
+pretty much useless.
+
+And the kbd-dock is special anyways, the dock is removable,
+but when docked / the 2-in-1 is in laptop mode, the touchpad
+should be treated as an internal touchpad, as it will be
+covered by the display when the lid is closed.
+
+Note I'm mostly referring to 2-in-1's which turn into normal
+clamshell laptops when docked into their keyboard dock,
+not those with the flimsy type-covers.
+
+Good example's of the type I mean are the Asus T100 series
+and the Lenovo Miix 300 / 310 / 320.
+
+>> 2) Teach systemd-logind which does the suspend-on-lid on modern
+>> GNOME3 based systems to disable wakeup on the parent of
+>> input-devices which have this tag set before suspending.
+>>
+>> As mentioned the kernel can then also use this to save
+>> some power by disable scanning for fingers on suspend.
+>>
+>> If you have time to work on these 2 items, that would be
+>> great. Once this is in place I'm fine with the suggested
+>> kernel change.
+> 
+> Ok, let me investigate a bit more.
+> 
+>>
+>> ###
+>>
+>> Semi-off-topic:
+>>
+>> The thread I linked to above is about adding a new inhibit
+>> feature to the input system, which is intended to allow
+>> telling the input system system to stop listening for
+>> events even if userspace has the device open (or it has
+>> in kernel listeners) once this has landed, we can use
+>> the same udev-tag to also teach systemd-logind to inhibit
+>> e.g. the touchpad when the lid is closed but the system is
+>> not suspending (e.g. external monitor connected).
+>> Combined with some extra hid-multitouch changes this will
+>> again allow us to tell the touchpad to stop scanning
+>> for fingers saving some power.
+>>
+>> The inhibit feature could likewise also be enabled on
+>> internal touchpads and keyboards when a 360 degree (yoga)
+>> style 2-in-1 is in tablet mode to avoid accidental key-pressed /
+>> touchpad touches.
+> 
+> I thought disabling keyboard/touchpad in tablet mode is done by system firmware.
+> Is it different now?
+
+It is in some cases but not always.
+
+> How does the kernel know it's in tablet mode?
+
+There are various interfaces for this. I've recently submitted
+a series of patches upstream adding an input dev with SW_TABLET
+functionality to most 2-in-1s:
+
+-I've done a bunch of fixes making the intel-vbtn code export
+  SW_TABLET on more devices
+
+-I've added support for the INT33D3 ACPI device to
+  the soc_button_array driver, this device offers direct access
+  to a GPIO for SW_TABLET mode (when it has a non empty resource list)
+
+-I've added SW_TABLET support for HP devices using HP's custom WMI
+  method for this to the hp_wmi driver.
+
+
+>> Note the inhibit when in tablet mode thing would require
+>> a new: "input-inhibit-on-tablet-mode" tag. At first I
+>> was thinking to just have an "input-device-is-internal"
+>> tag, but that would e.g. also apply to the touchscreen,
+>> on which we do want to disable wakeup when the lid is
+>> closed, but not when in tablet mode.
+>>
+>> Hmm, I guess to prepare for the inhibit stuff we should
+>> probably call the other tag "input-inhibit-on-closed-lid"
+>> rather then "input-disable-wake-on-closed-lid", and then
+>> systemd-logind can defer that wit should also disable wake
+>> (or initially only disable wake) from that. Otherwise we
+>> get 4 possible tags and I don't see a usecase where we
+>> want to inhibit but not also disable wakeup.
+> 
+> I'll focus on the clamshell case for now, I don't have 2-in-1 in hand right now.
+
+Ok, for the clamshell case it should be easy to have a few'
+simple universal (based on the bus/connection type of the touchpad)
+udev rules to tag them as "input-disable-wake-on-closed-lid".
+
+Because of the Bay/Cherry Trail hw-enablement I've been doing as
+a personal side project I have quite a few 2-in-1s, so I can
+build on top of that adding a hwdb template + some initial
+entries for tagging the touchpads in detachable keyboards the
+same way.
+
+
+> 
+>>
+>>>> Also your commit message mentions touchpads, but the change
+>>>> will also enable wakeup on most touchscreens out there, meaning
+>>>> that just picking up a device in tablet mode and accidentally
+>>>> touching the screen will wake it up.
+>>> I tried touch and i2c-hid touchscreen and it doesn't wake up the system.
+>>
+>> I guess the :
+>>
+>>         i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
+>>
+>> Call from i2c_hid_suspend() causes that, interesting that that
+>> works for touchscreens but not for touchpads.
+>>
+>> I'm pretty sure that if you comment out that line, your
+>> patch will cause wake-ups on touchscreens too, which
+>> IMHO means that your patch should maybe move the above
+>> call into the else of the:
+>>
+>>         if (device_may_wakeup(&client->dev)) {
+>>
+>> block, if we enable wakeup then it should work. This should
+>> probably be combined with being smarter about which devices
+>> to enable wakeup on by default...
+> 
+> Comment out that line doesn't make touchscreen have the ability to wake up the system.
+> 
+> My guess is that there's no ACPI GPIO connects to the touchscreen.
+
+But there is, i2c-hid devices always have an interrupt line,
+possibly the touchpad gets powered of on transition to D3 though.
+
+Yes that is probably it, many touchscreens have a _PS3 method
+like this:
+
+             Method (_PS3, 0, Serialized)  // _PS3: Power State 3
+             {
+                 If ((^^^I2C7.AVBL == One))
+                 {
+                     DATA = 0x1C
+                     ^^^I2C7.DL13 = BUFF /* \_SB_.PCI0.I2C6.TCS0.BUFF */
+                 }
+             }
+
+Which tells the PMIC to turn of the LDO supplying the touchscreen,
+so that means no wake from suspend by the touchscreen.
+
+I'm pretty sure you will find something similar in the ACPI
+node describing the touchscreen on the device you are testing
+with.
+
+If the ACPI tables do not explicitly turn off the device on D3,
+then it would be good to disable wake, and it cannot hurt on
+devices which do completely power down the touchscreen. So
+extending the "input-disable-wake-on-closed-lid" stuff to the
+touchscreen is probably a good idea. But for starters lets just
+focus on touchpads.
+
+>>> However we should still handle the two different cases, probably differentiate touchpad and touchscreen in hid-multitouch.
+>>
+>> Ack, see above.
+>>
+>>>> Also hid multi-touch devices have 3 modes, see the diagrams
+>>>> in Microsoft hw design guides for win8/10 touch devices:
+>>>> 1. Reporting events with low latency (high power mode)
+>>>> 2. Reporting events with high latency (lower power mode)
+>>>> 3. Not reporting events (lowest power mode)
+>>>>
+>>>> I actually still need to write some patches for hid-multitouch.c
+>>>> to set the mode to 2 or 3 on suspend depending on the device_may_wakeup
+>>>> setting of the parent. Once that patch is written, it should
+>>>> put most i2c-hid mt devices in mode 3, hopefully also helping
+>>>> with Linux' relative high power consumption when a device is
+>>>> suspended. With your change instead my to-be-written patch
+>>>> would put the device in mode 2, which would still be an
+>>>> improvement but less so.
+>>> IIRC, touchpad and touchscreen connect to different parents on all laptops I worked on.
+>>> So I think it's possible to enable mode 2 for touchpad, and mode 3 for touchscreen.
+>>
+>> Ack.
+>>
+>>> Touchpad wake is really handy, let's figure out how to enable it while covering all potential regression risks.
+>>
+>> See above I believe we should first get the userspace bits to disable it
+>> when the lid is closed in place.  And even then we may need to have
+>> a Kconfig option to disable it for people running an older userspace,
+>> but I guess once the userspace bits are there, we can proceed without
+>> the Kconfig option and then add that later if necessary (if people are
+>> seeing regressions).
+> 
+> For now, as a comprise, can we still enable the wake up capability but disable it by default?
+> i.e. "device_init_wakeup(dev, false)" so user can still choose to enable touchpad wakeup at their own discretion.
+
+Yes that sounds reasonable.
+
+Regards,
+
+Hans
+
+
+
+> 
+> Kai-Heng
+> 
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>>>> ---
+>>>>> v3:
+>>>>>   - Use device_init_wakeup().
+>>>>>   - Wording change.
+>>>>> v2:
+>>>>>   - Fix compile error when ACPI is not enabled.
+>>>>>   drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++++
+>>>>>   1 file changed, 10 insertions(+)
+>>>>> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+>>>>> index 294c84e136d7..dae1d072daf6 100644
+>>>>> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+>>>>> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+>>>>> @@ -931,6 +931,12 @@ static void i2c_hid_acpi_fix_up_power(struct device *dev)
+>>>>>   		acpi_device_fix_up_power(adev);
+>>>>>   }
+>>>>>   +static void i2c_hid_acpi_enable_wakeup(struct device *dev)
+>>>>> +{
+>>>>> +	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+>>>>> +		device_init_wakeup(dev, true);
+>>>>> +}
+>>>>> +
+>>>>>   static const struct acpi_device_id i2c_hid_acpi_match[] = {
+>>>>>   	{"ACPI0C50", 0 },
+>>>>>   	{"PNP0C50", 0 },
+>>>>> @@ -945,6 +951,8 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
+>>>>>   }
+>>>>>     static inline void i2c_hid_acpi_fix_up_power(struct device *dev) {}
+>>>>> +
+>>>>> +static inline void i2c_hid_acpi_enable_wakeup(struct device *dev) {}
+>>>>>   #endif
+>>>>>     #ifdef CONFIG_OF
+>>>>> @@ -1072,6 +1080,8 @@ static int i2c_hid_probe(struct i2c_client *client,
+>>>>>     	i2c_hid_acpi_fix_up_power(&client->dev);
+>>>>>   +	i2c_hid_acpi_enable_wakeup(&client->dev);
+>>>>> +
+>>>>>   	device_enable_async_suspend(&client->dev);
+>>>>>     	/* Make sure there is something at this address */
+> 
+
