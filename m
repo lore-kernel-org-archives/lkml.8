@@ -2,95 +2,81 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D280EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9AA82186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2A9208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T98eJq6M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j6shZpyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgGCQwD (ORCPT
+        id S1726484AbgGCQ4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:52:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40254 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGCQwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:52:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593795122; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=bs2X7o2ChfprwqSiXjt12ikg0daLURrNcQQ/2tEqmJI=;
- b=T98eJq6MWYNqxmiNtlzYjYlXC5iVgLGEoltCteyBkU53Ceqabc03o8neI7fCLsmj2Qzy8NPp
- dz40shBiwIB159GG3KV1DmXuPLI5PVDuxLyTJWN+N7ktlNg4T78I9s3kKZt5jbXS5xLLueeS
- YGNETiK0mvknGPUTKvWrounLHnc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5eff62296f2ee827da97e1fc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 16:51:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4CCE9C433A0; Fri,  3 Jul 2020 16:51:53 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CB1EC433C8;
-        Fri,  3 Jul 2020 16:51:52 +0000 (UTC)
+        Fri, 3 Jul 2020 12:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGCQ4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:56:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11E3C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 09:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ABg7NPFpv6+3fRjIjwbJfH0UuoJwtQBPMUCkpYS7fPM=; b=j6shZpyy1OUE9JhmDPF76zXks7
+        cAIx5QavH4ZH0UFFz7ycfhvbHvVrpLAOkgaOzu7sN0GRQE0GlyaDjP7Wli6wr/Gn7v59kwDWZQsfW
+        5JUbVXEwGUOL2V/XVmDJ/fm6dkBCQXAV4ZljaqS0btPsispu4YwKjF8v32Z4riyP5/y4uNWQ/Eohm
+        OG3YtJ17U+WnFN/QtYgWnAVKJ+GJZY6lse0CSgqHCzfL80vhnyNqtv/SPiNdEVDVR47I5nBwQcQCF
+        ChUqQYm5CB865YzTERIusgrKxcWQSzaLHSbFpvmTfWJMJPXgeETEZQZDUaCHodFI/ceVHeYVujItC
+        A6TOTdfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrOzD-0004Bq-Oa; Fri, 03 Jul 2020 16:56:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 37F4C301124;
+        Fri,  3 Jul 2020 18:56:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1AE4920A9E7A6; Fri,  3 Jul 2020 18:56:27 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 18:56:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        GregKroah-Hartmangregkh@linuxfoundation.org
+Subject: Re: nr_cpu_ids vs AMD 3970x(32 physical CPUs)
+Message-ID: <20200703165627.GG4781@hirez.programming.kicks-ass.net>
+References: <20200703155749.GA6255@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jul 2020 22:21:52 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Robin Murphy <robin.murphy@arm.com>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
-        Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH] iommu: Remove unused IOMMU_SYS_CACHE_ONLY flag
-In-Reply-To: <20200703162548.19953-1-will@kernel.org>
-References: <20200703162548.19953-1-will@kernel.org>
-Message-ID: <88f8a3021ae29534ad0d6a9269a1af40@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703155749.GA6255@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-03 21:55, Will Deacon wrote:
-> The IOMMU_SYS_CACHE_ONLY flag was never exposed via the DMA API and
-> has no in-tree users. Remove it.
+On Fri, Jul 03, 2020 at 05:57:49PM +0200, Uladzislau Rezki wrote:
+> Hello, folk.
 > 
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: "Isaac J. Manjarres" <isaacm@codeaurora.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Cc: Rob Clark <robdclark@gmail.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
+> I have a system based on AMD 3970x CPUs. It has 32 physical cores
+> and 64 threads. It seems that "nr_cpu_ids" variable is not correctly
+> set on latest 5.8-rc3 kernel. Please have a look below on dmesg output:
 > 
-> As discussed in [1], sounds like this should be a domain attribute 
-> anyway
-> when it's needed by the GPU.
-> 
-> [1]
-> https://lore.kernel.org/r/CAF6AEGsCROVTsi2R7_aUkmH9Luoc_guMR0w0KUJc2cEgpfj79w@mail.gmail.com
-> 
+> <snip>
+> urezki@pc638:~$ sudo dmesg | grep 128
+> [    0.000000] IOAPIC[0]: apic_id 128, version 33, address 0xfec00000, GSI 0-23
+> [    0.000000] smpboot: Allowing 128 CPUs, 64 hotplug CPUs
 
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org
+This is your BIOS saying it needs 128 ids, 64 of which are 'empty'.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+I have a box like that as well, if it bothers you boot with:
+"possible_cpus=64" or something.
