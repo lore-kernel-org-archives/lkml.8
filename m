@@ -2,210 +2,110 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA39C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7677C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E1E206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R55UeEch";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sIkFaEVz"
+	by mail.kernel.org (Postfix) with ESMTP id B71D6206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgGCIBb (ORCPT
+        id S1726112AbgGCIEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:01:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57378 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGCIBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:01:30 -0400
-Date:   Fri, 03 Jul 2020 08:01:26 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593763287;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oy4WReyZBoVmzASbvO7rtP53h0E1pKoAmkXDqRED9lA=;
-        b=R55UeEchtpQOBCcV8s6UaKXeF3DBEW+0N/QdF1JYwrbDEQKs2dXJ5oTlQswy8YmmXntZFU
-        nEzm/vUz4/BiPaTo3UwhArQlHX48cT+h3JP+e8LHWGAlklN37sfIaj42gaW+dLFdDDkQMJ
-        BS0dF45XlpIyAsWUzeb+8lqzn+8ywx4WaGeL/nK/h9f9kDQ1O2yp5hw4WfSGyIujuN5klp
-        B1Z129bQBANM7tt0tahY3rKR1dKkmd0XdIXgSyKaV833ypuoUvEzZnNOgCleARbPgSx/OO
-        ssVdRtdnvkcmC1ScO8v0dN9LiOK1YhXqUgAGOcmJPoLU2U9q0TVwAbeOYvpS3Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593763287;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oy4WReyZBoVmzASbvO7rtP53h0E1pKoAmkXDqRED9lA=;
-        b=sIkFaEVzORdGBcVg+snmvJx50H8YEdsSg3bmWyJ3Jtp2uKp6TVvNXOWYBMUav6F6a6KKSm
-        reN8apMA2LLhY0Ag==
-From:   "tip-bot2 for Like Xu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86: Add constraint to create guest LBR event
- without hw counter
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200514083054.62538-5-like.xu@linux.intel.com>
-References: <20200514083054.62538-5-like.xu@linux.intel.com>
+        Fri, 3 Jul 2020 04:04:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52311 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgGCIEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:04:11 -0400
+IronPort-SDR: Dn229BWwKJqBlu1KVYhxAXyM8jmjxxWZBRTLv8NfopFnXZ/a+3GzGslbBBboSLQfirCDqFUQCC
+ psYF8x8IkT4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="144635504"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="144635504"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 01:04:10 -0700
+IronPort-SDR: GRIZLHlnhU/QaE2cFWz1y1zrS2QBl46fG2xKdUbPD2Bxojs26x5cUhZW3UKpQnWZPq4inLc1jB
+ mi4DqQ/63sMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="481955282"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Jul 2020 01:04:07 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+ <20200702074059.GX4781@hirez.programming.kicks-ass.net>
+ <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
+ <20200702135842.GR4800@hirez.programming.kicks-ass.net>
+ <20200703075646.GJ117543@hirez.programming.kicks-ass.net>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <84a75c42-8a97-6771-9aab-3f9d3285486e@intel.com>
+Date:   Fri, 3 Jul 2020 16:04:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159376328664.4006.3096246262316423436.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200703075646.GJ117543@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On 2020/7/3 15:56, Peter Zijlstra wrote:
+> On Thu, Jul 02, 2020 at 03:58:42PM +0200, Peter Zijlstra wrote:
+>> On Thu, Jul 02, 2020 at 09:11:06AM -0400, Liang, Kan wrote:
+>>> On 7/2/2020 3:40 AM, Peter Zijlstra wrote:
+>>>> On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
+>>>>> Like Xu (10):
+>>>>>     perf/x86/core: Refactor hw->idx checks and cleanup
+>>>>>     perf/x86/lbr: Add interface to get LBR information
+>>>>>     perf/x86: Add constraint to create guest LBR event without hw counter
+>>>>>     perf/x86: Keep LBR records unchanged in host context for guest usage
+>>>>> Wei Wang (1):
+>>>>>     perf/x86: Fix variable types for LBR registers
+>>>>>    arch/x86/events/core.c            |  26 +--
+>>>>>    arch/x86/events/intel/core.c      | 109 ++++++++-----
+>>>>>    arch/x86/events/intel/lbr.c       |  51 +++++-
+>>>>>    arch/x86/events/perf_event.h      |   8 +-
+>>>>>    arch/x86/include/asm/perf_event.h |  34 +++-
+>>>> These look good to me; but at the same time Kan is sending me
+>>>> Architectural LBR patches.
+>>>>
+>>>> Kan, if I take these perf patches and stick them in a tip/perf/vlbr
+>>>> topic branch, can you rebase the arch lbr stuff on top, or is there
+>>>> anything in the arch-lbr series that badly conflicts with this work?
+>>>>
+>>> Yes, I can rebase the arch lbr patches on top of them.
+>>> Please push the tip/perf/vlbr branch, so I can pull and rebase my patches.
+>> For now I have:
+>>
+>>    git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/vlbr
+>>
+>> Once the 0day robot comes back all-green, I'll push it out to
+>> tip/perf/vlbr and merge it into tip/perf/core.
+> tip/perf/vlbr now exists, thanks!
+Hi Peter,
 
-Commit-ID:     097e4311cda952dfb047f2a49d35aa5de500d474
-Gitweb:        https://git.kernel.org/tip/097e4311cda952dfb047f2a49d35aa5de500d474
-Author:        Like Xu <like.xu@linux.intel.com>
-AuthorDate:    Sat, 13 Jun 2020 16:09:49 +08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 02 Jul 2020 15:51:46 +02:00
+Thanks for your patience and professional support on this feature!
 
-perf/x86: Add constraint to create guest LBR event without hw counter
+Thanks,
+Like Xu
 
-The hypervisor may request the perf subsystem to schedule a time window
-to directly access the LBR records msrs for its own use. Normally, it would
-create a guest LBR event with callstack mode enabled, which is scheduled
-along with other ordinary LBR events on the host but in an exclusive way.
-
-To avoid wasting a counter for the guest LBR event, the perf tracks its
-hw->idx via INTEL_PMC_IDX_FIXED_VLBR and assigns it with a fake VLBR
-counter with the help of new vlbr_constraint. As with the BTS event,
-there is actually no hardware counter assigned for the guest LBR event.
-
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200514083054.62538-5-like.xu@linux.intel.com
----
- arch/x86/events/core.c            |  1 +
- arch/x86/events/intel/core.c      | 18 ++++++++++++++++++
- arch/x86/events/intel/lbr.c       |  4 ++++
- arch/x86/events/perf_event.h      |  1 +
- arch/x86/include/asm/perf_event.h | 22 +++++++++++++++++++++-
- 5 files changed, 45 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 15cb7af..d740c86 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 
- 	switch (hwc->idx) {
- 	case INTEL_PMC_IDX_FIXED_BTS:
-+	case INTEL_PMC_IDX_FIXED_VLBR:
- 		hwc->config_base = 0;
- 		hwc->event_base	= 0;
- 		break;
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 8dac4c6..51e1fba 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2621,6 +2621,20 @@ intel_bts_constraints(struct perf_event *event)
- 	return NULL;
- }
- 
-+/*
-+ * Note: matches a fake event, like Fixed2.
-+ */
-+static struct event_constraint *
-+intel_vlbr_constraints(struct perf_event *event)
-+{
-+	struct event_constraint *c = &vlbr_constraint;
-+
-+	if (unlikely(constraint_match(c, event->hw.config)))
-+		return c;
-+
-+	return NULL;
-+}
-+
- static int intel_alt_er(int idx, u64 config)
- {
- 	int alt_idx = idx;
-@@ -2811,6 +2825,10 @@ __intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- {
- 	struct event_constraint *c;
- 
-+	c = intel_vlbr_constraints(event);
-+	if (c)
-+		return c;
-+
- 	c = intel_bts_constraints(event);
- 	if (c)
- 		return c;
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 2ed3f2a..d285d26 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1363,3 +1363,7 @@ int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
-+
-+struct event_constraint vlbr_constraint =
-+	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
-+			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index eb37f6c..77a6dd6 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -990,6 +990,7 @@ void release_ds_buffers(void);
- void reserve_ds_buffers(void);
- 
- extern struct event_constraint bts_constraint;
-+extern struct event_constraint vlbr_constraint;
- 
- void intel_pmu_enable_bts(u64 config);
- 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 5d2c30f..2df7073 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -192,10 +192,30 @@ struct x86_pmu_capability {
- #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
- #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
- #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
--#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
-+#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
-+#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
- #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
- 
- /*
-+ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
-+ *
-+ * We choose bit 58 because it's used to indicate LBR stack frozen state
-+ * for architectural perfmon v4, also we unconditionally mask that bit in
-+ * the handle_pmi_common(), so it'll never be set in the overflow handling.
-+ *
-+ * With this fake counter assigned, the guest LBR event user (such as KVM),
-+ * can program the LBR registers on its own, and we don't actually do anything
-+ * with then in the host context.
-+ */
-+#define INTEL_PMC_IDX_FIXED_VLBR	(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-+
-+/*
-+ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
-+ * since it would claim bit 58 which is effectively Fixed26.
-+ */
-+#define INTEL_FIXED_VLBR_EVENT	0x1b00
-+
-+/*
-  * Adaptive PEBS v4
-  */
- 
