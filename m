@@ -2,31 +2,32 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37999C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F410CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1595A20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7D720772
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="DbJowuWf"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MuA9Noi6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGCLr0 (ORCPT
+        id S1726262AbgGCLrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:47:26 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41220 "EHLO vps.xff.cz"
+        Fri, 3 Jul 2020 07:47:24 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41236 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGCLrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726074AbgGCLrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 07:47:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593776842; bh=qqqmBER67TiL8jtm7bhHtg++KZK59EXYjjn1FFY2Hhw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DbJowuWfMruGil3/tF0lPmG3d0y4hFQRLw+XYenolmZ/mzEj51epdT99Ct62ZSdde
-         Zn/toun/nuoisgRPpQPNppJZ4Zq1FtJUSEBIYfe8AeVmbCvM7nCicxuKAoQ6sCYPt6
-         ecnmG4VeSr+xvqt5hOH2L9eA71MRPZeQchnhipWc=
+        t=1593776842; bh=Mror7EhaRxvkBeJPmtCPvGSBofo331RIQIKcoOFqy6Y=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=MuA9Noi6uYlKU2CAFK1WTynrh42ZGRL7Tg8K7H1vyG8kWNPzuGLCruUbNWGfmOCU9
+         OWZBGyUs4yf6qYpa19lLPTYLtYrfT0OfyF8lrONoflImJXKxOSmYDyUGBQyJ1Y/Ck1
+         zUWj9XpA84Ujd+c37JTA/Q8748X7xbfwo9DPjvc8=
 From:   Ondrej Jirman <megous@megous.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -38,9 +39,11 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Robert Chiras <robert.chiras@nxp.com>
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Fix warnings in display/bridge/nwl-dsi.yaml DT example
-Date:   Fri,  3 Jul 2020 13:47:15 +0200
-Message-Id: <20200703114717.2140832-1-megous@megous.com>
+Subject: [PATCH 1/2] dt-bindings: display: Fix example in nwl-dsi.yaml
+Date:   Fri,  3 Jul 2020 13:47:16 +0200
+Message-Id: <20200703114717.2140832-2-megous@megous.com>
+In-Reply-To: <20200703114717.2140832-1-megous@megous.com>
+References: <20200703114717.2140832-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,23 +51,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset fixes warnings in the example in display/bridge/nwl-dsi.yaml
-revealed during port of display/panel/rocktech,jh057n00900.yaml to
-yaml.
+The example is now validated against rocktech,jh057n00900 schema
+that was ported to yaml, and didn't validate with:
 
-Please take a look.
+- '#address-cells', '#size-cells', 'port@0' do not match any of
+  the regexes: 'pinctrl-[0-9]+'
+- 'vcc-supply' is a required property
+- 'iovcc-supply' is a required property
+- 'reset-gpios' is a required property
 
-thank you and regards,
-  Ondrej Jirman
+Fix it.
 
-Ondrej Jirman (2):
-  dt-bindings: display: Fix example in nwl-dsi.yaml
-  dt-binding: display: Allow a single port node on rocktech,jh057n00900
-
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
  .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
- .../bindings/display/panel/rocktech,jh057n00900.yaml     | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+index 8aff2d68fc33..2c4c34e3bc29 100644
+--- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -165,6 +165,7 @@ examples:
+  - |
+ 
+    #include <dt-bindings/clock/imx8mq-clock.h>
++   #include <dt-bindings/gpio/gpio.h>
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+    #include <dt-bindings/reset/imx8mq-reset.h>
+ 
+@@ -191,12 +192,12 @@ examples:
+               phy-names = "dphy";
+ 
+               panel@0 {
+-                      #address-cells = <1>;
+-                      #size-cells = <0>;
+                       compatible = "rocktech,jh057n00900";
+                       reg = <0>;
+-                      port@0 {
+-                           reg = <0>;
++                      vcc-supply = <&reg_2v8_p>;
++                      iovcc-supply = <&reg_1v8_p>;
++                      reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
++                      port {
+                            panel_in: endpoint {
+                                      remote-endpoint = <&mipi_dsi_out>;
+                            };
 -- 
 2.27.0
 
