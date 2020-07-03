@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC805C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4617208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD60208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgGCCiB (ORCPT
+        id S1726995AbgGCCiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:38:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3196 "EHLO mga09.intel.com"
+        Thu, 2 Jul 2020 22:38:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:52027 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgGCCgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726152AbgGCCgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 22:36:06 -0400
-IronPort-SDR: 2ElqMqvAoN4SXu/jKWC5mO/Mg1b/m5t2o47WW3IzLI7s8Wo1K4uZY90xbfK88Iqon5qNvvcnGh
- dii+G3iPXJCQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148599911"
+IronPort-SDR: sjevnC4sAGYc+fxJcw7cagDNKhCwRsrfSn3FV21JDamZwz0ytJ4DTzpc+5pTSxoCP7bh/CvsXz
+ cjZ4caol9h7g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145213959"
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="148599911"
+   d="scan'208";a="145213959"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:05 -0700
-IronPort-SDR: FQIJxA8etHlkCUX30t30A3XmQU4ZuKr+HFI63QtU5U9+x83WcePQGKOInvMJDxVzMuqlu5vq/k
- XZmmWAW/lSGw==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:05 -0700
+IronPort-SDR: myyeMp/AEyA7OXQmG9mILHwHzMprfVY9+XX4MnNbM7wePOpLhpVFgo9jxcZVNIJleJVTvLDcyw
+ 4Zk7+ATmcOyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="278295748"
+   d="scan'208";a="278295722"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:05 -0700
+  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:04 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
@@ -55,9 +55,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Peter Shier <pshier@google.com>,
         Junaid Shahid <junaids@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v3 10/21] KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
-Date:   Thu,  2 Jul 2020 19:35:34 -0700
-Message-Id: <20200703023545.8771-11-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 02/21] KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
+Date:   Thu,  2 Jul 2020 19:35:26 -0700
+Message-Id: <20200703023545.8771-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200703023545.8771-1-sean.j.christopherson@intel.com>
 References: <20200703023545.8771-1-sean.j.christopherson@intel.com>
@@ -68,61 +68,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a gfp_zero flag to 'struct kvm_mmu_memory_cache' and use it to
-control __GFP_ZERO instead of hardcoding a call to kmem_cache_zalloc().
-A future patch needs such a flag for the __get_free_page() path, as
-gfn arrays do not need/want the allocator to zero the memory.  Convert
-the kmem_cache paths to __GFP_ZERO now so as to avoid a weird and
-inconsistent API in the future.
+Drop the "page" variants of the topup/free memory cache helpers, using
+the existence of an associated kmem_cache to select the correct alloc
+or free routine.
 
 No functional change intended.
 
 Reviewed-by: Ben Gardon <bgardon@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/mmu/mmu.c          | 7 ++++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c | 37 +++++++++++--------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index b71a4e77f65a..685fe5ac7124 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
-  */
- struct kvm_mmu_memory_cache {
- 	int nobjs;
-+	gfp_t gfp_zero;
- 	struct kmem_cache *kmem_cache;
- 	void *objects[KVM_NR_MEM_OBJS];
- };
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8e1b55d8a728..ed36f5e63863 100644
+index 2c62cc1d0353..d6612af6c056 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1063,8 +1063,10 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
- static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
- 					       gfp_t gfp_flags)
+@@ -1067,7 +1067,10 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
+ 	if (cache->nobjs >= min)
+ 		return 0;
+ 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+-		obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
++		if (cache->kmem_cache)
++			obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
++		else
++			obj = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
+ 		if (!obj)
+ 			return cache->nobjs >= min ? 0 : -ENOMEM;
+ 		cache->objects[cache->nobjs++] = obj;
+@@ -1082,30 +1085,12 @@ static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
+ 
+ static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
  {
-+	gfp_flags |= mc->gfp_zero;
-+
- 	if (mc->kmem_cache)
--		return kmem_cache_zalloc(mc->kmem_cache, gfp_flags);
-+		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
- 	else
- 		return (void *)__get_free_page(gfp_flags);
+-	while (mc->nobjs)
+-		kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+-}
+-
+-static int mmu_topup_memory_cache_page(struct kvm_mmu_memory_cache *cache,
+-				       int min)
+-{
+-	void *page;
+-
+-	if (cache->nobjs >= min)
+-		return 0;
+-	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+-		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
+-		if (!page)
+-			return cache->nobjs >= min ? 0 : -ENOMEM;
+-		cache->objects[cache->nobjs++] = page;
++	while (mc->nobjs) {
++		if (mc->kmem_cache)
++			kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
++		else
++			free_page((unsigned long)mc->objects[--mc->nobjs]);
+ 	}
+-	return 0;
+-}
+-
+-static void mmu_free_memory_cache_page(struct kvm_mmu_memory_cache *mc)
+-{
+-	while (mc->nobjs)
+-		free_page((unsigned long)mc->objects[--mc->nobjs]);
  }
-@@ -5675,7 +5677,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
- 	int ret;
  
- 	vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
-+	vcpu->arch.mmu_pte_list_desc_cache.gfp_zero = __GFP_ZERO;
-+
- 	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
-+	vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
+ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+@@ -1116,7 +1101,7 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+ 				   8 + PTE_PREFETCH_NUM);
+ 	if (r)
+ 		goto out;
+-	r = mmu_topup_memory_cache_page(&vcpu->arch.mmu_page_cache, 8);
++	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
+ 	if (r)
+ 		goto out;
+ 	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
+@@ -1127,7 +1112,7 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+ {
+ 	mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
+-	mmu_free_memory_cache_page(&vcpu->arch.mmu_page_cache);
++	mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
+ 	mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+ }
  
- 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
- 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
 -- 
 2.26.0
 
