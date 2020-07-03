@@ -2,189 +2,177 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6D8206BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D79206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgGCFYW (ORCPT
+        id S1726033AbgGCF1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:24:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725764AbgGCFYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:24:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 73172D5073F92DED88B3;
-        Fri,  3 Jul 2020 13:24:18 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.220) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Jul 2020
- 13:24:16 +0800
-Subject: Re: [PATCH 2/2] arm64: Allocate crashkernel always in ZONE_DMA
-To:     Bhupesh Sharma <bhsharma@redhat.com>, Will Deacon <will@kernel.org>
-References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
- <1593641660-13254-3-git-send-email-bhsharma@redhat.com>
- <20200702075001.GA16113@willie-the-truck>
- <CACi5LpPn4QUjC692G=5UxLchpi+ZL+xFCcxqLbFvgvvcso28ww@mail.gmail.com>
-CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Fri, 3 Jul 2020 01:27:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:16684 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgGCF1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 01:27:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49yk4X4kGBz9tyNx;
+        Fri,  3 Jul 2020 07:27:40 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2XeHCBp9pS9h; Fri,  3 Jul 2020 07:27:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49yk4X3tDtz9tyNw;
+        Fri,  3 Jul 2020 07:27:40 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AB22E8BB2C;
+        Fri,  3 Jul 2020 07:27:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id WlNZi18th2PB; Fri,  3 Jul 2020 07:27:41 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9AB0D8BB2A;
+        Fri,  3 Jul 2020 07:27:40 +0200 (CEST)
+Subject: Re: objtool clac/stac handling change..
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <eeea529a-14cd-3e2f-7a1c-c4c940967749@huawei.com>
-Date:   Fri, 3 Jul 2020 13:24:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
+ <20200701184131.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wj_2v9m+yZioE4vOLGW1mc9SBa5+++LdeJ86aEeB5OXcw@mail.gmail.com>
+ <20200701195914.GK2786714@ZenIV.linux.org.uk>
+ <CAHk-=wj-CYhKZR8ZKQgi=VTx=o7n6dtwPXikvgkJ3SdiqRPd8A@mail.gmail.com>
+ <87lfk26nx4.fsf@mpe.ellerman.id.au>
+ <8be7cf19-9fc9-ce9c-091f-c8824a01a3c8@csgroup.eu>
+ <87h7up70e5.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <a449e55b-7a8d-5acd-fc2f-acd1eb9ae252@csgroup.eu>
+Date:   Fri, 3 Jul 2020 07:27:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpPn4QUjC692G=5UxLchpi+ZL+xFCcxqLbFvgvvcso28ww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.220]
-X-CFilter-Loop: Reflected
+In-Reply-To: <87h7up70e5.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
 
 
-On 2020/7/3 3:22, Bhupesh Sharma wrote:
-> Hi Will,
->
-> On Thu, Jul 2, 2020 at 1:20 PM Will Deacon <will@kernel.org> wrote:
->> On Thu, Jul 02, 2020 at 03:44:20AM +0530, Bhupesh Sharma wrote:
->>> commit bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in
->>> ZONE_DMA32") allocates crashkernel for arm64 in the ZONE_DMA32.
+Le 03/07/2020 à 05:17, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>> Le 02/07/2020 à 15:34, Michael Ellerman a écrit :
+>>> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>>>> On Wed, Jul 1, 2020 at 12:59 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>>>>> On Wed, Jul 01, 2020 at 12:04:36PM -0700, Linus Torvalds wrote:
+>>>>>>
+>>>>>> That's actually for the access granting. Shutting the access down ends
+>>>>>> up always doing the same thing anyway..
+>>>>>
+>>>>> #define user_read_access_end            prevent_current_read_from_user
+>>>>> #define user_write_access_end           prevent_current_write_to_user
+>>>>> static inline void prevent_current_read_from_user(void)
+>>>>> {
+>>>>>           prevent_user_access(NULL, NULL, ~0UL, KUAP_CURRENT_READ);
+>>>>> }
+>>>>>
+>>>>> static inline void prevent_current_write_to_user(void)
+>>>>> {
+>>>>>           prevent_user_access(NULL, NULL, ~0UL, KUAP_CURRENT_WRITE);
+>>>>> }
+>>>>>
+>>>>> and prevent_user_access() has instances that do care about the direction...
+>>>>
+>>>> Go and look closer.
+>>>>
+>>>> There are three cases:
+>>>>
+>>>>    (a) the 32-bit book3s case. It looks like it cares, but when you look
+>>>> closer, it ends up not caring about the read side, and saving the
+>>>> "which address to I allow user writes to" in current->thread.kuap
+>>>>
+>>>>    (b) the nohash 32-bit case - doesn't care
+>>>>
+>>>>    (c) the 64-bit books case - doesn't care
+>>>>
+>>>> So yes, in the (a) case it does make a difference between reads and
+>>>> writes, but at least as far as I can tell, it ignores the read case,
+>>>> and has code to avoid the unnecessary "disable user writes" case when
+>>>> there was only a read enable done.
 >>>
->>> However as reported by Prabhakar, this breaks kdump kernel booting in
->>> ThunderX2 like arm64 systems. I have noticed this on another ampere
->>> arm64 machine. The OOM log in the kdump kernel looks like this:
+>>> Yeah that's my understanding too.
 >>>
->>>   [    0.240552] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
->>>   [    0.247713] swapper/0: page allocation failure: order:1, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
->>>   <..snip..>
->>>   [    0.274706] Call trace:
->>>   [    0.277170]  dump_backtrace+0x0/0x208
->>>   [    0.280863]  show_stack+0x1c/0x28
->>>   [    0.284207]  dump_stack+0xc4/0x10c
->>>   [    0.287638]  warn_alloc+0x104/0x170
->>>   [    0.291156]  __alloc_pages_slowpath.constprop.106+0xb08/0xb48
->>>   [    0.296958]  __alloc_pages_nodemask+0x2ac/0x2f8
->>>   [    0.301530]  alloc_page_interleave+0x20/0x90
->>>   [    0.305839]  alloc_pages_current+0xdc/0xf8
->>>   [    0.309972]  atomic_pool_expand+0x60/0x210
->>>   [    0.314108]  __dma_atomic_pool_init+0x50/0xa4
->>>   [    0.318504]  dma_atomic_pool_init+0xac/0x158
->>>   [    0.322813]  do_one_initcall+0x50/0x218
->>>   [    0.326684]  kernel_init_freeable+0x22c/0x2d0
->>>   [    0.331083]  kernel_init+0x18/0x110
->>>   [    0.334600]  ret_from_fork+0x10/0x18
+>>> Christophe is the expert on that code so I'll defer to him if I'm wrong.
 >>>
->>> This patch limits the crashkernel allocation to the first 1GB of
->>> the RAM accessible (ZONE_DMA), as otherwise we might run into OOM
->>> issues when crashkernel is executed, as it might have been originally
->>> allocated from either a ZONE_DMA32 memory or mixture of memory chunks
->>> belonging to both ZONE_DMA and ZONE_DMA32.
->> How does this interact with this ongoing series:
+>>>> Now, it's possible that I'm wrong, but the upshot of that is that even
+>>>> on powerpc, I think that if we just made the rule be that "taking a
+>>>> user exception should automatically do the 'user_access_end()' for us"
+>>>> is trivial.
+>>>
+>>> I think we can do something to make it work.
+>>>
+>>> We don't have an equivalent of x86's ex_handler_uaccess(), so it's not
+>>> quite as easy as whacking a user_access_end() in there.
 >>
->> https://lore.kernel.org/r/20200628083458.40066-1-chenzhou10@huawei.com
+>> Isn't it something easy to do in bad_page_fault() ?
+> 
+> We'd need to do it there at least.
+> 
+> But I'm not convinced that's the only place we'd need to do it. We could
+> theoretically take a machine check on a user access, and those are
+> handled differently on each sub-(sub-sub)-platform, and I think all or
+> most of them don't call bad_page_fault().
+
+Indeed, it needs to be done everywhere we do
+
+	regs->nip = extable_fixup(entry)
+
+There are half a dozen of places that do that, in additional of 
+bad_page_fault() that's mainly machine checks, also kprobe.
+
+I think we can create a fixup_exception() function which takes regs and 
+entry as parameters and does the nip fixup and kuap closuse.
+
+> 
+>> Not exactly a call to user_access_end() but altering regs->kuap so that
+>> user access is not restored on exception exit.
+> 
+> Yes.
+> 
+>>> Probably the simplest option for us is to just handle it in our
+>>> unsafe_op_wrap(). I'll try and come up with something tomorrow.
 >>
->> (patch 4, in particular)
-> Many thanks for having a look at this patchset. I was not aware that
-> Chen had sent out a new version.
-> I had noted in the v9 review of the high/low range allocation
-> <https://lists.gt.net/linux/kernel/3726052#3726052> that I was working
-> on a generic solution (irrespective of the crashkernel, low and high
-> range allocation) which resulted in this patchset.
->
-> The issue is two-fold: OOPs in memcfg layer (PATCH 1/2, which has been
-> Acked-by memcfg maintainer) and OOM in the kdump kernel due to
-> crashkernel allocation in ZONE_DMA32 regions(s) which is addressed by
-> this PATCH.
->
-> I will have a closer look at the v10 patchset Chen shared, but seems
-> it needs some rework as per Dave's review comments which he shared
-> today.
-> IMO, in the meanwhile this patchset  can be used to fix the existing
-> kdump issue with upstream kernel.
-Thanks for your work.
-There is no progress on the issue for long time, so i sent my solution in v8 comments
-and sent v9 recently.
+>> unsafe_op_wrap() is not used anymore for unsafe_put_user() as we are now
+>> using asm goto.
+> 
+> Sure, but we could change it back to use unsafe_op_wrap().
 
-I think direct limiting the crashkernel in ZONE_DMA isn't a good idea:
-1. For parameter "crashkernel=Y", reserving crashkernel in first 1G memory will increase
-the probability of memory allocation failure.
-Previous discuss from https://lkml.org/lkml/2019/10/21/725:
-    "With ZONE_DMA=y, this config will fail to reserve 512M CMA on a server"
-
-2. For parameter "crashkernel=Y@X", limiting the crashkernel in ZONE_DMA is unreasonable
-for someone really want to reserve crashkernel from specified start address.
-
-I have sent v10: https://www.spinics.net/lists/arm-kernel/msg819408.html, any commets are welcome.
-
-Thanks,
-Chen Zhou
->
->>> Fixes: bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in ZONE_DMA32")
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Michal Hocko <mhocko@kernel.org>
->>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->>> Cc: James Morse <james.morse@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Will Deacon <will@kernel.org>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: cgroups@vger.kernel.org
->>> Cc: linux-mm@kvack.org
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: kexec@lists.infradead.org
->>> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
->>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->>> ---
->>>  arch/arm64/mm/init.c | 16 ++++++++++++++--
->>>  1 file changed, 14 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>> index 1e93cfc7c47a..02ae4d623802 100644
->>> --- a/arch/arm64/mm/init.c
->>> +++ b/arch/arm64/mm/init.c
->>> @@ -91,8 +91,15 @@ static void __init reserve_crashkernel(void)
->>>       crash_size = PAGE_ALIGN(crash_size);
->>>
->>>       if (crash_base == 0) {
->>> -             /* Current arm64 boot protocol requires 2MB alignment */
->>> -             crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
->>> +             /* Current arm64 boot protocol requires 2MB alignment.
->>> +              * Also limit the crashkernel allocation to the first
->>> +              * 1GB of the RAM accessible (ZONE_DMA), as otherwise we
->>> +              * might run into OOM issues when crashkernel is executed,
->>> +              * as it might have been originally allocated from
->>> +              * either a ZONE_DMA32 memory or mixture of memory
->>> +              * chunks belonging to both ZONE_DMA and ZONE_DMA32.
->>> +              */
->> This comment needs help. Why does putting the crashkernel in ZONE_DMA
->> prevent "OOM issues"?
-> Sure, I can work on adding more details in the comment so that it
-> explains the potential OOM issue(s) better.
->
-> Thanks,
-> Bhupesh
->
->
-> .
->
+But the whole purpose of using goto in unsafe_???_user() is to allow the 
+use of asm goto. See explanations in commit 
+https://github.com/linuxppc/linux/commit/1bd4403d86a1c06cb6cc9ac87664a0c9d3413d51#diff-eba084de047bb8a9087dac10c06f44bc
 
 
+> 
+> I did a quick hack to do that and see no difference in the generated
+> code, but your commit adding put_user_goto() did show better code
+> generation, so possibly it depends on compiler version, or my example
+> wasn't complicated enough (filldir()).
+
+Yes as explained above it should remove the error checking in the caller 
+so your exemple was most likely too trivial.
+
+Christophe
