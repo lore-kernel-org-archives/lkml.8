@@ -2,403 +2,177 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0927C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C839208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="KmkgZokp"
+	by mail.kernel.org (Postfix) with ESMTP id A934C208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgGCDxW (ORCPT
+        id S1726323AbgGCDx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:53:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61965 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGCDxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:53:19 -0400
-IronPort-SDR: jZO/tren4WxxKFyk3jWN6muhgRx7FMSc6HJIAKheVewgm99Mlfqw6c+StVRLbvZe0BRxvPb+lo
- OZZ6xvCPk/yQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165143940"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="165143940"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 20:53:17 -0700
-IronPort-SDR: wnk8vVRTIdNDnVHaSdZVjtJ/lsEHD21zgtDOUKrSG0x1FDJHPpdCnmq8i7boOr3d2dhW7tfQ8d
- ps+WKyefsbRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="482234204"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 20:53:17 -0700
-Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX121.amr.corp.intel.com (10.22.225.226) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GC/JISaJL3G51KDV5GCsYOpjau130YfASO5lJO0bDAQBIaMZFxXhheAdC+/+fNJB6cALZaMwsZYMzPcka2bl5kAJ/tNtpjlszYQjevdcbqR3tirifR6J9Uw3ORmMop9a+QP5Qsq2e8DJzy8IkAMMr4FKj7tkxqpWYSfFq+AsnFLAVW5u9c/PuKXguJm57FVho4T3zVD94wbG7p2CUQcW7nKTPfjih0LB1n2HRNCaWU3NBy3GUjRkLFHXr5tbwHwC5nMAGlQKUb9A3CzqZBu48S+Yg/CI+FYOCVhQIsyND1m0psxUFspg1A3S+es2OepivF44xrOA1GNhte5i6/cftA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UqDhzxooY0X6jtji1FR8chh3mj8SaZlGIU5mxuWeZUo=;
- b=BiYheyfuWI2j2FqLtvwuD7eIr0rhm6b7z80pMxkpvhltX0CDRrgDGcn1IwydZeu4HVIUA5rv48itd/ld6mRAVN0BymLyGlkhagRffvLdb/mxMJPkuEmVIa04OObEKM0jV1gw0KKR23jMQXQVNOcWhasZeKmc7lsYrxVkIqtlwvNf6+6+kYhwLBcqadLcTsMK3loSodwydoNywyQOhYxwMcJAN7u5+TW/l2elu3qtbQufMIdWVtBvTYQ2YrAxRjSYRbBXyLOhT/WPDpCjelA7k+dylc2Y0pxy2/S8HTOxFtpv4wr3X71NfYHAJy4sZt/lYar9g6rq85saBDwVm6Mjcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UqDhzxooY0X6jtji1FR8chh3mj8SaZlGIU5mxuWeZUo=;
- b=KmkgZokpmoqNBiVAkwoy5QlXR/hSjuKw9b+4gOTa7colpNC9ZV6y1L0wPpsori1JCW5+Q8vW77P1WWlKIX9QCLaRp7zLJPJODuBE/DmbMNEf5mr+5Q2BAvmNIZg7PTPXX1Yq5cX6any2K3FdrNb232x9AImwVAs4VaCPYHLagCI=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB2537.namprd11.prod.outlook.com (2603:10b6:5:cd::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.23; Fri, 3 Jul 2020 03:53:14 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.033; Fri, 3 Jul 2020
- 03:53:14 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Index: AQHWSgRQVmc9Qp+Xi0mQEumzIJrE0qj0n78AgAClxmA=
-Date:   Fri, 3 Jul 2020 03:53:14 +0000
-Message-ID: <DM5PR11MB14353D6E0E4CE34BD839663BC36A0@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
- <20200702115454.058bd198@x1.home>
-In-Reply-To: <20200702115454.058bd198@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d152ba31-51d2-4546-015c-08d81f049cf8
-x-ms-traffictypediagnostic: DM6PR11MB2537:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB2537D298C5EEF680952C5374C36A0@DM6PR11MB2537.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3abHtGmnBgaVtqxvynip+nhzy1pb65YHdVn8N5g2QPB9GYXEIYqzXP2BrNyLY0HQd3mT+coM+HFl8JMtRzpBy99GMzdWlTHfHzQGBFbPEB3FDOiB4I35+FTHDGUWlYpmRwAm/Ppqt681CkZQKTlRFOBDYtCZu3gWlVldpcWm+6+TBeSY6Rr5VM+pg8OcreVwrfFjGh2Vsc52kJyacvFyeN8demMKwAudCmnmA9EQjSpKFnQy6BHXpvU6X0hUgUwpn6TxYezJZ1ap2r8fWzRYqR8+6+XXWThLAY52r4rN758P7cqRpAJl3dQTOPDCv7Z8TZ2I6Eeqi8rLjr/eYR5lFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(71200400001)(6916009)(54906003)(9686003)(316002)(55016002)(83380400001)(52536014)(7416002)(26005)(33656002)(6506007)(478600001)(4326008)(8936002)(7696005)(186003)(2906002)(8676002)(5660300002)(86362001)(66556008)(64756008)(66446008)(76116006)(66476007)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oHLQuncbA04bo7wQW/ET5fJ4wsDOWjWPu6MKGnCZ3NwzsnkwjBYrkB08YYr/G7Gv7zylokVbS6ld7XUH26KV4TzeekZf3H42C+p1mHgkA8gcTq2t7nOahiKf15g0l0QXUPBfsQoUudGgoBxXbwicgbJ6d813lLnETNxFnIbsj2DhGNJV6wwaNvchvUiJUbljBX7j4KsEFC8O97m2B8Rwt83amxABXME0FVm2MHt5nfESaUApLvEc5k5I1wSvO8UZiouA+VBDDpRSeSJV6tFHw74pdOVOzGn7Q+3DJKTzCY19diM+EUjDKZiVvUjq7Ck64cE+WqcGPgSodCsjWOwkKv7Z3yR1kUxBaHDCcGWzceZ1BLFI1K/PT7hmvXXGD77nvPsUtNOdJlrHv5ZI8pWQfo23tkJrwBRUkpAlvFBVZr8BoYvOsGH7Zpu5zhvUxZW84Y5YGcBUHxj2wahuwRxnMYNqd4V7hkof/EDw0LmJQpOQK+XdQd95mBQCra940JH4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Jul 2020 23:53:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6813 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725915AbgGCDx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:53:57 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CDE8C5EF4ABF00F4FB22;
+        Fri,  3 Jul 2020 11:53:54 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 3 Jul 2020 11:53:47 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <dyoung@redhat.com>,
+        <bhe@redhat.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <nsaenzjulienne@suse.de>, <corbet@lwn.net>, <bhsharma@redhat.com>,
+        <horms@verge.net.au>
+CC:     <guohanjun@huawei.com>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH v10 0/5] support reserving crashkernel above 4G on arm64 kdump
+Date:   Fri, 3 Jul 2020 11:58:11 +0800
+Message-ID: <20200703035816.31289-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d152ba31-51d2-4546-015c-08d81f049cf8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 03:53:14.5145
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T+/sL+heOP52hMKzlkD0DCyrTbwSmEMWz7wforblpbfDx1Fsfl3fftatEPA7xJi+SvvU7NXxboPC78pHSOO6aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2537
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, July 3, 2020 1:55 AM
->=20
-> On Wed, 24 Jun 2020 01:55:15 -0700
-> Liu Yi L <yi.l.liu@intel.com> wrote:
->=20
-> > IOMMUs that support nesting translation needs report the capability
-> > info to userspace, e.g. the format of first level/stage paging structur=
-es.
-> >
-> > This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
-> > nesting info after setting DOMAIN_ATTR_NESTING.
-> >
-> > v2 -> v3:
-> > *) remvoe cap/ecap_mask in iommu_nesting_info.
-> > *) reuse DOMAIN_ATTR_NESTING to get nesting info.
-> > *) return an empty iommu_nesting_info for SMMU drivers per Jean'
-> >    suggestion.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/arm-smmu-v3.c | 29 ++++++++++++++++++++--
-> >  drivers/iommu/arm-smmu.c    | 29 ++++++++++++++++++++--
-> >  include/uapi/linux/iommu.h  | 59
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 113 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> > index f578677..0c45d4d 100644
-> > --- a/drivers/iommu/arm-smmu-v3.c
-> > +++ b/drivers/iommu/arm-smmu-v3.c
-> > @@ -3019,6 +3019,32 @@ static struct iommu_group
-> *arm_smmu_device_group(struct device *dev)
-> >  	return group;
-> >  }
-> >
-> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
-> *smmu_domain,
-> > +					void *data)
-> > +{
-> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
-a;
-> > +	u32 size;
-> > +
-> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-> > +		return -ENODEV;
-> > +
-> > +	size =3D sizeof(struct iommu_nesting_info);
-> > +
-> > +	/*
-> > +	 * if provided buffer size is not equal to the size, should
-> > +	 * return 0 and also the expected buffer size to caller.
-> > +	 */
-> > +	if (info->size !=3D size) {
-> > +		info->size =3D size;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* report an empty iommu_nesting_info for now */
-> > +	memset(info, 0x0, size);
-> > +	info->size =3D size;
-> > +	return 0;
-> > +}
-> > +
-> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  				    enum iommu_attr attr, void *data)  { @@ -
-> 3028,8 +3054,7 @@
-> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  	case IOMMU_DOMAIN_UNMANAGED:
-> >  		switch (attr) {
-> >  		case DOMAIN_ATTR_NESTING:
-> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
-> ARM_SMMU_DOMAIN_NESTED);
-> > -			return 0;
-> > +			return arm_smmu_domain_nesting_info(smmu_domain,
-> data);
-> >  		default:
-> >  			return -ENODEV;
-> >  		}
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
-> > 243bc4c..908607d 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -1506,6 +1506,32 @@ static struct iommu_group
-> *arm_smmu_device_group(struct device *dev)
-> >  	return group;
-> >  }
-> >
-> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
-> *smmu_domain,
-> > +					void *data)
-> > +{
-> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
-a;
-> > +	u32 size;
-> > +
-> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-> > +		return -ENODEV;
-> > +
-> > +	size =3D sizeof(struct iommu_nesting_info);
-> > +
-> > +	/*
-> > +	 * if provided buffer size is not equal to the size, should
-> > +	 * return 0 and also the expected buffer size to caller.
-> > +	 */
-> > +	if (info->size !=3D size) {
-> > +		info->size =3D size;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* report an empty iommu_nesting_info for now */
-> > +	memset(info, 0x0, size);
-> > +	info->size =3D size;
-> > +	return 0;
-> > +}
-> > +
-> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  				    enum iommu_attr attr, void *data)  { @@ -
-> 1515,8 +1541,7 @@
-> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  	case IOMMU_DOMAIN_UNMANAGED:
-> >  		switch (attr) {
-> >  		case DOMAIN_ATTR_NESTING:
-> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
-> ARM_SMMU_DOMAIN_NESTED);
-> > -			return 0;
-> > +			return arm_smmu_domain_nesting_info(smmu_domain,
-> data);
-> >  		default:
-> >  			return -ENODEV;
-> >  		}
-> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> > index 1afc661..898c99a 100644
-> > --- a/include/uapi/linux/iommu.h
-> > +++ b/include/uapi/linux/iommu.h
-> > @@ -332,4 +332,63 @@ struct iommu_gpasid_bind_data {
-> >  	} vendor;
-> >  };
-> >
-> > +/*
-> > + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
-> > + *				user space should check it before using
-> > + *				nesting capability.
-> > + *
-> > + * @size:	size of the whole structure
-> > + * @format:	PASID table entry format, the same definition with
-> > + *		@format of struct iommu_gpasid_bind_data.
-> > + * @features:	supported nesting features.
-> > + * @flags:	currently reserved for future extension.
-> > + * @data:	vendor specific cap info.
-> > + *
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | feature       |  Notes                                           =
-  |
-> > + *
-> >
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D=3D=3D=3D=3D=3D=3D
-> > ++
-> > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used=
-  |
-> > + * |               |  in the system should be allocated by host kernel=
-  |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could =
-  |
-> > + * |               |  either be a host PASID passed in bind request or=
-  |
-> > + * |               |  default PASIDs (e.g. default PASID of aux-domain=
-) |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU     =
-  |
-> > + *
-> > ++---------------+----------------------------------------------------
-> > ++
->=20
-> Agree with the previous comments on these descriptions and Kevin's sugges=
-tions.
+This patch series enable reserving crashkernel above 4G in arm64.
 
-I see. will follow the suggestions.
+There are following issues in arm64 kdump:
+1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
+when there is no enough low memory.
+2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
+in this case, if swiotlb or DMA buffers are required, crash dump kernel
+will boot failure because there is no low memory available for allocation.
+3. commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32") broken
+the arm64 kdump. If the memory reserved for crash dump kernel falled in
+ZONE_DMA32, the devices in crash dump kernel need to use ZONE_DMA will alloc
+fail.
 
-> > + *
-> > + */
-> > +struct iommu_nesting_info {
-> > +	__u32	size;
-> > +	__u32	format;
-> > +	__u32	features;
-> > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
-> > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
-> > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
-> > +	__u32	flags;
-> > +	__u8	data[];
->=20
-> How does the user determine which vendor structure is provided in data[]?
+To solve these issues, introduce crashkernel=X,low to reserve specified
+size low memory.
+Crashkernel=X tries to reserve memory for the crash dump kernel under
+4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
+size low memory for crash kdump kernel devices firstly and then reserve
+memory above 4G.
 
-it can be deduced by the @format field. @format field follows the definitio=
-n
-in the iommu_gpasid_bind_data.
+When crashkernel is reserved above 4G in memory and crashkernel=X,low
+is specified simultaneously, kernel should reserve specified size low memory
+for crash dump kernel devices. So there may be two crash kernel regions, one
+is below 4G, the other is above 4G.
+In order to distinct from the high region and make no effect to the use of
+kexec-tools, rename the low region as "Crash kernel (low)", and pass the
+low region by reusing DT property "linux,usable-memory-range". We made the low
+memory region as the last range of "linux,usable-memory-range" to keep
+compatibility with existing user-space and older kdump kernels.
 
-struct iommu_gpasid_bind_data {
-        __u32 argsz;
-#define IOMMU_GPASID_BIND_VERSION_1     1
-        __u32 version;
-#define IOMMU_PASID_FORMAT_INTEL_VTD    1
-        __u32 format;
-#define IOMMU_SVA_GPASID_VAL    (1 << 0) /* guest PASID valid */
-        __u64 flags;
-        __u64 gpgd;
-        __u64 hpasid;
-        __u64 gpasid;
-        __u32 addr_width;
-        __u8  padding[12];
-        /* Vendor specific data */
-        union {
-                struct iommu_gpasid_bind_data_vtd vtd;
-        } vendor;
-};
+Besides, we need to modify kexec-tools:
+arm64: support more than one crash kernel regions(see [1])
 
-Regards,
-Yi Liu
+Another update is document about DT property 'linux,usable-memory-range':
+schemas: update 'linux,usable-memory-range' node schema(see [2])
 
-> Thanks,
->=20
-> Alex
->=20
-> > +};
-> > +
-> > +/*
-> > + * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info
-> > + *
-> > + *
-> > + * @flags:	VT-d specific flags. Currently reserved for future
-> > + *		extension.
-> > + * @addr_width:	The output addr width of first level/stage translation
-> > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
-> > + *		support.
-> > + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
-> > + *		register.
-> > + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
-> > + *		extended capability register.
-> > + */
-> > +struct iommu_nesting_info_vtd {
-> > +	__u32	flags;
-> > +	__u16	addr_width;
-> > +	__u16	pasid_bits;
-> > +	__u64	cap_reg;
-> > +	__u64	ecap_reg;
-> > +};
-> > +
-> >  #endif /* _UAPI_IOMMU_H */
+The previous changes and discussions can be retrieved from:
+
+Changes since [v9]
+- Patch 1 add Acked-by from Dave.
+- Update patch 5 according to Dave's comments.
+- Update chosen schema.
+
+Changes since [v8]
+- Reuse DT property "linux,usable-memory-range".
+Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
+memory region.
+- Fix kdump broken with ZONE_DMA reintroduced.
+- Update chosen schema.
+
+Changes since [v7]
+- Move x86 CRASH_ALIGN to 2M
+Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+- Update Documentation/devicetree/bindings/chosen.txt.
+Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
+suggested by Arnd.
+- Add Tested-by from Jhon and pk.
+
+Changes since [v6]
+- Fix build errors reported by kbuild test robot.
+
+Changes since [v5]
+- Move reserve_crashkernel_low() into kernel/crash_core.c.
+- Delete crashkernel=X,high.
+- Modify crashkernel=X,low.
+If crashkernel=X,low is specified simultaneously, reserve spcified size low
+memory for crash kdump kernel devices firstly and then reserve memory above 4G.
+In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
+pass to crash dump kernel by DT property "linux,low-memory-range".
+- Update Documentation/admin-guide/kdump/kdump.rst.
+
+Changes since [v4]
+- Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+
+Changes since [v3]
+- Add memblock_cap_memory_ranges back for multiple ranges.
+- Fix some compiling warnings.
+
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+patch.
+
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+in fdt_enforce_memory_region().
+There are at most two crash kernel regions, for two crash kernel regions
+case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+and then remove the memory range in the middle.
+
+[1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
+[2]: https://github.com/robherring/dt-schema/pull/19 
+[v1]: https://lkml.org/lkml/2019/4/2/1174
+[v2]: https://lkml.org/lkml/2019/4/9/86
+[v3]: https://lkml.org/lkml/2019/4/9/306
+[v4]: https://lkml.org/lkml/2019/4/15/273
+[v5]: https://lkml.org/lkml/2019/5/6/1360
+[v6]: https://lkml.org/lkml/2019/8/30/142
+[v7]: https://lkml.org/lkml/2019/12/23/411
+[v8]: https://lkml.org/lkml/2020/5/21/213
+[v9]: https://lkml.org/lkml/2020/6/28/73
+
+Chen Zhou (5):
+  x86: kdump: move reserve_crashkernel_low() into crash_core.c
+  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+  arm64: kdump: add memory for devices by DT property
+    linux,usable-memory-range
+  arm64: kdump: fix kdump broken with ZONE_DMA reintroduced
+  kdump: update Documentation about crashkernel on arm64
+
+ Documentation/admin-guide/kdump/kdump.rst     | 14 ++-
+ .../admin-guide/kernel-parameters.txt         | 17 +++-
+ arch/arm64/kernel/setup.c                     |  8 +-
+ arch/arm64/mm/init.c                          | 74 ++++++++++++---
+ arch/x86/kernel/setup.c                       | 66 ++------------
+ include/linux/crash_core.h                    |  3 +
+ include/linux/kexec.h                         |  2 -
+ kernel/crash_core.c                           | 90 +++++++++++++++++++
+ kernel/kexec_core.c                           | 17 ----
+ 9 files changed, 197 insertions(+), 94 deletions(-)
+
+-- 
+2.20.1
 
