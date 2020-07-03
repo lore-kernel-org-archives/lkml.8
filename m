@@ -2,124 +2,159 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74826C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55408C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD9E2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334872073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSEdiF8O"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="QmHrRP93";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVHDchzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGCAPm (ORCPT
+        id S1726362AbgGCAP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGCAPm (ORCPT
+        Thu, 2 Jul 2020 20:15:59 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41887 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725937AbgGCAP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:15:42 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE52C08C5C1;
-        Thu,  2 Jul 2020 17:15:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s14so11934616plq.6;
-        Thu, 02 Jul 2020 17:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=nuJRvdB0NXvVZz7pZcV4N1oDW2dnoBAuVAW0OAoXK2w=;
-        b=LSEdiF8O8c0k36FJz+J/p1Xm+032fT22eON16GPFoOrZL6GDx9jPsHusIL7FEU0XAV
-         lLDoHY9NSZfpcd5oNSgz7AXGqRLd1dfAW9ad86/buGeCa4uTE/vU9OPIKwfaZyBXfnsJ
-         uG05dXYdVlfndLY83LDfB7lzK6ZqRQP5RvYyTLEoAscx9LtDbk1kTfrj/Cwbbvqz6uxW
-         IUIYgXT0pd0DwhOqvL6wEv82lwldnFjq8WUAnvh0BthjGb+v++4h6R72lTgxl5Ir5SPV
-         KaijBTzwUbf0D6ex6rU/rFRlvvyVHMSFetaS1LKZRTYt3D1mhdMNSiJCFStkUNFQKfnS
-         w0+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=nuJRvdB0NXvVZz7pZcV4N1oDW2dnoBAuVAW0OAoXK2w=;
-        b=Hz5uPoOmI34jNibxFQgzG8dcvyTpPuwttGzgdY/dGS6GK8euGDlfSxLRaOd54uwZ7e
-         wg1iiQ1X2096xLB0jcr6U3QIZMnPvBS8sNWAwADZWzEAu7D8NKhAnoUq62vCcS6uwXAu
-         /WqcPecuG/yIXPQznZMzrrVoyJ5a0k8+GD8XSyIxviX+1bcoEwxfqJEDD3ENPhPrN3wS
-         80c7jzkC8CbweoPS71I664qGUHr7W0l4GNgVbip/eVDHWsTt23mSguKcinRIzVT0/4+7
-         WWapd1+dgB0ICBKKTBZpwu+F3gZWnFCqpzb7gX6mw3OSq8+WQFmkeKWYPfvBx1g8Mlkm
-         sq1A==
-X-Gm-Message-State: AOAM532WY+cpTtymdk9IBnjP7f1YFDQiWTyXYeWI9wDg38bzd1wrpoJE
-        GyZKyYga0cxBZwowUHIi4lGqmzE3
-X-Google-Smtp-Source: ABdhPJzVARbnUoiUECgH/rt6gF7oxr/jO/Or3UFnEeEEE5zO8Q2uC+eAackVR4Z456AOo0TJ+H99Rw==
-X-Received: by 2002:a17:902:b78a:: with SMTP id e10mr28875186pls.34.1593735341316;
-        Thu, 02 Jul 2020 17:15:41 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id b11sm10202251pfr.179.2020.07.02.17.15.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 17:15:40 -0700 (PDT)
-Date:   Fri, 03 Jul 2020 10:15:34 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     linux-mm@kvack.org, Zefan Li <lizefan@huawei.com>
-Cc:     =?iso-8859-1?q?Borislav=0A?= Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        =?iso-8859-1?q?Thomas=0A?= Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200413125303.423864-1-npiggin@gmail.com>
-        <20200413125303.423864-5-npiggin@gmail.com>
-        <d148f86c-b27b-63fb-31d2-35b8f52ec540@huawei.com>
-In-Reply-To: <d148f86c-b27b-63fb-31d2-35b8f52ec540@huawei.com>
+        Thu, 2 Jul 2020 20:15:58 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 16A715C01B3;
+        Thu,  2 Jul 2020 20:15:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 02 Jul 2020 20:15:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=wrs3v8MjlP7Q7VWVUBiPauQHIj
+        P2v+W5WpNE+Fx1jr0=; b=QmHrRP93lCvRfYB7/Ss2D39q/EzHksHTyIAuRohyJf
+        n5Q17uqzFO/aWUetejLkqnBpLvt62nGVQL5fjeblGY7+tcAwMWTbQJIBC6A1x+jg
+        FM+It5HzgO83yToQn/PjmDOd98jKrIE7J8/RmRytDsCFN7W25Rz9rLtwHOGjzfQM
+        RvvmUAWWNXWg479JBlZWUjKMYxbQlvr7zvEG/H/4BJ10V/Pyx+ZMQ84y80l5gR9D
+        sUf0q9bPQIj5Y9rz/0cuq9vjHFMiM4XkKZzffq8OEev+rzTaxEaio1E1ySPZigJn
+        aiIlGYZ8DAjCl0/6zr0ump5lAyRiPo0G+oLeI1Tykofw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wrs3v8MjlP7Q7VWVU
+        BiPauQHIjP2v+W5WpNE+Fx1jr0=; b=QVHDchzg74wDWP4YCGPYs5Fxn2XiIT1yO
+        947bOR8nv1Mvop38V7TMdOPS6tZM5pGXLFgw5Q/hV20GjdMN6Qdyzs4P9F83CDKK
+        LMDnszsx1JQyDAB1t5LeLqUsLToN/T8PCot747fsOkVN+q3H1wJy12+78YriQcc+
+        hJdMdP5XYqs9O45I6ZhNXTMSGqb1HF2UZuZ2U5kJ8tHQfD4fuQshmmef5Z5nnh9s
+        RTLSl0dv1kYic0O8dZTpmk6mWv3ohaLlkJjwyiOzWzn4kHt/U4UEnljd/RIb+HTD
+        HHAypE2DhDamFrf9zyc03z/VNUh2CljS5vTqQN6UXfHszTyGhRpcQ==
+X-ME-Sender: <xms:vHj-XqbHIDFdiAK_mOfTvZDoWoM5fvO3sRpjDxOq4NGrTW3yD6MIaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgdeftdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicunfhi
+    nhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpeekke
+    efkeelgfetvdekvedtffefudetveeuheefhfeikeevveetgeekhffgueegheenucffohhm
+    rghinhepvgguihhtohhrtghonhhfihhgrdhorhhgnecukfhppeejfedrvddvhedrgedrud
+    efkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegu
+    rghnnhihsehkughrrghgtdhnrdguvghv
+X-ME-Proxy: <xmx:vHj-XtZBUqcWob6eWc_0dKR_RHSmsNEsmKk2qYL-Ar0sMAF8ryS87w>
+    <xmx:vHj-Xk-k1GFwWrCtGeG7UmeiByiBPqw7ZDSd-n5jyLRPpI8Xbh2n2Q>
+    <xmx:vHj-Xspb4PLUdS5IMZn5E9PF3zPRPZEry-9MDODRc2BC57X4NAaKVw>
+    <xmx:vXj-XsUFcQkRVU35ARyemv4DzSGHBOxMFlGr5LlH_fQGND94kQ946Q>
+Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A4F6A3280059;
+        Thu,  2 Jul 2020 20:15:55 -0400 (EDT)
+From:   Danny Lin <danny@kdrag0n.dev>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Danny Lin <danny@kdrag0n.dev>
+Subject: [PATCH] editorconfig: Add automatic editor configuration file
+Date:   Thu,  2 Jul 2020 17:12:12 -0700
+Message-Id: <20200703001212.207565-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Message-Id: <1593735251.svr5r5cxle.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Zefan Li's message of July 1, 2020 5:10 pm:
->>  static void *__vmalloc_node(unsigned long size, unsigned long align,
->> -			    gfp_t gfp_mask, pgprot_t prot,
->> -			    int node, const void *caller);
->> +			gfp_t gfp_mask, pgprot_t prot, unsigned long vm_flags,
->> +			int node, const void *caller);
->>  static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask=
-,
->> -				 pgprot_t prot, int node)
->> +				 pgprot_t prot, unsigned int page_shift,
->> +				 int node)
->>  {
->>  	struct page **pages;
->> +	unsigned long addr =3D (unsigned long)area->addr;
->> +	unsigned long size =3D get_vm_area_size(area);
->> +	unsigned int page_order =3D page_shift - PAGE_SHIFT;
->>  	unsigned int nr_pages, array_size, i;
->>  	const gfp_t nested_gfp =3D (gfp_mask & GFP_RECLAIM_MASK) | __GFP_ZERO;
->>  	const gfp_t alloc_mask =3D gfp_mask | __GFP_NOWARN;
->>  	const gfp_t highmem_mask =3D (gfp_mask & (GFP_DMA | GFP_DMA32)) ?
->> -					0 :
->> -					__GFP_HIGHMEM;
->> +					0 : __GFP_HIGHMEM;
->> =20
->> -	nr_pages =3D get_vm_area_size(area) >> PAGE_SHIFT;
->> +	nr_pages =3D size >> page_shift;
->=20
-> while try out this patchset, we encountered a BUG_ON in account_kernel_st=
-ack()
-> in kernel/fork.c.
->=20
-> BUG_ON(vm->nr_pages !=3D THREAD_SIZE / PAGE_SIZE);
->=20
-> which obviously should be updated accordingly.
+EditorConfig is a standard for defining basic editor configuration in
+projects. There is support available for 47 code editors as of writing,
+including both built-in and extension support. Many notable projects
+have adopted the standard already, including zsh, htop, and qemu.
 
-Thanks for finding that. We may have to change this around a bit so=20
-nr_pages still appears to be in PAGE_SIZE units for anybody looking.
+While this isn't a full-fledged C code style specifier, it does set some
+basic ground rules that make it more convenient for contributors to use
+any editor of their choice and not have to worry about indentation, line
+endings, encoding, final newlines, etc. This should make it
+significantly easier to conform to the kernel's general code style when
+used in combination with clang-format.
 
-Thanks,
-Nick
+For more information, check the official EditorConfig website:
+https://editorconfig.org/
+
+Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+---
+ .editorconfig                      | 16 ++++++++++++++++
+ .gitignore                         |  1 +
+ Documentation/process/4.Coding.rst |  6 ++++++
+ 3 files changed, 23 insertions(+)
+ create mode 100644 .editorconfig
+
+diff --git a/.editorconfig b/.editorconfig
+new file mode 100644
+index 000000000000..580d2e90d855
+--- /dev/null
++++ b/.editorconfig
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0
++# Linux kernel EditorConfig file (https://editorconfig.org/)
++
++# Located at the project root
++root = true
++
++[*]
++charset = utf-8
++end_of_line = lf
++insert_final_newline = true
++
++indent_style = tab
++indent_size = 8
++
++# This avoids introducing too many unnecessary changes in trivial commits
++trim_trailing_whitespace = false
+diff --git a/.gitignore b/.gitignore
+index 87b9dd8a163b..956bcc3c9d76 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -89,6 +89,7 @@ modules.order
+ #
+ !.clang-format
+ !.cocciconfig
++!.editorconfig
+ !.get_maintainer.ignore
+ !.gitattributes
+ !.gitignore
+diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
+index 13dd893c9f88..c5c46bcafdad 100644
+--- a/Documentation/process/4.Coding.rst
++++ b/Documentation/process/4.Coding.rst
+@@ -66,6 +66,12 @@ for aligning variables/macros, for reflowing text and other similar tasks.
+ See the file :ref:`Documentation/process/clang-format.rst <clangformat>`
+ for more details.
+ 
++Some basic editor settings, such as indentation and line endings, will be
++set automatically if you are using an editor that is compatible with
++EditorConfig. See the official EditorConfig website for more information: 
++
++https://editorconfig.org/
++
+ 
+ Abstraction layers
+ ******************
+-- 
+2.27.0
+
