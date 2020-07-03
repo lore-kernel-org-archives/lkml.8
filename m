@@ -6,90 +6,86 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50034C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68805C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20BA221548
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4142C2192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593790362;
-	bh=E5WBMBWpc0DU8roMGj9Z8eOIghgWwVOfWI+Jkv8oYHE=;
+	s=default; t=1593790712;
+	bh=EaZyRGMJ3DZGnCZucHhtrQQ2FHW+M2zRfFOKdqaQ88Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s6rElS2/rLvU3Qu7isQZQUJS+P6gPPpaLLdHg3/UhC0uvZHsTI8MySV87HQNVmfrA
-	 GEbD3K1gW95Akely9E2KMt9BWtBMe/8VL8bA0ZNa3EI8bMFZEHllWXoJ+J2GpbwtYs
-	 Dq0vrOiKNTNLVqtp4GjGHB2k0G4BhszYKCrB+vSM=
+	b=Tcm5keWQPvly+Mpx5COQ1nvlHTu9Ek+3lmmirwnXIQcsBvtxKuFajM7FGKZQh/1g9
+	 lcihq4yOd99y/tW40WXn5XVBF7eK2XszxthQPojDMZQ9VZNb/RNAUhTuxLPXxZt/Pv
+	 aNIg6kr3nvz0R2tjGgUd0TLYEL9wJbhjnL1uohwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgGCPcl (ORCPT
+        id S1726594AbgGCPia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37936 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 11:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbgGCPck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:32:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726147AbgGCPia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:38:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D6F208C7;
-        Fri,  3 Jul 2020 15:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D794421927;
+        Fri,  3 Jul 2020 15:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593790360;
-        bh=E5WBMBWpc0DU8roMGj9Z8eOIghgWwVOfWI+Jkv8oYHE=;
+        s=default; t=1593790709;
+        bh=EaZyRGMJ3DZGnCZucHhtrQQ2FHW+M2zRfFOKdqaQ88Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NbF7K+rP+Lo7TK7VAT8lb6KkN5ajc8sINPfixyJa21OL3wnZEL5eag5gC7uqJkddx
-         ZAyrCNVXLTqcjI9X9xFQbNqTSFQjvyc+xZnxCOrhwQ45IAzfPMuwXTARz0dgB4jAq4
-         nVsqvwd2vB3bG/qxclE1tWY187qwflM5vN2SNO0M=
-Date:   Fri, 3 Jul 2020 16:32:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        alsa-devel@alsa-project.org, Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH] ASoC: core: Remove only the registered component in devm
- functions
-Message-ID: <20200703153237.GA16747@sirena.org.uk>
-References: <20200703074935.884736-1-maxime@cerno.tech>
+        b=snFx2Z60KTiip9uWRHw81DrSwKdtITBeMj0S7UBYCn7duUGPMMevfo6FRnHEaSEaJ
+         z8EYaMQgdT7ISklcQDM7jy8dgai4MALaQhWlxe4mgs1kX2bKwQuxoSn1TYjaKtYuUy
+         02dgEQmdo241zSeWdyXwXIRJOCRXfhw/TFhz7QQ8=
+Date:   Fri, 3 Jul 2020 16:38:24 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH 3/3] arm64: Add KRYO4XX silver CPU cores to erratum list
+ 1530923 and 1024718
+Message-ID: <20200703153824.GA19327@willie-the-truck>
+References: <7335e7fa1303a56a5e60339ed0c5d619@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703074935.884736-1-maxime@cerno.tech>
-X-Cookie: Without fools there would be no wisdom.
+In-Reply-To: <7335e7fa1303a56a5e60339ed0c5d619@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 08:04:04PM +0530, Sai Prakash Ranjan wrote:
+> On 2020-07-03 19:25, Will Deacon wrote:
+> > On Tue, Jun 30, 2020 at 11:30:55PM +0530, Sai Prakash Ranjan wrote:
+> > > KRYO4XX silver/LITTLE CPU cores with revision r1p0 are affected by
+> > > erratum 1530923 and 1024718, so add them to the respective list.
+> > > The variant and revision bits are implementation defined and are
+> > > different from the their Cortex CPU counterparts on which they are
+> > > based on, i.e., r1p0 is equivalent to rdpe.
+> > 
+> > So just to confirm, revisions prior to rdpe are unaffected, or do those
+> > parts simply not exist?
+> > 
+> 
+> There is one revision prior to this r0p1(r7pc) which has a different part
+> number and are used in v1 of SoCs which are limited to only internal test
+> platforms in the early stages of bringup and not used in actual devices out
+> there, so I did not add it to the list but they are affected. Plus we would
+> need to add another MIDR_QCOM_KRYO_4XX_SILVER_V1 if we are supporting them
+> which I thought was not worth it when devices with those CPUs are not
+> available.
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, just wanted to make sure. Sounds like we can safely assume those
+parts don't exist.
 
-On Fri, Jul 03, 2020 at 09:49:35AM +0200, Maxime Ripard wrote:
-> The ASoC devm_ functions that register a component
-> (devm_snd_soc_register_component and devm_snd_dmaengine_pcm_register) will
-> clean their component by running snd_soc_unregister_component.
-
-This doesn't apply against current code, please check and resend.  Looks
-like a genuine issue and sensible fix :/
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7/T5UACgkQJNaLcl1U
-h9CblQf8Cyrz/i6w3dI9uFuMBRAn8YEfVAoLAnWIIdNku8olQBF8OVzq8h6luaBy
-EqFNggt9cdVR146AImJEXdxJZgwig1sC9li1fMtSSiNKW35/5+IZsH28Pi+/7BTJ
-Y2mJbLi0s7gpd1XsNj7UsGuR/JELG+bpVPhf4vy+LcCbjJsFYniybNlzElYR/uux
-5YTbnzPGgXK3uMUHRnA5c2ehu+af7V/TgVnrtlbyQAA/8d0IPAyXQ1nYzX8NRslV
-4i2lF859MNZROH8t5J6eApiecWQprbXADzzvXqO63G4Cc0Qj6/b2wEj/p2W9chwe
-mULcSb4O9IOPOEcQpU1fs12HfHYD0A==
-=5nPY
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+Will
