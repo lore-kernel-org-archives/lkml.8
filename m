@@ -2,137 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B331C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F40C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5E1207E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB7E20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:30:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iaD8iCHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgGCD2y (ORCPT
+        id S1726140AbgGCDaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:28:54 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:33603 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726119AbgGCD2V (ORCPT
+        Thu, 2 Jul 2020 23:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgGCDaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:28:21 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 3 Jul 2020 06:28:15 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 0633SFp3006786;
-        Fri, 3 Jul 2020 06:28:15 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 0633SFxi006659;
-        Fri, 3 Jul 2020 06:28:15 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 0633SE3a006658;
-        Fri, 3 Jul 2020 06:28:14 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-Subject: [PATCH net-next v2 2/7] devlink: Rework devlink health reporter destructor
-Date:   Fri,  3 Jul 2020 06:27:33 +0300
-Message-Id: <1593746858-6548-3-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1593746858-6548-1-git-send-email-moshe@mellanox.com>
-References: <1593746858-6548-1-git-send-email-moshe@mellanox.com>
+        Thu, 2 Jul 2020 23:30:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A335C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 20:30:07 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so14456172pgk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 20:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mhHWKWz4+7rswG/cVf5u/2XBys3C/A1wtkJS52atwvM=;
+        b=iaD8iCHT2tH5aaetOxDpmb+hp2NNKCSgqWir0PneWlfh4jPSqWmG3Fq/6hs0On7hGp
+         gI0BLO0U6dRmbAGhJjcsNID08E0c6sOnvn+Y0TDwzf4kOTQ8/QUp/wdQzgZVNfTKxMpZ
+         pED1PF+Nfrmmp0Zu8JYR/O0h5j4QoT8142OiY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mhHWKWz4+7rswG/cVf5u/2XBys3C/A1wtkJS52atwvM=;
+        b=EV05ewFAcI5XPb9utm8rBBHjpSPVIlLwVoC8xmb/fqwD6PB1WwzKHuLlJ1UkVq0U43
+         wVkyBi6XiTxCAmJgBsK7Xu4LkWwaAEx4zZiKvVTW5AxJdntveqXS8mlkKpXmZiTp/gjS
+         vzzDiH6PkUrFpy5lKCJeF59+bbRLM2Y1miJ3IeWnKDLTyelHYoMKutPTxu6d0TlXotcX
+         ijNaK2NXox318Z1RCUO33hjEkwgKqeRjf4TV0EJXJ0n16S8WWhjrv8aoV2ugFHX5X+6n
+         l3948YrQL4pXU6iasdQ/+plrAl67QYFKe20hcLkoRK8919rmDCKMr4GLrGybCmgP/3gk
+         +nEw==
+X-Gm-Message-State: AOAM5324n7X3u//8ffTLP6H6a6wqbbMFqZ2g6GwuJ9jlJhovC5ziUhye
+        u2aW0tekttu6yh9x5A3MhbGxjpV/CiToKQ==
+X-Google-Smtp-Source: ABdhPJwOdorMAP4NfsHg8xE4MqSzD2/7knFWxWKzUNwHu1GYKFX+989l2/Yd0xXOGX/+GHWBW8hGOA==
+X-Received: by 2002:a65:448c:: with SMTP id l12mr26586535pgq.234.1593747006589;
+        Thu, 02 Jul 2020 20:30:06 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:725a:fff:fe46:44eb])
+        by smtp.gmail.com with ESMTPSA id 204sm10372466pfc.18.2020.07.02.20.30.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 20:30:05 -0700 (PDT)
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        alsa-devel@alsa-project.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Subject: [PATCH] ASoC: cros_ec_codec: Log results when EC commands fail
+Date:   Fri,  3 Jul 2020 11:29:48 +0800
+Message-Id: <20200703032948.2185290-1-yuhsuan@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+Log results of failed EC commands to identify a problem more easily.
 
-Devlink keeps its own reference to every reporter in a list and inits
-refcount to 1 upon reporter's creation. Existing destructor waits to
-free the memory indefinitely using msleep() until all references except
-devlink's own are put.
-
-Rework this mechanism by moving memory free routine to a separate
-function, which is called when the last reporter reference is put.
-
-Besides, it allows to call __devlink_health_reporter_destroy() while
-locked on a reporters list mutex in symmetry to
-__devlink_health_reporter_create(), which is required in follow-up
-patch.
-
-Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 ---
- net/core/devlink.c | 37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+ sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index dfd7fe2..dcf8006 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -5353,6 +5353,29 @@ struct devlink_health_reporter *
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_create);
+diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+index 8d45c628e988e..a4ab62f59efa6 100644
+--- a/sound/soc/codecs/cros_ec_codec.c
++++ b/sound/soc/codecs/cros_ec_codec.c
+@@ -90,10 +90,17 @@ static int send_ec_host_command(struct cros_ec_device *ec_dev, uint32_t cmd,
+ 	if (outsize)
+ 		memcpy(msg->data, out, outsize);
  
-+static void
-+devlink_health_reporter_free(struct devlink_health_reporter *reporter)
-+{
-+	mutex_destroy(&reporter->dump_lock);
-+	if (reporter->dump_fmsg)
-+		devlink_fmsg_free(reporter->dump_fmsg);
-+	kfree(reporter);
-+}
-+
-+static void
-+devlink_health_reporter_put(struct devlink_health_reporter *reporter)
-+{
-+	if (refcount_dec_and_test(&reporter->refcount))
-+		devlink_health_reporter_free(reporter);
-+}
-+
-+static void
-+__devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
-+{
-+	list_del(&reporter->list);
-+	devlink_health_reporter_put(reporter);
-+}
-+
- /**
-  *	devlink_health_reporter_destroy - destroy devlink health reporter
-  *
-@@ -5362,14 +5385,8 @@ struct devlink_health_reporter *
- devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
- {
- 	mutex_lock(&reporter->devlink->reporters_lock);
--	list_del(&reporter->list);
-+	__devlink_health_reporter_destroy(reporter);
- 	mutex_unlock(&reporter->devlink->reporters_lock);
--	while (refcount_read(&reporter->refcount) > 1)
--		msleep(100);
--	mutex_destroy(&reporter->dump_lock);
--	if (reporter->dump_fmsg)
--		devlink_fmsg_free(reporter->dump_fmsg);
--	kfree(reporter);
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_destroy);
+-	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	ret = cros_ec_cmd_xfer(ec_dev, msg);
+ 	if (ret < 0)
+ 		goto error;
  
-@@ -5639,12 +5656,6 @@ int devlink_health_report(struct devlink_health_reporter *reporter,
- 	return NULL;
- }
++	if (msg->result != EC_RES_SUCCESS) {
++		dev_err(ec_dev->dev, "Command %d failed: %d\n", cmd,
++			msg->result);
++		ret = -EPROTO;
++		goto error;
++	}
++
+ 	if (insize)
+ 		memcpy(in, msg->data, insize);
  
--static void
--devlink_health_reporter_put(struct devlink_health_reporter *reporter)
--{
--	refcount_dec(&reporter->refcount);
--}
--
- void
- devlink_health_reporter_state_update(struct devlink_health_reporter *reporter,
- 				     enum devlink_health_reporter_state state)
 -- 
-1.8.3.1
+2.27.0.212.ge8ba1cc988-goog
 
