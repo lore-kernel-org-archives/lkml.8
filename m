@@ -2,92 +2,151 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB796206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nINZe0Wk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mFdMw9wx"
+	by mail.kernel.org (Postfix) with ESMTP id B8A4F207D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593777558;
+	bh=keRg3YRbxDR461UXdjt+avGgeCv6FyZupYAUcFrt5cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2wOr59Ho3Q11Cn7+F6GlZ2DaX2aHtq0gZOdQlN9B1LTa08iTEg4v4UHP/KKroMY39
+	 bNUTCwSYQ1mzW2CQGlGekLZSJaT0lb/27/VJLxJ5PPd74JGTwtCSjLVEbvoIStuFCr
+	 kuG3UhHXeWfBkC56RfBOrWFNcxLhhs1HCsdGiEAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGCLyv (ORCPT
+        id S1726183AbgGCL7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGCLyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:54:50 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D520C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 04:54:50 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593777288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tqsPqORaw9Q178d54A+8BgwdJHYrzEiA8iUXpX8kYzc=;
-        b=nINZe0WknDYQsTzPNQZsKNTifXY2Ch3I5dT0PAGllDaHe+WkK++GpKN8LDDU271AfWGiax
-        zLcxxLPdDraYlifN/XSGzv3F9jWK9Qoxabpztre4iv+PVaaqPJ79nBDIWFk2Nb+Bo+zICS
-        4dVBbsT1v5bN1EmLVSSUck5wgoyNJgDkuF5XgEYHTx7Mrxq5M4P0HrP7y5QEpIh7Vq4tOq
-        odXcAON6TTbpdlFplDmvWQwCE0Oy3WZJD8snziiG/mRwxrQvMvw8+QBMNUuWXFnCQafGko
-        2m8rzcFgdcbx7mzIAlvLcV6KTrSUQoUmMLIJp3jDDnA2xJeiy8MyVIWp6fMR+w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593777288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tqsPqORaw9Q178d54A+8BgwdJHYrzEiA8iUXpX8kYzc=;
-        b=mFdMw9wxfKXp10wnG/GF5CJpEOzicAbwqZNhRSiqBp/by425+oGhGe6L+jqPHGF6dnjMwj
-        WWWW1/P0Ytz/iVCw==
-To:     lijiang <lijiang@redhat.com>, Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] printk: use the lockless ringbuffer
-In-Reply-To: <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
-References: <20200618144919.9806-1-john.ogness@linutronix.de> <20200618144919.9806-4-john.ogness@linutronix.de> <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com> <87zh8imgs5.fsf@jogness.linutronix.de> <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
-Date:   Fri, 03 Jul 2020 14:00:47 +0206
-Message-ID: <87lfk0stiw.fsf@jogness.linutronix.de>
+        Fri, 3 Jul 2020 07:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbgGCL7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:59:16 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.162.131.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA95E20782;
+        Fri,  3 Jul 2020 11:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593777555;
+        bh=keRg3YRbxDR461UXdjt+avGgeCv6FyZupYAUcFrt5cI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HpsZCP0ypoAaUAk9b21qT0U1PLtj+R/qZhp0jdG1d0gTV1gZ3HCKuKqgHSTPLOOa+
+         CUP0s4voHHdAXpiDVzpeLfZ2++ZGBYto/ZR8AP9GzKnyEJFDnJRvqEeYng//251jUK
+         9ukX0EF/OdOiFmAeNLzBdGDrKp9rgvoTww7y761o=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0BC47405FF; Fri,  3 Jul 2020 08:59:12 -0300 (-03)
+Date:   Fri, 3 Jul 2020 08:59:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "liwei (GF)" <liwei391@huawei.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, guohanjun@huawei.com
+Subject: Re: [PATCH] perf report TUI: Fix segmentation fault in
+ perf_evsel__hists_browse()
+Message-ID: <20200703115911.GE1320@kernel.org>
+References: <20200612094322.39565-1-liwei391@huawei.com>
+ <CAM9d7cjK=TN8-0kaWtMo2vPq_AzsmFwM9z=f_ni7qD2r9-8FDQ@mail.gmail.com>
+ <48be67be-9b87-87a1-125a-bb7d0d027a57@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48be67be-9b87-87a1-125a-bb7d0d027a57@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02, lijiang <lijiang@redhat.com> wrote:
-> About the VMCOREINFO part, I made some tests based on the kernel patch
-> v3, the makedumpfile and crash-utility can work as expected with your
-> patch(userspace patch), but, unfortunately, the
-> vmcore-dmesg(kexec-tools) can't correctly read the printk ring buffer
-> information, and get the following error:
->
-> "Missing the log_buf symbol"
->
-> The kexec-tools(vmcore-dmesg) should also have a similar patch, just like
-> in the makedumpfile and crash-utility.
+Em Fri, Jul 03, 2020 at 09:03:53AM +0800, liwei (GF) escreveu:
+> Ping...
 
-A patched kexec-tools is available here [0].
+Thanks, applied and tested, added the Acked-by Jiri and Namhyung
+provided,
 
-I did not test using 32-bit dumps on 64-bit machines and vice versa. But
-it should work.
+- Arnaldo
+ 
+> On 2020/6/12 23:19, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Fri, Jun 12, 2020 at 6:58 PM Wei Li <liwei391@huawei.com> wrote:
+> >>
+> >> The segmentation fault can be reproduced as following steps:
+> >> 1) Executing perf report in tui.
+> >> 2) Typing '/xxxxx' to filter the symbol to get nothing matched.
+> >> 3) Pressing enter with no entry selected.
+> >> Then it will report a segmentation fault.
+> >>
+> >> It is caused by the lack of check of browser->he_selection when
+> >> accessing it's member res_samples in perf_evsel__hists_browse().
+> >>
+> >> These processes are meaningful for specified samples, so we can
+> >> skip these when nothing is selected.
+> >>
+> >> Fixes: 4968ac8fb7c3 ("perf report: Implement browsing of individual samples")
+> >> Signed-off-by: Wei Li <liwei391@huawei.com>
+> > 
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > 
+> > Thanks
+> > Namhyung
+> > 
+> > 
+> >> ---
+> >>  tools/perf/ui/browsers/hists.c | 17 +++++++++++------
+> >>  1 file changed, 11 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> >> index 487e54ef56a9..2101b6b770d8 100644
+> >> --- a/tools/perf/ui/browsers/hists.c
+> >> +++ b/tools/perf/ui/browsers/hists.c
+> >> @@ -2288,6 +2288,11 @@ static struct thread *hist_browser__selected_thread(struct hist_browser *browser
+> >>         return browser->he_selection->thread;
+> >>  }
+> >>
+> >> +static struct res_sample *hist_browser__selected_res_sample(struct hist_browser *browser)
+> >> +{
+> >> +       return browser->he_selection ? browser->he_selection->res_samples : NULL;
+> >> +}
+> >> +
+> >>  /* Check whether the browser is for 'top' or 'report' */
+> >>  static inline bool is_report_browser(void *timer)
+> >>  {
+> >> @@ -3357,16 +3362,16 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+> >>                                              &options[nr_options], NULL, NULL, evsel);
+> >>                 nr_options += add_res_sample_opt(browser, &actions[nr_options],
+> >>                                                  &options[nr_options],
+> >> -                                hist_browser__selected_entry(browser)->res_samples,
+> >> -                                evsel, A_NORMAL);
+> >> +                                                hist_browser__selected_res_sample(browser),
+> >> +                                                evsel, A_NORMAL);
+> >>                 nr_options += add_res_sample_opt(browser, &actions[nr_options],
+> >>                                                  &options[nr_options],
+> >> -                                hist_browser__selected_entry(browser)->res_samples,
+> >> -                                evsel, A_ASM);
+> >> +                                                hist_browser__selected_res_sample(browser),
+> >> +                                                evsel, A_ASM);
+> >>                 nr_options += add_res_sample_opt(browser, &actions[nr_options],
+> >>                                                  &options[nr_options],
+> >> -                                hist_browser__selected_entry(browser)->res_samples,
+> >> -                                evsel, A_SOURCE);
+> >> +                                                hist_browser__selected_res_sample(browser),
+> >> +                                                evsel, A_SOURCE);
+> >>                 nr_options += add_switch_opt(browser, &actions[nr_options],
+> >>                                              &options[nr_options]);
+> >>  skip_scripting:
+> >> --
+> >> 2.17.1
+> >>
 
-John Ogness
+-- 
 
-[0] https://github.com/Linutronix/kexec-tools.git (printk branch)
+- Arnaldo
