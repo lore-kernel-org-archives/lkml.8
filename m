@@ -2,99 +2,87 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92028C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B30C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 541DE20760
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zDmqGVF3"
+	by mail.kernel.org (Postfix) with ESMTP id 4A63320760
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGCNZe (ORCPT
+        id S1726379AbgGCN0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgGCNZe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:25:34 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACF4C08C5C1;
-        Fri,  3 Jul 2020 06:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mTUdInrl0UZ5/CAUTtR8K6FDHzAHWr9fq3pJX4MJ7Gs=; b=zDmqGVF3FOX7aSDK4H8sAB/UGf
-        KrxUneT0wbec5AHPOWFWgsQ58J7O+x9kLSh6PJJns7NSEVQU5N9HLWo16vbkLGQakk7aa0dWh7QcL
-        grhzH9Vhd13yLmAKDlzxBAGgMJUMhc2N63hyENk4ip1OBwF3lMnThKgxhGjHOf93UVGDhIJabxxdh
-        PUNVs3yxqSKjZQoFoCbxqN8YldUcpszlAWVdmsX979wqXUgCBvBmOoPH/nHcee/NLh6hdRgtBFf9u
-        OxuXx54Xhpa+MCreoZf20laWaE2S6iSRhTAi9+Q78S4yOV4Vk9Mo0GC1/n+tL0uvPfxff2DnoUFjs
-        DrqF4xAQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrLgy-0002iy-Rt; Fri, 03 Jul 2020 13:25:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 718DD301124;
-        Fri,  3 Jul 2020 15:25:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5F59B20A9E7A6; Fri,  3 Jul 2020 15:25:23 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 15:25:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200703132523.GM117543@hirez.programming.kicks-ass.net>
-References: <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+        Fri, 3 Jul 2020 09:26:07 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:33602 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbgGCN0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:26:06 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 063DNHqc002307
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Fri, 3 Jul 2020 06:23:27 -0700
+Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 3 Jul 2020 06:23:06 -0700
+Received: by yow-pgortmak-d1.corp.ad.wrs.com (Postfix, from userid 1000)        id
+ 1A1512E0381; Fri,  3 Jul 2020 09:23:06 -0400 (EDT)
+Date:   Fri, 3 Jul 2020 09:23:06 -0400
+From:   Paul Gortmaker <paul.gortmaker@windriver.com>
+To:     Dave Jones <davej@codemonkey.org.uk>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        <peterz@infradead.org>, <mgorman@techsingularity.net>,
+        <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Michal Kubecek <mkubecek@suse.cz>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: weird loadavg on idle machine post 5.7
+Message-ID: <20200703132305.GA25509@windriver.com>
+References: <20200702171548.GA11813@codemonkey.org.uk>
+ <20200702211555.GA27819@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200702211555.GA27819@windriver.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
-> > The prototype for GCC is here: https://github.com/AKG001/gcc/
-> 
-> Thanks! Those test cases are somewhat over qualified though:
-> 
->        static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
+[Re: weird loadavg on idle machine post 5.7] On 02/07/2020 (Thu 17:15) Paul Gortmaker wrote:
 
-One question though; since its a qualifier, and we've recently spend a
-whole lot of effort to strip qualifiers in say READ_ONCE(), how does,
-and how do we want, this qualifier to behave.
+> [weird loadavg on idle machine post 5.7] On 02/07/2020 (Thu 13:15) Dave Jones wrote:
 
-C++ has very convenient means of manipulating qualifiers, so it's not
-much of a problem there, but for C it is, as we've found, really quite
-cumbersome. Even with _Generic() we can't manipulate individual
-qualifiers afaict.
+[...]
+
+> > both implicated this commit:
+> > 
+> > commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
+> > Author: Peter Zijlstra <peterz@infradead.org>
+> > Date:   Sun May 24 21:29:55 2020 +0100
+> > 
+> >     sched/core: Optimize ttwu() spinning on p->on_cpu
+> 
+> I was down to 10 commits roughly above and below this guy before hearing
+> you were working the same problem.
+> 
+> I just got this guy to reveal a false load after a 2h test as well.
+> I want to let the one underneath soak overnight just to also confirm it
+> is "good" - so that is pending.
+
+As per above, I ran a 12h test overnight on 505b8af5891 and it seems
+fine.  Every other "bad" bisect point failed in 7h or less.  So my
+testing seems to give the same result as Dave.
+
+Paul.
+--
+
+root@t5610:/home/paul/git/linux-head# 
+[1]-  Done                    nohup
+tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 24 --duration 720 --configs TREE03 --trust-make > /tmp/kvm.sh.out 2>&1
+root@t5610:/home/paul/git/linux-head# uptime
+ 09:10:56 up 13:12,  2 users,  load average: 0.00, 0.00, 0.14
+root@t5610:/home/paul/git/linux-head# cat /proc/version 
+Linux version 5.7.0-rc6-00029-gd505b8af5891 (paul@t5610) (gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2), GNU ld (GNU Binutils for Ubuntu) 2.34) #2 SMP Thu Jul 2 18:55:40 EDT 2020
