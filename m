@@ -2,146 +2,155 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57627214DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DE720760
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ItGZjDRI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBO1XJ5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgGCNNj (ORCPT
+        id S1726183AbgGCNUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59686 "EHLO
+        Fri, 3 Jul 2020 09:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGCNNj (ORCPT
+        with ESMTP id S1726022AbgGCNUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:13:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3842C08C5C1;
-        Fri,  3 Jul 2020 06:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uqsQimSA3ZVIJmzJ+g3hxvE+rQFiKwkEojhvCeRdahw=; b=ItGZjDRIImf27YsAGtOG8yy/um
-        tHTSFrVgQyOISf1u9ovbSydWGKTsYFOu1QdZqaIrPrVC+BQULRRFgfurUr+UHbhbVAjFYXc0yCGNH
-        NRV6Ty0xvDowLbPzhWsEfUHzZqw0FT874nx/34bvhnQsXXmIDYEOYRNqxPNQYH8rAHKE2/8AwTRk8
-        wHLizFfF5+qhuvmcj3dz1f5NSP8/5ZJsGkhy1O/RcYnmb5zr+RExexvUuyCwYq8Luedw4dSOP2EUv
-        Sin4pSha9/RbjtlWc8OZlJovtZ17d+oq5poGsjxjQDDenUnzl1rkiSj26lYRo48qjQPCyZuX1TsWH
-        IDaagGpA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrLVT-0003j1-Sa; Fri, 03 Jul 2020 13:13:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 71D12301124;
-        Fri,  3 Jul 2020 15:13:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 30A0521476E91; Fri,  3 Jul 2020 15:13:30 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 15:13:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200703131330.GX4800@hirez.programming.kicks-ass.net>
-References: <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
+        Fri, 3 Jul 2020 09:20:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D89C08C5C1;
+        Fri,  3 Jul 2020 06:20:21 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 207so13801978pfu.3;
+        Fri, 03 Jul 2020 06:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LDiFULixaebs2MrsIr7/asrSZO8qQssL9OgufzsRRnY=;
+        b=KBO1XJ5zAIjPFUjuxrpGgKmLwz0mXFjXa559w/Dgr+rBE+hEw+sVLFas/aRJSVyQIX
+         cPfYRDxpl97pxvktYM6nSWFJZsN9ky9lLF+m4shdFGtqKIEmvxOYlPxIcJTvEqrtMAMz
+         dNrqX53T8KnWVVRCtTOs4bmOXUWuVditN/vPtyWVv766Y80sQ1mBJRXmfIDrb4I8vsI+
+         5Tj5jVn+UeU7Ksv9r780PQNE0FAJ9ixBdCcM7ZnM+nb4Xxir/v56dwD/yS+/hZ6fN0QG
+         2twPoKWn+cZNfm//ONxJUMVQNpEny3oJm3NSEiAtI7JnE4XGo9IfxelfiWwrc3FoHS0u
+         y4UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LDiFULixaebs2MrsIr7/asrSZO8qQssL9OgufzsRRnY=;
+        b=C82LmxLQfvcgMKp3VKRfe3E0xuPjwLUhNb3T3GmNFy95WgJdL+KANVkX/+yTx178XT
+         rTi0GW3aDc5TxVsjM+EoUzgl4Lv/+t80OtoIijmQ4AhRtMVQBdZsi1b+T/Uohrhx5EfC
+         PcXU7mGcA9TA55gT00hz5PAxxUn8pnpYgJ7/axMRMCxs9fAg3kgI7YYKv4FRrbTv8xq5
+         opGeEH+hqsNGNl/e23wb2hI4YmRQUeNEUPpV75JBU1i0Os62rWhXUNHTadNmz+XZSdCk
+         R8XqNb3LCTTgehTctJuKUhKOro3h5WrdWxobfnQ/ezuLhoCyJgBnKOPZuJzX9f/92H3M
+         5/dw==
+X-Gm-Message-State: AOAM531CObmX4uFx7Pwt5hkZsQQlNZQL+U/XxcrfrajKpiYoa63gGGf1
+        8S1/5o0rg11I8N6RZgz9e0M=
+X-Google-Smtp-Source: ABdhPJzurlv8AWULBx68fy6iuWnB779WRjX6EPfzmLgBnv+o31xLSHolYNxGWmjnGyerIGkgX1Nfzg==
+X-Received: by 2002:a62:8782:: with SMTP id i124mr32943371pfe.267.1593782420821;
+        Fri, 03 Jul 2020 06:20:20 -0700 (PDT)
+Received: from localhost.localdomain ([103.51.74.198])
+        by smtp.gmail.com with ESMTPSA id q10sm12706937pfk.86.2020.07.03.06.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 06:20:19 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] phy: samsung: Use readl_poll_timeout function
+Date:   Fri,  3 Jul 2020 13:20:12 +0000
+Message-Id: <20200703132012.579-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702175948.GV9247@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
-> On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
-> > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
-> > 
-> > > But it looks like we are going to have to tell the compiler.
-> > 
-> > What does the current proposal look like? I can certainly annotate the
-> > seqcount latch users, but who knows what other code is out there....
-> 
-> For pointers, yes, within the Linux kernel it is hopeless, thus the
-> thought of a -fall-dependent-ptr or some such that makes the compiler
-> pretend that each and every pointer is marked with the _Dependent_ptr
-> qualifier.
-> 
-> New non-Linux-kernel code might want to use his qualifier explicitly,
-> perhaps something like the following:
-> 
-> 	_Dependent_ptr struct foo *p;  // Or maybe after the "*"?
+User readl_poll_timeout function instead of open
+coded handling in crport_handshake function.
 
-After, as you've written it, it's a pointer to a '_Dependent struct
-foo'.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 37 +++++++++---------------
+ 1 file changed, 13 insertions(+), 24 deletions(-)
 
-> 
-> 	rcu_read_lock();
-> 	p = rcu_dereference(gp);
-> 	// And so on...
-> 
-> If a function is to take a dependent pointer as a function argument,
-> then the corresponding parameter need the _Dependent_ptr marking.
-> Ditto for return values.
-> 
-> The proposal did not cover integers due to concerns about the number of
-> optimization passes that would need to be reviewed to make that work.
-> Nevertheless, using a marked integer would be safer than using an unmarked
-> one, and if the review can be carried out, why not?  Maybe something
-> like this:
-> 
-> 	_Dependent_ptr int idx;
-> 
-> 	rcu_read_lock();
-> 	idx = READ_ONCE(gidx);
-> 	d = rcuarray[idx];
-> 	rcu_read_unlock();
-> 	do_something_with(d);
-> 
-> So use of this qualifier is quite reasonable.
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index e510732afb8b..83274c5e3820 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/iopoll.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/mutex.h>
+@@ -556,40 +557,28 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+ static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+ 			    u32 val, u32 cmd)
+ {
+-	u32 usec = 100;
++	u32 timeout_us = 1000, sleep_us = 10;
+ 	unsigned int result;
++	int err;
+ 
+ 	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+ 
+-	do {
+-		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+-		if (result & PHYREG1_CR_ACK)
+-			break;
+-
+-		udelay(1);
+-	} while (usec-- > 0);
+-
+-	if (!usec) {
+-		dev_err(phy_drd->dev,
+-			"CRPORT handshake timeout1 (0x%08x)\n", val);
++	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
++			result,	(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
++	if (err) {
++		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
+ 		return -ETIME;
+ 	}
+ 
+-	usec = 100;
++	timeout_us = 1000;
++	sleep_us = 10;
+ 
+ 	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+ 
+-	do {
+-		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+-		if (!(result & PHYREG1_CR_ACK))
+-			break;
+-
+-		udelay(1);
+-	} while (usec-- > 0);
+-
+-	if (!usec) {
+-		dev_err(phy_drd->dev,
+-			"CRPORT handshake timeout2 (0x%08x)\n", val);
++	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
++			result,	!(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
++	if (err) {
++		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
+ 		return -ETIME;
+ 	}
+ 
+-- 
+2.27.0
 
-The above usage might warrant a rename of the qualifier though, since
-clearly there isn't anything ptr around.
-
-> The prototype for GCC is here: https://github.com/AKG001/gcc/
-
-Thanks! Those test cases are somewhat over qualified though:
-
-       static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
-
-Also, if C goes and specifies load dependencies, in any form, is then
-not the corrolary that they need to specify control dependencies? How
-else can they exclude the transformation.
-
-And of course, once we're there, can we get explicit support for control
-dependencies too? :-) :-)
