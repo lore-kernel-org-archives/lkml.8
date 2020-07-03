@@ -2,97 +2,95 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D42C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15729C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E4220BED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593780761;
-	bh=tHVvGtkSl7bYJvZhNMXbvQk/XxuWeRiGzO4sWMx9IWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZoQKJq4c9QQBvb4QhM4OvXbb5SFo/ARsWOdCg3wtroTVi8/+5LpcptjapUFndq1Wx
-	 GhbX+yMK7bPuGm5VgQ/wAz18HgCE66cA1kE184/BxA8lHv8gf2ErUQmbQm+BGcPsk4
-	 XM0L2x/0KaTX7SL6WBmuAuXLX7N1kOi41iyshKmg=
+	by mail.kernel.org (Postfix) with ESMTP id E60A520B80
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgGCMwk (ORCPT
+        id S1726415AbgGCMx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 08:53:26 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25720 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgGCMwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:52:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F90B20B80;
-        Fri,  3 Jul 2020 12:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593780759;
-        bh=tHVvGtkSl7bYJvZhNMXbvQk/XxuWeRiGzO4sWMx9IWY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xzoWZVPMoAYAqKrcLiWHawP6a6JjIWmEDh8WUckHT0qumaH/PV2Kk7Yez5ElgcD7D
-         ClUTWBsb3WbvJx7pkpcZrDoW+f34+1I+tOuQy4DfgkRaKNROhjd4mbVJr+gGrIWh86
-         HpCYn6OAa+bayffklwNrPWTkIVHd/8MR9iwItAyg=
-Date:   Fri, 3 Jul 2020 13:52:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
-        heikki.krogerus@linux.intel.com, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org, rdunlap@infradead.org,
-        bryan.odonoghue@linaro.org
-Subject: Re: [PATCH v5 4/6] regulator: Add support for QCOM PMIC VBUS booster
-Message-ID: <20200703125236.GA5417@sirena.org.uk>
-References: <20200703015102.27295-1-wcheng@codeaurora.org>
- <20200703015102.27295-5-wcheng@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-In-Reply-To: <20200703015102.27295-5-wcheng@codeaurora.org>
-X-Cookie: You need not be present to win.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726258AbgGCMx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:53:26 -0400
+IronPort-SDR: Stn+2fruvnPgzP55nFOxHQmwup2nxP5+S+u16q85GmsbTO6jv8OIor9zJwWqZxWXuyQmwZxudo
+ j3Kj0l9SnBNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134598345"
+X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
+   d="scan'208";a="134598345"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 05:53:25 -0700
+IronPort-SDR: ZDVOBl43CXvOs3bgWGitqI/qU7duoQdhh/CNx1OTMR1kOcXUqh8Cn9Na9dK9eE0c0JouJYpmJT
+ 0cQrHaLF8TNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
+   d="scan'208";a="265963963"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 05:53:24 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com, wei.w.wang@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 01/23] x86/cpufeatures: Add Architectural LBRs feature bit
+Date:   Fri,  3 Jul 2020 05:49:07 -0700
+Message-Id: <1593780569-62993-2-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+CPUID.(EAX=07H, ECX=0):EDX[19] indicates whether an Intel CPU supports
+Architectural LBRs.
 
-On Thu, Jul 02, 2020 at 06:51:00PM -0700, Wesley Cheng wrote:
-> Some Qualcomm PMICs have the capability to source the VBUS output to
-> connected peripherals.  This driver will register a regulator to the
-> regulator list to enable or disable this source by an external driver.
+The "X86_FEATURE_..., word 18" is already mirrored from CPUID
+"0x00000007:0 (EDX)". Add X86_FEATURE_ARCH_LBR under the "word 18"
+section.
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+The feature will appear as "arch_lbr" in /proc/cpuinfo.
 
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
+The Architectural Last Branch Records (LBR) feature enables recording
+of software path history by logging taken branches and other control
+flows. The feature will be supported in the perf_events subsystem.
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7/KhQACgkQJNaLcl1U
-h9DbaQf/Wn1umae5C1ME7+FMgKDOFXFlSpprrYcQpuTvaPIjeXxeKcprAdP+rmS1
-C8yCog08z4Oy1H7KoXigS130MBOVajvjnX5lokFDq3ceNKHbO2Jj2qrQFpzlJ4xW
-vqbaSDD64DW4qHhqSoKbDAmmtYQRyG4+diCgQuIEkNpwVZxI73AkYpnIqmx9FhQN
-KjzXq4rBFdaEqpYfh298Cu/3JZztAHThrwpTFUV3Iu85gHSH4Yem4zZ25adZwglB
-xMnd4ntO8SI0A3tI8AXHuux5U7s+cG9XCFYQxd2EOy6px3proHG5+9fvWnPLxTz2
-4hQQ8EMqwcCZD0gRHrZBw92i08GUEQ==
-=VYnx
------END PGP SIGNATURE-----
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9..72ba4c5 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -366,6 +366,7 @@
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
++#define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+-- 
+2.7.4
 
---HlL+5n6rz5pIUxbD--
