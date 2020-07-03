@@ -2,103 +2,132 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC88C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1F2206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D01207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVrVFHOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgGCINN (ORCPT
+        id S1726244AbgGCIPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:13:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:33205 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725764AbgGCINN (ORCPT
+        Fri, 3 Jul 2020 04:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgGCIPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:13:13 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-42-PNfofCLOMwuIdfmJ0GldaQ-1; Fri, 03 Jul 2020 09:13:09 +0100
-X-MC-Unique: PNfofCLOMwuIdfmJ0GldaQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 3 Jul 2020 09:13:08 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 3 Jul 2020 09:13:08 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kars Mulder' <kerneldev@karsmulder.nl>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: RE: Writing to a const pointer: is this  supposed to happen?
-Thread-Topic: Writing to a const pointer: is this  supposed to happen?
-Thread-Index: AQHWSju/rqA8ozob6UepcWuq3RM2GKjsP5LwgAcSxwCAAKR74IAA2NwAgAC9wfA=
-Date:   Fri, 3 Jul 2020 08:13:08 +0000
-Message-ID: <0c2bda4dd9e64a019d69339cf9054586@AcuMS.aculab.com>
-References: <32182d4126fd49dabac4091b7a6c89e7@AcuMS.aculab.com>
- <297d-5efe5600-1cf-7eab9a80@67481175>
-In-Reply-To: <297d-5efe5600-1cf-7eab9a80@67481175>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 3 Jul 2020 04:15:32 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEC9C08C5C1;
+        Fri,  3 Jul 2020 01:15:32 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t18so6664942ilh.2;
+        Fri, 03 Jul 2020 01:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=STO53GF8jJ9fwooJ/PR+LY6ObOQA6eXVQnYnb1oX2YQ=;
+        b=nVrVFHObmfwCc4EDiskqGuhvjiuURaIWWhH9VmEsXrXQKhMokPft9UjpBZZKwZ8Kw5
+         qtr5MtQN6wIOpNY0A27FMpEWWEuU9P+QcbhArU2WcaXFvLQxzLTzxLDx8r2zpyNUvqeK
+         /ttn5Y+hzeSetuUVHHlAp5pnE/7JWwZabaEgPER1I8ARjIw+iwOt9TErXo1e+OD35hI+
+         KSgVoS3ChcYlpfB/GSoWhGxe41EAUCr2dmbU+KToUaL9wVfRSY+I6+7xkjfaMaaba0Xn
+         D6EqUXv9PjEepW6cHh6w7KXyd5SbeLZypnu1wTHXGbOlG37ejLZP29uEDUDTFmd4a0PM
+         ASZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=STO53GF8jJ9fwooJ/PR+LY6ObOQA6eXVQnYnb1oX2YQ=;
+        b=TonItFMecAlOAEZ/w863ZBg0ClqpXOAa9kUdd3lvhNNhDFlCqkyfez3s8qxzUCBHWs
+         Hnx1zvj7hVepb98LMxehfMfec2E1+HiigyB6KPGcEjhA6zLNck2GfFlpm/SU0PtD6y9C
+         i5OQNN11o8YZ+im1pqSsjIk6xg7ndOEGkOja6gts0g9aKiFcSSZ6GrEjfcbBWyVKqq1W
+         k8HKXg0rXiTgFEB4nXiJ2hNa87PamZbMipSIXrzuBCWij50WCXwmM64igrXl8v907BfJ
+         BSZrUb4rrUG3Tqx8X5ZT/iXbOa8ljpxkuJinA6e7HFN6lQuFGrlXbC1IfPpYGiL9OegC
+         xN/Q==
+X-Gm-Message-State: AOAM530XSAnCELj51M0nHN+TONp1+7bLAsKcM+tyrfaGtsZXRvRmkJTj
+        7lX24TdzEUaWTyQMD8XxbI+wg8h7U9NVyaSXmzc=
+X-Google-Smtp-Source: ABdhPJwYkSTd8ot4rjgU2UsFNopOo9xCIiSptSonbdFkDXH1DxQN1/G8cLqz9aGySz4jhdPugh78yI5qv2AYvapETB8=
+X-Received: by 2002:a92:dc09:: with SMTP id t9mr16946661iln.226.1593764131855;
+ Fri, 03 Jul 2020 01:15:31 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <1588791882.08g1378g67.none.ref@localhost> <1588791882.08g1378g67.none@localhost>
+ <202007020818.87EA89106@keescook>
+In-Reply-To: <202007020818.87EA89106@keescook>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 3 Jul 2020 10:15:20 +0200
+Message-ID: <CA+icZUUBAzBNwqThSF=YS1zg9EVCuSZ-XDc5Pu3NrO6R3Fi2Zw@mail.gmail.com>
+Subject: Re: Kernel compression benchmarks
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        linux-kernel@vger.kernel.org,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Nick Terrell <terrelln@fb.com>,
+        Norbert Lange <nolange79@gmail.com>, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2FycyBNdWxkZXINCj4gU2VudDogMDIgSnVseSAyMDIwIDIyOjQ4DQo+IA0KPiBPbiBU
-aHVyc2RheSwgSnVseSAwMiwgMjAyMCAwOTo1NSBDRVNULCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+
-ID4gSG1tLi4uIHNzY2FuZigpIGlzIGFsc28gaG9ycmlkLg0KPiA+IFN1cnByaXNpbmdseSBkaWZm
-aWN1bHQgdG8gdXNlIGNvcnJlY3RseS4NCj4gPg0KPiA+IEl0IGlzIHVzdWFsbHkgYmVzdCB0byB1
-c2Ugc3RyY2hyKCkgKGFuZCBtYXliZSBzdHJbY11zY24oKSkNCj4gPiB0byBwYXJzZSBzdHJpbmdz
-Lg0KPiA+IEZvciBudW1iZXJzIHVzZSB3aGF0ZXZlciB0aGUga2VybmVscyBjdXJyZW50ICdmYXZv
-dXJpdGUnIGltcGxlbWVudGF0aW9uDQo+ID4gb2Ygc3RydG91bCgpIGlzIGNhbGxlZC4NCj4gDQo+
-IEkgdGhvdWdodCB0aGF0IHVzaW5nIHNzY2FuZiB3b3VsZCBjbGVhbiB1cCB0aGUgY29kZSBhIGJp
-dCBjb21wYXJlZCB0bw0KPiBzZXZlcmFsIGhhcGhhemFyZCBjYWxscywgYnV0IEkgY2FuIHNlZSB5
-b3VyIHBvaW50IGFib3V0IHNzY2FuZiBiZWluZw0KPiBkaWZmaWN1bHQgdG8gdXNlIGNvcnJlY3Rs
-eS4NCj4gDQo+IFRoZSBrZXJuZWwgZnVuY3Rpb25zIGtzdHJ0b3UxNiBzZWVtIHRvIGV4cGVjdCBh
-IG51bGwtdGVybWluYXRlZCBzdHJpbmcNCj4gYXMgYXJndW1lbnQuIFNpbmNlIHRoZXJlIGFyZSBu
-byBudWxsLWJ5dGVzIGFmdGVyIHRoZSBudW1iZXJzIHdlIHdhbnQgdG8NCj4gcGFyc2UsIGl0IGJl
-Y29tZXMgbmVjZXNzYXJ5IHRvIGNvcHkgYXQgbGVhc3QgcGFydCBvZiB0aGUgc3RyaW5ncyB0byBh
-DQo+IGJ1ZmZlci4NCg0KVGhlcmUgb3VnaHQgdG8gYmUgb25lIHRoYXQgcmV0dXJucyBhIHBvaW50
-ZXIgdG8gdGhlIGZpcnN0IGNoYXJhY3Rlcg0KdGhhdCBpc24ndCBjb252ZXJ0ZWQgLSBidXQgSSdt
-IG5vIGV4cGVydCBvbiB0aGUgZnVsbCByYW5nZSBvZiB0aGVzZQ0KZnVuY3Rpb25zLg0KDQo+IElm
-IHdlJ3JlIGNvcHlpbmcgc3RyaW5ncyB0byBidWZmZXJzIGFueXdheSwgSSB0aGluayB0aGUgc2lt
-cGxlc3QNCj4gc29sdXRpb24gd291bGQgYmUgdG8ganVzdCBrc3RyZHVwIHRoZSBlbnRpcmUgcGFy
-YW1ldGVyIGFuZCBub3QgdG91Y2gNCj4gdGhlIHJlc3Qgb2YgdGhlIHN0cmluZyBwYXJzaW5nIGNv
-ZGUuIFRoaXMgaGFzIHRoZSBkaXNhZHZhbnRhZ2Ugb2YNCj4gaGF2aW5nIGFuIGV4dHJhIG1lbW9y
-eSBhbGxvY2F0aW9uIHRvIGtlZXAgdHJhY2sgb2YuDQo+IA0KPiBTaW5jZSB0aGUgcGFyYW1ldGVy
-IGlzIGN1cnJlbnRseSByZXN0cmljdGVkIHRvIDEyOCBjaGFyYWN0ZXJzIGF0DQo+IG1vc3QsIGl0
-IG1heSBhbHRlcm5hdGl2ZWx5IGJlIHBvc3NpYmxlIHRvIGNvcHkgdGhlIHBhcmFtZXRlciB0bw0K
-PiBhIDEyOC1ieXRlIGJ1ZmZlciBvbiB0aGUgc3RhY2suIFRoaXMgaGFzIHRoZSBhZHZhbnRhZ2Ug
-b2YgaGF2aW5nDQo+IHRvIGtlZXAgdHJhY2sgb2Ygb25lIGxlc3MgbWVtb3J5IGFsbG9jYXRpb24s
-IGJ1dCB0aGUgZGlzYWR2YW50YWdlDQo+IG9mIHVzaW5nIDEyOCBieXRlcyBtb3JlIHN0YWNrIHNw
-YWNlOyBJJ20gbm90IHN1cmUgd2hldGhlciB0aGF0J3MNCj4gYWNjZXB0YWJsZS4NCg0KVGhlIHBy
-b2JsZW0gd2l0aCBzdHJkdXAoKSBpcyB5b3UgZ2V0IHRoZSBleHRyYSAodW5saWtlbHkpIGZhaWx1
-cmUgcGF0aC4NCjEyOCBieXRlcyBvZiBzdGFjayB3b24ndCBiZSBhIHByb2JsZW0gaWYgdGhlIGZ1
-bmN0aW9uIGlzIChlc3NlbnRpYWxseSkNCmEgbGVhZi4NCkRlZXAgc3RhY2sgdXNlIGlzIGFjdHVh
-bGx5IGxpa2VseSB0byBiZSBpbiB0aGUgYm93ZWxzIG9mIHByaW50ZigpKQ0KaW5zaWRlIGFuIG9i
-c2N1cmUgZXJyb3IgcGF0aC4NCk1hbnkgeWVhcnMgYWdvIChhYm91dCAxOTg0KSBJIHBhcnNlZCB0
-aGUgb2JqZWN0IGNvZGUgb2YgYSBwcm9ncmFtDQp0byBmaW5kIHRoZSBkZWVwZXN0IHN0YWNrIHVz
-ZSAobm8gcmVjdXJzaW9uIGFuZCBubyBmdW5jdGlvbiBwb2ludGVycykNCnNvIHdlIGNvdWxkIHNl
-dCB0aGUgc3RhY2sgc2l6ZXMgY29ycmVjdGx5IC0gdGhlcmUgd2Fzbid0IGVub3VnaA0KbWVtb3J5
-IHRvIGRvIGl0IHByb3Blcmx5IQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExh
-a2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQs
-IFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Thu, Jul 2, 2020 at 5:18 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Jul 01, 2020 at 10:35:48AM -0400, Alex Xu (Hello71) wrote:
+> > ZSTD compression patches have been sent in a number of times over the
+> > past few years. Every time, someone asks for benchmarks. Every time,
+> > someone is concerned about compression time. Sometimes, someone provides
+> > benchmarks.
+>
+> Where's the latest series for this, btw? I thought it had landed. :P It
+> seemed like it was done.
+>
 
+Hi,
+
+Again, I would like to see this upstream, too.
+
+Last I asked for a rebase against Linux v5.8-rc1 or later.
+
+Beyond above adaptations, the latest series "zstd-v5" of Nick T.s
+patchset needs some addition of zstd to the patch (see [1]):
+
+commit 8dfb61dcbaceb19a5ded5e9c9dcf8d05acc32294
+"kbuild: add variables for compression tools"
+
+NOTE:
+"zstd-v5" was against Linux-next 20200408 or download the series from
+patchwork LKML which applies cleanly against Linux v5.7 - last is what
+I did.
+
+There was a follow-up to the above patch (see [2]):
+
+commit e4a42c82e943b97ce124539fcd7a47445b43fa0d
+"kbuild: fix broken builds because of GZIP,BZIP2,LZOP variables"
+
+Nevertheless, this is the kernel-side of doing - user-space like for
+example Debian's initramfs-tools needs adaptations (see [3]).
+
+@Kees: Can you aid Nick T. to get this upstream? You know the
+processes a bit better than me.
+
+Regards,
+- Sedat -
+
+[0] https://github.com/terrelln/linux/tree/zstd-v5
+[0] https://lore.kernel.org/patchwork/project/lkml/list/?series=437934
+[1] https://git.kernel.org/linus/8dfb61dcbaceb19a5ded5e9c9dcf8d05acc32294
+[2] https://git.kernel.org/linus/e4a42c82e943b97ce124539fcd7a47445b43fa0d
+[2] https://bugs.debian.org/955469
