@@ -2,104 +2,187 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73922C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F36C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346CC20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AJX/ZDpz"
+	by mail.kernel.org (Postfix) with ESMTP id D0B18207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgGCKzV (ORCPT
+        id S1726262AbgGCK4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:55:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27369 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725915AbgGCKzT (ORCPT
+        Fri, 3 Jul 2020 06:56:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42538 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCK4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:55:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593773717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IW9MFSLhUfDzQ2wP5O2FCe1qiiypACsJ5yjAx966nYo=;
-        b=AJX/ZDpzOOzMOYLqjX4PNfjqCJ12fITsnCs/zG7ZZm51nYSVqxjk8r863OuIVd1uHw53qR
-        gIeueWYUM33x2bUz3QT3c27D6PcmzUSli/92J0v9u2JNrDiuGBWFaQRpvheSvErUE+xgdJ
-        +X7If+Vy3AA15bAr2nrgnNSdE6in8ro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-7-r6tVuaPjK61oEM1NoQEg-1; Fri, 03 Jul 2020 06:55:14 -0400
-X-MC-Unique: 7-r6tVuaPjK61oEM1NoQEg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C740107ACCD;
-        Fri,  3 Jul 2020 10:55:12 +0000 (UTC)
-Received: from krava (unknown [10.40.194.24])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AA3347BD40;
-        Fri,  3 Jul 2020 10:55:10 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 12:55:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Emmanouil Maroudas <emmanouil.maroudas@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 0/2] perf tools: minor fixes regarding macro usage
-Message-ID: <20200703105509.GB3261456@krava>
-References: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
+        Fri, 3 Jul 2020 06:56:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0C42F2A63F4
+Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Log results when EC commands fail
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+References: <20200703071913.2358882-1-yuhsuan@chromium.org>
+ <8d21fc0c-b43e-75a0-d5d4-ed4872ec92cb@collabora.com>
+ <CAGvk5Pqx475MOsefchcgs=CnVJiwFJxa+-J6eHcp1VgscVkTeg@mail.gmail.com>
+ <cea2bc7e-035b-2c97-73bf-25dc55ab8801@collabora.com>
+ <CAGvk5PoiWDchYCsaR_tqQ5mE0XA_hBXHy-hS5o3vFtuPzm_JiA@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d5634533-3cf3-b52a-ff24-2bda3230927d@collabora.com>
+Date:   Fri, 3 Jul 2020 12:56:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628232521.22686-1-emmanouil.maroudas@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <CAGvk5PoiWDchYCsaR_tqQ5mE0XA_hBXHy-hS5o3vFtuPzm_JiA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:25:19AM +0300, Emmanouil Maroudas wrote:
->     Hello,
-> 
->     Here are some minor fixes for perf tools regarding *SEC_PER*SEC macro usage,
->     found while reading the code.
-> 
->     Patch 1 replaces a macro with a more suitable one (same value, different name).
->     Patch 2 converts some hardcoded values (which seem appropriate IMHO) with their
->     respective macros.
-> 
->     Based on v5.8-rc3.
-> 
->     No functionality change. The final perf binary is the same, before and after
->     these patches.
-> 
->     Thanks,
->     Emmanouil Maroudas
-> 
-> Emmanouil Maroudas (2):
->   perf stat: use proper macro for time conversions
->   perf tools: use *SEC_PER_*SEC macros
+Hi Yu-Hsuan,
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
+On 3/7/20 11:40, Yu-Hsuan Hsu wrote:
+> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年7月3日 週五 下午5:19寫道：
+>>
+>> Hi Yu-Hsuan,
+>>
+>> On 3/7/20 10:48, Yu-Hsuan Hsu wrote:
+>>> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年7月3日 週五 下午4:38寫道：
+>>>>
+>>>> Hi Yu-Hsuan,
+>>>>
+>>>> Thank you for your patch
+>>>>
+>>>> On 3/7/20 9:19, Yu-Hsuan Hsu wrote:
+>>>>> Log results of failed EC commands to identify a problem more easily.
+>>>>>
+>>>>> Replace cros_ec_cmd_xfer_status with cros_ec_cmd_xfer because the result
+>>>>> has already been checked in this function. The wrapper is not needed.
+>>>>>
+>>>>
+>>>> Nack, we did an effort to remove all public users of cros_ec_cmd_xfer() in
+>>>> favour of cros_ec_cmd_xfer_status() and you are reintroducing again. You can do
+>>>> the same but using cros_ec_cmd_xfer_status(). In fact, your patch will not build
+>>>> on top of the upcoming changes.
+>>> Thanks! But I have a question about implementing it. Does it look like
+>>> the one below?
+>>> ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+>>> if (ret < 0) {
+>>
+>> In this case will already print an error.
+>>
+>> What are you trying to achieve?
+>>
+>> If the only reason is of this patch is print a message you should either, or
+>> enable dynamic printk and enable dev_dbg or event better use the kernel trace
+>> functionality. There is no need to be more verbose.
+>>
+>> Example:
+>>     $ echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
+>>     $ cat /sys/kernel/debug/tracing/trace
+>>
+>>     369.416372: cros_ec_request_start: version: 0, command: EC_CMD_USB_PD_POWER_INFO
+>>     369.420528: cros_ec_request_done: version: 0, command:
+>> EC_CMD_USB_PD_POWER_INFO, ec result: EC_RES_SUCCESS, retval: 16
+>>
+>> Cheers,
+>>  Enric
+>>
+> Thank Enric,
 > 
->  tools/perf/builtin-record.c |  2 +-
->  tools/perf/builtin-stat.c   | 12 ++++++------
->  tools/perf/builtin-trace.c  |  2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.17.1
+> The situation is that some users encountered errors on ChromeBook.
+
+And, aren't you able to reproduce the issue?
+
+
+> From their feedback reports, we only get the message like
+> 'cros-ec-codec GOOG0013:00: ASoC: Failed to set DAI format: -71'.
+> We know that -71 is -EPROTO but it is not clear enough for us to find
+> out the root cause. That's why we want the detail of the result.
+
+
+If I am not mistaken this ends calling i2s_rx_set_daifmt() into the EC firmware,
+if the result is -EPROTO that means is not returning EC_RES_SUCCESS, so there
+are few options:
+
+	if (i2s_rx_enabled)
+		return EC_RES_BUSY;
+
+	if (daifmt >= EC_CODEC_I2S_RX_DAIFMT_COUNT)
+		return EC_RES_INVALID_PARAM;
+
+	if (audio_codec_i2s_rx_set_daifmt(daifmt) != EC_SUCCESS)
+		return EC_RES_ERROR;
+
+> Because the situation happens on users' side, it is not possible for
+> them to enable kernel trace (ChromeOS does not allow users to touch
+> kernel).
 > 
 
+Are you sure that when you know the error code you'll find the root cause
+(without adding more prints)? There is only three possibilities? You can't start
+adding prints just to debug a user issue because you don't allow to be more
+verbose. I understand that might help you but is not the way to go.
+
+You should really reproduce the issue yourself an use actual debug
+tools/prints./traces.
+
+Cheers,
+ Enric
+
+> The other way we thought is changing dev_dbg to dev_err in
+> cros_ec_cmd_xfer_status. But we are not sure whether it is also an
+> error for other usages.
+> 
+>>>   if (ret == -EPROTO)
+>>>     dev_err(..., msg->result)
+>>>   goto error;
+>>> }
+>>> I'm not sure whether it makes sense to check ret == -EPROTO here.
+>>>
+>>>>
+>>>>> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+>>>>> ---
+>>>>>  sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
+>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+>>>>> index 8d45c628e988e..a4ab62f59efa6 100644
+>>>>> --- a/sound/soc/codecs/cros_ec_codec.c
+>>>>> +++ b/sound/soc/codecs/cros_ec_codec.c
+>>>>> @@ -90,10 +90,17 @@ static int send_ec_host_command(struct cros_ec_device *ec_dev, uint32_t cmd,
+>>>>>       if (outsize)
+>>>>>               memcpy(msg->data, out, outsize);
+>>>>>
+>>>>> -     ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+>>>>> +     ret = cros_ec_cmd_xfer(ec_dev, msg);
+>>>>>       if (ret < 0)
+>>>>>               goto error;
+>>>>>
+>>>>> +     if (msg->result != EC_RES_SUCCESS) {
+>>>>> +             dev_err(ec_dev->dev, "Command %d failed: %d\n", cmd,
+>>>>> +                     msg->result);
+>>>>> +             ret = -EPROTO;
+>>>>> +             goto error;
+>>>>> +     }
+>>>>> +
+>>>>>       if (insize)
+>>>>>               memcpy(in, msg->data, insize);
+>>>>>
+>>>>>
