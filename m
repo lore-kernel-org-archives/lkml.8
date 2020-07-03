@@ -2,137 +2,97 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67739C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F6A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFBD208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WEljvCeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgGCEEe (ORCPT
+        id S1726072AbgGCEGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 00:04:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:9178 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgGCEE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 00:04:26 -0400
-IronPort-SDR: Iuq7oc6dDYlnwGYknM/40ml2xolX0hmIpeM03w/zcq3JnmJo11Fh9tA46nH6wfLFGNpTXXjFL5
- vKQu0Z7Wkqcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="208604067"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="208604067"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 21:04:23 -0700
-IronPort-SDR: Q/KdMvKOGpwTXRrxlJ2FH54DTG3o+9WXOLFVKg/WygCplSJHYImhvF234IWvHU/8PNoPS0Pbk1
- pDHQycIha25g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="387520215"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2020 21:04:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] KVM: VMX: Use KVM_POSSIBLE_CR*_GUEST_BITS to initialize guest/host masks
-Date:   Thu,  2 Jul 2020 21:04:22 -0700
-Message-Id: <20200703040422.31536-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200703040422.31536-1-sean.j.christopherson@intel.com>
-References: <20200703040422.31536-1-sean.j.christopherson@intel.com>
+        Fri, 3 Jul 2020 00:06:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34924 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgGCEGM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 00:06:12 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0633xR8s097771;
+        Fri, 3 Jul 2020 04:06:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=LeWbrm8TYj4y9U2ldIQcfga2SR1ikeuUSI76X1adpzo=;
+ b=WEljvCeFyInkhSxz1wsbIOxncCttsCl6Nj0/8JJErhXpvVop1NCwWfTzPAmxQ15zCKxJ
+ sKMW7PTdpAxa4gBwbPZeylJ1mVxUnJ30AINBySi5GGZ4gjIGZ1xJwECTk97L8xS75Dsh
+ 4v2Oy9cXQylSRubve2h9StDnWs7VAkvo6VzezRA0rEpLotNyiBLbKCYh8CTkQeZZXL2k
+ JRkz7N6nSmxEXyTLh6ipgvT+4Av0TJeNtYV8QLjuTmMZP271Sa/q8EprECG5Y+nlllly
+ 0getILNJeo5Fh7q6OhtitNHmpWlZHkeLuPyqH34RgogP9k/5P/v18SWn8FLSFtt14l+8 wQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31wxrnkp7v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 03 Jul 2020 04:06:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0633wiGU162058;
+        Fri, 3 Jul 2020 04:04:02 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 31xfvwnc8n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jul 2020 04:04:02 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 063440op002587;
+        Fri, 3 Jul 2020 04:04:00 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jul 2020 04:04:00 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux@armlinux.org.uk,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        jejb@linux.ibm.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH V2] scsi: powertec: Fix different dev_id between 'request_irq()' and 'free_irq()'
+Date:   Fri,  3 Jul 2020 00:03:53 -0400
+Message-Id: <159374899165.14731.13358873635382558544.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626035948.944148-1-christophe.jaillet@wanadoo.fr>
+References: <08f63617-03df-71cf-70c4-00f08a9f51d8@wanadoo.fr> <20200626035948.944148-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=907 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=916
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the "common" KVM_POSSIBLE_CR*_GUEST_BITS defines to initialize the
-CR0/CR4 guest host masks instead of duplicating most of the CR4 mask and
-open coding the CR0 mask.  SVM doesn't utilize the masks, i.e. the masks
-are effectively VMX specific even if they're not named as such.  This
-avoids duplicate code, better documents the guest owned CR0 bit, and
-eliminates the need for a build-time assertion to keep VMX and x86
-synchronized.
+On Fri, 26 Jun 2020 05:59:48 +0200, Christophe JAILLET wrote:
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c |  4 ++--
- arch/x86/kvm/vmx/vmx.c    | 15 +++++----------
- 2 files changed, 7 insertions(+), 12 deletions(-)
+> The dev_id used in 'request_irq()' and 'free_irq()' should match.
+> So use 'info' in both cases.
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index d1af20b050a8..b26655104d4a 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4109,7 +4109,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	 * CR0_GUEST_HOST_MASK is already set in the original vmcs01
- 	 * (KVM doesn't change it);
- 	 */
--	vcpu->arch.cr0_guest_owned_bits = X86_CR0_TS;
-+	vcpu->arch.cr0_guest_owned_bits = KVM_POSSIBLE_CR0_GUEST_BITS;
- 	vmx_set_cr0(vcpu, vmcs12->host_cr0);
- 
- 	/* Same as above - no reason to call set_cr4_guest_host_mask().  */
-@@ -4259,7 +4259,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	 */
- 	vmx_set_efer(vcpu, nested_vmx_get_vmcs01_guest_efer(vmx));
- 
--	vcpu->arch.cr0_guest_owned_bits = X86_CR0_TS;
-+	vcpu->arch.cr0_guest_owned_bits = KVM_POSSIBLE_CR0_GUEST_BITS;
- 	vmx_set_cr0(vcpu, vmcs_readl(CR0_READ_SHADOW));
- 
- 	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 7fc5ca9cb5a0..2a42c86746f7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -133,9 +133,6 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
- #define KVM_VM_CR0_ALWAYS_ON				\
- 	(KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST | 	\
- 	 X86_CR0_WP | X86_CR0_PG | X86_CR0_PE)
--#define KVM_CR4_GUEST_OWNED_BITS				      \
--	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR      \
--	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_TSD)
- 
- #define KVM_VM_CR4_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR4_VMXE
- #define KVM_PMODE_VM_CR4_ALWAYS_ON (X86_CR4_PAE | X86_CR4_VMXE)
-@@ -4034,11 +4031,9 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
- 
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
- {
--	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
--
--	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
--	if (enable_ept)
--		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
-+	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_POSSIBLE_CR4_GUEST_BITS;
-+	if (!enable_ept)
-+		vmx->vcpu.arch.cr4_guest_owned_bits &= ~X86_CR4_PGE;
- 	if (is_guest_mode(&vmx->vcpu))
- 		vmx->vcpu.arch.cr4_guest_owned_bits &=
- 			~get_vmcs12(&vmx->vcpu)->cr4_guest_host_mask;
-@@ -4335,8 +4330,8 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 	/* 22.2.1, 20.8.1 */
- 	vm_entry_controls_set(vmx, vmx_vmentry_ctrl());
- 
--	vmx->vcpu.arch.cr0_guest_owned_bits = X86_CR0_TS;
--	vmcs_writel(CR0_GUEST_HOST_MASK, ~X86_CR0_TS);
-+	vmx->vcpu.arch.cr0_guest_owned_bits = KVM_POSSIBLE_CR0_GUEST_BITS;
-+	vmcs_writel(CR0_GUEST_HOST_MASK, ~vmx->vcpu.arch.cr0_guest_owned_bits);
- 
- 	set_cr4_guest_host_mask(vmx);
- 
+Applied to 5.9/scsi-queue, thanks!
+
+[1/1] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
+      https://git.kernel.org/mkp/scsi/c/d179f7c76324
+
 -- 
-2.26.0
-
+Martin K. Petersen	Oracle Linux Engineering
