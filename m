@@ -2,139 +2,136 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC48C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5AC20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4772B20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SD5J6vFT"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="WVAhV7ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGCLiG (ORCPT
+        id S1726147AbgGCLja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:38:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
+        Fri, 3 Jul 2020 07:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGCLiE (ORCPT
+        with ESMTP id S1726039AbgGCLj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:38:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B2FC08C5C1;
-        Fri,  3 Jul 2020 04:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jxMY/sjYHPMgsXoKZcO2Tjpd8qcWk4ZLnlW1zPQiZos=; b=SD5J6vFT+1Tw0Wjw31plD9IXaw
-        LrSALOLcDbthbfpf9zjSDSLF6Xuq76HDWRsI0492sDO15gYcMKQb4pFpEuaH17S++AxwGzxGqXX9/
-        BA5N1nuRbSLEFyYUX+zdvpIzPZajaNCTnVCfuuxb08WMRzNLXAwZ7weBv/lw1mpdUtiwKpGxsJyAY
-        Zkz43tmgB1qbFYJFkhiY5CiBqJvpMeLe46rF3juS6d0yswVl2Wb5muNOlb/9nULj0yYbSTUfgxrUY
-        ku6lmsJzMRqxGed1HT+Izr3xmPlxlCLLea3YyLqjFnQPhoHKK8nlUAi9JOjYgDQSAH8YsP1EkbHs2
-        vPBPqM/w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrK13-000083-2w; Fri, 03 Jul 2020 11:38:01 +0000
-Date:   Fri, 3 Jul 2020 12:38:01 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2 2/2] gfs2: Rework read and page fault locking
-Message-ID: <20200703113801.GD25523@casper.infradead.org>
-References: <20200703095325.1491832-1-agruenba@redhat.com>
- <20200703095325.1491832-3-agruenba@redhat.com>
+        Fri, 3 Jul 2020 07:39:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC81EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 04:39:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so29427459eje.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 04:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pGISnOur8oLWYv7+8TQITcaX7jATXPB+L5kiXZAigBU=;
+        b=WVAhV7ne7BUhACGeZniNHuofHwv1e3uzACAq19G6TvyM8UzQQ3aPIFlOvX8hBANhqW
+         kfujOOTPzKDBiNQevPORCLkAIvXlp2J91jU57dz8k9o80ATdgl4x2yjW9Fb2AodKgHaV
+         HH8Ta+IX+dWCZqnBa1JW1YqffWlmOn/haYYTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pGISnOur8oLWYv7+8TQITcaX7jATXPB+L5kiXZAigBU=;
+        b=qCpXhfbRQbhaqE09QjASNy6op67T9KkPLxE+MzKb0n5/iGCxhIv2K5rl2Q1Talh4uE
+         I85JPBg4rZZFAqvp9I5suSKfUo4rRsmvLTFWxsXZDCr/7cfvE+hdQO1FOz747ic6AedE
+         RAGDUwi3FuhSP9w4v1UirZOAC4McHVyAjmGlgWQN94E52V+GsQRnW/wOJ+On/J07kiKb
+         fL0iLBWXNli7IWGZxFNHfZyzRvE3ZLgPiWQ16Epn8uHX4gmnXHEhy0Fw+qCABqFcQCkB
+         Mo4RlaxSpiWIPlRPxxBhh5XkDmKqU53SvXXY7fnreHYFulpGQNHCQrOwFWygrSgyZtLN
+         lbPQ==
+X-Gm-Message-State: AOAM532JYOxSe2RSryJnZE6XRc4267xe5vJ2qk0XUkRU9w1eGqbEfx7d
+        K79rRu9D8G1YV5137osKT3MeqjI6FVy/YbSizYNg2A==
+X-Google-Smtp-Source: ABdhPJyNW3XMaAsmg+77KG3u0lZnz7EtGHkCDGxC54EevC5Q5fuKD2cd0qG4HzFGeIbC5k5ygQW2K3Lijlm0Dym68OY=
+X-Received: by 2002:a17:906:2b12:: with SMTP id a18mr31303665ejg.186.1593776367452;
+ Fri, 03 Jul 2020 04:39:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703095325.1491832-3-agruenba@redhat.com>
+References: <20200702090504.36670-1-jagan@amarulasolutions.com> <f0ae5915-9cb8-9550-f05c-6cebad191a14@arm.com>
+In-Reply-To: <f0ae5915-9cb8-9550-f05c-6cebad191a14@arm.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 3 Jul 2020 17:09:15 +0530
+Message-ID: <CAMty3ZBBdYdNOf-nQTdKZfi-VagaML6k+4PkAh6Uz936h9auow@mail.gmail.com>
+Subject: Re: [PATCH] usb: host: ohci-platform: Disable ohci for rk3288
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>,
+        linux-usb@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Kever Yang <kever.yang@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:53:25AM +0200, Andreas Gruenbacher wrote:
-> So far, gfs2 has taken the inode glocks inside the ->readpage and
-> ->readahead address space operations.  Since commit d4388340ae0b ("fs:
-> convert mpage_readpages to mpage_readahead"), gfs2_readahead is passed
-> the pages to read ahead locked.  With that, the current holder of the
-> inode glock may be trying to lock one of those pages while
-> gfs2_readahead is trying to take the inode glock, resulting in a
-> deadlock.
-> 
-> Fix that by moving the lock taking to the higher-level ->read_iter file
-> and ->fault vm operations.  This also gets rid of an ugly lock inversion
-> workaround in gfs2_readpage.
-> 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+On Thu, Jul 2, 2020 at 8:08 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-07-02 10:05, Jagan Teki wrote:
+> > rk3288 has usb host0 ohci controller but doesn't actually work
+> > on real hardware but it works with new revision chip rk3288w.
+> >
+> > So, disable ohci for rk3288.
+> >
+> > For rk3288w chips the compatible update code is handled by bootloader.
+> >
+> > Cc: William Wu <william.wu@rock-chips.com>
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Note:
+> > - U-Boot patch for compatible update
+> > https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
+> >
+> >   drivers/usb/host/ohci-platform.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> > index 7addfc2cbadc..24655ed6a7e0 100644
+> > --- a/drivers/usb/host/ohci-platform.c
+> > +++ b/drivers/usb/host/ohci-platform.c
+> > @@ -96,7 +96,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+> >       struct ohci_hcd *ohci;
+> >       int err, irq, clk = 0;
+> >
+> > -     if (usb_disabled())
+> > +     if (usb_disabled() || of_machine_is_compatible("rockchip,rk3288"))
+>
+> This seems unnecessary to me - if we've even started probing a driver
+> for a broken piece of hardware to the point that we need magic checks to
+> bail out again, then something is already fundamentally wrong.
+>
+> Old boards only sold with the original SoC variant have no reason to
+> enable the OHCI (since it never worked originally), thus will never
+> execute this check.
+>
+> New boards designed around the W variant to make use of the OHCI can
+> freely enable it either way.
+>
+> The only relative-edge-case where it might matter is older board designs
+> still in production which have shipped with both SoC variants. Enabling
+> OHCI can't be *necessary* given that it's still broken on a lot of
+> deployed boards, so at best it must be an opportunistic nice-to-have.
+> Since we're already having to rely on the bootloader to patch up the
+> devicetree for other low-level differences in this case, it should be
+> part of that responsibility for it to only enable the OHCI on the
+> appropriate SoC variant too. Statically enabling it in the DTS for a
+> board where it may well not work is just bad.
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+You mean enable OHCI by identifying revision W with dts status "okay"?
+doesn't it complex for the bootloader to update all effecting changes?
 
-> -/**
-> - * __gfs2_readpage - readpage
-> - * @file: The file to read a page for
-> - * @page: The page to read
-> - *
-> - * This is the core of gfs2's readpage. It's used by the internal file
-> - * reading code as in that case we already hold the glock. Also it's
-> - * called by gfs2_readpage() once the required lock has been granted.
-> - */
-> -
->  static int __gfs2_readpage(void *file, struct page *page)
-
-You could go a little further and rename this function to plain
-gfs2_readpage().
-
-gfs2_internal_read() should switch from read_cache_page() to
-read_mapping_page().
-
->  {
->  	struct gfs2_inode *ip = GFS2_I(page->mapping->host);
->  	struct gfs2_sbd *sdp = GFS2_SB(page->mapping->host);
-> -
->  	int error;
->  
->  	if (i_blocksize(page->mapping->host) == PAGE_SIZE &&
-> @@ -505,36 +494,11 @@ static int __gfs2_readpage(void *file, struct page *page)
->   * gfs2_readpage - read a page of a file
->   * @file: The file to read
->   * @page: The page of the file
-> - *
-> - * This deals with the locking required. We have to unlock and
-> - * relock the page in order to get the locking in the right
-> - * order.
->   */
-
-I'd drop the kernel-doc comments on method implementations entirely,
-unless there's something useful to say ... which there isn't any more
-(yay!)
-
-> @@ -598,16 +562,9 @@ static void gfs2_readahead(struct readahead_control *rac)
->  {
->  	struct inode *inode = rac->mapping->host;
->  	struct gfs2_inode *ip = GFS2_I(inode);
-> -	struct gfs2_holder gh;
->  
-> -	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-> -	if (gfs2_glock_nq(&gh))
-> -		goto out_uninit;
->  	if (!gfs2_is_stuffed(ip))
->  		mpage_readahead(rac, gfs2_block_map);
-
-I think you probably want to make this:
-
-	if (i_blocksize(page->mapping->host) == PAGE_SIZE &&
-	    !page_has_buffers(page))
-		error = iomap_readahead(rac, &gfs2_iomap_ops);
-	else if (!gfs2_is_stuffed(ip))
-		error = mpage_readahead(rac, gfs2_block_map);
-
-... but I understand not wanting to make that change at this point
-in the release cycle.
-
-I'm happy for the patches to go in as-is, just wanted to point out these
-improvements that could be made.
+Jagan.
