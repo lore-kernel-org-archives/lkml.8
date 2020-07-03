@@ -2,159 +2,94 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A50C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4529C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66ED120885
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C078020884
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xd2zq2Hk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGCVm3 (ORCPT
+        id S1727008AbgGCVnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 17:42:29 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:41788 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgGCVm3 (ORCPT
+        Fri, 3 Jul 2020 17:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgGCVni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 17:42:29 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jrTRx-0002QR-7U; Fri, 03 Jul 2020 15:42:25 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jrTRw-0001FP-6m; Fri, 03 Jul 2020 15:42:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
-        <20200702164140.4468-13-ebiederm@xmission.com>
-        <20200703203021.paebx25miovmaxqt@ast-mbp.dhcp.thefacebook.com>
-Date:   Fri, 03 Jul 2020 16:37:47 -0500
-In-Reply-To: <20200703203021.paebx25miovmaxqt@ast-mbp.dhcp.thefacebook.com>
-        (Alexei Starovoitov's message of "Fri, 3 Jul 2020 13:30:21 -0700")
-Message-ID: <873668s2j8.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 3 Jul 2020 17:43:38 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D521AC061794;
+        Fri,  3 Jul 2020 14:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=DSkLdwA8XxSZdlvPiriZ+UIh2jMZmNiuIw4Gi/uxGAg=; b=Xd2zq2HkI3a0FU1VBBjtPJvqTX
+        CGXLZmLSDI3L5qG/DVedVDS5awYqCdV1BFqob+4VuvTrTnrUkb0EXjDT64f27cLBrSSCioggLdi3A
+        SSaCaup+QndnrggX7aX3O/n6wXHjDe4GAXQWqwduGnAEsJRbhHjtYCo+PErhJukhbXxlgA+uA/tAN
+        4NAM3YHXlgfQ7lhOGj0Y7+x2iXQE+CVqXFoDWbfBZeUekvHMK4fMsHG861Tz6daghBjgf8IzcwDJ6
+        lLvzSkJTgJEEdKOMP5wAhkXr1GHC1GpjcTM54CtMm0KALo+ln3Y4Tw7A0HwryPVWrfKLvsFgPUrtY
+        ZhXUP3TA==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrTT2-0006uZ-8p; Fri, 03 Jul 2020 21:43:32 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Ian Kent <raven@themaw.net>, autofs@vger.kernel.org,
+        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>, linux-fscrypt@vger.kernel.org,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-unionfs@vger.kernel.org
+Subject: [PATCH 00/10] Documentation: filesystems: eliminate duplicated words
+Date:   Fri,  3 Jul 2020 14:43:15 -0700
+Message-Id: <20200703214325.31036-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jrTRw-0001FP-6m;;;mid=<873668s2j8.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19Q3He2YCYof+2pylv7RWD58IY3V+dYbb0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v3 13/16] exit: Factor thread_group_exited out of pidfd_poll
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+Fix doubled words in filesystems files.
 
-> On Thu, Jul 02, 2020 at 11:41:37AM -0500, Eric W. Biederman wrote:
->> Create an independent helper thread_group_exited report return true
->> when all threads have passed exit_notify in do_exit.  AKA all of the
->> threads are at least zombies and might be dead or completely gone.
->> 
->> Create this helper by taking the logic out of pidfd_poll where
->> it is already tested, and adding a missing READ_ONCE on
->> the read of task->exit_state.
->> 
->> I will be changing the user mode driver code to use this same logic
->> to know when a user mode driver needs to be restarted.
->> 
->> Place the new helper thread_group_exited in kernel/exit.c and
->> EXPORT it so it can be used by modules.
->> 
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  include/linux/sched/signal.h |  2 ++
->>  kernel/exit.c                | 24 ++++++++++++++++++++++++
->>  kernel/fork.c                |  6 +-----
->>  3 files changed, 27 insertions(+), 5 deletions(-)
->> 
->> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
->> index 0ee5e696c5d8..1bad18a1d8ba 100644
->> --- a/include/linux/sched/signal.h
->> +++ b/include/linux/sched/signal.h
->> @@ -674,6 +674,8 @@ static inline int thread_group_empty(struct task_struct *p)
->>  #define delay_group_leader(p) \
->>  		(thread_group_leader(p) && !thread_group_empty(p))
->>  
->> +extern bool thread_group_exited(struct pid *pid);
->> +
->>  extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
->>  							unsigned long *flags);
->>  
->> diff --git a/kernel/exit.c b/kernel/exit.c
->> index d3294b611df1..a7f112feb0f6 100644
->> --- a/kernel/exit.c
->> +++ b/kernel/exit.c
->> @@ -1713,6 +1713,30 @@ COMPAT_SYSCALL_DEFINE5(waitid,
->>  }
->>  #endif
->>  
->> +/**
->> + * thread_group_exited - check that a thread group has exited
->> + * @pid: tgid of thread group to be checked.
->> + *
->> + * Test if thread group is has exited (all threads are zombies, dead
->> + * or completely gone).
->> + *
->> + * Return: true if the thread group has exited. false otherwise.
->> + */
->> +bool thread_group_exited(struct pid *pid)
->> +{
->> +	struct task_struct *task;
->> +	bool exited;
->> +
->> +	rcu_read_lock();
->> +	task = pid_task(pid, PIDTYPE_PID);
->> +	exited = !task ||
->> +		(READ_ONCE(task->exit_state) && thread_group_empty(task));
->> +	rcu_read_unlock();
->> +
->> +	return exited;
->> +}
->
-> I'm not sure why you think READ_ONCE was missing.
-> It's different in wait_consider_task() where READ_ONCE is needed because
-> of multiple checks. Here it's done once.
 
-In practice it probably has no effect on the generated code.  But
-READ_ONCE is about telling the compiler not to be clever.  Don't use
-tearing loads or stores etc.  When all of the other readers are using
-READ_ONCE I just get nervous if we have a case that doesn't.
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Ian Kent <raven@themaw.net>
+Cc: autofs@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>
+Cc: linux-cachefs@redhat.com
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Theodore Y. Ts'o <tytso@mit.edu>
+Cc: linux-fscrypt@vger.kernel.org
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-unionfs@vger.kernel.org
 
-> The rest all looks good to me. Tested with and without bpf_preload patches.
-> Feel free to create a frozen branch with this set.
 
-Can I have your Tested-by and Acked-by?
-
-> btw I'll be offline starting tomorrow for a week.
-> Will catch up with threads afterwards.
-
-Eric
-
+ Documentation/filesystems/autofs-mount-control.rst |    6 +++---
+ Documentation/filesystems/caching/operations.rst   |    2 +-
+ Documentation/filesystems/configfs.rst             |    2 +-
+ Documentation/filesystems/directory-locking.rst    |    4 ++--
+ Documentation/filesystems/fsverity.rst             |    2 +-
+ Documentation/filesystems/mount_api.rst            |    4 ++--
+ Documentation/filesystems/overlayfs.rst            |    2 +-
+ Documentation/filesystems/path-lookup.rst          |    2 +-
+ Documentation/filesystems/sysfs-tagging.rst        |    2 +-
+ Documentation/filesystems/vfs.rst                  |    4 ++--
+ 10 files changed, 15 insertions(+), 15 deletions(-)
