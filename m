@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F25C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D72BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2B220884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCD3214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 20:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0gKR8A3E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tbW7Ee+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGCU5F (ORCPT
+        id S1726926AbgGCU5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 16:57:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
+        Fri, 3 Jul 2020 16:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgGCU5D (ORCPT
+        with ESMTP id S1726379AbgGCU5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 16:57:03 -0400
+        Fri, 3 Jul 2020 16:57:06 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9B9C061794;
-        Fri,  3 Jul 2020 13:57:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A66C061794;
+        Fri,  3 Jul 2020 13:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=ZjyioTRalYimLAboXrEmUQ+/b3I3ysLUSM2O0IlJMro=; b=0gKR8A3EosJlI5VVzkfpxpHf0A
-        5Zq3E3uMn2iqMrI9SQgehDGM3lkecXQ9LZO9EQH3FyzqqZ/JNHKp88imrhjOossZR3xlzAz6Z0607
-        UTB/MJtqvPCHpcYZ0rDFaKYJdPC3K3c73aux/aRAYfjZAp8oy8Mon97/VVDxSrwj7ZjI/VpGC+XS3
-        kODRl8QYBKqUMlu0WvIgpRtaBxYEzz1cdt7Co/dg33h0F7TUUnK25PyAWHMSlVZ30anktLP6oSauF
-        GpknJDxbC5vV+ZTJ2oOpuWxwbd2686Cs8gFtOxs3FbVjuZyfrLsb8fQZu1ykr86bsO9/avqCB/x10
-        aWejyRag==;
+        bh=M6C6YySqQi70TS5xHaBxSfjFdMg/sJtCXqPgg4DcCHY=; b=tbW7Ee+d3uWUKqGcHQH4L9RyvS
+        n+/Ob0cWxgvUBrVuv7LdiEXZyjt2BbPVfSbMucpgNrnbJPjkZRp7R9Vwf2lb6A5sXn2Vz1Ooypv0q
+        VylyX/hPfdiN1F5GhAJrhABm2bWhQhJFDooqMMgUVO8JolZQFV9sYL9FXH/a4y5wymhi59BiOi70p
+        VCXp6N1Aebe5JtpsOJpZzQWCKFUEfghrJkoTYGNfXhO7P9b9VRe7eJV80RNcvPpI8diyWC+1vizV6
+        WWI0HKgGyV+hHHCa5pf4Z5vH3jFeI/5wG+B/FK1A22wvztgm1IN56KO+QzUfCe0SH/QitK3r4MU0z
+        ZEnhHwdg==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrSk0-0003a5-Tp; Fri, 03 Jul 2020 20:57:01 +0000
+        id 1jrSk3-0003a5-Jv; Fri, 03 Jul 2020 20:57:04 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH 2/5] Documenation: hwmon/lm93: drop duplicate words
-Date:   Fri,  3 Jul 2020 13:56:46 -0700
-Message-Id: <20200703205649.30125-3-rdunlap@infradead.org>
+Subject: [PATCH 3/5] Documenation: hwmon/nct7665: drop duplicate words
+Date:   Fri,  3 Jul 2020 13:56:47 -0700
+Message-Id: <20200703205649.30125-4-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200703205649.30125-1-rdunlap@infradead.org>
 References: <20200703205649.30125-1-rdunlap@infradead.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "the".
+Drop the doubled word "be".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
@@ -67,17 +67,15 @@ Cc: Jean Delvare <jdelvare@suse.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Cc: linux-hwmon@vger.kernel.org
 ---
- Documentation/hwmon/lm93.rst |    2 +-
+ Documentation/hwmon/nct6775.rst |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200701.orig/Documentation/hwmon/lm93.rst
-+++ linux-next-20200701/Documentation/hwmon/lm93.rst
-@@ -133,7 +133,7 @@ Smart Tach Mode (from the datasheet)::
- 	four signals are measured within 4 seconds.
- 
- Smart tach mode is enabled by the driver by writing 1 or 2 (associating the
--the fan tachometer with a pwm) to the sysfs file fan<n>_smart_tach.  A zero
-+fan tachometer with a pwm) to the sysfs file fan<n>_smart_tach.  A zero
- will disable the function for that fan.  Note that Smart tach mode cannot be
- enabled if the PWM output frequency is 22500 Hz (see below).
- 
+--- linux-next-20200701.orig/Documentation/hwmon/nct6775.rst
++++ linux-next-20200701/Documentation/hwmon/nct6775.rst
+@@ -276,5 +276,5 @@ temperature measurement device. As a res
+ will not reflect a usable value. It often reports unreasonably high
+ temperatures, and in some cases the reported temperature declines if the actual
+ temperature increases (similar to the raw PECI temperature value - see PECI
+-specification for details). CPUTIN should therefore be be ignored on ASUS
++specification for details). CPUTIN should therefore be ignored on ASUS
+ boards. The CPU temperature on ASUS boards is reported from PECI 0.
