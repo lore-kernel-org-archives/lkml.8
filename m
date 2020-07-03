@@ -2,90 +2,95 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC133C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3285DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE7620781
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F9B20747
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgGCBHZ (ORCPT
+        id S1726228AbgGCBKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 21:07:25 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:52253 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725915AbgGCBHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 21:07:25 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 3DA22D59879;
-        Fri,  3 Jul 2020 11:07:21 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jrAAi-0001mh-CL; Fri, 03 Jul 2020 11:07:20 +1000
-Date:   Fri, 3 Jul 2020 11:07:20 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH v5] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200703010720.GH5369@dread.disaster.area>
-References: <20200702005923.10064-1-longman@redhat.com>
+        Thu, 2 Jul 2020 21:10:18 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33118 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGCBKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 21:10:18 -0400
+IronPort-SDR: ZcNxe+KN403AQeSQTJXcLlyHYxK++nSgMNegoxzU22R/WfL3+n6Cp5rrbfpu22BfftMnem+f7t
+ ylFjeywgE8/w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134523863"
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="134523863"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 18:10:17 -0700
+IronPort-SDR: hhzfnRppsSt1HZlwFkl+A9lSroPpFTv/+m1cEBZgvi+zT05eg3cgffRKVE4QVyqI/qYcDGTZQX
+ tb4Z/KJkQrzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="265844749"
+Received: from xpf-desktop.sh.intel.com ([10.239.13.107])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2020 18:10:15 -0700
+Date:   Fri, 3 Jul 2020 09:20:06 +0800
+From:   Pengfei Xu <pengfei.xu@intel.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Heng Su <heng.su@intel.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [PATCH v4] selftests: tpm: upgrade TPM2 tests from Python 2 to
+ Python 3
+Message-ID: <20200703012005.GA23276@xpf-desktop.sh.intel.com>
+References: <20200626034052.25263-1-pengfei.xu@intel.com>
+ <20200702194435.GA28988@linux.intel.com>
+ <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702005923.10064-1-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8
-        a=DRpurTtVrwkqR7YIFl8A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 08:59:23PM -0400, Waiman Long wrote:
-> Suggested-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  fs/xfs/xfs_super.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+Thanks a lot Jarkko and Shuah!
+
+BR.
+Thanks!
+
+On 2020-07-02 at 15:32:49 -0600, Shuah Khan wrote:
+> On 7/2/20 1:44 PM, Jarkko Sakkinen wrote:
+> > On Fri, Jun 26, 2020 at 11:40:52AM +0800, Pengfei Xu wrote:
+> > > Python 2 is no longer supported by the Python upstream project, so
+> > > upgrade TPM2 tests to Python 3.
+> > > 
+> > > Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
+> > 
+> > I think that it's perfect now. Thank you.
+> > 
+> > Also
+> > 
+> > 1. I checked that scripts/checkpatch.pl did not report any errors.
+> > 2. sudo python3 -m unittest -v tpm2_tests.SmokeTest
+> > 3. sudo python3 -m unittest -v tpm2_tests.SpaceTest
+> > 
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > Shuah, I could pick this up after your PR (with my earlier fixes) lands
+> > to mainline, and sort out possible merge conflicts if they uprise. Is
+> > this fine by you?
+> > 
 > 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 379cbff438bc..dcc97bad950a 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -913,11 +913,21 @@ xfs_fs_freeze(
->  	struct super_block	*sb)
->  {
->  	struct xfs_mount	*mp = XFS_M(sb);
-> +	unsigned long		pflags;
-> +	int			ret;
->  
-> +	/*
-> +	 * Disable fs reclaim in memory allocation for fs freeze to avoid
-> +	 * causing a possible circular locking dependency lockdep splat
-> +	 * relating to fs reclaim.
-> +	 */
-
-	/*
-	 * The filesystem is now frozen far enough that memory reclaim
-	 * cannot safely operate on the filesystem. Hence we need to
-	 * set a GFP_NOFS context here to avoid recursion deadlocks.
-	 */
-
-> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-
-memalloc_nofs_save/restore(), please.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Yes. I will apply them as soon as PR clears and hopefully they can go
+> into rc5.
+> 
+> thanks,
+> -- Shuah
+> 
