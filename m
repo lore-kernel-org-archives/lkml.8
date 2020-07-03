@@ -2,107 +2,89 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B983C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4946D204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgKdKXB1"
+	by mail.kernel.org (Postfix) with ESMTP id 801C8204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593757847;
+	bh=KHF2MMlAnVZH5QuuVgQtIY1BusorsR3zB8AWdQf+TSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kGWYi7cfpKdDkeAXNoNYZZcsqh0opxA0nFotG6tBrNtzmFHUwsZH7hqxudTNaYqTh
+	 N3shdoSSz0DzDchdTtYOSV/4SP8JMFRFstkx1ZMrrFJirG3BNYJtbVcQpXHkJ01z6H
+	 tGc1WprH6Sm5gDsa4utJOMXMvpbkMz64ae9bEYnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGCGai (ORCPT
+        id S1726347AbgGCGaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCGah (ORCPT
+        Fri, 3 Jul 2020 02:30:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40363 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgGCGap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:30:37 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B4BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:30:37 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id p25so8782795vsg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K4CTOkloIJSngYKP9mYdXYRzGngQiHdh+SB3XRrQL7w=;
-        b=RgKdKXB1RGn9Zl3WeaqKIP/k/A+DXNglNKPOVbE9c6+WpA1mM46zKKrY32uDDnrQoA
-         YNGiJMVO2zbHDdneDG2dmEYbBAI5TNUrvQ5B6vGd1AYv1VGPANZH510/A/esAHxq/mP6
-         CUB5r4WEBRdC8OGLXe+OKs8NWnBnSxfPSrD2ln+8cuzO/5pOrYCBk+u2g6EtB76IBpdF
-         K32Wvv58Hm7AsnRiaPd6abKMZNiVaH3O9Yy4KxgMoKoDscu3qimIlf5X9MKPsz/e+xNp
-         wKBxrEN9MOQDfEPicfypVgrPfjfUpcwuxSBh3VT69Brq8UEMLHW+g9Ny/jphlwKDlxYP
-         LGhg==
+        Fri, 3 Jul 2020 02:30:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f139so32603107wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:30:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K4CTOkloIJSngYKP9mYdXYRzGngQiHdh+SB3XRrQL7w=;
-        b=IyAF/T79alKwrxJA1mJf+a89S0eZv1GDwoOm1XqU3J5M2zaPTWXmlLZ5Kl7+ETRrb4
-         x0tnotocNeQlpzBa4Q8yiiMTpH17JEFyoGu7ugZ8TrgZ5orHPV1O01mTE+2xaqVn47r1
-         HhPZ8BkX62M57k/T1yTlCsEIE3EQlywWYCv0nhyudzFu/qWIKb9XhWFwGR/HSQyssl9C
-         TTXF8cf3sT6WGMlsCxatqHb9gNAOLSnP334+F8ERL5t++grShMIjXzyxXUo+bSQ6iYO4
-         uyVJg6gYwVqRVt0L66i7CfeNrtWg5TgxD5ICD9ntuTa0WFU6A/AFumFmfgiIvNRZe/Tj
-         Bu2g==
-X-Gm-Message-State: AOAM531GHNEi9FuE9GwlCaiBssenxQkp94yMTYz+qcrM3Aw66iX9KpTF
-        ALqH4RDpl+SopXAZHOa5Dm4IColz6iuTK/Bzq1w=
-X-Google-Smtp-Source: ABdhPJyFlr0qEIYFkZ5F4P9NqPrjy6PHLc2lkC9tuBddmoGutZTuHxrOvaPN/Mn4860Mx5DPCVFTT9IqZGI4YyfycKU=
-X-Received: by 2002:a67:8cc7:: with SMTP id o190mr25922203vsd.168.1593757836584;
- Thu, 02 Jul 2020 23:30:36 -0700 (PDT)
+        bh=tjZBJs8X0nguidZg5CpdB0HmryO+5Vc7KMWihjNjkqQ=;
+        b=Q55dyzjg0W4iZiIJvX9xwa2G0RQq3ggQfZ0dVEfc8A5pQg9Dv1r7A/1WPFM8EoRG1u
+         KYqyZxJuXiba2dArl2sdmYGOTVUblYl+IdARl9AGuZ81UB3gkIqlFIBg42AQWjVRB6xd
+         NkxFeOUGTOP5mL0+2hcsM/ARWwF8AkH2xxP4Li2NhThdLJogqieRIL91GuwCoJFzIULx
+         1mHEit3tu1WHcqCNIZ18n8vWTu0TC53c6VRIhJEfk+nKhz/H+k4nq+s8G2l2R+ybNAzm
+         B8SZszZTeHUUZCBMo8BPEqbiukoY99n8/08wbO5x78FJUHr0nmlSldnTy4vj+dQFax+/
+         +78w==
+X-Gm-Message-State: AOAM530Txc20phqfwW/lR8KCLL+aa5jSpyZHlSCbXo+A8BT9Wb/SkMDe
+        +DTugQDHkAFCPek/QMWVvOCdCpi+RD3nGa3c1PM=
+X-Google-Smtp-Source: ABdhPJzJZznGHNaVY6+zpi2TVhlBSB0KmWvoLVJF2nf8zzzae0tezM0Uz5dksrJktgyLQYR8fT5tsFWetM00zErXGaA=
+X-Received: by 2002:a05:600c:2241:: with SMTP id a1mr34156620wmm.168.1593757843977;
+ Thu, 02 Jul 2020 23:30:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1592537217.git.vaibhav.sr@gmail.com> <e9aaa09c6688aa5ed8bddf51f5cd402bb8cf39b3.1592537217.git.vaibhav.sr@gmail.com>
- <20200701133655.GA2373798@kroah.com>
-In-Reply-To: <20200701133655.GA2373798@kroah.com>
-From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Date:   Fri, 3 Jul 2020 12:00:00 +0530
-Message-ID: <CAAs3648mdWoeByMP_4s3Rcu4fbbChTW9C8s=DeyQQ=g_=W_EbA@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] staging: greybus: audio: Enable GB codec, audio
- module compilation.
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        devel@driverdev.osuosl.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
+References: <20200627133654.64863-1-changbin.du@gmail.com> <20200627133654.64863-10-changbin.du@gmail.com>
+In-Reply-To: <20200627133654.64863-10-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 3 Jul 2020 15:30:32 +0900
+Message-ID: <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] perf ftrace: add support for tracing option 'func_stack_trace'
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:36:55PM +0200, Greg Kroah-Hartman wrote:
-> On Fri, Jun 19, 2020 at 04:50:26PM +0530, Vaibhav Agarwal wrote:
-> > Currently you can't enable the Gey Bus Audio Codec because there is no
-> > entry for it in the Kconfig file. Originally the config name was going
-> > to be AUDIO_MSM8994 but that's not correct because other types of
-> > hardware are supported now. I have chosen the name AUDIO_APB_CODEC
-> > instead.  Also I had to update the dependencies for GREYBUS_AUDIO to
-> > make the compile work.
-> >
-> > Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> > Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >  drivers/staging/greybus/Kconfig  | 14 +++++++++++++-
-> >  drivers/staging/greybus/Makefile |  4 ++--
-> >  2 files changed, 15 insertions(+), 3 deletions(-)
+On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
 >
-> Can you fix the build issues found by the bot and resend?
+> This adds support to display call trace for function tracer. To do this,
+> just specify a '--func-call-graph' option.
 
-Sure Greg, I'll share the updated patch set with fixes for the issues
-reported.
+What if it's used with -G option?  Also it might be used only with
+the -T option..  How about showing a warning if it's missing.. ?
 
---
-thanks,
-vaibhav
+Thanks
+Namhyung
 
 >
-> thanks,
+> $ sudo perf ftrace -T vfs_read --func-call-graph
+>  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+>  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+>  => vfs_read
+>  => ksys_read
+>  => __x64_sys_read
+>  => do_syscall_64
+>  => entry_SYSCALL_64_after_hwframe
+>  ...
 >
-> greg k-h
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
