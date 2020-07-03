@@ -2,122 +2,88 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDF72073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A203D2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAdRtxY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGCJis (ORCPT
+        id S1726142AbgGCJkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54968 "EHLO
+        Fri, 3 Jul 2020 05:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgGCJis (ORCPT
+        with ESMTP id S1725786AbgGCJkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:38:48 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB2EC08C5C1;
-        Fri,  3 Jul 2020 02:38:48 -0700 (PDT)
-Received: from [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f] (unknown [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9571D2A066E;
-        Fri,  3 Jul 2020 10:38:46 +0100 (BST)
-Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, kernel@collabora.com,
-        Fabio Estevam <festevam@gmail.com>
-References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
- <20200702184226.GA23935@Asurada-Nvidia>
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
- 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
- xZQG6fKWuIur3RI=
-Message-ID: <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
-Date:   Fri, 3 Jul 2020 11:38:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 05:40:11 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A758AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:40:10 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q7so22962942ljm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 02:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bQEqi/XO2uG9xah6H42oeX7WTpEE5TdDYMdGWzAhx0Y=;
+        b=ZAdRtxY440gxqH45zPADxCc91LKS9cNz0BU27YTqxta2SBQjFSk1bLAtw3v81TKStu
+         pSuhFmDZ3QRSvey/i1BgxyI/vdMf8ZO2WF56Sv4C6OOnITLXNSx7q57nQmGO0E48Mpmu
+         EQqQgjbRoSUB3R2AOMmczzzgE9llYz/u5RtswXHOhTbXXAU8bJHFhEMmO8IKT6HkLuAZ
+         XsglndYsnUDQ3U5+gw8pr7xbFJMxdZvATKTnmAYJ6Higw91XryarYb5RbKxeUITVcNLF
+         +xbQjtLALiJtdQllvBfDsPHvm1r10t4oclMkfBS26AbVtU/qW8q2HQ7/18J5bh3qeXyE
+         iPOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bQEqi/XO2uG9xah6H42oeX7WTpEE5TdDYMdGWzAhx0Y=;
+        b=o1fiOTQiv9HFYg3ggP3ajxkMzAecnyxfuWYksA9tcWHnt9dWa8wSIo+pfvHSNiVlXC
+         yBxxkxA7blv81xCf6BXhylA71jz0Q0YJfsqjWkEyWID+u2jhzAuISaJb/AUBI/8C6Dn0
+         BmTIO2fOQq4zRKQuL0CLijUILj+4umE0AaHaUKJLdb6+GGhuZYAQAxRm/rLivRhn2NE1
+         yRhBNX+CHbSKwchVpgE9ILDpUGHWD4USI3xW4RnpQanRoirB2WYqhYx7wCT0Z7tD8qbM
+         OUapyqvDXL+6AFDcQy1WaOAlsgbyMPz2zt09UGRY0Xf5YjQiS/ilmjekMtDBp2udQVYA
+         FjHQ==
+X-Gm-Message-State: AOAM532XnLmT6g5sAftt6Hq9piOtezHke95+neOv5WAy9yVE7R7Z5sJC
+        lYsv55/8HlWSY0EBJDt1o4BKGC6RH85DQGLXxkH9ifWo
+X-Google-Smtp-Source: ABdhPJx76q21pbTAj506mPXqvJ7MR4UF8f2gfrceH5nGL/4c2TDLF1jfj3LAeyvUuZxTNyHuZUbMoWH5ath/YDlKfas=
+X-Received: by 2002:a2e:a544:: with SMTP id e4mr20547523ljn.264.1593769209237;
+ Fri, 03 Jul 2020 02:40:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702184226.GA23935@Asurada-Nvidia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <050476a0ee608046569588936394159d650ab535.1593763492.git.zong.li@sifive.com>
+ <80902e5d0d5ef752e71672e9c5794d0f5f9ccd15.camel@perches.com> <CANXhq0p8S_n_yGQrrEJ5HBHcnbPZh+dNfTrtL2Kuepf8mtkn=g@mail.gmail.com>
+In-Reply-To: <CANXhq0p8S_n_yGQrrEJ5HBHcnbPZh+dNfTrtL2Kuepf8mtkn=g@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 3 Jul 2020 11:39:58 +0200
+Message-ID: <CANiq72k7O50uD72RoTwevfcmqO1im86SYs2ae+qF3J0Vhvf_oA@mail.gmail.com>
+Subject: Re: [PATCH] scripts/Lindent: increase the maximum line length to 100
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nic,
+On Fri, Jul 3, 2020 at 11:19 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> Yes, as you mentioned, the reformatting tool uses up to the maximum line length,
+> it seems to me that we don't go this patch if you plan to post the
+> patch to delete it,
+> otherwise, we could consider to change it to 100.
 
-Le 02/07/2020 à 20:42, Nicolin Chen a écrit :
-> Hi Arnaud,
-> 
-> On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
->> The current ASRC driver hardcodes the input and output clocks used for
->> sample rate conversions. In order to allow greater flexibility and to
->> cover more use cases, it would be preferable to select the clocks using
->> device-tree properties.
-> 
-> We recent just merged a new change that auto-selecting internal
-> clocks based on sample rates as the first option -- ideal ratio
-> mode is the fallback mode now. Please refer to:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
+For reference, we discussed this for the limit in `.clang-format`, and
+for the moment we will keep the limit at 80 there too.
 
-That looks interesting, thanks for pointing this out!
-I'll rebase and see how it works for my use-case, will keep you informed.
+See https://lore.kernel.org/lkml/20200610125147.2782142-1-christian.brauner@ubuntu.com/
 
-Regards,
-Arnaud
+Cheers,
+Miguel
