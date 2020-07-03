@@ -2,103 +2,146 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA396C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F52C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DCA20936
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57627214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="S0pde+3B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ItGZjDRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgGCNIo (ORCPT
+        id S1726152AbgGCNNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:08:44 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42212 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGCNIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:08:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593781721; bh=CYRY9AOPIP7htR7BCw4/gS8rxf6F0JzXOnAZZ9MMcRY=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=S0pde+3BRUgDE8vcKlpnV7Ut/H9JL6ZM8QM8bnr9Ge0k3kKbg4uKFIGIyNZbBxAsR
-         Dzbjz0dOtgx5iGG3qofJT6NCG3Bz/KXq/rsoWqKvBKpdiy6o6ZE/3f8TpVLhZh3jpg
-         ldpXigLPX9xPU7Bvuo+ln+6dna5w6q56hfh8CMlk=
-Date:   Fri, 3 Jul 2020 15:08:41 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 2/2] arm64: dts: sun50i-a64-pinephone: Add touchscreen
- support
-Message-ID: <20200703130841.3zqa5y4uazzl477z@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20200702081432.1727696-1-megous@megous.com>
- <20200702081432.1727696-3-megous@megous.com>
- <20200703121706.gf2yxfe7crleatlm@gilmour.lan>
+        Fri, 3 Jul 2020 09:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgGCNNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:13:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3842C08C5C1;
+        Fri,  3 Jul 2020 06:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uqsQimSA3ZVIJmzJ+g3hxvE+rQFiKwkEojhvCeRdahw=; b=ItGZjDRIImf27YsAGtOG8yy/um
+        tHTSFrVgQyOISf1u9ovbSydWGKTsYFOu1QdZqaIrPrVC+BQULRRFgfurUr+UHbhbVAjFYXc0yCGNH
+        NRV6Ty0xvDowLbPzhWsEfUHzZqw0FT874nx/34bvhnQsXXmIDYEOYRNqxPNQYH8rAHKE2/8AwTRk8
+        wHLizFfF5+qhuvmcj3dz1f5NSP8/5ZJsGkhy1O/RcYnmb5zr+RExexvUuyCwYq8Luedw4dSOP2EUv
+        Sin4pSha9/RbjtlWc8OZlJovtZ17d+oq5poGsjxjQDDenUnzl1rkiSj26lYRo48qjQPCyZuX1TsWH
+        IDaagGpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrLVT-0003j1-Sa; Fri, 03 Jul 2020 13:13:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 71D12301124;
+        Fri,  3 Jul 2020 15:13:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 30A0521476E91; Fri,  3 Jul 2020 15:13:30 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 15:13:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+References: <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703121706.gf2yxfe7crleatlm@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200702175948.GV9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:17:06PM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Jul 02, 2020 at 10:14:32AM +0200, Ondrej Jirman wrote:
-> > Pinephone has a Goodix GT917S capacitive touchscreen controller on
-> > I2C0 bus. Add support for it.
+On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
+> On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
+> > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
 > > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
+> > > But it looks like we are going to have to tell the compiler.
 > > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > index a89425ad3727..5c7386566053 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > @@ -121,6 +121,25 @@ &ehci1 {
-> >  	status = "okay";
-> >  };
-> >  
-> > +&i2c0 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&i2c0_pins>;
-> > +	status = "okay";
+> > What does the current proposal look like? I can certainly annotate the
+> > seqcount latch users, but who knows what other code is out there....
 > 
-> I didn't spot this earlier, but the pinctrl properties are already set
-> in the DTSI. I've removed them while applying the patch.
+> For pointers, yes, within the Linux kernel it is hopeless, thus the
+> thought of a -fall-dependent-ptr or some such that makes the compiler
+> pretend that each and every pointer is marked with the _Dependent_ptr
+> qualifier.
+> 
+> New non-Linux-kernel code might want to use his qualifier explicitly,
+> perhaps something like the following:
+> 
+> 	_Dependent_ptr struct foo *p;  // Or maybe after the "*"?
 
-Ah, right. Thank you very much. :)
+After, as you've written it, it's a pointer to a '_Dependent struct
+foo'.
 
-regards,
-	o.
+> 
+> 	rcu_read_lock();
+> 	p = rcu_dereference(gp);
+> 	// And so on...
+> 
+> If a function is to take a dependent pointer as a function argument,
+> then the corresponding parameter need the _Dependent_ptr marking.
+> Ditto for return values.
+> 
+> The proposal did not cover integers due to concerns about the number of
+> optimization passes that would need to be reviewed to make that work.
+> Nevertheless, using a marked integer would be safer than using an unmarked
+> one, and if the review can be carried out, why not?  Maybe something
+> like this:
+> 
+> 	_Dependent_ptr int idx;
+> 
+> 	rcu_read_lock();
+> 	idx = READ_ONCE(gidx);
+> 	d = rcuarray[idx];
+> 	rcu_read_unlock();
+> 	do_something_with(d);
+> 
+> So use of this qualifier is quite reasonable.
 
-> Thanks!
-> Maxime
+The above usage might warrant a rename of the qualifier though, since
+clearly there isn't anything ptr around.
 
+> The prototype for GCC is here: https://github.com/AKG001/gcc/
 
+Thanks! Those test cases are somewhat over qualified though:
+
+       static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
+
+Also, if C goes and specifies load dependencies, in any form, is then
+not the corrolary that they need to specify control dependencies? How
+else can they exclude the transformation.
+
+And of course, once we're there, can we get explicit support for control
+dependencies too? :-) :-)
