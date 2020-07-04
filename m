@@ -2,156 +2,126 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9246C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921CC208B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860E220885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593867034;
+	bh=4XhuUQN3QNCuKbrbw9fG4qJ8DQkgRuvV3izCuziKVKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LTmP6hLA0OAEe7TqK/GE9+5Uq+snS42n8p96XVsBrZ/fZ7cu+UuI1S7yRsNMFyPve
+	 Q0wCs3Cnz/eRRf/mBLx9MZ+pq7K04386m7cLThZ6Tnt4DyGBKFedfM6tHTdA0CCTEl
+	 pVFL67OZsV9pZ0nYPRpEB8/Ylb0WTr/rU74FCuBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgGDMsq (ORCPT
+        id S1727848AbgGDMud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 08:48:46 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47434 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgGDMsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 08:48:46 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id EAE5E1C0BD2; Sat,  4 Jul 2020 14:48:43 +0200 (CEST)
-Date:   Sat, 4 Jul 2020 14:48:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v29 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200704124842.GB20088@amd>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200622185919.2131-2-dmurphy@ti.com>
+        Sat, 4 Jul 2020 08:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgGDMuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 08:50:32 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B57B520885;
+        Sat,  4 Jul 2020 12:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593867031;
+        bh=4XhuUQN3QNCuKbrbw9fG4qJ8DQkgRuvV3izCuziKVKk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LUGt9Y9D6tcO8lMDE/M9d56KUenZO8441sgpi2TquZUVjP0tEFiaqrdquhx3pPwKq
+         K9YMs4T+uMlwEPCsUhuY55oNm/YeoLz3dXPifFGIpXrwY28T7srYgIPli2uXgza+E7
+         HCiIt3c2+93EtM+qPAF9IvfUEAtQthLksOjyvUSQ=
+Date:   Sat, 4 Jul 2020 13:50:27 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: ptrace: seccomp: Return value when the call was already invalid
+Message-ID: <20200704125027.GB21185@willie-the-truck>
+References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
+ <20200703083914.GA18516@willie-the-truck>
+ <CABV8kRwYp9cvu1b4-fhHktyX_r2QiObhadJ4pqscvuLt1BtRvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622185919.2131-2-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CABV8kRwYp9cvu1b4-fhHktyX_r2QiObhadJ4pqscvuLt1BtRvg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 04:27:37PM -0400, Keno Fischer wrote:
+> > > Now, if we have a seccomp filter that simply does
+> > > SECCOMP_RET_TRACE, and a ptracer that simply
+> > > does PTRACE_CONT
+> >
+> > Ok, so this means that we're _skipping_ the system call, right?
+> 
+> If the system call were positive this would result in the system call
+> being executed. The notion of "skipping" the syscall is a bit odd in
+> this situation. Having the ptracer set the syscallno to -1 is generally
+> accepted as the way to do it, but what happens if the syscallno is
+> already -1 or negative is underspecified.
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok. I think it would be sensible for us to have the same behaviour for
+all negative system calls though.
 
-Hi!
+> > > then the assert will fire/fail on arm64, but not on x86_64.
+> >
+> > It feels weird to me that skipping the system call has any effect on the
+> > tracee registers...
+> 
+> I think the correct way to frame it is to ask whether the behavior
+> matches that of the tracee in absence of the ptracer. I would argue
+> that if the ptracer doesn't explicitly modify register contents, then
+> the tracee shouldn't observe any behavior difference.
 
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
+That's a useful way of thinking about it and is still the case after this
+patch. The difference now is that x0 isn't zapped in the case where a
+syscall(-1) is skipped.
 
-Rob, can we get some reviews here? It would be good to move this
-forward.
+> > > Interestingly, arm64 does do something different
+> > > if the syscall is -1 rather than -10, where early
+> > > in the ptrace stop it does.
+> > > ```
+> > > /* set default errno for user-issued syscall(-1) */
+> > > if (scno == NO_SYSCALL)
+> > >     regs->regs[0] = -ENOSYS;
+> >
+> > ... so I think this should be fixed too. How about the diff below?
+> 
+> I think the patch behavior is better overall, but I'm not sure it's ideal.
+> I think the biggest question is what the behavior should be here and
+> if we want a behavioral difference between *the syscall was -1 at entry*
+> and *the syscall was -1 because the ptracer wanted to skip the syscall*.
+> I think there is a bit of a semantic disconnect because "skipping" the
+> syscall is not really an operation that the ptracer has at its disposal
+> (unless it's using SYSEMU of course). The only thing it can do is set
+> the syscall to -1. However, arguably that already has semantics
+> (of returning -ENOSYS), so it's not at all clear to me that we should
+> deviate from that. Unfortunately, none of this is currently consistent
+> across architectures, so I think before we go changing arm64, we
+> should decide what we'd like to happen in theory and then see
+> what we can do to improve the situation without being too breaking.
 
-Best regards,
-								Pavel
+I just object to treating a user-issued -1 differently to any other negative
+system call. With this patch, they're all treated the same, which is to say
+that they return -ENOSYS normally, but when skipped by a tracer (e.g. by
+setting the syscall number to -1 or because of a seccomp failure), then
+x0 is preserved.
 
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/leds/leds-class-multicolor.yaml  | 37 +++++++++++++++++++
->  include/dt-bindings/leds/common.h             |  3 +-
->  2 files changed, 39 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-mul=
-ticolor.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor=
-=2Eyaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> new file mode 100644
-> index 000000000000..b55e1f1308a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for the multicolor LED class.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  Bindings for multi color LEDs show how to describe current outputs of
-> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-> +  modules. This is achieved by adding multi-led nodes layer to the
-> +  monochrome LED bindings.
-> +  The nodes and properties defined in this document are unique to the mu=
-lticolor
-> +  LED class.  Common LED nodes and properties are inherited from the com=
-mon.txt
-> +  within this documentation directory.
-> +
-> +patternProperties:
-> +  "^multi-led@([0-9a-f])$":
-> +    type: object
-> +    description: Represents the LEDs that are to be grouped.
-> +    properties:
-> +      color:
-> +        const: 8  # LED_COLOR_ID_MULTI
-> +        description: |
-> +          For multicolor LED support this property should be defined as
-> +          LED_COLOR_ID_MULTI which can be found in include/linux/leds/co=
-mmon.h.
-> +
-> +    $ref: "common.yaml#"
-> +
-> +    required:
-> +      - color
-> +...
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds=
-/common.h
-> index 0ce7dfc00dcb..a463ce6a8794 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,7 +30,8 @@
->  #define LED_COLOR_ID_VIOLET	5
->  #define LED_COLOR_ID_YELLOW	6
->  #define LED_COLOR_ID_IR		7
-> -#define LED_COLOR_ID_MAX	8
-> +#define LED_COLOR_ID_MULTI	8
-> +#define LED_COLOR_ID_MAX	9
-> =20
->  /* Standard LED functions */
->  /* Keyboard LEDs, usually it would be input4::capslock etc. */
-> --
+This means that, with this patch, skipping syscall(-1) behaves the same
+way as skipping syscall(-2) with mainline today.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---NDin8bjvE/0mNLFQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8AeqoACgkQMOfwapXb+vK5jgCeKLRaC8lShMPTAygJnOeEpl+n
-L/AAn0pr1+fswWvwkRPIDrk4dKKDdGg+
-=sCmq
------END PGP SIGNATURE-----
-
---NDin8bjvE/0mNLFQ--
+Will
