@@ -2,99 +2,122 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9064C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9506208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB9F208D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593842647;
-	bh=ZT3irlGnF64WXNfcKAnWdFCfdFgdVgmo10q2DEsJCYE=;
+	s=default; t=1593842692;
+	bh=/8vSxFn9V0oswGlBEN5dRRU1JZ7ExkRloN1fTwm5oNE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dEMwKPgbQNZAtsq+0PSaenesKU6olICCwiQdyEhrsxnRd8kC7ilEweAr1gftfEMcy
-	 44q1ScWfel6HAij3SkYDQ9ME05QxhUFtFzqKHMEcIsEwnIyKBNCpdFbpV4x1L2Y7rB
-	 Isj89EjS6uzf8Vr/7ZIMkw6jHSGOtDmp0xXsHo60=
+	b=lf/54FuRMjiAIssUD1vYO2GGAXg704NPqG8Iunf4TDHnmFN/cp6Bn+ROY1MHoe2fP
+	 IH3Q3XgWGrnB1SrAVf64guDtfQJAg6XcgjfEHclTBiYAymJNIfpumiTMgE4laeuQDV
+	 EedoDMu0i62s9PnJ1Jj95EP6HMFyEso4fhbB6amE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgGDGEG (ORCPT
+        id S1727071AbgGDGEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 02:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54312 "EHLO mail.kernel.org"
+        Sat, 4 Jul 2020 02:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbgGDGEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 02:04:06 -0400
-Received: from localhost (p54b3324c.dip0.t-ipconnect.de [84.179.50.76])
+        id S1725822AbgGDGEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 02:04:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BFB4207D4;
-        Sat,  4 Jul 2020 06:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1DCC207D4;
+        Sat,  4 Jul 2020 06:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593842645;
-        bh=ZT3irlGnF64WXNfcKAnWdFCfdFgdVgmo10q2DEsJCYE=;
+        s=default; t=1593842690;
+        bh=/8vSxFn9V0oswGlBEN5dRRU1JZ7ExkRloN1fTwm5oNE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QuCiK9IzZSYW13gK+m0JyUSq9kMsaZ26t7KQ+HvZK4G30NEFUQqu0YV+eh9WWwB0v
-         uc6SIsroWYiUzvTBCrU6YRKQUkFFHfla8YYN9sqzuz6M1GEF2+6XY95svOtFy+XbGf
-         7ZAcNSFkNVgTQ3PziMlX/lRr24/RTyfglGU4T43c=
-Date:   Sat, 4 Jul 2020 08:03:59 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     andriy.shevchenko@linux.intel.com,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: algo-pca: Add 0x78 as SCL stuck low status
-Message-ID: <20200704060359.GA1041@kunai>
-References: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
+        b=iItwMtHdFCkvptr3+wC5oBSGGXbOgDNx2gPwmgsCTOB9hZaNp9x1NukOjke8PsoZm
+         LU6UKJAFh7leBTlINaLmf8/tik/QF8IhaHYbr1woCmpOwenN8aJ6AMdSu0uNm3QREh
+         su1Am+O/L4hv41K8lDOtafcHW541qbu7l2T4hx4A=
+Date:   Sat, 4 Jul 2020 08:04:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Ben Dooks <ben@simtec.co.uk>
+Subject: Re: [PATCH 11/30] usb: dwc2: gadget: Avoid pointless read of EP
+ control register
+Message-ID: <20200704060446.GA20254@kroah.com>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
+ <20200702144625.2533530-12-lee.jones@linaro.org>
+ <20200703072926.GA2322133@kroah.com>
+ <e88abd64-4acf-31f6-f76a-5a333df3d46a@synopsys.com>
+ <20200703171626.GC2743379@dell>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200703171626.GC2743379@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 06:16:26PM +0100, Lee Jones wrote:
+> On Fri, 03 Jul 2020, Minas Harutyunyan wrote:
+> 
+> > Hi,
+> > 
+> > On 7/3/2020 11:29 AM, Greg KH wrote:
+> > > On Thu, Jul 02, 2020 at 03:46:06PM +0100, Lee Jones wrote:
+> > >> Commit ec1f9d9f01384 ("usb: dwc2: gadget: parity fix in isochronous mode") moved
+> > >> these checks to dwc2_hsotg_change_ep_iso_parity() back in 2015.  The assigned
+> > >> value hasn't been read back since.  Let's remove the unnecessary H/W read.
+> > >>
+> > >> Fixes the following W=1 warning:
+> > >>
+> > >>   drivers/usb/dwc2/gadget.c: In function ‘dwc2_hsotg_epint’:
+> > >>   drivers/usb/dwc2/gadget.c:2981:6: warning: variable ‘ctrl’ set but not used [-Wunused-but-set-variable]
+> > >>   2981 | u32 ctrl;
+> > >>   | ^~~~
+> > >>
+> > >> Cc: Minas Harutyunyan <hminas@synopsys.com>
+> > >> Cc: Ben Dooks <ben@simtec.co.uk>
+> > >> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > >> ---
+> > >>   drivers/usb/dwc2/gadget.c | 2 --
+> > >>   1 file changed, 2 deletions(-)
+> > >>
+> > >> diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+> > >> index 116e6175c7a48..fa07e3fcb8841 100644
+> > >> --- a/drivers/usb/dwc2/gadget.c
+> > >> +++ b/drivers/usb/dwc2/gadget.c
+> > >> @@ -2975,10 +2975,8 @@ static void dwc2_hsotg_epint(struct dwc2_hsotg *hsotg, unsigned int idx,
+> > >>   	u32 epctl_reg = dir_in ? DIEPCTL(idx) : DOEPCTL(idx);
+> > >>   	u32 epsiz_reg = dir_in ? DIEPTSIZ(idx) : DOEPTSIZ(idx);
+> > >>   	u32 ints;
+> > >> -	u32 ctrl;
+> > >>   
+> > >>   	ints = dwc2_gadget_read_ep_interrupts(hsotg, idx, dir_in);
+> > >> -	ctrl = dwc2_readl(hsotg, epctl_reg);
+> > > 
+> > > As you know, lots of hardware requires reads to happen to do things, so
+> > > are you sure it is safe to remove this read call?
+> > > 
+> > 
+> > Greg, yes, it's Ok to remove this unnecessary read which remained from 
+> > previous implementations.
+> > 
+> > Lee, please add "Fixes:" tag and resubmit v2.
+> 
+> Is this suitable for Stable Greg?
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does it fix something that people have ever noticed or care about?
+Given the age of the bug, I doubt it :)
 
-On Thu, Jul 02, 2020 at 10:39:11AM +1200, Chris Packham wrote:
-> The PCA9665 datasheet says that I2CSTA =3D 78h indicates that SCL is stuck
-> low, this differs to the PCA9564 which uses 90h for this indication.
-> Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
->=20
-> Based on looking through the PCA9564 and PCA9665 datasheets this should
-> be safe for both chips. The PCA9564 should not return 0x78 for any valid
-> state and the PCA9665 should not return 0x90.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+thanks,
 
-Applied to for-current, thanks!
-
-
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8AG8sACgkQFA3kzBSg
-KbaPjA//ZA4V8vkqdM6BI+DnOYhbryJlJ3/Xh8FydkFeE76OSvY1oXzTdsYHbbM5
-VUn5ypXdpSvmqlIG1d30simcZqf57R1CFyxEzknA6O8TQ1wuztsDqMXyL5Rv3k2w
-vvwuAWOrcS/DVZCf23upPUMnZpVAfgW8wa1SIE1dayLZmx8K8c3hKSIWYDSAr8l/
-EfjurQ6jAyCombwF9tEP3A9hUEnU0Ij2cbwtEsQE47Li/op9/qWEZ6dO8WXesOSN
-iX5lJR3v593c6jSMm2YHsk9r4w7wkZruSKWtkv1iu1Q0c1Qut9r+luDWixmymxvA
-g+5TM9AjmLILUI48NacnozRIcYcr6BlQpBxN/LxV5irYl42Gts37J1qqB4nxeNEo
-erRtscT8c6Ul2zwiEra8aFjBDSnpGt5/YURdObyQptdZVKfEqO3U3nNRf0cX3dL8
-y/MD0s42A8XsaWo8BtdkaX4gPpvlDQdGxfy0AWZ5XCnSFzXspHPyyFd728aVS8op
-Vu5ofH3whLohnBICdek3oOdNjP2txkHYxThHg3p81ajLu6q4AKmBaES9W+69fPkq
-27UTd5xCfEtaiHesDOYxH8HbwYMiGJGwqZhJ+dHYrORCgdsOHrq7WfHaI5ZyQjMJ
-mZANXdiq60a7kpAfVkBYJBjxZ1N4OOavkIr/exWFaEGPoyeeVrI=
-=aSbN
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+greg k-h
