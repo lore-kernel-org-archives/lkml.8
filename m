@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D718EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4B320870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF67820870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6T23DJJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yi3Q7Aum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgGDK0H (ORCPT
+        id S1727926AbgGDK0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 06:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57304 "EHLO
+        Sat, 4 Jul 2020 06:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbgGDKZ4 (ORCPT
+        with ESMTP id S1727059AbgGDKZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 06:25:56 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C3EC08C5E1
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:55 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id f18so27252443wrs.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:55 -0700 (PDT)
+        Sat, 4 Jul 2020 06:25:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DF9C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so27252334wrs.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aa8te2AcMwPmqAg9uKOXlMlgp9vWL13NU2V3cR52oIU=;
-        b=c6T23DJJiHs5BtAKmNutM8G+MKEe23gN/maB70SgfCaol8AfeQQ+G8TYIru7RAFnVe
-         gykZWTU2QlbC2rnUKQ/HBeKg6xs9YsgBm40QwJ4zwhH7b6V/7Ao2HCNFemANB9rdpmz1
-         JGS92y/SEVnqf6Q069alN55283PDakjsnw6ojaeK8uFh2m9hWHymIla+yylDoYHDNT/J
-         oXEdNQuVRJCH3VP1rH1BurCJaDG1gwBa5NraMYbPyV3H/2Y5auqTzHfV9RYBjfUEwO+T
-         f57qbaQfqFsW5tAD7qITLW8NpanEznAi0SVdgUU+uetvWDuteTw9g9xAGH31Gb+MZ49G
-         3t3A==
+        bh=ZTAD94SYmvrJ+EFhISqWY8vBWQR9v8s+XBZIL9+A5es=;
+        b=Yi3Q7AumboBSbsek8DjWtlQ9c10SbTrXYjcMr+rBaAc4VHSqVM6IpfGf8cdW0VtY6W
+         HD3FhPLO4DAnUDp+vpl1IiNzGQncT8eF2MvWK7LOcfqGQpQ6Lbi5946UXk8j2fadav0f
+         RYw1OVPiiI8ipVovArVWNu5/Vqe6mVcYZ+oaZdTsFMJhhQBa78PbriKiG1TN4ZfyIGR+
+         RvISp9wqEPCLfOhV78e1wh/CZdlseUZnUwC0Mq24QTscVxu9LlrgUeduTFA8BgWUFZKD
+         v6S9s6lGfmAU/5tMhnnAp9spVJLmQa9oNO/Vr3BYQQ0ctTpr8Uj8D2rbrAp7gTt3AvhD
+         2+Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aa8te2AcMwPmqAg9uKOXlMlgp9vWL13NU2V3cR52oIU=;
-        b=nnWWyCMYTs+Q9p9ytzqbjSgkG8S/2oXfKWt7AHWSl0v0CfnlZna39GxelJvga0LF2W
-         INYc16fJ3l5FPc8kgFg6S0fi+3fH9ASt9Cj0BxPtRg6dty2L5VW4FyR/FZcLqx7UFisH
-         WfS2ozH1wQGePKcN48POBQsNghCZcHq75Ch20lPySAbT5/N+LSG4x0FOj8nkbdZYMx6S
-         1u9jHPcVdLXGfziWiLAZX9sa64XaZp09ZvUt8Khv5ZpsSnXzz3OX2UgVC679iTe1fJji
-         xtS2t6cTitFi+c5tG8daUCHyhLAIg4JP0mGOe037UHIpQW33GXfYJEATI4Ups/GIq/xn
-         rBSg==
-X-Gm-Message-State: AOAM533jA1UMwyE4FWtfGhIvJ6W1uEyqbYSpR5s5YzBBZm+sZdaGKqEm
-        xEgRdNBBPiN+Yo3qok0hnn4=
-X-Google-Smtp-Source: ABdhPJwTY8xk+AwUuvBq2SX6rifzkA/0NydoFJzAmeI9i+CYuQQd2tXt9uKF7RQQ7yyoYhGi5RfQZA==
-X-Received: by 2002:adf:e6c8:: with SMTP id y8mr42893726wrm.40.1593858354417;
-        Sat, 04 Jul 2020 03:25:54 -0700 (PDT)
+        bh=ZTAD94SYmvrJ+EFhISqWY8vBWQR9v8s+XBZIL9+A5es=;
+        b=BZLkGu0H8DXGIwsw7Dky0yM0I/9EnwbVn9ggsmEeUWLUHA29/XOvA09XktoU+D6i4X
+         u7bPcoQzsq9+JcTOIwSI8fPZiGfqz2fodxD7LO/wmyhypxi6DIeglyYDlQcb2PKq5mJq
+         a5lrUuKj9igc9y4jiuPLBDGzO3MeUcKBlPC3GXXVhdsIrkPFy8jc04Uofe7sEtz/B69A
+         geiRXy8dNFdf8UmXQ5yIweq8uFGRtAOsGYIbLIl1SqHg744SqXw2iNnTJBdN1ssypXx+
+         kHaa/Rz06XqUe2HFAmjua3gDIpATXh3JwnZWnrU6fOggb0xCwU7BAlCspWe6G1IviCHF
+         /kag==
+X-Gm-Message-State: AOAM533I1LWhnTr/uetqcKEgWDCtwzGhqk4bLVWYUJrYcgRDzvbUS0Pb
+        TARmHwRFMGin6up8ovdrtvM=
+X-Google-Smtp-Source: ABdhPJykyG4asxyffWyKxljFdyjAyR9I1fXuAeS8wS1A/odEXdj7M78gsOEIXxbIcjmyVb3VUgKwUg==
+X-Received: by 2002:a5d:69cf:: with SMTP id s15mr29403010wrw.10.1593858349937;
+        Sat, 04 Jul 2020 03:25:49 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.53
+        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 03:25:53 -0700 (PDT)
+        Sat, 04 Jul 2020 03:25:49 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 11/14] arm64: defconfig: Enable devfreq cooling device
-Date:   Sat,  4 Jul 2020 12:25:32 +0200
-Message-Id: <20200704102535.189647-12-peron.clem@gmail.com>
+Subject: [PATCH v2 07/14] drm/panfrost: rename error labels in device_init
+Date:   Sat,  4 Jul 2020 12:25:28 +0200
+Message-Id: <20200704102535.189647-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704102535.189647-1-peron.clem@gmail.com>
 References: <20200704102535.189647-1-peron.clem@gmail.com>
@@ -85,28 +85,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devfreq cooling device framework is used in Panfrost
-to throttle GPU in order to regulate its temperature.
-
-Enable this driver for ARM64 SoC.
+Rename goto labels in device_init it will be easier to maintain.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/panfrost/panfrost_device.c | 30 +++++++++++-----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 883e8bace3ed..1b7f9ffdc314 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -501,6 +501,7 @@ CONFIG_SENSORS_INA2XX=m
- CONFIG_SENSORS_INA3221=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
-+CONFIG_DEVFREQ_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_QORIQ_THERMAL=m
- CONFIG_SUN8I_THERMAL=y
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+index 8136babd3ba9..cc16d102b275 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.c
++++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+@@ -215,57 +215,57 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+ 	err = panfrost_regulator_init(pfdev);
+ 	if (err) {
+ 		dev_err(pfdev->dev, "regulator init failed %d\n", err);
+-		goto err_out0;
++		goto out_clk;
+ 	}
+ 
+ 	err = panfrost_reset_init(pfdev);
+ 	if (err) {
+ 		dev_err(pfdev->dev, "reset init failed %d\n", err);
+-		goto err_out1;
++		goto out_regulator;
+ 	}
+ 
+ 	err = panfrost_pm_domain_init(pfdev);
+ 	if (err)
+-		goto err_out2;
++		goto out_reset;
+ 
+ 	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+ 	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+ 	if (IS_ERR(pfdev->iomem)) {
+ 		dev_err(pfdev->dev, "failed to ioremap iomem\n");
+ 		err = PTR_ERR(pfdev->iomem);
+-		goto err_out3;
++		goto out_pm_domain;
+ 	}
+ 
+ 	err = panfrost_gpu_init(pfdev);
+ 	if (err)
+-		goto err_out3;
++		goto out_pm_domain;
+ 
+ 	err = panfrost_mmu_init(pfdev);
+ 	if (err)
+-		goto err_out4;
++		goto out_gpu;
+ 
+ 	err = panfrost_job_init(pfdev);
+ 	if (err)
+-		goto err_out5;
++		goto out_mmu;
+ 
+ 	err = panfrost_perfcnt_init(pfdev);
+ 	if (err)
+-		goto err_out6;
++		goto out_job;
+ 
+ 	return 0;
+-err_out6:
++out_job:
+ 	panfrost_job_fini(pfdev);
+-err_out5:
++out_mmu:
+ 	panfrost_mmu_fini(pfdev);
+-err_out4:
++out_gpu:
+ 	panfrost_gpu_fini(pfdev);
+-err_out3:
++out_pm_domain:
+ 	panfrost_pm_domain_fini(pfdev);
+-err_out2:
++out_reset:
+ 	panfrost_reset_fini(pfdev);
+-err_out1:
++out_regulator:
+ 	panfrost_regulator_fini(pfdev);
+-err_out0:
++out_clk:
+ 	panfrost_clk_fini(pfdev);
+ 	return err;
+ }
 -- 
 2.25.1
 
