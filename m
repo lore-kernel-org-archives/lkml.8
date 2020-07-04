@@ -2,97 +2,110 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A317FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40862C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 794722084C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdNwr1QZ"
+	by mail.kernel.org (Postfix) with ESMTP id 225ED2084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgGDGkI (ORCPT
+        id S1727777AbgGDGlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 02:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGDGkH (ORCPT
+        Sat, 4 Jul 2020 02:41:17 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:56677 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgGDGlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 02:40:07 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520C2C061794;
-        Fri,  3 Jul 2020 23:40:07 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z63so30552858qkb.8;
-        Fri, 03 Jul 2020 23:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3fbem6xgsUHpQEkkr1bl021QDup9/jlYvisDm0Lh+SY=;
-        b=gdNwr1QZAC91+OD3FOIx7q1FSHbrZ7YbJPutNryHLdnGL2EaDZXgg1zzgnIYPTYV4q
-         AAbRJOeNvsOa4+McC/gP+Vq/x1uKRcc4b5DSU2mpHbVBiKbsPQX+1napYFZ55jeaHpV1
-         YQu9Gnn0oySDE+iCddiHSRxkpdnWbKC60kBf4dVFWKvEF8SQlM1PYcgYMSyuzngjVOWV
-         AjtZ2fZDImi88LBn5niGQdzZK6/Ue4VjB383dhWSwHXeNIoU5Lpl42xqU9yY3Lz37g94
-         kSBboDMTJn+JGwhchUz/w8fBVekEtuEUQmG9fUl4dGeQTHQBcuyuMWxybtFDwxof3X7J
-         yHlQ==
+        Sat, 4 Jul 2020 02:41:17 -0400
+Received: by mail-il1-f197.google.com with SMTP id k13so23337884ilh.23
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 23:41:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3fbem6xgsUHpQEkkr1bl021QDup9/jlYvisDm0Lh+SY=;
-        b=GmtbmfkzZVY4BYYzq9/oIYVBnUR2iq29XWF97dG6AQ9GkbDqYXa9SjTCkoHavOsacw
-         esRYK45hSzlyUO/gpraAceH4tCuKZooX+vyj1W/p8y0t639V/G2XejdilZAPd7sLZ6eh
-         MpRW6zX3okYf7SUZSP1cjGg77Gy4cBY7Oy7sDwC+1FWBot4P4dnflud8UrJNMhQWukVI
-         JLjbWfxteQrbCD/36lWiP1gfQrhM0u3njs3t5f+aCJfT8TRNh9JXlq7jca3YDli43KbZ
-         XsKZhmbAtEaHM+ZHvYvP1VuaJ0m0uUSuWQQosiLSTeY/A5nRSse2BD+9LKDoTo/zZbxD
-         dIUg==
-X-Gm-Message-State: AOAM533iv9kQsm1nrHFmjAJHYb/R0FEHpnfReacltKGsmsYAQKlply1s
-        i4MjRjlHB+A7N5lcWa1lRp6zEO7Wp8kjlQMIrnQ=
-X-Google-Smtp-Source: ABdhPJy7jzIt8rk0tJ5U6guhUCoxO+Lb/9yA05k7QhaWpyEYJTMhjhttaoUbaZnuIqKntrcFGwlzkq1eZ7HpYPc3mEQ=
-X-Received: by 2002:a37:4289:: with SMTP id p131mr8989609qka.28.1593844806613;
- Fri, 03 Jul 2020 23:40:06 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dbAGA2EOQ/ON2OekN9vX84E1a2gFJIKvdksnE+aJIXg=;
+        b=LHSS9akMRVgZd88t15sX/0tYGjA/h7DWgTYwcpzFDctkopEb7fuJggPZXN1qnDrJbc
+         R/Cav2Vd+s0NGVm1cecpXrc1AzMtpgFoFBXe0SaY5dDFPBaSk88KqSL+9Yqb6sBDt+ZD
+         gSlgpp6FgXSQG6CoYlOn0axuN7FYJiwB9RO3uL+rjCr9d3QS+gULvSqaXfHvPkZF6krU
+         kOp2jgvZi/6AGSM6ziAMeJcDQrONHkDEuvSO5BmyLZzGmUPRdKGja3wgoRLe4In0itpb
+         oOxNfw/tWwNSAHD1PDzb5uOWxsb4w8gi5OmNLdG9qIZO7/2VMo/Tkfxstw+qTSBTuW65
+         AstQ==
+X-Gm-Message-State: AOAM532PZtO7iIsywWugHMrzNTRmwnxFVfQBvtDQDpmQ44810NbkPSmS
+        zN74Qc6GWQ0jMVE6r2mgc6aT1+AV94xhrc8A9B9iV1Ujkfr5
+X-Google-Smtp-Source: ABdhPJwFvjbKbYwlvfSZJcJi+xsZs+I4CZcLu/Jdbz7IYY/TzLenHi+O2ZGUUc6HP06Sr+WSEo2Pu4ZfjcFBLKS/XdlA67SulQ82
 MIME-Version: 1.0
-References: <1593833659-26224-1-git-send-email-guoren@kernel.org>
-In-Reply-To: <1593833659-26224-1-git-send-email-guoren@kernel.org>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Sat, 4 Jul 2020 09:39:50 +0300
-Message-ID: <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com>
-Subject: Re: [PATCH V1 0/5] riscv: Add k/uprobe supported
-To:     guoren@kernel.org
-Cc:     palmerdabbelt@google.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>, greentime.hu@sifive.com,
-        zong.li@sifive.com, me@packi.ch, bjorn.topel@gmail.com,
-        atish.patra@wdc.com, linux-riscv@lists.infradead.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
+X-Received: by 2002:a92:cecd:: with SMTP id z13mr20924386ilq.76.1593844875910;
+ Fri, 03 Jul 2020 23:41:15 -0700 (PDT)
+Date:   Fri, 03 Jul 2020 23:41:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a7e38a05a997edb2@google.com>
+Subject: WARNING in __cfg80211_connect_result
+From:   syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johannes@sipsolutions.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
-> The patchset includes kprobe/uprobe support and some related fixups.
+Hello,
 
-Nice!
+syzbot found the following crash on:
 
-On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
-> There is no single step exception in riscv ISA, so utilize ebreak to
-> simulate. Some pc related instructions couldn't be executed out of line
-> and some system/fence instructions couldn't be a trace site at all.
-> So we give out a reject list and simulate list in decode-insn.c.
+HEAD commit:    23212a70 Merge branch 'mptcp-add-receive-buffer-auto-tuning'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=155842d5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-Can you elaborate on what you mean by this? Why would you need a
-single-step facility for kprobes? Is it for executing the instruction
-that was replaced with a probe breakpoint?
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Also, the "Debug Specification" [1] specifies a single-step facility
-for RISC-V -- why is that not useful for implementing kprobes?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
 
-1. https://riscv.org/specifications/debug-specification/
+ip6_tunnel: syzkaller1 xmit: Local address not yet configured!
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9155 at net/wireless/sme.c:757 __cfg80211_connect_result+0xf71/0x13a0 net/wireless/sme.c:757
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9155 Comm: kworker/u4:17 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: cfg80211 cfg80211_event_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+RIP: 0010:__cfg80211_connect_result+0xf71/0x13a0 net/wireless/sme.c:757
+Code: 89 be ac 02 00 00 48 c7 c7 00 2d 16 89 c6 05 ba ce 34 03 01 e8 35 58 e5 f9 e9 4f f6 ff ff e8 36 ad fe f9 0f 0b e8 2f ad fe f9 <0f> 0b e9 0c f2 ff ff e8 23 ad fe f9 e8 ee 51 71 00 31 ff 89 c3 89
+RSP: 0018:ffffc90001ab7bb8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff888091d10000 RCX: ffffffff87749792
+RDX: ffff888059f5c4c0 RSI: ffffffff8774a321 RDI: 0000000000000005
+RBP: ffff888040f72618 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff888040f72628 R14: ffff888091d10200 R15: ffff888040f72620
+ cfg80211_process_wdev_events+0x2c6/0x5b0 net/wireless/util.c:885
+ cfg80211_process_rdev_events+0x6e/0x100 net/wireless/util.c:926
+ cfg80211_event_work+0x1a/0x20 net/wireless/core.c:320
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Kernel Offset: disabled
 
-- Pekka
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
