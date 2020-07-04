@@ -2,131 +2,98 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B3CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 08:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD63207CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 08:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42D620EDD
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Pfn0Q9jS"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SCXoRevB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgGDIwk (ORCPT
+        id S1726852AbgGDJRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 04:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
+        Sat, 4 Jul 2020 05:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGDIwi (ORCPT
+        with ESMTP id S1726178AbgGDJRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 04:52:38 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DACBC08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 01:52:38 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id k6so35181522wrn.3
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 01:52:38 -0700 (PDT)
+        Sat, 4 Jul 2020 05:17:25 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49001C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 02:17:24 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so23265440edz.12
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 02:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HnWE2oirgCn5o685xdW8KSCAfE3mrg9wzOfvPNj8xZg=;
-        b=Pfn0Q9jSVoOwJyQytzVUeoY7P2OBAlYd1kI+8Ic+E7FkY31u/OBLdx2MwJQAj7U0xS
-         LZloTN42l6yrZlVD7MHnq7NtLkSsxeMPiW1IVwvff0kZ7haeMVd1EAbrpEE9p927TtN/
-         0epWoIWnrbaM1NXUl5fyZlH0dq7ssGJdiPbxM=
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+/TRH+R1Jd8bkRDtLQE4V1BauMMxUIjDQbhrcVAnS+Y=;
+        b=SCXoRevBc0YwM9J9u9Sa97afiHyxdiz7b0+aXHvuS7zS4Pfi7qbP1VfMqEiWoQM5ET
+         iTru0AzQeUchb3hj+nbINcockWsxFxRntPxnTA8jFD1jIcHOOqQkygVhv85LIJXGCm7b
+         kUkEJHjDU3X3QY5wFGzHlmah96sI8DpQDTMrM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HnWE2oirgCn5o685xdW8KSCAfE3mrg9wzOfvPNj8xZg=;
-        b=e6dYgGrrgooRbE0y8HTB194vgTsgybXVXZLXuMHPbDLi7N+sYjAS8vjOlPRh4mRe69
-         iKMKeun+HyW2leLzMnMyMCggzkKHhnu4NCM7Vj4RdeIIR4hTveCKivmfSf7/3yCxOLLC
-         YDqFpDa9UeBShvoNv63TptkibTIvNcGTzSHj6unJLk7eUDMj+bQYUlc/voKBUrbnGtEv
-         sHeczX43jdfyGZpYWC7dJbcSyjzmOcGN9CTiW5kLwjANbwAkZLrxCVjapKLas1L9h52r
-         YVQc/2pIkDzcLVs7bLrVuje90KzltSyCs4PJN5rzAPUX1s9qK/FsUtBbgWvXhiz3ZLUi
-         93IA==
-X-Gm-Message-State: AOAM531jJtb71mOuyJfJtiwvY7r6LfukFFFTR12hQ1W6r0qJ2QgAgZD4
-        q5c/0SI+m7fAsbix4Jy0QA42mQ==
-X-Google-Smtp-Source: ABdhPJxzJZHlOo7En8/cR47BCLtZwGkdzG4ZzFalBQ61w+bS7kduaH5pHCbCBTUTALDaJGaV3wYWPw==
-X-Received: by 2002:a5d:60c5:: with SMTP id x5mr5494877wrt.67.1593852757099;
-        Sat, 04 Jul 2020 01:52:37 -0700 (PDT)
-Received: from localhost.localdomain (88-144-169-139.host.pobb.as13285.net. [88.144.169.139])
-        by smtp.gmail.com with ESMTPSA id a22sm15195915wmb.4.2020.07.04.01.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 01:52:36 -0700 (PDT)
-From:   Ignat Korchagin <ignat@cloudflare.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        brendanhiggins@google.com, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ignat Korchagin <ignat@cloudflare.com>, kernel-team@cloudflare.com
-Subject: [PATCH v2 3/3] um: allow static linking for non-glibc implementations
-Date:   Sat,  4 Jul 2020 09:52:13 +0100
-Message-Id: <20200704085213.444645-4-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200704085213.444645-1-ignat@cloudflare.com>
-References: <20200704085213.444645-1-ignat@cloudflare.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+/TRH+R1Jd8bkRDtLQE4V1BauMMxUIjDQbhrcVAnS+Y=;
+        b=JZPb20xU+O0CJzyzetUn8XADLvOVZ1FdZnAtrbG4Q4xOyTLR0Q1KjZgexjIT9pWQh2
+         sjLEjfpEwIWPbyURzkXYXhii5Y/QGTWkOaZ4cbai5T6r+1Qt337I3d47NbMZWpVV/Ydx
+         0D3olYZ1roPZ4AKxutFmhlHGLHHcbHWxDz/FeZj0rS3Ko+Y9g5if5nLRqWTgtFtcgt61
+         nHykQgCKBuFNuZgMZ+uL1HWVi5XMTOA5oW44X4f8pGvBwBCAMAajJ0AbDvV80k2fXQ4L
+         CJj+qBi9HMtG9Adbfd53qRJ3ZEcn+ybPMyHtMw/VbmVke4cpRVdX5zwp/kAVnP9lTLi8
+         b9/A==
+X-Gm-Message-State: AOAM5314Nih/34/U5tiL47bqrhXOpPn5017iSFepRYEdygA8ZsrI/YQ5
+        h8w6Rf2ACEF6zhbFpOzBcTg18vNxIm+CZiOnnz9tjlFHzSPyWg==
+X-Google-Smtp-Source: ABdhPJwlefxsAbGTCRPLIBaYv9lxYvdEX0dTSqQ0Eif4z0YohHwTAySzp2vMit7sAuH5RhITj6dd324GeKAxdmHfpCk=
+X-Received: by 2002:aa7:ca05:: with SMTP id y5mr18051705eds.204.1593854242943;
+ Sat, 04 Jul 2020 02:17:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200703154948.260369-1-heiko@sntech.de>
+In-Reply-To: <20200703154948.260369-1-heiko@sntech.de>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Sat, 4 Jul 2020 14:47:11 +0530
+Message-ID: <CAMty3ZD7jBSCEWLRK9qNXKGQC2_0eJyo5NkbV4MfaTNbC4Br2A@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: rockchip: use separate compatibles for rk3288w-cru
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to produce a statically linked UML binary with UML_NET_VECTOR,
-UML_NET_VDE and UML_NET_PCAP options enabled using alternative libc
-implementations, which do not rely on NSS, such as musl.
+On Fri, Jul 3, 2020 at 9:19 PM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+>
+> Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
+> added the check for rk3288w-specific clock-tree changes but in turn would
+> require a double-compatible due to re-using the main rockchip,rk3288-cru
+> compatible as entry point.
+>
+> The binding change actually describes the compatibles as one or the other
+> so adapt the code accordingly and add a real second entry-point for the
+> clock controller.
+>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
 
-Allow static linking in this case.
+Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
+Tested-by: Jagan Teki <jagan@amarulasolutions.com> # rock-pi-n8
 
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
----
- arch/um/Kconfig         | 2 +-
- arch/um/drivers/Kconfig | 3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+Note: These are U-Boot changes,
+https://patchwork.ozlabs.org/project/uboot/list/?series=187546
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 9318dc6d1a0c..af7ed63f9c74 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -67,7 +67,7 @@ config FORBID_STATIC_LINK
- 
- config STATIC_LINK
- 	bool "Force a static link"
--	depends on !FORBID_STATIC_LINK
-+	depends on CC_CAN_LINK_STATIC_NO_RUNTIME_DEPS || (!UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP)
- 	help
- 	  This option gives you the ability to force a static link of UML.
- 	  Normally, UML is linked as a shared binary.  This is inconvenient for
-diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
-index 9160ead56e33..72d417055782 100644
---- a/arch/um/drivers/Kconfig
-+++ b/arch/um/drivers/Kconfig
-@@ -234,7 +234,6 @@ config UML_NET_DAEMON
- config UML_NET_VECTOR
- 	bool "Vector I/O high performance network devices"
- 	depends on UML_NET
--	select FORBID_STATIC_LINK
- 	help
- 	This User-Mode Linux network driver uses multi-message send
- 	and receive functions. The host running the UML guest must have
-@@ -246,7 +245,6 @@ config UML_NET_VECTOR
- config UML_NET_VDE
- 	bool "VDE transport (obsolete)"
- 	depends on UML_NET
--	select FORBID_STATIC_LINK
- 	help
- 	This User-Mode Linux network transport allows one or more running
- 	UMLs on a single host to communicate with each other and also
-@@ -294,7 +292,6 @@ config UML_NET_MCAST
- config UML_NET_PCAP
- 	bool "pcap transport (obsolete)"
- 	depends on UML_NET
--	select FORBID_STATIC_LINK
- 	help
- 	The pcap transport makes a pcap packet stream on the host look
- 	like an ethernet device inside UML.  This is useful for making
--- 
-2.20.1
-
+Jagan.
