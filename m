@@ -2,193 +2,154 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9860C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D389C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C235020885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7+j+auj"
+	by mail.kernel.org (Postfix) with ESMTP id DF86021927
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593874579;
+	bh=ojbgQmjPTV7D6kXqc4BTRRhR75bviWgGGtdXVdf+q9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GjphzYM5rZZxgiNeTR0L1tMfK4FmLCP/qc4ZKJoM4He6r5hIx4402cq6M8+cOXHc/
+	 JBQqQ95OEGqXZV9aOs/MJ2tAp+brRMng4Ie+kVSkfradNrmIaDsGW5I4TO8szglBq5
+	 P3w+wZ+J/qZDGbsIRSyH6mcWll7P90c+NNCsUTxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgGDOrY (ORCPT
+        id S1726942AbgGDOzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGDOrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:47:24 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF65C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:47:23 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u185so13081328pfu.1
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:47:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p/55De6gGtaFwxFQIqPcNfatEGLg0t1eCobtBLAgNg4=;
-        b=M7+j+auj6W0P6QiET/OM6aWLhlCgIAMiuV3Tk0omNfJDBKL5xdnu1jE1QQblptExQ2
-         Sr7qSCVN/OyIBXtT5ZSDzaSqreLAHb57RpkcXYnpObmK5n4NgRiRAUCh8+e+ieLUyR7G
-         pXq41vxVZP4ZOBTkZB1ENGjBDw/8AsgkTUbxEyUZgdH5q8CvI6OtHyTW6MCGv7J+KVxP
-         ei1gSYLww1tMA1F5l6vJkziBRR2Bn3KcPDyykQjPIhZ8+jYWrUXnmTaWhz1jckncE0zK
-         3uwaNTMvi60vel1giShy5RIw2tGoMiKKAWBJnlbzc3yhJwvfHeipI3+sH3FTBRp5SkHb
-         b5Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p/55De6gGtaFwxFQIqPcNfatEGLg0t1eCobtBLAgNg4=;
-        b=uDReeaqoaycoSz5m/f7iPQQTuBQDTHYDAqYchE+AG/BhIOfqnEvcx9g6spvOgHXdm+
-         KZKy7I0e0oBL1/NgrA6/Wn4CAY33tC+mvEQCyg7q9Hm44qw9H71HbJ7OSBblJ9WdJ+pP
-         V++6TbD05RVkxYEgDv/Kg1orIZlDyQZGNV4sBz9VSx3ke/y8nfpM6f8KC3DGpXxvXW8a
-         7+NbbJP4QWLVH4BRlYzr7dO79zQOIEHcRvFeSsnYt4AdMNpZIdVknF0YZxKymQgBCUpB
-         4YFxWXtBBo2ThGRSbylL46Gk4vhuj7z25Lng4eesfRRPtlJ4541pJ0fUdIK70yhmscKv
-         H92g==
-X-Gm-Message-State: AOAM533/AM4f41M6BNoqGqByBhRBRNcoUF85LAKABu8xC1+PQx8ZiUcl
-        Nql38ToSV5YTGZXQD4IG2d7G
-X-Google-Smtp-Source: ABdhPJwP/dv8Np1XlPSKXs0oR2M/7BaEapR8vP1S4nR79PyY2OHwL7cCfIF9S/EBer6mYXzCxqnSWg==
-X-Received: by 2002:a63:7f17:: with SMTP id a23mr33029745pgd.3.1593874042017;
-        Sat, 04 Jul 2020 07:47:22 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
-        by smtp.gmail.com with ESMTPSA id n12sm14766200pgr.88.2020.07.04.07.47.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jul 2020 07:47:20 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 20:17:14 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] bus: mhi: core: Use helper API to trigger a
- non-blocking host resume
-Message-ID: <20200704144714.GC3066@Mani-XPS-13-9360>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
- <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
+        Sat, 4 Jul 2020 10:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgGDOzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 10:55:43 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9260208FE;
+        Sat,  4 Jul 2020 14:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593874542;
+        bh=ojbgQmjPTV7D6kXqc4BTRRhR75bviWgGGtdXVdf+q9I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y3eSMm59oP8v1iEQ7GYqolbPktucp14jR0nXZszhUE2dTmzXPf35N2IOz91wo8Mcb
+         NnXjhBNvxqNPDHdG0mD6FLIiRVM4jtRN2rFAjqBvRz+w1k1J9cVer/BrWEzNCuYFGi
+         R2l9SCKG5o2CfKIQ0NcKo8VAYaUVPaMRsq/J44h0=
+Received: by mail-lj1-f173.google.com with SMTP id n23so40292530ljh.7;
+        Sat, 04 Jul 2020 07:55:41 -0700 (PDT)
+X-Gm-Message-State: AOAM531dss3lHWWAaDALyI1l9TEq9klAiV6Ljs43688svoa5H1mHNF+8
+        nwHG9UWMiUAZuCCAqn0XE2metTTwbJhZtt5rLXE=
+X-Google-Smtp-Source: ABdhPJzIk1tCgJjz4OUWhVlitpIkUcsZm9HDMIiZYK03ivVBzcTjfWnBMrpv0O6qL9pOvJGS1ty5yLoysAERVwX8Y94=
+X-Received: by 2002:a05:651c:2da:: with SMTP id f26mr21209299ljo.377.1593874540221;
+ Sat, 04 Jul 2020 07:55:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1593833659-26224-1-git-send-email-guoren@kernel.org> <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com>
+In-Reply-To: <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 4 Jul 2020 22:55:28 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
+Message-ID: <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
+Subject: Re: [PATCH V1 0/5] riscv: Add k/uprobe supported
+To:     Pekka Enberg <penberg@gmail.com>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
+        bjorn.topel@gmail.com, Atish Patra <atish.patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:39:36AM -0700, Bhaumik Bhatt wrote:
-> Autonomous low power mode support requires the MHI host to resume from
-> multiple places and post a wakeup source to exit system suspend. This
-> needs to be done in a non-blocking manner. Introduce a helper API to
-> trigger the host resume for data transfers and other non-blocking use
-> cases while supporting implementation of autonomous low power modes.
-> 
+Hi Pekka,
 
-Why can't you use pm_wakeup_event() as done in __mhi_device_get_sync()?
+On Sat, Jul 4, 2020 at 2:40 PM Pekka Enberg <penberg@gmail.com> wrote:
+>
+> On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
+> > The patchset includes kprobe/uprobe support and some related fixups.
+>
+> Nice!
+>
+> On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
+> > There is no single step exception in riscv ISA, so utilize ebreak to
+> > simulate. Some pc related instructions couldn't be executed out of line
+> > and some system/fence instructions couldn't be a trace site at all.
+> > So we give out a reject list and simulate list in decode-insn.c.
+>
+> Can you elaborate on what you mean by this? Why would you need a
+> single-step facility for kprobes? Is it for executing the instruction
+> that was replaced with a probe breakpoint?
 
-Thanks,
-Mani
+It's the single-step exception, not single-step facility!
 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
->  drivers/bus/mhi/core/internal.h |  8 ++++++++
->  drivers/bus/mhi/core/main.c     | 21 +++++++--------------
->  drivers/bus/mhi/core/pm.c       |  6 ++----
->  3 files changed, 17 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-> index bcfa7b6..cb32eaf 100644
-> --- a/drivers/bus/mhi/core/internal.h
-> +++ b/drivers/bus/mhi/core/internal.h
-> @@ -599,6 +599,14 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
->  int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
->  		 enum mhi_cmd_type cmd);
->  
-> +static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl,
-> +				      bool hard_wakeup)
-> +{
-> +	pm_wakeup_dev_event(&mhi_cntrl->mhi_dev->dev, 0, hard_wakeup);
-> +	mhi_cntrl->runtime_get(mhi_cntrl);
-> +	mhi_cntrl->runtime_put(mhi_cntrl);
-> +}
-> +
->  /* Register access methods */
->  void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
->  		     void __iomem *db_addr, dma_addr_t db_val);
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 1f622ce..8d6ec34 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
->  		 * process it since we are probably in a suspended state,
->  		 * so trigger a resume.
->  		 */
-> -		mhi_cntrl->runtime_get(mhi_cntrl);
-> -		mhi_cntrl->runtime_put(mhi_cntrl);
-> +		mhi_trigger_resume(mhi_cntrl, false);
->  
->  		return;
->  	}
-> @@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->  	}
->  
->  	/* we're in M3 or transitioning to M3 */
-> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> -		mhi_cntrl->runtime_get(mhi_cntrl);
-> -		mhi_cntrl->runtime_put(mhi_cntrl);
-> -	}
-> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> +		mhi_trigger_resume(mhi_cntrl, false);
->  
->  	/* Toggle wake to exit out of M2 */
->  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> @@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->  	}
->  
->  	/* we're in M3 or transitioning to M3 */
-> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> -		mhi_cntrl->runtime_get(mhi_cntrl);
-> -		mhi_cntrl->runtime_put(mhi_cntrl);
-> -	}
-> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> +		mhi_trigger_resume(mhi_cntrl, false);
->  
->  	/* Toggle wake to exit out of M2 */
->  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> @@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
->  	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
->  
->  	/* we're in M3 or transitioning to M3 */
-> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> -		mhi_cntrl->runtime_get(mhi_cntrl);
-> -		mhi_cntrl->runtime_put(mhi_cntrl);
-> -	}
-> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> +		mhi_trigger_resume(mhi_cntrl, false);
->  
->  	/* Toggle wake to exit out of M2 */
->  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> index 661d704..5e3994e 100644
-> --- a/drivers/bus/mhi/core/pm.c
-> +++ b/drivers/bus/mhi/core/pm.c
-> @@ -1139,10 +1139,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
->  
->  	mhi_dev->dev_wake--;
->  	read_lock_bh(&mhi_cntrl->pm_lock);
-> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> -		mhi_cntrl->runtime_get(mhi_cntrl);
-> -		mhi_cntrl->runtime_put(mhi_cntrl);
-> -	}
-> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> +		mhi_trigger_resume(mhi_cntrl, false);
->  
->  	mhi_cntrl->wake_put(mhi_cntrl, false);
->  	read_unlock_bh(&mhi_cntrl->pm_lock);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Other arches use hardware single-step exception for k/uprobe,  eg:
+ - powerpc: regs->msr |=3D MSR_SINGLESTEP
+ - arm/arm64: PSTATE.D for enabling software step exceptions
+ - s390: Set PER control regs, turns on single step for the given address
+ - x86: regs->flags |=3D X86_EFLAGS_TF
+ - csky: of course use hw single step :)
+
+Yes, All the above arches use a hardware single-step exception
+mechanism to execute the instruction that was replaced with a probe
+breakpoint.
+
+>
+> Also, the "Debug Specification" [1] specifies a single-step facility
+> for RISC-V -- why is that not useful for implementing kprobes?
+>
+> 1. https://riscv.org/specifications/debug-specification/
+We need single-step exception not single-step by jtag, so above spec
+is not related to the patchset.
+
+See riscv-Privileged spec:
+
+Interrupt Exception Code-Description
+1 0 Reserved
+1 1 Supervisor software interrupt
+1 2=E2=80=934 Reserved
+1 5 Supervisor timer interrupt
+1 6=E2=80=938 Reserved
+1 9 Supervisor external interrupt
+1 10=E2=80=9315 Reserved
+1 =E2=89=A516 Available for platform use
+0 0 Instruction address misaligned
+0 1 Instruction access fault
+0 2 Illegal instruction
+0 3 Breakpoint
+0 4 Load address misaligned
+0 5 Load access fault
+0 6 Store/AMO address misaligned
+0 7 Store/AMO access fault
+0 8 Environment call from U-mode
+0 9 Environment call from S-mode
+0 10=E2=80=9311 Reserved
+0 12 Instruction page fault
+0 13 Load page fault
+0 14 Reserved
+0 15 Store/AMO page fault
+0 16=E2=80=9323 Reserved
+0 24=E2=80=9331 Available for custom use
+0 32=E2=80=9347 Reserved
+0 48=E2=80=9363 Available for custom use
+0 =E2=89=A564 Reserved
+
+No single step!
+
+So I insert a "ebreak" instruction behind the target single-step
+instruction to simulate the same mechanism.
+
+--=20
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
