@@ -2,160 +2,185 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A319C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB7C433E1
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF8F20826
+	by mail.kernel.org (Postfix) with ESMTP id 5B02320870
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593905179;
-	bh=jjLI1NVY4paYHUmIojobSDVFBbLlkvJZnfkgPCCD+YU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jXclLENg8mGXeH4+BAZeXl9at2Q8HrQjCQ1jlWTUzI8QSTzh79IAADG/brwaG1bO3
-	 4bUjCmyp8sb/W15GduLD90AI/w0sQsg8MyHBMWxAp7DC0zyFXdThXVo+skKCCAfVdj
-	 Ne2BMj552/R0NYQescRTaWkgb7Qub8hvb0eE1IRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgGDXVN (ORCPT
+        id S1728018AbgGDXWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 19:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbgGDXVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 19:21:13 -0400
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 258B4208E4
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 23:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593904872;
-        bh=jjLI1NVY4paYHUmIojobSDVFBbLlkvJZnfkgPCCD+YU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yobnRxgPmq/BD478RO0cvpD+xb/0uvejoPSdBkq3UdFeQZXlXNWCbRavLRi7G5jXN
-         sQzEMSW1ZjA5FGsVKMmotrnmqQjs3veB0rUTXS3WX/0QqQ3GXePLVhnFNp/qvg6VcM
-         F6HZF0bXrQC8k6Ip8al9F+afQl6w//5t6MLwFunM=
-Received: by mail-ej1-f44.google.com with SMTP id n26so24598719ejx.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:21:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533aE1heT7Xk+VuiKGBnrPJUNZFMb8DWXdYicgfaHXHvDcGjw19O
-        uCQ4bjaDlTlVngYxWPlDTQ62CTUvFavUqMkZsA==
-X-Google-Smtp-Source: ABdhPJzSJ1ZWbwUWJLnVTcfoYRxGdqUMKJzrzedJHWFE7nqUV7raFr7/mAlCkHNtCxHv7UjgUk/yH0v2MF8C9pKav+U=
-X-Received: by 2002:a17:906:1e83:: with SMTP id e3mr23006232ejj.7.1593904870633;
- Sat, 04 Jul 2020 16:21:10 -0700 (PDT)
+        Sat, 4 Jul 2020 19:22:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:49668 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbgGDXWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 19:22:16 -0400
+Received: by mail-il1-f200.google.com with SMTP id w10so16684335ilm.16
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:22:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=p/sj6/A1h/oMfABdmzJUOldo2DwRLfpIf9LDXwypp7g=;
+        b=QxialC/U2Wf6uoODPwOWq2SGcuk4NHVL0BDuBMifsQUGtrebigIxECTRq8Q7fe5iUb
+         pI9+MANWGUoRqlHKyhFr2b1PEH5jjbs9JVioPzO6LLldU+OKdpW8MnuYlwzCJqOAtH6j
+         NBUI3Xu+acko0yNCWmywCgn5Fpkn3DZ7+QfpN2vLVyfPRQVJi8dncwnWVksCrZvkpRAo
+         r3hL/kMl+mPnXAAuiG346TAGpv+BR+f1rDp7nyoJvatIHiQ2QBKaAWwvSUZyGPpoGXHL
+         bGeap0oDTPJOhq+lnhsr5ygJbspTm7f2MXWT2fOSsvPGLxQXMzf+ViXC4QBIyVXkW7u8
+         7chQ==
+X-Gm-Message-State: AOAM531xwSVuftTM8M9q0Zi2nG9lOO9olpFBuHHApAheI4GU2n1ewULh
+        IQT2LoHg3+dX1G0uGKLIrM9iG8ymHmM9bm+yBiarcEG/NN8T
+X-Google-Smtp-Source: ABdhPJwOY9VsonF16dUne23woyWtFLgiGJ5rIS0toAM0k0AJN47MQXHGwL5NQrhbbHUmu2kAupwb2S74YZPjxycIQQNkU+4DgmO2
 MIME-Version: 1.0
-References: <20200615203108.786083-1-enric.balletbo@collabora.com> <20200615203108.786083-4-enric.balletbo@collabora.com>
-In-Reply-To: <20200615203108.786083-4-enric.balletbo@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 5 Jul 2020 07:20:59 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_89jeRvdv01batww9+bY0XWabvQ8xnEOEVCgsPimJ6WWg@mail.gmail.com>
-Message-ID: <CAAOTY_89jeRvdv01batww9+bY0XWabvQ8xnEOEVCgsPimJ6WWg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 3/7] drm/mediatek: mtk_dsi: Rename bridge to next_bridge
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+X-Received: by 2002:a02:ce9a:: with SMTP id y26mr14136365jaq.121.1593904934700;
+ Sat, 04 Jul 2020 16:22:14 -0700 (PDT)
+Date:   Sat, 04 Jul 2020 16:22:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000704c7705a9a5e938@google.com>
+Subject: INFO: task hung in lru_add_drain_all
+From:   syzbot <syzbot+1053252c4289b5f73548@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+Hello,
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B46=E6=9C=8816=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:31=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> This is really a cosmetic change just to make a bit more readable the
-> code after convert the driver to drm_bridge. The bridge variable name
-> will be used by the encoder drm_bridge, and the chained bridge will be
-> named next_bridge.
->
+syzbot found the following crash on:
 
-Applied to mediatek-drm-next [1], thanks.
+HEAD commit:    c28e58ee Add linux-next specific files for 20200629
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1400ab37100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcd26bbca17dd1db
+dashboard link: https://syzkaller.appspot.com/bug?extid=1053252c4289b5f73548
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c75c83100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11fd99e3100000
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1053252c4289b5f73548@syzkaller.appspotmail.com
 
-Regards,
-Chun-Kuang.
+INFO: task khugepaged:1160 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+khugepaged      D28584  1160      2 0x00004000
+Call Trace:
+ context_switch kernel/sched/core.c:3445 [inline]
+ __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4244
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1873
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ lru_add_drain_all+0x3ca/0x590 mm/swap.c:808
+ khugepaged_do_scan mm/khugepaged.c:2177 [inline]
+ khugepaged+0x10b/0x5a10 mm/khugepaged.c:2238
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> ---
->
-> Changes in v4: None
-> Changes in v3:
-> - Replace s/bridge/next bridge/ for comment. (Laurent Pinchart)
->
-> Changes in v2: None
->
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
-k/mtk_dsi.c
-> index 270bf22c98feb..208f49bf14a01 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -183,7 +183,7 @@ struct mtk_dsi {
->         struct drm_encoder encoder;
->         struct drm_connector conn;
->         struct drm_panel *panel;
-> -       struct drm_bridge *bridge;
-> +       struct drm_bridge *next_bridge;
->         struct phy *phy;
->
->         void __iomem *regs;
-> @@ -894,9 +894,10 @@ static int mtk_dsi_create_conn_enc(struct drm_device=
- *drm, struct mtk_dsi *dsi)
->          */
->         dsi->encoder.possible_crtcs =3D 1;
->
-> -       /* If there's a bridge, attach to it and let it create the connec=
-tor */
-> -       if (dsi->bridge) {
-> -               ret =3D drm_bridge_attach(&dsi->encoder, dsi->bridge, NUL=
-L, 0);
-> +       /* If there's a next bridge, attach to it and let it create the c=
-onnector */
-> +       if (dsi->next_bridge) {
-> +               ret =3D drm_bridge_attach(&dsi->encoder, dsi->next_bridge=
-, NULL,
-> +                                       0);
->                 if (ret) {
->                         DRM_ERROR("Failed to attach bridge to drm\n");
->                         goto err_encoder_cleanup;
-> @@ -1177,7 +1178,7 @@ static int mtk_dsi_probe(struct platform_device *pd=
-ev)
->         }
->
->         ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> -                                         &dsi->panel, &dsi->bridge);
-> +                                         &dsi->panel, &dsi->next_bridge)=
-;
->         if (ret)
->                 goto err_unregister_host;
->
-> --
-> 2.27.0
->
+Showing all locks held in the system:
+6 locks held by kworker/0:0/5:
+1 lock held by khungtaskd/1150:
+ #0: ffffffff89bc3000 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
+1 lock held by khugepaged/1160:
+ #0: ffffffff89c48448 (lock#4){+.+.}-{3:3}, at: lru_add_drain_all+0x59/0x590 mm/swap.c:779
+1 lock held by in:imklog/6654:
+ #0: ffff8880935425f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:928
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1150 Comm: khungtaskd Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
+ watchdog+0xd89/0xf30 kernel/hung_task.c:339
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
+RIP: 0010:hid_setup_resolution_multiplier+0x3a3/0x9b0 drivers/hid/hid-core.c:1163
+Code: b6 14 38 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 df 04 00 00 45 8b 74 24 04 bf 02 00 00 00 44 89 f6 e8 6d 62 90 fb <41> 83 fe 02 0f 85 74 ff ff ff 4c 89 24 24 e8 da 65 90 fb 49 8d 7d
+RSP: 0018:ffffc90000cbec18 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff85e38373
+RDX: 0000000000000000 RSI: ffff8880a9598140 RDI: 0000000000000005
+RBP: ffff88809f43e800 R08: 0000000000000001 R09: ffffc900015ee0cc
+R10: 0000000000000002 R11: 0000000000000000 R12: ffff88809f43e800
+R13: ffff888085800000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055726aabf328 CR3: 00000000a0102000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ hid_open_report+0x438/0x640 drivers/hid/hid-core.c:1274
+ hid_parse include/linux/hid.h:1017 [inline]
+ ms_probe+0x12d/0x4b0 drivers/hid/hid-microsoft.c:388
+ hid_device_probe+0x2bd/0x3f0 drivers/hid/hid-core.c:2263
+ really_probe+0x282/0x8a0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xacf/0x1b00 drivers/base/core.c:2680
+ hid_add_device+0x344/0x9b0 drivers/hid/hid-core.c:2419
+ usbhid_probe+0xac8/0xff0 drivers/hid/usbhid/hid-core.c:1412
+ usb_probe_interface+0x2f7/0x780 drivers/usb/core/driver.c:374
+ really_probe+0x282/0x8a0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xacf/0x1b00 drivers/base/core.c:2680
+ usb_set_configuration+0xef6/0x17a0 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0xba/0xf2 drivers/usb/core/generic.c:241
+ usb_probe_device+0xc6/0x210 drivers/usb/core/driver.c:272
+ really_probe+0x282/0x8a0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xacf/0x1b00 drivers/base/core.c:2680
+ usb_new_device.cold+0x748/0x103b drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x2033/0x3e40 drivers/usb/core/hub.c:5576
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
