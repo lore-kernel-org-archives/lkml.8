@@ -2,39 +2,40 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49725C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E182C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2398420885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D4D20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgGDLU0 (ORCPT
+        id S1727952AbgGDLUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:20:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48338 "EHLO mga11.intel.com"
+        Sat, 4 Jul 2020 07:20:10 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48334 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgGDLUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:20:25 -0400
-IronPort-SDR: a2gj+fkiDqA0DY5a0RW+pedL4MxPn4d62h+Lw3m+Bq0lh4WgOWIz1Q0mmk0IMtUw7+Nz5PTgbf
- r4Rjh0NkwkKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371335"
+        id S1727868AbgGDLUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 07:20:01 -0400
+IronPort-SDR: QKmiwYB6FvWs5fGHC5IpXYhT4uiiaTV87STyTc7y9TyVdVp2zqdFgcjIsDCX0S628Y2yZ7yDhB
+ CldrEuCaBJqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371360"
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="145371335"
+   d="scan'208";a="145371360"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:53 -0700
-IronPort-SDR: RJe1zSbxFxR0ij0gpvc9x4ZATrx5EGqzy2YgoNH/VBsNYcGhJuo6KfeWjyVaD/2efef/P8wDWn
- +ZD/GcLq26eQ==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:54 -0700
+IronPort-SDR: h1ON9ETzssuBh2NUHeKx3XWaxFJYgjZnBju22b4lJCMGJch1c4hNBI03NqOWz88xQEFNWlU7ri
+ JlOT6KXhzlxA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="282521408"
+   d="scan'208";a="282521463"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:52 -0700
+  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:53 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, eric.auger@redhat.com,
         baolu.lu@linux.intel.com, joro@8bytes.org
@@ -44,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/15] vfio/type1: Refactor vfio_iommu_type1_ioctl()
-Date:   Sat,  4 Jul 2020 04:26:15 -0700
-Message-Id: <1593861989-35920-2-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v4 15/15] iommu/vt-d: Support reporting nesting capability info
+Date:   Sat,  4 Jul 2020 04:26:29 -0700
+Message-Id: <1593861989-35920-16-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
 References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
@@ -55,9 +56,6 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch refactors the vfio_iommu_type1_ioctl() to use switch instead of
-if-else, and each cmd got a helper function.
-
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc: Alex Williamson <alex.williamson@redhat.com>
@@ -65,475 +63,153 @@ Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/vfio/vfio_iommu_type1.c | 392 ++++++++++++++++++++++------------------
- 1 file changed, 213 insertions(+), 179 deletions(-)
+v2 -> v3:
+*) remove cap/ecap_mask in iommu_nesting_info.
+---
+ drivers/iommu/intel/iommu.c | 81 +++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/intel-iommu.h | 16 +++++++++
+ 2 files changed, 95 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 5e556ac..7accb59 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -2453,6 +2453,23 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 7bebf82..4c10f4f 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -5659,12 +5659,16 @@ static inline bool iommu_pasid_support(void)
+ static inline bool nested_mode_support(void)
+ {
+ 	struct dmar_drhd_unit *drhd;
+-	struct intel_iommu *iommu;
++	struct intel_iommu *iommu, *prev = NULL;
+ 	bool ret = true;
+ 
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
+-		if (!sm_supported(iommu) || !ecap_nest(iommu->ecap)) {
++		if (!prev)
++			prev = iommu;
++		if (!sm_supported(iommu) || !ecap_nest(iommu->ecap) ||
++		    (VTD_CAP_MASK & (iommu->cap ^ prev->cap)) ||
++		    (VTD_ECAP_MASK & (iommu->ecap ^ prev->ecap))) {
+ 			ret = false;
+ 			break;
+ 		}
+@@ -6073,6 +6077,78 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
  	return ret;
  }
  
-+static int vfio_iommu_type1_check_extension(struct vfio_iommu *iommu,
-+					    unsigned long arg)
++static int intel_iommu_get_nesting_info(struct iommu_domain *domain,
++					struct iommu_nesting_info *info)
 +{
-+	switch (arg) {
-+	case VFIO_TYPE1_IOMMU:
-+	case VFIO_TYPE1v2_IOMMU:
-+	case VFIO_TYPE1_NESTING_IOMMU:
-+		return 1;
-+	case VFIO_DMA_CC_IOMMU:
-+		if (!iommu)
-+			return 0;
-+		return vfio_domains_have_iommu_cache(iommu);
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++	u64 cap = VTD_CAP_MASK, ecap = VTD_ECAP_MASK;
++	struct device_domain_info *domain_info;
++	struct iommu_nesting_info_vtd vtd;
++	unsigned long flags;
++	u32 size;
++
++	if ((domain->type != IOMMU_DOMAIN_UNMANAGED) ||
++	    !(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE))
++		return -ENODEV;
++
++	if (!info)
++		return -EINVAL;
++
++	size = sizeof(struct iommu_nesting_info) +
++		sizeof(struct iommu_nesting_info_vtd);
++	/*
++	 * if provided buffer size is not equal to the size, should
++	 * return 0 and also the expected buffer size to caller.
++	 */
++	if (info->size != size) {
++		info->size = size;
++		return 0;
++	}
++
++	spin_lock_irqsave(&device_domain_lock, flags);
++	/*
++	 * arbitrary select the first domain_info as all nesting
++	 * related capabilities should be consistent across iommu
++	 * units.
++	 */
++	domain_info = list_first_entry(&dmar_domain->devices,
++				      struct device_domain_info, link);
++	cap &= domain_info->iommu->cap;
++	ecap &= domain_info->iommu->ecap;
++	spin_unlock_irqrestore(&device_domain_lock, flags);
++
++	info->format = IOMMU_PASID_FORMAT_INTEL_VTD;
++	info->features = IOMMU_NESTING_FEAT_SYSWIDE_PASID |
++			 IOMMU_NESTING_FEAT_BIND_PGTBL |
++			 IOMMU_NESTING_FEAT_CACHE_INVLD;
++	info->addr_width = dmar_domain->gaw;
++	info->pasid_bits = ilog2(intel_pasid_max_id);
++	info->padding = 0;
++	vtd.flags = 0;
++	vtd.padding = 0;
++	vtd.cap_reg = cap;
++	vtd.ecap_reg = ecap;
++
++	memcpy(info->data, &vtd, sizeof(vtd));
++	return 0;
++}
++
++static int intel_iommu_domain_get_attr(struct iommu_domain *domain,
++				       enum iommu_attr attr, void *data)
++{
++	switch (attr) {
++	case DOMAIN_ATTR_NESTING:
++	{
++		struct iommu_nesting_info *info =
++				(struct iommu_nesting_info *) data;
++
++		return intel_iommu_get_nesting_info(domain, info);
++	}
 +	default:
-+		return 0;
++		return -ENODEV;
 +	}
 +}
 +
- static int vfio_iommu_iova_add_cap(struct vfio_info_cap *caps,
- 		 struct vfio_iommu_type1_info_cap_iova_range *cap_iovas,
- 		 size_t size)
-@@ -2529,238 +2546,255 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
- 	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
- }
+ /*
+  * Check that the device does not live on an external facing PCI port that is
+  * marked as untrusted. Such devices should not be able to apply quirks and
+@@ -6095,6 +6171,7 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+ 	.domain_free		= intel_iommu_domain_free,
+ 	.domain_set_attr	= intel_iommu_domain_set_attr,
++	.domain_get_attr	= intel_iommu_domain_get_attr,
+ 	.attach_dev		= intel_iommu_attach_device,
+ 	.detach_dev		= intel_iommu_detach_device,
+ 	.aux_attach_dev		= intel_iommu_aux_attach_device,
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 18f292e..a5728d7 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -197,6 +197,22 @@
+ #define ecap_max_handle_mask(e) ((e >> 20) & 0xf)
+ #define ecap_sc_support(e)	((e >> 7) & 0x1) /* Snooping Control */
  
--static long vfio_iommu_type1_ioctl(void *iommu_data,
--				   unsigned int cmd, unsigned long arg)
-+static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
-+				     unsigned long arg)
- {
--	struct vfio_iommu *iommu = iommu_data;
-+	struct vfio_iommu_type1_info info;
- 	unsigned long minsz;
-+	struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-+	unsigned long capsz;
-+	int ret;
- 
--	if (cmd == VFIO_CHECK_EXTENSION) {
--		switch (arg) {
--		case VFIO_TYPE1_IOMMU:
--		case VFIO_TYPE1v2_IOMMU:
--		case VFIO_TYPE1_NESTING_IOMMU:
--			return 1;
--		case VFIO_DMA_CC_IOMMU:
--			if (!iommu)
--				return 0;
--			return vfio_domains_have_iommu_cache(iommu);
--		default:
--			return 0;
--		}
--	} else if (cmd == VFIO_IOMMU_GET_INFO) {
--		struct vfio_iommu_type1_info info;
--		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
--		unsigned long capsz;
--		int ret;
--
--		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
-+	minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
- 
--		/* For backward compatibility, cannot require this */
--		capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
-+	/* For backward compatibility, cannot require this */
-+	capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
- 
--		if (copy_from_user(&info, (void __user *)arg, minsz))
--			return -EFAULT;
-+	if (copy_from_user(&info, (void __user *)arg, minsz))
-+		return -EFAULT;
- 
--		if (info.argsz < minsz)
--			return -EINVAL;
-+	if (info.argsz < minsz)
-+		return -EINVAL;
- 
--		if (info.argsz >= capsz) {
--			minsz = capsz;
--			info.cap_offset = 0; /* output, no-recopy necessary */
--		}
-+	if (info.argsz >= capsz) {
-+		minsz = capsz;
-+		info.cap_offset = 0; /* output, no-recopy necessary */
-+	}
- 
--		mutex_lock(&iommu->lock);
--		info.flags = VFIO_IOMMU_INFO_PGSIZES;
-+	mutex_lock(&iommu->lock);
-+	info.flags = VFIO_IOMMU_INFO_PGSIZES;
- 
--		info.iova_pgsizes = iommu->pgsize_bitmap;
-+	info.iova_pgsizes = iommu->pgsize_bitmap;
- 
--		ret = vfio_iommu_migration_build_caps(iommu, &caps);
-+	ret = vfio_iommu_migration_build_caps(iommu, &caps);
- 
--		if (!ret)
--			ret = vfio_iommu_iova_build_caps(iommu, &caps);
-+	if (!ret)
-+		ret = vfio_iommu_iova_build_caps(iommu, &caps);
- 
--		mutex_unlock(&iommu->lock);
-+	mutex_unlock(&iommu->lock);
- 
--		if (ret)
--			return ret;
-+	if (ret)
-+		return ret;
- 
--		if (caps.size) {
--			info.flags |= VFIO_IOMMU_INFO_CAPS;
-+	if (caps.size) {
-+		info.flags |= VFIO_IOMMU_INFO_CAPS;
- 
--			if (info.argsz < sizeof(info) + caps.size) {
--				info.argsz = sizeof(info) + caps.size;
--			} else {
--				vfio_info_cap_shift(&caps, sizeof(info));
--				if (copy_to_user((void __user *)arg +
--						sizeof(info), caps.buf,
--						caps.size)) {
--					kfree(caps.buf);
--					return -EFAULT;
--				}
--				info.cap_offset = sizeof(info);
-+		if (info.argsz < sizeof(info) + caps.size) {
-+			info.argsz = sizeof(info) + caps.size;
-+		} else {
-+			vfio_info_cap_shift(&caps, sizeof(info));
-+			if (copy_to_user((void __user *)arg +
-+					sizeof(info), caps.buf,
-+					caps.size)) {
-+				kfree(caps.buf);
-+				return -EFAULT;
- 			}
--
--			kfree(caps.buf);
-+			info.cap_offset = sizeof(info);
- 		}
- 
--		return copy_to_user((void __user *)arg, &info, minsz) ?
--			-EFAULT : 0;
-+		kfree(caps.buf);
-+	}
- 
--	} else if (cmd == VFIO_IOMMU_MAP_DMA) {
--		struct vfio_iommu_type1_dma_map map;
--		uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
--				VFIO_DMA_MAP_FLAG_WRITE;
-+	return copy_to_user((void __user *)arg, &info, minsz) ?
-+			-EFAULT : 0;
-+}
- 
--		minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
-+static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
-+				    unsigned long arg)
-+{
-+	struct vfio_iommu_type1_dma_map map;
-+	unsigned long minsz;
-+	uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
-+			VFIO_DMA_MAP_FLAG_WRITE;
- 
--		if (copy_from_user(&map, (void __user *)arg, minsz))
--			return -EFAULT;
-+	minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
- 
--		if (map.argsz < minsz || map.flags & ~mask)
--			return -EINVAL;
-+	if (copy_from_user(&map, (void __user *)arg, minsz))
-+		return -EFAULT;
- 
--		return vfio_dma_do_map(iommu, &map);
-+	if (map.argsz < minsz || map.flags & ~mask)
-+		return -EINVAL;
- 
--	} else if (cmd == VFIO_IOMMU_UNMAP_DMA) {
--		struct vfio_iommu_type1_dma_unmap unmap;
--		struct vfio_bitmap bitmap = { 0 };
--		int ret;
-+	return vfio_dma_do_map(iommu, &map);
-+}
- 
--		minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
-+static int vfio_iommu_type1_unmap_dma(struct vfio_iommu *iommu,
-+				      unsigned long arg)
-+{
-+	struct vfio_iommu_type1_dma_unmap unmap;
-+	struct vfio_bitmap bitmap = { 0 };
-+	unsigned long minsz;
-+	long ret;
- 
--		if (copy_from_user(&unmap, (void __user *)arg, minsz))
--			return -EFAULT;
-+	minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
- 
--		if (unmap.argsz < minsz ||
--		    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
--			return -EINVAL;
-+	if (copy_from_user(&unmap, (void __user *)arg, minsz))
-+		return -EFAULT;
- 
--		if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
--			unsigned long pgshift;
-+	if (unmap.argsz < minsz ||
-+	    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
-+		return -EINVAL;
- 
--			if (unmap.argsz < (minsz + sizeof(bitmap)))
--				return -EINVAL;
-+	if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
-+		unsigned long pgshift;
- 
--			if (copy_from_user(&bitmap,
--					   (void __user *)(arg + minsz),
--					   sizeof(bitmap)))
--				return -EFAULT;
-+		if (unmap.argsz < (minsz + sizeof(bitmap)))
-+			return -EINVAL;
- 
--			if (!access_ok((void __user *)bitmap.data, bitmap.size))
--				return -EINVAL;
-+		if (copy_from_user(&bitmap,
-+				   (void __user *)(arg + minsz),
-+				   sizeof(bitmap)))
-+			return -EFAULT;
- 
--			pgshift = __ffs(bitmap.pgsize);
--			ret = verify_bitmap_size(unmap.size >> pgshift,
--						 bitmap.size);
--			if (ret)
--				return ret;
--		}
-+		if (!access_ok((void __user *)bitmap.data, bitmap.size))
-+			return -EINVAL;
- 
--		ret = vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-+		pgshift = __ffs(bitmap.pgsize);
-+		ret = verify_bitmap_size(unmap.size >> pgshift,
-+					 bitmap.size);
- 		if (ret)
- 			return ret;
-+	}
++/* Nesting Support Capability Alignment */
++#define VTD_CAP_FL1GP		(1ULL << 56)
++#define VTD_CAP_FL5LP		(1ULL << 60)
++#define VTD_ECAP_PRS		(1ULL << 29)
++#define VTD_ECAP_ERS		(1ULL << 30)
++#define VTD_ECAP_SRS		(1ULL << 31)
++#define VTD_ECAP_EAFS		(1ULL << 34)
++#define VTD_ECAP_PASID		(1ULL << 40)
 +
-+	ret = vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-+	if (ret)
-+		return ret;
- 
--		return copy_to_user((void __user *)arg, &unmap, minsz) ?
-+	return copy_to_user((void __user *)arg, &unmap, minsz) ?
- 			-EFAULT : 0;
--	} else if (cmd == VFIO_IOMMU_DIRTY_PAGES) {
--		struct vfio_iommu_type1_dirty_bitmap dirty;
--		uint32_t mask = VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
--				VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
--				VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
--		int ret = 0;
-+}
- 
--		if (!iommu->v2)
--			return -EACCES;
-+static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
-+					unsigned long arg)
-+{
-+	struct vfio_iommu_type1_dirty_bitmap dirty;
-+	uint32_t mask = VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
-+			VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
-+			VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
-+	unsigned long minsz;
-+	int ret = 0;
- 
--		minsz = offsetofend(struct vfio_iommu_type1_dirty_bitmap,
--				    flags);
-+	if (!iommu->v2)
-+		return -EACCES;
- 
--		if (copy_from_user(&dirty, (void __user *)arg, minsz))
--			return -EFAULT;
-+	minsz = offsetofend(struct vfio_iommu_type1_dirty_bitmap,
-+			    flags);
- 
--		if (dirty.argsz < minsz || dirty.flags & ~mask)
--			return -EINVAL;
-+	if (copy_from_user(&dirty, (void __user *)arg, minsz))
-+		return -EFAULT;
++/* Only capabilities marked in below MASKs are reported */
++#define VTD_CAP_MASK		(VTD_CAP_FL1GP | VTD_CAP_FL5LP)
 +
-+	if (dirty.argsz < minsz || dirty.flags & ~mask)
-+		return -EINVAL;
++#define VTD_ECAP_MASK		(VTD_ECAP_PRS | VTD_ECAP_ERS | \
++				 VTD_ECAP_SRS | VTD_ECAP_EAFS | \
++				 VTD_ECAP_PASID)
 +
-+	/* only one flag should be set at a time */
-+	if (__ffs(dirty.flags) != __fls(dirty.flags))
-+		return -EINVAL;
-+
-+	if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
-+		size_t pgsize;
+ /* Virtual command interface capability */
+ #define vccap_pasid(v)		(((v) & DMA_VCS_PAS)) /* PASID allocation */
  
--		/* only one flag should be set at a time */
--		if (__ffs(dirty.flags) != __fls(dirty.flags))
-+		mutex_lock(&iommu->lock);
-+		pgsize = 1 << __ffs(iommu->pgsize_bitmap);
-+		if (!iommu->dirty_page_tracking) {
-+			ret = vfio_dma_bitmap_alloc_all(iommu, pgsize);
-+			if (!ret)
-+				iommu->dirty_page_tracking = true;
-+		}
-+		mutex_unlock(&iommu->lock);
-+		return ret;
-+	} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
-+		mutex_lock(&iommu->lock);
-+		if (iommu->dirty_page_tracking) {
-+			iommu->dirty_page_tracking = false;
-+			vfio_dma_bitmap_free_all(iommu);
-+		}
-+		mutex_unlock(&iommu->lock);
-+		return 0;
-+	} else if (dirty.flags &
-+			 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
-+		struct vfio_iommu_type1_dirty_bitmap_get range;
-+		unsigned long pgshift;
-+		size_t data_size = dirty.argsz - minsz;
-+		size_t iommu_pgsize;
-+
-+		if (!data_size || data_size < sizeof(range))
- 			return -EINVAL;
- 
--		if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
--			size_t pgsize;
-+		if (copy_from_user(&range, (void __user *)(arg + minsz),
-+				   sizeof(range)))
-+			return -EFAULT;
- 
--			mutex_lock(&iommu->lock);
--			pgsize = 1 << __ffs(iommu->pgsize_bitmap);
--			if (!iommu->dirty_page_tracking) {
--				ret = vfio_dma_bitmap_alloc_all(iommu, pgsize);
--				if (!ret)
--					iommu->dirty_page_tracking = true;
--			}
--			mutex_unlock(&iommu->lock);
-+		if (range.iova + range.size < range.iova)
-+			return -EINVAL;
-+		if (!access_ok((void __user *)range.bitmap.data,
-+			       range.bitmap.size))
-+			return -EINVAL;
-+
-+		pgshift = __ffs(range.bitmap.pgsize);
-+		ret = verify_bitmap_size(range.size >> pgshift,
-+					 range.bitmap.size);
-+		if (ret)
- 			return ret;
--		} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
--			mutex_lock(&iommu->lock);
--			if (iommu->dirty_page_tracking) {
--				iommu->dirty_page_tracking = false;
--				vfio_dma_bitmap_free_all(iommu);
--			}
--			mutex_unlock(&iommu->lock);
--			return 0;
--		} else if (dirty.flags &
--				 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
--			struct vfio_iommu_type1_dirty_bitmap_get range;
--			unsigned long pgshift;
--			size_t data_size = dirty.argsz - minsz;
--			size_t iommu_pgsize;
--
--			if (!data_size || data_size < sizeof(range))
--				return -EINVAL;
--
--			if (copy_from_user(&range, (void __user *)(arg + minsz),
--					   sizeof(range)))
--				return -EFAULT;
- 
--			if (range.iova + range.size < range.iova)
--				return -EINVAL;
--			if (!access_ok((void __user *)range.bitmap.data,
--				       range.bitmap.size))
--				return -EINVAL;
-+		mutex_lock(&iommu->lock);
- 
--			pgshift = __ffs(range.bitmap.pgsize);
--			ret = verify_bitmap_size(range.size >> pgshift,
--						 range.bitmap.size);
--			if (ret)
--				return ret;
-+		iommu_pgsize = (size_t)1 << __ffs(iommu->pgsize_bitmap);
- 
--			mutex_lock(&iommu->lock);
-+		/* allow only smallest supported pgsize */
-+		if (range.bitmap.pgsize != iommu_pgsize) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		}
-+		if (range.iova & (iommu_pgsize - 1)) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		}
-+		if (!range.size || range.size & (iommu_pgsize - 1)) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		}
- 
--			iommu_pgsize = (size_t)1 << __ffs(iommu->pgsize_bitmap);
-+		if (iommu->dirty_page_tracking)
-+			ret = vfio_iova_dirty_bitmap(range.bitmap.data,
-+					iommu, range.iova, range.size,
-+					range.bitmap.pgsize);
-+		else
-+			ret = -EINVAL;
-+out_unlock:
-+		mutex_unlock(&iommu->lock);
- 
--			/* allow only smallest supported pgsize */
--			if (range.bitmap.pgsize != iommu_pgsize) {
--				ret = -EINVAL;
--				goto out_unlock;
--			}
--			if (range.iova & (iommu_pgsize - 1)) {
--				ret = -EINVAL;
--				goto out_unlock;
--			}
--			if (!range.size || range.size & (iommu_pgsize - 1)) {
--				ret = -EINVAL;
--				goto out_unlock;
--			}
-+		return ret;
-+	}
- 
--			if (iommu->dirty_page_tracking)
--				ret = vfio_iova_dirty_bitmap(range.bitmap.data,
--						iommu, range.iova, range.size,
--						range.bitmap.pgsize);
--			else
--				ret = -EINVAL;
--out_unlock:
--			mutex_unlock(&iommu->lock);
-+	return -EINVAL;
-+}
- 
--			return ret;
--		}
-+static long vfio_iommu_type1_ioctl(void *iommu_data,
-+				   unsigned int cmd, unsigned long arg)
-+{
-+	struct vfio_iommu *iommu = iommu_data;
-+
-+	switch (cmd) {
-+	case VFIO_CHECK_EXTENSION:
-+		return vfio_iommu_type1_check_extension(iommu, arg);
-+	case VFIO_IOMMU_GET_INFO:
-+		return vfio_iommu_type1_get_info(iommu, arg);
-+	case VFIO_IOMMU_MAP_DMA:
-+		return vfio_iommu_type1_map_dma(iommu, arg);
-+	case VFIO_IOMMU_UNMAP_DMA:
-+		return vfio_iommu_type1_unmap_dma(iommu, arg);
-+	case VFIO_IOMMU_DIRTY_PAGES:
-+		return vfio_iommu_type1_dirty_pages(iommu, arg);
- 	}
- 
- 	return -ENOTTY;
 -- 
 2.7.4
 
