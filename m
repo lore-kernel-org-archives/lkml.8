@@ -2,157 +2,146 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8798C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95BCA207D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7388207D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cp+/esIZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPxhG4Rx"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="UuSnZzK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGDRtO (ORCPT
+        id S1727901AbgGDRts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 13:49:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40540 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDRtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 13:49:12 -0400
-Date:   Sat, 04 Jul 2020 17:49:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593884950;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TyT8hkQlhVSj6KK8bDYHft0bbGZKUG7cdvK5Ql2oBEk=;
-        b=Cp+/esIZ1NBLvhXGIhXL4XCo8lg4r4WZ/Iuk9PfZJJaXLvIlX57JQY+OvexePMrOvbPgXm
-        ABK9ssFB8b7V9JZMH7j3xR1KANRm/VDNvEOARor5ZrBLlcxKpkLgFEclQT6wazKyyrKm8L
-        d5zoTWbjf5cXVUGqDBiGt1xtHb4IdY+sajxx7b7PqpdxW2nGm75Imnrch8uZf0JeIfvKqv
-        dgpQgLLrMw8HiGNw1aokf0/nanM/2TEbNttq1MiwC8lQFt7OZjV3VcOz22PQmf0LKRRnQf
-        b31VsjZWprpL3IVegbgW/uvyYyym2hB4LlpYt+OYYbfG+gEWv1c1sGwKVLWEmw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593884950;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TyT8hkQlhVSj6KK8bDYHft0bbGZKUG7cdvK5Ql2oBEk=;
-        b=JPxhG4RxpDTkhyU805vAlyGjka1batxkqxegjWicD+YbpRYZgvTwWQ3PRi6HHd34uEFqAP
-        rkn1kaUjN8lle1CQ==
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/ldt: Disable 16-bit segments on Xen PV
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <92b2975459dfe5929ecf34c3896ad920bd9e3f2d.1593795633.git.luto@kernel.org>
-References: <92b2975459dfe5929ecf34c3896ad920bd9e3f2d.1593795633.git.luto@kernel.org>
+        Sat, 4 Jul 2020 13:49:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37448 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgGDRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 13:49:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593884986; bh=gePBFYf0OKwf1JpwnwFGo1PMkHdisVfSx93M0nTaPuI=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=UuSnZzK3XJ0gjlIYs5Ptf2B7J9R2IGupn0VhzieqhJCc5T2031FdrEQxyCdD0v6F4
+         IjDs6Z0Vo7UJZo5H5mFJkwtNmzb2xK1oHOVBxSvxCGoHJHYX/H3TC5qYn9NfGf4aIE
+         YWVMEZm9rmSeyPGZ6EXL9nzTAzuZPcupEB2xGsLY=
+Date:   Sat, 4 Jul 2020 19:49:45 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: light: stk3310: add chip id for STK3311-X variant
+Message-ID: <20200704174945.knawjt2yg52ejx2n@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+References: <20200703194406.110855-1-megous@megous.com>
+ <20200704172916.7a8a7359@archlinux>
+ <d2df561c8db7e11eb6937f824f483e33be1db7bc.camel@aosc.io>
 MIME-Version: 1.0
-Message-ID: <159388494850.4006.16547568050354289956.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2df561c8db7e11eb6937f824f483e33be1db7bc.camel@aosc.io>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi,
 
-Commit-ID:     cc801833a171163edb6385425349ba8903bd1b20
-Gitweb:        https://git.kernel.org/tip/cc801833a171163edb6385425349ba8903bd1b20
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Fri, 03 Jul 2020 10:02:57 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 04 Jul 2020 19:47:26 +02:00
+On Sun, Jul 05, 2020 at 01:09:37AM +0800, Icenowy Zheng wrote:
+> 在 2020-07-04星期六的 17:29 +0100，Jonathan Cameron写道：
+> > On Fri,  3 Jul 2020 21:44:05 +0200
+> > Ondrej Jirman <megous@megous.com> wrote:
+> > 
+> > > From: Icenowy Zheng <icenowy@aosc.io>
+> > > 
+> > > The STK3311 chip has a variant called STK3311-X, which has a
+> > > different
+> > > chip id of 0x12.
+> > > 
+> > > Add the chip id to the driver.
+> > > 
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > 
+> > Given this is clearly not quite compatible with the stk3311 probably
+> > best to also add a an id to the of id table.  Any idea what else
+> > is different?
+> 
+> By the way, STK3311 seems to have many variants lying around, and all
+> of them have different IDs. The pinouts seem to be different but the
+> registers are compatible.
+> 
+> [1] is a datasheet of STK3311-S34 with ID 0x1e.
+> [2] is a datasheet of STK3311-A with ID 0x15.
+> 
+> I cannot find the datasheet of STK3311-X, 0x12 is read from the device.
+> The model number itself is mentioned at [3], the official website of
+> sensortek.
+> 
+> [1] 
+> http://pro0fc108.hkpic1.websiteonline.cn/upload/STK3311-S34Datasheetv1.pdf
+> 
+> [2] 
+> http://pro0fc108.hkpic1.websiteonline.cn/upload/STK3311-ADatasheetv1.pdf
+> 
+> [3] 
+> http://www.sensortek.com.tw/index.php/en/products/proximity-sensor-with-als/
 
-x86/ldt: Disable 16-bit segments on Xen PV
+Yeah, it looks like it's the only one of stk3111-* variants that sensortek
+lists on their website. I also didn't find the *-x datasheet despite trying
+really hard.
 
-Xen PV doesn't implement ESPFIX64, so they don't work right.  Disable
-them.  Also print a warning the first time anyone tries to use a
-16-bit segment on a Xen PV guest that would otherwise allow it
-to help people diagnose this change in behavior.
+All the functionality seems to work with the current driver and this patch.
 
-This gets us closer to having all x86 selftests pass on Xen PV.
+regards,
+	o.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/92b2975459dfe5929ecf34c3896ad920bd9e3f2d.1593795633.git.luto@kernel.org
-
----
- arch/x86/kernel/ldt.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
-index 8748321..34e918a 100644
---- a/arch/x86/kernel/ldt.c
-+++ b/arch/x86/kernel/ldt.c
-@@ -29,6 +29,8 @@
- #include <asm/mmu_context.h>
- #include <asm/pgtable_areas.h>
- 
-+#include <xen/xen.h>
-+
- /* This is a multiple of PAGE_SIZE. */
- #define LDT_SLOT_STRIDE (LDT_ENTRIES * LDT_ENTRY_SIZE)
- 
-@@ -543,6 +545,37 @@ static int read_default_ldt(void __user *ptr, unsigned long bytecount)
- 	return bytecount;
- }
- 
-+static bool allow_16bit_segments(void)
-+{
-+	if (!IS_ENABLED(CONFIG_X86_16BIT))
-+		return false;
-+
-+#ifdef CONFIG_XEN_PV
-+	/*
-+	 * Xen PV does not implement ESPFIX64, which means that 16-bit
-+	 * segments will not work correctly.  Until either Xen PV implements
-+	 * ESPFIX64 and can signal this fact to the guest or unless someone
-+	 * provides compelling evidence that allowing broken 16-bit segments
-+	 * is worthwhile, disallow 16-bit segments under Xen PV.
-+	 */
-+	if (xen_pv_domain()) {
-+		static DEFINE_MUTEX(xen_warning);
-+		static bool warned;
-+
-+		mutex_lock(&xen_warning);
-+		if (!warned) {
-+			pr_info("Warning: 16-bit segments do not work correctly in a Xen PV guest\n");
-+			warned = true;
-+		}
-+		mutex_unlock(&xen_warning);
-+
-+		return false;
-+	}
-+#endif
-+
-+	return true;
-+}
-+
- static int write_ldt(void __user *ptr, unsigned long bytecount, int oldmode)
- {
- 	struct mm_struct *mm = current->mm;
-@@ -574,7 +607,7 @@ static int write_ldt(void __user *ptr, unsigned long bytecount, int oldmode)
- 		/* The user wants to clear the entry. */
- 		memset(&ldt, 0, sizeof(ldt));
- 	} else {
--		if (!IS_ENABLED(CONFIG_X86_16BIT) && !ldt_info.seg_32bit) {
-+		if (!ldt_info.seg_32bit && !allow_16bit_segments()) {
- 			error = -EINVAL;
- 			goto out;
- 		}
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> > > ---
+> > >  drivers/iio/light/stk3310.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/iio/light/stk3310.c
+> > > b/drivers/iio/light/stk3310.c
+> > > index 185c24a75ae6..1a8401d198a4 100644
+> > > --- a/drivers/iio/light/stk3310.c
+> > > +++ b/drivers/iio/light/stk3310.c
+> > > @@ -37,6 +37,7 @@
+> > >  
+> > >  #define STK3310_CHIP_ID_VAL			0x13
+> > >  #define STK3311_CHIP_ID_VAL			0x1D
+> > > +#define STK3311X_CHIP_ID_VAL			0x12
+> > >  #define STK3335_CHIP_ID_VAL			0x51
+> > >  #define STK3310_PSINT_EN			0x01
+> > >  #define STK3310_PS_MAX_VAL			0xFFFF
+> > > @@ -453,6 +454,7 @@ static int stk3310_init(struct iio_dev
+> > > *indio_dev)
+> > >  
+> > >  	if (chipid != STK3310_CHIP_ID_VAL &&
+> > >  	    chipid != STK3311_CHIP_ID_VAL &&
+> > > +	    chipid != STK3311X_CHIP_ID_VAL &&
+> > >  	    chipid != STK3335_CHIP_ID_VAL) {
+> > >  		dev_err(&client->dev, "invalid chip id: 0x%x\n",
+> > > chipid);
+> > >  		return -ENODEV;
