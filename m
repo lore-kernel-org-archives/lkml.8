@@ -2,231 +2,119 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A12C207CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D42720870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqQlaqT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGDThy (ORCPT
+        id S1727791AbgGDTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 15:37:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10938 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726153AbgGDThx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 15:37:53 -0400
-IronPort-SDR: FCellXLR8dXzPOzpGverKCrFLCVIyhSaZ+JA0F1IhheT23WPRbqyAgtcBSbZ4UNh2IZBIfauTZ
- TA8ckjB+m+4Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9672"; a="127352799"
-X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
-   d="scan'208";a="127352799"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 12:37:53 -0700
-IronPort-SDR: 4Jv8lZnLHys3JIi3Hw6fNy4JHWJKKgEcpOyMgaL4daig9agZ5GU7SVSE5pMt5PhsOt61r7kR9M
- FVuiX4alxgPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
-   d="scan'208";a="322800040"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 04 Jul 2020 12:37:51 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jrnyw-0000l9-Nk; Sat, 04 Jul 2020 19:37:50 +0000
-Date:   Sun, 05 Jul 2020 03:37:25 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- e8a2cb2717be343c9837318c28a4a87e4083a4e1
-Message-ID: <5f00da75.SINawzFd5G9K8F0I%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 4 Jul 2020 15:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726153AbgGDTlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 15:41:19 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAAAC061794;
+        Sat,  4 Jul 2020 12:41:18 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t4so16681718iln.1;
+        Sat, 04 Jul 2020 12:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oaguPC34T7R0o5+DoNQSjRDr1tEmYY+rGX3DoLh4xf8=;
+        b=UqQlaqT7Hr64mfOELSvx1Wr9DuwUyUEsOQFLfZLOzCNJEbzYE+7u+wQFpS+2aYI5XU
+         JBmMm3PyTEmTUd+hQDkw/w393xyUdgyaaQL+rgpTTTvsUuf0XUxvtP6X9iYLY/LaeuuB
+         HI5S3DYdndoix8ToVO30hJjXgLULga2v/wd3m8Syav7o2hfOP9/CAGOOFYBVXhSVIUWr
+         czNTCHLDr2U0Bv0Fk6Tkng8KosYcdMZTaJMcBIgDc1jLRknGgrxddMasIUql60sjBffi
+         tLaUYWSTq0M3wvGsTJ3bf+u5+C76wUmolpkFPwuomPtOQspzOYGxQdCYtbIZw590E++2
+         skwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oaguPC34T7R0o5+DoNQSjRDr1tEmYY+rGX3DoLh4xf8=;
+        b=bDYgHdcl9S61VqchsKh1nws/+i8FK5SQYaZ6lzIQmc+JmT80bCrNc2Ff+Wtsb2g1S/
+         H9P4nAMtpuM59e82wn6/kkSo3O4lw5SgMu8bsrxX1BuMPie0Ar30Wyz2bFxdbtqcrQXb
+         UX2ezFVxrL9FJmWjdcXha43TjQTOd++P6fQOuLa50js5t4usZnNWuS9bliy7wUUXri7s
+         7IW9p7noCEv1xyhdO7iA0kFxDEBU1obkwHqY3o3Fli5dfbsXzTL8l2y2KYjpcKCdiKH7
+         G68WrWxVkyLefgUc4zda2yF5Scf0f0I9zsYigYsF/L5PKpe1TCtj/dF4poScnqz0WcMp
+         dJiA==
+X-Gm-Message-State: AOAM5326eCKZ1n/YJllvOaQ5HvXR4Yznl7s4z6L0FtIDU2gw34lCwnQV
+        +6dUAD9X0JsnoRf3wyxLrKLrScAUWayZnl4x1gI=
+X-Google-Smtp-Source: ABdhPJxGQ+LYo3TE+w36gxfg8i5q9yhsP7/TsFl8gmY2pnj2YuCnzhl+fTmdgR3HZI5R6GxehmEzDItEiyvIcTdNi8g=
+X-Received: by 2002:a92:5a05:: with SMTP id o5mr17808012ilb.237.1593891678038;
+ Sat, 04 Jul 2020 12:41:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200703182010.1867-1-bruceshenzk@gmail.com> <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
+ <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com>
+In-Reply-To: <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sat, 4 Jul 2020 12:41:07 -0700
+Message-ID: <CAKgT0UdFPjD5YEBjVxkgCc65muNnxq54QPt3iBzm60QY46BCTA@mail.gmail.com>
+Subject: Re: [PATCH] net: fm10k: check size from dma region
+To:     Zekun Shen <bruceshenzk@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: e8a2cb2717be343c9837318c28a4a87e4083a4e1  torture: document --allcpus argument added to the kvm.sh script
+On Sat, Jul 4, 2020 at 9:37 AM Zekun Shen <bruceshenzk@gmail.com> wrote:
+>
+> On Sat, Jul 04, 2020 at 09:05:48AM -0700, Alexander Duyck wrote:
+> > The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
+> > PAGE_SIZE. Otherwise you are still capable of going out of bounds
+> > because the offset is used within the page to push the start of the
+> > region up by 2K.
+> PAGE_SIZE can drop the warning, as the dma allocated size is PAGE_SIZE.
 
-elapsed time: 1267m
+Yes, but the point I was getting at is that if you are just going to
+squelch the warning, but leave the code broken then the warning isn't
+of any use and might as well be discarded. Either you limit the value
+to 2K which is what the hardware is expected to max out at anyway, or
+you just skip the warning and assume hardware will do the right thing.
+I'm not even sure this patch is worth the effort if it is just using
+some dummy value that is still broken and simply squelches the
+warning.
 
-configs tested: 161
-configs skipped: 16
+Could you provide more information about how you are encountering the
+error? Is this something you are seeing with an actual fm10k device,
+or is this something found via code review or static analysis?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > If this is actually fixing the warning it makes me wonder if the code
+> > performing the check is broken itself since we would still be
+> > accessing outside of the accessible DMA range.
+> The unbounded size is only passed to fm10k_add_rx_frag, which expects
+> and checks size to be less than FM10K_RX_HDR_LEN which is 256.
+>
+> In this way, any boundary between 256 and 4K should work. I could address
+> that with a second version.
 
-arm                                 defconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                       aspeed_g4_defconfig
-m68k                       m5249evb_defconfig
-arm                            mmp2_defconfig
-sh                            shmin_defconfig
-powerpc                      pmac32_defconfig
-sh                                  defconfig
-arm                          moxart_defconfig
-arm                            qcom_defconfig
-arm                          iop32x_defconfig
-mips                           ip28_defconfig
-powerpc                     pq2fads_defconfig
-arm                         at91_dt_defconfig
-sh                           cayman_defconfig
-m68k                         amcore_defconfig
-arc                             nps_defconfig
-arm                        trizeps4_defconfig
-microblaze                    nommu_defconfig
-mips                           ip27_defconfig
-sh                         apsh4a3a_defconfig
-arc                 nsimosci_hs_smp_defconfig
-sh                            titan_defconfig
-powerpc                     skiroot_defconfig
-sh                               allmodconfig
-arm                         assabet_defconfig
-powerpc                      ppc40x_defconfig
-arm                          pxa3xx_defconfig
-arm                       imx_v6_v7_defconfig
-powerpc                      ppc6xx_defconfig
-mips                          ath25_defconfig
-powerpc                       maple_defconfig
-mips                      pistachio_defconfig
-h8300                               defconfig
-arm                          simpad_defconfig
-arm                           efm32_defconfig
-sh                               alldefconfig
-powerpc                    mvme5100_defconfig
-mips                          rb532_defconfig
-xtensa                          iss_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                   milbeaut_m10v_defconfig
-sh                        dreamcast_defconfig
-openrisc                    or1ksim_defconfig
-m68k                             alldefconfig
-arc                      axs103_smp_defconfig
-ia64                          tiger_defconfig
-arm                         vf610m4_defconfig
-h8300                     edosk2674_defconfig
-mips                        jmr3927_defconfig
-arm                         nhk8815_defconfig
-powerpc                     mpc5200_defconfig
-s390                          debug_defconfig
-ia64                                defconfig
-s390                             alldefconfig
-arm                         bcm2835_defconfig
-sparc                            alldefconfig
-arm                           viper_defconfig
-arm                         orion5x_defconfig
-m68k                          multi_defconfig
-arm                         ebsa110_defconfig
-powerpc                       ppc64_defconfig
-m68k                       bvme6000_defconfig
-sh                     sh7710voipgw_defconfig
-nios2                         10m50_defconfig
-powerpc                          alldefconfig
-arm                           stm32_defconfig
-arc                            hsdk_defconfig
-mips                      pic32mzda_defconfig
-arm                              zx_defconfig
-sh                           se7619_defconfig
-mips                        nlm_xlp_defconfig
-arm                      jornada720_defconfig
-mips                         tb0219_defconfig
-powerpc                  storcenter_defconfig
-arm                          tango4_defconfig
-sh                          r7785rp_defconfig
-arm                      footbridge_defconfig
-arm                          badge4_defconfig
-mips                           gcw0_defconfig
-nios2                         3c120_defconfig
-c6x                        evmc6678_defconfig
-sh                   sh7770_generic_defconfig
-sparc64                          allmodconfig
-microblaze                        allnoconfig
-parisc                generic-64bit_defconfig
-mips                 decstation_r4k_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                                allnoconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc                            allyesconfig
-sparc64                          allyesconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+I was referring to the code in the DMA-API that is generating the
+warning being broken, not the code itself. If you can tell me how you
+are getting to the warning it would be useful.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Anything over FM10K_RX_BUFSZ will break things. I think that is what
+you are missing. The driver splits a single 4K page into 2 pieces and
+then gives half off to the stack and uses the other half for the next
+receive. If you have a value over 2K you are going to be overwritting
+data in another buffer and/or attempting to access memory outside the
+DMA region. Both of which would likely cause significant issues and
+likely panic the system.
