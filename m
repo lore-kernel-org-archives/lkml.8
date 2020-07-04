@@ -2,217 +2,122 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C49DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E02C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B53120826
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="npG02l03"
+	by mail.kernel.org (Postfix) with ESMTP id D591E20884
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgGDAsB (ORCPT
+        id S1726942AbgGDAsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 20:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGDAsB (ORCPT
+        Fri, 3 Jul 2020 20:48:21 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55646 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgGDAsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 20:48:01 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB366C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 17:48:00 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x83so20213209oif.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 17:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MyrkdM+/4kywlo/uW0HgnDi0aBA7X4V+SafC1NVgeP8=;
-        b=npG02l03/lduMydpCZdBq/DY0eZ2nVHuPlPCmEzlyUDEHaNaWOtlLyAwZBWaHEBXNj
-         Y1Ge+jYO5m1ipN3xB0eOvNZZCyfg8LiSb3lkEShgopcDyFHapyeOA5O3db+lNbTNaYqj
-         HCNoWVQobB7ppqkpDtvMTyygDf9Hq/Seaaq9rJ5iE/xkeC4zX9SUfmczUa4cVSsWqCeU
-         eac+npmASPQIvpPY63XfszQYj1YA7oyt9p7qve3poM4luMZ9MiK6/wK55M5uvDaeXCT8
-         kCcPLhZ2Ar2IPOoVW+NLlEbleqZEXPJq02xQuxlRYUDxvQE0DNXQGhy/hEer59NCfDL9
-         kP+g==
+        Fri, 3 Jul 2020 20:48:21 -0400
+Received: by mail-io1-f72.google.com with SMTP id k10so20052109ioh.22
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 17:48:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MyrkdM+/4kywlo/uW0HgnDi0aBA7X4V+SafC1NVgeP8=;
-        b=BXMfS2/BBPe5xCnYTg/wMvN57OPaIBYAS9Q/aLQKM2o5lhbw848msMaoLi38qPsLFl
-         lWemWE8eu+DQzXJKN4CkVb1lMH8AqhmdjjuQ5XDv+saRstXnJ4k9uYQrBz/VOL2TZN4l
-         d/nZc6jRGbAMF3haDFMTfYOf65BTmKSv1+6omAhxruQyXCRlnnE6TjMx8Y09FmH3AJkH
-         T3KvvYyHRAQVAUOfZk5pN+8GhyaF4wfv4SsK1Juq/lD/yyfeLPG88x1MEQchtjrhzhfg
-         Sq4cpYXsu9eu3xcJCmGYB/CYXOUxcK+lUSl83jpgbK+rRyySIpNu1C9C4rIwgedBS4xl
-         1gmA==
-X-Gm-Message-State: AOAM531Ke7WeyvrLqZ+DXyX5TeVmCpHRINlci/9WxoXb8sWYVNph1yIy
-        A2UgXrKIV2+H7IS1qUndIsVfYwNtKQX+tubggqRzvw==
-X-Google-Smtp-Source: ABdhPJxtI0XuLnlxXZZheRMrj1zS5lfhIukPHeF36zADB7w8iimLB88dn2rs2U2+709eQuhvCr6+R6iIusJDlm8/wPU=
-X-Received: by 2002:a05:6808:3d8:: with SMTP id o24mr15366288oie.69.1593823680002;
- Fri, 03 Jul 2020 17:48:00 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=9OzbTej0eRMNtBlY/Y4wiBSxoUbN0sJufbnpKWM6F+4=;
+        b=CzcKRY6yaKsv0amEm0BSX5awkTbP3tXqB8gtCgyPLO/Ks7+Rs0J80Q3rGSbfST01AR
+         6Vz7njUYS7J4OJip3piuH7QgJaAC3IOaTriKnZSBb3Jbrg796lV1xaR3sDFHErOzmza5
+         bmtibnQwc/QDTwkIfLYegFBWinETWfeAJL7su1iP+vECnvAmFuWl5dWezLQ5wvSzLb5D
+         92sr4OE68hEyVCsWwWmQCTpdDY9A6LNS/aWweF5wum8weeeng9asdvaH+u1z6D0pyJ7v
+         S18tj4Nuc4/9xtxxJyWQ3PdTKTuMF8g6piaBRHeZbsnS/pPl8ASFqqZkBjo5qS1I5uKn
+         WJlw==
+X-Gm-Message-State: AOAM531JFufKuP6tGxmroUWHWMqrw4qYzZIExOK89gaDJrw+8ONstCbu
+        Tt/UYIUSwzQz5pSZcx60r0XZ+Z7IZ7krq+JCMBbBOptENj6G
+X-Google-Smtp-Source: ABdhPJwO24V0iVeIJgs/HPNqj8Oop1C4EvXfNQXLS/ec6EjCZb0Nn+7wP38er6bgj8xr70GJVORIkRx3j3fA3TXVCzXCnV+rDNav
 MIME-Version: 1.0
-References: <20200623011803.91232-1-saravanak@google.com> <CAKv+Gu8rwTntUjd83+s07n+4ki+ON0Gkqao0ZgAF9haAw71dTA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8rwTntUjd83+s07n+4ki+ON0Gkqao0ZgAF9haAw71dTA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 3 Jul 2020 17:47:24 -0700
-Message-ID: <CAGETcx9SBOQOL+xKq_-d2egG8+jMNjPMH37tVNBxgkWBGLWhvA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64/module: Optimize module load time by optimizing
- PLT counting
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6602:1408:: with SMTP id t8mr15057603iov.125.1593823700210;
+ Fri, 03 Jul 2020 17:48:20 -0700 (PDT)
+Date:   Fri, 03 Jul 2020 17:48:20 -0700
+In-Reply-To: <00000000000042f21905a991ecea@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c5de505a992ff57@google.com>
+Subject: Re: KASAN: stack-out-of-bounds Read in csd_lock_record
+From:   syzbot <syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com>
+To:     bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, paulmck@kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 8:30 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Tue, 23 Jun 2020 at 03:27, Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > When loading a module, module_frob_arch_sections() tries to figure out
-> > the number of PLTs that'll be needed to handle all the RELAs. While
-> > doing this, it tries to dedupe PLT allocations for multiple
-> > R_AARCH64_CALL26 relocations to the same symbol. It does the same for
-> > R_AARCH64_JUMP26 relocations.
-> >
-> > To make checks for duplicates easier/faster, it sorts the relocation
-> > list by type, symbol and addend. That way, to check for a duplicate
-> > relocation, it just needs to compare with the previous entry.
-> >
-> > However, sorting the entire relocation array is unnecessary and
-> > expensive (O(n log n)) because there are a lot of other relocation types
-> > that don't need deduping or can't be deduped.
-> >
-> > So this commit partitions the array into entries that need deduping and
-> > those that don't. And then sorts just the part that needs deduping. And
-> > when CONFIG_RANDOMIZE_BASE is disabled, the sorting is skipped entirely
-> > because PLTs are not allocated for R_AARCH64_CALL26 and R_AARCH64_JUMP26
-> > if it's disabled.
-> >
-> > This gives significant reduction in module load time for modules with
-> > large number of relocations with no measurable impact on modules with a
-> > small number of relocations. In my test setup with CONFIG_RANDOMIZE_BASE
-> > enabled, these were the results for a few downstream modules:
-> >
-> > Module          Size (MB)
-> > wlan            14
-> > video codec     3.8
-> > drm             1.8
-> > IPA             2.5
-> > audio           1.2
-> > gpu             1.8
-> >
-> > Without this patch:
-> > Module          Number of entries sorted        Module load time (ms)
-> > wlan            243739                          283
-> > video codec     74029                           138
-> > drm             53837                           67
-> > IPA             42800                           90
-> > audio           21326                           27
-> > gpu             20967                           32
-> >
-> > Total time to load all these module: 637 ms
-> >
-> > With this patch:
-> > Module          Number of entries sorted        Module load time (ms)
-> > wlan            22454                           61
-> > video codec     10150                           47
-> > drm             13014                           40
-> > IPA             8097                            63
-> > audio           4606                            16
-> > gpu             6527                            20
-> >
-> > Total time to load all these modules: 247
-> >
-> > Time saved during boot for just these 6 modules: 390 ms
-> >
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->
-> [I am no longer at Linaro so please don't use my @linaro.org address]
+syzbot has found a reproducer for the following crash on:
 
-Hmm... I'm pretty sure I got this using the get_maintainers script.
-Maybe update the MAINTAINERS file if you haven't already (I didn't
-check)?
+HEAD commit:    9e50b94b Add linux-next specific files for 20200703
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1224dc83100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
+dashboard link: https://syzkaller.appspot.com/bug?extid=0f719294463916a3fc0e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170442d5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162ef66d100000
 
-But if I ever manually add in your email, I'll keep this in mind.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com
 
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >
-> > v1 -> v2:
-> > - Provided more details in the commit text
-> > - Pulled in Will's comments on the coding style
-> > - Pulled in Ard's suggestion about skipping jumps with the same section
-> >   index (parts of Will's suggested code)
-> >
-> >  arch/arm64/kernel/module-plts.c | 46 ++++++++++++++++++++++++++++++---
-> >  1 file changed, 43 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
-> > index 65b08a74aec6..0ce3a28e3347 100644
-> > --- a/arch/arm64/kernel/module-plts.c
-> > +++ b/arch/arm64/kernel/module-plts.c
-> > @@ -253,6 +253,40 @@ static unsigned int count_plts(Elf64_Sym *syms, Elf64_Rela *rela, int num,
-> >         return ret;
-> >  }
-> >
-> > +static bool branch_rela_needs_plt(Elf64_Sym *syms, Elf64_Rela *rela,
-> > +                                 Elf64_Word dstidx)
-> > +{
-> > +
-> > +       Elf64_Sym *s = syms + ELF64_R_SYM(rela->r_info);
-> > +
-> > +       if (s->st_shndx == dstidx)
-> > +               return false;
-> > +
-> > +       return ELF64_R_TYPE(rela->r_info) == R_AARCH64_JUMP26 ||
-> > +              ELF64_R_TYPE(rela->r_info) == R_AARCH64_CALL26;
-> > +}
-> > +
-> > +/* Group branch PLT relas at the front end of the array. */
-> > +static int partition_branch_plt_relas(Elf64_Sym *syms, Elf64_Rela *rela,
-> > +                                     int numrels, Elf64_Word dstidx)
-> > +{
-> > +       int i = 0, j = numrels - 1;
-> > +
-> > +       if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE))
-> > +               return 0;
-> > +
-> > +       while (i < j) {
-> > +               if (branch_rela_needs_plt(syms, &rela[i], dstidx))
-> > +                       i++;
-> > +               else if (branch_rela_needs_plt(syms, &rela[j], dstidx))
-> > +                       swap(rela[i], rela[j]);
->
-> Nit: would be slightly better to put
->
->   swap(rela[i++], rela[j]);
->
-> here so the next iteration of the loop will not call
-> branch_rela_needs_plt() on rela[i] redundantly. But the current code
-> is also correct.
+==================================================================
+BUG: KASAN: stack-out-of-bounds in csd_lock_record+0xd2/0xe0 kernel/smp.c:119
+Read of size 8 at addr ffffc900016d75f8 by task swapper/1/0
 
-Oh yeah, I noticed that unnecessary repeat of branch_rela_needs_plt()
-on rela[i] when j had to be decremented, but forgot to handle it after
-I was done with all the testing.
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ csd_lock_record+0xd2/0xe0 kernel/smp.c:119
+ flush_smp_call_function_queue+0x285/0x730 kernel/smp.c:391
+ __sysvec_call_function_single+0x98/0x490 arch/x86/kernel/smp.c:248
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_call_function_single+0xe0/0x120 arch/x86/kernel/smp.c:243
+ asm_sysvec_call_function_single+0x12/0x20 arch/x86/include/asm/idtentry.h:604
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: ff 4c 89 ef e8 33 30 c7 f9 e9 8e fe ff ff 48 89 df e8 26 30 c7 f9 eb 8a cc cc cc cc e9 07 00 00 00 0f 00 2d 14 4b 5c 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d 04 4b 5c 00 f4 c3 cc cc 55 53 e8 c9
+RSP: 0018:ffffc90000d3fd18 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8880a95f0340 RSI: ffffffff87ec78c8 RDI: ffffffff87ec789e
+RBP: ffff88821af4d864 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff88821af4d864
+R13: 1ffff920001a7fad R14: ffff88821af4d865 R15: 0000000000000001
+ arch_safe_halt arch/x86/include/asm/paravirt.h:150 [inline]
+ acpi_safe_halt+0x8d/0x110 drivers/acpi/processor_idle.c:111
+ acpi_idle_do_entry+0x15c/0x1b0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x3f9/0xab0 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xff/0x960 drivers/cpuidle/cpuidle.c:235
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:346
+ call_cpuidle kernel/sched/idle.c:126 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:214 [inline]
+ do_idle+0x431/0x6d0 kernel/sched/idle.c:276
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:372
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
 
-But I did compare it to the code I had written in v1 that didn't have
-this extra check for rela[i]. I couldn't find any measurable
-difference in the module load time. Maybe 1ms for the worst case
-module, but that could have been just run to run variation.
 
-Anyway, maybe send this as another patch since Catalin has already
-picked this mine?
+Memory state around the buggy address:
+ ffffc900016d7480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc900016d7500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc900016d7580: 00 00 00 00 f1 f1 f1 f1 00 00 00 00 f3 f3 f3 f3
+                                                                ^
+ ffffc900016d7600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc900016d7680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
 
-Thanks,
-Saravana
