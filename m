@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C04C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C92C433DF
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 08:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 641BF207CD
+	by mail.kernel.org (Postfix) with ESMTP id 81F03208D5
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 08:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="g+dH1d/P"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="CTqsw89E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgGDIwe (ORCPT
+        id S1727807AbgGDIwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 04:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43004 "EHLO
+        Sat, 4 Jul 2020 04:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGDIwe (ORCPT
+        with ESMTP id S1726157AbgGDIwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 04:52:34 -0400
+        Sat, 4 Jul 2020 04:52:36 -0400
 Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12ACC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 01:52:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f139so36404291wmf.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 01:52:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E038C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 01:52:36 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so36374054wmh.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 01:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VwOjxo+AYrnIugDfwLwRdUzbVsmnTWEdefeWvuTDVmc=;
-        b=g+dH1d/PFd20ixl7FsBGTfs3j7Y9QoCZDBDayErBIX0wTDCFA72uArnuQl8kKjy3FC
-         gg5prSYGe1M/TdA6rApF1FQmwhI1i2ylfNHCtSCHvBh4tKhPjfdfOWjb+9LS781wd265
-         dcOXOWnlRnbona/kVOTImz6keVcM9jPw6pBNw=
+        bh=Rznutimi7TaFRmCYD1FndLgXvWN2rgQvPnobENT/Y1M=;
+        b=CTqsw89EHre1NzbA6YcnXAiAYaESDD7hM67gfwBLJeyBUCGrC4bgnGLjiRJd4fRgw+
+         A23nU5NEwIxPcNR2eQ8TSnR2oViyRnYX6H6JJOeKmewPABAB3YArPr6IQjhjizLoXwIz
+         FMGZB5CdXQVH9ca+nnE3JjSW8x+gUnViEUr/E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VwOjxo+AYrnIugDfwLwRdUzbVsmnTWEdefeWvuTDVmc=;
-        b=aEvpW0A/zVaUlGQTo+ah1qLQe5EtKfLNvQY2Cz4QCPjrMo7vgvOEOHuA+sduVIUOuV
-         GXr7f0IKRyvUV+1IuXe3+Cp14cSzHZjhrTiB8V0w8NaaI5mbGH3PRto4k1pfEY98oQUu
-         d/VTc+UGt+53Ia/oO0F7PAmfto2qlj/DYwKSLmIswMO7f9qyC8t1WEwfyChAdkCFAtAT
-         UBApyH2hN1D4tdnFhxZisaCszOPZjqfMUe+5ay8x8eg6nQ+vexSxUOvRnQuDApvhEV8o
-         c2bE2UXJjYxt3+Ksdak7X3wnatOQLb09zcv6/fKv8GGQFnQMxSaZs7GglTkVHPpueoaj
-         G6JQ==
-X-Gm-Message-State: AOAM533adsilRwurVsmVsbUmLWWmVt6dhrB5HBNnKB+Tx98YGSdba2Ck
-        8vDBsa/sLOxb+wGDu8/TtXpZ4A==
-X-Google-Smtp-Source: ABdhPJzbsB/S1RZFY2pfB6F0q/fG0RsNXwC0NA2OpOF5V3aDTPpH9dguOKD805O7ndqiZ43XdahrUw==
-X-Received: by 2002:a7b:cf10:: with SMTP id l16mr40618406wmg.93.1593852752398;
-        Sat, 04 Jul 2020 01:52:32 -0700 (PDT)
+        bh=Rznutimi7TaFRmCYD1FndLgXvWN2rgQvPnobENT/Y1M=;
+        b=gnnCBlfS9COUGWzD81LuAdm+z4vdHd6LscrgEHQfLCuGe4qR3h0AY/hOCZRblWIUYk
+         /giIOIgazzdcr4UA9p2zKPNJkq38rQuMMy0RLOiTMW4xskwkZRp8xRArmDBzlvsFYr3T
+         8nvgQTaGaIoPkb1npjpdu1oPtT/tlSvqYZq42G3wE55qRzmSf7/0972gE2FEkkSyLXob
+         dWU/GuONW/xL7sHd/DtnMZzz5gHiChBipTtrtY8oiv3dUab1/Mf4cslGFdFYcJO/r/c/
+         RAgqJH+YDZIsefjUA2ryH12Vv60ot6o0TjCdqLWvWYP5ds8M2gqVMyfdSfjvfh6omW3b
+         IG0w==
+X-Gm-Message-State: AOAM532/s5luqr958S69RWJiJp407ZC8XCNXD2VuNnr1U8DXuVzQCXtH
+        gJ0xrYk1cdqtKUgltlSsFrZmkw==
+X-Google-Smtp-Source: ABdhPJz567iIZe4stJh6Uxif/m5463WWqeV+3Y6gsx+Jo/UWJkhEVysIOFafyhMGn9evkvyC5diOTA==
+X-Received: by 2002:a05:600c:21a:: with SMTP id 26mr36233770wmi.148.1593852754610;
+        Sat, 04 Jul 2020 01:52:34 -0700 (PDT)
 Received: from localhost.localdomain (88-144-169-139.host.pobb.as13285.net. [88.144.169.139])
-        by smtp.gmail.com with ESMTPSA id a22sm15195915wmb.4.2020.07.04.01.52.31
+        by smtp.gmail.com with ESMTPSA id a22sm15195915wmb.4.2020.07.04.01.52.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 01:52:31 -0700 (PDT)
+        Sat, 04 Jul 2020 01:52:34 -0700 (PDT)
 From:   Ignat Korchagin <ignat@cloudflare.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         brendanhiggins@google.com, linux-um@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Ignat Korchagin <ignat@cloudflare.com>, kernel-team@cloudflare.com
-Subject: [PATCH v2 1/3] um/kconfig: introduce CC_CAN_LINK_STATIC_NO_RUNTIME_DEPS
-Date:   Sat,  4 Jul 2020 09:52:11 +0100
-Message-Id: <20200704085213.444645-2-ignat@cloudflare.com>
+Subject: [PATCH v2 2/3] um: some fixes to build UML with musl
+Date:   Sat,  4 Jul 2020 09:52:12 +0100
+Message-Id: <20200704085213.444645-3-ignat@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200704085213.444645-1-ignat@cloudflare.com>
 References: <20200704085213.444645-1-ignat@cloudflare.com>
@@ -74,70 +74,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For statically linked UML build it is important to take into account the
-standard C-library implementation. Some implementations, notably glibc have
-caveats: even when linked statically, the final program might require some
-runtime dependencies, if certain functions are used within the code.
-
-Consider the following program:
-int main(void)
-{
-	getpwent();
-	return 0;
-}
-
-Compiling this program and linking statically with glibc produces the following
-warning from the linker:
-/usr/sbin/ld: /tmp/ccuthw1o.o: in function `main':
-test.c:(.text+0x5): warning: Using 'getpwent' in statically linked
-applications requires at runtime the shared libraries from the glibc version
-used for linking
-
-We will use the flag to detect such C-library implementation build time and
-possibly disable static linking for UML to avoid producing a binary with
-unexpected behaviour and dependencies.
+musl toolchain and headers are a bit more strict. These fixes enable building
+UML with musl as well as seem not to break on glibc.
 
 Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
 ---
- init/Kconfig           | 6 ++++++
- scripts/cc-can-link.sh | 5 +++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ arch/um/drivers/daemon_user.c |  1 +
+ arch/um/drivers/pcap_user.c   | 12 ++++++------
+ arch/um/drivers/slip_user.c   |  2 +-
+ arch/um/drivers/vector_user.c |  4 +---
+ arch/um/os-Linux/util.c       |  2 +-
+ arch/x86/um/user-offsets.c    |  2 +-
+ 6 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index a46aa8f3174d..717a3ada765e 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -57,6 +57,12 @@ config CC_CAN_LINK_STATIC
- 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) -static $(m64-flag)) if 64BIT
- 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) -static $(m32-flag))
+diff --git a/arch/um/drivers/daemon_user.c b/arch/um/drivers/daemon_user.c
+index 3695821d06a2..785baedc3555 100644
+--- a/arch/um/drivers/daemon_user.c
++++ b/arch/um/drivers/daemon_user.c
+@@ -7,6 +7,7 @@
+  */
  
-+config CC_CAN_LINK_STATIC_NO_RUNTIME_DEPS
-+	bool
-+	depends on UML && CC_CAN_LINK_STATIC
-+	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) -static -Xlinker --fatal-warnings $(m64-flag)) if 64BIT
-+	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) -static -Xlinker --fatal-warnings $(m32-flag))
-+
- config CC_HAS_ASM_GOTO
- 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
- 
-diff --git a/scripts/cc-can-link.sh b/scripts/cc-can-link.sh
-index 6efcead31989..e5011a46103e 100755
---- a/scripts/cc-can-link.sh
-+++ b/scripts/cc-can-link.sh
-@@ -2,10 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- cat << "END" | $@ -x c - -o /dev/null >/dev/null 2>&1
--#include <stdio.h>
-+#include <sys/types.h>
-+#include <pwd.h>
- int main(void)
- {
--	printf("");
-+	getpwent();
+ #include <stdint.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+ #include <sys/types.h>
+diff --git a/arch/um/drivers/pcap_user.c b/arch/um/drivers/pcap_user.c
+index bbd20638788a..52ddda3e3b10 100644
+--- a/arch/um/drivers/pcap_user.c
++++ b/arch/um/drivers/pcap_user.c
+@@ -32,7 +32,7 @@ static int pcap_user_init(void *data, void *dev)
  	return 0;
  }
- END
+ 
+-static int pcap_open(void *data)
++static int pcap_user_open(void *data)
+ {
+ 	struct pcap_data *pri = data;
+ 	__u32 netmask;
+@@ -44,14 +44,14 @@ static int pcap_open(void *data)
+ 	if (pri->filter != NULL) {
+ 		err = dev_netmask(pri->dev, &netmask);
+ 		if (err < 0) {
+-			printk(UM_KERN_ERR "pcap_open : dev_netmask failed\n");
++			printk(UM_KERN_ERR "pcap_user_open : dev_netmask failed\n");
+ 			return -EIO;
+ 		}
+ 
+ 		pri->compiled = uml_kmalloc(sizeof(struct bpf_program),
+ 					UM_GFP_KERNEL);
+ 		if (pri->compiled == NULL) {
+-			printk(UM_KERN_ERR "pcap_open : kmalloc failed\n");
++			printk(UM_KERN_ERR "pcap_user_open : kmalloc failed\n");
+ 			return -ENOMEM;
+ 		}
+ 
+@@ -59,14 +59,14 @@ static int pcap_open(void *data)
+ 				   (struct bpf_program *) pri->compiled,
+ 				   pri->filter, pri->optimize, netmask);
+ 		if (err < 0) {
+-			printk(UM_KERN_ERR "pcap_open : pcap_compile failed - "
++			printk(UM_KERN_ERR "pcap_user_open : pcap_compile failed - "
+ 			       "'%s'\n", pcap_geterr(pri->pcap));
+ 			goto out;
+ 		}
+ 
+ 		err = pcap_setfilter(pri->pcap, pri->compiled);
+ 		if (err < 0) {
+-			printk(UM_KERN_ERR "pcap_open : pcap_setfilter "
++			printk(UM_KERN_ERR "pcap_user_open : pcap_setfilter "
+ 			       "failed - '%s'\n", pcap_geterr(pri->pcap));
+ 			goto out;
+ 		}
+@@ -127,7 +127,7 @@ int pcap_user_read(int fd, void *buffer, int len, struct pcap_data *pri)
+ 
+ const struct net_user_info pcap_user_info = {
+ 	.init		= pcap_user_init,
+-	.open		= pcap_open,
++	.open		= pcap_user_open,
+ 	.close	 	= NULL,
+ 	.remove	 	= pcap_remove,
+ 	.add_address	= NULL,
+diff --git a/arch/um/drivers/slip_user.c b/arch/um/drivers/slip_user.c
+index 8016d32b6809..482a19c5105c 100644
+--- a/arch/um/drivers/slip_user.c
++++ b/arch/um/drivers/slip_user.c
+@@ -9,7 +9,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <string.h>
+-#include <sys/termios.h>
++#include <termios.h>
+ #include <sys/wait.h>
+ #include <net_user.h>
+ #include <os.h>
+diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+index c4a0f26b2824..45d4164ad355 100644
+--- a/arch/um/drivers/vector_user.c
++++ b/arch/um/drivers/vector_user.c
+@@ -18,9 +18,7 @@
+ #include <fcntl.h>
+ #include <sys/socket.h>
+ #include <sys/un.h>
+-#include <net/ethernet.h>
+ #include <netinet/ip.h>
+-#include <netinet/ether.h>
+ #include <linux/if_ether.h>
+ #include <linux/if_packet.h>
+ #include <sys/wait.h>
+@@ -332,7 +330,7 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
+ 	}
+ 	switch (id) {
+ 	case ID_BESS:
+-		if (connect(fd, remote_addr, sizeof(struct sockaddr_un)) < 0) {
++		if (connect(fd, (const struct sockaddr *) remote_addr, sizeof(struct sockaddr_un)) < 0) {
+ 			printk(UM_KERN_ERR "bess open:cannot connect to %s %i", remote_addr->sun_path, -errno);
+ 			goto unix_cleanup;
+ 		}
+diff --git a/arch/um/os-Linux/util.c b/arch/um/os-Linux/util.c
+index ecf2f390fad2..07327425d06e 100644
+--- a/arch/um/os-Linux/util.c
++++ b/arch/um/os-Linux/util.c
+@@ -10,7 +10,7 @@
+ #include <signal.h>
+ #include <string.h>
+ #include <termios.h>
+-#include <wait.h>
++#include <sys/wait.h>
+ #include <sys/mman.h>
+ #include <sys/utsname.h>
+ #include <init.h>
+diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
+index c51dd8363d25..bae61554abcc 100644
+--- a/arch/x86/um/user-offsets.c
++++ b/arch/x86/um/user-offsets.c
+@@ -2,7 +2,7 @@
+ #include <stdio.h>
+ #include <stddef.h>
+ #include <signal.h>
+-#include <sys/poll.h>
++#include <poll.h>
+ #include <sys/mman.h>
+ #include <sys/user.h>
+ #define __FRAME_OFFSETS
 -- 
 2.20.1
 
