@@ -2,107 +2,131 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C82BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE55EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312A02075D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF29208D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593868130;
-	bh=98il11lSKYnc6reB2D5/q6+UpWByF7ffGS9nQPD/AAI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=o5Bm3CCEMNPa3tDtqHZ6JQp+SnuEjwyv1pI1hlgH7MyP6Zgnt0UCU81bG+qr88zwQ
-	 vfmrIhPuz1uLz3DbTuoM4Gz/fPiVLfoMFJkemCp0mTNa41KxiqRfDz3rc1ZtFkxz04
-	 Ml7j9CrtDaCG43uSX0Llnw+fYPqE2Zu0g1NUk6os=
+	s=default; t=1593868170;
+	bh=XKkYUna+C06YzYOPFLvRPSDNzCZHTcnnHceCSplfaDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EY0+G6/LL4Z9fEEBGKvD0pE2dl7Qp+fLPBoFNTo03E68keMWTHpAJuRCMLcM1u1aI
+	 wxZjIZV5cIp6hmHKSNYEdThvnHq4OMBfQ3oKNhgWdkEAnRJ5pc00lAFFvGIv5CLtlE
+	 GDRHn8/XZ41tSI05jcXFu9zzToJDX4t9eU+aIH0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgGDNFK (ORCPT
+        id S1726936AbgGDNJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 09:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37556 "EHLO mail.kernel.org"
+        Sat, 4 Jul 2020 09:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgGDNFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 09:05:10 -0400
+        id S1726638AbgGDNJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 09:09:28 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C5A320885;
-        Sat,  4 Jul 2020 13:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E48F2075D;
+        Sat,  4 Jul 2020 13:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593867909;
-        bh=98il11lSKYnc6reB2D5/q6+UpWByF7ffGS9nQPD/AAI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=yEXrj49d55WiKuwOfEUjhtWJlMVeETbFL+soMenZH8vX/vOukEOMB8DEBjhtPpVwb
-         r87y033cK2/a2rkPbttUN+shwJajL8Tz/455J8J51eCYf8jOKGMjJagwWPb9VnF53a
-         Kes3CEOLdWG4t9rZ3uZWG3aaxYI6PUoYpIo6czQ4=
-Date:   Sat, 4 Jul 2020 14:05:05 +0100
+        s=default; t=1593868168;
+        bh=XKkYUna+C06YzYOPFLvRPSDNzCZHTcnnHceCSplfaDo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UQGCEihcRR8O+4v1S89+qf+2jJkRhmrnWFknwJYLWkBg5Z/dQ75ffTq12DsnOKMiA
+         gg5x/N0JSgmAq656qlHecV6niqLIryBTuDHAFrCPSMiuDMtV75akZowtq8QyvEWLze
+         zxMxUuXexGPuai9UV2WwDb6idRHJqhw3KHGUJgN8=
+Date:   Sat, 4 Jul 2020 14:09:23 +0100
 From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc4
-Message-ID: <20200704130505.GA21333@willie-the-truck>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, john.stultz@linaro.org
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Message-ID: <20200704130922.GB21333@willie-the-truck>
+References: <20200704122809.73794-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200704122809.73794-1-konradybcio@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+[Adding Bjorn, Jordan and John because I really don't want a bunch of
+different ways to tell the driver that the firmware is screwing things up]
 
-Please pull these arm64 fixes for -rc4. Nothing Earth-shattering, really;
-some CPU errata workarounds (one day they'll get it right, ha!) and a
-fix for a boot failure with very large kernel images where the alternative
-patching gets confused when patching relative branches using veneers.
+On Sat, Jul 04, 2020 at 02:28:09PM +0200, Konrad Dybcio wrote:
+> This adds the downstream property required to support
+> SMMUs on SDM630 and other platforms (the need for it
+> most likely depends on firmware configuration).
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  .../devicetree/bindings/iommu/arm,smmu.yaml       | 10 ++++++++++
+>  drivers/iommu/arm-smmu.c                          | 15 +++++++++------
+>  2 files changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index d7ceb4c34423..9abd6d41a32c 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -102,6 +102,16 @@ properties:
+>        access to SMMU configuration registers. In this case non-secure aliases of
+>        secure registers have to be used during SMMU configuration.
+>  
+> +  qcom,skip-init:
+> +    description: |
+> +      Disable resetting configuration for all context banks
+> +      during device reset.  This is useful for targets where
+> +      some context banks are dedicated to other execution
+> +      environments outside of Linux and those other EEs are
+> +      programming their own stream match tables, SCTLR, etc.
+> +      Without setting this option we will trample on their
+> +      configuration.
 
-There are some vDSO and ptrace fixes floating about, but they need more
-review and testing if I'm going to send them for 5.8.
+It would probably be better to know _which_ context banks we shouldn't
+touch, no? Otherwise what happens to the others?
 
-Thanks,
+> +
+>    stream-match-mask:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description: |
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 243bc4cb2705..a5c623d4caf9 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1655,13 +1655,16 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+>  	 * Reset stream mapping groups: Initial values mark all SMRn as
+>  	 * invalid and all S2CRn as bypass unless overridden.
+>  	 */
+> -	for (i = 0; i < smmu->num_mapping_groups; ++i)
+> -		arm_smmu_write_sme(smmu, i);
+>  
+> -	/* Make sure all context banks are disabled and clear CB_FSR  */
+> -	for (i = 0; i < smmu->num_context_banks; ++i) {
+> -		arm_smmu_write_context_bank(smmu, i);
+> -		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
+> +	if (!of_find_property(smmu->dev->of_node, "qcom,skip-init", NULL)) {
+> +		for (i = 0; i < smmu->num_mapping_groups; ++i)
+> +			arm_smmu_write_sme(smmu, i);
+> +
+> +		/* Make sure all context banks are disabled and clear CB_FSR  */
+> +		for (i = 0; i < smmu->num_context_banks; ++i) {
+> +			arm_smmu_write_context_bank(smmu, i);
+> +			arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
+> +		}
+>  	}
+
+Do we not need to worry about the SMRs as well?
 
 Will
-
---->8
-
-The following changes since commit 108447fd0d1a34b0929cd26dc637c917a734ebab:
-
-  arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist (2020-06-25 20:18:57 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 9b23d95c539ebc5d6d6b5d6f20d2d7922384e76e:
-
-  arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718 (2020-07-03 16:39:16 +0100)
-
-----------------------------------------------------------------
-arm64 fixes for -rc4
-
-- Fix alternative patching for very large kernel images and modules
-
-- Hook up existing CPU errata workarounds for Qualcomm Kryo CPUs
-
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      arm64/alternatives: use subsections for replacement sequences
-
-Sai Prakash Ranjan (3):
-      arm64: Add MIDR value for KRYO4XX gold CPU cores
-      arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040
-      arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718
-
- Documentation/arm64/silicon-errata.rst |  8 ++++++++
- arch/arm64/include/asm/alternative.h   | 16 ++++++++--------
- arch/arm64/include/asm/cputype.h       |  2 ++
- arch/arm64/kernel/cpu_errata.c         | 21 +++++++++++++++------
- arch/arm64/kernel/cpufeature.c         |  2 ++
- arch/arm64/kernel/vmlinux.lds.S        |  3 ---
- 6 files changed, 35 insertions(+), 17 deletions(-)
