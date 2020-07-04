@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9320DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8170208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702FD2084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0vd95Qb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knZfke3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgGDLju (ORCPT
+        id S1728240AbgGDLj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40392 "EHLO
+        Sat, 4 Jul 2020 07:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgGDLjV (ORCPT
+        with ESMTP id S1728113AbgGDLjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:39:21 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E454C061794;
-        Sat,  4 Jul 2020 04:39:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so27368234wrs.0;
-        Sat, 04 Jul 2020 04:39:21 -0700 (PDT)
+        Sat, 4 Jul 2020 07:39:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC570C08C5DE;
+        Sat,  4 Jul 2020 04:39:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id o11so35448614wrv.9;
+        Sat, 04 Jul 2020 04:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vVjW7FiC+qSaQ3KBioDqK1mV2GwG3KhiYxWo2WY1YG8=;
-        b=W0vd95QbcYPxywbQ8+RJ8ztu8DvaIkr0ZKZitkNzpk1C9WB8xdrZhvB/JHiMxOaX6w
-         tG55l5DSxI/MHd92V/oAFfN31k91tu7G3CuqVPR9EAYe+/LWLF69wUhr1wHIXKjXZWFF
-         ps6F4O98jUYhoh6t/XTfLPOjfb0g8dOlfcXi+Ls7rzXpN0Y+/Y+IPlMPO0sVJKtESqnO
-         jo++bS18e4d3QnhkVNi2d+n4FJtQJWSr2yZC/0H533V7Or0YyVRns5b+gpgqn9IJEji1
-         hw9NsWkziOWm4S3+KrFAQpj6iZ2g97dgkRjWrm5L+4dS0Ej6rygfY2qkHyAae9/nXkpj
-         RI9w==
+        bh=x/iq/UaybIFP5fVA6Ln+hpouuRJu9kADukrtHp3BLVg=;
+        b=knZfke3sKYc0DXJM2t47oa2ovnx/dBeypmgCmiy3LPvRXi8c8/HnzAF1ftA44DIpVM
+         u17jA8jPwwoWp/t8Ya47Jcbhd1CqcMj0+Mw+mt/E2zm25zjxG84IszIewvufsi+WlbuP
+         nlHtCuAbGywK1wiTFYj3mfmErCdtgBOSfv1DqpGJrC+dJIN++ap5vun2+TcaV4voxohS
+         hgd41PtZ2U4+cMgGmx9yo1mismQjgSIksxzaIeqXxIzj63hzYwX49+Uxc1Kb1gBh7KqG
+         HYxa6jrxNS2qIRh4fQmekm32pi06pwsMtZeECEmDCkKrFlwVFtBb+OywLFbzEMrcNuVU
+         yC5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vVjW7FiC+qSaQ3KBioDqK1mV2GwG3KhiYxWo2WY1YG8=;
-        b=S+0GFo1hgsyS6JUtQwVXxJrk9WmCQ04VcSkhcZws1dRur3EfnvEcRl88cf8j//sUTn
-         2zY0MyTsPmPmP4OBkbsnUR3+Z3P7aEQuXHGSEqJRyhph6QkeIcsvdOn4045RHY/pd18G
-         +F2Wr6ZD2hItX5yqThBeJzg8/4jfDLOpBWuCbKuK0n0S6E81N5R4L3pWvscV+ZFOis3K
-         5ZOyP5m3wH+NHJGQpx98DrVT60gSvcKhgh1yT6wcrF5Prby2mXr5K0lkAVP3oig26fRQ
-         Hlsk0U1zH//3Lhq54dahuKWkoA9SASUpsGaM0xjoa3J1Fqwp5qgf5Z21f4ToRnxoRBgy
-         ByuQ==
-X-Gm-Message-State: AOAM531xagjiQRNdvKL6WP8xM2S19FbhlB3P4zVs0ie2vyoT5pgueUIH
-        4Xq1S6pr6P8BeI1ZjOJEtkY=
-X-Google-Smtp-Source: ABdhPJwerxoQFv4zEnNu+Da57+LRJoLW49iAkIp8U0yBpTUxgLCXgzWvx3YJVjiOUOqQbUJjIMeB6A==
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr40337474wrs.365.1593862760024;
-        Sat, 04 Jul 2020 04:39:20 -0700 (PDT)
+        bh=x/iq/UaybIFP5fVA6Ln+hpouuRJu9kADukrtHp3BLVg=;
+        b=nHxK7PFcRLS8XE4ZVPgm1ocg1yyV3U3teZYIhxlNnTiLUOukChg4DFzFrl+NYRj2d5
+         +4Nd2MDPLW5j5HBTxl/JiwtdUbwdiACrCz4zhzpz+9Ea/u8+KZpkiiwGV3R/pFJ0WUG4
+         Dtleq0sJDeTTvgkorDktQjuW/XdO4EghmDc1eSuVIOr6vTnTCv7jYMhcAlQh5oTAk6kU
+         66HYNZrQekjaYvkEYar7tjsZgHHTf3ZDbRdGxd0YqxSeFDmoqPuEOnO966Bte0NQlPEy
+         NJAHGuwnXGP66bj3Ksxh6HigIK7bsN39JHwCimkProFgaxD6qoFyBtQyd6iLs+on4xaX
+         p8Jw==
+X-Gm-Message-State: AOAM530HXskLthJ5k4BnDRbAxBOM8UX1eYeue3wAorfjWKJ51fDe1AhE
+        SeeI+ZgxzbqbKv8kYBSZFqM=
+X-Google-Smtp-Source: ABdhPJxuTS7kWmB4UbzVJyIM3G9fZFmSLmupexqyp35pR8yUKDd6X4+414YmhPgrPW1m9h4bEjT62A==
+X-Received: by 2002:a5d:6088:: with SMTP id w8mr39543136wrt.49.1593862756426;
+        Sat, 04 Jul 2020 04:39:16 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.18
+        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 04:39:19 -0700 (PDT)
+        Sat, 04 Jul 2020 04:39:15 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,9 +72,9 @@ Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 12/16] arm64: dts: allwinner: a64: Add DAI node for HDMI
-Date:   Sat,  4 Jul 2020 13:38:58 +0200
-Message-Id: <20200704113902.336911-13-peron.clem@gmail.com>
+Subject: [PATCH 09/16] arm64: dts: allwinner: h6: Enable HDMI sound for Beelink GS1
+Date:   Sat,  4 Jul 2020 13:38:55 +0200
+Message-Id: <20200704113902.336911-10-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704113902.336911-1-peron.clem@gmail.com>
 References: <20200704113902.336911-1-peron.clem@gmail.com>
@@ -86,41 +86,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+Now that HDMI sound node is available in the SoC dtsi.
+Enable it for this board.
 
-Add the new DAI block for I2S2 which is used for HDMI audio.
-
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8dfbcd144072..c662f6a170ce 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -845,6 +845,20 @@ i2s1: i2s@1c22400 {
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 3f7ceeb1a767..049c21718846 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -118,6 +118,14 @@ hdmi_out_con: endpoint {
+ 	};
+ };
  
-+		i2s2: i2s@1c22800 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-a64-i2s",
-+				     "allwinner,sun8i-h3-i2s";
-+			reg = <0x01c22800 0x400>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-+			clock-names = "apb", "mod";
-+			resets = <&ccu RST_BUS_I2S2>;
-+			dma-names = "tx";
-+			dmas = <&dma 27>;
-+			status = "disabled";
-+		};
++&hdmi_sound {
++	status = "okay";
++};
 +
- 		dai: dai@1c22c00 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-a64-codec-i2s";
++&i2s1 {
++	status = "okay";
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.25.1
 
