@@ -7,325 +7,159 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D98C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE6C21924
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FB620885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zz1bQ8Af"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AktzP1qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgGDUuW (ORCPT
+        id S1727896AbgGDUyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40326 "EHLO
+        Sat, 4 Jul 2020 16:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgGDUuV (ORCPT
+        with ESMTP id S1726922AbgGDUyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:50:21 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07284C061794;
-        Sat,  4 Jul 2020 13:50:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so36415477wrw.5;
-        Sat, 04 Jul 2020 13:50:20 -0700 (PDT)
+        Sat, 4 Jul 2020 16:54:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24989C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 13:54:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so10475271pfq.11
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 13:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=iMabnuPWln2gm5XGf/x6VpJNWO1Ih2I1TC//Xv1HJq0=;
-        b=Zz1bQ8AfAma22it+pCOtn8TK1r8ol5ZPEOyh4tsNnoLugjZ5cWoNJIYfXSDuFUKLAV
-         nRgx/hMtRXG40lgmBdqzeXkmrUxJyfyKsfYrolHNKdunoqhEma5hF2UMwFzV1DFDFIku
-         DXoGRifgCQrcP+mAYNQx2SWW64zCA++tWbMaqITJfjuGWhFmnpL+04fVug1q1VA76ebj
-         f4k39pf3hdnqNnRDIrLp7I2Cz79N4i0QghuIMbg7MGNXSXALBkQcwv9wh4AEgB4XgBnP
-         8UNRaRImq7w5u7iNyVKQlfef8bKlOuN4bbFCybqrk+DLE5PFMbIHQLBoOxSf8RsiRJQa
-         Dl4g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q6PmxtU26J104QjdAPS4bilmwtEeT3TLjN53LBeepDs=;
+        b=AktzP1qpR1WTXWaM4qWySrlhq4kJmUcLMYC1PLSqylxGEGiNY1E94Y0AAvWsRRtxdu
+         jiF5ZkmWl+zCb/jYZdjSa0RfdHLGlat+epiUvLWYpype4rDZNhCT6DNeFJ1FxpXpiARR
+         JC/zRNwICw2Gcv/8eF7IEkDBizaiAOt7GllHNEGzZXl4WE7eeuwKMwvqkSMqxcnFZ+3O
+         oiHnP8xaRyRVWdkojMZRGsp4seXiqYdnmxwsgxYMtcwL/BjzOrIKGoLJgpe8It7sI66e
+         8ESbtoE29KhxPrLH334rsRjYj9ig22aUvxDY7mZ9FCwcnfIOnSh2eBq1w7ffSBezfuLf
+         XztQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=iMabnuPWln2gm5XGf/x6VpJNWO1Ih2I1TC//Xv1HJq0=;
-        b=YztXrjDIMMKfrpTzctnMIkji/Y9uchyLWGdybs1YHb8hsg9mIMQi4L3S9/TcyF4Iqs
-         31kOhgmJQviqYAAPS59uji1h0OQbpa+PK79y15L7fQStGa4o1EYQX0UG28oh4vSRH+jf
-         SlL/m+wztvCDs+eU/RdklTTQQu2OFPrc2tWDalVl5kH6WMq/DByXecYda5rwfOByae0k
-         8DNfjhD5yMVp2u2skkMT9qL4G2ActaTLYIgL1zRFocv89jjv54MbiwQPHYGGSaqkDyoH
-         GxTOEyxrTgAGgehyKEhbEwCHvVmfSha1pW5DuqxRkR2b7Lgr7g2F7UsP5HpDmOHXvsDd
-         c5UA==
-X-Gm-Message-State: AOAM533iploNPIRJnxZ/ot0h4sHbqei8CPJEox8sNpsk2Vw1C9OBAmVl
-        vi75axqVZXIA9thwqyfXEA==
-X-Google-Smtp-Source: ABdhPJxtHEFVZy3X5EmlLR2hKE/9VV3UALLAqm+NhckrEBx2ll0njY6FCxBpdKHtw2B/S5GdWxHyRw==
-X-Received: by 2002:a05:6000:1107:: with SMTP id z7mr41365286wrw.355.1593895819483;
-        Sat, 04 Jul 2020 13:50:19 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.251.241])
-        by smtp.gmail.com with ESMTPSA id b184sm18007101wmc.20.2020.07.04.13.50.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 13:50:18 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 23:50:16 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        geert@linux-m68k.org, willy@infradead.org, miklos@szeredi.hu,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/3] readfile: implement readfile syscall
-Message-ID: <20200704205016.GA192853@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q6PmxtU26J104QjdAPS4bilmwtEeT3TLjN53LBeepDs=;
+        b=mrfmCcxZmAbBNbbfSWWmbym3W8C5i/vQvRlVhSp4/8mAQOB6jaRBGFiuNmjJmaGOuW
+         rmYLVrJxRUrhptgV3LTV0poLt7tu5l0Wx6vvEghubCjzvlZbCTZN7Qx+02wJjjrf5RbY
+         Iqvdh0w2bDCEpQmYoZ97PpRvmCmNOVjnssrloNnyUoAgXu08mHAEjEPKjXD0kd0S9Ywe
+         3c9KUTPs+YNw+idw6WI3KaCswJQ/WDrefsTeIzVdDMINb8wKt3lST8pyZdSiU2PzJGQA
+         lrnEGMVt2aEEpOeG4UWahEDv8yy9xN4mOdK7xSbPrIu7laccsQo2w9Dtb4Zo8RtiW+UM
+         KCAA==
+X-Gm-Message-State: AOAM530vkOggfO9NOfrk/+VvmQ/Y1dE4uB09TehDQ69sJlFofRFHZe+q
+        rl17iblxKMw3uYN9pSuAUUtJjz6yB+XnqwyRAPFIvY68
+X-Google-Smtp-Source: ABdhPJypceqcB51zvTmovBbJigCVusomdHRfDBdDi8tBLMpZ58trq+8Lt/EYeqIcNZa4igFnzXGABuIH1VEBixCWmos=
+X-Received: by 2002:a05:6a00:790:: with SMTP id g16mr2359035pfu.36.1593896078764;
+ Sat, 04 Jul 2020 13:54:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <CAHp75Ve4O+OmVttjhtKepFWwZLU6tFMx5vNpPVJdB58mcLFm3w@mail.gmail.com>
+ <613b-5f00e780-a9-10028e00@255553491>
+In-Reply-To: <613b-5f00e780-a9-10028e00@255553491>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 4 Jul 2020 23:54:22 +0300
+Message-ID: <CAHp75Ve7JO0xJzwODoNS6f_UcvNtWTTu9mJxWAE0xEyBpHqQSg@mail.gmail.com>
+Subject: Re: Writing to a const pointer: is this supposed to happen?
+To:     Kars Mulder <kerneldev@karsmulder.nl>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al wrote:
-
-> > On Sat, Jul 04, 2020 at 09:41:09PM +0200, Miklos Szeredi wrote:
-> >  1) just leave the first explanation (it's an open + read + close
-> > equivalent) and leave out the rest
+On Sat, Jul 4, 2020 at 11:32 PM Kars Mulder <kerneldev@karsmulder.nl> wrote:
+> On Saturday, July 04, 2020 16:39 CEST, Andy Shevchenko wrote:
+> > > I've searched for a function that parses an int from a string and
+> > > stores a pointer to the end; I can find some function simple_strtoul
+> > > that matches this criterion, but it's documented as
+> > >
+> > >     "This function has caveats. Please use kstrtoul instead."
+> > >
+> > > ... and kstrtoul does not store a pointer to the end. The documentation
+> > > of kstrtoul describes simple_strtoul as obsolete as well.
 > >
-> >  2) add a loop around the vfs_read() in the code.
-> 
-> 3) don't bother with the entire thing, until somebody manages to demonstrate
-> a setup where it does make a real difference (compared to than the obvious
-> sequence of syscalls, that is).
+> >
+> >  Where? We need to fix that, because using simple_strto*() is fairly legal
+> > in cases like this, but "has caveats".
+>
+> In lib/vsprintf.c, the comments before the function's implementation say:
+>
+>     /**
+>      * simple_strtoul - convert a string to an unsigned long
+>      * @cp: The start of the string
+>      * @endp: A pointer to the end of the parsed string will be placed here
+>      * @base: The number base to use
+>      *
+>      * This function has caveats. Please use kstrtoul instead.
+>      */
 
-Ehh? System call overead is trivially measurable.
-https://lwn.net/Articles/814175/
+This is correct.
 
-> At which point we'll need to figure out
-> what's going on and deal with the underlying problem of that setup.
+> Many variants upon kstrtoul, such as kstrtoull, defined in lib/kstrtox.c,
+> describe the simple_strtoull function as obsolete:
+>
+>     /**
+>      * kstrtoull - convert a string to an unsigned long long
+>      * [...]
+>      *
+>      * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
 
-Run top?
+>      * Used as a replacement for the obsolete simple_strtoull. Return code must
+>      * be checked.
+>      */
 
-Teach userspace to read 1 page minimum?
+This and similar are not correct. 1/ They are not replacement per se
+(because of different behaviour). 2/ They simple_strto*() are not
+obsoleted.
 
-	192803 read(4, "cpu  3718263 4417 342808 7127674"..., 1024) = 1024
-	192803 read(4, " 0 21217 21617 21954 10201 15425"..., 1024) = 1024
-	192803 read(4, " 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"..., 1024) = 1024
-	192803 read(4, "", 1024)
+Can you correct all places you found and make it consistent?
 
-Teach userspace to pread?
+> I seem to have been slightly inaccurate about my claim that "kstrtoul"
+> describes simple_strtoul as "obsolete" though, because in the specific
+> case of kstrtoul, include/linux/kernel.h only says:
+>
+>     /**
+>      * kstrtoul - convert a string to an unsigned long
+>      * [...]
+>      *
+>      * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+>      * Used as a replacement for the simple_strtoull. Return code must be checked.
+>     */
 
-	192803 openat(AT_FDCWD, "/proc/uptime", O_RDONLY) = 5
-	192803 lseek(5, 0, SEEK_SET)            = 0
-	192803 read(5, "47198.56 713699.82\n", 8191) = 19
+> (Also, there may be a documentation error here: all kstrto* functions in
+> kstrtox.c and kernel.h describe themselves as replacements of simple_strtoull.
+> E.g. kstrtol and kstrtoul also describe themselves as replacements of
+> simple_strtoull rather than as a replacements of simple_strtol and
+> simple_strtoul respectively.)
+>
+> By the way, I found the documentation of the caveat somewhere in
+> include/linux/kernel.h:
 
-Rhetorical question: what is harder: ditch the main source of overhead
-(VFS, seq_file, text) or teach userspace how to read files?
+Yes, that's what has been added lately to clarify the usage of
+simple_strto*() vs. kstrto*().
 
-Here is open+read /proc/cpuinfo in python2 and python3.
-Python2 case is terrifying.
-
-BTW is there is something broken with seqfiles and record keeping?
-Why does it return only 2 records per read?
-
-Python 3:
-
-openat(AT_FDCWD, "/proc/cpuinfo", O_RDONLY|O_CLOEXEC) = 3
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-ioctl(3, TCGETS, 0x7ffe6f1f0850) = -1 ENOTTY (Inappropriate ioctl for device)
-lseek(3, 0, SEEK_CUR)            = 0
-ioctl(3, TCGETS, 0x7ffe6f1f0710) = -1 ENOTTY (Inappropriate ioctl for device)
-lseek(3, 0, SEEK_CUR)            = 0
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-read(3, "processor\t: 0\nvendor_id\t: Genuin"..., 8192) = 3038
-read(3, "processor\t: 2\nvendor_id\t: Genuin"..., 5154) = 3038
-read(3, "processor\t: 4\nvendor_id\t: Genuin"..., 2116) = 2116
-read(3, "clmulqdq dtes64 monitor ds_cpl v"..., 8448) = 3966
-read(3, "processor\t: 8\nvendor_id\t: Genuin"..., 4482) = 3038
-read(3, "processor\t: 10\nvendor_id\t: Genui"..., 1444) = 1444
-read(3, "t\t: 64\naddress sizes\t: 46 bits p"..., 16896) = 3116
-read(3, "processor\t: 13\nvendor_id\t: Genui"..., 13780) = 3044
-read(3, "processor\t: 15\nvendor_id\t: Genui"..., 10736) = 1522
-read(3, "", 9214)                = 0
+>     /*
+>      * Use kstrto<foo> instead.
+>      *
+>      * NOTE: simple_strto<foo> does not check for the range overflow and,
+>      *   depending on the input, may give interesting results.
+>      *
+>      * Use these functions if and only if you cannot use kstrto<foo>, because
+>      * the conversion ends on the first non-digit character, which may be far
+>      * beyond the supported range. It might be useful to parse the strings like
+>      * 10x50 or 12:21 without altering original string or temporary buffer in use.
+>      * Keep in mind above caveat.
+>      */
 
 
-Python 2
-
-openat(AT_FDCWD, "/proc/cpuinfo", O_RDONLY) = 3
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 0
-lseek(3, 0, SEEK_CUR)            = 0
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-read(3, "processor\t: 0\nvendor_id\t: Genuin"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 1024
-lseek(3, 0, SEEK_CUR)            = 1024
-read(3, " cqm_occup_llc cqm_mbm_total cqm"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 2048
-lseek(3, 0, SEEK_CUR)            = 2048
-read(3, "ebs bts rep_good nopl xtopology "..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 3072
-lseek(3, 0, SEEK_CUR)            = 3072
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 3072
-lseek(3, 0, SEEK_CUR)            = 3072
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 3072
-lseek(3, 0, SEEK_CUR)            = 3072
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 3072
-lseek(3, 0, SEEK_CUR)            = 3072
-read(3, "ntel\ncpu family\t: 6\nmodel\t\t: 79\n"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 4096
-lseek(3, 0, SEEK_CUR)            = 4096
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 4096
-lseek(3, 0, SEEK_CUR)            = 4096
-read(3, "bm_local dtherm ida arat pln pts"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 5120
-lseek(3, 0, SEEK_CUR)            = 5120
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 5120
-lseek(3, 0, SEEK_CUR)            = 5120
-read(3, "nstop_tsc cpuid aperfmperf pni p"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 6144
-lseek(3, 0, SEEK_CUR)            = 6144
-read(3, "del name\t: Intel(R) Xeon(R) CPU "..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 7168
-lseek(3, 0, SEEK_CUR)            = 7168
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 7168
-lseek(3, 0, SEEK_CUR)            = 7168
-read(3, "d_clear flush_l1d\nvmx flags\t: vn"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 8192
-lseek(3, 0, SEEK_CUR)            = 8192
-read(3, "clmulqdq dtes64 monitor ds_cpl v"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 9216
-lseek(3, 0, SEEK_CUR)            = 9216
-read(3, "E5-2620 v4 @ 2.10GHz\nstepping\t: "..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 10240
-lseek(3, 0, SEEK_CUR)            = 10240
-read(3, "vnmi preemption_timer posted_int"..., 1024) = 1024
-read(3, " vmx smx est tm2 ssse3 sdbg fma "..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 12288
-lseek(3, 0, SEEK_CUR)            = 12288
-read(3, ": 1\nmicrocode\t: 0xb000038\ncpu MH"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 13312
-lseek(3, 0, SEEK_CUR)            = 13312
-read(3, "r invvpid ept_x_only ept_ad ept_"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 14336
-lseek(3, 0, SEEK_CUR)            = 14336
-read(3, "16 xtpr pdcm pcid dca sse4_1 sse"..., 1024) = 1024
-read(3, "\t\t: 1326.352\ncache size\t: 20480 "..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 16384
-lseek(3, 0, SEEK_CUR)            = 16384
-read(3, "gb flexpriority apicv tsc_offset"..., 1024) = 1024
-read(3, "4_2 x2apic movbe popcnt tsc_dead"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 18432
-lseek(3, 0, SEEK_CUR)            = 18432
-read(3, "KB\nphysical id\t: 0\nsiblings\t: 16"..., 1024) = 1024
-read(3, " vtpr mtf vapic ept vpid unrestr"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 20480
-lseek(3, 0, SEEK_CUR)            = 20480
-read(3, "adline_timer aes xsave avx f16c "..., 2048) = 2048
-read(3, "estricted_guest vapic_reg vid pl"..., 1024) = 1024
-fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-lseek(3, 0, SEEK_CUR)            = 23552
-lseek(3, 0, SEEK_CUR)            = 23552
-read(3, "16c rdrand lahf_lm abm 3dnowpref"..., 2048) = 770
-read(3, "", 1024)                = 0
-close(3)                         = 0
+-- 
+With Best Regards,
+Andy Shevchenko
