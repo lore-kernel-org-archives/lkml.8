@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D24C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B10C20890
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B1120890
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXEFrhsc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrewqFuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgGDLj2 (ORCPT
+        id S1728194AbgGDLje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
+        Sat, 4 Jul 2020 07:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbgGDLjU (ORCPT
+        with ESMTP id S1728170AbgGDLj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:39:20 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E91BC061794;
-        Sat,  4 Jul 2020 04:39:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so35372793wrj.13;
-        Sat, 04 Jul 2020 04:39:20 -0700 (PDT)
+        Sat, 4 Jul 2020 07:39:26 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE84C061794;
+        Sat,  4 Jul 2020 04:39:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f139so36655806wmf.5;
+        Sat, 04 Jul 2020 04:39:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fTGEWk45ndJLT2NY/8Es0iz5Nm0crZjCJORIXqLrPak=;
-        b=CXEFrhscCk+j5TdunLyNHrZJrFTXYvNBQ5sAs4RwVo03mfiM+PtGWDpxafKr37ac0U
-         w3EJeeD7fJHyI7NtFCa7hADR+v4sUNvZ8nVPHGJtiXAViVyRJ1oW7eTqlj1J8jyS6XCN
-         mPfkZXS/SPAUWuo8crj9VojAf7Jq0apgMdlqZMAopvh2jH4reQIzeqgDR4FGEqrBp7SW
-         bSokSJgr9mjXdsuhpWD+BWB0sb9sCtDcveDqNWTVbeXn+AGxd64K4jDMwQ6zRDdqJ85d
-         1SKKSrScwedcGXGymdH5NehlKUFxb9PvGFfKOx8rdhkbHi8gneO9o/AC4I/6rsjWZYCO
-         HMkQ==
+        bh=s1wxiSXb6FjGblsvKrZYztMSCVGGVQHB+0DmuQ/lyxA=;
+        b=JrewqFucv5cYOk7OE3oVnmZEW3IbJjLlbiFhIN8TjMDZzUl7L+jK5AKEFgEXWzxTt2
+         2pQXxy3Pz1M75SMWDCj/v0RMb9zesYAdX6YFCYIbnYmGaG9U9A/BVMclHljHSKcbD+qe
+         YAwDMlcI+nxg14LvyfWNzqkomR1qajrWKg4u814ufNNLKFQAY6e3hDdo729Kvyx+Pcil
+         IDKRHP5AQmDyohNs9j0Xia144mKJyU+H5ggVM8MSPXcNsrLv/Pbsxr2TwbtFJf+3XCQy
+         89ld2FVKMq24fnhWHiB3dC+gxVF4kpm1vsG8xovGK4fAWvcuKmXsP643kNsh9VlDOEoe
+         Kgww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fTGEWk45ndJLT2NY/8Es0iz5Nm0crZjCJORIXqLrPak=;
-        b=DhKU1NPnOL3LEmvrVPpixNpdx0Af3ZlxlRiYTXgCmNOv1FrUkwwiaaZBG45XAea/nA
-         dAAsJ4winRZ9o+dbN0iAWOqRdhSpad3sTDIeihd8Duwb7/2mGxdlznj2R3RGsQDRzfPB
-         NxqW9AtyiYfh7FgN63MGz+rrZVtPR9O5O3ToRFMzx6jiK7I83aIDx+LGhEFGDNdf/ZBI
-         DQBYW3syBbuRxrBFk6FHAZvRcVEqiaEltMvSoZeOSL2a6cE9blQcQJP8bGXlblpeJWVO
-         3fu1qXP+ktxM9PqNAb5+k6Tui24ZQ5tddm3VEt8TWB65JL3JG6aCye2n9BlKUy+yPNDm
-         GWOw==
-X-Gm-Message-State: AOAM530Pw4TvJItpsaUGn9lxMEmARBOKAcyj3ShgKX5LUd/Lux7FDyiX
-        BASLWJDdiwfVhNtNd9toN58=
-X-Google-Smtp-Source: ABdhPJzjNETgLRXE5zmLJIHF5Od05otTh5j/Sb/JD3W7Unyc0STwxcF2Y/1iz8u6zDLiGCgzVeKx3w==
-X-Received: by 2002:adf:e4cc:: with SMTP id v12mr42411528wrm.92.1593862758810;
-        Sat, 04 Jul 2020 04:39:18 -0700 (PDT)
+        bh=s1wxiSXb6FjGblsvKrZYztMSCVGGVQHB+0DmuQ/lyxA=;
+        b=uJUUZS2UncPnf/n6cEKz42vZb0VlwUreQAjPD2jfs4GwDMLqp4usb7FTYZWtWWDA0u
+         Kvi+/bDxp6mJ4PnG9q++aa1twiu9QRkdNVr5Rayc64a95XZ0Wdzh0uarVccTdMsTO+To
+         uOMconvmF2/R1L5uCGL5bWz3kd/yGrk4kdHY5/0/HBl/aoj4RxJTdxyEiOiO67t+9h1R
+         XJ6fsbaXzZfTIo8kWzoCINdRaB2VDD0/0I3xSdTgBogXajLdfmrxUH3vuIwrVUw/Lleu
+         q/a68MNt4cDWqgthE8a8b9EFUvzS6wmhVEfGSEgJwFYV5ypSCBDkoa29T/2eiyFDwsei
+         1+7Q==
+X-Gm-Message-State: AOAM531Y9bR7ZiosUvSdDOnjv0SR7uybmpMVaykUePe+nsglbCxkylIY
+        OMKEoSgz1hdkF2YakJEJxekn6bSA8Dai3g==
+X-Google-Smtp-Source: ABdhPJwzV34Wu9Tm/bGGoIIBjIyhv/6HbZCqgcw/NraTBYcNKoYfUjnjYieuWUKNkx3O6QBQVusUfg==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr39307080wmi.148.1593862764834;
+        Sat, 04 Jul 2020 04:39:24 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.17
+        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 04:39:18 -0700 (PDT)
+        Sat, 04 Jul 2020 04:39:24 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,9 +72,9 @@ Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 11/16] arm: dts: sunxi: h3/h5: Add HDMI audio
-Date:   Sat,  4 Jul 2020 13:38:57 +0200
-Message-Id: <20200704113902.336911-12-peron.clem@gmail.com>
+Subject: [PATCH 16/16] arm64: dts: allwinner: a64: Add HDMI audio to Pine64
+Date:   Sat,  4 Jul 2020 13:39:02 +0200
+Message-Id: <20200704113902.336911-17-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704113902.336911-1-peron.clem@gmail.com>
 References: <20200704113902.336911-1-peron.clem@gmail.com>
@@ -88,53 +88,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcus Cooper <codekipper@gmail.com>
 
-Add a simple-soundcard to link audio between HDMI and I2S.
+Enable HDMI audio on Pine64.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 9be13378d4df..91d8c2690feb 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -105,6 +105,25 @@ de: display-engine {
- 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index 2165f238af13..c5939ba52f19 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -99,6 +99,10 @@ hdmi_out_con: endpoint {
  	};
+ };
  
-+	hdmi_sound: hdmi-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,name = "sun8i-h3-hdmi";
-+		simple-audio-card,mclk-fs = <128>;
-+		simple-audio-card,frame-inversion;
-+		status = "disabled";
++&hdmi_sound {
++	status = "okay";
++};
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&hdmi>;
-+		};
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s2>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <32>;
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -806,6 +825,7 @@ csi: camera@1cb0000 {
- 		};
+ &i2c1 {
+ 	status = "okay";
+ };
+@@ -107,6 +111,10 @@ &i2c1_pins {
+ 	bias-pull-up;
+ };
  
- 		hdmi: hdmi@1ee0000 {
-+			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun8i-h3-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
- 			reg = <0x01ee0000 0x10000>;
++&i2s2 {
++	status = "okay";
++};
++
+ &mdio {
+ 	ext_rmii_phy1: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.25.1
 
