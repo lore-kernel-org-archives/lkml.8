@@ -2,120 +2,316 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A48C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8344EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB6520826
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5599C20674
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Dw2tzH9G"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QZyIOirx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgGDJ4k (ORCPT
+        id S1727094AbgGDKA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 05:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGDJ4j (ORCPT
+        Sat, 4 Jul 2020 06:00:28 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:61441 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgGDKA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 05:56:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF62BC08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 02:56:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d194so12792025pga.13
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
+        Sat, 4 Jul 2020 06:00:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
-        b=Dw2tzH9GMo3t6v2OWZ2FKYd50INhuVgAYZ1RNNDAkmfjXIxgihFgvl5W0/JEsbpCfM
-         2I2pMwGx+TgY4MyXNoIZABQt8fDBH3vKxvGq8E7jkjhrpx/HK1uPL3Pgv3uR/spZBERO
-         5ZNV4b2Rebq9XiKdCHHOP9a6crADnQ6DvGrqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
-        b=QTNZnuXq4xohOVb4ujX9bXJcsZLUZZNmI43QzFItIhWzhm9nOQwH/04nzI6/QfEAcs
-         BR6KYKOBdEQai1QeckR3q1r45xZe8Ss8STub91Ekkst6iSvIV5dZsFrJHq+1HHixJj39
-         JI9S+QtFHytuXnKrukBQDtMUazigUuwXkAP8s3CIb+vZWt1WpJltPhWFbCAJN2No+tzT
-         5iXW7AEihVfCAvIuBKfa2iYBQw9DqB31TAgJWyhM3e6VTjLUpB/99WYN55p6yV8BhV+V
-         naNIdDgDysMq/veArT0Wg12S9OFP4RXXCAQ6Ccqd1jimtM+yxvcC8HK/lDGMocxVGucX
-         rI3Q==
-X-Gm-Message-State: AOAM5322nj8Ec59BJ+jBcLHjQsjx4OD1vF3gjSDEYzAWVVYtqkH/ItGI
-        J7QVhDazhrnKjB0W0l+WMuo4Fw==
-X-Google-Smtp-Source: ABdhPJx32emjYkDYX9utXROC3YKYNpVwdpnluoe5KD8t6o547/d5ZwrxwXPuuLtCp+COopbqa/lffQ==
-X-Received: by 2002:a62:5c02:: with SMTP id q2mr37304228pfb.232.1593856599134;
-        Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:bdf4:3289:4b66:dcc0])
-        by smtp.gmail.com with ESMTPSA id t184sm14302575pfd.49.2020.07.04.02.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 02:56:38 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        mylene.josserand@collabora.com, Robin Murphy <robin.murphy@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
-Date:   Sat,  4 Jul 2020 15:26:18 +0530
-Message-Id: <20200704095618.72371-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593856827; x=1625392827;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=lj8o6qIN9a5pDYqi9LY2WR3SoxcoKhnmVOZo6/K7oAk=;
+  b=QZyIOirxWJ3JnirVwHa8HeI9bglCw6m1rxbCJMV56NgOleVGW5gqJr96
+   IOpJMY+FUqewSqcwUKSReN8iMQMB2lGgYbxS1PSi22he4mrUWY2LpKehq
+   eX3sWIWMyvUN9fil5p3k2/jibT7/nHs8Fx5J4qsKPOFsCSMP5lwHlF1g5
+   s=;
+IronPort-SDR: yZO/v/8BUrG7uTbSiMhU3mB+iCTkCteBPb7wBaiHZWcdyUtmoRzQkD/oYVm3WGcuO502Ntn6el
+ XR1KK6BWDKXw==
+X-IronPort-AV: E=Sophos;i="5.75,311,1589241600"; 
+   d="scan'208";a="55995232"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 04 Jul 2020 10:00:26 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id E5327A20C4;
+        Sat,  4 Jul 2020 10:00:25 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sat, 4 Jul 2020 10:00:25 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.214) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sat, 4 Jul 2020 10:00:16 +0000
+Subject: Re: [PATCH v4 04/18] nitro_enclaves: Init PCI device driver
+To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-5-andraprs@amazon.com>
+ <d8fe8668-15c3-fe3b-1ad1-eb939a4977c2@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <9b9f0ab6-8413-abdf-0829-7b4563593e86@amazon.com>
+Date:   Sat, 4 Jul 2020 13:00:10 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d8fe8668-15c3-fe3b-1ad1-eb939a4977c2@amazon.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D25UWB004.ant.amazon.com (10.43.161.180) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rk3288 and rk3288w have a usb host0 ohci controller.
 
-Although rk3288 ohci doesn't actually work on hardware, but
-rk3288w ohci can work well.
 
-So add usb host0 ohci node in rk3288 dtsi and the quirk in
-ohci platform driver will disable ohci on rk3288.
+On 02/07/2020 18:09, Alexander Graf wrote:
+>
+>
+> On 22.06.20 22:03, Andra Paraschiv wrote:
+>> The Nitro Enclaves PCI device is used by the kernel driver as a means of
+>> communication with the hypervisor on the host where the primary VM and
+>> the enclaves run. It handles requests with regard to enclave lifetime.
+>>
+>> Setup the PCI device driver and add support for MSI-X interrupts.
+>>
+>> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+>> Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>> ---
+>> Changelog
+>>
+>> v3 -> v4
+>>
+>> * Use dev_err instead of custom NE log pattern.
+>> * Update NE PCI driver name to "nitro_enclaves".
+>>
+>> v2 -> v3
+>>
+>> * Remove the GPL additional wording as SPDX-License-Identifier is
+>> =A0=A0 already in place.
+>> * Remove the WARN_ON calls.
+>> * Remove linux/bug include that is not needed.
+>> * Update static calls sanity checks.
+>> * Remove "ratelimited" from the logs that are not in the ioctl call
+>> =A0=A0 paths.
+>> * Update kzfree() calls to kfree().
+>>
+>> v1 -> v2
+>>
+>> * Add log pattern for NE.
+>> * Update PCI device setup functions to receive PCI device data =
 
-Cc: William Wu <william.wu@rock-chips.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- Updated NOTE comments.
+>> structure and
+>> =A0=A0 then get private data from it inside the functions logic.
+>> * Remove the BUG_ON calls.
+>> * Add teardown function for MSI-X setup.
+>> * Update goto labels to match their purpose.
+>> * Implement TODO for NE PCI device disable state check.
+>> * Update function name for NE PCI device probe / remove.
+>> ---
+>> =A0 drivers/virt/nitro_enclaves/ne_pci_dev.c | 261 +++++++++++++++++++++=
+++
+>> =A0 1 file changed, 261 insertions(+)
+>> =A0 create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
+>>
+>> diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c =
 
- arch/arm/boot/dts/rk3288.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+>> b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+>> new file mode 100644
+>> index 000000000000..235fa3ecbee2
+>> --- /dev/null
+>> +++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+>> @@ -0,0 +1,261 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights =
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0cd88774db95..f0774d9afb67 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -614,7 +614,16 @@ usb_host0_ehci: usb@ff500000 {
- 		status = "disabled";
- 	};
- 
--	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-+	/* NOTE: doesn't work on RK3288, but fixed on RK3288W */
-+	usb_host0_ohci: usb@ff520000 {
-+		compatible = "generic-ohci";
-+		reg = <0x0 0xff520000 0x0 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST0>;
-+		phys = <&usbphy1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
- 
- 	usb_host1: usb@ff540000 {
- 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
--- 
-2.25.1
+>> Reserved.
+>> + */
+>> +
+>> +/* Nitro Enclaves (NE) PCI device driver. */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/list.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/module.h>
+>> +#include <linux/nitro_enclaves.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/types.h>
+>> +#include <linux/wait.h>
+>> +
+>> +#include "ne_misc_dev.h"
+>> +#include "ne_pci_dev.h"
+>> +
+>> +#define NE_DEFAULT_TIMEOUT_MSECS (120000) /* 120 sec */
+>> +
+>> +static const struct pci_device_id ne_pci_ids[] =3D {
+>> +=A0=A0=A0 { PCI_DEVICE(PCI_VENDOR_ID_AMAZON, PCI_DEVICE_ID_NE) },
+>> +=A0=A0=A0 { 0, }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(pci, ne_pci_ids);
+>> +
+>> +/**
+>> + * ne_setup_msix - Setup MSI-X vectors for the PCI device.
+>> + *
+>> + * @pdev: PCI device to setup the MSI-X for.
+>> + *
+>> + * @returns: 0 on success, negative return value on failure.
+>> + */
+>> +static int ne_setup_msix(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +=A0=A0=A0 int nr_vecs =3D 0;
+>> +=A0=A0=A0 int rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0 if (!ne_pci_dev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>> +
+>> +=A0=A0=A0 nr_vecs =3D pci_msix_vec_count(pdev);
+>> +=A0=A0=A0 if (nr_vecs < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D nr_vecs;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in getting vec count [=
+rc=3D%d]\n", =
+
+>> rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return rc;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 rc =3D pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_=
+MSIX);
+>> +=A0=A0=A0 if (rc < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in alloc MSI-X vecs [r=
+c=3D%d]\n", rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return rc;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 return 0;
+>> +}
+>> +
+>> +/**
+>> + * ne_teardown_msix - Teardown MSI-X vectors for the PCI device.
+>> + *
+>> + * @pdev: PCI device to teardown the MSI-X for.
+>> + */
+>> +static void ne_teardown_msix(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +
+>> +=A0=A0=A0 if (!ne_pci_dev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>> +
+>> +=A0=A0=A0 pci_free_irq_vectors(pdev);
+>> +}
+>> +
+>> +/**
+>> + * ne_pci_dev_enable - Select PCI device version and enable it.
+>> + *
+>> + * @pdev: PCI device to select version for and then enable.
+>> + *
+>> + * @returns: 0 on success, negative return value on failure.
+>> + */
+>> +static int ne_pci_dev_enable(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 u8 dev_enable_reply =3D 0;
+>> +=A0=A0=A0 u16 dev_version_reply =3D 0;
+>> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +
+>> +=A0=A0=A0 if (!ne_pci_dev || !ne_pci_dev->iomem_base)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>
+> How can this ever happen?
+
+This check and the following one are part of that checks added before =
+
+for the situations that shouldn't happen, only if buggy system or broken =
+
+logic at all. Removed the checks.
+
+Thanks,
+Andra
+
+>
+>> +
+>> +=A0=A0=A0 iowrite16(NE_VERSION_MAX, ne_pci_dev->iomem_base + NE_VERSION=
+);
+>> +
+>> +=A0=A0=A0 dev_version_reply =3D ioread16(ne_pci_dev->iomem_base + NE_VE=
+RSION);
+>> +=A0=A0=A0 if (dev_version_reply !=3D NE_VERSION_MAX) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in pci dev version cmd=
+\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EIO;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 iowrite8(NE_ENABLE_ON, ne_pci_dev->iomem_base + NE_ENABLE);
+>> +
+>> +=A0=A0=A0 dev_enable_reply =3D ioread8(ne_pci_dev->iomem_base + NE_ENAB=
+LE);
+>> +=A0=A0=A0 if (dev_enable_reply !=3D NE_ENABLE_ON) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in pci dev enable cmd\=
+n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EIO;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 return 0;
+>> +}
+>> +
+>> +/**
+>> + * ne_pci_dev_disable - Disable PCI device.
+>> + *
+>> + * @pdev: PCI device to disable.
+>> + */
+>> +static void ne_pci_dev_disable(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 u8 dev_disable_reply =3D 0;
+>> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +=A0=A0=A0 const unsigned int sleep_time =3D 10; /* 10 ms */
+>> +=A0=A0=A0 unsigned int sleep_time_count =3D 0;
+>> +
+>> +=A0=A0=A0 if (!ne_pci_dev || !ne_pci_dev->iomem_base)
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>
+> How can this ever happen?
+>
+>
+> Alex
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
