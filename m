@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F84BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2032073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A722084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=domanski-co.20150623.gappssmtp.com header.i=@domanski-co.20150623.gappssmtp.com header.b="j0Y9E/FA"
+	dkim=pass (2048-bit key) header.d=domanski-co.20150623.gappssmtp.com header.i=@domanski-co.20150623.gappssmtp.com header.b="J4dfikkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgGDAoo (ORCPT
+        id S1726787AbgGDArv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 20:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53140 "EHLO
+        Fri, 3 Jul 2020 20:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGDAoo (ORCPT
+        with ESMTP id S1726455AbgGDAru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 20:44:44 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95472C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 17:44:43 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l12so35964473ejn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 17:44:43 -0700 (PDT)
+        Fri, 3 Jul 2020 20:47:50 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3132CC061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 17:47:50 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id rk21so36034481ejb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 17:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=domanski-co.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=vs1k8R+QxPoBfvYjlX3BrpdDaB1fKsGp6W2GdBM50yA=;
-        b=j0Y9E/FA1bRZQNpUWk61q0LwIumu6gwKrZf/awnj2qiXMmTpRf57zmvCJ5eyC5WBx1
-         qaM9sdEYCNB3iO/ORJHV7+oTideoAWEQ+z65FDEm4p10d9NRilxckCiIHBZfHR3sgYb2
-         rW8hKn0qQiHfQPflRQgDY6JHG2j8lzdA79PZ/sAnRLtXwDGM3flgtOGQPnSjYxJRouAU
-         I0YzNHKivlVptZBZl/7YozP3QaDUM4IB4QubLKNz4lMy4SBvNFm2Qlw25lKcVD9m40Se
-         K8dDcFHK99JX9OsMS3lLXB1yl01eyxvPPI8QZG79VHwEMFWm4YaYFXSVJjNbhEmJhCIy
-         m1rw==
+        b=J4dfikkqm90RVa+WaWPe+cuouPI9p45LeQdlU3gToiFUsWhXM9RkoeRFAFXRRmKtYf
+         o7fUeEcKEPPrByXvvj+cTkAYH6a3VsYwHA9CAtz3tdcbn5eB2mxTk20ZMik+IQDwaLn0
+         AIG70FiakFzvvGSzUBc0AW0ZG/5yLuDle0DZu9JSlRz9oMFwWqthBIP75jMFXt/zY/E6
+         oLy4z9DtZJCrzwLQn/MYTReH7w9kr+3chr8zDe0s2PyRWsUBIpJA4HGrf4WlmLOymCXO
+         O9tnDACwjvOwJMIxdJUC/EgZr2qB0oX9Ekm+YUVnhf5L7EELmHVrzFMv2CPFDyHGn/8j
+         PWGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=vs1k8R+QxPoBfvYjlX3BrpdDaB1fKsGp6W2GdBM50yA=;
-        b=Q5cX6ySYOFEKhDoI4nCdp5Hh6tvjqu8bA4Hv1sX9Gd3pGoeBmtRlmrUTS+WENBB8qS
-         uLkw4JridzHkiIDiwScwZMt8vwab6dxTxKa2ui7JCl8M1Zi19grgKcglPgww91C5k3q2
-         00PNaPEUITIJKW9Hjz18w4rRpXpSGnfIofYvJARM9wtTyYVNHGNBgq1iv6vOVClA4uAj
-         vcfvz8L2alUYm4SEfOu3VV/J3bUtz4b6ZOETIkUrwh+dT3I1wbNEv04W87arlqmypGs/
-         gNjJg21II2ptk9x1oJ4UncsTzfN2kRp3tq6rp45ihbqmyGGvbXBkufr2jk8vAMGanNcx
-         qV9Q==
-X-Gm-Message-State: AOAM532s+nme3zoJ9u0+IOxpXOykbpxKYKygTYftGlimhoCk+lSpNDkG
-        lOnVG971ltybYCsdTUbabDUnyB+l+zgVvTTj
-X-Google-Smtp-Source: ABdhPJwfXxJtaScsaT7Ebe7D0vhBVW0/3PVtgJ4h+gRjaCLBgoT41I6XEH7UccoYOVKyDSrZVnYGSg==
-X-Received: by 2002:a17:906:1688:: with SMTP id s8mr25237768ejd.164.1593823481809;
-        Fri, 03 Jul 2020 17:44:41 -0700 (PDT)
+        b=gS2pEchsScZ18USTmssE0VVT+O/vefsmxuTmd4nCwdyhrjAZYv6uJaJhUx6QpYMu77
+         TRUXrMaNr8rbKzm3hLgh39DTaMDvZKOtqN8fOyKR0+e2pRtXTtbniA4excRMyHM5YnwS
+         /VikWHLRhb9u2146Cd86l4PuDKAb6+uGJENQ6eVLJGt/Eri7OeXX38wCjQbrtTxy2LNC
+         T70mLzmiYUCSSdWN1mAIyoIIM9hL4lv4dBCq4t8fM5/Unfpc4uBw85ALocCHRKvmn1Dn
+         4n7GTZg99Z5lmKaHuq4ZUwH/lIM6L2fKHTGU7A36PDQLoiRW4JtDDLdLX6texE8LJ00P
+         wrCg==
+X-Gm-Message-State: AOAM5311wAmopxn6qzYytTXvShAxFfGjOJMLBS+AfMpgXqSCr/J1tRFs
+        7X5V0MST92vlMl+wYtQCxWnnBbnV/tB1cuEY
+X-Google-Smtp-Source: ABdhPJxXSOwXdHqsoVJkpAVLG4vinOi5GieMe0f/VfWP+JYEKFKtRN+ZSjvHbPFP3nTVLyHnAhmwww==
+X-Received: by 2002:a17:906:d116:: with SMTP id b22mr11026546ejz.250.1593823668367;
+        Fri, 03 Jul 2020 17:47:48 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:4540:6b00:6900:489f:a320:1bb1:801e])
-        by smtp.gmail.com with ESMTPSA id bc23sm14227997edb.90.2020.07.03.17.44.41
+        by smtp.gmail.com with ESMTPSA id u17sm10321650eje.74.2020.07.03.17.47.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 17:44:41 -0700 (PDT)
+        Fri, 03 Jul 2020 17:47:47 -0700 (PDT)
 From:   =?UTF-8?q?Kamil=20Doma=C5=84ski?= <kamil@domanski.co>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jiri Kosina <jikos@kernel.org>,
@@ -67,8 +67,8 @@ Cc:     Jiri Kosina <jikos@kernel.org>,
         =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
         =?UTF-8?q?Kamil=20Doma=C5=84ski?= <kamil@domanski.co>
 Subject: [PATCH v3] HID: logitech-hidpp: add support for Logitech G533 headset
-Date:   Sat,  4 Jul 2020 02:43:48 +0200
-Message-Id: <20200704004348.382666-1-kamil@domanski.co>
+Date:   Sat,  4 Jul 2020 02:47:45 +0200
+Message-Id: <20200704004745.383271-1-kamil@domanski.co>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
