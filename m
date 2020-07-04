@@ -2,164 +2,138 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FB620885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AktzP1qp"
+	by mail.kernel.org (Postfix) with ESMTP id A1EC42145D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgGDUyk (ORCPT
+        id S1727878AbgGDU4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgGDUyk (ORCPT
+        Sat, 4 Jul 2020 16:56:41 -0400
+Received: from lilium.sigma-star.at ([109.75.188.150]:50074 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgGDU4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:54:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24989C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 13:54:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so10475271pfq.11
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 13:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q6PmxtU26J104QjdAPS4bilmwtEeT3TLjN53LBeepDs=;
-        b=AktzP1qpR1WTXWaM4qWySrlhq4kJmUcLMYC1PLSqylxGEGiNY1E94Y0AAvWsRRtxdu
-         jiF5ZkmWl+zCb/jYZdjSa0RfdHLGlat+epiUvLWYpype4rDZNhCT6DNeFJ1FxpXpiARR
-         JC/zRNwICw2Gcv/8eF7IEkDBizaiAOt7GllHNEGzZXl4WE7eeuwKMwvqkSMqxcnFZ+3O
-         oiHnP8xaRyRVWdkojMZRGsp4seXiqYdnmxwsgxYMtcwL/BjzOrIKGoLJgpe8It7sI66e
-         8ESbtoE29KhxPrLH334rsRjYj9ig22aUvxDY7mZ9FCwcnfIOnSh2eBq1w7ffSBezfuLf
-         XztQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q6PmxtU26J104QjdAPS4bilmwtEeT3TLjN53LBeepDs=;
-        b=mrfmCcxZmAbBNbbfSWWmbym3W8C5i/vQvRlVhSp4/8mAQOB6jaRBGFiuNmjJmaGOuW
-         rmYLVrJxRUrhptgV3LTV0poLt7tu5l0Wx6vvEghubCjzvlZbCTZN7Qx+02wJjjrf5RbY
-         Iqvdh0w2bDCEpQmYoZ97PpRvmCmNOVjnssrloNnyUoAgXu08mHAEjEPKjXD0kd0S9Ywe
-         3c9KUTPs+YNw+idw6WI3KaCswJQ/WDrefsTeIzVdDMINb8wKt3lST8pyZdSiU2PzJGQA
-         lrnEGMVt2aEEpOeG4UWahEDv8yy9xN4mOdK7xSbPrIu7laccsQo2w9Dtb4Zo8RtiW+UM
-         KCAA==
-X-Gm-Message-State: AOAM530vkOggfO9NOfrk/+VvmQ/Y1dE4uB09TehDQ69sJlFofRFHZe+q
-        rl17iblxKMw3uYN9pSuAUUtJjz6yB+XnqwyRAPFIvY68
-X-Google-Smtp-Source: ABdhPJypceqcB51zvTmovBbJigCVusomdHRfDBdDi8tBLMpZ58trq+8Lt/EYeqIcNZa4igFnzXGABuIH1VEBixCWmos=
-X-Received: by 2002:a05:6a00:790:: with SMTP id g16mr2359035pfu.36.1593896078764;
- Sat, 04 Jul 2020 13:54:38 -0700 (PDT)
+        Sat, 4 Jul 2020 16:56:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id 03F671819104B;
+        Sat,  4 Jul 2020 22:56:39 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id X0Mx8iv6AOr7; Sat,  4 Jul 2020 22:56:38 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id VXH1s3sMiXyH; Sat,  4 Jul 2020 22:56:38 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-kernel@vger.kernel.org
+Cc:     tj@kernel.org, gregkh@linuxfoundation.org, ebiederm@xmission.com,
+        dan.j.williams@intel.com, Richard Weinberger <richard@nod.at>
+Subject: [PATCH] [RFC] kernfs: Allow vm_ops->close() if VMA is never split
+Date:   Sat,  4 Jul 2020 22:56:19 +0200
+Message-Id: <20200704205619.11172-1-richard@nod.at>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <CAHp75Ve4O+OmVttjhtKepFWwZLU6tFMx5vNpPVJdB58mcLFm3w@mail.gmail.com>
- <613b-5f00e780-a9-10028e00@255553491>
-In-Reply-To: <613b-5f00e780-a9-10028e00@255553491>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 4 Jul 2020 23:54:22 +0300
-Message-ID: <CAHp75Ve7JO0xJzwODoNS6f_UcvNtWTTu9mJxWAE0xEyBpHqQSg@mail.gmail.com>
-Subject: Re: Writing to a const pointer: is this supposed to happen?
-To:     Kars Mulder <kerneldev@karsmulder.nl>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 4, 2020 at 11:32 PM Kars Mulder <kerneldev@karsmulder.nl> wrote:
-> On Saturday, July 04, 2020 16:39 CEST, Andy Shevchenko wrote:
-> > > I've searched for a function that parses an int from a string and
-> > > stores a pointer to the end; I can find some function simple_strtoul
-> > > that matches this criterion, but it's documented as
-> > >
-> > >     "This function has caveats. Please use kstrtoul instead."
-> > >
-> > > ... and kstrtoul does not store a pointer to the end. The documentation
-> > > of kstrtoul describes simple_strtoul as obsolete as well.
-> >
-> >
-> >  Where? We need to fix that, because using simple_strto*() is fairly legal
-> > in cases like this, but "has caveats".
->
-> In lib/vsprintf.c, the comments before the function's implementation say:
->
->     /**
->      * simple_strtoul - convert a string to an unsigned long
->      * @cp: The start of the string
->      * @endp: A pointer to the end of the parsed string will be placed here
->      * @base: The number base to use
->      *
->      * This function has caveats. Please use kstrtoul instead.
->      */
+10 years ago commit a6849fa1f7d7 ("sysfs: Fail bin file mmap if vma close=
+ is implemented.")
+removed support for vm_ops->close() for mmap on sysfs.
+As far I understand the reason is that due to the wrapping in kernfs
+every VMA split operation needs to be tracked to call vm_ops->close()
+for all fragments. This is not feasible with reasonable effort.
 
-This is correct.
+Since commit 31383c6865a5 ("mm, hugetlbfs: introduce ->split() to vm_oper=
+ations_struct")
+we can get notified as soon a VMA is split, this can help to relax the re=
+striction.
+So I propose to allow having a custom close under the condition that a
+VMA cannot get split.
 
-> Many variants upon kstrtoul, such as kstrtoull, defined in lib/kstrtox.c,
-> describe the simple_strtoull function as obsolete:
->
->     /**
->      * kstrtoull - convert a string to an unsigned long long
->      * [...]
->      *
->      * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ fs/kernfs/file.c | 42 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 8 deletions(-)
 
->      * Used as a replacement for the obsolete simple_strtoull. Return code must
->      * be checked.
->      */
+diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+index 06b342d8462b..82b09e72acff 100644
+--- a/fs/kernfs/file.c
++++ b/fs/kernfs/file.c
+@@ -347,6 +347,38 @@ static void kernfs_vma_open(struct vm_area_struct *v=
+ma)
+ 	kernfs_put_active(of->kn);
+ }
+=20
++static void kernfs_vma_close(struct vm_area_struct *vma)
++{
++	struct file *file =3D vma->vm_file;
++	struct kernfs_open_file *of =3D kernfs_of(file);
++
++	if (!of->vm_ops)
++		return;
++
++	if (!kernfs_get_active(of->kn))
++		return;
++
++	if (of->vm_ops->close)
++		of->vm_ops->close(vma);
++
++	kernfs_put_active(of->kn);
++}
++
++static int kernfs_vma_split(struct vm_area_struct *vma, unsigned long ad=
+dr)
++{
++	struct file *file =3D vma->vm_file;
++	struct kernfs_open_file *of =3D kernfs_of(file);
++
++	/*
++	 * We cannot keep track of split operations,
++	 * so refuse splitting a VMA if someone uses close.
++	 */
++	if (of->vm_ops && of->vm_ops->close)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static vm_fault_t kernfs_vma_fault(struct vm_fault *vmf)
+ {
+ 	struct file *file =3D vmf->vma->vm_file;
+@@ -457,6 +489,8 @@ static struct mempolicy *kernfs_vma_get_policy(struct=
+ vm_area_struct *vma,
+=20
+ static const struct vm_operations_struct kernfs_vm_ops =3D {
+ 	.open		=3D kernfs_vma_open,
++	.close		=3D kernfs_vma_close,
++	.split		=3D kernfs_vma_split,
+ 	.fault		=3D kernfs_vma_fault,
+ 	.page_mkwrite	=3D kernfs_vma_page_mkwrite,
+ 	.access		=3D kernfs_vma_access,
+@@ -505,14 +539,6 @@ static int kernfs_fop_mmap(struct file *file, struct=
+ vm_area_struct *vma)
+ 	if (of->mmapped && of->vm_ops !=3D vma->vm_ops)
+ 		goto out_put;
+=20
+-	/*
+-	 * It is not possible to successfully wrap close.
+-	 * So error if someone is trying to use close.
+-	 */
+-	rc =3D -EINVAL;
+-	if (vma->vm_ops && vma->vm_ops->close)
+-		goto out_put;
+-
+ 	rc =3D 0;
+ 	of->mmapped =3D true;
+ 	of->vm_ops =3D vma->vm_ops;
+--=20
+2.26.2
 
-This and similar are not correct. 1/ They are not replacement per se
-(because of different behaviour). 2/ They simple_strto*() are not
-obsoleted.
-
-Can you correct all places you found and make it consistent?
-
-> I seem to have been slightly inaccurate about my claim that "kstrtoul"
-> describes simple_strtoul as "obsolete" though, because in the specific
-> case of kstrtoul, include/linux/kernel.h only says:
->
->     /**
->      * kstrtoul - convert a string to an unsigned long
->      * [...]
->      *
->      * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
->      * Used as a replacement for the simple_strtoull. Return code must be checked.
->     */
-
-> (Also, there may be a documentation error here: all kstrto* functions in
-> kstrtox.c and kernel.h describe themselves as replacements of simple_strtoull.
-> E.g. kstrtol and kstrtoul also describe themselves as replacements of
-> simple_strtoull rather than as a replacements of simple_strtol and
-> simple_strtoul respectively.)
->
-> By the way, I found the documentation of the caveat somewhere in
-> include/linux/kernel.h:
-
-Yes, that's what has been added lately to clarify the usage of
-simple_strto*() vs. kstrto*().
-
->     /*
->      * Use kstrto<foo> instead.
->      *
->      * NOTE: simple_strto<foo> does not check for the range overflow and,
->      *   depending on the input, may give interesting results.
->      *
->      * Use these functions if and only if you cannot use kstrto<foo>, because
->      * the conversion ends on the first non-digit character, which may be far
->      * beyond the supported range. It might be useful to parse the strings like
->      * 10x50 or 12:21 without altering original string or temporary buffer in use.
->      * Keep in mind above caveat.
->      */
-
-
--- 
-With Best Regards,
-Andy Shevchenko
