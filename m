@@ -2,191 +2,120 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44977C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D7B2158C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196AB2158C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+DSm09D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rm9vaEvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgGDO44 (ORCPT
+        id S1727104AbgGDO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
+        Sat, 4 Jul 2020 10:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGDO4z (ORCPT
+        with ESMTP id S1726643AbgGDO5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:56:55 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC90BC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:56:55 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id h16so6156304ilj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:56:55 -0700 (PDT)
+        Sat, 4 Jul 2020 10:57:03 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2069DC08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:57:03 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t15so745297pjq.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:57:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xot0KZ1EhWhfJq9HViGtN+bjZ+WybGEZJy8V2k8H9TI=;
-        b=L+DSm09D9IOs8fQMjRPagxmF/LrDsnvEidAHM5GlNEaZpGydFRJxhRnCVJ6Bb7WH6S
-         wVWExwHDrG+zZpuoS0PMpd54HCnUOaoN5Zuo1w/1oGzNNn2250lFWFx9033HIeYa1W9M
-         Usimdpt6GaSUGN3MRZJdX8bVuYNRS8K0aIxrSZwoiwch0IdJdJvhf4xpDGYdB32JzoCb
-         Q8DZtKOyK/PPqBsFMxWPp6stlDrMaXt3OvFOaM1LyQaTHFVqJFRsqIQU2G3UvlY+u2GZ
-         /UKe30xKzAQNaZgSCTTbPnFLmb+oGzTC+PvPN29jlXf9glwG7knBaK0MWnIsE3Uv0k1r
-         gt7w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T5ivJGFMS8l655Uv/RE5CHugIfJFOuIIYbEDilXGXss=;
+        b=rm9vaEvuxYykAd3uwe48eVOyoNQaP+YHUjVUtF4riLnU5be9sJT+o4erWOH00v/dGO
+         Jf4upm8oiedECEDJ2KGSt+HXAdvHQMP5dCINSHQN7p/cM3o4lw6cyw0v8rfuINFa864X
+         z/1t/It7fWOTRRv30MoQ7AOEWunZCK2ks8cmQGKHaqpm4DpkVk90aLN+mqEFwXbVFfRa
+         VzWVjsPfm5pIpZTRgidT2sNhCW+bhFDStDCCiEibq0z0Dp/d4OJLeBgx1M9lIVwZEaNo
+         EepAxEb/5n7900vJzXMVFUA9E2d/gKgJyhnpXSLz5SADP/EyYf4jopRWF+oniFHbj7vn
+         xlGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xot0KZ1EhWhfJq9HViGtN+bjZ+WybGEZJy8V2k8H9TI=;
-        b=nBAoWB/80gOrC+2SGBWgejVnliCBzFjDkQLnrm7+9X1cYSPSPFHkGq+EHX3Otnbozu
-         fKPZ4b1fqQJO2IuHkY7Upa2lK9oSlfLNytS5g9leYGC3q2b5bNxtvfRNcpmvaCZH+6wm
-         GawERQG5RvRuwB241/R9WhR1hx0/zu3qIDseRLIQQqCHhMLh3hMn43cExP4CrXKsUdxk
-         1+GyC4Q6T2OM15g9pOUBI/iObVmyl3e+nRDf3Lmsc+dHBWHa36JyDJ6Bai27eW7LUirx
-         szL1g5eAec82S4CTuoQtkm7gIrbsPj88SDOtQW5q12pnLu7Nl9z/yHgIY0qkZdeAMTtr
-         7WDw==
-X-Gm-Message-State: AOAM5316PYcmcUb8JK8pXnJRu0JWCczr74EUwURCHqhy42+B+3R7nWBX
-        YSLQIDRFWzA9ScUkDWfAf0BF7Xu+TREFWqXLqMg=
-X-Google-Smtp-Source: ABdhPJzZI6M2X2Py25VI8P/xoBsFbu293qqnEY1FZx4xraT+OgFvgXhjvPq2ppWX6qK158wzfmgJldJ1NM4LwmqYN0I=
-X-Received: by 2002:a05:6e02:1250:: with SMTP id j16mr22791618ilq.293.1593874614973;
- Sat, 04 Jul 2020 07:56:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T5ivJGFMS8l655Uv/RE5CHugIfJFOuIIYbEDilXGXss=;
+        b=kybJPrk4TGftzAsoAUD11B8FtcFRK2szmV6bGF1n4cCg30JhoMnfrCCMYV+Em3fcUL
+         bHE6w1FkHM4muuOfeWyMwd3VSHvUP0JE8ZlSUiv9hgvinNJT6hsRKos1yFYYj+uguTqd
+         Ze/rTYiKLaSDDO9IA/FFmbdrf9Unn8aMjTuhSG/ailMRMHjTgE4+o3XQFkUk7sQnWLix
+         8pxXrbRF/WF8L6ZofAaqlLoVSKpT1OnciuMhO2giAVEqo3RJHXkL1Yuwdg6ATXjfF1H5
+         2ZBUJYb3AZeyik5tSj+y9Bs/g3fCfYqwdI3V0vOzuHB4KZQocHmNG4Y2CQKMNACCqF56
+         48aA==
+X-Gm-Message-State: AOAM530A9+rmPYmFVxEk7tPVTRfLDcHxM1ELWfqnjYXm7BP5BEE/TDhV
+        BtOKIBowRc10mLnMKYCUc20aVVnZqA==
+X-Google-Smtp-Source: ABdhPJztNX703knSvL8QCwuvzOGC8mD18J64XhuJv9KJ2a95oXPCL0I0ukJbOGB2y2JUxUagBSuY7w==
+X-Received: by 2002:a17:90a:191b:: with SMTP id 27mr45064379pjg.158.1593874622508;
+        Sat, 04 Jul 2020 07:57:02 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
+        by smtp.gmail.com with ESMTPSA id f14sm13764448pjq.36.2020.07.04.07.56.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jul 2020 07:57:01 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 20:26:55 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/9] bus: mhi: core: Trigger a host resume when device
+ vote is requested
+Message-ID: <20200704145655.GD3066@Mani-XPS-13-9360>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+ <1593448782-8385-5-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-References: <20200704102535.189647-1-peron.clem@gmail.com> <20200704102535.189647-14-peron.clem@gmail.com>
- <20200704121301.jfd3m3jnlghmddg4@gilmour.lan>
-In-Reply-To: <20200704121301.jfd3m3jnlghmddg4@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sat, 4 Jul 2020 16:56:44 +0200
-Message-ID: <CAJiuCceMS__bNVO54E2OYnqnaOAL9pGkxRo4XAABiyqagaEtmw@mail.gmail.com>
-Subject: Re: [PATCH v2 13/14] [DO NOT MERGE] arm64: dts: allwinner: h6: Add
- GPU OPP table
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593448782-8385-5-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Mon, Jun 29, 2020 at 09:39:37AM -0700, Bhaumik Bhatt wrote:
+> It is possible that the host may be suspending or suspended and may
+> not allow an outgoing device wake assert immediately if a client has
+> requested for it. Ensure that the host wakes up and allows for it so
+> the client does not have to wait for an external trigger or an
+> outgoing packet to be queued for the host resume to occur.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 
-On Sat, 4 Jul 2020 at 14:13, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Sat, Jul 04, 2020 at 12:25:34PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Add an Operating Performance Points table for the GPU to
-> > enable Dynamic Voltage & Frequency Scaling on the H6.
-> >
-> > The voltage range is set with minival voltage set to the target
-> > and the maximal voltage set to 1.2V. This allow DVFS framework to
-> > work properly on board with fixed regulator.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> That patch seems reasonable, why shouldn't we merge it?
+Remove the term 'vote' from the commit subject, it doesn't seem right. How about
+"Trigger host resume if already suspended during mhi_device_get()"? With that
+fixed,
 
-I didn't test it a lot and last time I did, some frequencies looked unstabl=
-e.
-https://lore.kernel.org/patchwork/cover/1239739/
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This series adds regulator support to Panfrost devfreq, I will send a
-new one if DVFS on the H6 GPU is stable.
+Thanks,
+Mani
 
-I got this running glmark2 last time
-# glmark2-es2-drm
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    glmark2 2017.07
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    OpenGL Information
-    GL_VENDOR:     Panfrost
-    GL_RENDERER:   Mali T720 (Panfrost)
-    GL_VERSION:    OpenGL ES 2.0 Mesa 20.0.5
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-[   93.550063] panfrost 1800000.gpu: GPU Fault 0x00000088 (UNKNOWN) at
-0x0000000080117100
-[   94.045401] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-config=3D0x3700, status=3D0x8, head=3D0x21d6c00, tail=3D0x21d6c00,
-sched_job=3D00000000e3c2132f
-
-[  328.871070] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000000000000
-[  328.871070] Reason: TODO
-[  328.871070] raw fault status: 0xAA0003C2
-[  328.871070] decoded fault status: SLAVE FAULT
-[  328.871070] exception type 0xC2: TRANSLATION_FAULT_LEVEL2
-[  328.871070] access type 0x3: WRITE
-[  328.871070] source id 0xAA00
-[  329.373327] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-config=3D0x3700, status=3D0x8, head=3D0xa1a4900, tail=3D0xa1a4900,
-sched_job=3D000000007ac31097
-[  329.386527] panfrost 1800000.gpu: js fault, js=3D0,
-status=3DDATA_INVALID_FAULT, head=3D0xa1a4c00, tail=3D0xa1a4c00
-[  329.396293] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-config=3D0x3700, status=3D0x58, head=3D0xa1a4c00, tail=3D0xa1a4c00,
-sched_job=3D0000000004c90381
-[  329.411521] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000000000000
-[  329.411521] Reason: TODO
-[  329.411521] raw fault status: 0xAA0003C2
-[  329.411521] decoded fault status: SLAVE FAULT
-[  329.411521] exception type 0xC2: TRANSLATION_FAULT_LEVEL2
-[  329.411521] access type 0x3: WRITE
-[  329.411521] source id 0xAA00
-
-Regards,
-Clement
-
->
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++++
-> >  1 file changed, 80 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index 8f514a2169aa..a69f9e09a829 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -174,6 +174,7 @@ gpu: gpu@1800000 {
-> >                       clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-> >                       clock-names =3D "core", "bus";
-> >                       resets =3D <&ccu RST_BUS_GPU>;
-> > +                     operating-points-v2 =3D <&gpu_opp_table>;
-> >                       #cooling-cells =3D <2>;
-> >                       status =3D "disabled";
-> >               };
-> > @@ -1036,4 +1037,83 @@ map0 {
-> >                       };
-> >               };
-> >       };
-> > +
-> > +     gpu_opp_table: gpu-opp-table {
-> > +             compatible =3D "operating-points-v2";
-> > +
-> > +             opp@216000000 {
-> > +                     opp-hz =3D /bits/ 64 <216000000>;
-> > +                     opp-microvolt =3D <810000 810000 1200000>;
-> > +             };
->
-> All those nodes will create DTC warnings though.
->
-> Maxime
+> ---
+>  drivers/bus/mhi/core/pm.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 5e3994e..74c5cb1 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -1115,6 +1115,9 @@ void mhi_device_get(struct mhi_device *mhi_dev)
+>  
+>  	mhi_dev->dev_wake++;
+>  	read_lock_bh(&mhi_cntrl->pm_lock);
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl, false);
+> +
+>  	mhi_cntrl->wake_get(mhi_cntrl, true);
+>  	read_unlock_bh(&mhi_cntrl->pm_lock);
+>  }
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
