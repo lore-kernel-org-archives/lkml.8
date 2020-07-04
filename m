@@ -2,467 +2,114 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29827C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD82CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35CB208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593833716;
-	bh=wdAe2BkcZ0TFsD5d7hI54LAGx9RtXaZJnX4qqwnrhoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfbH9+Zhbwg2+Ef429TSwQsh6dw7483NhU5M90hdBpMRg7ec1SIWdrUeuQSOnLgy5
-	 8QHWLomQVMgnXaoxob8hQH1IT/gtLZAA28WFJMzGHpini3rOG1qXTK7OWPfr5/RV4m
-	 QN1L5P/PfkzQO1qKanAK4Ay149hmJ/+HXDITx0uI=
+	by mail.kernel.org (Postfix) with ESMTP id BD2AC208C7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCQdG3Sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgGDDfO (ORCPT
+        id S1727064AbgGDDoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 23:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgGDDfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 23:35:14 -0400
-Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A1552084C;
-        Sat,  4 Jul 2020 03:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593833713;
-        bh=wdAe2BkcZ0TFsD5d7hI54LAGx9RtXaZJnX4qqwnrhoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgIo4xGRFdkyTDJ5H3lBDcFVhp2rYHPKHRKQfbpu0H42fyODtN6dDcCEOB3/MGcwF
-         HKIIgVb1EPxYUAcHwllCyJkHVr9Pp72R47v9lWpjjsKPfZtSjT8pM+0nIv8L2vlYuW
-         jnz+pTc7ZoegC9hsmAFmhndD+Wi3TDYSv5wthpV8=
-From:   guoren@kernel.org
-To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
-        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
-        me@packi.ch, bjorn.topel@gmail.com, atish.patra@wdc.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, guoren@kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH V1 5/5] riscv: Add uprobes supported
-Date:   Sat,  4 Jul 2020 03:34:19 +0000
-Message-Id: <1593833659-26224-6-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593833659-26224-1-git-send-email-guoren@kernel.org>
-References: <1593833659-26224-1-git-send-email-guoren@kernel.org>
+        Fri, 3 Jul 2020 23:44:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgGDDoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 23:44:21 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0300EC061794;
+        Fri,  3 Jul 2020 20:44:21 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id y13so16316907ybj.10;
+        Fri, 03 Jul 2020 20:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=yOpzu2a4BTeDbI4M3JEE9Dpc5QS3zg/zl2GIwbh4czo=;
+        b=LCQdG3SmuHJBrZG2CCpfB02smzGeQvQYGKkMRJcPvA9WkmmmIoxEQc7SglHM7bW6rA
+         NvXvrz+0EEq49zDX/Vxs04zvUszC61eIZHe8F0SVHUZISdtugsMJh7H3EVN2m/JBV8Dp
+         F9mAJz0ktePlY4I8N+hUQ04RsXZSbXT3AXlZh1Me1+Aswd4wrxEiHXzT/nl6RTxfsTrz
+         kgcus+FYmHKGjlkcWhYG+RlJ8hAgdqkQYE8ntnr2YyqltIVRkkaZ0AkWMk2o0Prc/CSb
+         n4hqu8C+wl5Ob62cho6jTQ1I5RQ5+ZVFTCI5P/YHbGJenyBp2SmLEIb+OkasYac4+QpM
+         5i9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yOpzu2a4BTeDbI4M3JEE9Dpc5QS3zg/zl2GIwbh4czo=;
+        b=qS4FGACHlb87F/pv9zsoEzxZhtCk/5WUyNo0opzv9xWMXzDKr+3qx6VSA6mNi1V29u
+         hjvAl12YgDGxdsbNBcrxaCPcobA/eGirL8BU2wAfnACPS0H4/2NSYhAxkSuuzx/FZZc9
+         XlTU/edl9+mBjT/uB5ij62M0PtDBmIVOJeQd9CPZ9z/lUalg5JbI/ynRkmo0R7sCDmUc
+         IBLlPSbRPiBq3QPFzQHP4XlRQOUkdY65nAqci/UThbo7eTGvdVP7CV/yEHj4nBkjz9JF
+         AoQQpN/r/uDkghPwSAF3v5jQLb8HGHV0AmcZD6k7wyhwjCUg7uCyndYe3NgzSHo/KYVM
+         TZmw==
+X-Gm-Message-State: AOAM533D2wnMVtnuvx+4CfSL9/Wb5RgJpQS00Pp78wpW8IxrdIb8706K
+        WMpT80PnSkycC1SZgSdqyZSTFabml6Z0TEDNWD2hifc7
+X-Google-Smtp-Source: ABdhPJwzp9uvAMJY4gSmmPjGFRYuQyjDwbG99DjKonKdkshT0ZIxPuEcaWCEhiam+4QgKud2rGM7x2Bnzp7az318Noo=
+X-Received: by 2002:a25:bc81:: with SMTP id e1mr60463450ybk.375.1593834260097;
+ Fri, 03 Jul 2020 20:44:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Steve French <smfrench@gmail.com>
+Date:   Fri, 3 Jul 2020 22:44:08 -0500
+Message-ID: <CAH2r5msVSYHHt5y9eCrXJCBiNJEmpkVEF+iHuqTfsM9vQxw+5Q@mail.gmail.com>
+Subject: [GIT PULL] CIFS/SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+Please pull the following changes since commit
+9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
-This patch adds support for uprobes on riscv architecture.
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-Just like kprobe, it support single-step and simulate instructions.
+are available in the Git repository at:
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Cc: Patrick Stählin <me@packi.ch>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: Björn Töpel <bjorn.topel@gmail.com>
----
- arch/riscv/Kconfig                   |   3 +
- arch/riscv/include/asm/processor.h   |   1 +
- arch/riscv/include/asm/thread_info.h |   4 +-
- arch/riscv/include/asm/uprobes.h     |  40 ++++++++
- arch/riscv/kernel/probes/Makefile    |   1 +
- arch/riscv/kernel/probes/uprobes.c   | 186 +++++++++++++++++++++++++++++++++++
- arch/riscv/kernel/signal.c           |   3 +
- arch/riscv/kernel/traps.c            |  10 ++
- arch/riscv/mm/fault.c                |   7 ++
- 9 files changed, 254 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/include/asm/uprobes.h
- create mode 100644 arch/riscv/kernel/probes/uprobes.c
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.8-rc3-smb3-fixes
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index a295f0b..f927a91 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -146,6 +146,9 @@ config ARCH_WANT_GENERAL_HUGETLB
- config ARCH_SUPPORTS_DEBUG_PAGEALLOC
- 	def_bool y
- 
-+config ARCH_SUPPORTS_UPROBES
-+	def_bool y
-+
- config SYS_SUPPORTS_HUGETLBFS
- 	depends on MMU
- 	def_bool y
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index bdddcd5..3a24003 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -34,6 +34,7 @@ struct thread_struct {
- 	unsigned long sp;	/* Kernel mode stack */
- 	unsigned long s[12];	/* s[0]: frame pointer */
- 	struct __riscv_d_ext_state fstate;
-+	unsigned long bad_cause;
- };
- 
- #define INIT_THREAD {					\
-diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
-index 1dd12a0..b3a7eb6 100644
---- a/arch/riscv/include/asm/thread_info.h
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -76,6 +76,7 @@ struct thread_info {
- #define TIF_SYSCALL_TRACEPOINT  6       /* syscall tracepoint instrumentation */
- #define TIF_SYSCALL_AUDIT	7	/* syscall auditing */
- #define TIF_SECCOMP		8	/* syscall secure computing */
-+#define TIF_UPROBE		9	/* uprobe breakpoint or singlestep */
- 
- #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
- #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
-@@ -84,9 +85,10 @@ struct thread_info {
- #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
- #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
-+#define _TIF_UPROBE		(1 << TIF_UPROBE)
- 
- #define _TIF_WORK_MASK \
--	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED)
-+	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED | _TIF_UPROBE)
- 
- #define _TIF_SYSCALL_WORK \
- 	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT | \
-diff --git a/arch/riscv/include/asm/uprobes.h b/arch/riscv/include/asm/uprobes.h
-new file mode 100644
-index 00000000..f2183e0
---- /dev/null
-+++ b/arch/riscv/include/asm/uprobes.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _ASM_RISCV_UPROBES_H
-+#define _ASM_RISCV_UPROBES_H
-+
-+#include <asm/probes.h>
-+#include <asm/patch.h>
-+#include <asm/bug.h>
-+
-+#define MAX_UINSN_BYTES		8
-+
-+#ifdef CONFIG_RISCV_ISA_C
-+#define UPROBE_SWBP_INSN	__BUG_INSN_16
-+#define UPROBE_SWBP_INSN_SIZE	2
-+#else
-+#define UPROBE_SWBP_INSN	__BUG_INSN_32
-+#define UPROBE_SWBP_INSN_SIZE	4
-+#endif
-+#define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
-+
-+typedef u32 uprobe_opcode_t;
-+
-+struct arch_uprobe_task {
-+	unsigned long   saved_cause;
-+};
-+
-+struct arch_uprobe {
-+	union {
-+		u8 insn[MAX_UINSN_BYTES];
-+		u8 ixol[MAX_UINSN_BYTES];
-+	};
-+	struct arch_probe_insn api;
-+	unsigned long insn_size;
-+	bool simulate;
-+};
-+
-+bool uprobe_breakpoint_handler(struct pt_regs *regs);
-+bool uprobe_single_step_handler(struct pt_regs *regs);
-+
-+#endif /* _ASM_RISCV_UPROBES_H */
-diff --git a/arch/riscv/kernel/probes/Makefile b/arch/riscv/kernel/probes/Makefile
-index 8a39507..cb62991 100644
---- a/arch/riscv/kernel/probes/Makefile
-+++ b/arch/riscv/kernel/probes/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o simulate-insn.o
- obj-$(CONFIG_KPROBES)		+= kprobes_trampoline.o
-+obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o simulate-insn.o
- CFLAGS_REMOVE_simulate-insn.o = $(CC_FLAGS_FTRACE)
-diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
-new file mode 100644
-index 00000000..7a057b5
---- /dev/null
-+++ b/arch/riscv/kernel/probes/uprobes.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/highmem.h>
-+#include <linux/ptrace.h>
-+#include <linux/uprobes.h>
-+
-+#include "decode-insn.h"
-+
-+#define UPROBE_TRAP_NR	UINT_MAX
-+
-+bool is_swbp_insn(uprobe_opcode_t *insn)
-+{
-+#ifdef CONFIG_RISCV_ISA_C
-+	return (*insn & 0xffff) == UPROBE_SWBP_INSN;
-+#else
-+	return *insn == UPROBE_SWBP_INSN;
-+#endif
-+}
-+
-+unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
-+{
-+	return instruction_pointer(regs);
-+}
-+
-+int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
-+			     unsigned long addr)
-+{
-+	probe_opcode_t opcode;
-+
-+	opcode = *(probe_opcode_t *)(&auprobe->insn[0]);
-+
-+	auprobe->insn_size = GET_INSN_LENGTH(opcode);
-+
-+	switch (riscv_probe_decode_insn(&opcode, &auprobe->api)) {
-+	case INSN_REJECTED:
-+		return -EINVAL;
-+
-+	case INSN_GOOD_NO_SLOT:
-+		auprobe->simulate = true;
-+		break;
-+
-+	case INSN_GOOD:
-+		auprobe->simulate = false;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+int arch_uprobe_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
-+{
-+	struct uprobe_task *utask = current->utask;
-+
-+	utask->autask.saved_cause = current->thread.bad_cause;
-+	current->thread.bad_cause = UPROBE_TRAP_NR;
-+
-+	instruction_pointer_set(regs, utask->xol_vaddr);
-+
-+	regs->status &= ~SR_SPIE;
-+
-+	return 0;
-+}
-+
-+int arch_uprobe_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
-+{
-+	struct uprobe_task *utask = current->utask;
-+
-+	WARN_ON_ONCE(current->thread.bad_cause != UPROBE_TRAP_NR);
-+
-+	instruction_pointer_set(regs, utask->vaddr + auprobe->insn_size);
-+
-+	regs->status |= SR_SPIE;
-+
-+	return 0;
-+}
-+
-+bool arch_uprobe_xol_was_trapped(struct task_struct *t)
-+{
-+	if (t->thread.bad_cause != UPROBE_TRAP_NR)
-+		return true;
-+
-+	return false;
-+}
-+
-+bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs *regs)
-+{
-+	probe_opcode_t insn;
-+	unsigned long addr;
-+
-+	if (!auprobe->simulate)
-+		return false;
-+
-+	insn = *(probe_opcode_t *)(&auprobe->insn[0]);
-+	addr = instruction_pointer(regs);
-+
-+	if (auprobe->api.handler)
-+		auprobe->api.handler(insn, addr, regs);
-+
-+	return true;
-+}
-+
-+void arch_uprobe_abort_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
-+{
-+	struct uprobe_task *utask = current->utask;
-+
-+	/*
-+	 * Task has received a fatal signal, so reset back to probbed
-+	 * address.
-+	 */
-+	instruction_pointer_set(regs, utask->vaddr);
-+
-+	regs->status &= ~SR_SPIE;
-+}
-+
-+bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
-+		struct pt_regs *regs)
-+{
-+	if (ctx == RP_CHECK_CHAIN_CALL)
-+		return regs->sp <= ret->stack;
-+	else
-+		return regs->sp < ret->stack;
-+}
-+
-+unsigned long
-+arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
-+				  struct pt_regs *regs)
-+{
-+	unsigned long ra;
-+
-+	ra = regs->ra;
-+
-+	regs->ra = trampoline_vaddr;
-+
-+	return ra;
-+}
-+
-+int arch_uprobe_exception_notify(struct notifier_block *self,
-+				 unsigned long val, void *data)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+bool uprobe_breakpoint_handler(struct pt_regs *regs)
-+{
-+	if (uprobe_pre_sstep_notifier(regs))
-+		return true;
-+
-+	return false;
-+}
-+
-+bool uprobe_single_step_handler(struct pt_regs *regs)
-+{
-+	if (uprobe_post_sstep_notifier(regs))
-+		return true;
-+
-+	return false;
-+}
-+
-+void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
-+			   void *src, unsigned long len)
-+{
-+	/* Initialize the slot */
-+	void *kaddr = kmap_atomic(page);
-+	void *dst = kaddr + (vaddr & ~PAGE_MASK);
-+
-+	memcpy(dst, src, len);
-+
-+	/* Add ebreak behind opcode to simulate singlestep */
-+	if (vaddr) {
-+		dst += GET_INSN_LENGTH(*(probe_opcode_t *)src);
-+		*(uprobe_opcode_t *)dst = __BUG_INSN_32;
-+	}
-+
-+	kunmap_atomic(kaddr);
-+
-+	/*
-+	 * We probably need flush_icache_user_page() but it needs vma.
-+	 * This should work on most of architectures by default. If
-+	 * architecture needs to do something different it can define
-+	 * its own version of the function.
-+	 */
-+	flush_dcache_page(page);
-+}
-diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
-index 17ba190..a96db83b 100644
---- a/arch/riscv/kernel/signal.c
-+++ b/arch/riscv/kernel/signal.c
-@@ -309,6 +309,9 @@ static void do_signal(struct pt_regs *regs)
- asmlinkage __visible void do_notify_resume(struct pt_regs *regs,
- 					   unsigned long thread_info_flags)
- {
-+	if (thread_info_flags & _TIF_UPROBE)
-+		uprobe_notify_resume(regs);
-+
- 	/* Handle pending signal delivery */
- 	if (thread_info_flags & _TIF_SIGPENDING)
- 		do_signal(regs);
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index ac2e786..6981276 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -76,6 +76,8 @@ void do_trap(struct pt_regs *regs, int signo, int code, unsigned long addr)
- static void do_trap_error(struct pt_regs *regs, int signo, int code,
- 	unsigned long addr, const char *str)
- {
-+	current->thread.bad_cause = regs->cause;
-+
- 	if (user_mode(regs)) {
- 		do_trap(regs, signo, code, addr);
- 	} else {
-@@ -153,6 +155,14 @@ asmlinkage __visible void do_trap_break(struct pt_regs *regs)
- 	if (kprobe_breakpoint_handler(regs))
- 		return;
- #endif
-+#ifdef CONFIG_UPROBES
-+	if (uprobe_single_step_handler(regs))
-+		return;
-+
-+	if (uprobe_breakpoint_handler(regs))
-+		return;
-+#endif
-+	current->thread.bad_cause = regs->cause;
- 
- 	if (user_mode(regs))
- 		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->epc);
-diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-index da0c08c..ac96d93 100644
---- a/arch/riscv/mm/fault.c
-+++ b/arch/riscv/mm/fault.c
-@@ -170,11 +170,14 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
- 	mmap_read_unlock(mm);
- 	/* User mode accesses just cause a SIGSEGV */
- 	if (user_mode(regs)) {
-+		tsk->thread.bad_cause = cause;
- 		do_trap(regs, SIGSEGV, code, addr);
- 		return;
- 	}
- 
- no_context:
-+	tsk->thread.bad_cause = cause;
-+
- 	/* Are we prepared to handle this kernel fault? */
- 	if (fixup_exception(regs))
- 		return;
-@@ -195,6 +198,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
- 	 * (which will retry the fault, or kill us if we got oom-killed).
- 	 */
- out_of_memory:
-+	tsk->thread.bad_cause = cause;
-+
- 	mmap_read_unlock(mm);
- 	if (!user_mode(regs))
- 		goto no_context;
-@@ -202,6 +207,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
- 	return;
- 
- do_sigbus:
-+	tsk->thread.bad_cause = cause;
-+
- 	mmap_read_unlock(mm);
- 	/* Kernel mode? Handle exceptions or die */
- 	if (!user_mode(regs))
--- 
-2.7.4
+for you to fetch changes up to 19e888678bac8c82206eb915eaf72741b2a2615c:
 
+  cifs: prevent truncation from long to int in wait_for_free_credits
+(2020-07-01 20:01:26 -0500)
+
+----------------------------------------------------------------
+8 cifs/smb3 fixes, most for when specifying the multiuser mount flag,
+5 of the fixes for stable.
+
+Regression test results:
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/364
+----------------------------------------------------------------
+Paul Aurich (6):
+      cifs: Display local UID details for SMB sessions in DebugData
+      SMB3: Honor 'seal' flag for multiuser mounts
+      SMB3: Honor persistent/resilient handle flags for multiuser mounts
+      SMB3: Honor lease disabling for multiuser mounts
+      SMB3: Honor 'handletimeout' flag for multiuser mounts
+      SMB3: Honor 'posix' flag for multiuser mounts
+
+Ronnie Sahlberg (1):
+      cifs: prevent truncation from long to int in wait_for_free_credits
+
+Zhang Xiaoxu (1):
+      cifs: Fix the target file was deleted when rename failed.
+
+ fs/cifs/cifs_debug.c |  6 +++++-
+ fs/cifs/connect.c    | 10 ++++++----
+ fs/cifs/inode.c      | 10 ++++++++--
+ fs/cifs/transport.c  |  2 +-
+ 4 files changed, 20 insertions(+), 8 deletions(-)
+
+--
+Thanks,
+
+Steve
