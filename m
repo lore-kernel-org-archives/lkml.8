@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A403C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A509C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F142520890
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8E920890
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgGDUHY (ORCPT
+        id S1727863AbgGDUJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:07:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49756 "EHLO
+        Sat, 4 Jul 2020 16:09:26 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49892 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDUHY (ORCPT
+        with ESMTP id S1726643AbgGDUJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:07:24 -0400
+        Sat, 4 Jul 2020 16:09:26 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4D0C11C0BD2; Sat,  4 Jul 2020 22:07:21 +0200 (CEST)
-Date:   Sat, 4 Jul 2020 22:07:20 +0200
+        id 0A9101C0C0E; Sat,  4 Jul 2020 22:09:24 +0200 (CEST)
+Date:   Sat, 4 Jul 2020 22:09:23 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200704200720.GA24405@amd>
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200704120459.GE16083@amd>
- <20200704121737.xiwcqzsfuzy3k3qf@core.my.home>
+To:     =?utf-8?B?5a2Z5LiW6b6Z?= sunshilong <sunshilong369@gmail.com>
+Cc:     Greg KH <greg@kroah.com>,
+        kernelnewbies <Kernelnewbies@kernelnewbies.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Are there some potentially serious problems that I should be
+ aware of if I totally disable the CONFIG_ACPI option on the X86_64 platform?
+Message-ID: <20200704200923.GB24405@amd>
+References: <CAAvDm6bGBbN=EiJxO9Fq9HqLz6F=hSQqjKms_G6qPHzbZ6G3zg@mail.gmail.com>
+ <20200704122222.GB15530@amd>
+ <CAAvDm6bjTzcRXs0qMF2nTo_mfEDE1MYbh_ExMojOMNZ9H+iKVg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+        protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
 Content-Disposition: inline
-In-Reply-To: <20200704121737.xiwcqzsfuzy3k3qf@core.my.home>
+In-Reply-To: <CAAvDm6bjTzcRXs0qMF2nTo_mfEDE1MYbh_ExMojOMNZ9H+iKVg@mail.gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -46,51 +46,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
+--MW5yreqqjyrRcusr
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> > > Add support for registering per-LED device trigger.
-> > >=20
-> > > Names of private triggers need to be globally unique, but may clash
-> > > with other private triggers. This is enforced during trigger
-> >=20
-> > Globally unique name is going to be a problem, no? If you have two
-> > keyboards with automatical backlight support...
+On Sat 2020-07-04 21:34:36, =E5=AD=99=E4=B8=96=E9=BE=99 sunshilong wrote:
+> Thank you for taking the time to respond to me.
 >=20
-> Only globally unique in a sense that they must not clash with non
-> per-LED trigger names. So you can have two keyboards with 'self-working'
-> trigger on their LED devices in sysfs.
->=20
-> This requirement only comes from the fact that this shares the
-> same sysfs configuration interface as regular non-private triggers.
+> >These machines are still mostly IBM-PC compatible, so it is likely to
+> >somehow work. You'll likely get worse power and thermal
+> >management. Try it.
+> It's an industrial personal computer with an Intel processor.
+> What I am worried about is that it may damage the hardware.
 
-Ok. That looks sane.
+I'd simply try it. Risk is really quite low...
 
-And if you tweak code a bit (don't compare pointers to struct led;
-have struct hw_trigger_group, and compare pointers to that), you
-should be able to fix the uglyness Marek mentioned without major changes.
+If in doubt, you could ask vendor.
 
-Best regards,
+But you will not get definitive answers on the mailing list...
+
 									Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---3V7upXqbjpZ4EhLz
+--MW5yreqqjyrRcusr
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl8A4XgACgkQMOfwapXb+vLbsgCgvokoJmSQ7pb80ed7OiSTkrex
-pGUAoK0jV5UJHvqnGrfAtKVpolFF98nO
-=SesQ
+iEYEARECAAYFAl8A4fMACgkQMOfwapXb+vJskQCgpOmIeZIRft+5g2tDz2REqdy+
+q3IAnisn+kDNmQTDep9iYwwcNzDzImLK
+=40+X
 -----END PGP SIGNATURE-----
 
---3V7upXqbjpZ4EhLz--
+--MW5yreqqjyrRcusr--
