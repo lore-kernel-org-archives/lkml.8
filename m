@@ -2,207 +2,130 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B379520724
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o3gMuvBf"
+	by mail.kernel.org (Postfix) with ESMTP id 9397120747
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgGDSeP (ORCPT
+        id S1727782AbgGDSft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 14:34:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgGDSeP (ORCPT
+        Sat, 4 Jul 2020 14:35:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44392 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgGDSft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 14:34:15 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20973C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 11:34:15 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id i3so26116254qtq.13
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 11:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KWwfR8F64t/OnKprWesw13QhIuErHRQdBeIeB4UUEh8=;
-        b=o3gMuvBfUuu8ttLefhbl7yp/faQV9GRFzxi94vVwa+nGG1pbWylhc72e53JHROAVlH
-         zJJEzYlSm+tkzWVDuwkvqk4+DO2Zm4gNovi7qu6lGWuXE10Z9BtJKPCmPckwfbbwmcJ4
-         CvReJLsJGen6mSmaKxlAdpJYX2akuJTJseqxmP2WvRMELhRI+CvXXj7JxLrHkbhIdaG6
-         l5lPjBcYFuLaiLY1z8839kYfkBnq0mQDVpaMGdClTqdlGCqcoOpLX/hDZ3NOYhmF3bv7
-         9d55s0JXZUxC0iO5dHy/y75gzhI0/5CpoAadLnodhaRovTKHh4RObjKs1CkTU8SrPK7o
-         yyoQ==
+        Sat, 4 Jul 2020 14:35:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 5so26811736oty.11;
+        Sat, 04 Jul 2020 11:35:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KWwfR8F64t/OnKprWesw13QhIuErHRQdBeIeB4UUEh8=;
-        b=VSCdq2jNNdKy0OFFP9QUpGQdV0u+/ZXbUrC+GdQtGT0cMM3bwOKYZWI89B+I3d34r7
-         qK4Q1/GPE+vPSTLfMJnXyC01YbPh8yPspYRO7el+IG8LgwB8a4S9/5aCbuys6yRW57d3
-         MlbuwoyMuK3s1/cMG39iV7M5cDtayRd749/ifDW5Athl8o6rKC3gGgpKHtH7Io3FrnTl
-         rYOFtwO03o//ZQI2LbfXHBGXmNYzLcJNZj7Zv5phGVaLpPLhu/MjG5jLF3odA4cAmhIp
-         uNUj1jv74PXOcjHp38DlgCXVCDWnUy9So9rNmDcfo+Z7WxyL0Y6SD+427zckaBOulD4E
-         1SJw==
-X-Gm-Message-State: AOAM530J2TvQVikh74uJ/18KBRJRAzvUc7z15tVH8loHjxFLdPgUJCfU
-        jY9NXmQEgWaJiSKbsWTp5x/bMpBi+PzD6TphnTaPCA==
-X-Google-Smtp-Source: ABdhPJwYjcMoyMYQBkmRvyIpQooEYOwy8cuP7L8jyAU38VXeKWeEDHNRwOBilGLArkSRHtHjV1FRe7bIkOk1jAjNgmo=
-X-Received: by 2002:ac8:4c88:: with SMTP id j8mr40489488qtv.57.1593887653732;
- Sat, 04 Jul 2020 11:34:13 -0700 (PDT)
+        bh=/7ImKIfSgkzTRdy3VH0zTAz2g580OOvL55arrNBXHTU=;
+        b=IGW+oc//6FqbAPsbOqk43/UADR7NfQF2zRMJu7TtS9T8aI5KZ2qdW1qaLYpQ3uFcN2
+         +wc47ZbLqz1SrwXL7DYYuzMxXT0BF5qL2R8kfaMU1c/RnYW2TVUOBfSrgk52nYZOIgfx
+         s+g4YHEDULSwd2ljSuw05E1FGaliYbPsZTuwWBGdcOcCMLqJ3e/Ky2A8NZHyhsatmuWn
+         de+DJdMkunGgBt+dQB005ezTAKSd5iZ9UhV2QfnZLtcJ/4ny0QEUpJ3qa9mn//OF/O4t
+         CMOmQa7PGTldu7B66uWKDfTwMGTCY3MIdxk0PJowl6rdKz5oTDct3RU7MMhJOqksWAUO
+         rZlw==
+X-Gm-Message-State: AOAM531YF1oxC5uU4OZFnsyjd+1KnBPMOsuWeJL0k2KXSh4V0uGpwsV4
+        OI9TkFjeUFjYsbYWsnNnt917E9H8HWPHX9s0jnBrqqGo
+X-Google-Smtp-Source: ABdhPJyUe7YIsqlkWjiNEQH3Ag7AU3N7TQm7lXtyWCDzf+QjDWC36IS1w7Q0mNBb6yFG9dR56W1v7BX8pA9ynSVnTJM=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2983524otl.145.1593887747708;
+ Sat, 04 Jul 2020 11:35:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000042f21905a991ecea@google.com> <20200704164522.GO9247@paulmck-ThinkPad-P72>
-In-Reply-To: <20200704164522.GO9247@paulmck-ThinkPad-P72>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 4 Jul 2020 20:34:02 +0200
-Message-ID: <CACT4Y+Zs4TO9-XSZ7cRXFZVqRakS8WuSno2=dac6Gv2XmExbkA@mail.gmail.com>
-Subject: Re: KASAN: stack-out-of-bounds Read in csd_lock_record
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     syzbot <syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org> <20200704140250.423345-2-gregkh@linuxfoundation.org>
+In-Reply-To: <20200704140250.423345-2-gregkh@linuxfoundation.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 4 Jul 2020 20:35:36 +0200
+Message-ID: <CAMuHMdWeuzVjZMpR+d20X0mDCpVpNzEU0qpZO4LiMVGCgJBy3A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] readfile: implement readfile syscall
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-man@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 4, 2020 at 6:45 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Fri, Jul 03, 2020 at 04:31:22PM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    9e50b94b Add linux-next specific files for 20200703
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1024b405100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0f719294463916a3fc0e
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16dc490f100000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com
->
-> Good catch!  A call to csd_lock_record() was on the wrong side of a
-> call to csd_unlock().
+Hi Greg,
 
-Thanks for taking a look.
-
-> But is folded into another commit for bisectability reasons, so
-> "Reported-by" would not make sense.  I have instead added this to the
-> commit log:
+On Sat, Jul 4, 2020 at 4:05 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> It's a tiny syscall, meant to allow a user to do a single "open this
+> file, read into this buffer, and close the file" all in a single shot.
 >
-> [ paulmck: Fix for syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com ]
-> Link: https://lore.kernel.org/lkml/00000000000042f21905a991ecea@google.com
-> Link: https://lore.kernel.org/lkml/0000000000002ef21705a9933cf3@google.com
-
-This should work, as far as I remember sybot looks for the email+hash
-anywhere in the commit.
-FWIW Tested-by can make sense as well.
-
->                                                         Thanx, Paul
+> Should be good for reading "tiny" files like sysfs, procfs, and other
+> "small" files.
 >
-> > ==================================================================
-> > BUG: KASAN: stack-out-of-bounds in csd_lock_record+0xcb/0xe0 kernel/smp.c:118
-> > Read of size 8 at addr ffffc90001727710 by task syz-executor.0/10721
-> >
-> > CPU: 1 PID: 10721 Comm: syz-executor.0 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  <IRQ>
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
-> >  __kasan_report mm/kasan/report.c:513 [inline]
-> >  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
-> >  csd_lock_record+0xcb/0xe0 kernel/smp.c:118
-> >  flush_smp_call_function_queue+0x285/0x730 kernel/smp.c:391
-> >  __sysvec_call_function_single+0x98/0x490 arch/x86/kernel/smp.c:248
-> >  asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
-> >  </IRQ>
-> >  __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
-> >  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
-> >  sysvec_call_function_single+0xe0/0x120 arch/x86/kernel/smp.c:243
-> >  asm_sysvec_call_function_single+0x12/0x20 arch/x86/include/asm/idtentry.h:604
-> > RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:765 [inline]
-> > RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-> > RIP: 0010:_raw_spin_unlock_irqrestore+0x8c/0xe0 kernel/locking/spinlock.c:191
-> > Code: 48 c7 c0 00 ff b4 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 37 48 83 3d 9b 74 c8 01 00 74 22 48 89 df 57 9d <0f> 1f 44 00 00 bf 01 00 00 00 e8 95 fb 62 f9 65 8b 05 fe 73 15 78
-> > RSP: 0018:ffffc900016e7558 EFLAGS: 00000282
-> > RAX: 1ffffffff1369fe0 RBX: 0000000000000282 RCX: 0000000000000000
-> > RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000282
-> > RBP: ffffffff8cb02508 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000001 R11: 0000000000000000 R12: 1ffffffff19604a0
-> > R13: 0000000000000000 R14: dead000000000100 R15: dffffc0000000000
-> >  __debug_check_no_obj_freed lib/debugobjects.c:977 [inline]
-> >  debug_check_no_obj_freed+0x20c/0x41c lib/debugobjects.c:998
-> >  free_pages_prepare mm/page_alloc.c:1219 [inline]
-> >  __free_pages_ok+0x20b/0xc90 mm/page_alloc.c:1471
-> >  release_pages+0x5ec/0x17a0 mm/swap.c:880
-> >  tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
-> >  tlb_flush_mmu_free mm/mmu_gather.c:242 [inline]
-> >  tlb_flush_mmu+0xe9/0x6b0 mm/mmu_gather.c:249
-> >  zap_pte_range mm/memory.c:1155 [inline]
-> >  zap_pmd_range mm/memory.c:1193 [inline]
-> >  zap_pud_range mm/memory.c:1222 [inline]
-> >  zap_p4d_range mm/memory.c:1243 [inline]
-> >  unmap_page_range+0x1e22/0x2b20 mm/memory.c:1264
-> >  unmap_single_vma+0x198/0x300 mm/memory.c:1309
-> >  unmap_vmas+0x16f/0x2f0 mm/memory.c:1341
-> >  exit_mmap+0x2b1/0x530 mm/mmap.c:3165
-> >  __mmput+0x122/0x470 kernel/fork.c:1075
-> >  mmput+0x53/0x60 kernel/fork.c:1096
-> >  exit_mm kernel/exit.c:483 [inline]
-> >  do_exit+0xa8f/0x2a40 kernel/exit.c:793
-> >  do_group_exit+0x125/0x310 kernel/exit.c:904
-> >  get_signal+0x40b/0x1ee0 kernel/signal.c:2743
-> >  do_signal+0x82/0x2520 arch/x86/kernel/signal.c:810
-> >  exit_to_usermode_loop arch/x86/entry/common.c:218 [inline]
-> >  __prepare_exit_to_usermode+0x156/0x1f0 arch/x86/entry/common.c:252
-> >  do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:376
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > RIP: 0033:0x45cb29
-> > Code: Bad RIP value.
-> > RSP: 002b:00007fb154b96cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-> > RAX: 0000000000000001 RBX: 000000000078bf08 RCX: 000000000045cb29
-> > RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 000000000078bf0c
-> > RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-> > R13: 00007ffd3933f26f R14: 00007fb154b979c0 R15: 000000000078bf0c
-> >
-> >
-> > Memory state around the buggy address:
-> >  ffffc90001727600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >  ffffc90001727680: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 00
-> > >ffffc90001727700: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
-> >                          ^
-> >  ffffc90001727780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >  ffffc90001727800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > ==================================================================
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
+> There is no restarting the syscall, this is a "simple" syscall, with the
+> attempt to make reading "simple" files easier with less syscall
+> overhead.
 >
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200704164522.GO9247%40paulmck-ThinkPad-P72.
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Thanks for your patch!
+
+> --- a/fs/open.c
+> +++ b/fs/open.c
+
+> +SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
+> +               char __user *, buffer, size_t, bufsize, int, flags)
+> +{
+> +       struct open_flags op;
+> +       struct open_how how;
+> +       struct file *file;
+> +       loff_t pos = 0;
+> +       int retval;
+> +
+> +       /* only accept a small subset of O_ flags that make sense */
+> +       if ((flags & (O_NOFOLLOW | O_NOATIME)) != flags)
+> +               return -EINVAL;
+> +
+> +       /* add some needed flags to be able to open the file properly */
+> +       flags |= O_RDONLY | O_LARGEFILE;
+> +
+> +       how = build_open_how(flags, 0000);
+> +       retval = build_open_flags(&how, &op);
+> +       if (retval)
+> +               return retval;
+> +
+> +       file = readfile_open(dfd, filename, &op);
+> +       if (IS_ERR(file))
+> +               return PTR_ERR(file);
+> +
+> +       retval = vfs_read(file, buffer, bufsize, &pos);
+
+Should there be a way for the user to be informed that the file doesn't
+fit in the provided buffer (.e.g. -EFBIG)?
+
+> +
+> +       filp_close(file, NULL);
+> +
+> +       return retval;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
