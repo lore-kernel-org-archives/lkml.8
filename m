@@ -2,86 +2,66 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A509C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8E920890
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAAE20890
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgGDUJ0 (ORCPT
+        id S1727886AbgGDUMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:09:26 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49892 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDUJ0 (ORCPT
+        Sat, 4 Jul 2020 16:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgGDUMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:09:26 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0A9101C0C0E; Sat,  4 Jul 2020 22:09:24 +0200 (CEST)
-Date:   Sat, 4 Jul 2020 22:09:23 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     =?utf-8?B?5a2Z5LiW6b6Z?= sunshilong <sunshilong369@gmail.com>
-Cc:     Greg KH <greg@kroah.com>,
-        kernelnewbies <Kernelnewbies@kernelnewbies.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Are there some potentially serious problems that I should be
- aware of if I totally disable the CONFIG_ACPI option on the X86_64 platform?
-Message-ID: <20200704200923.GB24405@amd>
-References: <CAAvDm6bGBbN=EiJxO9Fq9HqLz6F=hSQqjKms_G6qPHzbZ6G3zg@mail.gmail.com>
- <20200704122222.GB15530@amd>
- <CAAvDm6bjTzcRXs0qMF2nTo_mfEDE1MYbh_ExMojOMNZ9H+iKVg@mail.gmail.com>
+        Sat, 4 Jul 2020 16:12:21 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF3DC061794;
+        Sat,  4 Jul 2020 13:12:21 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jroW6-005OXK-Sw; Sat, 04 Jul 2020 20:12:07 +0000
+Date:   Sat, 4 Jul 2020 21:12:06 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-man <linux-man@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/3] readfile: implement readfile syscall
+Message-ID: <20200704201206.GD2786714@ZenIV.linux.org.uk>
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
+ <20200704140250.423345-2-gregkh@linuxfoundation.org>
+ <CAJfpegusi8BjWFzEi05926d4RsEQvPnRW-w7My=ibBHQ8NgCuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAvDm6bjTzcRXs0qMF2nTo_mfEDE1MYbh_ExMojOMNZ9H+iKVg@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAJfpegusi8BjWFzEi05926d4RsEQvPnRW-w7My=ibBHQ8NgCuw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 04, 2020 at 09:41:09PM +0200, Miklos Szeredi wrote:
+> And "If the size of file is smaller than the value provided in count
+> then the whole file will be copied into buf", which is simply a lie;
+> for example seq_file will happily return a smaller-than-PAGE_SIZE
+> chunk if at least one record fits in there.  You'll have a very hard
+> time explaining that in the man page.  So I think there are two
+> possible ways forward:
+> 
+>  1) just leave the first explanation (it's an open + read + close
+> equivalent) and leave out the rest
+> 
+>  2) add a loop around the vfs_read() in the code.
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2020-07-04 21:34:36, =E5=AD=99=E4=B8=96=E9=BE=99 sunshilong wrote:
-> Thank you for taking the time to respond to me.
->=20
-> >These machines are still mostly IBM-PC compatible, so it is likely to
-> >somehow work. You'll likely get worse power and thermal
-> >management. Try it.
-> It's an industrial personal computer with an Intel processor.
-> What I am worried about is that it may damage the hardware.
-
-I'd simply try it. Risk is really quite low...
-
-If in doubt, you could ask vendor.
-
-But you will not get definitive answers on the mailing list...
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8A4fMACgkQMOfwapXb+vJskQCgpOmIeZIRft+5g2tDz2REqdy+
-q3IAnisn+kDNmQTDep9iYwwcNzDzImLK
-=40+X
------END PGP SIGNATURE-----
-
---MW5yreqqjyrRcusr--
+3) don't bother with the entire thing, until somebody manages to demonstrate
+a setup where it does make a real difference (compared to than the obvious
+sequence of syscalls, that is).  At which point we'll need to figure out
+what's going on and deal with the underlying problem of that setup.
