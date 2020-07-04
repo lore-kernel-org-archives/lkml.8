@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1639C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD97C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3AD20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC2E2100A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="LjxrK19h"
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="sV+GXz01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGDUqt (ORCPT
+        id S1727991AbgGDUqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:46:49 -0400
-Received: from smtp91.iad3b.emailsrvr.com ([146.20.161.91]:46828 "EHLO
-        smtp91.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726669AbgGDUqq (ORCPT
+        Sat, 4 Jul 2020 16:46:54 -0400
+Received: from smtp90.iad3b.emailsrvr.com ([146.20.161.90]:53526 "EHLO
+        smtp90.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727908AbgGDUqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:46:46 -0400
-X-Greylist: delayed 500 seconds by postgrey-1.27 at vger.kernel.org; Sat, 04 Jul 2020 16:46:45 EDT
+        Sat, 4 Jul 2020 16:46:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1593895107;
-        bh=w0ZgXkMgv8LAI8TjR+1AD+5/TefFnaxCjkf2/Gvaz9k=;
+        s=20190322-9u7zjiwi; t=1593895106;
+        bh=lr75QF2in2wcP8L+bTcON/4LbYMnulpodkBOzczEdWI=;
         h=From:To:Subject:Date:From;
-        b=LjxrK19hBZgLIh960XXcZdvSvzhIh/B44QczL05d+/kDeG4VpGpsKwWSPQI9KfyPv
-         +ZcYixyFMXA8KSLhrAfrb+FsFAulPawrJjr/kNxcghPoTjn2lgtvK/KBhg+sk+OeW9
-         apBJtXAAn/z/5vWNVhAb3NQYleZlYNJNAvn16rCo=
+        b=sV+GXz01AXRsv3bM23s4w+JNvMnJwCXp0Zh0tTR5g6YGa9RA7m7qTssJfOe3+kBBw
+         i19fA0dJmmEyJqDbxSysbjeSF1TZtjJ8X638cQEGvXadj1YzkLhp26C/39+Ycv0flg
+         rUdl6ZhfgvWX/1wqqwsld9po2hUPquhsoT9KCCoM=
 X-Auth-ID: dpreed@deepplum.com
-Received: by smtp20.relay.iad3b.emailsrvr.com (Authenticated sender: dpreed-AT-deepplum.com) with ESMTPSA id 65743A00ED;
-        Sat,  4 Jul 2020 16:38:26 -0400 (EDT)
+Received: by smtp20.relay.iad3b.emailsrvr.com (Authenticated sender: dpreed-AT-deepplum.com) with ESMTPSA id 7D7C5A00D3;
+        Sat,  4 Jul 2020 16:38:25 -0400 (EDT)
 From:   "David P. Reed" <dpreed@deepplum.com>
 To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Cc:     "David P. Reed" <dpreed@deepplum.com>,
@@ -53,88 +52,72 @@ Cc:     "David P. Reed" <dpreed@deepplum.com>,
         Jann Horn <jannh@google.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu on crash or panic
-Date:   Sat,  4 Jul 2020 16:38:08 -0400
-Message-Id: <20200704203809.76391-3-dpreed@deepplum.com>
+Subject: [PATCH v3 1/3] Correct asm VMXOFF side effects
+Date:   Sat,  4 Jul 2020 16:38:07 -0400
+Message-Id: <20200704203809.76391-2-dpreed@deepplum.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200704203809.76391-1-dpreed@deepplum.com>
 References: <20200629214956.GA12962@linux.intel.com>
  <20200704203809.76391-1-dpreed@deepplum.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Classification-ID: 64370b40-6b65-46c7-a817-521193c95a46-3-1
+X-Classification-ID: 64370b40-6b65-46c7-a817-521193c95a46-2-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix: Mask undefined operation fault during emergency VMXOFF that must be
-attempted to force cpu exit from VMX root operation.
-Explanation: When a cpu may be in VMX root operation (only possible when
-CR4.VMXE is set), crash or panic reboot tries to exit VMX root operation
-using VMXOFF. This is necessary, because any INIT will be masked while cpu
-is in VMX root operation, but that state cannot be reliably
-discerned by the state of the cpu.
-VMXOFF faults if the cpu is not actually in VMX root operation, signalling
-undefined operation.
-Discovered while debugging an out-of-tree x-visor with a race. Can happen
-due to certain kinds of bugs in KVM.
+Tell gcc that VMXOFF instruction clobbers condition codes
+and memory when executed.
+Also, correct original comments to remove kernel-doc syntax
+per Randy Dunlap's request.
 
-Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
-Reported-by: David P. Reed <dpreed@deepplum.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: David P. Reed <dpreed@deepplum.com>
 ---
- arch/x86/include/asm/virtext.h | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/virtext.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-index 0ede8d04535a..0e0900eacb9c 100644
+index 9aad0e0876fb..0ede8d04535a 100644
 --- a/arch/x86/include/asm/virtext.h
 +++ b/arch/x86/include/asm/virtext.h
-@@ -30,11 +30,11 @@ static inline int cpu_has_vmx(void)
+@@ -30,7 +30,7 @@ static inline int cpu_has_vmx(void)
  }
  
  
--/* Disable VMX on the current CPU
-+/* Exit VMX root mode and isable VMX on the current CPU.
+-/** Disable VMX on the current CPU
++/* Disable VMX on the current CPU
   *
   * vmxoff causes a undefined-opcode exception if vmxon was not run
-- * on the CPU previously. Only call this function if you know VMX
-- * is enabled.
-+ * on the CPU previously. Only call this function if you know cpu
-+ * is in VMX root mode.
+  * on the CPU previously. Only call this function if you know VMX
+@@ -38,7 +38,7 @@ static inline int cpu_has_vmx(void)
   */
  static inline void cpu_vmxoff(void)
  {
-@@ -47,14 +47,22 @@ static inline int cpu_vmx_enabled(void)
+-	asm volatile ("vmxoff");
++	asm volatile ("vmxoff" ::: "cc", "memory");
+ 	cr4_clear_bits(X86_CR4_VMXE);
+ }
+ 
+@@ -47,7 +47,7 @@ static inline int cpu_vmx_enabled(void)
  	return __read_cr4() & X86_CR4_VMXE;
  }
  
--/* Disable VMX if it is enabled on the current CPU
-+/* Safely exit VMX root mode and disable VMX if VMX enabled
-+ * on the current CPU. Handle undefined-opcode fault
-+ * that can occur if cpu is not in VMX root mode, due
-+ * to a race.
+-/** Disable VMX if it is enabled on the current CPU
++/* Disable VMX if it is enabled on the current CPU
   *
   * You shouldn't call this if cpu_has_vmx() returns 0.
   */
- static inline void __cpu_emergency_vmxoff(void)
- {
--	if (cpu_vmx_enabled())
--		cpu_vmxoff();
-+	if (!cpu_vmx_enabled())
-+		return;
-+	asm volatile ("1:vmxoff\n\t"
-+		      "2:\n\t"
-+		      _ASM_EXTABLE(1b, 2b)
-+		      ::: "cc", "memory");
-+	cr4_clear_bits(X86_CR4_VMXE);
+@@ -57,7 +57,7 @@ static inline void __cpu_emergency_vmxoff(void)
+ 		cpu_vmxoff();
  }
  
- /* Disable VMX if it is supported and enabled on the current CPU
+-/** Disable VMX if it is supported and enabled on the current CPU
++/* Disable VMX if it is supported and enabled on the current CPU
+  */
+ static inline void cpu_emergency_vmxoff(void)
+ {
 -- 
 2.26.2
 
