@@ -2,146 +2,105 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AC6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7388207D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D267C20720
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 18:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="UuSnZzK3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtMO7CWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGDRts (ORCPT
+        id S1727083AbgGDSbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 13:49:48 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37448 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgGDRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 13:49:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593884986; bh=gePBFYf0OKwf1JpwnwFGo1PMkHdisVfSx93M0nTaPuI=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=UuSnZzK3XJ0gjlIYs5Ptf2B7J9R2IGupn0VhzieqhJCc5T2031FdrEQxyCdD0v6F4
-         IjDs6Z0Vo7UJZo5H5mFJkwtNmzb2xK1oHOVBxSvxCGoHJHYX/H3TC5qYn9NfGf4aIE
-         YWVMEZm9rmSeyPGZ6EXL9nzTAzuZPcupEB2xGsLY=
-Date:   Sat, 4 Jul 2020 19:49:45 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] iio: light: stk3310: add chip id for STK3311-X variant
-Message-ID: <20200704174945.knawjt2yg52ejx2n@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-References: <20200703194406.110855-1-megous@megous.com>
- <20200704172916.7a8a7359@archlinux>
- <d2df561c8db7e11eb6937f824f483e33be1db7bc.camel@aosc.io>
+        Sat, 4 Jul 2020 14:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgGDSbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 14:31:08 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B571C061794;
+        Sat,  4 Jul 2020 11:31:08 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id j10so26116276qtq.11;
+        Sat, 04 Jul 2020 11:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFLUHOIJlWWk7hAI07Y9tp1o5QM5QJCYXSXyL0loMUc=;
+        b=JtMO7CWw51DLAx12Q1J7wDQrbMLhCpTUxO44RqG7IexDvBT3q/Ppj/UrQyV4iupDhg
+         /55dybi9z2Ip1geGBwWutbj91Ou1gqVieINEmiTZ/bH6CNGiPnZkVompFBiTVtuq11Hq
+         V3j3XbYzDoCXX0a1Z45umxZsJ9vTklMXVTauHc7pl28MCAE3L8ZT5oqpWlyl8kH4AqRg
+         sY9MO+xVu58iyOk1zqeUZvlJzJ6TWWPwoON8Tj0a+W1xmxpkHPpNjUrMWRiHqWzHkocH
+         Al1Zi/WqxVY6u6iAJbzeukTCQR8CoNp8vQHenRjmpMW/lwnowiYeOsefSlWsrpOpiiZH
+         ovKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UFLUHOIJlWWk7hAI07Y9tp1o5QM5QJCYXSXyL0loMUc=;
+        b=JO+jtpP4PGU2jstLM24AoZck/J2cr3X2mfi3Tkl0iziUe9zPirX2pWVNF85heLQyBX
+         iXWhaVTAvG9967PC6IYtgCD1xTOvDtOCgY3HtiKEVGBHb94/NV3ysOEfcB7+8LfZTZtY
+         XTo7gM+kYkhMRRqubdEJZP6XY8IucY2Ly4LhbBYICg/NYc1gfdnY/KFAbANAbUKS+DpX
+         5ps3eyyUH/X5OkrIpo4Bu5ETgIIgUAL3fGqghypqLA65C2awO7WvkrEwwzIQ4S62BXrO
+         Quch5if8o6cSGmP3NPpP9ZRzM0IZa8poccGVn/e7qYKtolst9q7+01EsLTjQytkoRmwl
+         PFXg==
+X-Gm-Message-State: AOAM531ytmlBdxx9Jet2AFNMRl/kSePXUOj+OIETsHff8O/AGNlXmGZm
+        wOQ/GZ8+JJt129KdW7418LN17ndg8r9Rj3chjS0=
+X-Google-Smtp-Source: ABdhPJwSRtILfOImuh8qk8haIBu/Hxgg+XL6PXWIgOMU1jKJ7Qi5EhbGfS4iXfEMEQwvOgsLA+uDBZjvovcMQpvgIRk=
+X-Received: by 2002:ac8:4b5b:: with SMTP id e27mr39335257qts.96.1593887467803;
+ Sat, 04 Jul 2020 11:31:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2df561c8db7e11eb6937f824f483e33be1db7bc.camel@aosc.io>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+References: <1593833659-26224-1-git-send-email-guoren@kernel.org>
+ <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com> <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
+In-Reply-To: <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Sat, 4 Jul 2020 21:30:50 +0300
+Message-ID: <CAOJsxLFSH2_e03xo_HMqKAzVE+2Y9=hriv-Zu=GdVUHgDMgYtw@mail.gmail.com>
+Subject: Re: [PATCH V1 0/5] riscv: Add k/uprobe supported
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
+        bjorn.topel@gmail.com, Atish Patra <atish.patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Guo,
 
-On Sun, Jul 05, 2020 at 01:09:37AM +0800, Icenowy Zheng wrote:
-> 在 2020-07-04星期六的 17:29 +0100，Jonathan Cameron写道：
-> > On Fri,  3 Jul 2020 21:44:05 +0200
-> > Ondrej Jirman <megous@megous.com> wrote:
-> > 
-> > > From: Icenowy Zheng <icenowy@aosc.io>
-> > > 
-> > > The STK3311 chip has a variant called STK3311-X, which has a
-> > > different
-> > > chip id of 0x12.
-> > > 
-> > > Add the chip id to the driver.
-> > > 
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > 
-> > Given this is clearly not quite compatible with the stk3311 probably
-> > best to also add a an id to the of id table.  Any idea what else
-> > is different?
-> 
-> By the way, STK3311 seems to have many variants lying around, and all
-> of them have different IDs. The pinouts seem to be different but the
-> registers are compatible.
-> 
-> [1] is a datasheet of STK3311-S34 with ID 0x1e.
-> [2] is a datasheet of STK3311-A with ID 0x15.
-> 
-> I cannot find the datasheet of STK3311-X, 0x12 is read from the device.
-> The model number itself is mentioned at [3], the official website of
-> sensortek.
-> 
-> [1] 
-> http://pro0fc108.hkpic1.websiteonline.cn/upload/STK3311-S34Datasheetv1.pdf
-> 
-> [2] 
-> http://pro0fc108.hkpic1.websiteonline.cn/upload/STK3311-ADatasheetv1.pdf
-> 
-> [3] 
-> http://www.sensortek.com.tw/index.php/en/products/proximity-sensor-with-als/
+On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
+> > > There is no single step exception in riscv ISA, so utilize ebreak to
+> > > simulate. Some pc related instructions couldn't be executed out of line
+> > > and some system/fence instructions couldn't be a trace site at all.
+> > > So we give out a reject list and simulate list in decode-insn.c.
 
-Yeah, it looks like it's the only one of stk3111-* variants that sensortek
-lists on their website. I also didn't find the *-x datasheet despite trying
-really hard.
+On Sat, Jul 4, 2020 at 2:40 PM Pekka Enberg <penberg@gmail.com> wrote:
+> > Can you elaborate on what you mean by this? Why would you need a
+> > single-step facility for kprobes? Is it for executing the instruction
+> > that was replaced with a probe breakpoint?
 
-All the functionality seems to work with the current driver and this patch.
+On Sat, Jul 4, 2020 at 5:55 PM Guo Ren <guoren@kernel.org> wrote:
+> It's the single-step exception, not single-step facility!
 
-regards,
-	o.
+Aah, right, I didn't read the specification carefully enough. Thanks
+for taking the time to clarify this!
 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > > ---
-> > >  drivers/iio/light/stk3310.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/iio/light/stk3310.c
-> > > b/drivers/iio/light/stk3310.c
-> > > index 185c24a75ae6..1a8401d198a4 100644
-> > > --- a/drivers/iio/light/stk3310.c
-> > > +++ b/drivers/iio/light/stk3310.c
-> > > @@ -37,6 +37,7 @@
-> > >  
-> > >  #define STK3310_CHIP_ID_VAL			0x13
-> > >  #define STK3311_CHIP_ID_VAL			0x1D
-> > > +#define STK3311X_CHIP_ID_VAL			0x12
-> > >  #define STK3335_CHIP_ID_VAL			0x51
-> > >  #define STK3310_PSINT_EN			0x01
-> > >  #define STK3310_PS_MAX_VAL			0xFFFF
-> > > @@ -453,6 +454,7 @@ static int stk3310_init(struct iio_dev
-> > > *indio_dev)
-> > >  
-> > >  	if (chipid != STK3310_CHIP_ID_VAL &&
-> > >  	    chipid != STK3311_CHIP_ID_VAL &&
-> > > +	    chipid != STK3311X_CHIP_ID_VAL &&
-> > >  	    chipid != STK3335_CHIP_ID_VAL) {
-> > >  		dev_err(&client->dev, "invalid chip id: 0x%x\n",
-> > > chipid);
-> > >  		return -ENODEV;
+FWIW, for the whole series:
+
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
+
+- Pekka
