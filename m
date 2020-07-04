@@ -2,66 +2,98 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAAE20890
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F4020890
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 20:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jNffwTmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGDUMW (ORCPT
+        id S1727904AbgGDUNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 16:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgGDUMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 16:12:21 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF3DC061794;
-        Sat,  4 Jul 2020 13:12:21 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jroW6-005OXK-Sw; Sat, 04 Jul 2020 20:12:07 +0000
-Date:   Sat, 4 Jul 2020 21:12:06 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-man <linux-man@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/3] readfile: implement readfile syscall
-Message-ID: <20200704201206.GD2786714@ZenIV.linux.org.uk>
-References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
- <20200704140250.423345-2-gregkh@linuxfoundation.org>
- <CAJfpegusi8BjWFzEi05926d4RsEQvPnRW-w7My=ibBHQ8NgCuw@mail.gmail.com>
+        Sat, 4 Jul 2020 16:13:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33667 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbgGDUNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 16:13:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49zjh039Hzz9sDX;
+        Sun,  5 Jul 2020 06:13:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593893601;
+        bh=3o+AYAld1Uz6K2VKHMEd2orW6cryHaz5XCb8LLg7sbU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jNffwTmSMPJjO8SJZbcoapTH0bhy7nXAP97esHjqo37fWXTVm3Fdm6V/ciBxG+1yT
+         p/FqJbuO2t8ssfYtZuAER+KNIS1BgqBEPVvA0hqNc90ofhRpF8ZKhoaB4ekoxoYvlV
+         aHj5NMdWBLE74oTCIlcTFXeM3Ddb0Kh7As2hoWmDI+J/C/3J93Yb/4RQUCvoQnd6OV
+         6HQhx2BcQhjIbn2BmzQ/FhGxl6vcCyuVDuv2pRYhnpkKDIluYMNn0JNeJs59kjIpF3
+         Qw3kknEEbwFFjlD789q4dN56kyRFBT2Dz1A9zqVt9ee2nJf69C1DgSIIURuauzf670
+         gESdyNsOx8hdw==
+Date:   Sun, 5 Jul 2020 06:13:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: linux-next: Fixes tag needs some work in the v4l-dvb tree
+Message-ID: <20200705061319.4a2ae191@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegusi8BjWFzEi05926d4RsEQvPnRW-w7My=ibBHQ8NgCuw@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/TzNLVsalb_8A9Dw9Lr99uZS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 09:41:09PM +0200, Miklos Szeredi wrote:
-> And "If the size of file is smaller than the value provided in count
-> then the whole file will be copied into buf", which is simply a lie;
-> for example seq_file will happily return a smaller-than-PAGE_SIZE
-> chunk if at least one record fits in there.  You'll have a very hard
-> time explaining that in the man page.  So I think there are two
-> possible ways forward:
-> 
->  1) just leave the first explanation (it's an open + read + close
-> equivalent) and leave out the rest
-> 
->  2) add a loop around the vfs_read() in the code.
+--Sig_/TzNLVsalb_8A9Dw9Lr99uZS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-3) don't bother with the entire thing, until somebody manages to demonstrate
-a setup where it does make a real difference (compared to than the obvious
-sequence of syscalls, that is).  At which point we'll need to figure out
-what's going on and deal with the underlying problem of that setup.
+Hi all,
+
+In commit
+
+  18ffec750578 ("media: exynos4-is: Add missed check for pinctrl_lookup_sta=
+te()")
+
+Fixes tag
+
+  Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports =
+configuration]")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TzNLVsalb_8A9Dw9Lr99uZS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8A4t8ACgkQAVBC80lX
+0GwBXgf/VGsJZZq57EIN1xTkyQKLFO0rP107Fl5StwOR6v4pz1oVqrlWNN/YWTtt
+cYAitwQzSzE8FIjfQg7Gaglz1XyRohJMdJ6/N5j8L+KzVd5OrRIOzqEWWKw/SHCj
+axr1Y0RaYyvI/t8tCdiTzDi756lKWldJvacbTzzi9jjdQgwAXkjGETauT65j3OSU
+PxVYGMfvYoHf/wnV6BPBArpI6z4RLWAVL4HijfyEqpM3h/lv+U47LoCzHCwWQtMk
+gCav4TnyeVAhFjmZW5vEuFYaxYtaLCXcI60pKgFarp5gRRHxJWCjq4ytOKxOZC5b
+o9sUf/86FO56tbQHd0O0qMnc/gIlqg==
+=vgtP
+-----END PGP SIGNATURE-----
+
+--Sig_/TzNLVsalb_8A9Dw9Lr99uZS--
