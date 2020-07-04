@@ -2,172 +2,199 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D32C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 01:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD41C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 01:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B1E20747
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 01:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7893C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 01:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGDB3h (ORCPT
+        id S1726772AbgGDBmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 21:29:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48913 "EHLO mga14.intel.com"
+        Fri, 3 Jul 2020 21:42:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:27633 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbgGDB3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 21:29:36 -0400
-IronPort-SDR: JIpwZlW620DQuheSdiaeHI1V9OuW6gsGG7vOdY63dWCutKyxwiIJQVcsO/IONkvDMpmujCWuvZ
- RBQrq3vpP+Cg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="146305347"
+        id S1726469AbgGDBmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 21:42:42 -0400
+IronPort-SDR: URsA/gpr1+psg0qGkyyLypn69DRDzAwGUhoegrqJ+QOKT2P4lvbauetVkR60TiqrkvGcA4k2b9
+ uv90dBVsqPcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="127304430"
 X-IronPort-AV: E=Sophos;i="5.75,309,1589266800"; 
-   d="scan'208";a="146305347"
+   d="scan'208";a="127304430"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 18:29:36 -0700
-IronPort-SDR: ZtbmMYelI8IXZAsk3KLBJcK5aowbULxh8Ai3XvHepeJX9AGEHZXrQ6G/GyZbQOogL0ijoBF/bD
- 6vJ2XYr9Ifdw==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 18:42:41 -0700
+IronPort-SDR: Tlv4/bc43PDV98bFLyN78rNhcEqaX5HK7KbatAVa5KBJbcVIZD8nHXpSFk/42Hvb52Q0iJ863q
+ gaDyiTY0HOyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,309,1589266800"; 
-   d="scan'208";a="356894439"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 03 Jul 2020 18:29:35 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jrWzm-0000Un-Dd; Sat, 04 Jul 2020 01:29:34 +0000
-Date:   Sat, 04 Jul 2020 09:29:27 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- a282cddefe90c4b21ef2c22a76a7c3ebd3ec6b86
-Message-ID: <5effdb77.xJJYQTu1OXVffy63%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="266063928"
+Received: from itaradex-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.22])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 18:42:26 -0700
+Date:   Sat, 4 Jul 2020 04:42:24 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+Message-ID: <20200704014224.GA129411@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200627174335.GC15585@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200627174335.GC15585@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: a282cddefe90c4b21ef2c22a76a7c3ebd3ec6b86  Merge branch 'WIP.core/headers'
+On Sat, Jun 27, 2020 at 07:43:35PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
+> > +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
+> > +			 void *token)
+> > +{
+> > +	u64 mrsigner[4];
+> > +	int ret;
+> > +	int i;
+> > +	int j;
+> > +
+> > +	/* Check that the required attributes have been authorized. */
+> > +	if (encl->secs_attributes & ~encl->allowed_attributes)
+> > +		return -EACCES;
+> > +
+> > +	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_lock(&encl->lock);
+> > +
+> > +	if (atomic_read(&encl->flags) & SGX_ENCL_INITIALIZED) {
+> > +		ret = -EFAULT;
+> > +		goto err_out;
+> > +	}
+> 
+> That test should be the first thing this function or its caller does.
 
-elapsed time: 2145m
+Fixed.
 
-configs tested: 102
-configs skipped: 5
+> 
+> > +	for (i = 0; i < SGX_EINIT_SLEEP_COUNT; i++) {
+> > +		for (j = 0; j < SGX_EINIT_SPIN_COUNT; j++) {
+> 
+> Ew, what's that double-loop for?
+> 
+> It tries to init an enclave a bunch of times. Why does it need to init
+> more than once?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+From SDM:
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                          pxa3xx_defconfig
-arm                       imx_v6_v7_defconfig
-powerpc                      ppc6xx_defconfig
-mips                          ath25_defconfig
-ia64                             allyesconfig
-arm                           efm32_defconfig
-sh                               alldefconfig
-powerpc                    mvme5100_defconfig
-mips                          rb532_defconfig
-xtensa                          iss_defconfig
-h8300                               defconfig
-mips                  maltasmvp_eva_defconfig
-ia64                        generic_defconfig
-microblaze                    nommu_defconfig
-s390                              allnoconfig
-parisc                generic-64bit_defconfig
-mips                        jmr3927_defconfig
-mips                 decstation_r4k_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200701
-i386                 randconfig-a001-20200701
-i386                 randconfig-a006-20200701
-i386                 randconfig-a005-20200701
-i386                 randconfig-a004-20200701
-i386                 randconfig-a003-20200701
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+"Periodically, EINIT polls for certain asynchronous events. If such an
+event is detected, it completes with failure code (ZF=1 and RAX =
+SGX_UNMASKED_EVENT), and RIP is incremented to point to the next
+instruction. These events includes external interrupts, non-maskable
+interrupts, system-management interrupts, machine checks, INIT signals,
+and the VMX-preemption timer. EINIT does not fail if the pending event
+is inhibited (e.g., external interrupts could be inhibited due to
+blocking by MOV SS blocking or by STI)."
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Not exactly sure though why this must be polled inside the kernel though.
+
+> 
+> > +			ret = sgx_einit(sigstruct, token, encl->secs.epc_page,
+> > +					mrsigner);
+> > +			if (ret == SGX_UNMASKED_EVENT)
+> > +				continue;
+> > +			else
+> > +				break;
+> > +		}
+> > +
+> > +		if (ret != SGX_UNMASKED_EVENT)
+> > +			break;
+> > +
+> > +		msleep_interruptible(SGX_EINIT_SLEEP_TIME);
+> > +
+> > +		if (signal_pending(current)) {
+> > +			ret = -ERESTARTSYS;
+> > +			goto err_out;
+> > +		}
+> > +	}
+> > +
+> > +	if (ret & ENCLS_FAULT_FLAG) {
+> > +		if (encls_failed(ret))
+> > +			ENCLS_WARN(ret, "EINIT");
+> > +
+> > +		sgx_encl_destroy(encl);
+> > +		ret = -EFAULT;
+> > +	} else if (ret) {
+> > +		pr_debug("EINIT returned %d\n", ret);
+> > +		ret = -EPERM;
+> > +	} else {
+> > +		atomic_or(SGX_ENCL_INITIALIZED, &encl->flags);
+> > +	}
+> > +
+> > +err_out:
+> > +	mutex_unlock(&encl->lock);
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
+> > + *
+> > + * @filep:	open file to /dev/sgx
+> 
+> @encl:       pointer to an enclave instance (via ioctl() file pointer)
+> 
+> > + * @arg:	userspace pointer to a struct sgx_enclave_init instance
+> > + *
+> > + * Flush any outstanding enqueued EADD operations and perform EINIT.  The
+> > + * Launch Enclave Public Key Hash MSRs are rewritten as necessary to match
+> > + * the enclave's MRSIGNER, which is caculated from the provided sigstruct.
+> > + *
+> > + * Return:
+> > + *   0 on success,
+> > + *   SGX error code on EINIT failure,
+> > + *   -errno otherwise
+> > + */
+> > +static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
+> > +{
+> > +	struct sgx_sigstruct *sigstruct;
+> > +	struct sgx_enclave_init einit;
+> > +	struct page *initp_page;
+> > +	void *token;
+> > +	int ret;
+> > +
+> > +	if (!(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
+> 
+> Might just as well check the other flags: doing EINIT on an already
+> initialized enclave - SGX_ENCL_INITIALIZED - is perhaps a nono or
+> similarly on a SGX_ENCL_DEAD enclave.
+> 
+> And you could do similar sanity checks in the other ioctl functions.
+
+Agreed (see my earlier response, let's continue this discussion there).
+
+/Jarkko
