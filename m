@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E949CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED77C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE7CB20885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7E020885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgGDLVA (ORCPT
+        id S1728071AbgGDLVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:21:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48334 "EHLO mga11.intel.com"
+        Sat, 4 Jul 2020 07:21:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48343 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbgGDLUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:20:00 -0400
-IronPort-SDR: yZjSbKgVPBbcZfrk/vQTE4DGNG4JPywdn0pzwUfatSHHtB/X0ltseNlWEKMS8sUZwu9XJ/ZnO9
- XTWJsmUcPEkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371355"
+        id S1727848AbgGDLT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 07:19:59 -0400
+IronPort-SDR: cam2EfBZesdx6MGml98jSgLskRmXsrSjUyghD9dhNsosC2v3ryeZiPiIrRBTlPOoRGvUUZ7dUI
+ pBuZ4p1I7PDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371353"
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="145371355"
+   d="scan'208";a="145371353"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:54 -0700
-IronPort-SDR: YsjoZH501qmpyn9DGovXZv7BEMxRmtsbnuRvyEzNQlHe7377nr7TCNlu71ivl5kyNKmjmAC5Dz
- xpVPv6Z1Ig6Q==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:53 -0700
+IronPort-SDR: 1CPHyZICftC/uPwmyfs+8MZ7sF++35C2lDMCeXe59RoftSriaaG1ijdMC53UUa0obPhpIEwVa9
+ rf6Rno6yNUqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="282521450"
+   d="scan'208";a="282521438"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:53 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 11/15] vfio/type1: Allow invalidating first-level/stage IOMMU cache
-Date:   Sat,  4 Jul 2020 04:26:25 -0700
-Message-Id: <1593861989-35920-12-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v4 08/15] iommu: Pass domain to sva_unbind_gpasid()
+Date:   Sat,  4 Jul 2020 04:26:22 -0700
+Message-Id: <1593861989-35920-9-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
 References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
@@ -56,10 +56,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides an interface allowing the userspace to invalidate
-IOMMU cache for first-level page table. It is required when the first
-level IOMMU page table is not managed by the host kernel in the nested
-translation setup.
+From: Yi Sun <yi.y.sun@intel.com>
+
+Current interface is good enough for SVA virtualization on an assigned
+physical PCI device, but when it comes to mediated devices, a physical
+device may attached with multiple aux-domains. Also, for guest unbind,
+the PASID to be unbind should be allocated to the VM. This check requires
+to know the ioasid_set which is associated with the domain.
+
+So this interface needs to pass in domain info. Then the iommu driver is
+able to know which domain will be used for the 2nd stage translation of
+the nesting mode and also be able to do PASID ownership check. This patch
+passes @domain per the above reason.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -68,108 +76,76 @@ Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Yi Sun <yi.y.sun@intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
-v1 -> v2:
-*) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
-*) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
-*) vfio_dev_cache_inv_fn() always successful
-*) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
----
- drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/vfio.h       |  3 +++
- 2 files changed, 53 insertions(+)
+v2 -> v3:
+*) pass in domain info only
+*) use ioasid_t for pasid instead of int type
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 6de0b8e..116b28e 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -3077,6 +3077,53 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+v1 -> v2:
+*) added in v2.
+---
+ drivers/iommu/intel/svm.c   | 3 ++-
+ drivers/iommu/iommu.c       | 2 +-
+ include/linux/intel-iommu.h | 3 ++-
+ include/linux/iommu.h       | 3 ++-
+ 4 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index e995e1a..1e567a1 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -436,7 +436,8 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
  	return ret;
  }
  
-+static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
-+{
-+	struct domain_capsule *dc = (struct domain_capsule *)data;
-+	unsigned long arg = *(unsigned long *) dc->data;
-+
-+	iommu_cache_invalidate(dc->domain, dev, (void __user *) arg);
-+	return 0;
-+}
-+
-+static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
-+					unsigned long arg)
-+{
-+	struct domain_capsule dc = { .data = &arg };
-+	struct vfio_group *group;
-+	struct vfio_domain *domain;
-+	int ret = 0;
-+	struct iommu_nesting_info *info;
-+
-+	mutex_lock(&iommu->lock);
-+	/*
-+	 * Cache invalidation is required for any nesting IOMMU,
-+	 * so no need to check system-wide PASID support.
-+	 */
-+	info = iommu->nesting_info;
-+	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
-+		ret = -EOPNOTSUPP;
-+		goto out_unlock;
-+	}
-+
-+	group = vfio_find_nesting_group(iommu);
-+	if (!group) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	domain = list_first_entry(&iommu->domain_list,
-+				      struct vfio_domain, next);
-+	dc.group = group;
-+	dc.domain = domain->domain;
-+	iommu_group_for_each_dev(group->iommu_group, &dc,
-+				 vfio_dev_cache_invalidate_fn);
-+
-+out_unlock:
-+	mutex_unlock(&iommu->lock);
-+	return ret;
-+}
-+
- static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
- 					unsigned long arg)
+-int intel_svm_unbind_gpasid(struct device *dev, int pasid)
++int intel_svm_unbind_gpasid(struct iommu_domain *domain,
++			    struct device *dev, ioasid_t pasid)
  {
-@@ -3099,6 +3146,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
- 	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
- 		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
- 		break;
-+	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
-+		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 	}
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 095a52a..d7a565a 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -1220,6 +1220,8 @@ struct vfio_iommu_type1_pasid_request {
-  * +-----------------+-----------------------------------------------+
-  * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
-  * +-----------------+-----------------------------------------------+
-+ * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
-+ * +-----------------+-----------------------------------------------+
-  *
-  * returns: 0 on success, -errno on failure.
-  */
-@@ -1232,6 +1234,7 @@ struct vfio_iommu_type1_nesting_op {
+ 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+ 	struct intel_svm_dev *sdev;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 595527e..5f74837 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2081,7 +2081,7 @@ int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 	if (unlikely(!domain->ops->sva_unbind_gpasid))
+ 		return -ENODEV;
  
- #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
- #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
-+#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
+-	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
++	return domain->ops->sva_unbind_gpasid(domain, dev, data->hpasid);
+ }
+ EXPORT_SYMBOL_GPL(__iommu_sva_unbind_gpasid);
  
- #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 0d0ab32..18f292e 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -738,7 +738,8 @@ extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+ extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 			  struct iommu_gpasid_bind_data *data);
+-int intel_svm_unbind_gpasid(struct device *dev, int pasid);
++int intel_svm_unbind_gpasid(struct iommu_domain *domain,
++			    struct device *dev, ioasid_t pasid);
+ struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
+ 				 void *drvdata);
+ void intel_svm_unbind(struct iommu_sva *handle);
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 21d32be..22f0730 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -303,7 +303,8 @@ struct iommu_ops {
+ 	int (*sva_bind_gpasid)(struct iommu_domain *domain,
+ 			struct device *dev, struct iommu_gpasid_bind_data *data);
+ 
+-	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
++	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
++				 struct device *dev, ioasid_t pasid);
+ 
+ 	int (*def_domain_type)(struct device *dev);
  
 -- 
 2.7.4
