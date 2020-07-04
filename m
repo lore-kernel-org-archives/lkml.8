@@ -2,113 +2,97 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B48206B7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKJb+1an"
+	by mail.kernel.org (Postfix) with ESMTP id 27750207D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 06:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593844342;
+	bh=M1LITLgZWedAqPaeDFmPN578cGEKoPhgwQmTWgqw0Aw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p6aX9kcW2cvUp0p380tVylAIaMLIa7o8VnSo7xlQO1jxRCZrLutVEwa7UHiW8nuBE
+	 t/Ce50tF4ge0jippyTPSGPrkHLxafLqf3ZNHCxk09A4bT7Ug99tzscpIf4EIdSObwu
+	 vsZQTc+zTmq1D/q7rMOTCyGeEhFxLWNFIUXd+TCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgGDGIx (ORCPT
+        id S1726839AbgGDGcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 02:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgGDGIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 02:08:49 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB45C061794;
-        Fri,  3 Jul 2020 23:08:49 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id u133so4557813vsc.0;
-        Fri, 03 Jul 2020 23:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Y/a/zbYT3mheg8JLw87yQei4Q/XEwYAs7jxL9Z5JTyA=;
-        b=cKJb+1anPH5nx0QokPkWHc1eslRDIE7n2q60lYmUJZe1VQK3oYQhMrfx+BSxBinah9
-         EkqH0pkjTZGeG/+jqTt7xVcuR22gO8kdN8uz4cyurD7XJHeZbvIpZem9aGVqfBgX9ju2
-         f/Qz5CdmVy9m2YOcz21Sk31SKm2KC+0Oh3N8UPjBHz47iAXbwa09kmYfzzgGtcuA45Kw
-         LCDX/ImEHUUPPcaUyorYRBTz986sb+bzkItcwKHjcqKwo3UpGfoVA0xkhWXJ2omjASpM
-         cgy4zz4SxaNh4Pt2dnFF2TKPNuCU+Ox02PyROhOuzAAW1Z/ppBmO0S6tda8FA5ZbfGvV
-         H1zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Y/a/zbYT3mheg8JLw87yQei4Q/XEwYAs7jxL9Z5JTyA=;
-        b=lfeBu7NmCOtl4ajUlxVEygPgC995Bgl67uvzPBCa7cjN7QEhHor7lnQw3ac6gSbgVj
-         6d8+fHjDSkkDtoVgI7VospZUZg4scs8E0tkDoYelfGGExALdz9MLuA3cQ21tbxP+9rys
-         kQ7Ipe04Z2/5i5+wKHyY7MfDdl/NAMT4Ra9eQtCT38U3tDqGcncQBTmCFhjd3QQb5PFb
-         e0wNmfLRmk8b0avN26Rttw3QNua1a8DFR3tX/y92t3r0rCmO3uH2PeGeNdB8UMjBWpgi
-         r29FchRoz/oetP2ujSkNVgULsKLLjMNXauguqjupDY54Phz+vmJHmECY05OPD5nYUqdd
-         kUCQ==
-X-Gm-Message-State: AOAM532tA6NGAZFqwITZMXlioyP+qYyY8QJnwGUk0KHOgJtv0+lzqzsm
-        UFAQ5dRjBylAYQLLiHIXK0dtkmvAv4g5bDjpSRo=
-X-Google-Smtp-Source: ABdhPJxmPJv+Coy9OsgrxrRmX/6vRF26FjAiHxnnt+EkjQKkjggARFe9Os8KR1MbhyAbMfgRBsxJclA/7NIzZx7L18g=
-X-Received: by 2002:a05:6102:5e1:: with SMTP id w1mr21239002vsf.147.1593842928615;
- Fri, 03 Jul 2020 23:08:48 -0700 (PDT)
+        Sat, 4 Jul 2020 02:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726178AbgGDGcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 02:32:20 -0400
+Received: from localhost (p54b3324c.dip0.t-ipconnect.de [84.179.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F112075D;
+        Sat,  4 Jul 2020 06:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593844340;
+        bh=M1LITLgZWedAqPaeDFmPN578cGEKoPhgwQmTWgqw0Aw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QPY5JS4UhHL9aOYiaU9qHYn8pt+hZjL11z8SyOMmqFPOjzf9GtxMHNe6Vb2WKWhD+
+         qjZWBuXrz8tqiy327Eq63yO/wIW19B1jBJQ/sbKYhFkBcwJniGdFobkfPpuI4SLHbI
+         dd3xizy1kZySr8bbWYMbinS1rt3RrUw36ITnA4HQ=
+Date:   Sat, 4 Jul 2020 08:32:17 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>, linux-i2c@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: jz4780: remove redundant assignment to variable i
+Message-ID: <20200704063217.GG1041@kunai>
+References: <20200610125901.1134204-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20200703212156.30453-1-rdunlap@infradead.org> <20200703212156.30453-4-rdunlap@infradead.org>
-In-Reply-To: <20200703212156.30453-4-rdunlap@infradead.org>
-Reply-To: linasvepstas@gmail.com
-From:   Linas Vepstas <linasvepstas@gmail.com>
-Date:   Sat, 4 Jul 2020 01:08:36 -0500
-Message-ID: <CAHrUA35-ocneW=B+P+qjTTtBztS3ZtDcoESXOBz0sc5nSw1xew@mail.gmail.com>
-Subject: Re: [PATCH 3/4] Documentation: PCI: pci-error-recovery: drop doubled words
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
+Content-Disposition: inline
+In-Reply-To: <20200610125901.1134204-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Linas Vepstas <linasvepstas@gmail.com>
 
-for this and the other patches in the series.
+--w/VI3ydZO+RcZ3Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 10, 2020 at 01:59:01PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> The variable i is being initialized with a value that is
+> never read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
+>=20
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On Fri, Jul 3, 2020 at 4:22 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Drop the doubled word "the".
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Linas Vepstas <linasvepstas@gmail.com>
-> Cc: linux-pci@vger.kernel.org
-> ---
->  Documentation/PCI/pci-error-recovery.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- linux-next-20200701.orig/Documentation/PCI/pci-error-recovery.rst
-> +++ linux-next-20200701/Documentation/PCI/pci-error-recovery.rst
-> @@ -248,7 +248,7 @@ STEP 4: Slot Reset
->  ------------------
->
->  In response to a return value of PCI_ERS_RESULT_NEED_RESET, the
-> -the platform will perform a slot reset on the requesting PCI device(s).
-> +platform will perform a slot reset on the requesting PCI device(s).
->  The actual steps taken by a platform to perform a slot reset
->  will be platform-dependent. Upon completion of slot reset, the
->  platform will call the device slot_reset() callback.
+What about 'ret'? Doesn't the same reasoning apply for it?
 
 
+--w/VI3ydZO+RcZ3Ux
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Verbogeny is one of the pleasurettes of a creatific thinkerizer.
-        --Peter da Silva
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8AInEACgkQFA3kzBSg
+Kbb+Bw/8DjdHpZF7hd2HqBySqH1zWA9Pq7rs0E0odz5AgngsAIREXgm9jq3NpF8q
+tN5W0f8rRuaBOyslXuR/v3FKU9ISAwGroDputlZW/O3yS4yYs6GPHxgiXqetKCq3
+sCB3my5jdtugp0pndjFn36UbzFxKANCxq3I15ZhQ2S3MVXbaKo6DzmBSiodihJY5
+QqG1RaKkLZoLCVlgO80CU6wCaoUOXkXlx4kurNuVSe8/3XhrbmHBylT9w8fMsxFq
+uWljyt1kLMhUlkBBcA9PQmGhwh31fCzWPBsP2T8Ti8oYm82oSqxlC69MLXZYYeEf
+3mIN+HjsVS1t4d2yW4li3UgMj7bBSFc1j1taOYFSxbGkxbGqMkcf6P7FnvNoIVum
+czPIXeA4JkYTsn3XZGM53l/sy+eSUr4/LF01DEqksHBcvTMBGAULlOLTuXWTGE97
+GEnM8aZ5fRqRa3ozV5BGbqDOhoMBvOgVoZR4jAhPVG2F8dat4UfRvu/e7V1dVS5P
+1vs5L/VNDIura6ZHofk5AMKZU2rDl5NQLkSeHlo7b2fhZaRBTn9329mIPm7rOixA
+jEw75Mu926qVeRnWhGRC0m4ADwSqZdsz3DGiR3WPZHY3G5JGQmqFNusfwhhJfOWj
+C+dDbTmVTKNSlAV9nhFuEOpW/GtyZ3PzQeFo0C5krvzglLUWpgs=
+=ZgOV
+-----END PGP SIGNATURE-----
+
+--w/VI3ydZO+RcZ3Ux--
