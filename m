@@ -2,113 +2,152 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5463CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E08C2084C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCAD208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7q7SjXm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meZHio9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGDLhb (ORCPT
+        id S1727943AbgGDLjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:37:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40092 "EHLO
+        Sat, 4 Jul 2020 07:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGDLhb (ORCPT
+        with ESMTP id S1726934AbgGDLjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:37:31 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AE7C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 04:37:31 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cm21so5530266pjb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 04:37:31 -0700 (PDT)
+        Sat, 4 Jul 2020 07:39:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58145C061794;
+        Sat,  4 Jul 2020 04:39:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so35448202wrn.3;
+        Sat, 04 Jul 2020 04:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4plqkhvVW/dHuIMMbhq1LQlta+pdw76VHrKkcf+m5iQ=;
-        b=o7q7SjXmYnY30eDj0Sa+Ilrh7Nbozwd343h6x09nNYV6HKAPXg5MLJ0YSzSKtG4laz
-         lSOAZJ62klEIMeDTY1m80EXHJp2NBqyvadia3ut9igvApRfwDgN10JOCBEKQYGY7GnjO
-         6tvFsI+YUxPCZGjS0/rmAJohvDoyuQQAT+RXEvh9Fdj6zFlMOeQGojpMMRYYQCBcwkPa
-         055NYk2wCcA3BwJRjCWg1sW/wRNIrW6a31NPaS1Obpwx5TNLZTOJMNsfni9IrBrUbdAw
-         mIYVztcCi+e53ph9SnZGE3nDCEdbCJQ46El82W48EQasgmKVxbwMD7Avmzio68xvtF+j
-         KTqw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=huTZWc4WX2Vk6rlBo+W/npzq0ocSqctPFM6mvDyKzhI=;
+        b=meZHio9kKgmPtzv7j7dRdrQkTdsN+PUWTJgQrVGZfSrAh8bO7SmdtsxUZjgewfgm+t
+         KQwupF83sh/tOwBQV2oDQvmEfzbCBdFbhiUvgFkafu1hc5+9tgW7oPWeKLcGMlf0xwYg
+         S2JDTsTmYO3/pqZqdM/qTRYEVSI36OaSmC5Ong+8WOPeDVX9ZMkGa4DKmN21UFyjZThT
+         z1Ufia2+HHra4ZoTt2B6k5q8aIFfPVb1u5oySe6l7B16SF3ZGJ1EV0X+UGaGHshmlZNL
+         qOyl/wjerLE2dV4cjbW8EykX/AWIQolAs6de3MRZaDBSi0bHrWY0IY6DD2Bidzdc6jho
+         8fdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4plqkhvVW/dHuIMMbhq1LQlta+pdw76VHrKkcf+m5iQ=;
-        b=tktK/DPr46mWz8M2eJSS9AAFbtZKq4ZdqAgtDCsWahYxDN5T5urxzMxcxLZkLO3MEf
-         lA6jeLotim8lITpEkrDST4cK5++18LfoGiTMWnhIUa3J00fdi967yYjqdbw4Zu+NwNxD
-         7YQeIL7TuAyLOWTOadxtveFzO/wB+GFmuqXBdb0TBBG92QABRRRdBzq1RCbaoC6qxpMT
-         G+Ff7eeH59BkRx8R0LIKBTjxkpnHkNRriqVXxoOR/xVcqpPqtYmyUYEaB72Y38zSY7+f
-         tbZm7VITU8ohrnAqkxsZ9nIk616DtR0XbSVusj4T2yy0OJ/RttuJlCJ6JXdkYPJ31TBe
-         KRzg==
-X-Gm-Message-State: AOAM533lc0tUEO6sNwpkLVabqGmWE0KRuwxDE/N9iXfWjSzRQCO7cTsD
-        d8V6dcbOd5rt9U3+Tbj9OWNmGmteAwAmHa7YF+Q=
-X-Google-Smtp-Source: ABdhPJwyL6hejhdOKtLk/8BNlcTJZtRGhcJrJxoAS5Tf95pbjgX8rcextWE547S3/0FtbsgkGF5z2RrY+5rxYa5DJv4=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr16736902pjb.181.1593862650846;
- Sat, 04 Jul 2020 04:37:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=huTZWc4WX2Vk6rlBo+W/npzq0ocSqctPFM6mvDyKzhI=;
+        b=oJVrBnhMGcTcSPPkgy+E+oVNHdPVwNcrFjnoMzgmqqoQN9Jovh9YOomc0vdB4w/t9e
+         aM2u1NZUsp8bks0T5iJBOvjj9n34OqZZGkX/8mxdLz2lIgIi0m9ToaNchXEF0XUw3/eM
+         A6ycgrSDXUukAS3U8jB8sDitHug4zAzaXo1fU74Jv+u+k7vBxcepX1/qLiJzsIzFothV
+         btWblu7oZyQKiEW1+ey5hCok2Zo0A+BCobY28FAD+qD1ZuzEMNDxRQMtkec0ZnrTPFJY
+         74tqUKvALLyUUf+TsPemeclq0yFmBZCFAvYFBDBJOsrW3L0mwrFDid01n2PqkPf95fES
+         kwXw==
+X-Gm-Message-State: AOAM533AF+P1/Yy5Uu4GmGM0HQcb2PAAKPkvHn6MD+tzH5Vf+Nw2pS4E
+        gXdtwhtZ8lY2/TzD1g1znG4=
+X-Google-Smtp-Source: ABdhPJxCjhh8TckSSIgRr6CJvS63LYfsRrgWAUQSGAQuTFPXEG/R05nSp234vtwv/LzOsRt4HrNb7Q==
+X-Received: by 2002:adf:fc90:: with SMTP id g16mr40188744wrr.42.1593862745973;
+        Sat, 04 Jul 2020 04:39:05 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 04:39:05 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 00/16] Add Allwinner H3/H5/H6/A64 HDMI audio
+Date:   Sat,  4 Jul 2020 13:38:46 +0200
+Message-Id: <20200704113902.336911-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
- <20200630035816.GA21591@jagdpanzerIV.localdomain> <20200630102141.GA11587@alley>
- <20200630105512.GA530@jagdpanzerIV.localdomain> <20200630122239.GD6173@alley>
- <20200630130534.GB145027@jagdpanzerIV.localdomain> <20200630180255.GD37466@atomide.com>
- <20200702051213.GB3450@jagdpanzerIV.localdomain> <20200702054033.GC3450@jagdpanzerIV.localdomain>
- <20200702082008.GE3703480@smile.fi.intel.com> <20200703105302.GC182102@jagdpanzerIV.localdomain>
-In-Reply-To: <20200703105302.GC182102@jagdpanzerIV.localdomain>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 4 Jul 2020 14:37:14 +0300
-Message-ID: <CAHp75Vc42k2G5VJDECBQ=HkkMoQq_VX+rpxVrjZHwMyAQ6O7gw@mail.gmail.com>
-Subject: Re: UART/TTY console deadlock
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Petr Mladek <pmladek@suse.com>,
-        Raul Rangel <rrangel@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 1:53 PM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> On (20/07/02 11:20), Andy Shevchenko wrote:
-> >
-> > I didn't look into this deeply, but my understanding that this is something for
-> > special case when you have several UART ports sharing the IRQ (multi-port card)
-> > and IRQ even maybe undesirable b/c it will confuse real IRQ handler. I don't
-> > remember details, but AFAIR IRQ handler does a busyloop to service as much as
-> > possible and in between it may release the lock (again, multi-port UART cards),
-> > that's why we better avoid IRQ event in the first place.
-> > But it's my pure speculation.
->
-> Hmm. Would different IRQ handlers use different UART port structures? ->irq
-> might be the only thing they share. Even if they use the same port, we
-> keep IRQs disabled on local CPU, and UART port locked. To unlock the UART
-> port during IRQ, the handler (on another CPU) first needs to acquire the
-> port->lock, which is locked by serial8250_do_startup().
+Hi,
 
-It appears to be a RT kernel related. Don't know the state of affairs
-in RT nowadays, but maybe still relevant.
-See the commit 768aec0b5bcc ("serial: 8250: fix shared interrupts
-issues with SMP and RT kernels").
+This a merge of serie:
+- Add Add H6 I2S support https://patchwork.kernel.org/cover/11497007/
+- Add Allwinner H3/H5/A64 HDMI audio https://patchwork.kernel.org/cover/11510511/
 
+I merge both serie because there is a similar issue regarding the I2S polarity.
+This need to be investigated under a scope and see if the comment is still true
+for Allwinner H6 and previous SoC.
+LibreElec team found that we have to introduce the
+"simple-audio-card,frame-inversion" property with recent mainline change.
+In order to make HDMI audio work.
+Maybe the I2S polarity is good or maybe the silicium has an issue but not present
+for HDMI I2S or not present in TDM mode...
+I cannot do it myself, so if someone want to to do it please feel free.
+
+Regarding the discussion we had here: https://patchwork.kernel.org/patch/11510521/
+I didn't switch to generic hdmi card-name and used name like:
+sun8i-h3-hdmi, sun50i-h6-hdmi, etc....
+
+Despite this wrong comment the rest of the serie introduce some fix that should
+be merged even if it's without the H6 support.
+
+Regards
+Clement
+
+Change since v1:
+- drop allwinner,playback-channels property
+- use coherent hdmi,card-name 
+- indentation fix
+- collect tags
+
+Clément Péron (2):
+  ASoC: sun4i-i2s: Fix sun8i volatile regs
+  arm64: dts: allwinner: h6: Enable HDMI sound for Beelink GS1
+
+Jernej Skrabec (3):
+  ASoC: sun4i-i2s: Add support for H6 I2S
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  arm64: dts: allwinner: h6: Add HDMI audio node
+
+Marcus Cooper (11):
+  ASoC: sun4i-i2s: Adjust LRCLK width
+  ASoC: sun4i-i2s: Set sign extend sample
+  ASoc: sun4i-i2s: Add 20 and 24 bit support
+  ASoC: sun4i-i2s: Adjust regmap settings
+  arm: dts: sunxi: h3/h5: Add DAI node for HDMI
+  arm: dts: sunxi: h3/h5: Add HDMI audio
+  arm64: dts: allwinner: a64: Add DAI node for HDMI
+  arm64: dts: allwinner: a64: Add HDMI audio
+  arm: sun8i: h3: Add HDMI audio to Orange Pi 2
+  arm: sun8i: h3: Add HDMI audio to Beelink X2
+  arm64: dts: allwinner: a64: Add HDMI audio to Pine64
+
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts     |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts     |   8 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  33 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |   8 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  35 +++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   8 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 ++
+ sound/soc/sunxi/sun4i-i2s.c                   | 281 +++++++++++++++++-
+ 9 files changed, 410 insertions(+), 6 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
