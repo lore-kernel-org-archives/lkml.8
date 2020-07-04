@@ -2,106 +2,87 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB609C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9461C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C776220723
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBGUXT9y"
+	by mail.kernel.org (Postfix) with ESMTP id C3FFD20747
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 00:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGDADV (ORCPT
+        id S1726819AbgGDAHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 20:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGDADU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 20:03:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAF9C061794;
-        Fri,  3 Jul 2020 17:03:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f3so15747046pgr.2;
-        Fri, 03 Jul 2020 17:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XfsnRGq5c7ISQMP6l12lIG9CT/MaV1ytAKPLovkdW6g=;
-        b=OBGUXT9yA+G7A+0ACpDkuvOBizruNZlUi6m2uBHw58O/fWISX/mOkrCVRWmKfBetTs
-         1rHrohBUhudhmqPZXYAko4J1WPW1lcU3mqOMiDO9x4a7G2W6l2jy9MacOGdbXd6ssffb
-         3rzhjJDJSvl0Wl+FL0AWzIdok6xQQId192oFJ4OfYkvuNRjXdlxL0uomU062UWmVYLVv
-         XyMCY8Ip7HDlP0yXehDFcxcyblxXYTZXf/AcFXL7UclLaK7hkdoRLu6aIpOvnhcaxFiN
-         hhmGGppwMCNYUgt+bEfOmaZrQzLUc0wvL7hQBgOlsl8VVTZTd2AYWxlCt9aLUzUYyf6O
-         /mCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XfsnRGq5c7ISQMP6l12lIG9CT/MaV1ytAKPLovkdW6g=;
-        b=Q633J5urr1g398Au4nGXo22v5Au/8Cu6GPKB15IJdDZ+LEHsxQXL0ydMXJNX0WXhak
-         Aed2/Rko/W84OsJ8VZx+HAC6wAfcRTVCSWaU2sFGG7dLHn4b+Zag+n+qLbmJ26kIBZfK
-         W1RRLtTMLTn2NA5KBUuC6MJnPYcUYlaHylvAeLTQ5g7Z/+YbA3BaoG0vkpCi5aHGvkTP
-         Ad26OmCsXqWtckALMnuCHEQjZKgKTVJY21yQFJ1FksRvOpqb8p6W8/uhLZyZH055wdxx
-         XXI/f4uZBhCL1uGITw78stNp14ePoVwSVQBAMqfEPYdlZhSukph5HNUG0pcTHsvRM8h7
-         g1AA==
-X-Gm-Message-State: AOAM532yn0jCZxx/+n6fcisS1sMtie7cNa0kWUCES/tKJ3E+/gvdqm7C
-        araBLRuWlwWJtJca7za3ktU=
-X-Google-Smtp-Source: ABdhPJwHHJ3EdBT7aaN5Xo7682dRxRj8iLuo7RgIeJaLML1bJV+ESClFMpDgDn8cRiVupJ5LSZ4N9w==
-X-Received: by 2002:a62:190a:: with SMTP id 10mr2980224pfz.29.1593821000161;
-        Fri, 03 Jul 2020 17:03:20 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:d8c2])
-        by smtp.gmail.com with ESMTPSA id b24sm12799253pgn.8.2020.07.03.17.03.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 17:03:19 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 17:03:16 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Fri, 3 Jul 2020 20:07:10 -0400
+Received: from correo.us.es ([193.147.175.20]:56236 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgGDAHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 20:07:10 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 16AB2ED5CA
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 02:07:09 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 03B2FDA78E
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 02:07:09 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id E2D73DA797; Sat,  4 Jul 2020 02:07:08 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id B3186DA73F;
+        Sat,  4 Jul 2020 02:07:06 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Sat, 04 Jul 2020 02:07:06 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 8143C4265A32;
+        Sat,  4 Jul 2020 02:07:06 +0200 (CEST)
+Date:   Sat, 4 Jul 2020 02:07:06 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v3 13/16] exit: Factor thread_group_exited out of
- pidfd_poll
-Message-ID: <20200704000316.z5opxpi4iozjjtfj@ast-mbp.dhcp.thefacebook.com>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-13-ebiederm@xmission.com>
- <20200703203021.paebx25miovmaxqt@ast-mbp.dhcp.thefacebook.com>
- <873668s2j8.fsf@x220.int.ebiederm.org>
+        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
+        "open list:NETFILTER" <coreteam@netfilter.org>,
+        "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] [net/ipv6] Remove redundant null check in ah_mt6
+Message-ID: <20200704000706.GA32604@salvia>
+References: <20200625023626.32557-1-gaurav1086@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <873668s2j8.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200625023626.32557-1-gaurav1086@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 04:37:47PM -0500, Eric W. Biederman wrote:
-> 
-> > The rest all looks good to me. Tested with and without bpf_preload patches.
-> > Feel free to create a frozen branch with this set.
-> 
-> Can I have your Tested-by and Acked-by?
+Hi Gaurav,
 
-For the set:
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Alexei Starovoitov <ast@kernel.org>
+On Wed, Jun 24, 2020 at 10:36:25PM -0400, Gaurav Singh wrote:
+> ah cannot be NULL since its already checked above after
+> assignment and is being dereferenced before in pr().
+> Remove the redundant null check.
+
+Could you collapse all your patches into one?
+
+They look like the same logic change (patch description is the same in
+the four patches in the series).
+
+Please, prepend netfilter: to your patch subject, I suggest the
+following subject for the collapsed patch.
+
+        netfilter: ip6tables: Remove redundant null checks
+
+Thanks.
