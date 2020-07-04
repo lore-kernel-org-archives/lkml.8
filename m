@@ -2,110 +2,120 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5246C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6909C20870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F6620772
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVToQFB0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kup5Q35r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgGDXfK (ORCPT
+        id S1728057AbgGDXjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 19:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
+        Sat, 4 Jul 2020 19:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgGDXfK (ORCPT
+        with ESMTP id S1727994AbgGDXjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 19:35:10 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D467DC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 16:35:09 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f12so12374532eja.9
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:35:09 -0700 (PDT)
+        Sat, 4 Jul 2020 19:39:42 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70066C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 16:39:42 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n2so22310206edr.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HNDVeItDy/XBJ+8/VApySLuTKnyDwRPMoyZTnmzqQFg=;
-        b=mVToQFB0MteQPg60+j4sV1I3VbaU39JUkaonE1q9EGVvB6176pUyGu2KyH1VE3ixbD
-         gfY/YIX3tKWUhzizlEgvK3g67Cxjbd5C0OGaHirmfieJtN0mkJjDLGmb9RPVVsoACtoA
-         kVTWv+2kauUJf6W3C+FAz39m5bE8c2DzB+2Q2NcjNsKmJYsZj7IJaRNrK3O17oSxudQS
-         v5vJdLD1mDnqkFiiIO3mU8BuhWY8SFlcXhv9MmfDq/AgPpdRTtO35/qsCQuNYEhqlOng
-         80cf5/tzQnCwskMaplSXXY4aW318c/rn0ZxOwhIXF8I9xsM0c8HWtH0BWhod0ZbR8AF9
-         CK4Q==
+        bh=wiOQQZ02XFm/BV4L3Jk1shIvr/SgSyC6/7/Nw0lQ+ZA=;
+        b=kup5Q35rKbLnb1mEjO8X6MKkJrcWslIPp6mdkMvRY0G1dR/BCUgniv2XMdUgQx8BP0
+         WdqSljKF6PIRc+5Q5lO0Q3uBGpO7GjIrgaIaeNHJyDnaQkmMJQeGlF9rT2UJXyErJ8EJ
+         0NiEJ0pu6U74hLy+C1UpY2QxTCIQSUH7362ciYBgckTfc7auJkrziYcZmVBweBxWyPwa
+         mC6xVATf6Vp4gS4WRuTtPM8aHV7dA9K6+GeNdqWUfzDUtHlI2edaTooIYe1QZp5BVdvD
+         QnQchV6QQJKykJE9sWiUSF5lW6Th9AQe2GMYD4g0PuITzvM9Mv2qVkWh75Edu5Ov9yt/
+         0DOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HNDVeItDy/XBJ+8/VApySLuTKnyDwRPMoyZTnmzqQFg=;
-        b=ogvtV6g8xPRrzWphwx2op3kFebi8SlhW6xLySontbGdn5AQbuIg0L7S/GF4RAdJH21
-         /AKabq05k7wTYrpSWGCdNKFsO60YGrZHstI7NoIe0iJbNmYrcgnuwwegSCN+F/zLQ0Dy
-         CpvDyqaW5JtXYCcFjugO/TbHMly5bxt7yYD74Mu5dBFfhjoF6Bhqw6pGLcW+2SQt5Mb1
-         MiDhSfLEtGSpTX21C+MbyL8dmdb5s/kXDTDz3LQe1FAzpTd+jBceG/AtcwhBsNK2vE+X
-         b95BMBkUVOj1wQPt3Tc9hRXZpDuMKUXIzvC9P4nVLVwO2qQUvOeMRtAJz5tJeBZo11JH
-         qgtg==
-X-Gm-Message-State: AOAM532+JucD7ffUNRKJdPo5+FY7rMQweH+YjBXGdZtXcTKrabOtupoY
-        aIi0kM8QNOB2TlAoFjW44/P4eJnonbaQBsNyNAw=
-X-Google-Smtp-Source: ABdhPJzLHDeLKWceSh0oqqwXr+kjyv7oF+hVEXofB6wPk1V5t3rlZKh6KqR8EFtrC8rgBH5h4Ut4Mck8IR9S9Tp4ZJA=
-X-Received: by 2002:a17:906:4086:: with SMTP id u6mr40502780ejj.9.1593905708462;
- Sat, 04 Jul 2020 16:35:08 -0700 (PDT)
+        bh=wiOQQZ02XFm/BV4L3Jk1shIvr/SgSyC6/7/Nw0lQ+ZA=;
+        b=rrT9P40lIzJs1kvxmUr+/CQseUdmpYO1mjLjuC//0qnI+h3AmG98dffShMTuD3k/br
+         2SSVCuoo38OMgioEW2QrscDlbUqmMPY2DRnHxwZdCsEiuVraTrPS+Vj4z2KXml4HWm8C
+         WCd/jr1nZWwtH7YAPv+xkO7+K/e/hM//HoeMR+QF3P7seHQSvOAh32OFEL5AUt1xj3DI
+         cqJKWzR6YsBAEoz2rl/3mXJ7UasC2J4PzzbjHOjurLbEqENlulu8GMw5F2FJ0St2a4AZ
+         Y3r1XuapQxxN181OzRpd2lTZ3cB2J2uukoU5E90sSxJAqWR7iZnIi9QzQr7bK6gSyoWU
+         3nzg==
+X-Gm-Message-State: AOAM530c6vqJiSozEdYA3aeKLRpifccviGKnXPZztCvYUU/7K+G4Cphe
+        BszsR8rWhFkTAL0XOCZbFaHKAmx8aTPrfU4K77s=
+X-Google-Smtp-Source: ABdhPJzbei+YhbyxBBky+9dDKnl8xs2AYHFFXGBEnxjE+lcFPY0N5s9i6KJs6PQtIT40TdEoIG90VJW5+1F1Of5ao3E=
+X-Received: by 2002:a50:f08c:: with SMTP id v12mr47055813edl.119.1593905981048;
+ Sat, 04 Jul 2020 16:39:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200705064348.71d4d51f@canb.auug.org.au>
-In-Reply-To: <20200705064348.71d4d51f@canb.auug.org.au>
+ <1593897917.7058.11.camel@HansenPartnership.com>
+In-Reply-To: <1593897917.7058.11.camel@HansenPartnership.com>
 From:   Dave Airlie <airlied@gmail.com>
-Date:   Sun, 5 Jul 2020 09:34:57 +1000
-Message-ID: <CAPM=9txOgRYc7RM3fzohB4=Ejcp_xMGLBX_OOCOD=r+W6D678A@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Sun, 5 Jul 2020 09:39:29 +1000
+Message-ID: <CAPM=9tyjdzU-O2nAWFngGSE=aSfUsaRer9x3bk8hpyhCOX0Bew@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
+ Inclusive Terminology
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chris Mason <clm@fb.clm>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Jul 2020 at 06:45, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Sun, 5 Jul 2020 at 07:25, James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
 >
-> Hi Dan,
+> On Sat, 2020-07-04 at 13:02 -0700, Dan Williams wrote:
+> [...]
+> > diff --git a/Documentation/process/inclusive-terminology.rst
+> > b/Documentation/process/inclusive-terminology.rst
+> > new file mode 100644
+> > index 000000000000..a8eb26690eb4
+> > --- /dev/null
+> > +++ b/Documentation/process/inclusive-terminology.rst
 >
-> On Sat, 04 Jul 2020 13:02:51 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > +Linux kernel inclusive terminology
-> > +==================================
-> > +
-> > +The Linux kernel is a global software project, and in 2020 there was a
-> > +global reckoning on race relations that caused many organizations to
-> > +re-evaluate their policies and practices relative to the inclusion of
-> > +people of African descent. This document describes why the 'Naming'
->
-> I feel a need to point out that racial issues are wider than just
-> people of African descent ...  Also, others have pointed out that
-> slavery is not just restricted to those of African descent.
+> Could we just lose this entire document?  The one thing we should learn
+> from recent history is that we really want prevent people distracting
+> from the good inclusive (and technically more accurate) terminology
+> will do.  One way the detractors do this by engaging in ultimately
+> pointless arguments about historical accuracy of supporting statements.
+>   By making pejorative statements about history (which are open to
+> challenge on several fronts), this document acts as a magnet for such
+> attention.  Simply leave it out and the detractors will have nothing to
+> attack except the bald statement of desiring more inclusive language.
+> I'd much rather defend why we want inclusive and more descriptive
+> language than get into a pointless argument over whether the Ottoman
+> slave trade was more or less evil than the American one.
 
-The racial issues are wider than that, and even wider again I'm sure,
-but in 2020 this is as good a place to start as any, and the trigger
-as that sentence says was in 2020, there was a reckoning about it
-mainly due to people of African descent. That trigger has had flow on
-effects in other countries, but I'm not sure that sentence in any way
-diminishes that, it's merely an introduction to why this change is
-happening now.
+I don't totally agree on that, because like the CoC discussion, people
+need concrete examples. People need reasons, saying simply "be
+inclusive" doesn't work.
 
-As for the non-black slavery, others have never pointed this out
-before in 30 years of master/slave terminology? surely if white
-slavery was as big a problem, they be as supportive of this, even more
-so. It speaks volumes that I've never heard white slavery as a problem
-once in 30 years, but now I'm hearing about it a few times, and
-somehow as an excuse not to support this.
+You say "be inclusive" people don't think about it, they just go "I'm
+inclusive" and proceed, never questioning what it means to be
+inclusive, they normalise inclusivity to their self image and within
+their lives where they might never confront anything like this.
+
+I don't doubt we get the American/Ottoman/Barbery coast people and the
+correct answer to those people is to tell them to examine why they
+suddenly care about Barbery slavery now when they have never even
+heard or worried about it before. Why haven't they submitted patches
+removing slavery terminology from the kernel before?
 
 Dave.
