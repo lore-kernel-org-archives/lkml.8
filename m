@@ -2,179 +2,115 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77D720723
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95BC20739
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXaw5hyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgGDQAx (ORCPT
+        id S1726869AbgGDQGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 12:00:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57226 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgGDQAw (ORCPT
+        Sat, 4 Jul 2020 12:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgGDQGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 12:00:52 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jrkav-00008Q-2S; Sat, 04 Jul 2020 16:00:49 +0000
-Date:   Sat, 4 Jul 2020 18:00:48 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v3 13/16] exit: Factor thread_group_exited out of
- pidfd_poll
-Message-ID: <20200704160048.l2yvs3w5k4vclpdv@wittgenstein>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-13-ebiederm@xmission.com>
+        Sat, 4 Jul 2020 12:06:00 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C9EC061794;
+        Sat,  4 Jul 2020 09:06:00 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id x9so29615772ila.3;
+        Sat, 04 Jul 2020 09:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ODHZ3f5eaFjThQNy1ZH1ODuExiCMIx4dGKFuIMQycDw=;
+        b=eXaw5hyn1DlJTN9+CuJ68vCNARTwivoLZmwxV2nk+eiU9l4cu8J57gvDVx2la4cdQH
+         F45M46Hp2KUEL27s9NCuDwj7RqGvtJZeCqzVBB4uoBwYPhM0AgA0R38QKNPTxDpJtUAD
+         2DUeaZOmKAppV2Hbt9QZqnGCZ3EyFIyAKtGRjS7GEHEMd840d6rm6gEQdE1OLh5Eh5aZ
+         nEDFyrWul5L29yxZl0DChN4fsU9epiKleEkmpifHWTvrQ5+ARFsDSN6mlBkBd1belI+h
+         MDdA6+vM4ON+hdBQTVKZrWCT2zFd8wRoMwOc15sR8yAUrZVbOE0UG1RVxjXn2RDc4bOg
+         lSJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ODHZ3f5eaFjThQNy1ZH1ODuExiCMIx4dGKFuIMQycDw=;
+        b=nb9wpIgcHVsCtje/+IIl3PbdZ7S9O9OHTjuSCUQnYpze7p1u0TEy7joumg0fff4PSQ
+         txo3FY5i7NvQ7qEWvrozNXGQiH5dqlR5mF1xVXGyV/a9sqTYkByuxh6ZNEw5zPwdXFvE
+         YukIV7HNzObvR23L1pv/JKLL+HmsItjL92pEmmYWvch5RuFADw/tG16mTup+fmBo3Xk3
+         erHKPebT+IZwMBTa3nHOTMqehi4qt1vUTqrkullRhVd/mNJrQz/v6IrcxpwBfyJgZ0Qz
+         cUf0EvmI33Jn+oYZuFMvYg22VLrpsFq6loGc+wxaih/RWftgij1hkqEBeBwnhI2UUBwk
+         9Q2w==
+X-Gm-Message-State: AOAM531KCudeg9rRMMsemZjcFVeMZ1HSpReS+MjdS0tzUEmX0j++Dsu3
+        T7+6gS18QVV4Nt3/Q7Qq70D1OEVZ7JzFvx9cMr8=
+X-Google-Smtp-Source: ABdhPJzWM29TMUej+iL+jdlpOERWnMeNOp63J3Uc4L++L7sTeG0IuET1vhWvp/f2zID3OWSCC0/FHOp8Sf4CxOvC7yo=
+X-Received: by 2002:a92:5a05:: with SMTP id o5mr17126179ilb.237.1593878759489;
+ Sat, 04 Jul 2020 09:05:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200702164140.4468-13-ebiederm@xmission.com>
+References: <20200703182010.1867-1-bruceshenzk@gmail.com>
+In-Reply-To: <20200703182010.1867-1-bruceshenzk@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sat, 4 Jul 2020 09:05:48 -0700
+Message-ID: <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
+Subject: Re: [PATCH] net: fm10k: check size from dma region
+To:     Zekun Shen <bruceshenzk@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:41:37AM -0500, Eric W. Biederman wrote:
-> Create an independent helper thread_group_exited report return true
-
-s/report return/which reports/
-
-> when all threads have passed exit_notify in do_exit.  AKA all of the
-> threads are at least zombies and might be dead or completely gone.
-> 
-> Create this helper by taking the logic out of pidfd_poll where
-> it is already tested, and adding a missing READ_ONCE on
-> the read of task->exit_state.
-
-I would prefer to have this comment dropped as this read_once() is not
-missing as you can see from the comments elsewhere in this thread.
-
-> 
-> I will be changing the user mode driver code to use this same logic
-> to know when a user mode driver needs to be restarted.
-> 
-> Place the new helper thread_group_exited in kernel/exit.c and
-> EXPORT it so it can be used by modules.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+On Fri, Jul 3, 2020 at 11:21 AM Zekun Shen <bruceshenzk@gmail.com> wrote:
+>
+> Size is read from a dma region as input from device. Add sanity
+> check of size before calling dma_sync_single_range_for_cpu
+> with it.
+>
+> This would prevent DMA-API warning: device driver tries to sync DMA
+> memory it has not allocated.
+>
+> Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
 > ---
-
-Minus the typos above and below, this looks good and passes the pidfd
-and process test-suite.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-Thanks!
-Christian
-
->  include/linux/sched/signal.h |  2 ++
->  kernel/exit.c                | 24 ++++++++++++++++++++++++
->  kernel/fork.c                |  6 +-----
->  3 files changed, 27 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index 0ee5e696c5d8..1bad18a1d8ba 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -674,6 +674,8 @@ static inline int thread_group_empty(struct task_struct *p)
->  #define delay_group_leader(p) \
->  		(thread_group_leader(p) && !thread_group_empty(p))
->  
-> +extern bool thread_group_exited(struct pid *pid);
+>  drivers/net/ethernet/intel/fm10k/fm10k_main.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_main.c b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+> index 17738b0a9..e020b346b 100644
+> --- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+> +++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+> @@ -304,6 +304,11 @@ static struct sk_buff *fm10k_fetch_rx_buffer(struct fm10k_ring *rx_ring,
+>         struct fm10k_rx_buffer *rx_buffer;
+>         struct page *page;
+>
+> +       if (unlikely(size > PAGE_SIZE)) {
+> +               dev_err(rx_ring->dev, "size %d exceeds PAGE_SIZE\n", size);
+> +               return NULL;
+> +       }
 > +
->  extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
->  							unsigned long *flags);
->  
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index d3294b611df1..a7f112feb0f6 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -1713,6 +1713,30 @@ COMPAT_SYSCALL_DEFINE5(waitid,
->  }
->  #endif
->  
-> +/**
-> + * thread_group_exited - check that a thread group has exited
-> + * @pid: tgid of thread group to be checked.
-> + *
-> + * Test if thread group is has exited (all threads are zombies, dead
+>         rx_buffer = &rx_ring->rx_buffer[rx_ring->next_to_clean];
+>         page = rx_buffer->page;
+>         prefetchw(page);
 
-s/is has exited/has exited/
+The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
+PAGE_SIZE. Otherwise you are still capable of going out of bounds
+because the offset is used within the page to push the start of the
+region up by 2K.
 
-> + * or completely gone).
-> + *
-> + * Return: true if the thread group has exited. false otherwise.
-> + */
-> +bool thread_group_exited(struct pid *pid)
-> +{
-> +	struct task_struct *task;
-> +	bool exited;
-> +
-> +	rcu_read_lock();
-> +	task = pid_task(pid, PIDTYPE_PID);
-> +	exited = !task ||
-> +		(READ_ONCE(task->exit_state) && thread_group_empty(task));
-> +	rcu_read_unlock();
-> +
-> +	return exited;
-> +}
-> +EXPORT_SYMBOL(thread_group_exited);
-> +
->  __weak void abort(void)
->  {
->  	BUG();
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 142b23645d82..bf215af7a904 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1787,22 +1787,18 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->   */
->  static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
->  {
-> -	struct task_struct *task;
->  	struct pid *pid = file->private_data;
->  	__poll_t poll_flags = 0;
->  
->  	poll_wait(file, &pid->wait_pidfd, pts);
->  
-> -	rcu_read_lock();
-> -	task = pid_task(pid, PIDTYPE_PID);
->  	/*
->  	 * Inform pollers only when the whole thread group exits.
->  	 * If the thread group leader exits before all other threads in the
->  	 * group, then poll(2) should block, similar to the wait(2) family.
->  	 */
-> -	if (!task || (task->exit_state && thread_group_empty(task)))
-> +	if (thread_group_exited(pid))
->  		poll_flags = EPOLLIN | EPOLLRDNORM;
-> -	rcu_read_unlock();
->  
->  	return poll_flags;
->  }
-> -- 
-> 2.25.0
-> 
+If this is actually fixing the warning it makes me wonder if the code
+performing the check is broken itself since we would still be
+accessing outside of the accessible DMA range.
