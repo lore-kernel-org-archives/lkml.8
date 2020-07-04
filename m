@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A918320870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CAB208B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNFNgYAd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtcohPOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgGDK01 (ORCPT
+        id S1727961AbgGDK0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 06:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
+        Sat, 4 Jul 2020 06:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgGDKZu (ORCPT
+        with ESMTP id S1727863AbgGDKZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 06:25:50 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325EBC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:50 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so32305620wrw.1
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:50 -0700 (PDT)
+        Sat, 4 Jul 2020 06:25:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E2EC061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r12so35257122wrj.13
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UtYpmlK0sBLIGu+jD6jSIfVxQzKUKkc64VLLUVnW2E0=;
-        b=qNFNgYAd58cWTopWsCnVpN6KF4hgB35zsvk6rweB2geap+2a/hZHA4uMl6E/nhyVcz
-         4ypnl0H+eZ43sMPKGNvmbbssEXLnVdNP87/3ePmLXVN3fjJ7dBtESN0y6eZgz/eW5wmF
-         D8m38BQ7KY6+zDcy3BkKBdVqRbWTVtxZd2KIOEpCgimRHWJhRsacbK1tBOENgfk557hF
-         BOagm7Vf7N1RO3OOeVg5Ld4aYv490y6kKN94T2AjBJ1Cw/Q0c8EKUkwbKV+50Gyz6zZu
-         zVZrjvDEvR66R7ATN6aQmSk1hr3Iw9rizpE1dlrX3vUob8+6+iU7sgzkRYRBYnzOke+h
-         NsjQ==
+        bh=ljYbPfikKidTyz4vCaRd3InFHHUQa8/wBp/13AuL7tw=;
+        b=OtcohPOvXt2wkLQ8Gr+W1KKjsQooO/5qB9Qw8JWG4RNqLiqDxo/9dseNe3YnuskVz1
+         s7+RSXF88YSx0S6+WZ8nxtvazmNCAcDUDipl+5YPKdkS0Sj+UxAu+3DwQ69w7IWJNq/e
+         OEn29d41euiV7DUJLQ+IsPKmiIoZaugWLz0hax5yM9jQ2D5MD9QIbuyu6fhXI3OLFifN
+         A3oxh7V5aXwUq4ERKGIgHYaqepYNQSO+ryAMrM3CqymMBsQVRYGPBQ6PElR5bge+l0c9
+         +IDp464kLvagcPqwbTfP8MgY1W0ukcv19uHRk6Ya1lgRMXDV2XEaIfsvW39GtXFdUhOY
+         021A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UtYpmlK0sBLIGu+jD6jSIfVxQzKUKkc64VLLUVnW2E0=;
-        b=mLvp1r+PMJVMUpwMdK1Pal8/oElWUXwVy2QXtmXChR41UArDTjz77t1zhZrrmvByUr
-         DEb38guDqE7dVdBYFIm3MjCq/3W9iwm06zeKCY6Q53/u8EJxK59pc7j0ssGdJtU49/lj
-         iX9yzoWm0bUqMgD78+qi+eWQZ0xUqi7jigoQnMdL8cSARVWQ4/rdXwrneKJtC4X7egqU
-         NvJdmM/hWrSVlrNfn6sTXsv/OiHyPY08PScc4tG8aFmW7d0oaAGsMEPJHOb7hruJRDwn
-         fKZjHD+8ZGMLQ1DIp5SHTY+VZZ5n9Fp6WHuGZtBoXFV+uGzFmxfl0i/bk5b5oZ9RLMK9
-         20Dw==
-X-Gm-Message-State: AOAM5315ol/9DBV96NQLTVChZbet3f2evPfyc0oarEgZ0xXacakYlJOL
-        HS8IMzbr2mXo64jizUn2LdQ=
-X-Google-Smtp-Source: ABdhPJy/tukX+K79X4Pugp0jciTOgHL2tsymvPVNBkXelV2FU7kvRasFKCl5O0QlvUUsoGSmQgxY2w==
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr39485996wrs.36.1593858348780;
-        Sat, 04 Jul 2020 03:25:48 -0700 (PDT)
+        bh=ljYbPfikKidTyz4vCaRd3InFHHUQa8/wBp/13AuL7tw=;
+        b=FJoQsU08fwXxbo/6XSGU5Kchckp45n4lwDAnM7WTNvECN6dWjprpTJHk1lZ9rhDDoB
+         PiZ4oP3cLnjr6iasSlmss7vYBfU/i/zCuWC0dIYrQY9ybQ8QPE6hscrgbWp04alZJREi
+         amKRXUio0ezkQiPlWwE1pE7dEZ/GAaaYscNLs8JJOPG/w6xitAjzzv3kaUgWmGk/9p9/
+         s1f8hAjYv9pdXywY+NLHc2LWrM3FvZtqboBQMUfFurT98G8rEGV0ljB3p4bneu1CTQgd
+         bQOx2nci7XgObQQM1sKDwhHomj+4xfnTWjhAOincqJY1sF08J56ZP3fKITCEAIzphkyI
+         Jdgw==
+X-Gm-Message-State: AOAM531JgjV5h55l1e1euSgISuNhPKxdylBYSTZIFeHp5hceJf/Q0MpF
+        aFD6P95201dUOfLlpBqBBmc=
+X-Google-Smtp-Source: ABdhPJyzbanNd720c5+6eFrmSAieB5pdrwV6bL2dAq30zpazgrsKSLmIJk9Tt8TYJ1H6eSrfY76sgw==
+X-Received: by 2002:adf:f34e:: with SMTP id e14mr40085606wrp.299.1593858355499;
+        Sat, 04 Jul 2020 03:25:55 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.47
+        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 03:25:48 -0700 (PDT)
+        Sat, 04 Jul 2020 03:25:54 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 06/14] drm/panfrost: properly handle error in probe
-Date:   Sat,  4 Jul 2020 12:25:27 +0200
-Message-Id: <20200704102535.189647-7-peron.clem@gmail.com>
+Subject: [PATCH v2 12/14] arm64: dts: allwinner: h6: Add cooling map for GPU
+Date:   Sat,  4 Jul 2020 12:25:33 +0200
+Message-Id: <20200704102535.189647-13-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704102535.189647-1-peron.clem@gmail.com>
 References: <20200704102535.189647-1-peron.clem@gmail.com>
@@ -85,94 +85,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a boolean to know if opp table has been added.
-
-With this, we can call panfrost_devfreq_fini() in case of error
-and release what has been initialised.
+Add a simple cooling map for the GPU.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 25 ++++++++++++++++-----
- drivers/gpu/drm/panfrost/panfrost_devfreq.h |  1 +
- 2 files changed, 20 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 78753cfb59fb..d9007f44b772 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -101,6 +101,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 		return 0;
- 	else if (ret)
- 		return ret;
-+	pfdevfreq->opp_of_table_added = true;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 78b1361dfbb9..8f514a2169aa 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -174,6 +174,7 @@ gpu: gpu@1800000 {
+ 			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
+ 			clock-names = "core", "bus";
+ 			resets = <&ccu RST_BUS_GPU>;
++			#cooling-cells = <2>;
+ 			status = "disabled";
+ 		};
  
- 	spin_lock_init(&pfdevfreq->lock);
- 
-@@ -109,8 +110,10 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	cur_freq = clk_get_rate(pfdev->clock);
- 
- 	opp = devfreq_recommended_opp(dev, &cur_freq, 0);
--	if (IS_ERR(opp))
--		return PTR_ERR(opp);
-+	if (IS_ERR(opp)) {
-+		ret = PTR_ERR(opp);
-+		goto err_fini;
-+	}
- 
- 	panfrost_devfreq_profile.initial_freq = cur_freq;
- 	dev_pm_opp_put(opp);
-@@ -119,8 +122,8 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 					  DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
- 	if (IS_ERR(devfreq)) {
- 		DRM_DEV_ERROR(dev, "Couldn't initialize GPU devfreq\n");
--		dev_pm_opp_of_remove_table(dev);
--		return PTR_ERR(devfreq);
-+		ret = PTR_ERR(devfreq);
-+		goto err_fini;
- 	}
- 	pfdevfreq->devfreq = devfreq;
- 
-@@ -131,15 +134,25 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 		pfdevfreq->cooling = cooling;
- 
- 	return 0;
+@@ -1012,6 +1013,27 @@ gpu-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 1>;
 +
-+err_fini:
-+	panfrost_devfreq_fini(pfdev);
-+	return ret;
- }
- 
- void panfrost_devfreq_fini(struct panfrost_device *pfdev)
- {
- 	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
- 
--	if (pfdevfreq->cooling)
-+	if (pfdevfreq->cooling) {
- 		devfreq_cooling_unregister(pfdevfreq->cooling);
--	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-+		pfdevfreq->cooling = NULL;
-+	}
++			trips {
++				gpu_alert: gpu-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
-+	if (pfdevfreq->opp_of_table_added) {
-+		dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-+		pfdevfreq->opp_of_table_added = false;
-+	}
- }
- 
- void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-index 3392df1020be..210269944687 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-@@ -15,6 +15,7 @@ struct panfrost_device;
- struct panfrost_devfreq {
- 	struct devfreq *devfreq;
- 	struct thermal_cooling_device *cooling;
-+	bool opp_of_table_added;
- 
- 	ktime_t busy_time;
- 	ktime_t idle_time;
++				gpu-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.25.1
 
