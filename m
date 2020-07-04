@@ -2,119 +2,111 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D82C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4A9208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842AC208B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLSRDPJx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY6yfc0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgGDLkO (ORCPT
+        id S1728076AbgGDLlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
+        Sat, 4 Jul 2020 07:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbgGDLjK (ORCPT
+        with ESMTP id S1726807AbgGDLlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:39:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A019C061794;
-        Sat,  4 Jul 2020 04:39:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j4so32999596wrp.10;
-        Sat, 04 Jul 2020 04:39:09 -0700 (PDT)
+        Sat, 4 Jul 2020 07:41:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B528C061794;
+        Sat,  4 Jul 2020 04:41:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j19so9367253pgm.11;
+        Sat, 04 Jul 2020 04:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wM8K//a3jkdseqCAX2c7vevYvjhQJoc1FelDz72tbrA=;
-        b=uLSRDPJxTFQXZeoHyKDe5jl2kj0U+TGby3zgXWBnikqtT6iWF2HlxK66opO7RAlSaT
-         PlGtaqTqdSRH5fxRrcNbVqNexyGLLvRP60i+KX6k1qhMSGGY9dsvNC3LEVf1INfUi/p5
-         ye6D6sD2UHAIpmmf7aM/z87jqs1s877OgEWe+asl/0NtltxFcZb4Sbqp/TRmiSXAxSWb
-         hMeWglCBdNY1hf+OTXKA/zPoeoMreUO9Cj7gPjk+gsAYGUQruNFh3K4ZhxTXVI2CmmeP
-         adiQel92MTrYxYZqyyWgHE54DkcHH5zUbFyOnnofBty/t4XfBv/3DRt0FhdYIAMuHikg
-         RxSw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=73HK164+x5FAxaDbC4Zvcu41NPAm1TqUuRv2JoFu+h4=;
+        b=VY6yfc0HXQk+XYGXORLDWV/ESqqDcoZ2BUmV4VxB22eeUJ3ZppfrRXbKoxXLk4nWLn
+         lrmx+/YTTd5fySmVtnxgCjCgkvo/Yo7x7ZvY1KUIR560VUDZVrPgYCXrPzMUw+rxTm1F
+         FIuI9TP43DDz/uCCBkwYpO7u2ue3waqxp76oswJEadMA+C0/D/JRzxh3OXQnmIcrQpNG
+         J5fwkTsYkmXlO5Bg6MC1guYeDqabmOBRzYGMDO5FjNDxIif3kAtMCPCQS8fUHNlPmbf+
+         ztV4MOeAFwji67KuP+Bgm64UoowS//twc0klMCOGUQnoKujmwqemqoxhzF2si8Lev7GQ
+         737A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wM8K//a3jkdseqCAX2c7vevYvjhQJoc1FelDz72tbrA=;
-        b=PnapFxM00MgsCD45ymZzt6bfD3bz1qQrzNpcECG5BhrFOztq5Fv/3ktulxSwF9OsDp
-         F9cwqv43SIHYVhXHcbBC8HQfe4YwpMHnaqfMod7x8fU4w3C5m1ehXX9KblOy2SwqkPAF
-         6Qy4XRvu5SNK14nVVgVueiDCUitIEZ7Zc4ts1niE9+JXlUp7iQq0LctEjbqNRfYEQNbf
-         hgtVwL2BeeWb9fxdAxqcinhgicMGjpjnF+EXNVmsPmpC+Cj8IFfn7DS+3XtBSTxF20In
-         P1MorLesjQX1FD8t0Mtz5MV2ipN0iXS/Dg2yqvs2tSZH6ZrX8RFipXszgcxnChRq7SUi
-         X7AQ==
-X-Gm-Message-State: AOAM532ZpjaKB67qyAvVy62QCWz3NakvooDBdp4Ktub5NwCY2bGfbS7d
-        tOIrXtiJEpgqJztQZp6vnl8=
-X-Google-Smtp-Source: ABdhPJwuek4INGNtBBLyn1Xm7fiys3LCOLkRgtyoQjhb5oZz83S7qN2/HUPVrbJchM+9xFxxHAwRKA==
-X-Received: by 2002:adf:ea06:: with SMTP id q6mr39049381wrm.69.1593862748290;
-        Sat, 04 Jul 2020 04:39:08 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 04:39:07 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 02/16] ASoC: sun4i-i2s: Adjust LRCLK width
-Date:   Sat,  4 Jul 2020 13:38:48 +0200
-Message-Id: <20200704113902.336911-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200704113902.336911-1-peron.clem@gmail.com>
-References: <20200704113902.336911-1-peron.clem@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=73HK164+x5FAxaDbC4Zvcu41NPAm1TqUuRv2JoFu+h4=;
+        b=Y/8pWtr2m+edCfRLd1bzaQZ/wlBhYXDlixn7QP6ed3v/BXcq66z6pKr4+edVcY/Hwb
+         GhLlaFg06QRmFjds9Jf5XIm0dmiNqKV70kxOFAi/UEYfKn8zPIQg5uf0fcePPWwDxcJs
+         kQleW42a4TCAyZPWyS49hlHPRkrOS6/DEAC4Z6JZHrp33XaphqK8M8k0BGTy+k6YKVRp
+         YeRO2H9oWgp6A28TUwe8fwffFP5GMQBgkTf7mOHigfCxW61EEdyMU2HKr4X/O50R0o09
+         LpdHc1WlXNH6ZxWAb1sIAeMQh+92rVAA498beiwkXEbDu/1d+XJLkeF9P6ZCaefLLzqo
+         VqAA==
+X-Gm-Message-State: AOAM533+iGeKtcOAe/TX68xSjVHfcNdjy1OZ3brN9vE6Ram5xj8TS2GU
+        +e2Xt1KFZk1MsSRUxfiHF211bYRuX71/sjOF6PHX+iXW
+X-Google-Smtp-Source: ABdhPJzkBH27R+83QkLBn2fxgsGgG6b3CuuR6qdE98+6TJshy2GA2eAs7Gxu3/Rmi3QMLIYwxJssYTTAdHwERACETaA=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr9300128pgi.203.1593862870758;
+ Sat, 04 Jul 2020 04:41:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com>
+ <20200701061233.31120-3-calvin.johnson@oss.nxp.com> <CAHp75VfxpogiUhiwGDaj3wT5BN7U4s9coMd3Rw10zX=sxSn6Lg@mail.gmail.com>
+ <20200703113550.GA16676@lsv03152.swis.in-blr01.nxp.com>
+In-Reply-To: <20200703113550.GA16676@lsv03152.swis.in-blr01.nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 4 Jul 2020 14:40:54 +0300
+Message-ID: <CAHp75VfVO0vw3N18m5-9twPVTJVRd2cWQRmV3A37oCWmwJe8Pw@mail.gmail.com>
+Subject: Re: [net-next PATCH v2 2/3] Documentation: ACPI: DSD: Document MDIO PHY
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        netdev <netdev@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux.cj@gmail.com, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+On Fri, Jul 3, 2020 at 2:36 PM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+> On Wed, Jul 01, 2020 at 01:27:43PM +0300, Andy Shevchenko wrote:
+> > On Wed, Jul 1, 2020 at 9:13 AM Calvin Johnson
+> > <calvin.johnson@oss.nxp.com> wrote:
 
-Some codecs such as i2s based HDMI audio and the Pine64 DAC require
-a different amount of bit clocks per frame than what is calculated
-by the sample width. Use the values obtained by the tdm slot bindings
-to adjust the LRCLK width accordingly.
+...
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Maxime Ripard <maxime@cerno.tech>
----
- sound/soc/sunxi/sun4i-i2s.c | 3 +++
- 1 file changed, 3 insertions(+)
+> > > +                    Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
+> >
+> > Reference as a package? Hmm... Is it really possible to have more than
+> > one handle here?
+>
+> I didn't get your question here.
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 9690389cb68e..8bae97efea30 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -470,6 +470,9 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 		return -EINVAL;
- 	}
- 
-+	if (i2s->slot_width)
-+		lrck_period = i2s->slot_width;
-+
- 	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
- 			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
- 			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+> But if it is about the reference as a package. We've other similar examples.
+> One of them here:
+> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1610/Hi1610AcpiTables/Dsdt/D03Hns.asl#L581
+
+Thanks for this. It's not the line I was looking for, but I found
+another example that answers my question, i.o.w. you may have several
+references in one property.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
