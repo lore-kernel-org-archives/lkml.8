@@ -2,111 +2,88 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 842AC208B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A932084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY6yfc0H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iP6/CNSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgGDLlM (ORCPT
+        id S1727931AbgGDLmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
+        Sat, 4 Jul 2020 07:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgGDLlL (ORCPT
+        with ESMTP id S1727866AbgGDLmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:41:11 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B528C061794;
-        Sat,  4 Jul 2020 04:41:11 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j19so9367253pgm.11;
-        Sat, 04 Jul 2020 04:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=73HK164+x5FAxaDbC4Zvcu41NPAm1TqUuRv2JoFu+h4=;
-        b=VY6yfc0HXQk+XYGXORLDWV/ESqqDcoZ2BUmV4VxB22eeUJ3ZppfrRXbKoxXLk4nWLn
-         lrmx+/YTTd5fySmVtnxgCjCgkvo/Yo7x7ZvY1KUIR560VUDZVrPgYCXrPzMUw+rxTm1F
-         FIuI9TP43DDz/uCCBkwYpO7u2ue3waqxp76oswJEadMA+C0/D/JRzxh3OXQnmIcrQpNG
-         J5fwkTsYkmXlO5Bg6MC1guYeDqabmOBRzYGMDO5FjNDxIif3kAtMCPCQS8fUHNlPmbf+
-         ztV4MOeAFwji67KuP+Bgm64UoowS//twc0klMCOGUQnoKujmwqemqoxhzF2si8Lev7GQ
-         737A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=73HK164+x5FAxaDbC4Zvcu41NPAm1TqUuRv2JoFu+h4=;
-        b=Y/8pWtr2m+edCfRLd1bzaQZ/wlBhYXDlixn7QP6ed3v/BXcq66z6pKr4+edVcY/Hwb
-         GhLlaFg06QRmFjds9Jf5XIm0dmiNqKV70kxOFAi/UEYfKn8zPIQg5uf0fcePPWwDxcJs
-         kQleW42a4TCAyZPWyS49hlHPRkrOS6/DEAC4Z6JZHrp33XaphqK8M8k0BGTy+k6YKVRp
-         YeRO2H9oWgp6A28TUwe8fwffFP5GMQBgkTf7mOHigfCxW61EEdyMU2HKr4X/O50R0o09
-         LpdHc1WlXNH6ZxWAb1sIAeMQh+92rVAA498beiwkXEbDu/1d+XJLkeF9P6ZCaefLLzqo
-         VqAA==
-X-Gm-Message-State: AOAM533+iGeKtcOAe/TX68xSjVHfcNdjy1OZ3brN9vE6Ram5xj8TS2GU
-        +e2Xt1KFZk1MsSRUxfiHF211bYRuX71/sjOF6PHX+iXW
-X-Google-Smtp-Source: ABdhPJzkBH27R+83QkLBn2fxgsGgG6b3CuuR6qdE98+6TJshy2GA2eAs7Gxu3/Rmi3QMLIYwxJssYTTAdHwERACETaA=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr9300128pgi.203.1593862870758;
- Sat, 04 Jul 2020 04:41:10 -0700 (PDT)
+        Sat, 4 Jul 2020 07:42:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A6B4C061794;
+        Sat,  4 Jul 2020 04:42:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MXpoH39hkfx8lgKVBovhjF5ANO4ljnFW8iWeu9q4FtE=; b=iP6/CNSCbNXBo+C/p41wEdgqOs
+        Jr4msbp5S/4stoYRzupozCzahdW4W5qLA9rFE/jAJGafZzoTOWq/BtD0LPnMvRdZAJXEUXzA010OC
+        wmYNupFLw0kEnngYZDcewEmwgTgPupAdv71XGlf8Mli9TxBAj3g1tIWPIqU6Ez+Mzr9aAiNExKS4u
+        0qsXJLoqJ4SlS2+zhU2Orlh37xa8EOmq3xh8FAAwnSgBjB8F6fpRecx3YR4bpQWAo03LZDvzg7EzF
+        uVwk2cwG0r3ZxLCtnYzOPq/50Uy2RS5XDCduvq5ZvNsXbvtvqqJLPEFMyhEKEOQ7cZk/omxY9Zx5R
+        vwdW2zOQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrgWG-0007pl-O0; Sat, 04 Jul 2020 11:39:44 +0000
+Date:   Sat, 4 Jul 2020 12:39:44 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        =?utf-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
+        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
+        lkp@intel.com, linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
+Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during
+ pagevec_lru_move_fn
+Message-ID: <20200704113944.GN25523@casper.infradead.org>
+References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
+ <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
+ <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com>
- <20200701061233.31120-3-calvin.johnson@oss.nxp.com> <CAHp75VfxpogiUhiwGDaj3wT5BN7U4s9coMd3Rw10zX=sxSn6Lg@mail.gmail.com>
- <20200703113550.GA16676@lsv03152.swis.in-blr01.nxp.com>
-In-Reply-To: <20200703113550.GA16676@lsv03152.swis.in-blr01.nxp.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 4 Jul 2020 14:40:54 +0300
-Message-ID: <CAHp75VfVO0vw3N18m5-9twPVTJVRd2cWQRmV3A37oCWmwJe8Pw@mail.gmail.com>
-Subject: Re: [net-next PATCH v2 2/3] Documentation: ACPI: DSD: Document MDIO PHY
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jon <jon@solid-run.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux.cj@gmail.com, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 2:36 PM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
-> On Wed, Jul 01, 2020 at 01:27:43PM +0300, Andy Shevchenko wrote:
-> > On Wed, Jul 1, 2020 at 9:13 AM Calvin Johnson
-> > <calvin.johnson@oss.nxp.com> wrote:
+On Sat, Jul 04, 2020 at 07:34:59PM +0800, Alex Shi wrote:
+> That's a great idea! Guess what the new struct we need would be like this?
+> I like to try this. :)
+> 
+> 
+> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+> index 081d934eda64..d62778c8c184 100644
+> --- a/include/linux/pagevec.h
+> +++ b/include/linux/pagevec.h
+> @@ -20,7 +20,7 @@
+>  struct pagevec {
+>         unsigned char nr;
+>         bool percpu_pvec_drained;
+> -       struct page *pages[PAGEVEC_SIZE];
+> +       struct list_head veclist;
+>  };
 
-...
+pagevecs are used not just for LRU.  If you want to use a list_head for
+LRU then define a new structure.
 
-> > > +                    Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
-> >
-> > Reference as a package? Hmm... Is it really possible to have more than
-> > one handle here?
->
-> I didn't get your question here.
-
-> But if it is about the reference as a package. We've other similar examples.
-> One of them here:
-> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1610/Hi1610AcpiTables/Dsdt/D03Hns.asl#L581
-
-Thanks for this. It's not the line I was looking for, but I found
-another example that answers my question, i.o.w. you may have several
-references in one property.
-
--- 
-With Best Regards,
-Andy Shevchenko
