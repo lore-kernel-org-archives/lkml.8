@@ -2,88 +2,125 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0660CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A932084C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iP6/CNSC"
+	by mail.kernel.org (Postfix) with ESMTP id DAF5C2084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgGDLmj (ORCPT
+        id S1727847AbgGDLo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbgGDLmj (ORCPT
+        Sat, 4 Jul 2020 07:44:57 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41148 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgGDLo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:42:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A6B4C061794;
-        Sat,  4 Jul 2020 04:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MXpoH39hkfx8lgKVBovhjF5ANO4ljnFW8iWeu9q4FtE=; b=iP6/CNSCbNXBo+C/p41wEdgqOs
-        Jr4msbp5S/4stoYRzupozCzahdW4W5qLA9rFE/jAJGafZzoTOWq/BtD0LPnMvRdZAJXEUXzA010OC
-        wmYNupFLw0kEnngYZDcewEmwgTgPupAdv71XGlf8Mli9TxBAj3g1tIWPIqU6Ez+Mzr9aAiNExKS4u
-        0qsXJLoqJ4SlS2+zhU2Orlh37xa8EOmq3xh8FAAwnSgBjB8F6fpRecx3YR4bpQWAo03LZDvzg7EzF
-        uVwk2cwG0r3ZxLCtnYzOPq/50Uy2RS5XDCduvq5ZvNsXbvtvqqJLPEFMyhEKEOQ7cZk/omxY9Zx5R
-        vwdW2zOQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrgWG-0007pl-O0; Sat, 04 Jul 2020 11:39:44 +0000
-Date:   Sat, 4 Jul 2020 12:39:44 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        =?utf-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
-        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        lkp@intel.com, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
-Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during
- pagevec_lru_move_fn
-Message-ID: <20200704113944.GN25523@casper.infradead.org>
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
- <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
- <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
+        Sat, 4 Jul 2020 07:44:57 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7F6811C0BD2; Sat,  4 Jul 2020 13:44:53 +0200 (CEST)
+Date:   Sat, 4 Jul 2020 13:44:52 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 0/7] Tighten PCI security, expose dev location in sysfs
+Message-ID: <20200704114452.GA15530@amd>
+References: <20200630044943.3425049-1-rajatja@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
+In-Reply-To: <20200630044943.3425049-1-rajatja@google.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 07:34:59PM +0800, Alex Shi wrote:
-> That's a great idea! Guess what the new struct we need would be like this?
-> I like to try this. :)
-> 
-> 
-> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
-> index 081d934eda64..d62778c8c184 100644
-> --- a/include/linux/pagevec.h
-> +++ b/include/linux/pagevec.h
-> @@ -20,7 +20,7 @@
->  struct pagevec {
->         unsigned char nr;
->         bool percpu_pvec_drained;
-> -       struct page *pages[PAGEVEC_SIZE];
-> +       struct list_head veclist;
->  };
 
-pagevecs are used not just for LRU.  If you want to use a list_head for
-LRU then define a new structure.
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> * The first 3 patches tighten the PCI security using ACS, and take care
+>   of a border case.
+> * The 4th patch takes care of PCI bug.
+> * 5th and 6th patches expose a device's location into the sysfs to allow
+>   admin to make decision based on that.
+
+I see no patch for Documentation -- new sysfs interfaces should be
+documented for 5/6.
+
+									Pavel
+
+>  drivers/base/core.c         | 35 +++++++++++++++++++++++++++++++
+>  drivers/iommu/intel/iommu.c | 31 ++++++++++++++++++---------
+>  drivers/pci/ats.c           |  2 +-
+>  drivers/pci/bus.c           | 13 ++++++------
+>  drivers/pci/of.c            |  2 +-
+>  drivers/pci/p2pdma.c        |  2 +-
+>  drivers/pci/pci-acpi.c      | 13 ++++++------
+>  drivers/pci/pci-driver.c    |  1 +
+>  drivers/pci/pci.c           | 34 ++++++++++++++++++++++++++----
+>  drivers/pci/pci.h           |  3 ++-
+>  drivers/pci/probe.c         | 20 +++++++++++-------
+>  drivers/pci/quirks.c        | 19 +++++++++++++----
+>  include/linux/device.h      | 42 +++++++++++++++++++++++++++++++++++++
+>  include/linux/device/bus.h  |  8 +++++++
+>  include/linux/pci.h         | 13 ++++++------
+>  15 files changed, 191 insertions(+), 47 deletions(-)
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8Aa7QACgkQMOfwapXb+vKywACguAX/M2pdPQp3cMcFaM8SJJbH
+zsoAn1By+0ZFx363Y5WWGNssFTuDT0Al
+=AJH4
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
