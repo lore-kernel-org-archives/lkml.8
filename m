@@ -2,373 +2,276 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39700C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC96C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA2520885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VYPSW47K"
+	by mail.kernel.org (Postfix) with ESMTP id 2247420890
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgGDLev (ORCPT
+        id S1727959AbgGDLfF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGDLev (ORCPT
+        Sat, 4 Jul 2020 07:35:05 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:45322 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgGDLfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:34:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA96FC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 04:34:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id j18so34348588wmi.3
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 04:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZhZK32moMwNKC3Zi3SUMtlpuiUvUgXFLuf1hMzSDJJo=;
-        b=VYPSW47KW7mN/gi3095AnWTz/O4bIs9XY1WHoJfN9kHp1hvFuKHxtQutSr/Uf842gF
-         gb/fHu1JgOyoafTpuSJSh3kV5LyFcBwLLX9h5yEs6221ky3oVcqy4oBmxrpy/dPbw8EY
-         e+57TMDgoga8PPraCj9hQMzA2IVqyLb1ui+co=
+        Sat, 4 Jul 2020 07:35:05 -0400
+Received: by mail-yb1-f193.google.com with SMTP id y17so14577716ybm.12
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 04:35:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZhZK32moMwNKC3Zi3SUMtlpuiUvUgXFLuf1hMzSDJJo=;
-        b=LiDjMWk8cTnyfWv1wFeQa8QsLoNifPKCWd/DG0UjWVUigp7Gcoh6RFrVY9PzZFcvYE
-         HeXP0tXtsiRpa2vqHuwH58kyRUHUFn69C5lmkoM+tGHJU7zP5eMAI7+DhNWwq2Q0TlXX
-         sCFvuIt8ndDp9QWECtnY/Xi/sTJ+Q1MNPq5yKVDJ0u7SKPCVUE72hLr/2b/U6bFPLkS3
-         VIbHlQNmdfQ1l2Cpjt/VS7Om3RsejYmTKrMtE7Vmg8LaABWjGq4IMNMrXHbslUiyzOSm
-         /vDR2qFE/qIftXXdF85s48uoxvE8kY45BVV4ZQSXHbb6nTrHCIEkYxqsjbiftROesF/g
-         NH2w==
-X-Gm-Message-State: AOAM5325bHCywrOyVlc0E59O3RV86BHvbtkZzPiXGvxltPiuZEPfolhd
-        6TO4ofRsSUBlBf4gMvJfZlytaiRETvEVaGEgkNeRiA==
-X-Google-Smtp-Source: ABdhPJwYx8vitLOJRot4DkoWUXEeX2/iSZOylj7pbyMaJtgtnxXR4z9c1TdXevNToMHrYi25FgTMNtpCiHYcQw1wbs4=
-X-Received: by 2002:a1c:6788:: with SMTP id b130mr42087381wmc.100.1593862489252;
- Sat, 04 Jul 2020 04:34:49 -0700 (PDT)
+        bh=vk74MHPAeIvcMKYpspR75LMA91KoxGRB3f0LyIi3THo=;
+        b=o1T+1IGfiaPWDGbDodtczndaETPQc8r5jkIItvbqW6h9DOjJ4EJpaJBo87C/QNYejk
+         Ocru3POR0UjI35Nb0qPLpU5djo5mgoyRQ8LwWO+ykWnhe/RI9xVRPm3l+85ODIKjATxt
+         /0imKFab+0MCj0ZB0MMuUs2d5EfBRLCaDTZWomUkoiuGPeq9c37F8UR8NuGUG5+y4ax0
+         EdLnDD7nkJzBYVvSZ9mRzBDHzaor6edJmffg6modKHh3CABYZ++la5+e8EiiQsYWUfpB
+         5u5E9D0lhQjhn3KMt99XhT36JEcvZ5QX6BrUPGwr/k4m09RjseH/RTb7qhU043zaon0v
+         j7hg==
+X-Gm-Message-State: AOAM533KUAxPpRrnPm4io/f0wmyRlnkRTBPE56C9BO/Abj3vHASy6w3z
+        grqkPJ+K6/NxBfrKppa0Awtc9+GcDTvYP0KHpbI=
+X-Google-Smtp-Source: ABdhPJzOFsKyaQDZNPAIfKfUsKapOR/mTd9zeC0qfmThSAs3pbINDR/xXeaSEBABTEiJRfz2zhNREPsO/8XJoEcPD3Y=
+X-Received: by 2002:a25:3b4e:: with SMTP id i75mr16636329yba.231.1593862503546;
+ Sat, 04 Jul 2020 04:35:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200703071913.2358882-1-yuhsuan@chromium.org>
- <8d21fc0c-b43e-75a0-d5d4-ed4872ec92cb@collabora.com> <CAGvk5Pqx475MOsefchcgs=CnVJiwFJxa+-J6eHcp1VgscVkTeg@mail.gmail.com>
- <cea2bc7e-035b-2c97-73bf-25dc55ab8801@collabora.com> <CAGvk5PoiWDchYCsaR_tqQ5mE0XA_hBXHy-hS5o3vFtuPzm_JiA@mail.gmail.com>
- <d5634533-3cf3-b52a-ff24-2bda3230927d@collabora.com> <CABXOdTcP0DagxzUrBh5H_TXzSAZjMAG4UaV++0sW99W4ypC78w@mail.gmail.com>
- <CAGvk5PpKTHGgp5v3FLGARE7EX7F7nZUJucnpcncbf4epDfZ7jw@mail.gmail.com> <CABXOdTemH2sknDJYmUyazk38+nK2ny+OiD8BaqcS=_t7STEEWg@mail.gmail.com>
-In-Reply-To: <CABXOdTemH2sknDJYmUyazk38+nK2ny+OiD8BaqcS=_t7STEEWg@mail.gmail.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Sat, 4 Jul 2020 19:34:37 +0800
-Message-ID: <CAGvk5PrV2u==ZH38mX1DAUpa8YRiDmCazkxNr1qhFmOaiw2duQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Log results when EC commands fail
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
+References: <20200702200727.239348-1-kernel@esmil.dk> <CANBLGczQ51LQCiubvu2HTYrdnW2q_6GY_dfVNrV6M+dnRh1KQw@mail.gmail.com>
+ <CAJ+HfNh38DwrwKrDi-S_3rzyF+=B4N3kXfAOoMEnXOyoq3LkSg@mail.gmail.com>
+In-Reply-To: <CAJ+HfNh38DwrwKrDi-S_3rzyF+=B4N3kXfAOoMEnXOyoq3LkSg@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Sat, 4 Jul 2020 13:34:52 +0200
+Message-ID: <CANBLGcxf_vZ6b75Nm52-p0W-1h+Yft77gW+j+U5Wa-9uUo=pxw@mail.gmail.com>
+Subject: Re: [RFC] riscv: Add jump-label implementation
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=884=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:28=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Fri, Jul 3, 2020 at 12:11 PM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote=
-:
-> >
-> > Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=883=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:58=E5=AF=AB=E9=81=93=EF=BC=
-=9A
+On Sat, 4 Jul 2020 at 13:23, Björn Töpel <bjorn.topel@gmail.com> wrote:
+> On Fri, 3 Jul 2020 at 17:43, Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > On Thu, 2 Jul 2020 at 22:07, Emil Renner Berthing <kernel@esmil.dk> wrote:
 > > >
-> > > On Fri, Jul 3, 2020 at 3:56 AM Enric Balletbo i Serra
-> > > <enric.balletbo@collabora.com> wrote:
-> > > >
-> > > > Hi Yu-Hsuan,
-> > > >
-> > > > On 3/7/20 11:40, Yu-Hsuan Hsu wrote:
-> > > > > Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2=
-020=E5=B9=B47=E6=9C=883=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:19=
-=E5=AF=AB=E9=81=93=EF=BC=9A
-> > > > >>
-> > > > >> Hi Yu-Hsuan,
-> > > > >>
-> > > > >> On 3/7/20 10:48, Yu-Hsuan Hsu wrote:
-> > > > >>> Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC=
- 2020=E5=B9=B47=E6=9C=883=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:3=
-8=E5=AF=AB=E9=81=93=EF=BC=9A
-> > > > >>>>
-> > > > >>>> Hi Yu-Hsuan,
-> > > > >>>>
-> > > > >>>> Thank you for your patch
-> > > > >>>>
-> > > > >>>> On 3/7/20 9:19, Yu-Hsuan Hsu wrote:
-> > > > >>>>> Log results of failed EC commands to identify a problem more =
-easily.
-> > > > >>>>>
-> > > > >>>>> Replace cros_ec_cmd_xfer_status with cros_ec_cmd_xfer because=
- the result
-> > > > >>>>> has already been checked in this function. The wrapper is not=
- needed.
-> > > > >>>>>
-> > > > >>>>
-> > > > >>>> Nack, we did an effort to remove all public users of cros_ec_c=
-md_xfer() in
-> > > > >>>> favour of cros_ec_cmd_xfer_status() and you are reintroducing =
-again. You can do
-> > > > >>>> the same but using cros_ec_cmd_xfer_status(). In fact, your pa=
-tch will not build
-> > > > >>>> on top of the upcoming changes.
-> > > > >>> Thanks! But I have a question about implementing it. Does it lo=
-ok like
-> > > > >>> the one below?
-> > > > >>> ret =3D cros_ec_cmd_xfer_status(ec_dev, msg);
-> > > > >>> if (ret < 0) {
-> > > > >>
-> > > > >> In this case will already print an error.
-> > > > >>
-> > > > >> What are you trying to achieve?
-> > > > >>
-> > > > >> If the only reason is of this patch is print a message you shoul=
-d either, or
-> > > > >> enable dynamic printk and enable dev_dbg or event better use the=
- kernel trace
-> > > > >> functionality. There is no need to be more verbose.
-> > > > >>
-> > > > >> Example:
-> > > > >>     $ echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
-> > > > >>     $ cat /sys/kernel/debug/tracing/trace
-> > > > >>
-> > > > >>     369.416372: cros_ec_request_start: version: 0, command: EC_C=
-MD_USB_PD_POWER_INFO
-> > > > >>     369.420528: cros_ec_request_done: version: 0, command:
-> > > > >> EC_CMD_USB_PD_POWER_INFO, ec result: EC_RES_SUCCESS, retval: 16
-> > > > >>
-> > > > >> Cheers,
-> > > > >>  Enric
-> > > > >>
-> > > > > Thank Enric,
-> > > > >
-> > > > > The situation is that some users encountered errors on ChromeBook=
-.
-> > > >
-> > > > And, aren't you able to reproduce the issue?
-> > > >
-> > > >
-> > > > > From their feedback reports, we only get the message like
-> > > > > 'cros-ec-codec GOOG0013:00: ASoC: Failed to set DAI format: -71'.
-> > > > > We know that -71 is -EPROTO but it is not clear enough for us to =
-find
-> > > > > out the root cause. That's why we want the detail of the result.
-> > > >
-> > > >
-> > > > If I am not mistaken this ends calling i2s_rx_set_daifmt() into the=
- EC firmware,
-> > > > if the result is -EPROTO that means is not returning EC_RES_SUCCESS=
-, so there
-> > > > are few options:
-> > > >
-> > > >         if (i2s_rx_enabled)
-> > > >                 return EC_RES_BUSY;
-> > > >
-> > > >         if (daifmt >=3D EC_CODEC_I2S_RX_DAIFMT_COUNT)
-> > > >                 return EC_RES_INVALID_PARAM;
-> > > >
-> > > >         if (audio_codec_i2s_rx_set_daifmt(daifmt) !=3D EC_SUCCESS)
-> > > >                 return EC_RES_ERROR;
-> > > >
-> > > > > Because the situation happens on users' side, it is not possible =
-for
-> > > > > them to enable kernel trace (ChromeOS does not allow users to tou=
-ch
-> > > > > kernel).
-> > > > >
-> > > >
-> > > > Are you sure that when you know the error code you'll find the root=
- cause
-> > > > (without adding more prints)? There is only three possibilities? Yo=
-u can't start
-> > > > adding prints just to debug a user issue because you don't allow to=
- be more
-> > > > verbose. I understand that might help you but is not the way to go.
+> > > Add basic jump-label implementation heavily based
+> > > on the ARM64 version.
+> > >
+> > > Tested on the HiFive Unleashed.
+> > >
+> > > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > > ---
+> > >
+> > > This seems to work on my HiFive Unleashed. At least boots, runs fine
+> > > and the static key self-tests doesn't complain, but I'm sure I've missed
+> > > something, so I'm sending this as an RFC.
+> > >
+> > > /Emil
+> > >
+> > >  .../core/jump-labels/arch-support.txt         |  2 +-
+> > >  arch/riscv/Kconfig                            |  2 +
+> > >  arch/riscv/include/asm/jump_label.h           | 59 +++++++++++++++++++
+> > >  arch/riscv/kernel/Makefile                    |  2 +
+> > >  arch/riscv/kernel/jump_label.c                | 44 ++++++++++++++
+> > >  5 files changed, 108 insertions(+), 1 deletion(-)
+> > >  create mode 100644 arch/riscv/include/asm/jump_label.h
+> > >  create mode 100644 arch/riscv/kernel/jump_label.c
+> > >
+> > > diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
+> > > index 632a1c7aefa2..760243d18ed7 100644
+> > > --- a/Documentation/features/core/jump-labels/arch-support.txt
+> > > +++ b/Documentation/features/core/jump-labels/arch-support.txt
+> > > @@ -23,7 +23,7 @@
+> > >      |    openrisc: | TODO |
+> > >      |      parisc: |  ok  |
+> > >      |     powerpc: |  ok  |
+> > > -    |       riscv: | TODO |
+> > > +    |       riscv: |  ok  |
+> > >      |        s390: |  ok  |
+> > >      |          sh: | TODO |
+> > >      |       sparc: |  ok  |
+> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > index fd639937e251..d2f5c53fdc19 100644
+> > > --- a/arch/riscv/Kconfig
+> > > +++ b/arch/riscv/Kconfig
+> > > @@ -46,6 +46,8 @@ config RISCV
+> > >         select GENERIC_TIME_VSYSCALL if MMU && 64BIT
+> > >         select HANDLE_DOMAIN_IRQ
+> > >         select HAVE_ARCH_AUDITSYSCALL
+> > > +       select HAVE_ARCH_JUMP_LABEL
+> > > +       select HAVE_ARCH_JUMP_LABEL_RELATIVE
+> > >         select HAVE_ARCH_KASAN if MMU && 64BIT
+> > >         select HAVE_ARCH_KGDB
+> > >         select HAVE_ARCH_KGDB_QXFER_PKT
+> > > diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
+> > > new file mode 100644
+> > > index 000000000000..29be6d351866
+> > > --- /dev/null
+> > > +++ b/arch/riscv/include/asm/jump_label.h
+> > > @@ -0,0 +1,59 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/*
+> > > + * Copyright (C) 2020 Emil Renner Berthing
+> > > + *
+> > > + * Based on arch/arm64/include/asm/jump_label.h
+> > > + */
+> > > +#ifndef __ASM_JUMP_LABEL_H
+> > > +#define __ASM_JUMP_LABEL_H
+> > > +
+> > > +#ifndef __ASSEMBLY__
+> > > +
+> > > +#include <linux/types.h>
+> > > +
+> > > +#define JUMP_LABEL_NOP_SIZE 4
+> > > +
+> > > +static __always_inline bool arch_static_branch(struct static_key *key,
+> > > +                                              bool branch)
+> > > +{
+> > > +       asm_volatile_goto(
+> > > +               "       .option push                            \n\n"
+> > > +               "       .option norelax                         \n\n"
+> > > +               "       .option norvc                           \n\n"
+> > > +               "1:     nop                                     \n\t"
+> > > +               "       .option pop                             \n\n"
+> > > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
+> > > +               "       .align          3                       \n\t"
+> > > +               "       .long           1b - ., %l[l_yes] - .   \n\t"
+> > > +               "       .quad           %0 - .                  \n\t"
 > >
-> > Hi Enric and Guenter,
-> >
-> > Thanks for your inspiring comments.
-> > I'm not sure whether we will find the root cause if I know the error
-> > code. But I think it's not a point.
-> > We wanted to add this error log because we found that the current one
-> > is not enough. Since it is a real error, it would be better if we can
-> > make it more detailed, right?
-> > In addition, we thought it would be helpful in the future as well.
-> > That's why we chose to upstream instead of merging into our source
-> > tree only.
+> > With HAVE_ARCH_JUMP_LABEL_RELATIVE we get
+> > struct jump_entry {
+> >   s32 code;
+> >   s32 target;
+> >   long key;
+> > }
+> > ..so this .quad and the one below should be replaced by the RISCV_PTR
+> > macro to match the struct in 32bit kernels.
 > >
 >
-> Kernel log messages are almost never useful for actual users. In most
-> cases, they just clog up the kernel log, making it useless for when it
-> actually counts (such as when the system crashes). On top of that,
-> there already is an error message, only the error code doesn't mean
-> much because it is "universalized". I don't see how adding another
-> error message would improve that, even more so if that error message
-> is only added in one place. On the other side, converting EC error
-> codes to Linux kernel error codes would help every caller of
-> cros_ec_cmd_xfer_status without adding more logging noise.
+> Indeed. And nice work! Can you respin the patch with the 32b fix
+> above, and also without the RFC tag?
 
-Thanks for the explanation. If I understand correctly, the mean point
-is this log is noisy.
-In this case, the log will only appear one time during the card
-probing(if it fails). But I do agree that it may create some potential
-noises.
-Converting EC error codes to Linux kernel error codes also work for
-me. Is it possible for you to send the corresponding patch? If not, I
-can try to work on it.
-In addition, is it possible that one error code can come from linux or from=
- EC?
+Yes, of course. If you don't mind I'll wait a bit and let this collect
+a bit more comments.
+
+> Curious; Why is [branch ? 1 : 0] needed when coding the boolean into
+> the key pointer (arm64 is just [branch]). Different encoding of
+> booleans (branch in this case)?
+
+No, that was just me being unsure exactly how bool works when used as
+an index. After reading up on it it seems the original code is right,
+you can actually trust that _Bool is either 0 or 1. I'll fix it in the
+next version. Thanks!
+
+/Emil
 
 >
-> > > >
-> > > > You should really reproduce the issue yourself an use actual debug
-> > > > tools/prints./traces
-> > We are trying but still unable to reproduce this issue.
-> > However, as I maintained above, it is not a main concern of this change=
-.
-> > > >
-> > >
-> > > Another possibility would be to change cros_ec_cmd_xfer_status() to
-> > > return a more granular error code, such as -EINVAL for
-> > > EC_RES_INVALID_PARAM, -EBUSY for EC_RES_BUSY, -EINPROGRESS for
-> > > EC_RES_IN_PROGRESS,  -ETIMEDOUT for EC_RES_TIMEOUT, -EOVERFLOW for
-> > > EC_RES_OVERFLOW, -ENODATA for EC_RES_UNAVAILABLE, and so on.
-> > Since there are many kinds of results from EC, why not just make users
-> > able to check on their own?
-> > For example, users can wait and try again if the result is EC_RES_BUSY.
-> >
 >
-> That is exactly what -EBUSY is for: It lets the user space application
-> decide what to do about it. A kernel log message can not and will
-> never achieve that.
+> Cheers,
+> Björn
 >
+> > > +               "       .popsection                             \n\t"
+> > > +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
+> > > +
+> > > +       return false;
+> > > +l_yes:
+> > > +       return true;
+> > > +}
+> > > +
+> > > +static __always_inline bool arch_static_branch_jump(struct static_key *key,
+> > > +                                                   bool branch)
+> > > +{
+> > > +       asm_volatile_goto(
+> > > +               "       .option push                            \n\n"
+> > > +               "       .option norelax                         \n\n"
+> > > +               "       .option norvc                           \n\n"
+> > > +               "1:     jal             zero, %l[l_yes]         \n\t"
+> > > +               "       .option pop                             \n\n"
+> > > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
+> > > +               "       .align          3                       \n\t"
+> > > +               "       .long           1b - ., %l[l_yes] - .   \n\t"
+> > > +               "       .quad           %0 - .                  \n\t"
+> > > +               "       .popsection                             \n\t"
+> > > +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
+> > > +
+> > > +       return false;
+> > > +l_yes:
+> > > +       return true;
+> > > +}
+> > > +
+> > > +#endif  /* __ASSEMBLY__ */
+> > > +#endif /* __ASM_JUMP_LABEL_H */
+> > > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> > > index b355cf485671..a5287ab9f7f2 100644
+> > > --- a/arch/riscv/kernel/Makefile
+> > > +++ b/arch/riscv/kernel/Makefile
+> > > @@ -53,4 +53,6 @@ endif
+> > >  obj-$(CONFIG_HOTPLUG_CPU)      += cpu-hotplug.o
+> > >  obj-$(CONFIG_KGDB)             += kgdb.o
 > > >
-> > > However, it appears that the various low level functions already
-> > > replace various EC error codes with a blank EC_RES_ERROR. No amount o=
-f
-> > > logging will tell us what exactly went wrong in those functions. Luck=
-y
-> > > for us, audio_codec_i2s_rx_set_daifmt() only ever returns EC_SUCCESS,
-> > > so we know that the problem is either that i2s_rx_enabled is true or
-> > > that daifmt is too large. None of those really warrants more verbose
-> > > logging.
+> > > +obj-$(CONFIG_JUMP_LABEL)       += jump_label.o
+> > > +
+> > >  clean:
+> > > diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
+> > > new file mode 100644
+> > > index 000000000000..55b2d742efe1
+> > > --- /dev/null
+> > > +++ b/arch/riscv/kernel/jump_label.c
+> > > @@ -0,0 +1,44 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (C) 2020 Emil Renner Berthing
+> > > + *
+> > > + * Based on arch/arm64/kernel/jump_label.c
+> > > + */
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/jump_label.h>
+> > > +#include <asm/patch.h>
+> > > +
+> > > +#define RISCV_INSN_NOP 0x00000013
+> > > +#define RISCV_INSN_JAL 0x0000006f
+> > > +
+> > > +void arch_jump_label_transform(struct jump_entry *entry,
+> > > +                              enum jump_label_type type)
+> > > +{
+> > > +       void *addr = (void *)jump_entry_code(entry);
+> > > +       u32 insn;
+> > > +
+> > > +       if (type == JUMP_LABEL_JMP) {
+> > > +               u32 offset = jump_entry_target(entry) - jump_entry_code(entry);
+> > > +
+> > > +               insn = RISCV_INSN_JAL |
+> > > +                       ((offset & GENMASK(19, 12)) << (12 - 12)) |
+> > > +                       ((offset & GENMASK(11, 11)) << (20 - 11)) |
+> > > +                       ((offset & GENMASK(10,  1)) << (21 -  1)) |
+> > > +                       ((offset & GENMASK(20, 20)) << (31 - 20));
+> > > +       } else
+> > > +               insn = RISCV_INSN_NOP;
+> > > +
+> > > +       patch_text_nosync(addr, &insn, sizeof(insn));
+> > > +}
+> > > +
+> > > +void arch_jump_label_transform_static(struct jump_entry *entry,
+> > > +                                     enum jump_label_type type)
+> > > +{
+> > > +       /*
+> > > +        * We use the same instructions in the arch_static_branch and
+> > > +        * arch_static_branch_jump inline functions, so there's no
+> > > +        * need to patch them up here.
+> > > +        * The core will call arch_jump_label_transform  when those
+> > > +        * instructions need to be replaced.
+> > > +        */
+> > > +}
+> > > --
+> > > 2.27.0
 > > >
-> > > From the context, my personal bet is that i2s_rx_enabled is true: I
-> > > don't immediately see how disabling it is enforced before trying to
-> > > set the DAI format, and I don't see how "daifmt >=3D
-> > > EC_CODEC_I2S_RX_DAIFMT_COUNT" can ever be true.
-> > I totally agree. According to the source, it seems that both path are
->
-> You are effectively saying that there is code to ensure that
-> i2s_rx_enabled is false. Granted, the code is too complex to easily
-> understand, and I may not have seen that flow. Per the same logic,
-> though, it might well be possible that _because_ the code is not easy
-> to understand there may well be a data path where i2s_rx_enabled is
-> set. One would need to ensure that the sequence of <disable rx> - <set
-> dai format> - <re-enable rx> is guaranteed, and that it is always
-> executed under a kernel lock. Maybe you can point me to that code, for
-> my education.
->
-> On the other side, it is much easier to verify that "daifmt >=3D
-> EC_CODEC_I2S_RX_DAIFMT_COUNT" is never true.
->
-> Thanks,
-> Guenter
-The complete errors are:
-ERR kernel: [    8.568171]  cros-ec-codec GOOG0013:00: ASoC: error at
-snd_soc_dai_set_fmt on GOOG0013:00: -71
-WARNING kernel: [    8.583312] cros-ec-codec GOOG0013:00: ASoC: Failed
-to set DAI format: -71
-ERR kernel: [    8.629388] acp3x-alc5682-max98357 AMDI5682:00:
-devm_snd_soc_register_card(acp3xalc5682m98357) failed: -71
-WARNING kernel: [    8.645306] acp3x-alc5682-max98357: probe of
-AMDI5682:00 failed with error -71
-
-This issue happened when probing the card while the i2s_rx is only
-enabled when the device is used. Therefore, the i2s_rx should not be
-enabled before the card is probed. However, I may miss something. I
-will check the entire path later.
-For "daifmt >=3D EC_CODEC_I2S_RX_DAIFMT_COUNT", it is obviously not to
-be true by looking into i2s_rx_set_fmt function.
-
-Thanks,
-Yu-Hsuan
-
->
-> > impossible. I'm not really understand the whole path but is it
-> > possible for EC to return other results? I will do more tests and look
-> > carefully into the source. Really thanks for your suggestions.
-> >
-> > Cheers,
-> > Yu-Hsuan
-> > >
-> > > Guenter
-> > >
-> > >
-> > > Guenter
-> > >
-> > > > Cheers,
-> > > >  Enric
-> > > >
-> > > > > The other way we thought is changing dev_dbg to dev_err in
-> > > > > cros_ec_cmd_xfer_status. But we are not sure whether it is also a=
-n
-> > > > > error for other usages.
-> > > > >
-> > > > >>>   if (ret =3D=3D -EPROTO)
-> > > > >>>     dev_err(..., msg->result)
-> > > > >>>   goto error;
-> > > > >>> }
-> > > > >>> I'm not sure whether it makes sense to check ret =3D=3D -EPROTO=
- here.
-> > > > >>>
-> > > > >>>>
-> > > > >>>>> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > > > >>>>> ---
-> > > > >>>>>  sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
-> > > > >>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > > >>>>>
-> > > > >>>>> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/cod=
-ecs/cros_ec_codec.c
-> > > > >>>>> index 8d45c628e988e..a4ab62f59efa6 100644
-> > > > >>>>> --- a/sound/soc/codecs/cros_ec_codec.c
-> > > > >>>>> +++ b/sound/soc/codecs/cros_ec_codec.c
-> > > > >>>>> @@ -90,10 +90,17 @@ static int send_ec_host_command(struct cr=
-os_ec_device *ec_dev, uint32_t cmd,
-> > > > >>>>>       if (outsize)
-> > > > >>>>>               memcpy(msg->data, out, outsize);
-> > > > >>>>>
-> > > > >>>>> -     ret =3D cros_ec_cmd_xfer_status(ec_dev, msg);
-> > > > >>>>> +     ret =3D cros_ec_cmd_xfer(ec_dev, msg);
-> > > > >>>>>       if (ret < 0)
-> > > > >>>>>               goto error;
-> > > > >>>>>
-> > > > >>>>> +     if (msg->result !=3D EC_RES_SUCCESS) {
-> > > > >>>>> +             dev_err(ec_dev->dev, "Command %d failed: %d\n",=
- cmd,
-> > > > >>>>> +                     msg->result);
-> > > > >>>>> +             ret =3D -EPROTO;
-> > > > >>>>> +             goto error;
-> > > > >>>>> +     }
-> > > > >>>>> +
-> > > > >>>>>       if (insize)
-> > > > >>>>>               memcpy(in, msg->data, insize);
-> > > > >>>>>
-> > > > >>>>>
