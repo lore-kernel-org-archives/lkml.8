@@ -2,90 +2,83 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E06C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E952AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21F9208C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="twiINFJb"
+	by mail.kernel.org (Postfix) with ESMTP id D174B21527
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgGDDqr (ORCPT
+        id S1727065AbgGDD4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 23:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgGDDqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 23:46:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CA4C061794;
-        Fri,  3 Jul 2020 20:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=QMUoZdBV4wse9lG8bnGaYE8IXC2pAaw0z4G8gYRTTas=; b=twiINFJbNLpQTiX+61YMRDPQ7P
-        Ih4JzjvMGpS/7co6aGhmYZ1snZh0VmzNAo8ri2YrNhS8zoVk1giZdDlpOU5Rn1V7vSb8wxLsEkds3
-        LW6DwFhnksRRYmEUCnDnC0kgfGsmeNcGUGkg7OJB1cXe5h+q6e8GWOj2KlMypltNJYGARtLBoKsuu
-        qIwB5yLKA6jD9zzxRl5301Z8EldaWs3/x5EaQq5ODvudFnfk5lGrUS+jcb6iVGixaS1WuEE5rKlTk
-        gYwayt4ffNIsoPjU91v/FUf2M4DkReF69U2OOA2ND3wXinIvmvqPOAj9W12NAZbh2q054EbNmBE0X
-        WtMgmQ1w==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrZ8R-0001Xb-Dk; Sat, 04 Jul 2020 03:46:40 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Fri, 3 Jul 2020 23:56:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33191 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbgGDD4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 23:56:22 -0400
+IronPort-SDR: O3p4wEfQzumhmv3KdSmawxJEMBSoq2BcHv8z81y4eFTJwO1WD535GMfivP0J0KwjtPOA0owLX0
+ trit3OUL9/lQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="126832378"
+X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
+   d="scan'208";a="126832378"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 20:56:22 -0700
+IronPort-SDR: 4PwYMQsrwNKt0BQPWVg2aGZznq/PxOskNpz4IIfdAj5DpKcAAMPW5zB39K6lzbhTOP93kc7JME
+ /buUEOwb4mYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
+   d="scan'208";a="267454037"
+Received: from winzenbu-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.41.221])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2020 20:56:17 -0700
+Date:   Sat, 4 Jul 2020 06:56:15 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>, stable@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
-        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
-Subject: [PATCH 17/17] Documentation/driver-api: xillybus: drop doubled word
-Date:   Fri,  3 Jul 2020 20:45:02 -0700
-Message-Id: <20200704034502.17199-18-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200704034502.17199-1-rdunlap@infradead.org>
-References: <20200704034502.17199-1-rdunlap@infradead.org>
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Define TPM2_SPACE_BUFFER_SIZE to replace the use of
+ PAGE_SIZE
+Message-ID: <20200704035615.GA157149@linux.intel.com>
+References: <20200702225603.293122-1-jarkko.sakkinen@linux.intel.com>
+ <20200702235544.4o7dbgvlq3br2x7e@cantor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702235544.4o7dbgvlq3br2x7e@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "the".
+On Thu, Jul 02, 2020 at 04:55:44PM -0700, Jerry Snitselaar wrote:
+> On Fri Jul 03 20, Jarkko Sakkinen wrote:
+> > The size of the buffers for storing context's and sessions can vary from
+> > arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
+> > maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
+> > enough for most use with three handles (that is how many we allow at the
+> > moment). Parametrize the buffer size while doing this, so that it is easier
+> > to revisit this later on if required.
+> > 
+> > Reported-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Cc: stable@vger.kernel.org
+> > Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Eli Billauer <eli.billauer@gmail.com>
----
- Documentation/driver-api/xillybus.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you.
 
---- linux-next-20200701.orig/Documentation/driver-api/xillybus.rst
-+++ linux-next-20200701/Documentation/driver-api/xillybus.rst
-@@ -273,7 +273,7 @@ buffer is full, the FPGA informs the hos
- XILLYMSG_OPCODE_RELEASEBUF message channel 0 and sending an interrupt if
- necessary). The host responds by making the data available for reading through
- the character device. When all data has been read, the host writes on the
--the FPGA's buffer control register, allowing the buffer's overwriting. Flow
-+FPGA's buffer control register, allowing the buffer's overwriting. Flow
- control mechanisms exist on both sides to prevent underflows and overflows.
- 
- This is not good enough for creating a TCP/IP-like stream: If the data flow
+Now only needs tested-by from Stefan.
+
+/Jarkko
