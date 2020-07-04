@@ -2,180 +2,288 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C55C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C11720885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A5E20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VK6wH8pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgGDLVh (ORCPT
+        id S1727953AbgGDLXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:21:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48334 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgGDLT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:19:57 -0400
-IronPort-SDR: DHtb1rBvIMdctclQzoqLbNg1Qhi2+LpenmiPi4AGs0bHIQPKXM1CjsY7O9PUNEmI89AxqWgMsw
- 7amg3s23FO3Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371338"
-X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="145371338"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:53 -0700
-IronPort-SDR: QHxq/KyrFmtyt9Sw9ZL9e9K7Gg5IW9EDpf+iOMiWbQv9fSBZhxEs7yTimN7z/6GHiH8W4fD4Tz
- s63MoAAFnGXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="282521413"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:52 -0700
-From:   Liu Yi L <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
-        hao.wu@intel.com, stefanha@gmail.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/15] iommu: Report domain nesting info
-Date:   Sat,  4 Jul 2020 04:26:16 -0700
-Message-Id: <1593861989-35920-3-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
+        Sat, 4 Jul 2020 07:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgGDLXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 07:23:09 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B10C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 04:23:09 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l2so35110866wmf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 04:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SuesqFA+SrbJ0j/QOB9bPYH/TmQCfqo1Pg1V6p+gBb4=;
+        b=VK6wH8pf/RWyIolJvAF1G+YeyVsiFuMibOnqBJ+iV2aYVk+czpRZQxz3SXhhLCEus1
+         DNFcJi9Kn3qA6qfPeg3EWPDNtTeATN3AXkFF1Uv1+1LsnIFcc0qCXXPQmmj59yCboO58
+         ucWSUgaUJMiyFjCxzS8uNGmLLYAsmBsdjWNzItBs2zLYIKekpgkwz0+zDVVMXVaszGNu
+         Eh/BaQ0PVQmhtf5X56yBLpss8iydpX/mt9sBObfZdX0V4yk9yXYmFt6yQApCwkyzkHsv
+         Qy3iboy2TX9k6aQI6MpLc4i3Rcg/3j6v9Sxd5pWj83ab72BLwTLkMI7mv1QcI5uzFjVY
+         KUJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SuesqFA+SrbJ0j/QOB9bPYH/TmQCfqo1Pg1V6p+gBb4=;
+        b=lwVi+z8KI2KN1EWKem2gRUw59O9+CotzIol5Lga7xvgkoQkmjOX95TshWLZJs06g7u
+         bNCxFX1mgNkBCfUVfwLo7k1L+1X3p7qR3d4SsBk13AO+FVhNeqmmjK3AyT/ySyx8BrL+
+         7l/aSeiunz21xstph9fEU42qBSBXenK4fAX2ob5+16oRXoS1ErbGcqP3y7IYne6Z/SLa
+         ZEkqB/VgPuIBncKd+teLOhJXiEJzVRnK+aBLaHvtGVzKSroXECWMtsvn+yL2DuCPdut5
+         vgAL21ofWB/AvmE8dxrFWTVLgZQNLgZrOBqA6JEne51DiiVELYHNudv7pp9how4RJA+r
+         6UfQ==
+X-Gm-Message-State: AOAM530pj48gWw6FmMzqGsShVsmxpphGkiC/r7oh/SAErqZl2vAitmXo
+        Z/0Dd479xv4KsZQJHn6GtvP3jb820v4qopF80oqHgMNt
+X-Google-Smtp-Source: ABdhPJwe68inYZC8F7BCUhh15Ur6MNtyx/VwinCZ7/7EGkaAnUxrAoOCEKiI/pvbt/FS0oaBXHIyLhsX16WVJb6vPs8=
+X-Received: by 2002:a7b:c259:: with SMTP id b25mr16836292wmj.107.1593861787918;
+ Sat, 04 Jul 2020 04:23:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702200727.239348-1-kernel@esmil.dk> <CANBLGczQ51LQCiubvu2HTYrdnW2q_6GY_dfVNrV6M+dnRh1KQw@mail.gmail.com>
+In-Reply-To: <CANBLGczQ51LQCiubvu2HTYrdnW2q_6GY_dfVNrV6M+dnRh1KQw@mail.gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Sat, 4 Jul 2020 13:22:56 +0200
+Message-ID: <CAJ+HfNh38DwrwKrDi-S_3rzyF+=B4N3kXfAOoMEnXOyoq3LkSg@mail.gmail.com>
+Subject: Re: [RFC] riscv: Add jump-label implementation
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMUs that support nesting translation needs report the capability info
-to userspace, e.g. the format of first level/stage paging structures.
+On Fri, 3 Jul 2020 at 17:43, Emil Renner Berthing <kernel@esmil.dk> wrote:
+>
+> On Thu, 2 Jul 2020 at 22:07, Emil Renner Berthing <kernel@esmil.dk> wrote=
+:
+> >
+> > Add basic jump-label implementation heavily based
+> > on the ARM64 version.
+> >
+> > Tested on the HiFive Unleashed.
+> >
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > ---
+> >
+> > This seems to work on my HiFive Unleashed. At least boots, runs fine
+> > and the static key self-tests doesn't complain, but I'm sure I've misse=
+d
+> > something, so I'm sending this as an RFC.
+> >
+> > /Emil
+> >
+> >  .../core/jump-labels/arch-support.txt         |  2 +-
+> >  arch/riscv/Kconfig                            |  2 +
+> >  arch/riscv/include/asm/jump_label.h           | 59 +++++++++++++++++++
+> >  arch/riscv/kernel/Makefile                    |  2 +
+> >  arch/riscv/kernel/jump_label.c                | 44 ++++++++++++++
+> >  5 files changed, 108 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/riscv/include/asm/jump_label.h
+> >  create mode 100644 arch/riscv/kernel/jump_label.c
+> >
+> > diff --git a/Documentation/features/core/jump-labels/arch-support.txt b=
+/Documentation/features/core/jump-labels/arch-support.txt
+> > index 632a1c7aefa2..760243d18ed7 100644
+> > --- a/Documentation/features/core/jump-labels/arch-support.txt
+> > +++ b/Documentation/features/core/jump-labels/arch-support.txt
+> > @@ -23,7 +23,7 @@
+> >      |    openrisc: | TODO |
+> >      |      parisc: |  ok  |
+> >      |     powerpc: |  ok  |
+> > -    |       riscv: | TODO |
+> > +    |       riscv: |  ok  |
+> >      |        s390: |  ok  |
+> >      |          sh: | TODO |
+> >      |       sparc: |  ok  |
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index fd639937e251..d2f5c53fdc19 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -46,6 +46,8 @@ config RISCV
+> >         select GENERIC_TIME_VSYSCALL if MMU && 64BIT
+> >         select HANDLE_DOMAIN_IRQ
+> >         select HAVE_ARCH_AUDITSYSCALL
+> > +       select HAVE_ARCH_JUMP_LABEL
+> > +       select HAVE_ARCH_JUMP_LABEL_RELATIVE
+> >         select HAVE_ARCH_KASAN if MMU && 64BIT
+> >         select HAVE_ARCH_KGDB
+> >         select HAVE_ARCH_KGDB_QXFER_PKT
+> > diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/a=
+sm/jump_label.h
+> > new file mode 100644
+> > index 000000000000..29be6d351866
+> > --- /dev/null
+> > +++ b/arch/riscv/include/asm/jump_label.h
+> > @@ -0,0 +1,59 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (C) 2020 Emil Renner Berthing
+> > + *
+> > + * Based on arch/arm64/include/asm/jump_label.h
+> > + */
+> > +#ifndef __ASM_JUMP_LABEL_H
+> > +#define __ASM_JUMP_LABEL_H
+> > +
+> > +#ifndef __ASSEMBLY__
+> > +
+> > +#include <linux/types.h>
+> > +
+> > +#define JUMP_LABEL_NOP_SIZE 4
+> > +
+> > +static __always_inline bool arch_static_branch(struct static_key *key,
+> > +                                              bool branch)
+> > +{
+> > +       asm_volatile_goto(
+> > +               "       .option push                            \n\n"
+> > +               "       .option norelax                         \n\n"
+> > +               "       .option norvc                           \n\n"
+> > +               "1:     nop                                     \n\t"
+> > +               "       .option pop                             \n\n"
+> > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
+> > +               "       .align          3                       \n\t"
+> > +               "       .long           1b - ., %l[l_yes] - .   \n\t"
+> > +               "       .quad           %0 - .                  \n\t"
+>
+> With HAVE_ARCH_JUMP_LABEL_RELATIVE we get
+> struct jump_entry {
+>   s32 code;
+>   s32 target;
+>   long key;
+> }
+> ..so this .quad and the one below should be replaced by the RISCV_PTR
+> macro to match the struct in 32bit kernels.
+>
 
-This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
-nesting info after setting DOMAIN_ATTR_NESTING.
+Indeed. And nice work! Can you respin the patch with the 32b fix
+above, and also without the RFC tag?
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
-v3 -> v4:
-*) split the SMMU driver changes to be a separate patch
-*) move the @addr_width and @pasid_bits from vendor specific
-   part to generic part.
-*) tweak the description for the @features field of struct
-   iommu_nesting_info.
-*) add description on the @data[] field of struct iommu_nesting_info
+Curious; Why is [branch ? 1 : 0] needed when coding the boolean into
+the key pointer (arm64 is just [branch]). Different encoding of
+booleans (branch in this case)?
 
-v2 -> v3:
-*) remvoe cap/ecap_mask in iommu_nesting_info.
-*) reuse DOMAIN_ATTR_NESTING to get nesting info.
-*) return an empty iommu_nesting_info for SMMU drivers per Jean'
-   suggestion.
----
- include/uapi/linux/iommu.h | 78 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
 
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 1afc661..1bfc032 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -332,4 +332,82 @@ struct iommu_gpasid_bind_data {
- 	} vendor;
- };
- 
-+/*
-+ * struct iommu_nesting_info - Information for nesting-capable IOMMU.
-+ *				user space should check it before using
-+ *				nesting capability.
-+ *
-+ * @size:	size of the whole structure
-+ * @format:	PASID table entry format, the same definition with
-+ *		@format of struct iommu_gpasid_bind_data.
-+ * @features:	supported nesting features.
-+ * @flags:	currently reserved for future extension.
-+ * @addr_width:	The output addr width of first level/stage translation
-+ * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
-+ *		support.
-+ * @data:	vendor specific cap info. data[] structure type can be deduced
-+ *		from @format field.
-+ *
-+ * +===============+======================================================+
-+ * | feature       |  Notes                                               |
-+ * +===============+======================================================+
-+ * | SYSWIDE_PASID |  PASIDs are managed in system-wide, instead of per   |
-+ * |               |  device. When a device is assigned to userspace or   |
-+ * |               |  VM, proper uAPI (userspace driver framework uAPI,   |
-+ * |               |  e.g. VFIO) must be used to allocate/free PASIDs for |
-+ * |               |  the assigned device.                                |
-+ * +---------------+------------------------------------------------------+
-+ * | BIND_PGTBL    |  The owner of the first level/stage page table must  |
-+ * |               |  explicitly bind the page table to associated PASID  |
-+ * |               |  (either the one specified in bind request or the    |
-+ * |               |  default PASID of iommu domain), through userspace   |
-+ * |               |  driver framework uAPI (e.g. VFIO_IOMMU_NESTING_OP). |
-+ * +---------------+------------------------------------------------------+
-+ * | CACHE_INVLD   |  The owner of the first level/stage page table must  |
-+ * |               |  explicitly invalidate the IOMMU cache through uAPI  |
-+ * |               |  provided by userspace driver framework (e.g. VFIO)  |
-+ * |               |  according to vendor-specific requirement when       |
-+ * |               |  changing the page table.                            |
-+ * +---------------+------------------------------------------------------+
-+ *
-+ * @data[] types defined for @format:
-+ * +================================+=====================================+
-+ * | @format                        | @data[]                             |
-+ * +================================+=====================================+
-+ * | IOMMU_PASID_FORMAT_INTEL_VTD   | struct iommu_nesting_info_vtd       |
-+ * +--------------------------------+-------------------------------------+
-+ *
-+ */
-+struct iommu_nesting_info {
-+	__u32	size;
-+	__u32	format;
-+	__u32	features;
-+#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
-+#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
-+#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
-+	__u32	flags;
-+	__u16	addr_width;
-+	__u16	pasid_bits;
-+	__u32	padding;
-+	__u8	data[];
-+};
-+
-+/*
-+ * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info
-+ *
-+ *
-+ * @flags:	VT-d specific flags. Currently reserved for future
-+ *		extension.
-+ * @cap_reg:	Describe basic capabilities as defined in VT-d capability
-+ *		register.
-+ * @ecap_reg:	Describe the extended capabilities as defined in VT-d
-+ *		extended capability register.
-+ */
-+struct iommu_nesting_info_vtd {
-+	__u32	flags;
-+	__u32	padding;
-+	__u64	cap_reg;
-+	__u64	ecap_reg;
-+};
-+
- #endif /* _UAPI_IOMMU_H */
--- 
-2.7.4
+Cheers,
+Bj=C3=B6rn
 
+> > +               "       .popsection                             \n\t"
+> > +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
+> > +
+> > +       return false;
+> > +l_yes:
+> > +       return true;
+> > +}
+> > +
+> > +static __always_inline bool arch_static_branch_jump(struct static_key =
+*key,
+> > +                                                   bool branch)
+> > +{
+> > +       asm_volatile_goto(
+> > +               "       .option push                            \n\n"
+> > +               "       .option norelax                         \n\n"
+> > +               "       .option norvc                           \n\n"
+> > +               "1:     jal             zero, %l[l_yes]         \n\t"
+> > +               "       .option pop                             \n\n"
+> > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
+> > +               "       .align          3                       \n\t"
+> > +               "       .long           1b - ., %l[l_yes] - .   \n\t"
+> > +               "       .quad           %0 - .                  \n\t"
+> > +               "       .popsection                             \n\t"
+> > +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
+> > +
+> > +       return false;
+> > +l_yes:
+> > +       return true;
+> > +}
+> > +
+> > +#endif  /* __ASSEMBLY__ */
+> > +#endif /* __ASM_JUMP_LABEL_H */
+> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> > index b355cf485671..a5287ab9f7f2 100644
+> > --- a/arch/riscv/kernel/Makefile
+> > +++ b/arch/riscv/kernel/Makefile
+> > @@ -53,4 +53,6 @@ endif
+> >  obj-$(CONFIG_HOTPLUG_CPU)      +=3D cpu-hotplug.o
+> >  obj-$(CONFIG_KGDB)             +=3D kgdb.o
+> >
+> > +obj-$(CONFIG_JUMP_LABEL)       +=3D jump_label.o
+> > +
+> >  clean:
+> > diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_la=
+bel.c
+> > new file mode 100644
+> > index 000000000000..55b2d742efe1
+> > --- /dev/null
+> > +++ b/arch/riscv/kernel/jump_label.c
+> > @@ -0,0 +1,44 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2020 Emil Renner Berthing
+> > + *
+> > + * Based on arch/arm64/kernel/jump_label.c
+> > + */
+> > +#include <linux/kernel.h>
+> > +#include <linux/jump_label.h>
+> > +#include <asm/patch.h>
+> > +
+> > +#define RISCV_INSN_NOP 0x00000013
+> > +#define RISCV_INSN_JAL 0x0000006f
+> > +
+> > +void arch_jump_label_transform(struct jump_entry *entry,
+> > +                              enum jump_label_type type)
+> > +{
+> > +       void *addr =3D (void *)jump_entry_code(entry);
+> > +       u32 insn;
+> > +
+> > +       if (type =3D=3D JUMP_LABEL_JMP) {
+> > +               u32 offset =3D jump_entry_target(entry) - jump_entry_co=
+de(entry);
+> > +
+> > +               insn =3D RISCV_INSN_JAL |
+> > +                       ((offset & GENMASK(19, 12)) << (12 - 12)) |
+> > +                       ((offset & GENMASK(11, 11)) << (20 - 11)) |
+> > +                       ((offset & GENMASK(10,  1)) << (21 -  1)) |
+> > +                       ((offset & GENMASK(20, 20)) << (31 - 20));
+> > +       } else
+> > +               insn =3D RISCV_INSN_NOP;
+> > +
+> > +       patch_text_nosync(addr, &insn, sizeof(insn));
+> > +}
+> > +
+> > +void arch_jump_label_transform_static(struct jump_entry *entry,
+> > +                                     enum jump_label_type type)
+> > +{
+> > +       /*
+> > +        * We use the same instructions in the arch_static_branch and
+> > +        * arch_static_branch_jump inline functions, so there's no
+> > +        * need to patch them up here.
+> > +        * The core will call arch_jump_label_transform  when those
+> > +        * instructions need to be replaced.
+> > +        */
+> > +}
+> > --
+> > 2.27.0
+> >
