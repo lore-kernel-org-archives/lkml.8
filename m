@@ -2,333 +2,167 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4379BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 185A9208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AAF208D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="F7Nif+jJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFuJOl88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGDPn2 (ORCPT
+        id S1726892AbgGDPry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 11:43:28 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64804 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgGDPn1 (ORCPT
+        Sat, 4 Jul 2020 11:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgGDPrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 11:43:27 -0400
+        Sat, 4 Jul 2020 11:47:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70087C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 08:47:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so16417097pgc.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 08:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593877406; x=1625413406;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=n2dWr7gm9H7OUjK09qHgnMN5WT5OD5pPnkAXz3ZiBaU=;
-  b=F7Nif+jJpIu2w9MLX2MUED8FBjJIE8/GW+08OVuaZbdfonbe/FpoeUSD
-   Qw5JTxyTGHDHKDDnUxgkBLsHVveGiFInDnUabJ2B4goVz0uyoOCx8Ax9Z
-   YOJ8R4wTTISx8fPSULGAv14O6K7CncxlWYKwb8gvLKooSywUJSoN/QR7z
-   0=;
-IronPort-SDR: vvTuIuFDl5r/cTkYtiJkATQ043ltuAmqvaxQkIS5WF0gcyHyfoNEaC2byrcD5n/2sprJDIe8LV
- 3qkcRDh0zYVw==
-X-IronPort-AV: E=Sophos;i="5.75,312,1589241600"; 
-   d="scan'208";a="57284908"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Jul 2020 15:43:21 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 956CBA205F;
-        Sat,  4 Jul 2020 15:43:18 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 4 Jul 2020 15:43:17 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 4 Jul 2020 15:43:09 +0000
-Subject: Re: [PATCH v4 06/18] nitro_enclaves: Handle out-of-band PCI device
- events
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-7-andraprs@amazon.com>
- <82768612-0d23-55a9-dedf-58ade57b37af@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <96667e27-3379-4817-843f-988af9db4366@amazon.com>
-Date:   Sat, 4 Jul 2020 18:43:04 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kbJGmL/GT/RryX9bJANqO+8burLO+M6iii1/sXcpL8Y=;
+        b=aFuJOl88J5YF63X3Nc3Zmfg/OZKoB1k6qA4dmQ6pilrTcDmHp9MOAjcdZj1GhkLtJr
+         7tDM3xJLxv58i8BE20/OSQgO0T1kAegEKWn+q6m5GRn/T2QQJYuBH5Qg4NJu8/WW4XzD
+         DvQojXVv3/TIznFSPeA/6NcnnkwVfrtbrdkb4KgGENz5NTSvgt8koGac5YXJjIlx9PVT
+         quFpdKi4F+a6Nqipat0JrAUqYnqwNQh0u7Cq3uxu6pPPYInONp+Osf+G2RfzjF2nxgkJ
+         Wya8a4LK6psikVX5MMbBn+zO7mXgUA5NWYyYpZ4LFt67UGdkeJnbbOCqur7ddiW7V691
+         CN9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kbJGmL/GT/RryX9bJANqO+8burLO+M6iii1/sXcpL8Y=;
+        b=UfJ/I8uV/kNsl6ns1yekYErJtgON1QO2sSN8y5WQ6Ex5gVTABMZ7J1HJHhngwsImlH
+         7VS8LktC6jbAsHv9hH1jCcjgHWHn5joDEHnW/HxQN4hy8RUieDULqLFU5h+GjFG4471Y
+         eLZRBkNr8hLqpNjUy0aQGFB+nGKyIN6VQiCophhoA84ZH7+YXRSRT19ueuZ4EWHvy71S
+         1jQxcfOBUjRBUGIAFJDCKtknUj+HhCJ4UqUE1ihJk4bYg4GxtZeKV9zfEv1rfkW2A4Dr
+         uF2noViSh+Sohq2wDNaiQ3C1fgEcNOIBXgCdY9y5VnOAJTTjRYrf/4nH987E01yN38VV
+         GcOg==
+X-Gm-Message-State: AOAM532EeAExALPCSldJ361gNfT8tAn0ILVmBdgDGsZwrw8zB2LPKixi
+        9XdDofLYe5MJ/lE2uABmMSx6IJ4sxA==
+X-Google-Smtp-Source: ABdhPJwws+NSx7/B9LRulDiPh9acFGl8Y2Exd9qvt5YXjr/TgKIXVnvC2kFcmJn/2pn7IO6Wd8RhQA==
+X-Received: by 2002:a63:5a1a:: with SMTP id o26mr33016259pgb.420.1593877672856;
+        Sat, 04 Jul 2020 08:47:52 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
+        by smtp.gmail.com with ESMTPSA id i196sm15044123pgc.55.2020.07.04.08.47.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jul 2020 08:47:52 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 21:17:45 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 8/9] bus: mhi: core: Read and save device hardware
+ information from BHI
+Message-ID: <20200704154745.GH3066@Mani-XPS-13-9360>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+ <1593448782-8385-9-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <82768612-0d23-55a9-dedf-58ade57b37af@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D08UWB002.ant.amazon.com (10.43.161.168) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593448782-8385-9-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 29, 2020 at 09:39:41AM -0700, Bhaumik Bhatt wrote:
+> Device hardware specific information such as serial number and the OEM
+> PK hash can be read using BHI and saved on host to identify the
+> endpoint.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On 02/07/2020 18:24, Alexander Graf wrote:
->
->
-> On 22.06.20 22:03, Andra Paraschiv wrote:
->> In addition to the replies sent by the Nitro Enclaves PCI device in
->> response to command requests, out-of-band enclave events can happen e.g.
->> an enclave crashes. In this case, the Nitro Enclaves driver needs to be
->> aware of the event and notify the corresponding user space process that
->> abstracts the enclave.
->>
->> Register an MSI-X interrupt vector to be used for this kind of
->> out-of-band events. The interrupt notifies that the state of an enclave
->> changed and the driver logic scans the state of each running enclave to
->> identify for which this notification is intended.
->>
->> Create an workqueue to handle the out-of-band events. Notify user space
->> enclave process that is using a polling mechanism on the enclave fd.
->>
->> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->> ---
->> Changelog
->>
->> v3 -> v4
->>
->> * Use dev_err instead of custom NE log pattern.
->> * Return IRQ_NONE when interrupts are not handled.
->>
->> v2 -> v3
->>
->> * Remove the WARN_ON calls.
->> * Update static calls sanity checks.
->> * Remove "ratelimited" from the logs that are not in the ioctl call
->> =A0=A0 paths.
->>
->> v1 -> v2
->>
->> * Add log pattern for NE.
->> * Update goto labels to match their purpose.
->> ---
->> =A0 drivers/virt/nitro_enclaves/ne_pci_dev.c | 122 +++++++++++++++++++++=
-++
->> =A0 1 file changed, 122 insertions(+)
->>
->> diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c =
+Thanks,
+Mani
 
->> b/drivers/virt/nitro_enclaves/ne_pci_dev.c
->> index c24230cfe7c0..9a137862cade 100644
->> --- a/drivers/virt/nitro_enclaves/ne_pci_dev.c
->> +++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
->> @@ -239,6 +239,93 @@ static irqreturn_t ne_reply_handler(int irq, =
-
->> void *args)
->> =A0=A0=A0=A0=A0 return IRQ_HANDLED;
->> =A0 }
->> =A0 +/**
->> + * ne_event_work_handler - Work queue handler for notifying enclaves on
->> + * a state change received by the event interrupt handler.
->> + *
->> + * An out-of-band event is being issued by the Nitro Hypervisor when =
-
->> at least
->> + * one enclave is changing state without client interaction.
->> + *
->> + * @work: item containing the Nitro Enclaves PCI device for which a
->> + *=A0=A0=A0=A0=A0 out-of-band event was issued.
->> + */
->> +static void ne_event_work_handler(struct work_struct *work)
->> +{
->> +=A0=A0=A0 struct ne_pci_dev_cmd_reply cmd_reply =3D {};
->> +=A0=A0=A0 struct ne_enclave *ne_enclave =3D NULL;
->> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D
->> +=A0=A0=A0=A0=A0=A0=A0 container_of(work, struct ne_pci_dev, notify_work=
-);
->> +=A0=A0=A0 int rc =3D -EINVAL;
->> +=A0=A0=A0 struct slot_info_req slot_info_req =3D {};
->> +
->> +=A0=A0=A0 if (!ne_pci_dev)
->> +=A0=A0=A0=A0=A0=A0=A0 return;
->
-> How?
-
-Removed this check and the one below. Thank you.
-
-Andra
-
->
->> +
->> +=A0=A0=A0 mutex_lock(&ne_pci_dev->enclaves_list_mutex);
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * Iterate over all enclaves registered for the Nitro Encla=
-ves
->> +=A0=A0=A0=A0 * PCI device and determine for which enclave(s) the out-of=
--band =
-
->> event
->> +=A0=A0=A0=A0 * is corresponding to.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 list_for_each_entry(ne_enclave, &ne_pci_dev->enclaves_list,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 enclave_list_entry) {
->> +=A0=A0=A0=A0=A0=A0=A0 mutex_lock(&ne_enclave->enclave_info_mutex);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 /*
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * Enclaves that were never started cannot rece=
-ive out-of-band
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * events.
->> +=A0=A0=A0=A0=A0=A0=A0=A0 */
->> +=A0=A0=A0=A0=A0=A0=A0 if (ne_enclave->state !=3D NE_STATE_RUNNING)
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unlock;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 slot_info_req.slot_uid =3D ne_enclave->slot_uid;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 rc =3D ne_do_request(ne_enclave->pdev, SLOT_INFO,=
- &slot_info_req,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(slot_info=
-_req), &cmd_reply,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(cmd_reply=
-));
->> +=A0=A0=A0=A0=A0=A0=A0 if (rc < 0)
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&ne_enclave->pdev->dev,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Error in slot info [rc=
-=3D%d]\n", rc);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 /* Notify enclave process that the enclave state =
-changed. */
->> +=A0=A0=A0=A0=A0=A0=A0 if (ne_enclave->state !=3D cmd_reply.state) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ne_enclave->state =3D cmd_reply.state;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ne_enclave->has_event =3D true;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 wake_up_interruptible(&ne_enclave->ev=
-entq);
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +unlock:
->> +=A0=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_enclave->enclave_info_mutex);
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
->> +}
->> +
->> +/**
->> + * ne_event_handler - Interrupt handler for PCI device out-of-band
->> + * events. This interrupt does not supply any data in the MMIO region.
->> + * It notifies a change in the state of any of the launched enclaves.
->> + *
->> + * @irq: received interrupt for an out-of-band event.
->> + * @args: PCI device private data structure.
->> + *
->> + * @returns: IRQ_HANDLED on handled interrupt, IRQ_NONE otherwise.
->> + */
->> +static irqreturn_t ne_event_handler(int irq, void *args)
->> +{
->> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D (struct ne_pci_dev *)args;
->> +
->> +=A0=A0=A0 if (!ne_pci_dev)
->> +=A0=A0=A0=A0=A0=A0=A0 return IRQ_NONE;
->
-> How can this happen?
->
->
-> Alex
->
->> +
->> +=A0=A0=A0 queue_work(ne_pci_dev->event_wq, &ne_pci_dev->notify_work);
->> +
->> +=A0=A0=A0 return IRQ_HANDLED;
->> +}
->> +
->> =A0 /**
->> =A0=A0 * ne_setup_msix - Setup MSI-X vectors for the PCI device.
->> =A0=A0 *
->> @@ -284,8 +371,37 @@ static int ne_setup_msix(struct pci_dev *pdev)
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 goto free_irq_vectors;
->> =A0=A0=A0=A0=A0 }
->> =A0 +=A0=A0=A0 ne_pci_dev->event_wq =3D =
-
->> create_singlethread_workqueue("ne_pci_dev_wq");
->> +=A0=A0=A0 if (!ne_pci_dev->event_wq) {
->> +=A0=A0=A0=A0=A0=A0=A0 rc =3D -ENOMEM;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Cannot get wq for dev events=
- [rc=3D%d]\n",
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 goto free_reply_irq_vec;
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 INIT_WORK(&ne_pci_dev->notify_work, ne_event_work_handler);
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * This IRQ gets triggered every time any enclave's state =
-
->> changes. Its
->> +=A0=A0=A0=A0 * handler then scans for the changes and propagates them t=
-o the =
-
->> user
->> +=A0=A0=A0=A0 * space.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 rc =3D request_irq(pci_irq_vector(pdev, NE_VEC_EVENT),
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ne_event_handler, 0, "enclave_evt"=
-, ne_pci_dev);
->> +=A0=A0=A0 if (rc < 0) {
->> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in request irq event [=
-rc=3D%d]\n", =
-
->> rc);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 goto destroy_wq;
->> +=A0=A0=A0 }
->> +
->> =A0=A0=A0=A0=A0 return 0;
->> =A0 +destroy_wq:
->> +=A0=A0=A0 destroy_workqueue(ne_pci_dev->event_wq);
->> +free_reply_irq_vec:
->> +=A0=A0=A0 free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
->> =A0 free_irq_vectors:
->> =A0=A0=A0=A0=A0 pci_free_irq_vectors(pdev);
->> =A0 @@ -304,6 +420,12 @@ static void ne_teardown_msix(struct pci_dev =
-
->> *pdev)
->> =A0=A0=A0=A0=A0 if (!ne_pci_dev)
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return;
->> =A0 +=A0=A0=A0 free_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_pci_dev);
->> +
->> +=A0=A0=A0 flush_work(&ne_pci_dev->notify_work);
->> +=A0=A0=A0 flush_workqueue(ne_pci_dev->event_wq);
->> +=A0=A0=A0 destroy_workqueue(ne_pci_dev->event_wq);
->> +
->> =A0=A0=A0=A0=A0 free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
->> =A0 =A0=A0=A0=A0=A0 pci_free_irq_vectors(pdev);
->>
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+> ---
+>  drivers/bus/mhi/core/boot.c | 17 ++++++++++++++++-
+>  include/linux/mhi.h         |  6 ++++++
+>  2 files changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+> index 0b38014..24422f5 100644
+> --- a/drivers/bus/mhi/core/boot.c
+> +++ b/drivers/bus/mhi/core/boot.c
+> @@ -392,13 +392,28 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+>  	void *buf;
+>  	dma_addr_t dma_addr;
+>  	size_t size;
+> -	int ret;
+> +	int i, ret;
+>  
+>  	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
+>  		dev_err(dev, "Device MHI is not in valid state\n");
+>  		return;
+>  	}
+>  
+> +	/* save hardware info from BHI */
+> +	ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_SERIALNU,
+> +			   &mhi_cntrl->serial_number);
+> +	if (ret)
+> +		dev_err(dev, "Could not capture serial number via BHI\n");
+> +
+> +	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++) {
+> +		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_OEMPKHASH(i),
+> +				   &mhi_cntrl->oem_pk_hash[i]);
+> +		if (ret) {
+> +			dev_err(dev, "Could not capture OEM PK HASH via BHI\n");
+> +			break;
+> +		}
+> +	}
+> +
+>  	/* If device is in pass through, do reset to ready state transition */
+>  	if (mhi_cntrl->ee == MHI_EE_PTHRU)
+>  		goto fw_load_ee_pthru;
+> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+> index b1e8b4f..dad6246 100644
+> --- a/include/linux/mhi.h
+> +++ b/include/linux/mhi.h
+> @@ -16,6 +16,8 @@
+>  #include <linux/wait.h>
+>  #include <linux/workqueue.h>
+>  
+> +#define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
+> +
+>  struct mhi_chan;
+>  struct mhi_event;
+>  struct mhi_ctxt;
+> @@ -315,6 +317,8 @@ struct mhi_controller_config {
+>   * @device_number: MHI controller device number
+>   * @major_version: MHI controller major revision number
+>   * @minor_version: MHI controller minor revision number
+> + * @serial_number: MHI controller serial number obtained from BHI
+> + * @oem_pk_hash: MHI controller OEM PK Hash obtained from BHI
+>   * @mhi_event: MHI event ring configurations table
+>   * @mhi_cmd: MHI command ring configurations table
+>   * @mhi_ctxt: MHI device context, shared memory between host and device
+> @@ -394,6 +398,8 @@ struct mhi_controller {
+>  	u32 device_number;
+>  	u32 major_version;
+>  	u32 minor_version;
+> +	u32 serial_number;
+> +	u32 oem_pk_hash[MHI_MAX_OEM_PK_HASH_SEGMENTS];
+>  
+>  	struct mhi_event *mhi_event;
+>  	struct mhi_cmd *mhi_cmd;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
