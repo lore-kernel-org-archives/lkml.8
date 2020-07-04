@@ -2,185 +2,346 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B02320870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6CC20772
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 23:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593905712;
+	bh=wyCmrZT1/F4MWf7J6vRrTXwurSok2IlwZH3Atvuq5aQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jxx0oizWer5wfMXzdS4B8szJmZ3klkeCkb8A/nqL6IsY/2YjsMGaMSlGbC5jmaYCC
+	 Jyo7uutsEF95u81sIsDkmS7aAP0uOZlgBx4DGT/ThLmWvY4xiJBgq++pnu/I9x8i9R
+	 na6KoMUk4HK+8MBV2d1ExLwndoJRzIKNtTuW558U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgGDXWQ (ORCPT
+        id S1728073AbgGDXeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 19:22:16 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:49668 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727980AbgGDXWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 19:22:16 -0400
-Received: by mail-il1-f200.google.com with SMTP id w10so16684335ilm.16
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:22:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=p/sj6/A1h/oMfABdmzJUOldo2DwRLfpIf9LDXwypp7g=;
-        b=QxialC/U2Wf6uoODPwOWq2SGcuk4NHVL0BDuBMifsQUGtrebigIxECTRq8Q7fe5iUb
-         pI9+MANWGUoRqlHKyhFr2b1PEH5jjbs9JVioPzO6LLldU+OKdpW8MnuYlwzCJqOAtH6j
-         NBUI3Xu+acko0yNCWmywCgn5Fpkn3DZ7+QfpN2vLVyfPRQVJi8dncwnWVksCrZvkpRAo
-         r3hL/kMl+mPnXAAuiG346TAGpv+BR+f1rDp7nyoJvatIHiQ2QBKaAWwvSUZyGPpoGXHL
-         bGeap0oDTPJOhq+lnhsr5ygJbspTm7f2MXWT2fOSsvPGLxQXMzf+ViXC4QBIyVXkW7u8
-         7chQ==
-X-Gm-Message-State: AOAM531xwSVuftTM8M9q0Zi2nG9lOO9olpFBuHHApAheI4GU2n1ewULh
-        IQT2LoHg3+dX1G0uGKLIrM9iG8ymHmM9bm+yBiarcEG/NN8T
-X-Google-Smtp-Source: ABdhPJwOY9VsonF16dUne23woyWtFLgiGJ5rIS0toAM0k0AJN47MQXHGwL5NQrhbbHUmu2kAupwb2S74YZPjxycIQQNkU+4DgmO2
+        Sat, 4 Jul 2020 19:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbgGDXeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 19:34:15 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F047214D8
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 23:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593905654;
+        bh=wyCmrZT1/F4MWf7J6vRrTXwurSok2IlwZH3Atvuq5aQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OgUVh5IawpbA03Cd65mr+rtfG8one+8prFLbxf52uY5MF/ArJg28vLuTXl0TpvFrl
+         qfgfltP55JzDYEUPO79dddZBo3aYTovUbjX6vi1No4JKEaxlQJBRdiekV4KxsccoEh
+         ece5ueWRzEHk3bNC2HOWqyQpadpPj+lRLOPmarYM=
+Received: by mail-ej1-f50.google.com with SMTP id w16so38587166ejj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 16:34:14 -0700 (PDT)
+X-Gm-Message-State: AOAM5320a5NV+dYcN2FS7lYhuX13axDFCLNYkWIwZ3dMXgzmrZDAL8G9
+        2IcFg+11yekxQGUsbNk1IU9y8vlJi0JPjRAJWQ==
+X-Google-Smtp-Source: ABdhPJzM1lQhvawcJNzhzdJ+FEFnk6MNbEQYBs3zdIQOEtzvrsWmGsJ0Ij1tyUtGSv+R+lSANVreuxdTH/jr0gBH8K8=
+X-Received: by 2002:a17:906:404e:: with SMTP id y14mr37027241ejj.260.1593905653033;
+ Sat, 04 Jul 2020 16:34:13 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr14136365jaq.121.1593904934700;
- Sat, 04 Jul 2020 16:22:14 -0700 (PDT)
-Date:   Sat, 04 Jul 2020 16:22:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000704c7705a9a5e938@google.com>
-Subject: INFO: task hung in lru_add_drain_all
-From:   syzbot <syzbot+1053252c4289b5f73548@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+References: <20200615203108.786083-1-enric.balletbo@collabora.com> <20200615203108.786083-5-enric.balletbo@collabora.com>
+In-Reply-To: <20200615203108.786083-5-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 5 Jul 2020 07:34:02 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__amgJj-dJA_ngV9yF7X-y_pB-P-EBqGfD=hNbgVbZSkA@mail.gmail.com>
+Message-ID: <CAAOTY__amgJj-dJA_ngV9yF7X-y_pB-P-EBqGfD=hNbgVbZSkA@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 4/7] drm/mediatek: mtk_dsi: Convert to bridge driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi, Enric:
 
-syzbot found the following crash on:
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B46=E6=9C=8816=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:31=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> Convert mtk_dsi to a bridge driver with built-in encoder support for
+> compatibility with existing component drivers.
 
-HEAD commit:    c28e58ee Add linux-next specific files for 20200629
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1400ab37100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcd26bbca17dd1db
-dashboard link: https://syzkaller.appspot.com/bug?extid=1053252c4289b5f73548
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c75c83100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11fd99e3100000
+Applied to mediatek-drm-next [1], thanks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1053252c4289b5f73548@syzkaller.appspotmail.com
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
 
-INFO: task khugepaged:1160 blocked for more than 143 seconds.
-      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-khugepaged      D28584  1160      2 0x00004000
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1873
- do_wait_for_common kernel/sched/completion.c:85 [inline]
- __wait_for_common kernel/sched/completion.c:106 [inline]
- wait_for_common kernel/sched/completion.c:117 [inline]
- wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
- __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
- lru_add_drain_all+0x3ca/0x590 mm/swap.c:808
- khugepaged_do_scan mm/khugepaged.c:2177 [inline]
- khugepaged+0x10b/0x5a10 mm/khugepaged.c:2238
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Regards,
+Chun-Kuang.
 
-Showing all locks held in the system:
-6 locks held by kworker/0:0/5:
-1 lock held by khungtaskd/1150:
- #0: ffffffff89bc3000 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
-1 lock held by khugepaged/1160:
- #0: ffffffff89c48448 (lock#4){+.+.}-{3:3}, at: lru_add_drain_all+0x59/0x590 mm/swap.c:779
-1 lock held by in:imklog/6654:
- #0: ffff8880935425f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:928
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1150 Comm: khungtaskd Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
-RIP: 0010:hid_setup_resolution_multiplier+0x3a3/0x9b0 drivers/hid/hid-core.c:1163
-Code: b6 14 38 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 df 04 00 00 45 8b 74 24 04 bf 02 00 00 00 44 89 f6 e8 6d 62 90 fb <41> 83 fe 02 0f 85 74 ff ff ff 4c 89 24 24 e8 da 65 90 fb 49 8d 7d
-RSP: 0018:ffffc90000cbec18 EFLAGS: 00000293
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff85e38373
-RDX: 0000000000000000 RSI: ffff8880a9598140 RDI: 0000000000000005
-RBP: ffff88809f43e800 R08: 0000000000000001 R09: ffffc900015ee0cc
-R10: 0000000000000002 R11: 0000000000000000 R12: ffff88809f43e800
-R13: ffff888085800000 R14: 0000000000000000 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055726aabf328 CR3: 00000000a0102000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- hid_open_report+0x438/0x640 drivers/hid/hid-core.c:1274
- hid_parse include/linux/hid.h:1017 [inline]
- ms_probe+0x12d/0x4b0 drivers/hid/hid-microsoft.c:388
- hid_device_probe+0x2bd/0x3f0 drivers/hid/hid-core.c:2263
- really_probe+0x282/0x8a0 drivers/base/dd.c:525
- driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
- __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
- bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
- __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xacf/0x1b00 drivers/base/core.c:2680
- hid_add_device+0x344/0x9b0 drivers/hid/hid-core.c:2419
- usbhid_probe+0xac8/0xff0 drivers/hid/usbhid/hid-core.c:1412
- usb_probe_interface+0x2f7/0x780 drivers/usb/core/driver.c:374
- really_probe+0x282/0x8a0 drivers/base/dd.c:525
- driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
- __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
- bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
- __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xacf/0x1b00 drivers/base/core.c:2680
- usb_set_configuration+0xef6/0x17a0 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0xba/0xf2 drivers/usb/core/generic.c:241
- usb_probe_device+0xc6/0x210 drivers/usb/core/driver.c:272
- really_probe+0x282/0x8a0 drivers/base/dd.c:525
- driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
- __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
- bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
- __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xacf/0x1b00 drivers/base/core.c:2680
- usb_new_device.cold+0x748/0x103b drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x2033/0x3e40 drivers/usb/core/hub.c:5576
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> ---
+>
+> Changes in v4:
+> - Remove double call to drm_encoder_init(). (Chun-Kuang Hu)
+> - Cleanup the encoder in mtk_dsi_unbind(). (Chun-Kuang Hu)
+>
+> Changes in v3:
+> - Add the bridge.type. (Laurent Pinchart)
+>
+> Changes in v2: None
+>
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 117 +++++++++++++++++++----------
+>  1 file changed, 79 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
+k/mtk_dsi.c
+> index 208f49bf14a01..759a5b37fb4d2 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -181,6 +181,7 @@ struct mtk_dsi {
+>         struct device *dev;
+>         struct mipi_dsi_host host;
+>         struct drm_encoder encoder;
+> +       struct drm_bridge bridge;
+>         struct drm_connector conn;
+>         struct drm_panel *panel;
+>         struct drm_bridge *next_bridge;
+> @@ -206,9 +207,9 @@ struct mtk_dsi {
+>         const struct mtk_dsi_driver_data *driver_data;
+>  };
+>
+> -static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> +static inline struct mtk_dsi *bridge_to_dsi(struct drm_bridge *b)
+>  {
+> -       return container_of(e, struct mtk_dsi, encoder);
+> +       return container_of(b, struct mtk_dsi, bridge);
+>  }
+>
+>  static inline struct mtk_dsi *connector_to_dsi(struct drm_connector *c)
+> @@ -788,32 +789,52 @@ static void mtk_output_dsi_disable(struct mtk_dsi *=
+dsi)
+>         dsi->enabled =3D false;
+>  }
+>
+> -static bool mtk_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
+> -                                      const struct drm_display_mode *mod=
+e,
+> -                                      struct drm_display_mode *adjusted_=
+mode)
+> +static void mtk_dsi_encoder_destroy(struct drm_encoder *encoder)
+>  {
+> -       return true;
+> +       drm_encoder_cleanup(encoder);
+>  }
+>
+> -static void mtk_dsi_encoder_mode_set(struct drm_encoder *encoder,
+> -                                    struct drm_display_mode *mode,
+> -                                    struct drm_display_mode *adjusted)
+> +static const struct drm_encoder_funcs mtk_dsi_encoder_funcs =3D {
+> +       .destroy =3D mtk_dsi_encoder_destroy,
+> +};
+> +
+> +static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_ds=
+i *dsi);
+> +static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
+> +
+> +static int mtk_dsi_bridge_attach(struct drm_bridge *bridge,
+> +                                enum drm_bridge_attach_flags flags)
+> +{
+> +       struct mtk_dsi *dsi =3D bridge_to_dsi(bridge);
+> +
+> +       return mtk_dsi_create_conn_enc(bridge->dev, dsi);
+> +}
+> +
+> +static void mtk_dsi_bridge_detach(struct drm_bridge *bridge)
+>  {
+> -       struct mtk_dsi *dsi =3D encoder_to_dsi(encoder);
+> +       struct mtk_dsi *dsi =3D bridge_to_dsi(bridge);
+> +
+> +       mtk_dsi_destroy_conn_enc(dsi);
+> +}
+> +
+> +static void mtk_dsi_bridge_mode_set(struct drm_bridge *bridge,
+> +                                   const struct drm_display_mode *mode,
+> +                                   const struct drm_display_mode *adjust=
+ed)
+> +{
+> +       struct mtk_dsi *dsi =3D bridge_to_dsi(bridge);
+>
+>         drm_display_mode_to_videomode(adjusted, &dsi->vm);
+>  }
+>
+> -static void mtk_dsi_encoder_disable(struct drm_encoder *encoder)
+> +static void mtk_dsi_bridge_disable(struct drm_bridge *bridge)
+>  {
+> -       struct mtk_dsi *dsi =3D encoder_to_dsi(encoder);
+> +       struct mtk_dsi *dsi =3D bridge_to_dsi(bridge);
+>
+>         mtk_output_dsi_disable(dsi);
+>  }
+>
+> -static void mtk_dsi_encoder_enable(struct drm_encoder *encoder)
+> +static void mtk_dsi_bridge_enable(struct drm_bridge *bridge)
+>  {
+> -       struct mtk_dsi *dsi =3D encoder_to_dsi(encoder);
+> +       struct mtk_dsi *dsi =3D bridge_to_dsi(bridge);
+>
+>         mtk_output_dsi_enable(dsi);
+>  }
+> @@ -825,11 +846,12 @@ static int mtk_dsi_connector_get_modes(struct drm_c=
+onnector *connector)
+>         return drm_panel_get_modes(dsi->panel, connector);
+>  }
+>
+> -static const struct drm_encoder_helper_funcs mtk_dsi_encoder_helper_func=
+s =3D {
+> -       .mode_fixup =3D mtk_dsi_encoder_mode_fixup,
+> -       .mode_set =3D mtk_dsi_encoder_mode_set,
+> -       .disable =3D mtk_dsi_encoder_disable,
+> -       .enable =3D mtk_dsi_encoder_enable,
+> +static const struct drm_bridge_funcs mtk_dsi_bridge_funcs =3D {
+> +       .attach =3D mtk_dsi_bridge_attach,
+> +       .detach =3D mtk_dsi_bridge_detach,
+> +       .disable =3D mtk_dsi_bridge_disable,
+> +       .enable =3D mtk_dsi_bridge_enable,
+> +       .mode_set =3D mtk_dsi_bridge_mode_set,
+>  };
+>
+>  static const struct drm_connector_funcs mtk_dsi_connector_funcs =3D {
+> @@ -880,20 +902,6 @@ static int mtk_dsi_create_conn_enc(struct drm_device=
+ *drm, struct mtk_dsi *dsi)
+>  {
+>         int ret;
+>
+> -       ret =3D drm_simple_encoder_init(drm, &dsi->encoder,
+> -                                     DRM_MODE_ENCODER_DSI);
+> -       if (ret) {
+> -               DRM_ERROR("Failed to encoder init to drm\n");
+> -               return ret;
+> -       }
+> -       drm_encoder_helper_add(&dsi->encoder, &mtk_dsi_encoder_helper_fun=
+cs);
+> -
+> -       /*
+> -        * Currently display data paths are statically assigned to a crtc=
+ each.
+> -        * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
+> -        */
+> -       dsi->encoder.possible_crtcs =3D 1;
+> -
+>         /* If there's a next bridge, attach to it and let it create the c=
+onnector */
+>         if (dsi->next_bridge) {
+>                 ret =3D drm_bridge_attach(&dsi->encoder, dsi->next_bridge=
+, NULL,
+> @@ -1115,6 +1123,34 @@ static const struct mipi_dsi_host_ops mtk_dsi_ops =
+=3D {
+>         .transfer =3D mtk_dsi_host_transfer,
+>  };
+>
+> +static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *=
+dsi)
+> +{
+> +       int ret;
+> +
+> +       ret =3D drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_fun=
+cs,
+> +                              DRM_MODE_ENCODER_DSI, NULL);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to encoder init to drm\n");
+> +               return ret;
+> +       }
+> +
+> +       /*
+> +        * Currently display data paths are statically assigned to a crtc=
+ each.
+> +        * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
+> +        */
+> +       dsi->encoder.possible_crtcs =3D 1;
+> +
+> +       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+> +       if (ret)
+> +               goto err_cleanup_encoder;
+> +
+> +       return 0;
+> +
+> +err_cleanup_encoder:
+> +       drm_encoder_cleanup(&dsi->encoder);
+> +       return ret;
+> +}
+> +
+>  static int mtk_dsi_bind(struct device *dev, struct device *master, void =
+*data)
+>  {
+>         int ret;
+> @@ -1128,11 +1164,9 @@ static int mtk_dsi_bind(struct device *dev, struct=
+ device *master, void *data)
+>                 return ret;
+>         }
+>
+> -       ret =3D mtk_dsi_create_conn_enc(drm, dsi);
+> -       if (ret) {
+> -               DRM_ERROR("Encoder create failed with %d\n", ret);
+> +       ret =3D mtk_dsi_encoder_init(drm, dsi);
+> +       if (ret)
+>                 goto err_unregister;
+> -       }
+>
+>         return 0;
+>
+> @@ -1147,7 +1181,7 @@ static void mtk_dsi_unbind(struct device *dev, stru=
+ct device *master,
+>         struct drm_device *drm =3D data;
+>         struct mtk_dsi *dsi =3D dev_get_drvdata(dev);
+>
+> -       mtk_dsi_destroy_conn_enc(dsi);
+> +       drm_encoder_cleanup(&dsi->encoder);
+>         mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+>  }
+>
+> @@ -1257,6 +1291,12 @@ static int mtk_dsi_probe(struct platform_device *p=
+dev)
+>
+>         platform_set_drvdata(pdev, dsi);
+>
+> +       dsi->bridge.funcs =3D &mtk_dsi_bridge_funcs;
+> +       dsi->bridge.of_node =3D dev->of_node;
+> +       dsi->bridge.type =3D DRM_MODE_CONNECTOR_DSI;
+> +
+> +       drm_bridge_add(&dsi->bridge);
+> +
+>         ret =3D component_add(&pdev->dev, &mtk_dsi_component_ops);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "failed to add component: %d\n", ret)=
+;
+> @@ -1275,6 +1315,7 @@ static int mtk_dsi_remove(struct platform_device *p=
+dev)
+>         struct mtk_dsi *dsi =3D platform_get_drvdata(pdev);
+>
+>         mtk_output_dsi_disable(dsi);
+> +       drm_bridge_remove(&dsi->bridge);
+>         component_del(&pdev->dev, &mtk_dsi_component_ops);
+>         mipi_dsi_host_unregister(&dsi->host);
+>
+> --
+> 2.27.0
+>
