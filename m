@@ -2,124 +2,118 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 22:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 22:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A4520826
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 22:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYtwKXSe"
+	by mail.kernel.org (Postfix) with ESMTP id 1319620885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 22:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593901164;
+	bh=9v1dX1d5CT4OlZG432LBpmp+z8QjBxiwBh7CgA1A544=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s8ZrHUQtFZRevLneqwlCTWMlzwUJ/0CcZYaeyRVXuEwRyBaV4gm5p7/vSp4BskYg4
+	 Kg/2Di5hU/MMbIh6wkkJk/V0PnDX9VBAv6kfgZNxhMB8vISb3YB0UQ8/Bw1/PGLCze
+	 XQT0Kb9rdkqU52jgC7aBfRPWq31Z8W+ynztwxFiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgGDWLj (ORCPT
+        id S1727995AbgGDWTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 18:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgGDWLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 18:11:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C63C061794;
-        Sat,  4 Jul 2020 15:11:38 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so36608419wrs.11;
-        Sat, 04 Jul 2020 15:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZMOjjBuoh2tQ18+I+Ei9Hr4tOOAs3+zliLyALfVwD6w=;
-        b=iYtwKXSeaCyMs8CQdm5dxUxBy/F6NPv+0J+jHKk/920RUHkma9y7CgaHI8yroMcpJn
-         XI3vajGxGom0c6ZIprj4yZ9195bR9Ptw+OaBC5fuIS69x8nc4qDEfqOuwSqokHUMbUSW
-         qeshMSuERqw+tiVwNHW3lm+aySzaNQl+8smrsFrgpKAWgrZskhRpBpwcKZ2vQhsf2dF0
-         DqJNFGvtl1Q/pDKfizfABgjdVDni7ZRq0ZcJGHrSy2PtDciCBFgQyq1V0NUuz9PhaT/J
-         nouGDXeZE40Xmgd8OEjSZAs3DFBvTBVfg7JIVaOv4VHyYkrCXPQFuotS01j+NJb8LyiX
-         Jq4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZMOjjBuoh2tQ18+I+Ei9Hr4tOOAs3+zliLyALfVwD6w=;
-        b=o5mCKcoiYnc+xsETgXS5vKm+gq+uCwv1hQa9HC501TY3Pqg5Yao9CyrMsFLoulzx36
-         SbHxa0Scxokk+bOa/eRyvW/pL+kMQtEwS7qkQqU5YAOwpU4BD1qJDbU5W67HfWvot+cn
-         n04ytLZA22QGUlXpkdbn6NMrU2K/8QSxeBlxXilU+eP3Yil70myjzyuZ4l9aMiKZ9+4h
-         PZ0M1CVREy2JuUb2ASf0Rf80t4BhOfil0MrEh1WF6BUMHOqzbVfeUwXqNFc5iI6Iu2wJ
-         dTJc72Vcz1d5zRh7I97kZ1IR890OgMdqq3+3NT79wZiWKAbqmy7+kgT5davLumAOGQ5N
-         BDKg==
-X-Gm-Message-State: AOAM531ocu5WRfzgXvcpDMg9suGufC4H38m35pAiewIdx9tdaz7Wnwjn
-        AR25aKsRVMhrK1fa8SAcY7Hck2qvLE/Pf4wdWkREcg==
-X-Google-Smtp-Source: ABdhPJwk+QowS0xAsT5XIvOxqwz+VBTILCeJa9En5hyRX4Z29zmj+99X4Mi1DUpybnl7Yw8g/F7kk4p8p7SsTeMeA9I=
-X-Received: by 2002:adf:ee0b:: with SMTP id y11mr19673009wrn.360.1593900697518;
- Sat, 04 Jul 2020 15:11:37 -0700 (PDT)
+        Sat, 4 Jul 2020 18:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727929AbgGDWTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 18:19:21 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28AF620826
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593901161;
+        bh=9v1dX1d5CT4OlZG432LBpmp+z8QjBxiwBh7CgA1A544=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=se3OQJClKKjKhYoH9WhQiUxEFZX2L1NvaCCUMqtw7TdurqgGX58PSFP4Skgh6Vvju
+         vh4aaV/eWxRDjkmOCifgaTNdIJMHSYciq6XCi2nR+4YsxXKzZYgzkWkdfIIR/oAscc
+         tkMswjD4s1D410+EJomp69qFD7gFMMT8MZv//3+w=
+Received: by mail-ej1-f43.google.com with SMTP id w6so38400097ejq.6
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 15:19:21 -0700 (PDT)
+X-Gm-Message-State: AOAM531jAZztFQacgBf+iZEBL7DMXMHiQS+i+MMbRwbXCxCLsTOxQHyM
+        0VrZoXyXsPD0FRU4E0crFUb12YEMk6uOQIkYIw==
+X-Google-Smtp-Source: ABdhPJzpbnPFMQGBtbgHPK/mpFFqynZ8/TPSZmE0VOmdWVSRLcQBDhVy6aNOzos4UlWBPw4oa0qmR7WsUfFu23y1s4M=
+X-Received: by 2002:a17:906:856:: with SMTP id f22mr36036089ejd.245.1593901159756;
+ Sat, 04 Jul 2020 15:19:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200703182010.1867-1-bruceshenzk@gmail.com> <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
- <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com> <CAKgT0UdFPjD5YEBjVxkgCc65muNnxq54QPt3iBzm60QY46BCTA@mail.gmail.com>
-In-Reply-To: <CAKgT0UdFPjD5YEBjVxkgCc65muNnxq54QPt3iBzm60QY46BCTA@mail.gmail.com>
-From:   Zekun Shen <bruceshenzk@gmail.com>
-Date:   Sat, 4 Jul 2020 18:11:26 -0400
-Message-ID: <CAHE_cOtP+BD+6jyBCoADz1CsZaLgKTknE+OFHnDyDPMrwxo=wQ@mail.gmail.com>
-Subject: Re: [PATCH] net: fm10k: check size from dma region
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200518112254.23692-1-matthias.bgg@kernel.org>
+In-Reply-To: <20200518112254.23692-1-matthias.bgg@kernel.org>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 5 Jul 2020 06:19:03 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9gcFvNv26FgKHwN7cxha57sDJ8dzvmBKf-vtUx82YcoA@mail.gmail.com>
+Message-ID: <CAAOTY_9gcFvNv26FgKHwN7cxha57sDJ8dzvmBKf-vtUx82YcoA@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: Delete not used of_device_get_match_data
+To:     matthias.bgg@kernel.org
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 12:41:07PM -0700, Alexander Duyck wrote:
-> On Sat, Jul 4, 2020 at 9:37 AM Zekun Shen <bruceshenzk@gmail.com> wrote:
-> >
-> > On Sat, Jul 04, 2020 at 09:05:48AM -0700, Alexander Duyck wrote:
-> > > The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
-> > > PAGE_SIZE. Otherwise you are still capable of going out of bounds
-> > > because the offset is used within the page to push the start of the
-> > > region up by 2K.
-> > PAGE_SIZE can drop the warning, as the dma allocated size is PAGE_SIZE.
+Hi, Matthias:
+
+<matthias.bgg@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=97=A5 =E9=
+=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:23=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Yes, but the point I was getting at is that if you are just going to
-> squelch the warning, but leave the code broken then the warning isn't
-> of any use and might as well be discarded. Either you limit the value
-> to 2K which is what the hardware is expected to max out at anyway, or
-> you just skip the warning and assume hardware will do the right thing.
-> I'm not even sure this patch is worth the effort if it is just using
-> some dummy value that is still broken and simply squelches the
-> warning.
+> From: Matthias Brugger <matthias.bgg@gmail.com>
 >
-> Could you provide more information about how you are encountering the
-> error? Is this something you are seeing with an actual fm10k device,
-> or is this something found via code review or static analysis?
-I did not see it on a real device. I got the warning through emulation
-and fuzzing, treating dma, mmio and interrupts as input vectors.
-My research is on the peripheral/driver boundary.
+> The driver will be loaded by via a platform device. So we
+> will need to get the device_node from the parent device.
+> Depending on this we will set the driver data.
+> As all this is done later already, just delete the call to
+> of_device_get_match_data.
+
+Applied to mediatek-drm-fixes [1], thanks.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-fixes
+
+Regards,
+Chun-Kuang.
+
 >
-> > > If this is actually fixing the warning it makes me wonder if the code
-> > > performing the check is broken itself since we would still be
-> > > accessing outside of the accessible DMA range.
-> > The unbounded size is only passed to fm10k_add_rx_frag, which expects
-> > and checks size to be less than FM10K_RX_HDR_LEN which is 256.
-> >
-> > In this way, any boundary between 256 and 4K should work. I could address
-> > that with a second version.
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> I was referring to the code in the DMA-API that is generating the
-> warning being broken, not the code itself. If you can tell me how you
-> are getting to the warning it would be useful.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_drv.c
+> index e2bb0d19ef99..63ec92ba0e92 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -447,7 +447,6 @@ static int mtk_drm_probe(struct platform_device *pdev=
+)
+>         if (!private)
+>                 return -ENOMEM;
 >
-> Anything over FM10K_RX_BUFSZ will break things. I think that is what
-> you are missing. The driver splits a single 4K page into 2 pieces and
-> then gives half off to the stack and uses the other half for the next
-> receive. If you have a value over 2K you are going to be overwritting
-> data in another buffer and/or attempting to access memory outside the
-> DMA region. Both of which would likely cause significant issues and
-> likely panic the system.
-I agree. FM10K_RX_BUFSZ is the right boundary in that sense.
+> -       private->data =3D of_device_get_match_data(dev);
+>         private->mmsys_dev =3D dev->parent;
+>         if (!private->mmsys_dev) {
+>                 dev_err(dev, "Failed to get MMSYS device\n");
+> --
+> 2.26.2
+>
