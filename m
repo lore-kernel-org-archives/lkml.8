@@ -2,115 +2,107 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD93C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95BC20739
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXaw5hyn"
+	by mail.kernel.org (Postfix) with ESMTP id 4A30920748
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593878895;
+	bh=1BpfsvpmseYY6Czd4aQrB5WsjTyV3T6hjuFnvWaFxYk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eN+qF4Rc56VrKlPq45PZ261DkiBocgbViXbJICfXmNF1QnzkaIVlj3d6UYHAZCcsa
+	 n+tcsfjO4BlnkHZwMbKpJEN++8fPIAu1lMNInMzJUCpxj5uCeMNfe4MHEudJdM0bvD
+	 fqTNe8bPlv+rrLQbDMuh+6oRThgpkeFRjWqt3mOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgGDQGB (ORCPT
+        id S1727062AbgGDQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 12:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgGDQGA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 12:06:00 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C9EC061794;
-        Sat,  4 Jul 2020 09:06:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x9so29615772ila.3;
-        Sat, 04 Jul 2020 09:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ODHZ3f5eaFjThQNy1ZH1ODuExiCMIx4dGKFuIMQycDw=;
-        b=eXaw5hyn1DlJTN9+CuJ68vCNARTwivoLZmwxV2nk+eiU9l4cu8J57gvDVx2la4cdQH
-         F45M46Hp2KUEL27s9NCuDwj7RqGvtJZeCqzVBB4uoBwYPhM0AgA0R38QKNPTxDpJtUAD
-         2DUeaZOmKAppV2Hbt9QZqnGCZ3EyFIyAKtGRjS7GEHEMd840d6rm6gEQdE1OLh5Eh5aZ
-         nEDFyrWul5L29yxZl0DChN4fsU9epiKleEkmpifHWTvrQ5+ARFsDSN6mlBkBd1belI+h
-         MDdA6+vM4ON+hdBQTVKZrWCT2zFd8wRoMwOc15sR8yAUrZVbOE0UG1RVxjXn2RDc4bOg
-         lSJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ODHZ3f5eaFjThQNy1ZH1ODuExiCMIx4dGKFuIMQycDw=;
-        b=nb9wpIgcHVsCtje/+IIl3PbdZ7S9O9OHTjuSCUQnYpze7p1u0TEy7joumg0fff4PSQ
-         txo3FY5i7NvQ7qEWvrozNXGQiH5dqlR5mF1xVXGyV/a9sqTYkByuxh6ZNEw5zPwdXFvE
-         YukIV7HNzObvR23L1pv/JKLL+HmsItjL92pEmmYWvch5RuFADw/tG16mTup+fmBo3Xk3
-         erHKPebT+IZwMBTa3nHOTMqehi4qt1vUTqrkullRhVd/mNJrQz/v6IrcxpwBfyJgZ0Qz
-         cUf0EvmI33Jn+oYZuFMvYg22VLrpsFq6loGc+wxaih/RWftgij1hkqEBeBwnhI2UUBwk
-         9Q2w==
-X-Gm-Message-State: AOAM531KCudeg9rRMMsemZjcFVeMZ1HSpReS+MjdS0tzUEmX0j++Dsu3
-        T7+6gS18QVV4Nt3/Q7Qq70D1OEVZ7JzFvx9cMr8=
-X-Google-Smtp-Source: ABdhPJzWM29TMUej+iL+jdlpOERWnMeNOp63J3Uc4L++L7sTeG0IuET1vhWvp/f2zID3OWSCC0/FHOp8Sf4CxOvC7yo=
-X-Received: by 2002:a92:5a05:: with SMTP id o5mr17126179ilb.237.1593878759489;
- Sat, 04 Jul 2020 09:05:59 -0700 (PDT)
+        Sat, 4 Jul 2020 12:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbgGDQIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 12:08:13 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE73520739;
+        Sat,  4 Jul 2020 16:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593878892;
+        bh=1BpfsvpmseYY6Czd4aQrB5WsjTyV3T6hjuFnvWaFxYk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l5+F5/ytTi7u4OFepYp/cyoSTMCyGXSJo0lhT6S9CBsCxhL19+xmKTfgSTcvWh4KH
+         bFN3f+bYvtnJNrdrnt0YqD9n94fo5RXRHJ6w3byFwfT+jsusMAk5NsjiJYU2EwrTMQ
+         BI7iVw6BHNgJrKRAU3Hh+9xUm0dkCc2iKNJdzwqg=
+Date:   Sat, 4 Jul 2020 17:08:05 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
+Subject: Re: [PATCH 06/17] Documentation/driver-api: generic-counter: drop
+ doubled word
+Message-ID: <20200704170805.18b07f1a@archlinux>
+In-Reply-To: <20200704123041.GA5194@shinobu>
+References: <20200704034502.17199-1-rdunlap@infradead.org>
+        <20200704034502.17199-7-rdunlap@infradead.org>
+        <20200704123041.GA5194@shinobu>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200703182010.1867-1-bruceshenzk@gmail.com>
-In-Reply-To: <20200703182010.1867-1-bruceshenzk@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Sat, 4 Jul 2020 09:05:48 -0700
-Message-ID: <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
-Subject: Re: [PATCH] net: fm10k: check size from dma region
-To:     Zekun Shen <bruceshenzk@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 11:21 AM Zekun Shen <bruceshenzk@gmail.com> wrote:
->
-> Size is read from a dma region as input from device. Add sanity
-> check of size before calling dma_sync_single_range_for_cpu
-> with it.
->
-> This would prevent DMA-API warning: device driver tries to sync DMA
-> memory it has not allocated.
->
-> Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
-> ---
->  drivers/net/ethernet/intel/fm10k/fm10k_main.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_main.c b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-> index 17738b0a9..e020b346b 100644
-> --- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-> +++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-> @@ -304,6 +304,11 @@ static struct sk_buff *fm10k_fetch_rx_buffer(struct fm10k_ring *rx_ring,
->         struct fm10k_rx_buffer *rx_buffer;
->         struct page *page;
->
-> +       if (unlikely(size > PAGE_SIZE)) {
-> +               dev_err(rx_ring->dev, "size %d exceeds PAGE_SIZE\n", size);
-> +               return NULL;
-> +       }
-> +
->         rx_buffer = &rx_ring->rx_buffer[rx_ring->next_to_clean];
->         page = rx_buffer->page;
->         prefetchw(page);
+On Sat, 4 Jul 2020 08:30:41 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
-PAGE_SIZE. Otherwise you are still capable of going out of bounds
-because the offset is used within the page to push the start of the
-region up by 2K.
+> On Fri, Jul 03, 2020 at 08:44:51PM -0700, Randy Dunlap wrote:
+> > Drop the doubled word "the".
+> > 
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: linux-doc@vger.kernel.org
+> > Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > Cc: linux-iio@vger.kernel.org
+> > ---
+> >  Documentation/driver-api/generic-counter.rst |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- linux-next-20200701.orig/Documentation/driver-api/generic-counter.rst
+> > +++ linux-next-20200701/Documentation/driver-api/generic-counter.rst
+> > @@ -262,7 +262,7 @@ the system.
+> >  Counter Counts may be allocated via counter_count structures, and
+> >  respective Counter Signal associations (Synapses) made via
+> >  counter_synapse structures. Associated counter_synapse structures are
+> > -stored as an array and set to the the synapses array member of the
+> > +stored as an array and set to the synapses array member of the
+> >  respective counter_count structure. These counter_count structures are
+> >  set to the counts array member of an allocated counter_device structure
+> >  before the Counter is registered to the system.  
+> 
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-If this is actually fixing the warning it makes me wonder if the code
-performing the check is broken itself since we would still be
-accessing outside of the accessible DMA range.
+Applied to the togreg branch of iio.git
+
+Thanks,
+
+Jonathan
