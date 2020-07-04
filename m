@@ -2,144 +2,111 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19748C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879B320724
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4D020739
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 17:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="iqfnV0fX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgGDRK1 (ORCPT
+        id S1727111AbgGDRXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 13:10:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726639AbgGDRK1 (ORCPT
+        Sat, 4 Jul 2020 13:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgGDRXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 13:10:27 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 064H1CVw181054;
-        Sat, 4 Jul 2020 13:10:21 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 322kcw1ybu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 04 Jul 2020 13:10:20 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 064H676w014967;
-        Sat, 4 Jul 2020 17:10:19 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 322hd80hkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 04 Jul 2020 17:10:19 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 064H7fO965077590
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 4 Jul 2020 17:07:41 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9C6AA404D;
-        Sat,  4 Jul 2020 17:09:01 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A2C7A4040;
-        Sat,  4 Jul 2020 17:09:00 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.65.197.207])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  4 Jul 2020 17:09:00 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH] powerpc/pseries: detect secure and trusted boot state of the system.
-Date:   Sat,  4 Jul 2020 13:08:55 -0400
-Message-Id: <1593882535-21368-1-git-send-email-nayna@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-04_12:2020-07-02,2020-07-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=1
- spamscore=0 cotscore=-2147483648 mlxlogscore=791 mlxscore=0 malwarescore=0
- clxscore=1011 bulkscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007040119
+        Sat, 4 Jul 2020 13:23:40 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BCFC061794;
+        Sat,  4 Jul 2020 10:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=G8yXxDShVwrQA0v5h9br4pp8LoK+D/7j1foC/3SaMd0=; b=iqfnV0fXgswM+NU9tB7/k/igqY
+        NP9n+DzJ7C6kJj2L2NRdKOUqo8j6rHsEL0aj7MnPiPazV1Nx8I6H5+SvI8u/RM/Q24EAIZhwYnkX2
+        fQWScbSibNM1uo+zLJZz78GiIDtTztunonFuK/r1nhmrd55dIrKmGeFMpGJo22EhD2zKHK8kzXgaZ
+        fNvxIpLsb7rcSmf8u/a947Qvjn2wjU/rW56GyfKfjOERIRvCg94Fzl1T79/IIL80pds6mW/sndC4k
+        xk1PG0HpGnESFBsYjFZIh/1qdecXHaWlQcvi+O8zS9X3SCahSvh593D39m3FPGLHln2kunSy8/Z1S
+        wXbVsL1g==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jrlt0-0000EO-OQ; Sat, 04 Jul 2020 18:23:34 +0100
+Date:   Sat, 4 Jul 2020 18:23:34 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Elliot Berman <eberman@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: qcom_scm: Fix legacy convention SCM accessors
+Message-ID: <20200704172334.GA759@earth.li>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device-tree property to check secure and trusted boot state is
-different for guests(pseries) compared to baremetal(powernv).
+The move to a combined driver for the QCOM SCM hardware changed the
+io_writel and io_readl helpers to use non-atomic calls, despite the
+commit message saying that atomic was a better option. This breaks these
+helpers on hardware that uses the old legacy convention (access fails
+with a -95 return code). Switch back to using the atomic calls.
 
-This patch updates the existing is_ppc_secureboot_enabled() and
-is_ppc_trustedboot_enabled() function to add support for pseries.
+Observed as a failure routing GPIO interrupts to the Apps processor on
+an IPQ8064; fix is confirmed as correctly allowing the interrupts to be
+routed and observed.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Fixes: 57d3b816718c ("firmware: qcom_scm: Remove thin wrappers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
 ---
- arch/powerpc/kernel/secure_boot.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ drivers/firmware/qcom_scm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-index 4b982324d368..43fc6607c7a5 100644
---- a/arch/powerpc/kernel/secure_boot.c
-+++ b/arch/powerpc/kernel/secure_boot.c
-@@ -6,6 +6,7 @@
- #include <linux/types.h>
- #include <linux/of.h>
- #include <asm/secure_boot.h>
-+#include <asm/machdep.h>
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 0e7233a20f34..d4fda210adfe 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -391,7 +391,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
  
- static struct device_node *get_ppc_fw_sb_node(void)
- {
-@@ -23,11 +24,20 @@ bool is_ppc_secureboot_enabled(void)
- {
- 	struct device_node *node;
- 	bool enabled = false;
-+	const u32 *secureboot;
+ 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
  
--	node = get_ppc_fw_sb_node();
--	enabled = of_property_read_bool(node, "os-secureboot-enforcing");
-+	if (machine_is(powernv)) {
-+		node = get_ppc_fw_sb_node();
-+		enabled =
-+		    of_property_read_bool(node, "os-secureboot-enforcing");
-+		of_node_put(node);
-+	}
+-	return qcom_scm_call(__scm->dev, &desc, NULL);
++	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+ }
  
--	of_node_put(node);
-+	if (machine_is(pseries)) {
-+		secureboot = of_get_property(of_root, "ibm,secure-boot", NULL);
-+		if (secureboot)
-+			enabled = (*secureboot > 1) ? true : false;
-+	}
+ static void qcom_scm_set_download_mode(bool enable)
+@@ -650,7 +650,7 @@ int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
+ 	int ret;
  
- 	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
  
-@@ -38,11 +48,20 @@ bool is_ppc_trustedboot_enabled(void)
- {
- 	struct device_node *node;
- 	bool enabled = false;
-+	const u32 *trustedboot;
+-	ret = qcom_scm_call(__scm->dev, &desc, &res);
++	ret = qcom_scm_call_atomic(__scm->dev, &desc, &res);
+ 	if (ret >= 0)
+ 		*val = res.result[0];
  
--	node = get_ppc_fw_sb_node();
--	enabled = of_property_read_bool(node, "trusted-enabled");
-+	if (machine_is(powernv)) {
-+		node = get_ppc_fw_sb_node();
-+		enabled = of_property_read_bool(node, "trusted-enabled");
-+		of_node_put(node);
-+	}
+@@ -669,8 +669,7 @@ int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
  
--	of_node_put(node);
-+	if (machine_is(pseries)) {
-+		trustedboot =
-+		    of_get_property(of_root, "ibm,trusted-boot", NULL);
-+		if (trustedboot)
-+			enabled = (*trustedboot > 0) ? true : false;
-+	}
- 
- 	pr_info("Trusted boot mode %s\n", enabled ? "enabled" : "disabled");
+-
+-	return qcom_scm_call(__scm->dev, &desc, NULL);
++	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+ }
+ EXPORT_SYMBOL(qcom_scm_io_writel);
  
 -- 
-2.18.1
+2.20.1
 
