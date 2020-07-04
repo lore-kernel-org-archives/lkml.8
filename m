@@ -2,376 +2,176 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D50C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B090C21527
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A538A207CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="PUcqx4OT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TQHRysxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGDOUM (ORCPT
+        id S1726796AbgGDO0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGDOUL (ORCPT
+        Sat, 4 Jul 2020 10:26:08 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:19524 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGDO0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:20:11 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0454AC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:20:10 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a9so4543741pjh.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=nlGpbArF9xfb1RbikwvtVAKDT0tA3g+rAVjq+tCjP+I=;
-        b=PUcqx4OTMtTKR+1Ra2DcXm0M4hHKSpfcEMpGYgfi2IG2ZiKRdVNPpRDES+2cPkB7J9
-         jFhn4M6p4ksiEHTSimwzclGBgR8SDUZ1Lot1iKNryt/Ov0ubpTnsJFS2M3TRo1KqdzdX
-         U0KDH/74nbIMn6jGoZtL5wshSe6kCUYBzoMk0fG//RbeWemvM9k+NnOZDJ60LO8Ggua1
-         dj1K7Ahajg/10Z2s2358L40IUV0+FQG9RanXvWr5agEa37MXl2lafkOYvce/o3mm+yqf
-         sxxuzF150j8Zhw3THH6hZczxOpzYW45ocpxO9GD0DE6GMV3a2E8QEDZIUokJGIFtN9Gy
-         abUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=nlGpbArF9xfb1RbikwvtVAKDT0tA3g+rAVjq+tCjP+I=;
-        b=qugs/UJbi1VW6zrf/TJRt9Asg9Mra0wQSuj113E6SPzr0DGhjW+fcAmOid8FC+YILJ
-         76VHBuOFI7OTDwLPumZejjTJaukgK0zjUP2jbu65R4PCSDO/mftj/oqEhbGywPr7otAX
-         b9qxqcRwB5/BaZk1hSny32bJQocuNbjsTjAQXzULwt7+J1b5jTKNUHWFcr5dEDROYDaW
-         u0WOawZYiLNNReqJogoUfayzYywXy/E2B2BdEEIxqGYQYDeWEqUZYctZrRwyEkhCgerc
-         p/VuHJmEIZtMjeqLzBlYyZ5S2q91q1GDi9yO9X9bIBmipFrUjD8PfsbE7NOCXnETG+fT
-         EhkA==
-X-Gm-Message-State: AOAM530iystGl8j/0fw75ANQiQYWS1ER6T+4+aM5n12cq7LhoPncwOAv
-        tjNqZCdRoqiKBzRQnh1eHKxdRw==
-X-Google-Smtp-Source: ABdhPJyjQONNXaz3xbmom4Gc05sdeh80a59LFCvdhpUJu0zBql2ZRMQDYjOBq44sbl4D5UyMeyTv2g==
-X-Received: by 2002:a17:902:e78f:: with SMTP id cp15mr35663050plb.41.1593872409280;
-        Sat, 04 Jul 2020 07:20:09 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id s194sm14727247pgs.24.2020.07.04.07.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 07:20:08 -0700 (PDT)
-Message-ID: <5f009018.1c69fb81.f1aa7.5001@mx.google.com>
-Date:   Sat, 04 Jul 2020 07:20:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 4 Jul 2020 10:26:07 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200704142604epoutp035062523565eae57f10af6427c7ead574~ektWduCGY0270702707epoutp03D
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 14:26:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200704142604epoutp035062523565eae57f10af6427c7ead574~ektWduCGY0270702707epoutp03D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593872764;
+        bh=g024nBw65V+jQc3zGElxh1aWZIKVCwXeNs9GXBythh8=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=TQHRysxrrLkmYclubFWWuF9MDqshVJs7Zl9RqgoD6gI0DzTdWTE7pXzgjPyf9wcy0
+         61TU3s1+dA3bNCkV9yNlOQ0agfI6KHcV5Z8PlP5q4EEwJ8b5wvxy2DvS9jRxcO1+fT
+         x+x/HxcWPouOsrH+5PPbBoR2CHICeh84FBiHD7Cg=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200704142603epcas5p3e2253714492a263e0eca697ba532a971~ektWBYy0j1568615686epcas5p3j;
+        Sat,  4 Jul 2020 14:26:03 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        55.FE.09475.B71900F5; Sat,  4 Jul 2020 23:26:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200704142603epcas5p47d591e62a4c6914476ca3254b7a78ab0~ektVs0eik1125311253epcas5p4O;
+        Sat,  4 Jul 2020 14:26:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200704142603epsmtrp157b36d3c0353dc8e630b060ba3258081~ektVsDjjO2555925559epsmtrp1i;
+        Sat,  4 Jul 2020 14:26:03 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-6a-5f00917b83f8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0B.9C.08382.B71900F5; Sat,  4 Jul 2020 23:26:03 +0900 (KST)
+Received: from mshams01 (unknown [107.122.43.244]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200704142601epsmtip2fdcb4038a783818f4b4433ac58a42553~ektTk6G7-2161321613epsmtip2F;
+        Sat,  4 Jul 2020 14:26:01 +0000 (GMT)
+From:   "M Tamseel Shams" <m.shams@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     <kgene@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jslaby@suse.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alim.akhtar@samsung.com>
+In-Reply-To: <20200629083553.GA14028@kozik-lap>
+Subject: RE: [PATCH v2] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Date:   Sat, 4 Jul 2020 19:55:47 +0530
+Message-ID: <046901d6520f$0bd565d0$23803170$@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.8-rc3-156-g35e884f89df4
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-cip
-Subject: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     Andre Przywara <andre.przywara@arm.com>, gtucker@collabora.com,
-        kernelci-results@groups.io, Sudeep Holla <sudeep.holla@arm.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQI6aq/f5OGM4WvcDSK12mGjbdwEpQGtqyKCAmf4LUOoDpsC4A==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7bCmum71RIZ4g49/dS0ezNvGZtG8eD2b
+        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
+        Hn1bVjF6rN9ylcXj8ya5ALYoLpuU1JzMstQifbsEroz7y3pYC6YJVnRO+8bcwNjA18XIySEh
+        YCLx7eBBpi5GLg4hgd2MEsuWzmODcD4xSlya+hXK+cYosXvbfuYuRg6wljPnzSHiexklljZP
+        ZoRwnjNKTL+/hg1kLpuArsSkg23MILYIkL35xnJ2kCJmga+MEqe2fgAr4hTQl/h4YxMTiC0s
+        EC/x7upNRpANLAIqEg8askDCvAKWEr+vHmCBsAUlTs58AmYzC2hLLFv4mhniBwWJn0+XsULs
+        cpK4sfQOVI24xMujR8D2Sgis5JDY8XkqG0SDi8S0bU2MELawxKvjW9ghbCmJl/1tUHa+xPx5
+        q6AWVEisvPAGyraXOHBlDgvIncwCmhLrd+lD7OKT6P39hAkSQLwSHW1CENWKEv9390NNFJd4
+        t2IKK4TtIbH5yCymCYyKs5B8NgvJZ7OQfDALYdkCRpZVjJKpBcW56anFpgXGeanlesWJucWl
+        eel6yfm5mxjBKUrLewfjowcf9A4xMnEwHmKU4GBWEuFNUP0XJ8SbklhZlVqUH19UmpNafIhR
+        moNFSZxX6ceZOCGB9MSS1OzU1ILUIpgsEwenVANTaNmJZWaGNm+e1Df/yLrV5GHYo/Tsvav4
+        hqMyYVsMzjeILHj958qzAMtZk9fuCrE64Tfr9/S22RLxtY+qbi89xu7eX2DHHzcpQH5ldH1S
+        tOzf4Hmbv4Sz+sp7T+vnYtePD/qQeOzM9phW060X+uev/LfZI6F853km3wmxuo5P5TTnZkaf
+        4jX44H4wtHGG79x74eqx7ZOeRXZn2+z8bDTlVWZQyZ/jjsV/jR/NFNWM3rDWZLL+tgmF9S8O
+        cAc7bnS24bfxXb3Y4JdORzr3Bedq6U0it1m+p9kKPGV1ienXnH03/ZIjU7tf/zY7jc7OSVwJ
+        hSHsPWe3XtTlUmQ9Wrl3XtmnzQHbt/xN3GU43VOJpTgj0VCLuag4EQDRn9Q/wAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvG71RIZ4g6/HxS0ezNvGZtG8eD2b
+        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
+        Hn1bVjF6rN9ylcXj8ya5ALYoLpuU1JzMstQifbsEroxzEx+wFnQKVlzuWcvSwPiWt4uRg0NC
+        wETizHnzLkYuDiGB3YwSL39eZeti5ASKi0tM+7WfEcIWllj57zk7iC0k8JRRYuNDJhCbTUBX
+        YtLBNmYQWwTI3nxjOTvIIGaBv4wSb1ouskFMXcsoMXH7KrBuTgF9iY83NoF1CwvESrx4sZ4d
+        5AoWARWJBw1ZIGFeAUuJ31cPsEDYghInZz4Bs5kFtCWe3nwKZy9b+JoZ4jgFiZ9Pl7FCHOEk
+        cWPpHagacYmXR4+wT2AUnoVk1Cwko2YhGTULScsCRpZVjJKpBcW56bnFhgWGeanlesWJucWl
+        eel6yfm5mxjBkaaluYNx+6oPeocYmTgYDzFKcDArifAmqP6LE+JNSaysSi3Kjy8qzUktPsQo
+        zcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoFpx4a951xn7AhUN3Sq/GepMOP6li0HPu4o
+        8T6Z1Wi2xdrS0f7lxpsaYcbKRxoCnq/fWypZXPXcu7Lmm9EOXlcPrX1bPpjdaIzYuVfdcK/u
+        KZ4PF4801E1fo/Sw5vMxh089Kw/opv7b+td7+/O+x3F3/JxDjNKubPNeExubZc/U/kO39cbW
+        9zU/1mhxXFqZolx1vYDbQV6niTHv/mHxZvN5PB/bzbkCu54kTz/I/Zk1mkXZVtCS8887ZyXD
+        pYwss1y55769tz/y3t6khumzvRx1hEp/bS/PZrAWtKz21J0nfXWnaMXqG4rd594wbjTS6q0U
+        OXfsxuOgSauO9fZuSlx8RbbyuPhrl39b/pezm4srsRRnJBpqMRcVJwIAXaTl8CMDAAA=
+X-CMS-MailID: 20200704142603epcas5p47d591e62a4c6914476ca3254b7a78ab0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200628071932epcas5p175059c085421a95de76202767bd132cf
+References: <CGME20200628071932epcas5p175059c085421a95de76202767bd132cf@epcas5p1.samsung.com>
+        <20200628070007.36222-1-m.shams@samsung.com>
+        <20200629083553.GA14028@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> On Sun, Jun 28, 2020 at 12:30:07PM +0530, Tamseel Shams wrote:
+> > In few older Samsung SoCs like s3c2410, s3c2412 and s3c2440, UART IP
+> > is having 2 interrupt lines.
+> > However, in other SoCs like s3c6400, s5pv210, exynos5433, and
+> > exynos4210 UART is having only 1 interrupt line. Due to this,
+> > =22platform_get_irq(platdev, 1)=22
+> > call in the driver gives the following warning:
+> > =22IRQ index 1 not found=22 on recent platforms.
+> >
+> > This patch re-factors the IRQ resources handling for each platform and
+> > hence fixing the above warnings seen on some platforms.
+> >
+> > Signed-off-by: Tamseel Shams <m.shams=40samsung.com>
+> > ---
+> > Removed the RFC tag and using 'platform_get_irq_optional'
+> > instead of 'platform_get_irq' as per comment received from Robin
+> > Murphy.
+> >
+> >  drivers/tty/serial/samsung_tty.c =7C 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/samsung_tty.c
+> > b/drivers/tty/serial/samsung_tty.c
+> > index 6ef614d8648c..60554f42e208 100644
+> > --- a/drivers/tty/serial/samsung_tty.c
+> > +++ b/drivers/tty/serial/samsung_tty.c
+> > =40=40 -60,6 +60,7 =40=40 struct s3c24xx_uart_info =7B
+> >  	char			*name;
+> >  	unsigned int		type;
+> >  	unsigned int		fifosize;
+> > +	unsigned int		irq_cnt;
+>=20
+> No, it's duplicating the logic.
+>=20
+> The driver already checks whether SoC has two or one interrupt line with
+> s3c24xx_serial_has_interrupt_mask() so there is no point to have two of s=
+uch
+> methods.
+>=20
+> Instead unify it please. Probably entire
+> s3c24xx_serial_has_interrupt_mask() and s3c24xx_serial_type() should be
+> removed and switched into *serial_drv_data.
+>=20
+> Best regards,
+> Krzysztof
 
-mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+Hi Krzysztof,
+Thanks for letting me know about duplication of logic.
+I will remove my logic of checking of number of interrupt line
+and replace it with check using s3c24xx_serial_has_interrupt_mask().
 
-Summary:
-  Start:      35e884f89df4 Merge tag 'for-linus-5.8b-rc4-tag' of git://git.=
-kernel.org/pub/scm/linux/kernel/git/xen/tip
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-156-g35=
-e884f89df4/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
-tc1.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-156-g35=
-e884f89df4/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
-tc1.html
-  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
-erboard node
+I will come up with another patch regarding the suggestion of removal=20
+of the two functions s3c24xx_serial_has_interrupt_mask() and=20
+s3c24xx_serial_type() and moving it to *serial_drv_data.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Thanks & Regards,
+Tamseel
 
-Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-  Branch:     master
-  Target:     qemu_arm-vexpress-a15
-  CPU arch:   arm
-  Lab:        lab-cip
-  Compiler:   gcc-8
-  Config:     vexpress_defconfig
-  Test case:  baseline.dmesg.crit
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 38ac46002d1df5707566a73486452851341028d2
-Author: Andre Przywara <andre.przywara@arm.com>
-Date:   Wed Jun 3 17:22:37 2020 +0100
-
-    arm: dts: vexpress: Move mcc node back into motherboard node
-    =
-
-    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
-    out of bus node") moved the "mcc" DT node into the root node, because
-    it does not have any children using "reg" properties, so does violate
-    some dtc checks about "simple-bus" nodes.
-    =
-
-    However this broke the vexpress config-bus code, which walks up the
-    device tree to find the first node with an "arm,vexpress,site" property.
-    This gave the wrong result (matching the root node instead of the
-    motherboard node), so broke the clocks and some other devices for
-    VExpress boards.
-    =
-
-    Move the whole node back into its original position. This re-introduces
-    the dtc warning, but is conceptually the right thing to do. The dtc
-    warning seems to be overzealous here, there are discussions on fixing or
-    relaxing this check instead.
-    =
-
-    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
-rm.com
-    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
-us node")
-    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
-xpress-v2m-rs1.dtsi
-index e6308fb76183..a88ee5294d35 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -100,79 +100,6 @@
- 		};
- 	};
- =
-
--	mcc {
--		compatible =3D "arm,vexpress,config-bus";
--		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
--
--		oscclk0 {
--			/* MCC static memory clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 0>;
--			freq-range =3D <25000000 60000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk0";
--		};
--
--		v2m_oscclk1: oscclk1 {
--			/* CLCD clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 1>;
--			freq-range =3D <23750000 65000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk1";
--		};
--
--		v2m_oscclk2: oscclk2 {
--			/* IO FPGA peripheral clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 2>;
--			freq-range =3D <24000000 24000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk2";
--		};
--
--		volt-vio {
--			/* Logic level voltage */
--			compatible =3D "arm,vexpress-volt";
--			arm,vexpress-sysreg,func =3D <2 0>;
--			regulator-name =3D "VIO";
--			regulator-always-on;
--			label =3D "VIO";
--		};
--
--		temp-mcc {
--			/* MCC internal operating temperature */
--			compatible =3D "arm,vexpress-temp";
--			arm,vexpress-sysreg,func =3D <4 0>;
--			label =3D "MCC";
--		};
--
--		reset {
--			compatible =3D "arm,vexpress-reset";
--			arm,vexpress-sysreg,func =3D <5 0>;
--		};
--
--		muxfpga {
--			compatible =3D "arm,vexpress-muxfpga";
--			arm,vexpress-sysreg,func =3D <7 0>;
--		};
--
--		shutdown {
--			compatible =3D "arm,vexpress-shutdown";
--			arm,vexpress-sysreg,func =3D <8 0>;
--		};
--
--		reboot {
--			compatible =3D "arm,vexpress-reboot";
--			arm,vexpress-sysreg,func =3D <9 0>;
--		};
--
--		dvimode {
--			compatible =3D "arm,vexpress-dvimode";
--			arm,vexpress-sysreg,func =3D <11 0>;
--		};
--	};
--
- 	bus@8000000 {
- 		motherboard-bus {
- 			model =3D "V2M-P1";
-@@ -435,6 +362,79 @@
- 						};
- 					};
- 				};
-+
-+				mcc {
-+					compatible =3D "arm,vexpress,config-bus";
-+					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
-+
-+					oscclk0 {
-+						/* MCC static memory clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 0>;
-+						freq-range =3D <25000000 60000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk0";
-+					};
-+
-+					v2m_oscclk1: oscclk1 {
-+						/* CLCD clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 1>;
-+						freq-range =3D <23750000 65000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk1";
-+					};
-+
-+					v2m_oscclk2: oscclk2 {
-+						/* IO FPGA peripheral clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 2>;
-+						freq-range =3D <24000000 24000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk2";
-+					};
-+
-+					volt-vio {
-+						/* Logic level voltage */
-+						compatible =3D "arm,vexpress-volt";
-+						arm,vexpress-sysreg,func =3D <2 0>;
-+						regulator-name =3D "VIO";
-+						regulator-always-on;
-+						label =3D "VIO";
-+					};
-+
-+					temp-mcc {
-+						/* MCC internal operating temperature */
-+						compatible =3D "arm,vexpress-temp";
-+						arm,vexpress-sysreg,func =3D <4 0>;
-+						label =3D "MCC";
-+					};
-+
-+					reset {
-+						compatible =3D "arm,vexpress-reset";
-+						arm,vexpress-sysreg,func =3D <5 0>;
-+					};
-+
-+					muxfpga {
-+						compatible =3D "arm,vexpress-muxfpga";
-+						arm,vexpress-sysreg,func =3D <7 0>;
-+					};
-+
-+					shutdown {
-+						compatible =3D "arm,vexpress-shutdown";
-+						arm,vexpress-sysreg,func =3D <8 0>;
-+					};
-+
-+					reboot {
-+						compatible =3D "arm,vexpress-reboot";
-+						arm,vexpress-sysreg,func =3D <9 0>;
-+					};
-+
-+					dvimode {
-+						compatible =3D "arm,vexpress-dvimode";
-+						arm,vexpress-sysreg,func =3D <11 0>;
-+					};
-+				};
- 			};
- 		};
- 	};
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
- names
-git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
-# bad: [35e884f89df4c48566d745dc5a97a0d058d04263] Merge tag 'for-linus-5.8b=
--rc4-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
-git bisect bad 35e884f89df4c48566d745dc5a97a0d058d04263
-# bad: [615bc218d628d90a3afebcfa772aa41865acd301] Merge tag 'fixes-v5.8-rc3=
--a' of git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security
-git bisect bad 615bc218d628d90a3afebcfa772aa41865acd301
-# good: [668f532da4808688f5162cec6a38875390e1a91d] Merge tag 'timers-urgent=
--2020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good 668f532da4808688f5162cec6a38875390e1a91d
-# good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
-/fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
-linux-omap into arm/omap-fixes
-git bisect good d528945d7762be94beca4c111bb95dcc9a9f39c0
-# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
- of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
-ixes
-git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
-# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
-8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
-# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
-nt dummy L2 cache's write_sec"
-git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
-# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
-m/fixes
-git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
-# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
-mcc node back into motherboard node
-git bisect bad 38ac46002d1df5707566a73486452851341028d2
-# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
-xpress: Move mcc node back into motherboard node
----------------------------------------------------------------------------=
-----
