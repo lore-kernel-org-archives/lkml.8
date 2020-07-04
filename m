@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99CF2084C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568DF208B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrHuEd2Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtFrKdEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGDLj6 (ORCPT
+        id S1728255AbgGDLkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:39:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        Sat, 4 Jul 2020 07:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgGDLjQ (ORCPT
+        with ESMTP id S1728096AbgGDLjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:39:16 -0400
+        Sat, 4 Jul 2020 07:39:15 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932E2C061794;
-        Sat,  4 Jul 2020 04:39:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so35412559wrs.11;
-        Sat, 04 Jul 2020 04:39:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67358C08C5DE;
+        Sat,  4 Jul 2020 04:39:15 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z13so35434562wrw.5;
+        Sat, 04 Jul 2020 04:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ezO7lsAoD6+JpVBUKtvDQJMPID6Dt/CBroo5aFvxW2c=;
-        b=MrHuEd2QT2ZG+PWI9dVl4RQZaS0AAbRl7EJLQByo8JfTtqrsz8cRyRhZz95E9Bfdp7
-         4hteyPq1A5GG5i0YXjdG4qVSnW5GK+W6Evvgyiw01ojSZ0JX5mHq/IL1d7ztzMzLJItL
-         z3WGpoaWoO/17jXsjdzV2ln0DyBENhFlFx3xyRH4pu9bYbIH6KyCDfQ3IBVsljgH6WbA
-         ic1kR4226T52XjPmy4TujajrMGgGVyNtKr3g+oJUCTQeVHezP/U/7ZzD3n4VGstGE3AU
-         uY2Ko8gjm2ew2Fz43HFWV6Gizk+Zm5uMcnUYiPZIN1LFZ/URzsqFILAKDP8EszHmAyMR
-         uygA==
+        bh=6srjU/ZvMImw58RSlWml1hSuOXhUjM1f+LvigtsjUM0=;
+        b=XtFrKdEpb8bM+H8QddJjKQH5JC/VHoJSwNcO8OBf/L+QWdA26GqLvH11+AYVmuRzf7
+         ROsysFD/uvNR1V9BVbVkxhgRR6fSKMl889u5A8Ah/9nseslR/JnSdVo6IHY+GgWas1PX
+         RcRpZf2BY/wSGyagBdkI3/LAHRt0WY+NfYjLUxCWy+6lsxsGZqkWLq0jjwi6n6e6cpgu
+         I6pTE1xqoHcSZ0z3W3fSd4Kv4DjvelmrAEcFKzBPofWi7cvp7RTPHUuRKrfil8RbMOR8
+         SjIh2IG44xkvhbQ4EO6URcl+EysjVlf3KK95SjIXJJigqokxZdB+2d4CU4a4JMYtvoqa
+         ZhWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ezO7lsAoD6+JpVBUKtvDQJMPID6Dt/CBroo5aFvxW2c=;
-        b=TzpLSqVH0n+1cBX25p4btqVTo09xTs6kls7hUHdMhiQtphY/Rv9KNaGenvU4qTDlZi
-         ydp3b3RvuZeyXtwETAyG9v7N7ZcYZk9cmOBiEzv97gyog0FgksapEZyRtG1NVQrwIuWI
-         TrATD7ufcz60r1Jxm/pDrppJsCX+NY50Tew6CRQEk3NsovkAs6du96xY6lgWXI44B2vw
-         plUwUYfZjegbim9WgNwHNXBznDsAstStWtPrTqEN1JiZXtpQWR/2AloZICcGDc2eSLgJ
-         D4xueuKxVMBxsHzi0orqP9FRD6HlUucgSQ/Ote2PzAV2F5Cef46c6LKcMuTovtl0I9zB
-         tYUg==
-X-Gm-Message-State: AOAM5317TJwQKW9L6xRqbnnGwOHZ005PrvgkWuzQ7Z6VA1ayQkcun4ec
-        1flZ7RVbDdE6xCgh74Zb+/k=
-X-Google-Smtp-Source: ABdhPJyiYQcCMIVNP2K3kv3FGvdS4uvqVsD55hFFNUkDO5/5HgW8wLxq7kKI6/UKcROBuhJPZUQlUA==
-X-Received: by 2002:a5d:4991:: with SMTP id r17mr13013702wrq.1.1593862755239;
-        Sat, 04 Jul 2020 04:39:15 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=6srjU/ZvMImw58RSlWml1hSuOXhUjM1f+LvigtsjUM0=;
+        b=cyE8/73WioUPuPbsSw/8vG5GYTbTbFbA7Z0aaSb8TKu5JxT2LDi3/8hxEpjVmYbOAC
+         FkuulbH1TcTvCyDHfHtuhotdMU3dHjP1LCQo6s5mMf4ASpRn5FIpdnWwVpy0fM3DwWWN
+         L8AYR8w3BWw62P718S1m3xM4/EDo92lnoFD6V91EeCwhVtVb93SF/1Mo7nlhJb+y3zJD
+         izqnr9ox6ElpycOcuv2NdUnrOn24O/39gRKPbvn5ArhnCbKtsCG9/P8nC6ByD2slacFx
+         g8XPkuOTlw/7UGyRhdd+rU638uDOYh/J+SJDAZGr+ypOXsxlTgFldY218rYwDgqaJP28
+         ts+A==
+X-Gm-Message-State: AOAM531XAL/XVhpkAkVoygUq2VEhrO/PxOCsON32tjfNPty+pTIX3kev
+        RGPGPMrZAwWcGzlDe8Ei0a8=
+X-Google-Smtp-Source: ABdhPJwK6E1iUiYqMoIAXl71mOL+4VQsJk1OxMZ+u6k8BriUd2J7xo3i7cKAuCBEKWDBXnm86Zm6gw==
+X-Received: by 2002:adf:dd8d:: with SMTP id x13mr39861926wrl.362.1593862754105;
         Sat, 04 Jul 2020 04:39:14 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 04:39:13 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,9 +72,9 @@ Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 08/16] arm64: dts: allwinner: h6: Add HDMI audio node
-Date:   Sat,  4 Jul 2020 13:38:54 +0200
-Message-Id: <20200704113902.336911-9-peron.clem@gmail.com>
+Subject: [PATCH 07/16] ASoC: sun4i-i2s: Fix sun8i volatile regs
+Date:   Sat,  4 Jul 2020 13:38:53 +0200
+Message-Id: <20200704113902.336911-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704113902.336911-1-peron.clem@gmail.com>
 References: <20200704113902.336911-1-peron.clem@gmail.com>
@@ -86,75 +86,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+The FIFO TX reg is volatile and sun8i i2s register
+mapping is different from sun4i.
 
-Add a simple-soundcard to link audio between HDMI and I2S.
+Even if in this case it's doesn't create an issue,
+Avoid setting some regs that are undefined in sun8i.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ sound/soc/sunxi/sun4i-i2s.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 78b1361dfbb9..ae169d07b939 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -67,6 +67,25 @@ de: display-engine {
- 		status = "disabled";
- 	};
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index d7484c7e8fa2..109c10296d83 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -1147,12 +1147,19 @@ static bool sun8i_i2s_rd_reg(struct device *dev, unsigned int reg)
  
-+	hdmi_sound: hdmi-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,name = "sun50i-h6-hdmi";
-+		simple-audio-card,mclk-fs = <128>;
-+		simple-audio-card,frame-inversion;
-+		status = "disabled";
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&hdmi>;
-+		};
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s1>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <32>;
-+		};
-+	};
-+
- 	osc24M: osc24M_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -607,6 +626,19 @@ mdio: mdio {
- 			};
- 		};
+ static bool sun8i_i2s_volatile_reg(struct device *dev, unsigned int reg)
+ {
+-	if (reg == SUN8I_I2S_INT_STA_REG)
++	switch (reg) {
++	case SUN4I_I2S_FIFO_CTRL_REG:
++	case SUN4I_I2S_FIFO_RX_REG:
++	case SUN4I_I2S_FIFO_STA_REG:
++	case SUN4I_I2S_RX_CNT_REG:
++	case SUN4I_I2S_TX_CNT_REG:
++	case SUN8I_I2S_FIFO_TX_REG:
++	case SUN8I_I2S_INT_STA_REG:
+ 		return true;
+-	if (reg == SUN8I_I2S_FIFO_TX_REG)
+-		return false;
  
-+		i2s1: i2s@5091000 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-h6-i2s";
-+			reg = <0x05091000 0x1000>;
-+			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
-+			clock-names = "apb", "mod";
-+			dmas = <&dma 4>, <&dma 4>;
-+			resets = <&ccu RST_BUS_I2S1>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
- 		spdif: spdif@5093000 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-h6-spdif";
-@@ -737,6 +769,7 @@ ohci3: usb@5311400 {
- 		};
+-	return sun4i_i2s_volatile_reg(dev, reg);
++	default:
++		return false;
++	}
+ }
  
- 		hdmi: hdmi@6000000 {
-+			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-h6-dw-hdmi";
- 			reg = <0x06000000 0x10000>;
- 			reg-io-width = <1>;
+ static const struct reg_default sun4i_i2s_reg_defaults[] = {
 -- 
 2.25.1
 
