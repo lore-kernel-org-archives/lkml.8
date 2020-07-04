@@ -2,120 +2,126 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ADBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70906C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49CDA20899
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GaxIQ0mX"
+	by mail.kernel.org (Postfix) with ESMTP id 58B6520899
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgGDD3V (ORCPT
+        id S1727067AbgGDDb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 23:29:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54648 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgGDD3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 23:29:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0643IE0v056401;
-        Sat, 4 Jul 2020 03:29:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xICZg36pt8h/hSPa7Ni+oRU48F4QAE0rnESu93rms6E=;
- b=GaxIQ0mXCFQ9B6DI5XrlVJ4YDKWNcTEAYyAkaXWpBdBabGXejcQoYd4GKqlDXxFEsNo4
- Yo/c3Wfuq8Bw4rgxkS5QNGPANMnOo8YZnuQwi9uojng+/lIdi7QXgXeJdvJda5tvObfZ
- kj7/qfR9M8AcoqogpodLMo9sIgIlGjsaTGNcTUr/PCI8iQYD/cS/taCcIBAoH3eR/UWm
- j/VTxcPlSY7klKeppS+ktOLe3mEWoZ7UOLnwPkx3AlVQv+xpyFHkEQkOfqqwaZjIck5O
- 63KkNipcYjh3ezk1M7oowSTgacTeIE9KYlijS2rkUSj6tVfB376DqN7ZNmHeLAXtfD7A dw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 322hqm00bm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 04 Jul 2020 03:29:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0643Cwiw082610;
-        Sat, 4 Jul 2020 03:29:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 322ft93j7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 04 Jul 2020 03:29:00 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0643SocQ028543;
-        Sat, 4 Jul 2020 03:28:50 GMT
-Received: from localhost (/10.159.135.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 04 Jul 2020 03:28:50 +0000
-Date:   Fri, 3 Jul 2020 20:28:46 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, cgroups@vger.kernel.org,
-        dm-devel@redhat.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/13] Documentation/admin-guide: xfs: drop doubled word
-Message-ID: <20200704032846.GU7625@magnolia>
-References: <20200704032020.21923-1-rdunlap@infradead.org>
- <20200704032020.21923-14-rdunlap@infradead.org>
+        Fri, 3 Jul 2020 23:31:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:39715 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbgGDDb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 23:31:27 -0400
+IronPort-SDR: IN3AXyWv1h7g810kGPi06xjmhEO6V8Jte2eAsIZ7uZHBCB61XSwCl2M89bLTS9OXvME8gk3Kl4
+ I0/R+QhQdjJg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="147239518"
+X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
+   d="scan'208";a="147239518"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 20:31:26 -0700
+IronPort-SDR: JlMMqkTiFk8Mk98DqTZ8i8/NJpMhQO7FUiSWpuFrinD4zff6ep+DUsAsP4tSpnVXoWfqKKGudK
+ kweN9iMAlOQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
+   d="scan'208";a="456075034"
+Received: from winzenbu-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.41.221])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2020 20:31:12 -0700
+Date:   Sat, 4 Jul 2020 06:31:10 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+Message-ID: <20200704033025.GA144756@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200702035902.GC1819@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200704032020.21923-14-rdunlap@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9671 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007040023
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9671 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 clxscore=1011
- priorityscore=1501 phishscore=0 mlxlogscore=999 cotscore=-2147483648
- bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0 suspectscore=1
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007040023
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702035902.GC1819@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 08:20:20PM -0700, Randy Dunlap wrote:
-> Drop the doubled word "for".
+On Wed, Jul 01, 2020 at 08:59:02PM -0700, Sean Christopherson wrote:
+> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
+> > +static int sgx_validate_secs(const struct sgx_secs *secs,
+> > +			     unsigned long ssaframesize)
+> > +{
+> > +	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
+> > +		return -EINVAL;
+> > +
+> > +	if (secs->base & (secs->size - 1))
+> > +		return -EINVAL;
+> > +
+> > +	if (secs->miscselect & sgx_misc_reserved_mask ||
+> > +	    secs->attributes & sgx_attributes_reserved_mask ||
+> > +	    secs->xfrm & sgx_xfrm_reserved_mask)
+> > +		return -EINVAL;
+> > +
+> > +	if (secs->attributes & SGX_ATTR_MODE64BIT) {
+> > +		if (secs->size > sgx_encl_size_max_64)
+> > +			return -EINVAL;
+> > +	} else if (secs->size > sgx_encl_size_max_32)
+> > +		return -EINVAL;
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Darrick J. Wong <darrick.wong@oracle.com>
-> Cc: linux-xfs@vger.kernel.org
-
-Looks good to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> ---
->  Documentation/admin-guide/xfs.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> These should be >=, not >, the SDM uses one of those fancy ≥ ligatures.
 > 
-> --- linux-next-20200701.orig/Documentation/admin-guide/xfs.rst
-> +++ linux-next-20200701/Documentation/admin-guide/xfs.rst
-> @@ -133,7 +133,7 @@ When mounting an XFS filesystem, the fol
->  	logbsize must be an integer multiple of the log
->  	stripe unit configured at **mkfs(8)** time.
->  
-> -	The default value for for version 1 logs is 32768, while the
-> +	The default value for version 1 logs is 32768, while the
->  	default value for version 2 logs is MAX(32768, log_sunit).
->  
->    logdev=device and rtdev=device
+> Internal versions use more obvious pseudocode, e.g.:
+> 
+>     if ((DS:TMP_SECS.ATTRIBUTES.MODE64BIT = 1) AND
+>         (DS:TMP_SECS.SIZE AND (~((1 << CPUID.18.0:EDX[15:8]) – 1)))
+>     {
+>         #GP(0);
+
+Updated as:
+
+static int sgx_validate_secs(const struct sgx_secs *secs)
+{
+	u64 max_size = (secs->attributes & SGX_ATTR_MODE64BIT) ?
+		       sgx_encl_size_max_64 : sgx_encl_size_max_32;
+
+	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
+		return -EINVAL;
+
+	if (secs->base & (secs->size - 1))
+		return -EINVAL;
+
+	if (secs->miscselect & sgx_misc_reserved_mask ||
+	    secs->attributes & sgx_attributes_reserved_mask ||
+	    secs->xfrm & sgx_xfrm_reserved_mask)
+		return -EINVAL;
+
+	if (secs->size >= max_size)
+		return -EINVAL;
+
+/Jarkko
