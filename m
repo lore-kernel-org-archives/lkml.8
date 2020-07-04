@@ -2,95 +2,108 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 21:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E491C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 21:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFF0720CC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 21:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD9220CC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 21:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jSEfzXzE";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MWxpwFEO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSPLSa/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGDVZZ (ORCPT
+        id S1727928AbgGDV3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 17:25:25 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38542 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727084AbgGDVZY (ORCPT
+        Sat, 4 Jul 2020 17:29:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgGDV3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 17:25:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 348288EE12E;
-        Sat,  4 Jul 2020 14:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593897924;
-        bh=fLNQ6d4VgZNzO4C0fql4nUSSP4E1HMcnNHwjRBlqS38=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jSEfzXzEGPQpGZgTuO7n558XbKupxEGM4ec/UKZ5/nAQHrKVQn9Q5emC/KIHUvPMK
-         lTcBBUvpM8YTTYW8DTzMjA1QWQbrHrwKbcFLUvbqr9ooz+pdXI7ZASgBBTEaInRqVC
-         Dwnx6vjv0JvtUwIERsnoQ3JC8ZSMl2cFCe6Qxjmg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Lq2wohIdSLj6; Sat,  4 Jul 2020 14:25:24 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 5BB268EE100;
-        Sat,  4 Jul 2020 14:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593897923;
-        bh=fLNQ6d4VgZNzO4C0fql4nUSSP4E1HMcnNHwjRBlqS38=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MWxpwFEOQ9gzwOJ89HrIVizZNBpEf2v7N+WliEgdI3/madcY6YLi6ldin9gv985pD
-         TFySuPGQu9wIMQJw/c+0F0kYdTjm5V6FvZKjscOFOpEHx9YfWhbaPhYWS5ahKzKnCf
-         mZ4lCC4odeea0Ev9a02WfRXWN+zxfqhv1ogHTc2k=
-Message-ID: <1593897917.7058.11.camel@HansenPartnership.com>
-Subject: Re: [Tech-board-discuss] [PATCH] CodingStyle: Inclusive Terminology
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        torvalds@linux-foundation.org
-Cc:     ksummit-discuss@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Date:   Sat, 04 Jul 2020 14:25:17 -0700
-In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 4 Jul 2020 17:29:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED1F3C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 14:29:50 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q15so35351763wmj.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 14:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LjzcBI79sxOJxzVQKPCIyuJutTNEiW0H8TnQRgGGRK4=;
+        b=TSPLSa/SqaaFWtHntF2Lqxj4Epnb3XvDw+B8/Iz+n5XmPOr2m8MPVcV/U6bO/E1xTS
+         oCzw9uzS0Luvc39FhMezKjfB0NQO7Kr6ijsd6D3cKMyXhMTCU9PmAEk6EBEOvGM7B8kP
+         Gqs7wvUWrnuWeDS3Fv2x/i6Iusvea9ufcLuRzC9F0ks78KAHCs+alg4KwTIN9eYDdCHo
+         wW4asd0ZwAkhyMNTYIpv3sI/hbPuJX+m5r98EmXvmZ4rbYMp58Vt76EJgHKH+8sG2yCX
+         RxU1/LHm/tvzNu+Lc9MtqJipqcxrA/mOlZeIA2oFspgp0hHi1AHJH+SGjPjAE7bxQCtp
+         /gRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LjzcBI79sxOJxzVQKPCIyuJutTNEiW0H8TnQRgGGRK4=;
+        b=D/IEAs5zmKdo33xn3F6K0XaAp8gu+o+w8qhO4Q3qh6rV6AZH2VByCBxIXJikmXY8b2
+         EWhUHL8iPKlorKCcO1jYRm09WBAyrvVtETU0/1QF4SXSqdxhmcKUClbBSNeZlAXeApq0
+         fKLy40eacBWlvgg1sxnzUtIM70Z4qHhKAlhbGh/NiHz2L3qoSIt075oJDLYrcIJ0E6xH
+         D5hTK9nH0+3Evgh+TgNk1Cl4XGQZ/mk0kysMFFOKnqPe4f6CbtEC+vQqUI2vEfUkT+os
+         TaFDBcwx9Slv6M6H7GOBQSx23FFU66bMpdTbyXEkGaO4g8PrtMrIpmgyL5f8ThvtKH3D
+         Lj6w==
+X-Gm-Message-State: AOAM530tx30spaqQO8W/SQhFszUODWi9Wlgax/IEkGZA1S2Ppuj4m00W
+        rFK19I3Tc3SHOtb1kxKDwHnrQeZz
+X-Google-Smtp-Source: ABdhPJz+LiyFBgkM+BSs7zqzubcag3N6rgnyEYsIO4l/X2FcQ2FSjhNlFn4d920wgSZcAbqT80Fy/A==
+X-Received: by 2002:a1c:1fd1:: with SMTP id f200mr41233994wmf.162.1593898189107;
+        Sat, 04 Jul 2020 14:29:49 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id x7sm18397141wrr.72.2020.07.04.14.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 14:29:47 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 1/2] habanalabs: block WREG_BULK packet on PDMA
+Date:   Sun,  5 Jul 2020 00:29:50 +0300
+Message-Id: <20200704212951.20062-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-07-04 at 13:02 -0700, Dan Williams wrote:
-[...]
-> diff --git a/Documentation/process/inclusive-terminology.rst
-> b/Documentation/process/inclusive-terminology.rst
-> new file mode 100644
-> index 000000000000..a8eb26690eb4
-> --- /dev/null
-> +++ b/Documentation/process/inclusive-terminology.rst
+WREG_BULK is a special packet that has a variable length. Therefore, we
+can't parse it when validating CBs that go to the PCI DMA queue. In case
+the user needs to use it, it can put multiple WREG32 packets instead.
 
-Could we just lose this entire document?  The one thing we should learn
-from recent history is that we really want prevent people distracting
-from the good inclusive (and technically more accurate) terminology
-will do.  One way the detractors do this by engaging in ultimately
-pointless arguments about historical accuracy of supporting statements.
-  By making pejorative statements about history (which are open to
-challenge on several fronts), this document acts as a magnet for such
-attention.  Simply leave it out and the detractors will have nothing to
-attack except the bald statement of desiring more inclusive language. 
-I'd much rather defend why we want inclusive and more descriptive
-language than get into a pointless argument over whether the Ottoman
-slave trade was more or less evil than the American one.
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/gaudi/gaudi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-James
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 834470d10b46..e22206527164 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -3865,6 +3865,12 @@ static int gaudi_validate_cb(struct hl_device *hdev,
+ 			rc = -EPERM;
+ 			break;
+ 
++		case PACKET_WREG_BULK:
++			dev_err(hdev->dev,
++				"User not allowed to use WREG_BULK\n");
++			rc = -EPERM;
++			break;
++
+ 		case PACKET_LOAD_AND_EXE:
+ 			rc = gaudi_validate_load_and_exe_pkt(hdev, parser,
+ 				(struct packet_load_and_exe *) user_pkt);
+@@ -3880,7 +3886,6 @@ static int gaudi_validate_cb(struct hl_device *hdev,
+ 			break;
+ 
+ 		case PACKET_WREG_32:
+-		case PACKET_WREG_BULK:
+ 		case PACKET_MSG_LONG:
+ 		case PACKET_MSG_SHORT:
+ 		case PACKET_REPEAT:
+-- 
+2.17.1
 
