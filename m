@@ -2,114 +2,110 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SPACE_RATIO,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD82CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD2AC208C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9828C208C7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCQdG3Sm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RWNe5fwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgGDDoV (ORCPT
+        id S1727099AbgGDDpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 23:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
+        Fri, 3 Jul 2020 23:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgGDDoV (ORCPT
+        with ESMTP id S1726746AbgGDDpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 23:44:21 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0300EC061794;
-        Fri,  3 Jul 2020 20:44:21 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id y13so16316907ybj.10;
-        Fri, 03 Jul 2020 20:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yOpzu2a4BTeDbI4M3JEE9Dpc5QS3zg/zl2GIwbh4czo=;
-        b=LCQdG3SmuHJBrZG2CCpfB02smzGeQvQYGKkMRJcPvA9WkmmmIoxEQc7SglHM7bW6rA
-         NvXvrz+0EEq49zDX/Vxs04zvUszC61eIZHe8F0SVHUZISdtugsMJh7H3EVN2m/JBV8Dp
-         F9mAJz0ktePlY4I8N+hUQ04RsXZSbXT3AXlZh1Me1+Aswd4wrxEiHXzT/nl6RTxfsTrz
-         kgcus+FYmHKGjlkcWhYG+RlJ8hAgdqkQYE8ntnr2YyqltIVRkkaZ0AkWMk2o0Prc/CSb
-         n4hqu8C+wl5Ob62cho6jTQ1I5RQ5+ZVFTCI5P/YHbGJenyBp2SmLEIb+OkasYac4+QpM
-         5i9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yOpzu2a4BTeDbI4M3JEE9Dpc5QS3zg/zl2GIwbh4czo=;
-        b=qS4FGACHlb87F/pv9zsoEzxZhtCk/5WUyNo0opzv9xWMXzDKr+3qx6VSA6mNi1V29u
-         hjvAl12YgDGxdsbNBcrxaCPcobA/eGirL8BU2wAfnACPS0H4/2NSYhAxkSuuzx/FZZc9
-         XlTU/edl9+mBjT/uB5ij62M0PtDBmIVOJeQd9CPZ9z/lUalg5JbI/ynRkmo0R7sCDmUc
-         IBLlPSbRPiBq3QPFzQHP4XlRQOUkdY65nAqci/UThbo7eTGvdVP7CV/yEHj4nBkjz9JF
-         AoQQpN/r/uDkghPwSAF3v5jQLb8HGHV0AmcZD6k7wyhwjCUg7uCyndYe3NgzSHo/KYVM
-         TZmw==
-X-Gm-Message-State: AOAM533D2wnMVtnuvx+4CfSL9/Wb5RgJpQS00Pp78wpW8IxrdIb8706K
-        WMpT80PnSkycC1SZgSdqyZSTFabml6Z0TEDNWD2hifc7
-X-Google-Smtp-Source: ABdhPJwzp9uvAMJY4gSmmPjGFRYuQyjDwbG99DjKonKdkshT0ZIxPuEcaWCEhiam+4QgKud2rGM7x2Bnzp7az318Noo=
-X-Received: by 2002:a25:bc81:: with SMTP id e1mr60463450ybk.375.1593834260097;
- Fri, 03 Jul 2020 20:44:20 -0700 (PDT)
+        Fri, 3 Jul 2020 23:45:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B6CC061794;
+        Fri,  3 Jul 2020 20:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=RjgXbItONDI8qoKZoagX/7fm2XOCDVB41PDHOzajmYk=; b=RWNe5fwbC3uETb+vlA25w47G3W
+        81y378w8gWI/l1I3BPLGTGJicfvdaYVSHZlWHL4Hr274m/Gu+9IT0kTIyL9CibvdIjGBGjA0sEIg2
+        zPhQ7y4YxWIMVJNCAjAtZPQxKkCok68tVHKhYM/AWFDo8STqJT6VWg8wFXfdJOdojDYsKxqN2zWGO
+        ILNhDg2rOINWSh94+fSvNzVs0SACUZiQvqnxJgiCJ2jzDTuI9P5RBHjoZOnCRuAiVODwJ3OIB3HUC
+        x4PHuDEI9filMB0QaqnSXiLe2h3crPRb65DfVRIkCXMmbrrFyBqlIQC0wi3nSpCE1f7DqmZJiG6je
+        HtGhnLOw==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrZ6y-0001Xb-Bk; Sat, 04 Jul 2020 03:45:09 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
+Subject: [PATCH 00/17] Documentation/driver-api: eliminate duplicated words
+Date:   Fri,  3 Jul 2020 20:44:45 -0700
+Message-Id: <20200704034502.17199-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 3 Jul 2020 22:44:08 -0500
-Message-ID: <CAH2r5msVSYHHt5y9eCrXJCBiNJEmpkVEF+iHuqTfsM9vQxw+5Q@mail.gmail.com>
-Subject: [GIT PULL] CIFS/SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+Remove occurrences of duplicated words in Documentation/driver-api/.
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: linux-iio@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: Jon Mason <jdmason@kudzu.us>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Allen Hubbe <allenbh@gmail.com>
+Cc: linux-ntb@googlegroups.com
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-nvdimm@lists.01.org
+Cc: linux-usb@vger.kernel.org
+Cc: Eli Billauer <eli.billauer@gmail.com>
 
-are available in the Git repository at:
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.8-rc3-smb3-fixes
-
-for you to fetch changes up to 19e888678bac8c82206eb915eaf72741b2a2615c:
-
-  cifs: prevent truncation from long to int in wait_for_free_credits
-(2020-07-01 20:01:26 -0500)
-
-----------------------------------------------------------------
-8 cifs/smb3 fixes, most for when specifying the multiuser mount flag,
-5 of the fixes for stable.
-
-Regression test results:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/364
-----------------------------------------------------------------
-Paul Aurich (6):
-      cifs: Display local UID details for SMB sessions in DebugData
-      SMB3: Honor 'seal' flag for multiuser mounts
-      SMB3: Honor persistent/resilient handle flags for multiuser mounts
-      SMB3: Honor lease disabling for multiuser mounts
-      SMB3: Honor 'handletimeout' flag for multiuser mounts
-      SMB3: Honor 'posix' flag for multiuser mounts
-
-Ronnie Sahlberg (1):
-      cifs: prevent truncation from long to int in wait_for_free_credits
-
-Zhang Xiaoxu (1):
-      cifs: Fix the target file was deleted when rename failed.
-
- fs/cifs/cifs_debug.c |  6 +++++-
- fs/cifs/connect.c    | 10 ++++++----
- fs/cifs/inode.c      | 10 ++++++++--
- fs/cifs/transport.c  |  2 +-
- 4 files changed, 20 insertions(+), 8 deletions(-)
-
---
-Thanks,
-
-Steve
+ Documentation/driver-api/dmaengine/provider.rst        |    2 +-
+ Documentation/driver-api/driver-model/platform.rst     |    2 +-
+ Documentation/driver-api/firmware/built-in-fw.rst      |    2 +-
+ Documentation/driver-api/firmware/direct-fs-lookup.rst |    2 +-
+ Documentation/driver-api/firmware/firmware_cache.rst   |    2 +-
+ Documentation/driver-api/firmware/request_firmware.rst |    2 +-
+ Documentation/driver-api/generic-counter.rst           |    2 +-
+ Documentation/driver-api/iio/buffers.rst               |    2 +-
+ Documentation/driver-api/media/cec-core.rst            |    2 +-
+ Documentation/driver-api/media/dtv-frontend.rst        |    6 +++---
+ Documentation/driver-api/media/v4l2-controls.rst       |    4 ++--
+ Documentation/driver-api/media/v4l2-dev.rst            |    2 +-
+ Documentation/driver-api/ntb.rst                       |    2 +-
+ Documentation/driver-api/nvdimm/nvdimm.rst             |    2 +-
+ Documentation/driver-api/uio-howto.rst                 |    2 +-
+ Documentation/driver-api/usb/URB.rst                   |    2 +-
+ Documentation/driver-api/xillybus.rst                  |    2 +-
+ 17 files changed, 20 insertions(+), 20 deletions(-)
