@@ -2,130 +2,143 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F107720737
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321222075D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CeMC7fyM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPhYRScc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGDMZh (ORCPT
+        id S1727922AbgGDM2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 08:25:37 -0400
-Received: from mout.gmx.net ([212.227.17.21]:56559 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgGDMZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 08:25:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593865520;
-        bh=hRnxg8DtT6k4/mZVelI77V7qFw+c66iSsZf/aODHFjk=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=CeMC7fyMBwu8ohSx+EQmLy69uXWkm8rVEDp0Pkf6yDpCRfGEmNJHEIHnwIvkeOF6W
-         63vwfg5YmgMqG/lrvhl1lgvEtQ676a/UeMNtNtpbI5HcgJYAemH5eK57G31zqZvT3i
-         FZlgqRc42e+u8x9hss9tY0nf6dFQoOWHilxSfgbo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MvbG2-1kkD5y0iCk-00se4p; Sat, 04
- Jul 2020 14:25:20 +0200
-Date:   Sat, 4 Jul 2020 14:25:17 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kernel-hardening@lists.openwall.com, linux-s390@vger.kernel.org,
+        Sat, 4 Jul 2020 08:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgGDM2X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 08:28:23 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CB8C061794;
+        Sat,  4 Jul 2020 05:28:23 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d16so23557969edz.12;
+        Sat, 04 Jul 2020 05:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i+PMOq5Al6StIBzFo1wcc3naFIWV4JdGXcD4ZNngMYA=;
+        b=hPhYRSccHjEE/ShMqbPzxgOdCzDHXjA4b8SawVRhXNUUP+zf2Zwez4er/xTE1Ca5uj
+         mcfmRVtdHXqBvDsIXbwijSfi+FBiunNeXv8qhhPAbCPrXliUSZiDksu6/uj8i+7X9A9k
+         Qs0zcFPfSbKd9Te0JqUwW0M6A7p4KzfnrZjLnIalinkY2YDklLZst1m31vG+rxMTeuV4
+         Wj3yTiwBtFzM15NLWPa7JB0yeiAwRefq0LCBA8K9fDP3oiFoDW99RCzwMQ0kGw8rI+fe
+         kHsdHKBlGScRmD4f9yRo3O9gGuVemAbp1MrOdMKgtoWmxRKUDkLycxUZ4BSwznkz/Fbk
+         zuqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i+PMOq5Al6StIBzFo1wcc3naFIWV4JdGXcD4ZNngMYA=;
+        b=TsvdVxlyeFfv0JKv/bIZWAgvma4mNZsvcmXIz67jW+uMXaovX22uqZ9quhDsH9RYC9
+         K9RnJgKZQZTBRZ4Se0uKGqRteUb+agHFRRN4KDOp/uVjmJIymCvZhsXNccycHkGdRFF9
+         yJ3fccRfK/2CBIbyARO9ihgaoo3FFZzZyKjWLIYI1nBq7/aUphvOTTWaKrqGraAomyWX
+         D5wXFQPr8NONGGvLeeOLOA08poTAkYX9pajV2qKd0g6vRX+VUvepiHABuM32ar+skJrJ
+         0jJmI4LRjDCVNrQuLT5GwT8dACkmLDbE5F0xLjkguJUxVlEYuHoPCtGyb5nO4kZgHTjx
+         en7w==
+X-Gm-Message-State: AOAM5302QN/9OrKhngkUXG3eG/Eqx9v1UvHYEvcp9o9Q/9Rd8nhJ4uBv
+        B8J31R+oNQkHLbbWMRPLuX6VLsWPi3I=
+X-Google-Smtp-Source: ABdhPJxNoGpPWfHtk5GtUWgId+YmOEKnhvbIaHUdtxzXA+oC0iIVpg7GUe70uTMDbAHPmrfK5PCATw==
+X-Received: by 2002:a05:6402:1778:: with SMTP id da24mr33863987edb.126.1593865701817;
+        Sat, 04 Jul 2020 05:28:21 -0700 (PDT)
+Received: from localhost.localdomain (abab73.neoplus.adsl.tpnet.pl. [83.6.165.73])
+        by smtp.googlemail.com with ESMTPSA id be2sm15861831edb.92.2020.07.04.05.28.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 05:28:21 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/s390/char/tty3270: Remove function callback casts
-Message-ID: <20200704122517.GB3143@ubuntu>
-References: <20200627125417.18887-1-oscar.carter@gmx.com>
- <202006270853.C40CA89806@keescook>
+Subject: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Date:   Sat,  4 Jul 2020 14:28:09 +0200
+Message-Id: <20200704122809.73794-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006270853.C40CA89806@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:yzZW78M2++DLSaE2wWY6qe0FnrDwLez6iHP7SSkTJBuSPNdWcNw
- 2ASjko6NlqJ0ro0glT5/q08xba8c3/wk35ZI51qCBSm4IMuGGLzBGf/wYfejiafd04/bTwh
- X9P9ZTS5xf0ROWjtrIcQnnUyTt3srdkjZJQQY0DFzA0AAymjIROGGxjtY+B9CsalqQ7+L52
- NUXFNArqBNmh1L+13UAug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3hC62I/9p64=:UVoEGLBhNPIpOvgrjAdyjB
- 3FgdbPiuCC3XvI7gXXjiBB1ql47XBRLqBpmTOrGoUD5gg7lzir18EJkaLRrWHvETyidwLKmyl
- I6lhhXnHI2/TEwziK/7rZ3gAzyVYjbNWfTGPUXzUoyqxASfJ1beYaSlovGrjm2dvwJOyQ6Z3R
- mvOZfrPFZXATPY+946oCF50nGxmLCIggHJhd8oW1dj9dsq57Y4q2cx/CXILd6FagwWHiQyqzh
- cffWWmtj6bI76gTOVfWGtGhZBvG9cLsLPw0IId5C2Tkhohy4CuAhVjimP80gwnepN/8bF4Mig
- rRRofCTaYPTaYOMjeKtkN+nbFYJkVfXZ5HT+aCwzLjbF1bkMk+DcqVVhBdoQaiXUm21jDPRWV
- i+mOwBKFiLpldSKrNJVeFia6PgGSGn4toE4+Zs3kvpKDERjzCmrwYfT5s2yHCn2N7e9Hnn/cj
- 8shptfg+joterbJeTuCUXaOGeYTUupSM//SVjl9DvqqlcieNw08Hl4oiqr51Q2or0Lc4MqAXf
- od+Kckpy2Ombvjdq5uWTbciIJhaAqT8fMFifx5MFsKXVVdYR22pAFZXwXOUD2w5g6sgj4g1mX
- Hu3fLrlSK0jaQ7xnQoQe8fNaMWRNtzOl4KnqQTiSFPaWnkP6KC5GNeENK/eAqJGNNMtAnaChS
- GF/yuCafObo2L9+If/FxI0G1OEESlQX559BsHdFwhs5wVSAPJZEkMMhkqyTVZ7XGQn4j6Q8tY
- pIrn45Yps0e8dubBoLVroxyMb0OD/uG76TPCciwjWdKqdi/pClhRX7cUr35PTMNPtUs+k4c+j
- UMzh4jTVBy/qtTcD9GYSJcgJXCvG237Bu0X/mD5VjJNM7HF+z18yXW+DFEIwg35pCFeFaVwVX
- bQnUOAcgRgFaBbRFhmiqOskLRoMRKrwLP6T0GXvc5HIuQQi/5/wQO2Edw/MsHh+5LTOPdSAll
- 1Go03clwMhDWoNY57I0Co1wthSz2ianZ5OzWZb2T4aJsH30Ewa6DCGRSDM/NwYCfpZ+Tk5NNh
- md4ffVC8xDS8AcLbTPsajmKCWQsBnjuejA4DHdoSSDa35TbB1soQhnoBS8z+0JRrE1LYNURHT
- zOl/jaHfAm+Ea0vvnBrw/gJIF0JFAakgUyHyvIx6wDPpLwm4dcNUSNuOUrF6+bnhrFJu1keqi
- zDMzFz7FNfZ/enBHhlo02sUrO0rxKLxEa837SUdySfl6HDKodvs8X1sNgkbHil9+UAdWO0Ann
- pCLGX/vTDjm6Ec2Xy
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:10:56AM -0700, Kees Cook wrote:
-> On Sat, Jun 27, 2020 at 02:54:17PM +0200, Oscar Carter wrote:
-> > In an effort to enable -Wcast-function-type in the top-level Makefile =
-to
-> > support Control Flow Integrity builds, remove all the function callbac=
-k
-> > casts.
-> >
-> > To do this modify the function prototypes accordingly.
-> >
-> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
->
-> Oh yes, the tasklets! I'd love to see this fixed correctly. (Which is to
-> say, modernize the API.) Romain hasn't had time to continue the work:
-> https://lore.kernel.org/kernel-hardening/20190929163028.9665-1-romain.pe=
-rier@gmail.com/
->
-> Is this something you'd want to tackle?
+This adds the downstream property required to support
+SMMUs on SDM630 and other platforms (the need for it
+most likely depends on firmware configuration).
 
-Yes, of course. It will be a pleasure to work on this. But without forgett=
-ing
-the work to remove all the function cast mismatches.
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ .../devicetree/bindings/iommu/arm,smmu.yaml       | 10 ++++++++++
+ drivers/iommu/arm-smmu.c                          | 15 +++++++++------
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-> > ---
-> >  drivers/s390/char/tty3270.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-> > index 98d7fc152e32..aec996de44d9 100644
-> > --- a/drivers/s390/char/tty3270.c
-> > +++ b/drivers/s390/char/tty3270.c
-> > @@ -556,8 +556,9 @@ tty3270_scroll_backward(struct kbd_data *kbd)
-> >   * Pass input line to tty.
-> >   */
-> >  static void
-> > -tty3270_read_tasklet(struct raw3270_request *rrq)
-> > +tty3270_read_tasklet(unsigned long data)
-> >  {
-> > +	struct raw3270_request *rrq =3D (struct raw3270_request *)data;
->
-> Regardless, this is correct as far as fixing the prototype.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index d7ceb4c34423..9abd6d41a32c 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -102,6 +102,16 @@ properties:
+       access to SMMU configuration registers. In this case non-secure aliases of
+       secure registers have to be used during SMMU configuration.
+ 
++  qcom,skip-init:
++    description: |
++      Disable resetting configuration for all context banks
++      during device reset.  This is useful for targets where
++      some context banks are dedicated to other execution
++      environments outside of Linux and those other EEs are
++      programming their own stream match tables, SCTLR, etc.
++      Without setting this option we will trample on their
++      configuration.
++
+   stream-match-mask:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description: |
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 243bc4cb2705..a5c623d4caf9 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1655,13 +1655,16 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	 * Reset stream mapping groups: Initial values mark all SMRn as
+ 	 * invalid and all S2CRn as bypass unless overridden.
+ 	 */
+-	for (i = 0; i < smmu->num_mapping_groups; ++i)
+-		arm_smmu_write_sme(smmu, i);
+ 
+-	/* Make sure all context banks are disabled and clear CB_FSR  */
+-	for (i = 0; i < smmu->num_context_banks; ++i) {
+-		arm_smmu_write_context_bank(smmu, i);
+-		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
++	if (!of_find_property(smmu->dev->of_node, "qcom,skip-init", NULL)) {
++		for (i = 0; i < smmu->num_mapping_groups; ++i)
++			arm_smmu_write_sme(smmu, i);
++
++		/* Make sure all context banks are disabled and clear CB_FSR  */
++		for (i = 0; i < smmu->num_context_banks; ++i) {
++			arm_smmu_write_context_bank(smmu, i);
++			arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
++		}
+ 	}
+ 
+ 	/* Invalidate the TLB, just in case */
+-- 
+2.27.0
 
-Regards,
-Oscar Carter
