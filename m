@@ -2,116 +2,93 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF8EA20890
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958EE20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kB+9tCEz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcLVCw4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgGDKBU (ORCPT
+        id S1726877AbgGDKGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 06:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
+        Sat, 4 Jul 2020 06:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgGDKBT (ORCPT
+        with ESMTP id S1726178AbgGDKGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 06:01:19 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E760C061794;
-        Sat,  4 Jul 2020 03:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1dt5GpWobPCWxADEO0CCn+J6WsbVv3IjpAPTzTvLYEY=; b=kB+9tCEzCM3n0z7SVN280nAhW
-        EETrCJxjW1UJeb/mz1L93LQEBrd4JXv0kpEDG4e0yGMTK9soaNXghV0DptH0M/IBGlGmSCQTuaWL5
-        WYXc1FS5ZBcAeTSzmsrjd9zRBdvB/fBpLZorkQQGUIU4qtwy8R4Z7XkucAzZ6IRrdKyC/In3yE5tr
-        +Kgixwhb8iIg2iUfk1VDwzyDTEdeSyAfvpASyCw+atVLM3ZD6aTaeg/bP5iVOK9R3nuv6GMD+XTTo
-        wfhuuT0uvISJ4fzEQcVS78rM105qBEOU+YL+7zyOdvl85LG5pp2d+rnelNeDCzjLujtN3bg7zwUzR
-        3VPretJFw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35158)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jreyn-0004Yk-Nm; Sat, 04 Jul 2020 11:01:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jreyg-0003mR-WA; Sat, 04 Jul 2020 11:00:59 +0100
-Date:   Sat, 4 Jul 2020 11:00:58 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Subject: Re: [PATCH RESEND net-next v3 0/3] net: enetc: remove bootloader
- dependency
-Message-ID: <20200704100058.GQ1551@shell.armlinux.org.uk>
-References: <20200701213433.9217-1-michael@walle.cc>
- <20200701215310.GL1551@shell.armlinux.org.uk>
- <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com>
- <20200702084128.GM1551@shell.armlinux.org.uk>
- <CA+h21hoD0HTtpeGtEFyALg-5b7Gs0qJycukgzhQOGy+xHra23A@mail.gmail.com>
+        Sat, 4 Jul 2020 06:06:14 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A02C061794;
+        Sat,  4 Jul 2020 03:06:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so12604770plm.10;
+        Sat, 04 Jul 2020 03:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CA8jAzkc8W5El34ezuF44fIuAEbcJFUBVCL/rlG7C0M=;
+        b=FcLVCw4FDMn8+9cPs40rfEdiHmHpyUrZ5rjyFIT/4NUjnkjjRRA5Z7AfESSDcdzVOb
+         jwE5vkKOjCVfXlKplFBGLTB3G4eqMu4uNjNgiqZ+6AKifwOPVYyU+7orXvgv4QVmUd8n
+         Je6AhuNHB9Mv8/oXIUato5MeYXJTtgnHXagOlUGLnkaoECk9yz/OqLk+IcXpebscE8R1
+         UE5Wr9FyE0x5/Pr5ysnx4ObDJW7EL1g/S2h4iTthKe9BYTKjXghPz/zMSh6LKlulWREb
+         Rty1UgYzXvjN9M2Bo/cI78kH3RNdH8dSrlGY7V9DTlEE+IEs1l+SbHGTOSCo4pLJ2LCX
+         sMzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CA8jAzkc8W5El34ezuF44fIuAEbcJFUBVCL/rlG7C0M=;
+        b=SbEGJuf/lvkgAmpdVR8ygkhHk8C8Q48V5NeR5GarpAWJj91f0swYjO3p24US0Tmh5f
+         e1B9btW/V9eBq6G+E6J9zh6fcfEuHgVVgmjHOpfktNTE7iRwq5KQ5wza7eUCQDA6YGbM
+         WhKmteQGaD6ln8h3c0gF2HpkHt1SYvz39Dhxefy4KAD83F1f0cHYChVH/MkY5G4HFUc7
+         DcamRVEMznCkdsif0PlVn/r4Locd7RqcOXpQYs6lTvz6HEVL+B4PRf0bDqLcKFndoSgZ
+         sLXXqSlVJbAj4zERGEAOzNZXT+6FSX/uOn4JDORA+GTZkGgXLam+DwmMOek1smcWN1GA
+         aRrA==
+X-Gm-Message-State: AOAM530NWN4RFyJR/bUE/LArzP9W9NRqUXQnprT+1KF/oQAjoJ6XIPs9
+        zFTQRFyLvSZ1QFlq+miv93XCtLETUKKG9jAcp9g=
+X-Google-Smtp-Source: ABdhPJwfX1XWacFTmLH/1p+BTilyHqJnHseXKrJymRf5BL7HBdBVc4qJVCGYQ7RSvfL7M5C2p2USQkIZQgh/lDfnR0g=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr16435838pjb.181.1593857173428;
+ Sat, 04 Jul 2020 03:06:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hoD0HTtpeGtEFyALg-5b7Gs0qJycukgzhQOGy+xHra23A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200702121722.1121468-1-mans0n@gorani.run> <CAHp75VdSWxcAQzWryKoMfzh8xM_2ZRF6Uk+8pveGhmt=prOAVg@mail.gmail.com>
+ <f7a1960b-97b8-4a09-20bf-452e29307257@gorani.run>
+In-Reply-To: <f7a1960b-97b8-4a09-20bf-452e29307257@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 4 Jul 2020 13:05:57 +0300
+Message-ID: <CAHp75VfJi2a4pBu_3qE=nsRZ=5udSNZ6gsKct6sB51WPvQAA3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:41:39PM +0300, Vladimir Oltean wrote:
-> On Thu, 2 Jul 2020 at 11:41, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
+On Fri, Jul 3, 2020 at 3:13 AM Sungbo Eo <mans0n@gorani.run> wrote:
+> On 2020-07-02 21:36, Andy Shevchenko wrote:
+> >> +       gpio->chip.ngpio = i2c_match_id(pca9570_id_table, client)->driver_data;
 > >
-> > On Thu, Jul 02, 2020 at 01:04:02AM +0300, Vladimir Oltean wrote:
-> > > On Thu, 2 Jul 2020 at 00:53, Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > fixing up almost every driver the best I can with the exception of two -
-> > > > felix DSA and Mediatek.
-> > > >
-> > > > I'm not going to wait for Felix or Mediatek.  As I say, I've given
-> > > > plenty of warning, and it's only a _suspicion_ of breakage on my
-> > > > side.
-> > > >
-> > >
-> > > What do you mean "I'm not going to wait for Felix"?
-> > > https://patchwork.ozlabs.org/project/netdev/patch/20200625152331.3784018-5-olteanv@gmail.com/
-> > > We left it at:
-> > >
-> > > > I'm not going to review patch 7
-> > > > tonight because of this fiasco.  To pissed off to do a decent job, so
-> > > > you're just going to have to wait.
-> > >
-> > > So, I was actively waiting for you to review it ever since, just like
-> > > you said, so I could send a v2. Were you waiting for anything?
-> >
-> > I stopped being interested in your series with the patch 5 commit
-> > description issue; what happened there is really demotivating.
-> >
-> > --
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
-> 
-> Yes, but I mean, the fact that reviewing felix is "demotivating" can
-> only have 2 courses of action as far as I can see:
+> > Oh, avoid direct access to the table like this. And you may simply use
+> > device_get_match_data().
+>
+> I'm not sure if it really does the same thing, but I'll try following
+> your suggestion.
 
-Sigh. I give up with you.
+It's an agnostic way to get it from fwnode enumerated devices. Since
+you are using ->probe_new() the driver should rely on fwnode, that's
+why the OF table has to have driver data be defined.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+With Best Regards,
+Andy Shevchenko
