@@ -2,86 +2,92 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D86C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071E92075D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A40208B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0AQLqmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGDNNS (ORCPT
+        id S1727008AbgGDNUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 09:13:18 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51440 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbgGDNNR (ORCPT
+        Sat, 4 Jul 2020 09:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgGDNUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 09:13:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U1fA.Dn_1593868391;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U1fA.Dn_1593868391)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 04 Jul 2020 21:13:13 +0800
-Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during
- pagevec_lru_move_fn
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
-        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        lkp@intel.com, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
- <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
- <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
- <20200704113944.GN25523@casper.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <b6caf0d7-266e-55ea-0c88-656c800af1e3@linux.alibaba.com>
-Date:   Sat, 4 Jul 2020 21:12:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sat, 4 Jul 2020 09:20:42 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DB2C061794;
+        Sat,  4 Jul 2020 06:20:41 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l12so37255104ejn.10;
+        Sat, 04 Jul 2020 06:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FxeWfdeiZs/rAf+ljgMaCrJoKxPAwF3x7YpavGdK0aI=;
+        b=k0AQLqmBs39X8hgGcZfrSBkkff33qKuj+PAa3/3V65/noDmQ9W9gBdNBEIm3GAiYWG
+         K6z6S2fEzf0frf6VKldY8Gd2e3labO3XqPacm0GwJL0ye56QlNoLrQvh71TI/xADk4Uh
+         ZkXB8LqAQ2QGY5G8fXCYj2K/pROMoNUc2tXHyIV+em8G8bX4fkC8m+EBzByr/hRBUdQc
+         RkNjsKRyV9TcZLk3EruvbcRuMlkJxEtQ34ZyIW5oxcPuvABduPtZpncxH7AvHqQCOqBX
+         JCEH2AQ0xqWNz0m0odvp1ziGDp9a0jNHZZakGHeTRWpHkhw8Wlo3hjBRgnzW4nZOzCKk
+         AK4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FxeWfdeiZs/rAf+ljgMaCrJoKxPAwF3x7YpavGdK0aI=;
+        b=i/eBDyrujDQFc4aJUDVEmndn4BWwgOCCyfmB3Z99rox1sdPy3tq+5dzpqL1F3hZthO
+         OzHyeJP+VA5WwO/UpP0GotnK4aGt+o7XiFRytbuV8w1G1czBpMLfouSZwkZSAMODm2/p
+         dn3fsbe9/gkmDol+FxNybn1ueAAUxwt2j1I/84erRBhAaYe7JcIyW9vv+JLieL6Noxqq
+         08AyqrfaLgIVJ1ZkG1Vt+tM4W7pc/wOiToQ2g31b5C0FL4bJNyDY6MHklzia2nCiAEiw
+         amwmanDZQvRDG3UUgbmd64KrsLogkP4fXuOo0rZi55dhJcxhsE5iTI7OKUp6SXJWMqS9
+         VLWw==
+X-Gm-Message-State: AOAM532Itmt5/+rdo5c51nS/Ze5072k3yqICUq5Q43jVTab2MykB2t9n
+        ScnDlieabOa0KCuGJI8CpQ3exdP8CAe+js/f7pI=
+X-Google-Smtp-Source: ABdhPJyN0L6Lg+tDrvxAD4o3/ArnPQHIneDzLuy5Y3L9y8VnRCiaTHn+7cc8WOa3IbxOlmbcK4A+SFhO5NQmPPcgJZQ=
+X-Received: by 2002:a17:906:70d5:: with SMTP id g21mr19049076ejk.340.1593868840390;
+ Sat, 04 Jul 2020 06:20:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200704113944.GN25523@casper.infradead.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+References: <20200704122809.73794-1-konradybcio@gmail.com> <20200704130922.GB21333@willie-the-truck>
+In-Reply-To: <20200704130922.GB21333@willie-the-truck>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Sat, 4 Jul 2020 15:20:04 +0200
+Message-ID: <CAMS8qEU7owyk0ELmfE7f6Q_C0RT0cy3N=WtP0DzEUhV6KPnDhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+To:     Will Deacon <will@kernel.org>
+Cc:     skrzynka@konradybcio.pl, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        jcrouse@codeaurora.org, john.stultz@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> It would probably be better to know _which_ context banks we shouldn't
+> touch, no? Otherwise what happens to the others?
+
+> Do we not need to worry about the SMRs as well?
+
+This was mimicked from CAF (think [1]) and the SMMUs don't make the
+hypervisor angry anymore, so I wouldn't be too picky on that if it works..
 
 
-ÔÚ 2020/7/4 ÏÂÎç7:39, Matthew Wilcox Ð´µÀ:
-> On Sat, Jul 04, 2020 at 07:34:59PM +0800, Alex Shi wrote:
->> That's a great idea! Guess what the new struct we need would be like this?
->> I like to try this. :)
->>
->>
->> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
->> index 081d934eda64..d62778c8c184 100644
->> --- a/include/linux/pagevec.h
->> +++ b/include/linux/pagevec.h
->> @@ -20,7 +20,7 @@
->>  struct pagevec {
->>         unsigned char nr;
->>         bool percpu_pvec_drained;
->> -       struct page *pages[PAGEVEC_SIZE];
->> +       struct list_head veclist;
->>  };
-> 
-> pagevecs are used not just for LRU.  If you want to use a list_head for
-> LRU then define a new structure.
-> 
+[1] https://github.com/sonyxperiadev/kernel/blob/aosp/LA.UM.7.1.r1/drivers/iommu/arm-smmu.c#L4104-L4109
 
-yes, there are much page don't use page->lru, like slab etc. we need a new struct.
-
-Thanks!
-Alex
+Regards
+Konrad
