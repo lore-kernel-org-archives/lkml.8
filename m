@@ -2,100 +2,93 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE24C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBDA208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P6cgPErm"
+	by mail.kernel.org (Postfix) with ESMTP id DFE692084C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgGDNdx (ORCPT
+        id S1728003AbgGDNnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 09:33:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDNdx (ORCPT
+        Sat, 4 Jul 2020 09:43:09 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:60533 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGDNnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 09:33:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B88F7C061794;
-        Sat,  4 Jul 2020 06:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=WX43RKw0+FGdp9bNmImS/2sAa8MNXnNJwwbZw51kMdQ=; b=P6cgPErml8i03xIAD2T2msZxIG
-        m8LjhA4KE1VmUJ/jww8W5OIDqMwXNvGXmLJGm4V84vgiHw1Q1sLRBY/KET+hmBWm6YagHqDZOxy1S
-        1Cl5YP8V6suzo6wGWC78gJS46MGJpjwrQBxUv7MUsIRJcX5aG7Y+vlV7q/wTWzQA54upC4dU6oywQ
-        vNfwjiOvGOpXyTBDyxyFo9KCpqLv4grXWw6HZGrK8fRYYgmfV9wk7OjDtMPRq144R4RlYp+6bxG0r
-        b8KTCgPZUJhUs9VACBdSKb2OCv3N6WdQNjMqc6ky2TBcBYCmQnMTCLhZTAfd9qaKHaEari7D+2tOb
-        do6pVwFg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jriIM-0002wM-5j; Sat, 04 Jul 2020 13:33:30 +0000
-Date:   Sat, 4 Jul 2020 14:33:30 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        =?utf-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
-        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        lkp@intel.com, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
-Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during
- pagevec_lru_move_fn
-Message-ID: <20200704133330.GP25523@casper.infradead.org>
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
- <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
- <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
- <20200704113944.GN25523@casper.infradead.org>
- <b6caf0d7-266e-55ea-0c88-656c800af1e3@linux.alibaba.com>
+        Sat, 4 Jul 2020 09:43:09 -0400
+X-Originating-IP: 82.66.179.123
+Received: from localhost (unknown [82.66.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C75CB1BF205;
+        Sat,  4 Jul 2020 13:43:04 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Javier Cardona <javier@cozybit.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] mac80211: mesh: Free ie data when leaving mesh
+Date:   Sat,  4 Jul 2020 15:50:07 +0200
+Message-Id: <20200704135007.27292-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6caf0d7-266e-55ea-0c88-656c800af1e3@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 09:12:46PM +0800, Alex Shi wrote:
-> 在 2020/7/4 下午7:39, Matthew Wilcox 写道:
-> > On Sat, Jul 04, 2020 at 07:34:59PM +0800, Alex Shi wrote:
-> >> That's a great idea! Guess what the new struct we need would be like this?
-> >> I like to try this. :)
-> >>
-> >>
-> >> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
-> >> index 081d934eda64..d62778c8c184 100644
-> >> --- a/include/linux/pagevec.h
-> >> +++ b/include/linux/pagevec.h
-> >> @@ -20,7 +20,7 @@
-> >>  struct pagevec {
-> >>         unsigned char nr;
-> >>         bool percpu_pvec_drained;
-> >> -       struct page *pages[PAGEVEC_SIZE];
-> >> +       struct list_head veclist;
-> >>  };
-> > 
-> > pagevecs are used not just for LRU.  If you want to use a list_head for
-> > LRU then define a new structure.
-> 
-> yes, there are much page don't use page->lru, like slab etc. we need a new struct.
+At ieee80211_join_mesh() some ie data could have been allocated (see
+copy_mesh_setup()) and need to be cleaned up when leaving the mesh.
 
-That's not what I mean.  Slab pages aren't on the LRU anyway.
+This fixes the following kmemleak report:
 
-Consider the callers of page_cache_delete_batch().  These use a pagevec
-for a non-LRU purpose, and they will be much slower with a list_head than
-with an array.
+unreferenced object 0xffff0000116bc600 (size 128):
+  comm "wpa_supplicant", pid 608, jiffies 4294898983 (age 293.484s)
+  hex dump (first 32 bytes):
+    30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00  0...............
+    00 0f ac 08 00 00 00 00 c4 65 40 00 00 00 00 00  .........e@.....
+  backtrace:
+    [<00000000bebe439d>] __kmalloc_track_caller+0x1c0/0x330
+    [<00000000a349dbe1>] kmemdup+0x28/0x50
+    [<0000000075d69baa>] ieee80211_join_mesh+0x6c/0x3b8 [mac80211]
+    [<00000000683bb98b>] __cfg80211_join_mesh+0x1e8/0x4f0 [cfg80211]
+    [<0000000072cb507f>] nl80211_join_mesh+0x520/0x6b8 [cfg80211]
+    [<0000000077e9bcf9>] genl_family_rcv_msg+0x374/0x680
+    [<00000000b1bd936d>] genl_rcv_msg+0x78/0x108
+    [<0000000022c53788>] netlink_rcv_skb+0xb0/0x1c0
+    [<0000000011af8ec9>] genl_rcv+0x34/0x48
+    [<0000000069e41f53>] netlink_unicast+0x268/0x2e8
+    [<00000000a7517316>] netlink_sendmsg+0x320/0x4c0
+    [<0000000069cba205>] ____sys_sendmsg+0x354/0x3a0
+    [<00000000e06bab0f>] ___sys_sendmsg+0xd8/0x120
+    [<0000000037340728>] __sys_sendmsg+0xa4/0xf8
+    [<000000004fed9776>] __arm64_sys_sendmsg+0x44/0x58
+    [<000000001c1e5647>] el0_svc_handler+0xd0/0x1a0
+
+Fixes: c80d545da3f7 (mac80211: Let userspace enable and configure vendor specific path selection.)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ net/mac80211/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 9b360544ad6f..1079a07e43e4 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -2166,6 +2166,7 @@ static int ieee80211_leave_mesh(struct wiphy *wiphy, struct net_device *dev)
+ 	ieee80211_stop_mesh(sdata);
+ 	mutex_lock(&sdata->local->mtx);
+ 	ieee80211_vif_release_channel(sdata);
++	kfree(sdata->u.mesh.ie);
+ 	mutex_unlock(&sdata->local->mtx);
+ 
+ 	return 0;
+-- 
+2.26.2
+
