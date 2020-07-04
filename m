@@ -2,83 +2,92 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E952AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 04:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D174B21527
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 03:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DD02070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 04:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GSMgcojL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGDD4W (ORCPT
+        id S1726052AbgGDEMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 23:56:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33191 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgGDD4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 23:56:22 -0400
-IronPort-SDR: O3p4wEfQzumhmv3KdSmawxJEMBSoq2BcHv8z81y4eFTJwO1WD535GMfivP0J0KwjtPOA0owLX0
- trit3OUL9/lQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="126832378"
-X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
-   d="scan'208";a="126832378"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 20:56:22 -0700
-IronPort-SDR: 4PwYMQsrwNKt0BQPWVg2aGZznq/PxOskNpz4IIfdAj5DpKcAAMPW5zB39K6lzbhTOP93kc7JME
- /buUEOwb4mYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,310,1589266800"; 
-   d="scan'208";a="267454037"
-Received: from winzenbu-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.41.221])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2020 20:56:17 -0700
-Date:   Sat, 4 Jul 2020 06:56:15 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Alexey Klimov <aklimov@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Define TPM2_SPACE_BUFFER_SIZE to replace the use of
- PAGE_SIZE
-Message-ID: <20200704035615.GA157149@linux.intel.com>
-References: <20200702225603.293122-1-jarkko.sakkinen@linux.intel.com>
- <20200702235544.4o7dbgvlq3br2x7e@cantor>
+        Sat, 4 Jul 2020 00:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgGDEMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 00:12:08 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B99C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 21:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=Y2ZgUgKaIXgGhPIp8kLg05ubcJzNrmK0t36CFq8N0BA=; b=GSMgcojLUdsO4sVyLhSzZjDQr1
+        3bRZkHE35qeOTP9c96j3WluBPvd/wwy8iikpS/X4tNB9K5mziDMqQ/lY3Bdri5CYuQ0dMghC80RuN
+        cne/mUTV+V1y7QGJe625af1ZP6wHo0y7kK0xHTxfQWsE3dHoz3+ZTBvpQhlN3F96+ybkSAajV5gLC
+        9237aDkk2zfixVqiLTn+5mueTG6L6jPl1BQtBEHJerZaGRQFGFt5JIf1LVzz0G314btKYfMCXFq/q
+        JtbM8YgD/gZBPLiaZsUbg6ufARN0YipPjub8dhkjvSKyuFDxLN+HpUvEHUGsVzRs3yfWvjB4OJSjx
+        xonEQOFw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrZWy-0001P6-0M; Sat, 04 Jul 2020 04:12:00 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] ASoC: amd: fix Kconfig warning for Renoir
+Message-ID: <7849ce3b-e0f0-d28d-cf9d-d0560a5b4bc8@infradead.org>
+Date:   Fri, 3 Jul 2020 21:11:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702235544.4o7dbgvlq3br2x7e@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 04:55:44PM -0700, Jerry Snitselaar wrote:
-> On Fri Jul 03 20, Jarkko Sakkinen wrote:
-> > The size of the buffers for storing context's and sessions can vary from
-> > arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-> > maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
-> > enough for most use with three handles (that is how many we allow at the
-> > moment). Parametrize the buffer size while doing this, so that it is easier
-> > to revisit this later on if required.
-> > 
-> > Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-> > Cc: stable@vger.kernel.org
-> > Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Thank you.
+SND_SOC_DMIC depends on GPIOLIB so this driver should also depend on
+GPIOLIB to make kconfig happy.
 
-Now only needs tested-by from Stefan.
+WARNING: unmet direct dependencies detected for SND_SOC_DMIC
+  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && GPIOLIB [=n]
+  Selected by [y]:
+  - SND_SOC_AMD_RENOIR_MACH [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_AMD_RENOIR [=y]
 
-/Jarkko
+Fixes: 1d3776669323 ("ASoC: amd: enable build for RN machine driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: Mark Brown <broonie@kernel.org>
+---
+Found in mmotm.
+
+There are no object file build errors. I suppose that gpiolib stubs
+take care of that. Maybe some other patch would be more appropriate.
+
+ sound/soc/amd/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- mmotm-2020-0703-1503.orig/sound/soc/amd/Kconfig
++++ mmotm-2020-0703-1503/sound/soc/amd/Kconfig
+@@ -47,5 +47,6 @@ config SND_SOC_AMD_RENOIR_MACH
+ 	tristate "AMD Renoir support for DMIC"
+ 	select SND_SOC_DMIC
+ 	depends on SND_SOC_AMD_RENOIR
++	depends on GPIOLIB
+ 	help
+ 	 This option enables machine driver for DMIC
+
