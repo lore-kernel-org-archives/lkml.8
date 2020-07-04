@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A94C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC24F208B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98F620870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 10:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAmDMlJ2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhrFjlEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgGDK0C (ORCPT
+        id S1727903AbgGDK0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 06:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
+        Sat, 4 Jul 2020 06:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGDKZw (ORCPT
+        with ESMTP id S1727856AbgGDKZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 06:25:52 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D67C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so24036459wrl.8
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:52 -0700 (PDT)
+        Sat, 4 Jul 2020 06:25:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E9CC08C5E0
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 03:25:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j4so32885056wrp.10
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 03:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=czEmxOplWl/ihZz6Bt2jvlGMVXmPgT75PDRsU7SwMwA=;
-        b=EAmDMlJ2JBtETZactBM4rssBiXrZdMLiMz4NLtV4BcqbwyFQ+4FHmSWTT+H9UUnma6
-         Kv006v35J0SQyn5EtFK1IJk8UrTApoDn5aGjcLvDx29gVwq91Sp5SJc7SyIkqJbDzML4
-         IIJhBmqkI48V/d7XpRxVnU+IfPNK0x+K0CagrQBQj7s8HM7f4OmOZk0+HNmMBN75/E4f
-         g1cLMdruBt44KbJg8MsQ4EyBH2F5MKBJnewBZpvM9zykoSlOozdGuYjWCUEzTwpgBKUX
-         ZRP0l2kVvEi7uFZmBEgNo60l9kf042FSOGb95ePnXSuuybeymS4gVK0SOiHg02uDV4GE
-         PEgQ==
+        bh=+ekmXxgc2CJLhUtRJfX6RJbgFcgiu4O269w7FRXLrjM=;
+        b=XhrFjlEY5PPJ5atPvo98rUZh1ZQWnHm5Ls6NPL6ZTnGWOAxgiXwXfUtKj4vFQXEkZ1
+         sYO5UqWCjprLeI5XG5bD0nfsyMeBD8uZLIaFiE7N5XASwC6BW0zIXcnBBZ0v+wDNdt7P
+         SIGro8XEPu8P2ii8FVA2HtRZ48opMJz8RZjXPrvdz4ceT5zPYOFuN7jHfBguQ8sOgFaC
+         qDcKZJcoS+C/p/epqdy4cSkgQsD7dBnRa1JBYiYsmZQO1sfzS5Hyl45VzImUOvNxnX7l
+         s0ysH9XHR4q+oEBTNOacdVKS54TI587vSIHnjltfSLJv7wd6ILU0ZdX+iqSBe1ck5uM2
+         eg6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=czEmxOplWl/ihZz6Bt2jvlGMVXmPgT75PDRsU7SwMwA=;
-        b=KdeWhiT76Yz6nhXd3McQSo1HumdoWoKyzV+XdrtJTQCqWJMTERNqbuPmWqybdgFd1R
-         oL8I2R9edEOvAdKvdA848BZRSfUCfn2EfX1L/XqVZOB8XqfC5n4Wx4K6qcxOMIa0lYWG
-         5l28+JV32Zpyhpa3VWs9jTh/PVPz4mHXRaMicN3Wt2t0omPuEwXrZ0fS7E6oYNUMqkSm
-         yc3FM7xT1PTre1MrB5UDP615qPouFu6gqfafzCnbFO6xqAVbWhBcKAG75OB25ly6w651
-         OWxhPat6XlphirBcHu97yG0BzATbyQXWyHBYnZclw3aY5ldIitNjzrTfSxoSkQjlJkdI
-         JPLQ==
-X-Gm-Message-State: AOAM530dvrZtMjNrnGHixltNO/TeSlj43oKESrJyYncJDmfLnHJwP66e
-        J14091w4xdKFGW+dd2dWpAQ=
-X-Google-Smtp-Source: ABdhPJw1psxKrWFiSaDxrj+otByubFEIFRvaF35q6qFjq4w+V4aYu2Yn5JF34Ax+AAtf9OBZdFGMqw==
-X-Received: by 2002:a5d:51ce:: with SMTP id n14mr40562723wrv.155.1593858351009;
-        Sat, 04 Jul 2020 03:25:51 -0700 (PDT)
+        bh=+ekmXxgc2CJLhUtRJfX6RJbgFcgiu4O269w7FRXLrjM=;
+        b=iGyWMauUaCBFplZ1xswbACrD080qlp4wBWganVz0c6BGN3StuGv0uQ2weKzFJmXh01
+         BOlUzmy1HYvc7S9qrjl1w9Oj31YVDUnG1F6bqb4qzR9hbSIcAPf1rX+ljhNycLb+dQP0
+         w98A6+dUYFRGn/vnkcRn0N8pLHrK1W3lb6tU54nwXHOV2VpJZfFlU1S3EO5+VYLgSN+f
+         N/JRuT2tjLRFodBN/q7Fkg8T5lHHp0giBXLOz43jgnt4upt1BWIypqfVx+9B8XZ7XVk4
+         gwZa9pJ8ZpurkyK+fHA0W1tzwihTF940Dy5ejkxQWxbH5zykvsQ3V7ktKYzs5jxn2PPT
+         zQHw==
+X-Gm-Message-State: AOAM531jnxVoGg4KRln8zbXki6JiNXQUBWwTGgPYTDZyP3gTx9KyYy3b
+        4P9jDvmHj9gtR2xMRkJH2fc=
+X-Google-Smtp-Source: ABdhPJy38Ca5rvU97m5F4CdQCK7nkRR1FB9ubCnok0fal6lPP07aDjaptGbQHLPIbee5P1rhdOSDWA==
+X-Received: by 2002:adf:ee4d:: with SMTP id w13mr11520166wro.245.1593858353105;
+        Sat, 04 Jul 2020 03:25:53 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.49
+        by smtp.gmail.com with ESMTPSA id g14sm16421428wrm.93.2020.07.04.03.25.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 03:25:50 -0700 (PDT)
+        Sat, 04 Jul 2020 03:25:52 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 08/14] drm/panfrost: move devfreq_init()/fini() in device
-Date:   Sat,  4 Jul 2020 12:25:29 +0200
-Message-Id: <20200704102535.189647-9-peron.clem@gmail.com>
+Subject: [PATCH v2 10/14] drm/panfrost: add regulators to devfreq
+Date:   Sat,  4 Jul 2020 12:25:31 +0200
+Message-Id: <20200704102535.189647-11-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200704102535.189647-1-peron.clem@gmail.com>
 References: <20200704102535.189647-1-peron.clem@gmail.com>
@@ -85,113 +85,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Later we will introduce devfreq probing regulator if they
-are present. As regulator should be probe only one time we
-need to get this logic in the device_init().
+Some OPP tables specify voltage for each frequency. Devfreq can
+handle these regulators but they should be get only 1 time to avoid
+issue and know who is in charge.
 
-panfrost_device is already taking care of devfreq_resume()
-and devfreq_suspend(), so it's not totally illogic to move
-the devfreq_init() and devfreq_fini() here.
+If OPP table is probe don't init regulator.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_device.c | 12 +++++++++++-
- drivers/gpu/drm/panfrost/panfrost_drv.c    | 15 ++-------------
- 2 files changed, 13 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 19 +++++++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_devfreq.h |  2 ++
+ drivers/gpu/drm/panfrost/panfrost_device.c  | 11 +++++++----
+ 3 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index cc16d102b275..464da1646398 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -212,10 +212,17 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 		return err;
- 	}
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+index d9007f44b772..d1e3e9d00a48 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+@@ -93,6 +93,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+ 	unsigned long cur_freq;
+ 	struct device *dev = &pfdev->pdev->dev;
+ 	struct devfreq *devfreq;
++	struct opp_table *opp_table;
+ 	struct thermal_cooling_device *cooling;
+ 	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
  
-+	err = panfrost_devfreq_init(pfdev);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(pfdev->dev, "devfreq init failed %d\n", err);
-+		goto out_clk;
+@@ -105,6 +106,19 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+ 
+ 	spin_lock_init(&pfdevfreq->lock);
+ 
++	opp_table = dev_pm_opp_set_regulators(dev, pfdev->comp->supply_names,
++					      pfdev->comp->num_supplies);
++	if (IS_ERR(opp_table)) {
++		ret = PTR_ERR(opp_table);
++		/* Continue if the optional regulator is missing */
++		if (ret != -ENODEV) {
++			DRM_DEV_ERROR(dev, "Couldn't set OPP regulators\n");
++			goto err_fini;
++		}
++	} else {
++		pfdevfreq->regulators_opp_table = opp_table;
 +	}
 +
- 	err = panfrost_regulator_init(pfdev);
- 	if (err) {
- 		dev_err(pfdev->dev, "regulator init failed %d\n", err);
--		goto out_clk;
-+		goto out_devfreq;
+ 	panfrost_devfreq_reset(pfdevfreq);
+ 
+ 	cur_freq = clk_get_rate(pfdev->clock);
+@@ -153,6 +167,11 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
+ 		dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
+ 		pfdevfreq->opp_of_table_added = false;
+ 	}
++
++	if (pfdevfreq->regulators_opp_table) {
++		dev_pm_opp_put_regulators(pfdevfreq->regulators_opp_table);
++		pfdevfreq->regulators_opp_table = NULL;
++	}
+ }
+ 
+ void panfrost_devfreq_resume(struct panfrost_device *pfdev)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+index 210269944687..db6ea48e21f9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+@@ -8,12 +8,14 @@
+ #include <linux/ktime.h>
+ 
+ struct devfreq;
++struct opp_table;
+ struct thermal_cooling_device;
+ 
+ struct panfrost_device;
+ 
+ struct panfrost_devfreq {
+ 	struct devfreq *devfreq;
++	struct opp_table *regulators_opp_table;
+ 	struct thermal_cooling_device *cooling;
+ 	bool opp_of_table_added;
+ 
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+index 0b0fb45aee82..1b5fc9221828 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.c
++++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+@@ -223,10 +223,13 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+ 		goto out_clk;
+ 	}
+ 
+-	err = panfrost_regulator_init(pfdev);
+-	if (err) {
+-		dev_err(pfdev->dev, "regulator init failed %d\n", err);
+-		goto out_devfreq;
++	/* OPP will handle regulators */
++	if (!pfdev->pfdevfreq.opp_of_table_added) {
++		err = panfrost_regulator_init(pfdev);
++		if (err) {
++			dev_err(pfdev->dev, "regulator init failed %d\n", err);
++			goto out_devfreq;
++		}
  	}
  
  	err = panfrost_reset_init(pfdev);
-@@ -265,6 +272,8 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 	panfrost_reset_fini(pfdev);
- out_regulator:
- 	panfrost_regulator_fini(pfdev);
-+out_devfreq:
-+	panfrost_devfreq_fini(pfdev);
- out_clk:
- 	panfrost_clk_fini(pfdev);
- 	return err;
-@@ -278,6 +287,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
- 	panfrost_gpu_fini(pfdev);
- 	panfrost_pm_domain_fini(pfdev);
- 	panfrost_reset_fini(pfdev);
-+	panfrost_devfreq_fini(pfdev);
- 	panfrost_regulator_fini(pfdev);
- 	panfrost_clk_fini(pfdev);
- }
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 882fecc33fdb..4dda68689015 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -14,7 +14,6 @@
- #include <drm/drm_utils.h>
- 
- #include "panfrost_device.h"
--#include "panfrost_devfreq.h"
- #include "panfrost_gem.h"
- #include "panfrost_mmu.h"
- #include "panfrost_job.h"
-@@ -606,13 +605,6 @@ static int panfrost_probe(struct platform_device *pdev)
- 		goto err_out0;
- 	}
- 
--	err = panfrost_devfreq_init(pfdev);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Fatal error during devfreq init\n");
--		goto err_out1;
--	}
--
- 	pm_runtime_set_active(pfdev->dev);
- 	pm_runtime_mark_last_busy(pfdev->dev);
- 	pm_runtime_enable(pfdev->dev);
-@@ -625,16 +617,14 @@ static int panfrost_probe(struct platform_device *pdev)
- 	 */
- 	err = drm_dev_register(ddev, 0);
- 	if (err < 0)
--		goto err_out2;
-+		goto err_out1;
- 
- 	panfrost_gem_shrinker_init(ddev);
- 
- 	return 0;
- 
--err_out2:
--	pm_runtime_disable(pfdev->dev);
--	panfrost_devfreq_fini(pfdev);
- err_out1:
-+	pm_runtime_disable(pfdev->dev);
- 	panfrost_device_fini(pfdev);
- err_out0:
- 	drm_dev_put(ddev);
-@@ -650,7 +640,6 @@ static int panfrost_remove(struct platform_device *pdev)
- 	panfrost_gem_shrinker_cleanup(ddev);
- 
- 	pm_runtime_get_sync(pfdev->dev);
--	panfrost_devfreq_fini(pfdev);
- 	panfrost_device_fini(pfdev);
- 	pm_runtime_put_sync_suspend(pfdev->dev);
- 	pm_runtime_disable(pfdev->dev);
 -- 
 2.25.1
 
