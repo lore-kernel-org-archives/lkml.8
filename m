@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E949CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F2620885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7CB20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 11:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgGDLUC (ORCPT
+        id S1728055AbgGDLVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:20:02 -0400
+        Sat, 4 Jul 2020 07:21:00 -0400
 Received: from mga11.intel.com ([192.55.52.93]:48334 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgGDLT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 07:19:58 -0400
-IronPort-SDR: mg/tUxNMymYiWu5/0BdolbyORf4pwnG3aizBEwAHPKqiTBdHCLuyfWkxRmAHMYXhUWKro156gQ
- 9LBuey7//tcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371342"
+        id S1727853AbgGDLUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 07:20:00 -0400
+IronPort-SDR: yZjSbKgVPBbcZfrk/vQTE4DGNG4JPywdn0pzwUfatSHHtB/X0ltseNlWEKMS8sUZwu9XJ/ZnO9
+ XTWJsmUcPEkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="145371355"
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="145371342"
+   d="scan'208";a="145371355"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:53 -0700
-IronPort-SDR: rrauR9Mx6KGiNvmAhCO4W1Sohabr5nGaDstSCt4d9E4oD/DBcWH2jjo6raGT1Gft7GI2yyioQR
- dvLBncfZexAw==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 04:19:54 -0700
+IronPort-SDR: YsjoZH501qmpyn9DGovXZv7BEMxRmtsbnuRvyEzNQlHe7377nr7TCNlu71ivl5kyNKmjmAC5Dz
+ xpVPv6Z1Ig6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,311,1589266800"; 
-   d="scan'208";a="282521420"
+   d="scan'208";a="282521450"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:52 -0700
+  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2020 04:19:53 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, eric.auger@redhat.com,
         baolu.lu@linux.intel.com, joro@8bytes.org
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to userspace
-Date:   Sat,  4 Jul 2020 04:26:18 -0700
-Message-Id: <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v4 11/15] vfio/type1: Allow invalidating first-level/stage IOMMU cache
+Date:   Sat,  4 Jul 2020 04:26:25 -0700
+Message-Id: <1593861989-35920-12-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
 References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
@@ -56,27 +56,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exports iommu nesting capability info to user space through
-VFIO. User space is expected to check this info for supported uAPIs (e.g.
-PASID alloc/free, bind page table, and cache invalidation) and the vendor
-specific format information for first level/stage page table that will be
-bound to.
-
-The nesting info is available only after the nesting iommu type is set
-for a container. Current implementation imposes one limitation - one
-nesting container should include at most one group. The philosophy of
-vfio container is having all groups/devices within the container share
-the same IOMMU context. When vSVA is enabled, one IOMMU context could
-include one 2nd-level address space and multiple 1st-level address spaces.
-While the 2nd-leve address space is reasonably sharable by multiple groups
-, blindly sharing 1st-level address spaces across all groups within the
-container might instead break the guest expectation. In the future sub/
-super container concept might be introduced to allow partial address space
-sharing within an IOMMU context. But for now let's go with this restriction
-by requiring singleton container for using nesting iommu features. Below
-link has the related discussion about this decision.
-
-https://lkml.org/lkml/2020/5/15/1028
+This patch provides an interface allowing the userspace to invalidate
+IOMMU cache for first-level page table. It is required when the first
+level IOMMU page table is not managed by the host kernel in the nested
+translation setup.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -86,217 +69,108 @@ Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
-v3 -> v4:
-*) address comments against v3.
-
 v1 -> v2:
-*) added in v2
+*) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
+*) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
+*) vfio_dev_cache_inv_fn() always successful
+*) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
 ---
-
- drivers/vfio/vfio_iommu_type1.c | 105 +++++++++++++++++++++++++++++++++++-----
- include/uapi/linux/vfio.h       |  16 ++++++
- 2 files changed, 109 insertions(+), 12 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h       |  3 +++
+ 2 files changed, 53 insertions(+)
 
 diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 7accb59..80623b8 100644
+index 6de0b8e..116b28e 100644
 --- a/drivers/vfio/vfio_iommu_type1.c
 +++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
- 		 "Maximum number of user DMA mappings per container (65535).");
- 
- struct vfio_iommu {
--	struct list_head	domain_list;
--	struct list_head	iova_list;
--	struct vfio_domain	*external_domain; /* domain for external user */
--	struct mutex		lock;
--	struct rb_root		dma_list;
--	struct blocking_notifier_head notifier;
--	unsigned int		dma_avail;
--	uint64_t		pgsize_bitmap;
--	bool			v2;
--	bool			nesting;
--	bool			dirty_page_tracking;
--	bool			pinned_page_dirty_scope;
-+	struct list_head		domain_list;
-+	struct list_head		iova_list;
-+	struct vfio_domain		*external_domain; /* domain for
-+							     external user */
-+	struct mutex			lock;
-+	struct rb_root			dma_list;
-+	struct blocking_notifier_head	notifier;
-+	unsigned int			dma_avail;
-+	uint64_t			pgsize_bitmap;
-+	bool				v2;
-+	bool				nesting;
-+	bool				dirty_page_tracking;
-+	bool				pinned_page_dirty_scope;
-+	struct iommu_nesting_info	*nesting_info;
- };
- 
- struct vfio_domain {
-@@ -130,6 +132,9 @@ struct vfio_regions {
- #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
- 					(!list_empty(&iommu->domain_list))
- 
-+#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
-+					 (!list_empty(&iommu->domain_list)))
-+
- #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
- 
- /*
-@@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
- 
- 	list_splice_tail(iova_copy, iova);
- }
-+
-+static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
-+{
-+	kfree(iommu->nesting_info);
-+	iommu->nesting_info = NULL;
-+}
-+
- static int vfio_iommu_type1_attach_group(void *iommu_data,
- 					 struct iommu_group *iommu_group)
- {
-@@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 		}
- 	}
- 
-+	/* Nesting type container can include only one group */
-+	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
-+		mutex_unlock(&iommu->lock);
-+		return -EINVAL;
-+	}
-+
- 	group = kzalloc(sizeof(*group), GFP_KERNEL);
- 	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
- 	if (!group || !domain) {
-@@ -2029,6 +2047,36 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 	if (ret)
- 		goto out_domain;
- 
-+	/* Nesting cap info is available only after attaching */
-+	if (iommu->nesting) {
-+		struct iommu_nesting_info tmp;
-+		struct iommu_nesting_info *info;
-+
-+		/* First get the size of vendor specific nesting info */
-+		ret = iommu_domain_get_attr(domain->domain,
-+					    DOMAIN_ATTR_NESTING,
-+					    &tmp);
-+		if (ret)
-+			goto out_detach;
-+
-+		info = kzalloc(tmp.size, GFP_KERNEL);
-+		if (!info) {
-+			ret = -ENOMEM;
-+			goto out_detach;
-+		}
-+
-+		/* Now get the nesting info */
-+		info->size = tmp.size;
-+		ret = iommu_domain_get_attr(domain->domain,
-+					    DOMAIN_ATTR_NESTING,
-+					    info);
-+		if (ret) {
-+			kfree(info);
-+			goto out_detach;
-+		}
-+		iommu->nesting_info = info;
-+	}
-+
- 	/* Get aperture info */
- 	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
- 
-@@ -2138,6 +2186,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 	return 0;
- 
- out_detach:
-+	vfio_iommu_release_nesting_info(iommu);
- 	vfio_iommu_detach_group(domain, group);
- out_domain:
- 	iommu_domain_free(domain->domain);
-@@ -2338,6 +2387,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
- 					vfio_iommu_unmap_unpin_all(iommu);
- 				else
- 					vfio_iommu_unmap_unpin_reaccount(iommu);
-+
-+				vfio_iommu_release_nesting_info(iommu);
- 			}
- 			iommu_domain_free(domain->domain);
- 			list_del(&domain->next);
-@@ -2546,6 +2597,30 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
- 	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
+@@ -3077,6 +3077,53 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+ 	return ret;
  }
  
-+static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-+					   struct vfio_info_cap *caps)
++static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
 +{
-+	struct vfio_info_cap_header *header;
-+	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-+	size_t size;
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	unsigned long arg = *(unsigned long *) dc->data;
 +
-+	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
-+
-+	header = vfio_info_cap_add(caps, size,
-+				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-+	if (IS_ERR(header))
-+		return PTR_ERR(header);
-+
-+	nesting_cap = container_of(header,
-+				   struct vfio_iommu_type1_info_cap_nesting,
-+				   header);
-+
-+	memcpy(&nesting_cap->info, iommu->nesting_info,
-+	       iommu->nesting_info->size);
-+
++	iommu_cache_invalidate(dc->domain, dev, (void __user *) arg);
 +	return 0;
 +}
 +
- static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
- 				     unsigned long arg)
- {
-@@ -2586,6 +2661,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
- 	if (ret)
- 		return ret;
- 
-+	if (iommu->nesting_info) {
-+		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-+		if (ret)
-+			return ret;
++static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
++					unsigned long arg)
++{
++	struct domain_capsule dc = { .data = &arg };
++	struct vfio_group *group;
++	struct vfio_domain *domain;
++	int ret = 0;
++	struct iommu_nesting_info *info;
++
++	mutex_lock(&iommu->lock);
++	/*
++	 * Cache invalidation is required for any nesting IOMMU,
++	 * so no need to check system-wide PASID support.
++	 */
++	info = iommu->nesting_info;
++	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
++		ret = -EOPNOTSUPP;
++		goto out_unlock;
 +	}
 +
- 	if (caps.size) {
- 		info.flags |= VFIO_IOMMU_INFO_CAPS;
- 
++	group = vfio_find_nesting_group(iommu);
++	if (!group) {
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	domain = list_first_entry(&iommu->domain_list,
++				      struct vfio_domain, next);
++	dc.group = group;
++	dc.domain = domain->domain;
++	iommu_group_for_each_dev(group->iommu_group, &dc,
++				 vfio_dev_cache_invalidate_fn);
++
++out_unlock:
++	mutex_unlock(&iommu->lock);
++	return ret;
++}
++
+ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+ 					unsigned long arg)
+ {
+@@ -3099,6 +3146,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+ 	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
+ 		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
+ 		break;
++	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
++		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
 diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 9204705..3e3de9c 100644
+index 095a52a..d7a565a 100644
 --- a/include/uapi/linux/vfio.h
 +++ b/include/uapi/linux/vfio.h
-@@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
- 	__u64	max_dirty_bitmap_size;		/* in bytes */
- };
+@@ -1220,6 +1220,8 @@ struct vfio_iommu_type1_pasid_request {
+  * +-----------------+-----------------------------------------------+
+  * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
+  * +-----------------+-----------------------------------------------+
++ * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
++ * +-----------------+-----------------------------------------------+
+  *
+  * returns: 0 on success, -errno on failure.
+  */
+@@ -1232,6 +1234,7 @@ struct vfio_iommu_type1_nesting_op {
  
-+#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-+
-+/*
-+ * Reporting nesting info to user space.
-+ *
-+ * @info:	the nesting info provided by IOMMU driver. Today
-+ *		it is expected to be a struct iommu_nesting_info
-+ *		data.
-+ */
-+struct vfio_iommu_type1_info_cap_nesting {
-+	struct	vfio_info_cap_header header;
-+	__u32	flags;
-+	__u32	padding;
-+	__u8	info[];
-+};
-+
- #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+ #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
+ #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
++#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
  
- /**
+ #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+ 
 -- 
 2.7.4
 
