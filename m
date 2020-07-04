@@ -2,240 +2,119 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C57C21707
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593871404;
-	bh=Yj+14217YtAOnGW+R47dIfZ8DJrAtcfTkhE3moybXhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfAXpvdHJdZ3cF2LtHpQahJWWpNBMOAlgq081KBd0ci8hdQVKLeX2fNGIQXUDW+CZ
-	 X/e4mjeynSt8A9uB5GKjvynobpkW0bk7NnXowEWZVGbLkhRfNetk7lcPvBcz5TLFYG
-	 R4x3n0nk/UCTFuLjfXdY0UJ0L5WhViz+jev0tCeE=
+	by mail.kernel.org (Postfix) with ESMTP id A258A20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGGfNXsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGDODU (ORCPT
+        id S1726819AbgGDOIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgGDODN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:03:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD589218AC;
-        Sat,  4 Jul 2020 14:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593871392;
-        bh=Yj+14217YtAOnGW+R47dIfZ8DJrAtcfTkhE3moybXhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bo1VVkDd19yyAM+xVbtMirVeDtHC8y8RVtHm53sL556lDzTRt7fNbrNRVslVhYZQh
-         jB4FnUhzApA+tdrCHP5OK5i0o7VSGvrVwKwgJAUXYBs2Tlqpg3HLvxn5WJhZkYfTZw
-         DyEvXIMAXEm++4fTgZWv/HtWpliLrfrV11Oh3GoU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     viro@zeniv.linux.org.uk, mtk.manpages@gmail.com, shuah@kernel.org,
-        linux-api@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] readfile.2: new page describing readfile(2)
-Date:   Sat,  4 Jul 2020 16:02:50 +0200
-Message-Id: <20200704140250.423345-5-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200704140250.423345-1-gregkh@linuxfoundation.org>
-References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
+        Sat, 4 Jul 2020 10:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGDOIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 10:08:54 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2858EC061794;
+        Sat,  4 Jul 2020 07:08:54 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id w17so27994411oie.6;
+        Sat, 04 Jul 2020 07:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sruIXwAXhVbyB5irGxpmieYBkvT+Yh76sngiyp81DSY=;
+        b=bGGfNXswYZe14/cuzAmIfTCOrYwfHvCH4h2te1yO88pI7RbPNA7Czv4reMww8I8SbP
+         s7KT5FPP1bFRY4eFbAuO4gaa8m7yQVpHAYj/lMxb4yc97Az2qudXG0cbkRsYUUD3wZoF
+         VcfO/PuPPWvtKdkXdSKu7vcI1ir7FriWYlg+YA0IYCfpVJH0UvzY1LXnLM1XgzBP40WZ
+         jfTvdG/d7nzvQcNmMNtQZZGcTvo0v8HkU6ccy9hOpu+mYF/Sq7YbmlKkHIMZJk+UZhaH
+         yQZa/f4ADWlFCb+UE+CsDdnFeAWIn9DAei37pKrH6P/kqqxK70mAp9uaEyAIA+AGLOPT
+         fSIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sruIXwAXhVbyB5irGxpmieYBkvT+Yh76sngiyp81DSY=;
+        b=opqxa+FgwjmJqkAq856nfqoAgVdogaV50658Qsj9tBg0TB+7jGuFu9v+OkyHv69dZk
+         Yl7fa90kDXtefzmPwLOGxCspKyhlDFIdxae9Sfc7EgHEBvSuVJBIOkdsMPERd9fxEu1e
+         xaSfILW86HUKQjoDuHFKj4zzKrwnRCZZd+liWB7au2U2kFj7uu7qeKOqd2yNDg8jC5Cp
+         BTpLD8iWlNnrDDIuCbIQ8NaU6MV6yYTy7H6qAf8dBLAmNoKzvaqjsHKr5G02DKwxL4yh
+         wau5HJYUJXEMUyfXi0Q+H7+w+VwuEyFfcU42p7oLRcjxvT8eMCn9ynD7FZTd1KcjuM13
+         pNgA==
+X-Gm-Message-State: AOAM533rNVbfuEN2xltMvguTaJ9NoDKRWn7E0NftZRkdlxboxKr2lIxD
+        65Y9ld4j0NjkJ/g5G1DVZ61oG9fQrBbM0JNNiEA=
+X-Google-Smtp-Source: ABdhPJztoFfvdTLj2yMn1sCGZxmmBOCYmRIuPcHWgshbnsn/EhxPtETALm2xO46URFZ5cicFgCzGhlj5YWM8/IMYuUI=
+X-Received: by 2002:aca:b205:: with SMTP id b5mr32722874oif.103.1593871733367;
+ Sat, 04 Jul 2020 07:08:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+In-Reply-To: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sat, 4 Jul 2020 10:08:42 -0400
+Message-ID: <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
+ of clk_enet_ref
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-readfile(2) is a new syscall to remove the need to do the
-open/read/close dance for small virtual files in places like procfs or
-sysfs.
+Hi Fabio, Andy,
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
+On Thu, Jul 2, 2020 at 6:29 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> With the device tree approach, I think that a better place to touch
+> GPR5 would be inside the fec driver.
+>
 
-This patch is for the man-pages project, not the kernel source tree
+Are we 100% sure this is the best way forward, though?
 
- man2/readfile.2 | 159 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 man2/readfile.2
+All the FEC driver should care about is the FEC logic block
+inside the SoC. It should not concern itself with the way a SoC
+happens to bring a clock (PTP clock) to the input of the FEC
+logic block - that is purely a SoC implementation detail.
 
-diff --git a/man2/readfile.2 b/man2/readfile.2
-new file mode 100644
-index 000000000000..449e722c3442
---- /dev/null
-+++ b/man2/readfile.2
-@@ -0,0 +1,159 @@
-+.\" This manpage is Copyright (C) 2020 Greg Kroah-Hartman;
-+.\"  and Copyright (C) 2020 The Linux Foundation
-+.\"
-+.\" %%%LICENSE_START(VERBATIM)
-+.\" Permission is granted to make and distribute verbatim copies of this
-+.\" manual provided the copyright notice and this permission notice are
-+.\" preserved on all copies.
-+.\"
-+.\" Permission is granted to copy and distribute modified versions of this
-+.\" manual under the conditions for verbatim copying, provided that the
-+.\" entire resulting derived work is distributed under the terms of a
-+.\" permission notice identical to this one.
-+.\"
-+.\" Since the Linux kernel and libraries are constantly changing, this
-+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-+.\" responsibility for errors or omissions, or for damages resulting from
-+.\" the use of the information contained herein.  The author(s) may not
-+.\" have taken the same level of care in the production of this manual,
-+.\" which is licensed free of charge, as they might when working
-+.\" professionally.
-+.\"
-+.\" Formatted or processed versions of this manual, if unaccompanied by
-+.\" the source, must acknowledge the copyright and authors of this work.
-+.\" %%%LICENSE_END
-+.\"
-+.TH READFILE 2 2020-07-04 "Linux" "Linux Programmer's Manual"
-+.SH NAME
-+readfile \- read a file into a buffer
-+.SH SYNOPSIS
-+.nf
-+.B #include <unistd.h>
-+.PP
-+.BI "ssize_t readfile(int " dirfd ", const char *" pathname ", void *" buf \
-+", size_t " count ", int " flags );
-+.fi
-+.SH DESCRIPTION
-+.BR readfile ()
-+attempts to open the file specified by
-+.IR pathname
-+and to read up to
-+.I count
-+bytes from the file into the buffer starting at
-+.IR buf .
-+It is to be a shortcut of doing the sequence of
-+.BR open ()
-+and then
-+.BR read ()
-+and then
-+.BR close ()
-+for small files that are read frequently, such as those in
-+.B procfs
-+or
-+.BR sysfs .
-+.PP
-+If the size of file is smaller than the value provided in
-+.I count
-+then the whole file will be copied into
-+.IR buf .
-+.PP
-+If the file is larger than the value provided in
-+.I count
-+then only
-+.I count
-+number of bytes will be copied into
-+.IR buf .
-+.PP
-+The argument
-+.I flags
-+may contain one of the following
-+.IR "access modes" :
-+.BR O_NOFOLLOW ", or " O_NOATIME .
-+.PP
-+If the pathname given in
-+.I pathname
-+is relative, then it is interpreted relative to the directory
-+referred to by the file descriptor
-+.IR dirfd .
-+.PP
-+If
-+.I pathname
-+is relative and
-+.I dirfd
-+is the special value
-+.BR AT_FDCWD ,
-+then
-+.I pathname
-+is interpreted relative to the current working
-+directory of the calling process (like
-+.BR openat ()).
-+.PP
-+If
-+.I pathname
-+is absolute, then
-+.I dirfd
-+is ignored.
-+.SH RETURN VALUE
-+On success, the number of bytes read is returned.
-+It is not an error if this number is smaller than the number of bytes
-+requested; this can happen if the file is smaller than the number of
-+bytes requested.
-+.PP
-+On error, \-1 is returned, and
-+.I errno
-+is set appropriately.
-+.SH ERRORS
-+.TP
-+.B EFAULT
-+.I buf
-+is outside your accessible address space.
-+.TP
-+.B EINTR
-+The call was interrupted by a signal before any data was read; see
-+.BR signal (7).
-+.TP
-+.B EINVAL
-+.I flags
-+was set to a value that is not allowed.
-+.TP
-+.B EIO
-+I/O error.
-+This will happen for example when the process is in a
-+background process group, tries to read from its controlling terminal,
-+and either it is ignoring or blocking
-+.B SIGTTIN
-+or its process group
-+is orphaned.
-+It may also occur when there is a low-level I/O error
-+while reading from a disk or tape.
-+A further possible cause of
-+.B EIO
-+on networked filesystems is when an advisory lock had been taken
-+out on the file descriptor and this lock has been lost.
-+See the
-+.I "Lost locks"
-+section of
-+.BR fcntl (2)
-+for further details.
-+.SH CONFORMING TO
-+None, this is a Linux-specific system call at this point in time.
-+.SH NOTES
-+The type
-+.I size_t
-+is an unsigned integer data type specified by POSIX.1.
-+.PP
-+On Linux,
-+.BR read ()
-+(and similar system calls) will transfer at most
-+0x7ffff000 (2,147,479,552) bytes,
-+returning the number of bytes actually transferred.
-+.\" commit e28cc71572da38a5a12c1cfe4d7032017adccf69
-+(This is true on both 32-bit and 64-bit systems.)
-+.SH BUGS
-+None yet!
-+.SH SEE ALSO
-+.BR close (2),
-+.BR open (2),
-+.BR openat (2),
-+.BR read (2),
-+.BR fread (3)
--- 
-2.27.0
+It makes sense to add fsl,stop-mode (= a GPR bit) to the FEC driver,
+as this bit is a logic input to the FEC block, which the driver needs
+to dynamically flip.
 
+But the PTP clock is different, because it's statically routed by
+the SoC.
+
+Maybe this problem needs a clock routing solution?
+Isn't there an imx6q plus clock mux we're not modelling?
+
+  enet_ref-o------>ext>---pad_clk--| \
+           |                       |M |----fec_ptp_clk
+           o-----------------------|_/
+
+Where M = mux controlled by GPR5[9]
+
+The issue here is that pad_clk is routed externally, so its parent
+could be any internal or external clock. I have no idea how to
+model this in the clock framework.
