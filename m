@@ -2,119 +2,176 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D42720870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE05320870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 19:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqQlaqT7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ANB3jbE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgGDTlT (ORCPT
+        id S1727873AbgGDTl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 15:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57830 "EHLO
+        Sat, 4 Jul 2020 15:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGDTlT (ORCPT
+        with ESMTP id S1727831AbgGDTlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 15:41:19 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAAAC061794;
-        Sat,  4 Jul 2020 12:41:18 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t4so16681718iln.1;
-        Sat, 04 Jul 2020 12:41:18 -0700 (PDT)
+        Sat, 4 Jul 2020 15:41:22 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BA0C08C5E0
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 12:41:21 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id y10so37874930eje.1
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 12:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=szeredi.hu; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oaguPC34T7R0o5+DoNQSjRDr1tEmYY+rGX3DoLh4xf8=;
-        b=UqQlaqT7Hr64mfOELSvx1Wr9DuwUyUEsOQFLfZLOzCNJEbzYE+7u+wQFpS+2aYI5XU
-         JBmMm3PyTEmTUd+hQDkw/w393xyUdgyaaQL+rgpTTTvsUuf0XUxvtP6X9iYLY/LaeuuB
-         HI5S3DYdndoix8ToVO30hJjXgLULga2v/wd3m8Syav7o2hfOP9/CAGOOFYBVXhSVIUWr
-         czNTCHLDr2U0Bv0Fk6Tkng8KosYcdMZTaJMcBIgDc1jLRknGgrxddMasIUql60sjBffi
-         tLaUYWSTq0M3wvGsTJ3bf+u5+C76wUmolpkFPwuomPtOQspzOYGxQdCYtbIZw590E++2
-         skwQ==
+        bh=oYoqd/CUPo684lZ33nBT5H+rI2BWES+cDScLFKGmu2Y=;
+        b=ANB3jbE5Aespe1bV8GUSrufR+UgUOcLLAce0mIM6RWiw6ddEBfK4M4umN+gDfubuLQ
+         Nkv6ZOnUULIggH34MXijLri4E67UdDtVYgNoi6Xp6EHGQgwkj0MrpFEGNmKuMCE7oaXy
+         sVM/9FM1+ZIbdrCOCvBtEzrAS0Mh9st+EXtgg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oaguPC34T7R0o5+DoNQSjRDr1tEmYY+rGX3DoLh4xf8=;
-        b=bDYgHdcl9S61VqchsKh1nws/+i8FK5SQYaZ6lzIQmc+JmT80bCrNc2Ff+Wtsb2g1S/
-         H9P4nAMtpuM59e82wn6/kkSo3O4lw5SgMu8bsrxX1BuMPie0Ar30Wyz2bFxdbtqcrQXb
-         UX2ezFVxrL9FJmWjdcXha43TjQTOd++P6fQOuLa50js5t4usZnNWuS9bliy7wUUXri7s
-         7IW9p7noCEv1xyhdO7iA0kFxDEBU1obkwHqY3o3Fli5dfbsXzTL8l2y2KYjpcKCdiKH7
-         G68WrWxVkyLefgUc4zda2yF5Scf0f0I9zsYigYsF/L5PKpe1TCtj/dF4poScnqz0WcMp
-         dJiA==
-X-Gm-Message-State: AOAM5326eCKZ1n/YJllvOaQ5HvXR4Yznl7s4z6L0FtIDU2gw34lCwnQV
-        +6dUAD9X0JsnoRf3wyxLrKLrScAUWayZnl4x1gI=
-X-Google-Smtp-Source: ABdhPJxGQ+LYo3TE+w36gxfg8i5q9yhsP7/TsFl8gmY2pnj2YuCnzhl+fTmdgR3HZI5R6GxehmEzDItEiyvIcTdNi8g=
-X-Received: by 2002:a92:5a05:: with SMTP id o5mr17808012ilb.237.1593891678038;
- Sat, 04 Jul 2020 12:41:18 -0700 (PDT)
+        bh=oYoqd/CUPo684lZ33nBT5H+rI2BWES+cDScLFKGmu2Y=;
+        b=pnLyoiyl1XGfd/ls/fRzGpWWtsZV/2A7S1Rlle5jNaBIM94/57UvOszZAflbo1oS5J
+         edvgOhIo1WA9LHTG17DY2zF585C7S3XSsOTVdGKxpR0Ts7mi+ESIbag5wkxlBDdmx5j4
+         6TVhih0lfIbSXyezDKl76lFVWLoi5WVan8vGCcIsWJhTg8k1Hg9tXFD/4w1rAOy1xjWM
+         IRUv3im3sKQUjVEg3KM1ldebXOTC7MJ/QfG0Wm0k6iJ0Erulf9iLHxgf8Nk0Knd0pBol
+         wXb2rVBky3qWjm50XR7fH7WLGfH2voEO8m0Z71dLKGQK1AmEd50RK1MP1QZIWAkcW/VJ
+         175A==
+X-Gm-Message-State: AOAM532ApH3dT4BeA6QGfzHinshKiJRLxgMJSk1Dp0kcst7iubhSifNf
+        uLmxINEyhktYJc1TJX0Rys/ha9+wj7Jfp0IMtC4GdLP3TEZAKw==
+X-Google-Smtp-Source: ABdhPJyBxGUwYEhvhTUGxE8h2XDZCFFswvZ1ByHXCuGt9UuHeYQFizfvUsknnM+fvByRLxVRrSZ1+AkntCkhvZDN10Q=
+X-Received: by 2002:a17:906:1c05:: with SMTP id k5mr36355926ejg.320.1593891680498;
+ Sat, 04 Jul 2020 12:41:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200703182010.1867-1-bruceshenzk@gmail.com> <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
- <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com>
-In-Reply-To: <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Sat, 4 Jul 2020 12:41:07 -0700
-Message-ID: <CAKgT0UdFPjD5YEBjVxkgCc65muNnxq54QPt3iBzm60QY46BCTA@mail.gmail.com>
-Subject: Re: [PATCH] net: fm10k: check size from dma region
-To:     Zekun Shen <bruceshenzk@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org> <20200704140250.423345-2-gregkh@linuxfoundation.org>
+In-Reply-To: <20200704140250.423345-2-gregkh@linuxfoundation.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Sat, 4 Jul 2020 21:41:09 +0200
+Message-ID: <CAJfpegusi8BjWFzEi05926d4RsEQvPnRW-w7My=ibBHQ8NgCuw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] readfile: implement readfile syscall
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-man <linux-man@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 4, 2020 at 9:37 AM Zekun Shen <bruceshenzk@gmail.com> wrote:
+On Sat, Jul 4, 2020 at 4:03 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Sat, Jul 04, 2020 at 09:05:48AM -0700, Alexander Duyck wrote:
-> > The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
-> > PAGE_SIZE. Otherwise you are still capable of going out of bounds
-> > because the offset is used within the page to push the start of the
-> > region up by 2K.
-> PAGE_SIZE can drop the warning, as the dma allocated size is PAGE_SIZE.
-
-Yes, but the point I was getting at is that if you are just going to
-squelch the warning, but leave the code broken then the warning isn't
-of any use and might as well be discarded. Either you limit the value
-to 2K which is what the hardware is expected to max out at anyway, or
-you just skip the warning and assume hardware will do the right thing.
-I'm not even sure this patch is worth the effort if it is just using
-some dummy value that is still broken and simply squelches the
-warning.
-
-Could you provide more information about how you are encountering the
-error? Is this something you are seeing with an actual fm10k device,
-or is this something found via code review or static analysis?
-
-> > If this is actually fixing the warning it makes me wonder if the code
-> > performing the check is broken itself since we would still be
-> > accessing outside of the accessible DMA range.
-> The unbounded size is only passed to fm10k_add_rx_frag, which expects
-> and checks size to be less than FM10K_RX_HDR_LEN which is 256.
+> It's a tiny syscall, meant to allow a user to do a single "open this
+> file, read into this buffer, and close the file" all in a single shot.
 >
-> In this way, any boundary between 256 and 4K should work. I could address
-> that with a second version.
+> Should be good for reading "tiny" files like sysfs, procfs, and other
+> "small" files.
+>
+> There is no restarting the syscall, this is a "simple" syscall, with the
+> attempt to make reading "simple" files easier with less syscall
+> overhead.
+>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  fs/open.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>
+> diff --git a/fs/open.c b/fs/open.c
+> index 6cd48a61cda3..4469faa9379c 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -1370,3 +1370,53 @@ int stream_open(struct inode *inode, struct file *filp)
+>  }
+>
+>  EXPORT_SYMBOL(stream_open);
+> +
+> +static struct file *readfile_open(int dfd, const char __user *filename,
+> +                                 struct open_flags *op)
+> +{
+> +       struct filename *tmp;
+> +       struct file *f;
+> +
+> +       tmp = getname(filename);
+> +       if (IS_ERR(tmp))
+> +               return (struct file *)tmp;
+> +
+> +       f = do_filp_open(dfd, tmp, op);
+> +       if (!IS_ERR(f))
+> +               fsnotify_open(f);
+> +
+> +       putname(tmp);
+> +       return f;
+> +}
+> +
+> +SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
+> +               char __user *, buffer, size_t, bufsize, int, flags)
+> +{
+> +       struct open_flags op;
+> +       struct open_how how;
+> +       struct file *file;
+> +       loff_t pos = 0;
+> +       int retval;
+> +
+> +       /* only accept a small subset of O_ flags that make sense */
+> +       if ((flags & (O_NOFOLLOW | O_NOATIME)) != flags)
+> +               return -EINVAL;
+> +
+> +       /* add some needed flags to be able to open the file properly */
+> +       flags |= O_RDONLY | O_LARGEFILE;
+> +
+> +       how = build_open_how(flags, 0000);
+> +       retval = build_open_flags(&how, &op);
+> +       if (retval)
+> +               return retval;
+> +
+> +       file = readfile_open(dfd, filename, &op);
+> +       if (IS_ERR(file))
+> +               return PTR_ERR(file);
+> +
+> +       retval = vfs_read(file, buffer, bufsize, &pos);
+> +
+> +       filp_close(file, NULL);
+> +
+> +       return retval;
 
-I was referring to the code in the DMA-API that is generating the
-warning being broken, not the code itself. If you can tell me how you
-are getting to the warning it would be useful.
+Manpage says: "doing the sequence of open() and then read() and then
+close()", which is exactly what it does.
 
-Anything over FM10K_RX_BUFSZ will break things. I think that is what
-you are missing. The driver splits a single 4K page into 2 pieces and
-then gives half off to the stack and uses the other half for the next
-receive. If you have a value over 2K you are going to be overwritting
-data in another buffer and/or attempting to access memory outside the
-DMA region. Both of which would likely cause significant issues and
-likely panic the system.
+But then it goes on to say: "If the file is larger than the value
+provided in count then only count number of bytes will be copied into
+buf", which is only half true, it should be: "If the file is larger
+than the value provided in count then at most count number of bytes
+will be copied into buf", which is not a lot of information.
+
+And "If the size of file is smaller than the value provided in count
+then the whole file will be copied into buf", which is simply a lie;
+for example seq_file will happily return a smaller-than-PAGE_SIZE
+chunk if at least one record fits in there.  You'll have a very hard
+time explaining that in the man page.  So I think there are two
+possible ways forward:
+
+ 1) just leave the first explanation (it's an open + read + close
+equivalent) and leave out the rest
+
+ 2) add a loop around the vfs_read() in the code.
+
+I'd strongly prefer #2 because with the non-looping read it's
+impossible to detect whether the file was completely read or not, and
+that's just going to lead to surprises and bugs in userspace code.
+
+Thanks,
+Miklos
