@@ -2,270 +2,91 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C887C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF13C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2C720723
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593880509;
-	bh=xRdkOlLbDfNgaIOJu+m3hhpUDDNqCLE4MI0dkTFTEgk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OAii+8Mj+04Ji0yMjFcxNQ2PfquZPxeKeWL55hRdyS5rhjF8V4Kg4ZE/X+FfHdET5
-	 HeqOxHmf4RfpJCEQyWeTWWtA9Ov8Eb/qH7zEKPUAd7WQXD+PQzdde8scMoy15XlxjJ
-	 Suo0eGNRTbuIyg22ojXUspckKsSf3K/eiC0NisQo=
+	by mail.kernel.org (Postfix) with ESMTP id B69BA20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 16:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnNHdo+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGDQfG (ORCPT
+        id S1726964AbgGDQhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 12:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgGDQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 12:35:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABEDF20724;
-        Sat,  4 Jul 2020 16:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593880505;
-        bh=xRdkOlLbDfNgaIOJu+m3hhpUDDNqCLE4MI0dkTFTEgk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=x9EBN5kpqIePXkJXZpE4GaJNPkIX/KCTNNuZCpIjjXi5Nl1AgEQQL5CvOzzWtkqVz
-         /q0HhF4pALuuP0oq8cTAjr/nNa2kyHafRdwwnYcbB7ehfnvGsLNTf50S0zEmnrXElB
-         IHs2ioP8unzngVrcS/fzf0CK7z0pOZTfedPmQYpw=
-Date:   Sat, 4 Jul 2020 17:34:59 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     michael.hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, ribalda@kernel.org,
-        tomislav.denis@avl.com, broonie@kernel.org,
-        alexandru.ardelean@analog.com, sboyd@kernel.org, ak@it-klinger.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/devicetree/bindings/iio
-Message-ID: <20200704173459.78ceec60@archlinux>
-In-Reply-To: <20200703185725.15399-1-grandmaster@al2klimov.de>
-References: <20200703185725.15399-1-grandmaster@al2klimov.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 4 Jul 2020 12:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgGDQhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 12:37:17 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7941FC061794;
+        Sat,  4 Jul 2020 09:37:17 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id z13so35936068wrw.5;
+        Sat, 04 Jul 2020 09:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NGM5We0s6d91iAHT6ccX0Y+8JiIRTw5ExhXAZd/KucE=;
+        b=DnNHdo+tr+7acCeB3NZNGPinQRrKbRX81uLIAqtL5Hkt/3NH6jV4gGOIFxZUdhPXJ3
+         VPaI3R/0RsZ7/M9+bOEWBDmBixytA1fLy5NFct3WKqZfjVzWaWOXA7fuKI3qWCRUU8te
+         urDZtriR2Xff+nOwTMemCtle3CH2b/MRLP2OHXjPLdKcqfZWpbUWezB3y5Q9k/azKuFC
+         TJWcfJNHW1DTRx/rjXUcxD23vts4lMFHuaLDd3T/7MOPIFWcxft2CQHL4+ymm0neAX5M
+         CmM5LCfw392tt+EEnwsm0wiNQsP/u7Mb0AEudQgZFrKnqVpT7YisWpBYRnmdqxK7ieze
+         z2sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NGM5We0s6d91iAHT6ccX0Y+8JiIRTw5ExhXAZd/KucE=;
+        b=iLraqFrha4TeGfgiJ73PveAwF5TT3SxtL5kUA0NvpSpzrrELJEyr1JFU3d/QI680V8
+         EDI4T1QnAhZ5+KlWvOmtAFFvykhkO/JYUoPhkvLlzQ42dK4zXBdg/+Ybk1/4xC/uQ6IW
+         SYOUU44eVbuG585XP72D8LX6iYNkdB7BKx66VfkEAt7FCYF125HPnY0g5HKyTXRs/OoF
+         CBSjPngyTue9pAe4JH3M3KKNd2bggCBBe2XajE1ZxRmwLtqszIJJVjAFRVlootQMVxc0
+         S+soh0Qz4tVAmz0f9eri0B5EUPM9FjsdaAfl/+6OuAbpYveMIWEd5za32Yq4TlWjL9N8
+         7zXg==
+X-Gm-Message-State: AOAM532ToqLM/s1PrFQ1qthBc0/0V6f+SUw3cp4tjlDhi7izfPHkmG3J
+        xcafwTQgq2RPzNb3EpLZV45CLI82EYL1q+A7jVSKjw==
+X-Google-Smtp-Source: ABdhPJxCG5R263EDYCqlklp/8pFwN2e0CRcdTF3YD9+FvcUrMqsic+O84r6XvCvWiGvxyIUtusxMqbrPX6uf876EGvY=
+X-Received: by 2002:adf:ee0b:: with SMTP id y11mr18837573wrn.360.1593880636134;
+ Sat, 04 Jul 2020 09:37:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200703182010.1867-1-bruceshenzk@gmail.com> <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
+In-Reply-To: <CAKgT0Uc0sxRmADBozs3BvK2HFsDAcgzwUKWHyu91npQvyFRM1w@mail.gmail.com>
+From:   Zekun Shen <bruceshenzk@gmail.com>
+Date:   Sat, 4 Jul 2020 12:37:04 -0400
+Message-ID: <CAHE_cOvFC4sjVvVuC-7A8Zqw6=uJP5AAUmZOk5sQ=7bD+ePpgA@mail.gmail.com>
+Subject: Re: [PATCH] net: fm10k: check size from dma region
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Jul 2020 20:57:25 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+On Sat, Jul 04, 2020 at 09:05:48AM -0700, Alexander Duyck wrote:
+> The upper limitation for the size should be 2K or FM10K_RX_BUFSZ, not
+> PAGE_SIZE. Otherwise you are still capable of going out of bounds
+> because the offset is used within the page to push the start of the
+> region up by 2K.
+PAGE_SIZE can drop the warning, as the dma allocated size is PAGE_SIZE.
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
-> 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
-> 
->  Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml  | 4 ++--
->  Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/iio-bindings.txt        | 2 +-
->  Documentation/devicetree/bindings/iio/light/apds9300.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/light/apds9960.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/light/opt3001.txt       | 2 +-
->  Documentation/devicetree/bindings/iio/light/vl6180.txt        | 2 +-
->  .../devicetree/bindings/iio/potentiometer/mcp41010.txt        | 2 +-
->  .../devicetree/bindings/iio/potentiostat/lmp91000.txt         | 4 ++--
->  .../devicetree/bindings/iio/pressure/asc,dlhl60d.yaml         | 2 +-
->  .../devicetree/bindings/iio/proximity/devantech-srf04.yaml    | 4 ++--
->  Documentation/devicetree/bindings/iio/temperature/tmp007.txt  | 2 +-
->  12 files changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> index d124eba1ce54..fd4eaa3d0ab4 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> @@ -12,8 +12,8 @@ maintainers:
->  description: |
->    Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers that supports
->    both I2C & SPI interfaces.
-> -    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
-> -    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
-> +    https://www.analog.com/en/products/mems/accelerometers/adxl345.html
-> +    https://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> index 639c94ed83e9..17af395b99d9 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> @@ -6,7 +6,7 @@ Is is programmable through an SPI interface.
->  
->  The internal DACs are loaded when the LOADDACS pin is pulled down.
->  
-> -http://www.ti.com/lit/ds/sbas106/sbas106.pdf
-> +https://www.ti.com/lit/ds/sbas106/sbas106.pdf
->  
->  Required Properties:
->  - compatible: Should be one of:
-> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> index af33267727f4..aa63cac7323e 100644
-> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> @@ -9,7 +9,7 @@ specifier is an array of one or more cells identifying the IIO
->  output on a device. The length of an IIO specifier is defined by the
->  value of a #io-channel-cells property in the IIO provider node.
->  
-> -[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> +[1] https://marc.info/?l=linux-iio&m=135902119507483&w=2
->  
->  ==IIO providers==
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> index aa199e09a493..3aa6db3ee99d 100644
-> --- a/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> @@ -1,6 +1,6 @@
->  * Avago APDS9300 ambient light sensor
->  
-> -http://www.avagotech.com/docs/AV02-1077EN
-> +https://www.avagotech.com/docs/AV02-1077EN
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> index 3af325ad194b..c53ddb81c4aa 100644
-> --- a/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> @@ -1,6 +1,6 @@
->  * Avago APDS9960 gesture/RGB/ALS/proximity sensor
->  
-> -http://www.avagotech.com/docs/AV02-4191EN
-> +https://www.avagotech.com/docs/AV02-4191EN
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> index 47b13eb8f4ec..9e6f2998e751 100644
-> --- a/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> @@ -6,7 +6,7 @@ the optional generation of IIO events on rising/falling light threshold changes
->  requires the use of interrupts. Without interrupts, only the simple reading
->  of the current light value is supported through the IIO API.
->  
-> -http://www.ti.com/product/opt3001
-> +https://www.ti.com/product/opt3001
->  
->  Required properties:
->    - compatible: should be "ti,opt3001"
-> diff --git a/Documentation/devicetree/bindings/iio/light/vl6180.txt b/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> index 2c52952715a0..fb9137d85df9 100644
-> --- a/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> @@ -1,6 +1,6 @@
->  STMicro VL6180 -  ALS, range and proximity sensor
->  
-> -Link to datasheet: http://www.st.com/resource/en/datasheet/vl6180x.pdf
-> +Link to datasheet: https://www.st.com/resource/en/datasheet/vl6180x.pdf
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> index 566711b9950c..4f245e8469fd 100644
-> --- a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> @@ -1,7 +1,7 @@
->  * Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
->  
->  Datasheet publicly available at:
-> -http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
-> +https://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
->  
->  The node for this driver must be a child node of a SPI controller, hence
->  all mandatory properties described in
-> diff --git a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> index e6d0c2eb345c..f3ab02b0dd41 100644
-> --- a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> +++ b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> @@ -1,7 +1,7 @@
->  * Texas Instruments LMP91000 series of potentiostats
->  
-> -LMP91000: http://www.ti.com/lit/ds/symlink/lmp91000.pdf
-> -LMP91002: http://www.ti.com/lit/ds/symlink/lmp91002.pdf
-> +LMP91000: https://www.ti.com/lit/ds/symlink/lmp91000.pdf
-> +LMP91002: https://www.ti.com/lit/ds/symlink/lmp91002.pdf
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> index 64c18f1693f0..be2be4b556db 100644
-> --- a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> +++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> @@ -13,7 +13,7 @@ description: |
->    Bindings for the All Sensors DLH series pressure sensors.
->  
->    Specifications about the sensors can be found at:
-> -    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
-> +    https://www.allsensors.com/cad/DS-0355_Rev_B.PDF
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> index f86f8b23ef18..ce795279839e 100644
-> --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> @@ -17,9 +17,9 @@ description: |
->      until it is received once again
->  
->    Specifications about the devices can be found at:
-> -  http://www.robot-electronics.co.uk/htm/srf04tech.htm
-> +  https://www.robot-electronics.co.uk/htm/srf04tech.htm
->  
-> -  http://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
-> +  https://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> index da0af234a357..21952c140599 100644
-> --- a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> +++ b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> @@ -1,6 +1,6 @@
->  * TI TMP007 - IR thermopile sensor with integrated math engine
->  
-> -Link to datasheet: http://www.ti.com/lit/ds/symlink/tmp007.pdf
-> +Link to datasheet: https://www.ti.com/lit/ds/symlink/tmp007.pdf
+> If this is actually fixing the warning it makes me wonder if the code
+> performing the check is broken itself since we would still be
+> accessing outside of the accessible DMA range.
+The unbounded size is only passed to fm10k_add_rx_frag, which expects
+and checks size to be less than FM10K_RX_HDR_LEN which is 256.
 
-This one doesn't actually take us anywhere very useful. So probably best
-to just drop it.  The datasheet has been removed from TI's website it
-seems.
-
-
->  
->  Required properties:
->  
-
+In this way, any boundary between 256 and 4K should work. I could address
+that with a second version.
