@@ -2,127 +2,193 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F16C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9860C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5D720885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C235020885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7+j+auj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgGDOnY (ORCPT
+        id S1726830AbgGDOrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:43:24 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:54230 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDOnY (ORCPT
+        Sat, 4 Jul 2020 10:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgGDOrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:43:24 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 860851D3582663;
-        Sat,  4 Jul 2020 14:43:21 +0000 (UTC)
-Received: from centaurus (unknown [37.189.45.160])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Sat,  4 Jul 2020 14:43:20 +0000 (UTC)
-Message-ID: <908bf287f370a947e60bc7817b395c91c5be63d9.camel@archlinux.org>
-Subject: Re: [PATCH v2] HID: logitech-hidpp: add support for Logitech G533
- headset
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Kamil =?UTF-8?Q?Doma=C5=84ski?= <kamil@domanski.co>,
-        linux-kernel@vger.kernel.org
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nestor Lopez Casado <nlopezcasad@logitech.com>
-In-Reply-To: <52609283-6d37-9e0e-be24-7df378e4fead@domanski.co>
-References: <023148f582cc20bef7079508ce417c8ebeb0febb.camel@domanski.co>
-         <137acb00c6ec098d7506901df05067e8d7207aa9.camel@archlinux.org>
-         <52609283-6d37-9e0e-be24-7df378e4fead@domanski.co>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-pGP/VXSr2cqvTSWNfpQw"
-Date:   Sat, 04 Jul 2020 15:48:30 +0100
+        Sat, 4 Jul 2020 10:47:24 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF65C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:47:23 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so13081328pfu.1
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p/55De6gGtaFwxFQIqPcNfatEGLg0t1eCobtBLAgNg4=;
+        b=M7+j+auj6W0P6QiET/OM6aWLhlCgIAMiuV3Tk0omNfJDBKL5xdnu1jE1QQblptExQ2
+         Sr7qSCVN/OyIBXtT5ZSDzaSqreLAHb57RpkcXYnpObmK5n4NgRiRAUCh8+e+ieLUyR7G
+         pXq41vxVZP4ZOBTkZB1ENGjBDw/8AsgkTUbxEyUZgdH5q8CvI6OtHyTW6MCGv7J+KVxP
+         ei1gSYLww1tMA1F5l6vJkziBRR2Bn3KcPDyykQjPIhZ8+jYWrUXnmTaWhz1jckncE0zK
+         3uwaNTMvi60vel1giShy5RIw2tGoMiKKAWBJnlbzc3yhJwvfHeipI3+sH3FTBRp5SkHb
+         b5Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p/55De6gGtaFwxFQIqPcNfatEGLg0t1eCobtBLAgNg4=;
+        b=uDReeaqoaycoSz5m/f7iPQQTuBQDTHYDAqYchE+AG/BhIOfqnEvcx9g6spvOgHXdm+
+         KZKy7I0e0oBL1/NgrA6/Wn4CAY33tC+mvEQCyg7q9Hm44qw9H71HbJ7OSBblJ9WdJ+pP
+         V++6TbD05RVkxYEgDv/Kg1orIZlDyQZGNV4sBz9VSx3ke/y8nfpM6f8KC3DGpXxvXW8a
+         7+NbbJP4QWLVH4BRlYzr7dO79zQOIEHcRvFeSsnYt4AdMNpZIdVknF0YZxKymQgBCUpB
+         4YFxWXtBBo2ThGRSbylL46Gk4vhuj7z25Lng4eesfRRPtlJ4541pJ0fUdIK70yhmscKv
+         H92g==
+X-Gm-Message-State: AOAM533/AM4f41M6BNoqGqByBhRBRNcoUF85LAKABu8xC1+PQx8ZiUcl
+        Nql38ToSV5YTGZXQD4IG2d7G
+X-Google-Smtp-Source: ABdhPJwP/dv8Np1XlPSKXs0oR2M/7BaEapR8vP1S4nR79PyY2OHwL7cCfIF9S/EBer6mYXzCxqnSWg==
+X-Received: by 2002:a63:7f17:: with SMTP id a23mr33029745pgd.3.1593874042017;
+        Sat, 04 Jul 2020 07:47:22 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
+        by smtp.gmail.com with ESMTPSA id n12sm14766200pgr.88.2020.07.04.07.47.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jul 2020 07:47:20 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 20:17:14 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/9] bus: mhi: core: Use helper API to trigger a
+ non-blocking host resume
+Message-ID: <20200704144714.GC3066@Mani-XPS-13-9360>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+ <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.4 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 29, 2020 at 09:39:36AM -0700, Bhaumik Bhatt wrote:
+> Autonomous low power mode support requires the MHI host to resume from
+> multiple places and post a wakeup source to exit system suspend. This
+> needs to be done in a non-blocking manner. Introduce a helper API to
+> trigger the host resume for data transfers and other non-blocking use
+> cases while supporting implementation of autonomous low power modes.
+> 
 
---=-pGP/VXSr2cqvTSWNfpQw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Why can't you use pm_wakeup_event() as done in __mhi_device_get_sync()?
 
-On Sat, 2020-07-04 at 02:37 +0200, Kamil Doma=C5=84ski wrote:
-> Hi Filipe,
->=20
-> > My main point here is that long means different things in different
-> > architectures, and we only want one byte so I would go for u8.
->=20
-> I used long, because the test_bit macro accepts long and the similar
-> function for voltage reading already used long too.
-> That will be changed in v3 - see next paragraph.
+Thanks,
+Mani
 
-The compiler can handle these conversions. Explicit is generally better
-than implicit, and in cases where the implicit assumptions might break,
-explicit is definitely better. We know the data size, so let's use it
-:D
-
-> > > +
-> > > +	*voltage =3D get_unaligned_be16(data);
-> > > +	isConnected =3D test_bit(0, &flags);
-> > > +	isCharging =3D test_bit(1, &flags);
-> > > +	chargingComplete =3D test_bit(2, &flags);
-> > > +	chargingFault =3D test_bit(3, &flags);
-> > > I don't think this is needed, just do it in the ifs directly.
-> > >=20
-> > > Here I would add a #define for each bit:
-> > >=20
-> > > #define FLAG_ADC_MAP_STATUS_CONNECTED 0
-> > > ...
-> > > if (data[2] & FLAG_ADC_MAP_STATUS_CONNECTED)
->=20
-> Yeah, I it will do exactly that for v3, which allows to drop the flag
-> variables and avoid using a long.
->=20
-> =20
-> > Same thing here. We should see if the device supports the DJ protocol
-> > and add it in hid-logitech-dj instead.
->=20
-> It doesn't seem to be a DJ device. The DJ driver just detects the extra i=
-nterfaces
-> and skips directly to hid_hw_start.
-
-Thanks for looking into this!
-
-Cheers,
-Filipe La=C3=ADns
-
---=-pGP/VXSr2cqvTSWNfpQw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8AlrcACgkQ+JPGdIFq
-qV0C7g//ak1uA7fSG2ruS8LAvg6Fgy1qtvBPvL54Vs9qFZL+pgilwBidZawahYVs
-48MoS+U2nLLCyjWRtceEFJNDOa0if2aW1V+M1SRHKdf6XhVZ2xHDKxYUk7GAu7Vp
-J0Y9kObMSXNdd4EgUT/n+Dta+9W90UsITIBKpkPQmk0lMGlQI0eONT8oqGqDtSZv
-RJV6GwNjX8fIhTiHhLgl4UeN5boLumFNpM13RGO2+wpvDLUTvaIZRXYcRjPgm/yr
-lb+iqVfKLH50BV5G3yKkEyG8wythxq9+a1FWEBCKHYmalPQX3ZXFGnW17GOozTYj
-OJjWJk3s1esBdK6B30h/lGX+n9ItaxcBz0k4SenepLTPdffZaItRrkbqCBbkjX5l
-91yzwi8FwtVVYdRBPUuNMtMNvqflMg+lsNyfP2iWzxGHl7FQcyaTmR7J/BKYXu+7
-LpaA7o3Qv6LY7s7prle73EvoyXGS6GW17O1HxWm1k0cX+UD4w6TPnA0ljbdA9roe
-EaIG0SPr53yS+pyzNGKl3Sf96WZZVcrgtB+sPo5o7hi+y+T53KgQLWvQBLAT7cF4
-rh3+pC6tmWAaPurdq5lABbdGkAlyGloyUMB3mLDj6p2wJvUUcMJpwvURqtsXKRn3
-GkTA5yaLZcvwpfmMEYuZrcMvYhvmlzV4GlmeX+fRqpS7Pmjj50g=
-=1+tX
------END PGP SIGNATURE-----
-
---=-pGP/VXSr2cqvTSWNfpQw--
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> ---
+>  drivers/bus/mhi/core/internal.h |  8 ++++++++
+>  drivers/bus/mhi/core/main.c     | 21 +++++++--------------
+>  drivers/bus/mhi/core/pm.c       |  6 ++----
+>  3 files changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+> index bcfa7b6..cb32eaf 100644
+> --- a/drivers/bus/mhi/core/internal.h
+> +++ b/drivers/bus/mhi/core/internal.h
+> @@ -599,6 +599,14 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
+>  int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>  		 enum mhi_cmd_type cmd);
+>  
+> +static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl,
+> +				      bool hard_wakeup)
+> +{
+> +	pm_wakeup_dev_event(&mhi_cntrl->mhi_dev->dev, 0, hard_wakeup);
+> +	mhi_cntrl->runtime_get(mhi_cntrl);
+> +	mhi_cntrl->runtime_put(mhi_cntrl);
+> +}
+> +
+>  /* Register access methods */
+>  void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
+>  		     void __iomem *db_addr, dma_addr_t db_val);
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index 1f622ce..8d6ec34 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
+>  		 * process it since we are probably in a suspended state,
+>  		 * so trigger a resume.
+>  		 */
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> +		mhi_trigger_resume(mhi_cntrl, false);
+>  
+>  		return;
+>  	}
+> @@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	}
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl, false);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> @@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	}
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl, false);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> @@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl, false);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 661d704..5e3994e 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -1139,10 +1139,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
+>  
+>  	mhi_dev->dev_wake--;
+>  	read_lock_bh(&mhi_cntrl->pm_lock);
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl, false);
+>  
+>  	mhi_cntrl->wake_put(mhi_cntrl, false);
+>  	read_unlock_bh(&mhi_cntrl->pm_lock);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
