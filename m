@@ -2,104 +2,148 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A047C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F09F208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDB4208D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgGDPrz (ORCPT
+        id S1726933AbgGDPvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 11:47:55 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47953 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbgGDPry (ORCPT
+        Sat, 4 Jul 2020 11:51:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57146 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGDPvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 11:47:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U1ffIy7_1593877655;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U1ffIy7_1593877655)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 04 Jul 2020 23:47:36 +0800
-Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during
- pagevec_lru_move_fn
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sat, 4 Jul 2020 11:51:00 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jrkRJ-00087y-O9; Sat, 04 Jul 2020 15:50:53 +0000
+Date:   Sat, 4 Jul 2020 17:50:52 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
-        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        lkp@intel.com, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
- <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
- <56e395c6-81e7-7163-0d4f-42b91573289f@linux.alibaba.com>
- <20200704113944.GN25523@casper.infradead.org>
- <b6caf0d7-266e-55ea-0c88-656c800af1e3@linux.alibaba.com>
- <20200704133330.GP25523@casper.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <4a42888e-4d7e-0d76-358c-9a073e6e4794@linux.alibaba.com>
-Date:   Sat, 4 Jul 2020 23:47:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v3 13/16] exit: Factor thread_group_exited out of
+ pidfd_poll
+Message-ID: <20200704155052.kmrest5useyxcfnu@wittgenstein>
+References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+ <20200702164140.4468-13-ebiederm@xmission.com>
+ <20200703203021.paebx25miovmaxqt@ast-mbp.dhcp.thefacebook.com>
+ <873668s2j8.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20200704133330.GP25523@casper.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <873668s2j8.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/7/4 下午9:33, Matthew Wilcox 写道:
-> On Sat, Jul 04, 2020 at 09:12:46PM +0800, Alex Shi wrote:
->> 在 2020/7/4 下午7:39, Matthew Wilcox 写道:
->>> On Sat, Jul 04, 2020 at 07:34:59PM +0800, Alex Shi wrote:
->>>> That's a great idea! Guess what the new struct we need would be like this?
->>>> I like to try this. :)
->>>>
->>>>
->>>> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
->>>> index 081d934eda64..d62778c8c184 100644
->>>> --- a/include/linux/pagevec.h
->>>> +++ b/include/linux/pagevec.h
->>>> @@ -20,7 +20,7 @@
->>>>  struct pagevec {
->>>>         unsigned char nr;
->>>>         bool percpu_pvec_drained;
->>>> -       struct page *pages[PAGEVEC_SIZE];
->>>> +       struct list_head veclist;
->>>>  };
->>>
->>> pagevecs are used not just for LRU.  If you want to use a list_head for
->>> LRU then define a new structure.
->>
->> yes, there are much page don't use page->lru, like slab etc. we need a new struct> 
-> That's not what I mean.  Slab pages aren't on the LRU anyway.
-
-Right. I mean, that's reason for a new struct if we change to list.
-
+On Fri, Jul 03, 2020 at 04:37:47PM -0500, Eric W. Biederman wrote:
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 > 
-> Consider the callers of page_cache_delete_batch().  These use a pagevec
-> for a non-LRU purpose, and they will be much slower with a list_head than
-> with an array.
+> > On Thu, Jul 02, 2020 at 11:41:37AM -0500, Eric W. Biederman wrote:
+> >> Create an independent helper thread_group_exited report return true
+> >> when all threads have passed exit_notify in do_exit.  AKA all of the
+> >> threads are at least zombies and might be dead or completely gone.
+> >> 
+> >> Create this helper by taking the logic out of pidfd_poll where
+> >> it is already tested, and adding a missing READ_ONCE on
+> >> the read of task->exit_state.
+> >> 
+> >> I will be changing the user mode driver code to use this same logic
+> >> to know when a user mode driver needs to be restarted.
+> >> 
+> >> Place the new helper thread_group_exited in kernel/exit.c and
+> >> EXPORT it so it can be used by modules.
+> >> 
+> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> >> ---
+> >>  include/linux/sched/signal.h |  2 ++
+> >>  kernel/exit.c                | 24 ++++++++++++++++++++++++
+> >>  kernel/fork.c                |  6 +-----
+> >>  3 files changed, 27 insertions(+), 5 deletions(-)
+> >> 
+> >> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+> >> index 0ee5e696c5d8..1bad18a1d8ba 100644
+> >> --- a/include/linux/sched/signal.h
+> >> +++ b/include/linux/sched/signal.h
+> >> @@ -674,6 +674,8 @@ static inline int thread_group_empty(struct task_struct *p)
+> >>  #define delay_group_leader(p) \
+> >>  		(thread_group_leader(p) && !thread_group_empty(p))
+> >>  
+> >> +extern bool thread_group_exited(struct pid *pid);
+> >> +
+> >>  extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
+> >>  							unsigned long *flags);
+> >>  
+> >> diff --git a/kernel/exit.c b/kernel/exit.c
+> >> index d3294b611df1..a7f112feb0f6 100644
+> >> --- a/kernel/exit.c
+> >> +++ b/kernel/exit.c
+> >> @@ -1713,6 +1713,30 @@ COMPAT_SYSCALL_DEFINE5(waitid,
+> >>  }
+> >>  #endif
+> >>  
+> >> +/**
+> >> + * thread_group_exited - check that a thread group has exited
+> >> + * @pid: tgid of thread group to be checked.
+> >> + *
+> >> + * Test if thread group is has exited (all threads are zombies, dead
+> >> + * or completely gone).
+> >> + *
+> >> + * Return: true if the thread group has exited. false otherwise.
+> >> + */
+> >> +bool thread_group_exited(struct pid *pid)
+> >> +{
+> >> +	struct task_struct *task;
+> >> +	bool exited;
+> >> +
+> >> +	rcu_read_lock();
+> >> +	task = pid_task(pid, PIDTYPE_PID);
+> >> +	exited = !task ||
+> >> +		(READ_ONCE(task->exit_state) && thread_group_empty(task));
+> >> +	rcu_read_unlock();
+> >> +
+> >> +	return exited;
+> >> +}
+> >
+> > I'm not sure why you think READ_ONCE was missing.
+> > It's different in wait_consider_task() where READ_ONCE is needed because
+> > of multiple checks. Here it's done once.
 > 
+> In practice it probably has no effect on the generated code.  But
+> READ_ONCE is about telling the compiler not to be clever.  Don't use
+> tearing loads or stores etc.  When all of the other readers are using
+> READ_ONCE I just get nervous if we have a case that doesn't.
 
-Thanks for the info.
-If the list is slower than pagevec, maybe it's not worth to do the change.
-Since pagevec could handle any kind of pages, anon/file, non-active/active, but one
-list only fit for just one kind of list. 5 kinds of list adding would increase the
-complexity. Consider this, I am wondering if it's worth?
+That's not true. The only place where READ_ONCE(->exit_state) is used is
+in wait_consider_task() and nowhere else. We had that discussion a while
+ago where I or someone proposed to simply place a READ_ONCE() around all
+accesses to exit_state for the sake of kcsan and we agreed that it's
+unnecessary and not to do this.
+But it obviously doesn't hurt to have it.
 
-Thanks
-Alex
+Christian
