@@ -2,238 +2,117 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE86CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 07:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 07:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8983F207CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 07:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7F920747
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 07:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgGDHfG (ORCPT
+        id S1727790AbgGDHvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 03:35:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgGDHfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 03:35:05 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4B15C5F4DE94B68CEE44;
-        Sat,  4 Jul 2020 15:33:13 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 4 Jul 2020 15:33:03 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-Subject: [PATCH net] hinic: fix sending mailbox timeout in aeq event work
-Date:   Sat, 4 Jul 2020 15:32:43 +0800
-Message-ID: <20200704073243.6842-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 4 Jul 2020 03:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgGDHvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 03:51:46 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24EBC061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 00:51:46 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jrcxL-0002mL-Pi; Sat, 04 Jul 2020 09:51:27 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c] (unknown [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id C0795528C0A;
+        Sat,  4 Jul 2020 07:51:20 +0000 (UTC)
+Subject: Re: [PATCH 3/7] Documentation: networking: can_ucan_protocol: drop
+ doubled words
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>, linux-hams@vger.kernel.org,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        linux-can@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-afs@lists.infradead.org
+References: <20200703224115.29769-1-rdunlap@infradead.org>
+ <20200703224115.29769-4-rdunlap@infradead.org>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <d2dd726e-8136-31ea-ba38-8d4bce6d7d87@pengutronix.de>
+Date:   Sat, 4 Jul 2020 09:51:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200703224115.29769-4-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sending mailbox in the work of aeq event, another aeq event
-will be triggered. because the last aeq work is not exited and only
-one work can be excuted simultaneously in the same workqueue, mailbox
-sending function will return failure of timeout. We create and use
-another workqueue to fix this.
+On 7/4/20 12:41 AM, Randy Dunlap wrote:
+> Drop the doubled words "the" and "of".
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: linux-can@vger.kernel.org
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.c | 91 +++++++++++++++----
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h | 16 ++++
- 2 files changed, 88 insertions(+), 19 deletions(-)
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-index c33eb1147055..e0f5a81d8620 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -370,48 +370,89 @@ int hinic_msg_to_mgmt(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 				MSG_NOT_RESP, timeout);
- }
- 
--/**
-- * mgmt_recv_msg_handler - handler for message from mgmt cpu
-- * @pf_to_mgmt: PF to MGMT channel
-- * @recv_msg: received message details
-- **/
--static void mgmt_recv_msg_handler(struct hinic_pf_to_mgmt *pf_to_mgmt,
--				  struct hinic_recv_msg *recv_msg)
-+static void recv_mgmt_msg_work_handler(struct work_struct *work)
- {
--	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	u8 *buf_out = recv_msg->buf_out;
-+	struct hinic_mgmt_msg_handle_work *mgmt_work =
-+		container_of(work, struct hinic_mgmt_msg_handle_work, work);
-+	struct hinic_pf_to_mgmt *pf_to_mgmt = mgmt_work->pf_to_mgmt;
-+	struct pci_dev *pdev = pf_to_mgmt->hwif->pdev;
-+	u8 *buf_out = pf_to_mgmt->mgmt_ack_buf;
- 	struct hinic_mgmt_cb *mgmt_cb;
- 	unsigned long cb_state;
- 	u16 out_size = 0;
- 
--	if (recv_msg->mod >= HINIC_MOD_MAX) {
-+	memset(buf_out, 0, MAX_PF_MGMT_BUF_SIZE);
-+
-+	if (mgmt_work->mod >= HINIC_MOD_MAX) {
- 		dev_err(&pdev->dev, "Unknown MGMT MSG module = %d\n",
--			recv_msg->mod);
-+			mgmt_work->mod);
-+		kfree(mgmt_work->msg);
-+		kfree(mgmt_work);
- 		return;
- 	}
- 
--	mgmt_cb = &pf_to_mgmt->mgmt_cb[recv_msg->mod];
-+	mgmt_cb = &pf_to_mgmt->mgmt_cb[mgmt_work->mod];
- 
- 	cb_state = cmpxchg(&mgmt_cb->state,
- 			   HINIC_MGMT_CB_ENABLED,
- 			   HINIC_MGMT_CB_ENABLED | HINIC_MGMT_CB_RUNNING);
- 
- 	if ((cb_state == HINIC_MGMT_CB_ENABLED) && (mgmt_cb->cb))
--		mgmt_cb->cb(mgmt_cb->handle, recv_msg->cmd,
--			    recv_msg->msg, recv_msg->msg_len,
-+		mgmt_cb->cb(mgmt_cb->handle, mgmt_work->cmd,
-+			    mgmt_work->msg, mgmt_work->msg_len,
- 			    buf_out, &out_size);
- 	else
- 		dev_err(&pdev->dev, "No MGMT msg handler, mod: %d, cmd: %d\n",
--			recv_msg->mod, recv_msg->cmd);
-+			mgmt_work->mod, mgmt_work->cmd);
- 
- 	mgmt_cb->state &= ~HINIC_MGMT_CB_RUNNING;
- 
--	if (!recv_msg->async_mgmt_to_pf)
-+	if (!mgmt_work->async_mgmt_to_pf)
- 		/* MGMT sent sync msg, send the response */
--		msg_to_mgmt_async(pf_to_mgmt, recv_msg->mod, recv_msg->cmd,
-+		msg_to_mgmt_async(pf_to_mgmt, mgmt_work->mod, mgmt_work->cmd,
- 				  buf_out, out_size, MGMT_RESP,
--				  recv_msg->msg_id);
-+				  mgmt_work->msg_id);
-+
-+	kfree(mgmt_work->msg);
-+	kfree(mgmt_work);
-+}
-+
-+/**
-+ * mgmt_recv_msg_handler - handler for message from mgmt cpu
-+ * @pf_to_mgmt: PF to MGMT channel
-+ * @recv_msg: received message details
-+ **/
-+static void mgmt_recv_msg_handler(struct hinic_pf_to_mgmt *pf_to_mgmt,
-+				  struct hinic_recv_msg *recv_msg)
-+{
-+	struct hinic_mgmt_msg_handle_work *mgmt_work = NULL;
-+	struct pci_dev *pdev = pf_to_mgmt->hwif->pdev;
-+
-+	mgmt_work = kzalloc(sizeof(*mgmt_work), GFP_KERNEL);
-+	if (!mgmt_work) {
-+		dev_err(&pdev->dev, "Allocate mgmt work memory failed\n");
-+		return;
-+	}
-+
-+	if (recv_msg->msg_len) {
-+		mgmt_work->msg = kzalloc(recv_msg->msg_len, GFP_KERNEL);
-+		if (!mgmt_work->msg) {
-+			dev_err(&pdev->dev, "Allocate mgmt msg memory failed\n");
-+			kfree(mgmt_work);
-+			return;
-+		}
-+	}
-+
-+	mgmt_work->pf_to_mgmt = pf_to_mgmt;
-+	mgmt_work->msg_len = recv_msg->msg_len;
-+	memcpy(mgmt_work->msg, recv_msg->msg, recv_msg->msg_len);
-+	mgmt_work->msg_id = recv_msg->msg_id;
-+	mgmt_work->mod = recv_msg->mod;
-+	mgmt_work->cmd = recv_msg->cmd;
-+	mgmt_work->async_mgmt_to_pf = recv_msg->async_mgmt_to_pf;
-+
-+	INIT_WORK(&mgmt_work->work, recv_mgmt_msg_work_handler);
-+	queue_work(pf_to_mgmt->workq, &mgmt_work->work);
- }
- 
- /**
-@@ -546,6 +587,12 @@ static int alloc_msg_buf(struct hinic_pf_to_mgmt *pf_to_mgmt)
- 	if (!pf_to_mgmt->sync_msg_buf)
- 		return -ENOMEM;
- 
-+	pf_to_mgmt->mgmt_ack_buf = devm_kzalloc(&pdev->dev,
-+						MAX_PF_MGMT_BUF_SIZE,
-+						GFP_KERNEL);
-+	if (!pf_to_mgmt->mgmt_ack_buf)
-+		return -ENOMEM;
-+
- 	return 0;
- }
- 
-@@ -571,6 +618,11 @@ int hinic_pf_to_mgmt_init(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 		return 0;
- 
- 	sema_init(&pf_to_mgmt->sync_msg_lock, 1);
-+	pf_to_mgmt->workq = create_singlethread_workqueue("hinic_mgmt");
-+	if (!pf_to_mgmt->workq) {
-+		dev_err(&pdev->dev, "Failed to initialize MGMT workqueue\n");
-+		return -ENOMEM;
-+	}
- 	pf_to_mgmt->sync_msg_id = 0;
- 
- 	err = alloc_msg_buf(pf_to_mgmt);
-@@ -605,4 +657,5 @@ void hinic_pf_to_mgmt_free(struct hinic_pf_to_mgmt *pf_to_mgmt)
- 
- 	hinic_aeq_unregister_hw_cb(&hwdev->aeqs, HINIC_MSG_FROM_MGMT_CPU);
- 	hinic_api_cmd_free(pf_to_mgmt->cmd_chain);
-+	destroy_workqueue(pf_to_mgmt->workq);
- }
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-index c2b142c08b0e..a824fbda59db 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-@@ -119,6 +119,7 @@ struct hinic_pf_to_mgmt {
- 	struct semaphore                sync_msg_lock;
- 	u16                             sync_msg_id;
- 	u8                              *sync_msg_buf;
-+	void				*mgmt_ack_buf;
- 
- 	struct hinic_recv_msg           recv_resp_msg_from_mgmt;
- 	struct hinic_recv_msg           recv_msg_from_mgmt;
-@@ -126,6 +127,21 @@ struct hinic_pf_to_mgmt {
- 	struct hinic_api_cmd_chain      *cmd_chain[HINIC_API_CMD_MAX];
- 
- 	struct hinic_mgmt_cb            mgmt_cb[HINIC_MOD_MAX];
-+
-+	struct workqueue_struct		*workq;
-+};
-+
-+struct hinic_mgmt_msg_handle_work {
-+	struct work_struct work;
-+	struct hinic_pf_to_mgmt *pf_to_mgmt;
-+
-+	void			*msg;
-+	u16			msg_len;
-+
-+	enum hinic_mod_type	mod;
-+	u8			cmd;
-+	u16			msg_id;
-+	int			async_mgmt_to_pf;
- };
- 
- void hinic_register_mgmt_msg_cb(struct hinic_pf_to_mgmt *pf_to_mgmt,
+regards,
+Marc
+
 -- 
-2.17.1
-
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
