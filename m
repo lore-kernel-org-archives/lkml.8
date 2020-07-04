@@ -2,117 +2,120 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A48C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A64F20870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593856142;
-	bh=Cu67IPYD8RGEy878FxUK/SlxsdI9o47oKHu0OuTWDJU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UatgjYXevP0syAl2+Ru3/iW++5XJHvUca1jEAFWQOacdEuV1PXOAqSNzaobqd+jPG
-	 x2SVlj2484iK09AS40o/NkF13D/z4LsqAS8tlECsthj17vxsEJXWilH0aQ9/r6fkxj
-	 Ly8v1ulfbIAdAJOAC7Sl8FJKOyVsolksoUgyNzC0=
+	by mail.kernel.org (Postfix) with ESMTP id 4BB6520826
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Dw2tzH9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgGDJs7 (ORCPT
+        id S1727051AbgGDJ4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 05:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgGDJs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 05:48:59 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D248C20870;
-        Sat,  4 Jul 2020 09:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593856139;
-        bh=Cu67IPYD8RGEy878FxUK/SlxsdI9o47oKHu0OuTWDJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NUSyLQj0oxeyBoZDZ5xlHGihuxvitaQoZltFvZPuadY+wBTWL1BLg6d7Fu1AGTUnk
-         e7GdxYUNAFBHSa0Pc0e0IQg/2HqEhIl8muhG8lyQRo9I/UQ5ugpiL/c7GQHQaMbEau
-         zE+AKSNGiUwBk7PP5RMRPhuJf6nOlhopUbhDCehI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jren3-008vYO-6m; Sat, 04 Jul 2020 10:48:57 +0100
+        Sat, 4 Jul 2020 05:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgGDJ4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 05:56:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF62BC08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 02:56:39 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d194so12792025pga.13
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
+        b=Dw2tzH9GMo3t6v2OWZ2FKYd50INhuVgAYZ1RNNDAkmfjXIxgihFgvl5W0/JEsbpCfM
+         2I2pMwGx+TgY4MyXNoIZABQt8fDBH3vKxvGq8E7jkjhrpx/HK1uPL3Pgv3uR/spZBERO
+         5ZNV4b2Rebq9XiKdCHHOP9a6crADnQ6DvGrqo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
+        b=QTNZnuXq4xohOVb4ujX9bXJcsZLUZZNmI43QzFItIhWzhm9nOQwH/04nzI6/QfEAcs
+         BR6KYKOBdEQai1QeckR3q1r45xZe8Ss8STub91Ekkst6iSvIV5dZsFrJHq+1HHixJj39
+         JI9S+QtFHytuXnKrukBQDtMUazigUuwXkAP8s3CIb+vZWt1WpJltPhWFbCAJN2No+tzT
+         5iXW7AEihVfCAvIuBKfa2iYBQw9DqB31TAgJWyhM3e6VTjLUpB/99WYN55p6yV8BhV+V
+         naNIdDgDysMq/veArT0Wg12S9OFP4RXXCAQ6Ccqd1jimtM+yxvcC8HK/lDGMocxVGucX
+         rI3Q==
+X-Gm-Message-State: AOAM5322nj8Ec59BJ+jBcLHjQsjx4OD1vF3gjSDEYzAWVVYtqkH/ItGI
+        J7QVhDazhrnKjB0W0l+WMuo4Fw==
+X-Google-Smtp-Source: ABdhPJx32emjYkDYX9utXROC3YKYNpVwdpnluoe5KD8t6o547/d5ZwrxwXPuuLtCp+COopbqa/lffQ==
+X-Received: by 2002:a62:5c02:: with SMTP id q2mr37304228pfb.232.1593856599134;
+        Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:bdf4:3289:4b66:dcc0])
+        by smtp.gmail.com with ESMTPSA id t184sm14302575pfd.49.2020.07.04.02.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 02:56:38 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        mylene.josserand@collabora.com, Robin Murphy <robin.murphy@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
+Date:   Sat,  4 Jul 2020 15:26:18 +0530
+Message-Id: <20200704095618.72371-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 04 Jul 2020 10:48:57 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/2] genirq: Kill preflow handlers
-In-Reply-To: <20200703155645.29703-1-valentin.schneider@arm.com>
-References: <20200703155645.29703-1-valentin.schneider@arm.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <6d902159f1819b6f3a0af5e982d11868@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, davem@davemloft.net, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+rk3288 and rk3288w have a usb host0 ohci controller.
 
-On 2020-07-03 16:56, Valentin Schneider wrote:
-> Hi,
-> 
-> while strolling around the different flow handlers, I tried to make 
-> sense of
-> what preflow_handler() was about. Turns out no one uses those anymore, 
-> but the
-> genirq support has remained in place.
+Although rk3288 ohci doesn't actually work on hardware, but
+rk3288w ohci can work well.
 
-If we needed to reintroduce some form of preflow handler, we'd try and
-do it using hierarchical irqchips, if at all possible.
+So add usb host0 ohci node in rk3288 dtsi and the quirk in
+ohci platform driver will disable ohci on rk3288.
 
-> 
-> Unless we can see another user of those in the near future, this seems 
-> like as
-> good a time as any for a little housecleaning.
-> 
-> - Patch 1 simply deselects the (unexploited) preflow Kconfig for 
-> sparc64
-> - Patch 2 is the actual cleanup
-> 
-> Cheers,
-> Valentin
-> 
-> Valentin Schneider (2):
->   sparc64: Deselect IRQ_PREFLOW_FASTEOI
->   genirq: Remove preflow handler support
-> 
->  arch/sparc/Kconfig         |  1 -
->  include/linux/irqdesc.h    | 15 ---------------
->  include/linux/irqhandler.h |  1 -
->  kernel/irq/Kconfig         |  4 ----
->  kernel/irq/chip.c          | 13 -------------
->  5 files changed, 34 deletions(-)
+Cc: William Wu <william.wu@rock-chips.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- Updated NOTE comments.
 
-For the whole series, and assuming that there is no regression
-(can't imagine any for unused code):
+ arch/arm/boot/dts/rk3288.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-
-Thanks,
-
-         M.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0cd88774db95..f0774d9afb67 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -614,7 +614,16 @@ usb_host0_ehci: usb@ff500000 {
+ 		status = "disabled";
+ 	};
+ 
+-	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
++	/* NOTE: doesn't work on RK3288, but fixed on RK3288W */
++	usb_host0_ohci: usb@ff520000 {
++		compatible = "generic-ohci";
++		reg = <0x0 0xff520000 0x0 0x100>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_USBHOST0>;
++		phys = <&usbphy1>;
++		phy-names = "usb";
++		status = "disabled";
++	};
+ 
+ 	usb_host1: usb@ff540000 {
+ 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
 -- 
-Jazz is not dead. It just smells funny...
+2.25.1
+
