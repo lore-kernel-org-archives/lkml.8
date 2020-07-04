@@ -2,125 +2,107 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C82BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E063B20885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 12:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312A02075D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 13:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593868130;
+	bh=98il11lSKYnc6reB2D5/q6+UpWByF7ffGS9nQPD/AAI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=o5Bm3CCEMNPa3tDtqHZ6JQp+SnuEjwyv1pI1hlgH7MyP6Zgnt0UCU81bG+qr88zwQ
+	 vfmrIhPuz1uLz3DbTuoM4Gz/fPiVLfoMFJkemCp0mTNa41KxiqRfDz3rc1ZtFkxz04
+	 Ml7j9CrtDaCG43uSX0Llnw+fYPqE2Zu0g1NUk6os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGDM7E (ORCPT
+        id S1727910AbgGDNFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 08:59:04 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48092 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgGDM7D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 08:59:03 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F22FD1C0BD2; Sat,  4 Jul 2020 14:59:00 +0200 (CEST)
-Date:   Sat, 4 Jul 2020 14:59:00 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Ondrej Jirman <megous@megous.com>, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200704125900.GA20503@amd>
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
+        Sat, 4 Jul 2020 09:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgGDNFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 09:05:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C5A320885;
+        Sat,  4 Jul 2020 13:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593867909;
+        bh=98il11lSKYnc6reB2D5/q6+UpWByF7ffGS9nQPD/AAI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=yEXrj49d55WiKuwOfEUjhtWJlMVeETbFL+soMenZH8vX/vOukEOMB8DEBjhtPpVwb
+         r87y033cK2/a2rkPbttUN+shwJajL8Tz/455J8J51eCYf8jOKGMjJagwWPb9VnF53a
+         Kes3CEOLdWG4t9rZ3uZWG3aaxYI6PUoYpIo6czQ4=
+Date:   Sat, 4 Jul 2020 14:05:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, kernel-team@android.com
+Subject: [GIT PULL] arm64 fixes for -rc4
+Message-ID: <20200704130505.GA21333@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull these arm64 fixes for -rc4. Nothing Earth-shattering, really;
+some CPU errata workarounds (one day they'll get it right, ha!) and a
+fix for a boot failure with very large kernel images where the alternative
+patching gets confused when patching relative branches using veneers.
 
-Hi!
+There are some vDSO and ptrace fixes floating about, but they need more
+review and testing if I'm going to send them for 5.8.
 
-> Some criticism to this approach to HW triggers:
-> - every hw trigger for each LED has to be registered via current trigger
->   API. This will grow code size and memory footprint once this API is
->   widely used
-> - one HW trigger can only master one LED device (via private_led
->   member). So if I have, for example an ethernet switch with 8 ports,
->   and each port has 2 LEDs, and each LED has 10 possible HW triggering
->   mechanisms, with your proposed API one would need to register 8*2*10
->   =3D 160 triggers
+Thanks,
 
-Well, code is simple, and so far I have seen 2 HW triggering
-mechanisms, not 10. Maybe we should have a function to regiter a hw
-trigger for a LED, so that internal implementation can be changed
-more easily.
+Will
 
-Ondrej: You already have code using this, right? Can we get an example?
+--->8
 
-> I too have been thinking about an API for HW LED triggers, and I
-> tinkered with it a little. Some time ago I sent some emails, with
-> subjects:
->   "RFC: LED hw triggering API"
->   "about my trigger-sources work"
+The following changes since commit 108447fd0d1a34b0929cd26dc637c917a734ebab:
 
-Perhaps it is time to send them one more time, so Ondrej can say if it
-works for him/looks okay for him?
+  arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist (2020-06-25 20:18:57 +0100)
 
-> My current thoughts about how HW LED triggers could work nicely is as
-> such:
->   - these members (maybe with different names) shall be added to struct
->     led_classdev:
->       available_hw_triggers()
->         - shall return a NULL terminated list of HW trigger names
->           available for this LED
->       set_hw_trigger()
->         - sets HW trigger for this LED. The LED triggering API shall
->           call this method after previous LED trigger is unset. If
->           called with NULL parameter, unsets HW trigger
->       current_hw_trigger
->         - name of the currently set HW LED trigger for this LED
->   - the driver registering the LED cdev informs abouth the LED being
->     capable of HW triggering - members available_hw_triggers and
->     set_hw_trigger must be set
->   - SW LED trigger and HW LED trigger are mutualy exclusive on one LED
->   - the trigger file in sysfs (/sys/class/leds/LED/trigger) shall first
->     list the available SW triggers, and then available hw triggers for
->     this LED, prefixed with "hw:"
->     When written, if the written trigger name starts with "hw:",
->     instead of setting SW trigger, a HW trigger is set via
->     set_hw_trigger() method
+are available in the Git repository at:
 
-This does not sound bad, either.
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+for you to fetch changes up to 9b23d95c539ebc5d6d6b5d6f20d2d7922384e76e:
 
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+  arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718 (2020-07-03 16:39:16 +0100)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+----------------------------------------------------------------
+arm64 fixes for -rc4
 
-iEYEARECAAYFAl8AfRQACgkQMOfwapXb+vIOgQCfU+rjWFzjMDjVUO2Au4O9+KFz
-J+IAoI1wY8zexgdpp1vEpFRsp/FcM/bI
-=mY9m
------END PGP SIGNATURE-----
+- Fix alternative patching for very large kernel images and modules
 
---fdj2RfSjLxBAspz7--
+- Hook up existing CPU errata workarounds for Qualcomm Kryo CPUs
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64/alternatives: use subsections for replacement sequences
+
+Sai Prakash Ranjan (3):
+      arm64: Add MIDR value for KRYO4XX gold CPU cores
+      arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040
+      arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718
+
+ Documentation/arm64/silicon-errata.rst |  8 ++++++++
+ arch/arm64/include/asm/alternative.h   | 16 ++++++++--------
+ arch/arm64/include/asm/cputype.h       |  2 ++
+ arch/arm64/kernel/cpu_errata.c         | 21 +++++++++++++++------
+ arch/arm64/kernel/cpufeature.c         |  2 ++
+ arch/arm64/kernel/vmlinux.lds.S        |  3 ---
+ 6 files changed, 35 insertions(+), 17 deletions(-)
