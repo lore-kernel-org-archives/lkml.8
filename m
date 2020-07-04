@@ -2,151 +2,154 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1E6208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8886207CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maMritpN"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lAPFUGo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgGDO0L (ORCPT
+        id S1726907AbgGDO1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDO0K (ORCPT
+        Sat, 4 Jul 2020 10:27:02 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:18069 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGDO1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:26:10 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB70C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:26:10 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t15so727452pjq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=sJThXt18vj76dxg1XcYlMwFo2sABsgrySSJXPsuoOYY=;
-        b=maMritpNagy30HECmq6aoOT2GspL3it8/9m5yAxAVDOG8QZocql/yeZ2/WNGd8lUVa
-         u+XXqRTIpdF1HoajLLLk1rm8R5FfBBKc3CEbM7KZVIlwXJeT2RshCn5nNRj+jZpc52vQ
-         Zt3FPqA7ZNPpXTXgVPyVgrBFG2YdMcAXW/i3XQlOWprHufsPXXk9WVCqBgxwYFiqfNhE
-         ro6chsTbVP1hAThtuXxCOLjGmt2KnV5NHsC1MGE9HWyTNrEH4ZJALLEtYlyL2ksrQyGV
-         UTvNpeOxkd0DZSsxohxpcbTuaW/PMuWiciJUl3QtiBRJUjOrEbQKJfiOuzG4a2pFCzhO
-         Ip4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=sJThXt18vj76dxg1XcYlMwFo2sABsgrySSJXPsuoOYY=;
-        b=ItZXbhnNpJ9nuXjXDXZmpIZJ2l6PGqoIi86aInmuipEGN1fPiQ67h2JZCqx8NV0+Ji
-         tmvj3nOpPsZPi6Dp6+IjVl40DHrnqAkFN9HOLEfWHCdj9Ra4swcXHtgWAhlBdJmtcZsD
-         TQm7jhdHrulX3ag7D0bQunsGCX4nztlb+7Szax2ESCjgxdWAgEUajpXsQEPM/BNXq+L6
-         rkabFPv40S/WTjWVacZ7ukKPDbnDKw5xq5En1YObsMsizxRvCMe8cXQTn8dDZu97PM7v
-         zfaNX8Hco9wQzXvEPZieQnxcs7QacMe5W3zdmRvoRW8DRA/Ia9+kv4jr5lSn0fh7iv2H
-         joxQ==
-X-Gm-Message-State: AOAM533yhufdIVOIru6oQSc79p71JMoNkAcIZYwQryjOncPrQ5SYs5OC
-        5Rbuwf5hcx65xuqJZXDc1Kw=
-X-Google-Smtp-Source: ABdhPJya3qQ8oSRMdsfXQr3Ni068EwPYVbgNPhChuYbXVTZaro9XU9XytC2v5Qb04uhykrPqdBvvJQ==
-X-Received: by 2002:a17:902:d896:: with SMTP id b22mr35085917plz.87.1593872770214;
-        Sat, 04 Jul 2020 07:26:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t1sm15022776pgq.66.2020.07.04.07.26.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jul 2020 07:26:09 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-Date:   Sat,  4 Jul 2020 07:26:07 -0700
-Message-Id: <20200704142607.171400-1-linux@roeck-us.net>
+        Sat, 4 Jul 2020 10:27:01 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200704142659epoutp013c5d81356dd2694b4ebbb7c7ab39fbae~ekuJ10wQH2393323933epoutp01U
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 14:26:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200704142659epoutp013c5d81356dd2694b4ebbb7c7ab39fbae~ekuJ10wQH2393323933epoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593872819;
+        bh=bo3BR9KaIVU8rO1xsrNx2+sOCrK1lLR9D1y1xtgsDvg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=lAPFUGo1LivKMQE0G54L72wbBJGjEDVCuaoDsILRQ9wekcAapfaya94VwNrCO0RxB
+         TsJBQ2twin0BKDq0qe2Aqv5wzVFU8XJgAJREFFdGbZsZjfmSL1VPGV7QmoCoVLHTY4
+         lEEmMWSiN/yy8je09Ag7Pb8+JtpHH+xxLivVh4qY=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200704142658epcas5p3b0bfcb0c53feb47775864122a626dca9~ekuJFeJIL1569915699epcas5p3R;
+        Sat,  4 Jul 2020 14:26:58 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        02.0F.09475.2B1900F5; Sat,  4 Jul 2020 23:26:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200704142658epcas5p254ae909fedb07dda58cece5d6d5252b4~ekuIk9OPS1952219522epcas5p21;
+        Sat,  4 Jul 2020 14:26:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200704142658epsmtrp1256cc5e5c9e3212ea45bd4d747d1f6f3~ekuIjZhbG2608426084epsmtrp1c;
+        Sat,  4 Jul 2020 14:26:58 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-c3-5f0091b26061
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CD.9C.08382.1B1900F5; Sat,  4 Jul 2020 23:26:57 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200704142656epsmtip1fba91bc0b977589a15ca47d9b2e9569b~ekuHGO34Y1778117781epsmtip1W;
+        Sat,  4 Jul 2020 14:26:56 +0000 (GMT)
+From:   Tamseel Shams <m.shams@samsung.com>
+To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH v3] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Date:   Sat,  4 Jul 2020 19:36:46 +0530
+Message-Id: <20200704140646.66528-1-m.shams@samsung.com>
 X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsWy7bCmlu6miQzxBgfXqlo8mLeNzaJ58Xo2
+        iykbPjBZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slvcbV3M7sDlsWlVJ5vH/rlr
+        2D02L6n36NuyitFj/ZarLB6fN8kFsEVx2aSk5mSWpRbp2yVwZdy80cBcMJe7YtGktSwNjPM4
+        uxg5OCQETCSW3QzsYuTkEBLYzShx+GBGFyMXkP2JUaLpzTpmCOcbo8Tfne/YQapAGua+mgeV
+        2Mso8eviU3YIp4VJ4t6dpSwgY9kENCWOn+cGaRARCJF4d3YLI0gNs8BJRom9mxtYQBLCAtES
+        rV3HWEHqWQRUJa5PSQMJ8wpYSNw+8oUZYpm8xOoNB8CWSQicY5eYvbyXDSLhIvH802OoImGJ
+        V8e3QF0nJfGyvw3KzpeYP28VVE2FxMoLb6Bse4kDV+aA3ckMdOf6XfogYWYBPone30+YIKHC
+        K9HRJgRRrSjxf3c/1ERxiXcrprBC2B4S/1vWs0JCLlai6/wupgmMMrMQhi5gZFzFKJlaUJyb
+        nlpsWmCcl1quV5yYW1yal66XnJ+7iRGcALS8dzA+evBB7xAjEwfjIUYJDmYlEd4E1X9xQrwp
+        iZVVqUX58UWlOanFhxilOViUxHmVfpyJExJITyxJzU5NLUgtgskycXBKNTBl+hTGyMt93c3k
+        /nKHTRNb6talolsjOXfM+hp64kziw76NTexFdSsePaq/vzU2005ENFCw5eDGmuPrvZ3U/xdf
+        sLDjk/Q/uiTgjlXV5PpzL2tqi+88SjlV8nDVD0m7yc2cpUlPDsY/fqJ1xLvOenKUi5Ov1KO3
+        jrZTf+f4BaZJTHUuWcbMXbTGJSKjKy3a+olhQ1+4/bl/FYsU7Xyzu/08+7VcK/j0+k8scPtS
+        Ja50qLHd7aV/YrjOw+rJOi8V/h60EM/vOVrgdqt3+6T87iyPO8fUZ+4/oLzpRKfe4YjWZeoB
+        DO+2iJz6snoXa4iLiNAjlyjzSw+3VBbzB4U6PHRtuiYmsGqX/o3l8ya+V2Ipzkg01GIuKk4E
+        AEVvJK5vAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprALMWRmVeSWpSXmKPExsWy7bCSnO7GiQzxBmc22lg8mLeNzaJ58Xo2
+        iykbPjBZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slvcbV3M7sDlsWlVJ5vH/rlr
+        2D02L6n36NuyitFj/ZarLB6fN8kFsEVx2aSk5mSWpRbp2yVwZdy80cBcMJe7YtGktSwNjPM4
+        uxg5OSQETCTmvprH3MXIxSEksJtR4u/9a2wQCXGJab/2M0LYwhIr/z1nhyhqYpI4N+8NUIKD
+        g01AU+L4eW4QU0QgQmLmxxqQEmaB84wSO4+vZgLpFRaIlDg/r5ENpIZFQFXi+pQ0kDCvgIXE
+        7SNfmCHGy0us3nCAeQIjzwJGhlWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMGBpqW5
+        g3H7qg96hxiZOBgPMUpwMCuJ8Cao/osT4k1JrKxKLcqPLyrNSS0+xCjNwaIkznujcGGckEB6
+        YklqdmpqQWoRTJaJg1Oqgemqjs/7Y+FuXaEfGtMWTtotXlwwk9N4/b2rv+YVP7uzJn9CeNm5
+        9MUxigJqBe/FpnGqOf1JfqgVu6PIbOXhc7k7Xs/p4qw5z7QsRupXL3OVA1fPRHXZKfUpp2ay
+        n52wd9Ff/doGllsiGnPeif2NqNpTfkWi4volncLLZQ+8bf2ibsdt+dR68+yKpxc6fgQ6bRSf
+        /2HH+qxDXxI3ZDxifVrVcvznc6t95UEi9x+svpHyYaHF+0Mp5z7dqryyUOf44TIt15tCv+oc
+        j+6Zd6GHoePRP42Lrye/ZUk6X/pdsVmKS40zQ9MweubaKLGiln1/ZQMcLT3FFWOZSposr3Hz
+        KHxW1tv1TW7X/9fKwh9azrUpsRRnJBpqMRcVJwIAq2UZGqMCAAA=
+X-CMS-MailID: 20200704142658epcas5p254ae909fedb07dda58cece5d6d5252b4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200704142658epcas5p254ae909fedb07dda58cece5d6d5252b4
+References: <CGME20200704142658epcas5p254ae909fedb07dda58cece5d6d5252b4@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EC reports a variety of error codes. Most of those, with the exception
-of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-error code gets lost. Convert all EC errors to Linux error codes to report
-a more meaningful error to the caller to aid debugging.
+In few older Samsung SoCs like s3c2410, s3c2412
+and s3c2440, UART IP is having 2 interrupt lines.
+However, in other SoCs like s3c6400, s5pv210,
+exynos5433, and exynos4210 UART is having only 1
+interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+call in the driver gives the following warning:
+"IRQ index 1 not found" on recent platforms.
 
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This patch re-factors the IRQ resources handling for
+each platform and hence fixing the above warnings seen
+on some platforms.
+
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
 ---
- drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+Removed the logic of irq_cnt and directly using
+s3c24xx_serial_has_interrupt_mask() to check for
+number of interrupt lines.
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 3e745e0fe092..10aa9e483d35 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
- }
- EXPORT_SYMBOL(cros_ec_cmd_xfer);
- 
-+static const int cros_ec_error_map[] = {
-+	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-+	[EC_RES_ERROR] = -EIO,
-+	[EC_RES_INVALID_PARAM] = -EINVAL,
-+	[EC_RES_ACCESS_DENIED] = -EACCES,
-+	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-+	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
-+	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-+	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-+	[EC_RES_UNAVAILABLE] = -ENODATA,
-+	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-+	[EC_RES_OVERFLOW] = -EOVERFLOW,
-+	[EC_RES_INVALID_HEADER] = -EBADR,
-+	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-+	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-+	[EC_RES_BUS_ERROR] = -EFAULT,
-+	[EC_RES_BUSY] = -EBUSY,
-+	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-+	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-+	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-+	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-+};
-+
- /**
-  * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
-  * @ec_dev: EC device.
-@@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-  *
-  * Return:
-  * >=0 - The number of bytes transferred
-- * -ENOTSUPP - Operation not supported
-- * -EPROTO - Protocol error
-+ * <0 - Linux error code
-  */
- int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 			    struct cros_ec_command *msg)
-@@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 	ret = cros_ec_cmd_xfer(ec_dev, msg);
- 	if (ret < 0) {
- 		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
--	} else if (msg->result == EC_RES_INVALID_VERSION) {
--		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
--			msg->result);
--		return -ENOTSUPP;
- 	} else if (msg->result != EC_RES_SUCCESS) {
--		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
--		return -EPROTO;
-+		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
-+			ret = cros_ec_error_map[msg->result];
+ drivers/tty/serial/samsung_tty.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 6ef614d8648c..8a955f3d8975 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -1908,10 +1908,13 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+ 	else {
+ 		port->irq = ret;
+ 		ourport->rx_irq = ret;
+-		ourport->tx_irq = ret + 1;
++		if (s3c24xx_serial_has_interrupt_mask(port))
++			ourport->tx_irq = ret;
 +		else
-+			ret = -EPROTO;
-+		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
++			ourport->tx_irq = ret + 1;
  	}
  
- 	return ret;
+-	ret = platform_get_irq(platdev, 1);
++	ret = platform_get_irq_optional(platdev, 1);
+ 	if (ret > 0)
+ 		ourport->tx_irq = ret;
+ 	/*
 -- 
 2.17.1
 
