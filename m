@@ -2,187 +2,154 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A312FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5673CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA73208D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315E520936
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 15:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0EBfx8P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSCGTrxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgGDPI2 (ORCPT
+        id S1726975AbgGDPL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 11:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44470 "EHLO
+        Sat, 4 Jul 2020 11:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgGDPI1 (ORCPT
+        with ESMTP id S1726501AbgGDPLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 11:08:27 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBE0C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 08:08:27 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d4so16376500pgk.4
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 08:08:27 -0700 (PDT)
+        Sat, 4 Jul 2020 11:11:25 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1D4C061794;
+        Sat,  4 Jul 2020 08:11:25 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id b25so4469804qto.2;
+        Sat, 04 Jul 2020 08:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1wb73vYv/CqphlWd96x1H+DWcYa52t0ykdauU1Ecrr0=;
-        b=W0EBfx8Pf5lO9/EW1AxErbvpgFNAoHuht9cBcRaFY75qO5qtPAmN3H24wz6X2l270h
-         1YIh96uz9fR1lmFiMcCkxMo3BPIZ7es01PnvfWIYxB3ekvoRuEFPA0ah4xvNwZB8i0ff
-         cVjMkJzY8mfpAkexCVMmQlYorYV7eshdyWdWANOvw658wjwe0wtlwOytbJY/zxJP8X6t
-         58m+l51fPEhxRaSnt5RQ+tojLHTnKE15XkJmKk0Q3DkRtdUs9i+U81OLLaPy8EfTlbff
-         6cmNcIZxaGhGEtpXck61oOv1ktqmgWuy1eGw70Zhp6YX1l2FIKcqta6dBtHvi3GIsjOr
-         cX3w==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OOkooQcgZT8G2WjNcK+Cq5ASRRPbRLgNwU0mUCZTWZI=;
+        b=SSCGTrxShtNJIdkHMwubUtEAPLob65gZ9Nz5GIsi4JTIzZCXrLS/99iaMWNLeILZZh
+         dUCTc3VZFmhBFFLd6jSGUcZoz4xga8nOBy81G/6qLO+eDQFVHxsn45Hc+A2nfJbxQLQ3
+         F/yWQeimUTBDQsKwVTH3jhKYtwL7xOf7lN40MjPuRNoNjMdHcoy12/g+hDD3lKHj4+yW
+         4w2ihNFDM1x8cwKAZcSDup2S5B+BdcBesMzzm3szOfZD3uGB51X/o6qFL+ZwB749hzBe
+         DWEjqvR/fDIzJeaw5zs0M8WY8K+4iXiLIzARk5Sn76TMP5jOkhrKt6AE/QYT8GXmRlM/
+         0w3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1wb73vYv/CqphlWd96x1H+DWcYa52t0ykdauU1Ecrr0=;
-        b=iAiW0lcUUGjXi7egZ28yVW12fljGraaMJQmGt3CZo3JO+lmMG1kvIY5nXRxYODaMFg
-         XCrafks/ralHCTxdITB1iVrV3rXHF6GAjlsdgPJ/gcN5I6KCrD3KMoYCwRldFk1g0nvq
-         gIClYogjdxy7RG3jJTN2voYdYC1WQeRN/gItJ8fO+H9SPA7u5qsMhdTqY8rMHzXP0UcZ
-         Ec/h+FIjpp6K9IXW5QM/HV5fvQP/CV81J7X76gME8+8p3TCFojFqQBA5NHm62EFHzJYb
-         Wj+KitvGFp4NwIKJRxE+Yv7XIRvvdikgN4p0aLj9mIFH5Ehk8Lt5JSKRxjtOZZYXgtGh
-         OWDQ==
-X-Gm-Message-State: AOAM530LkAQeXl9JBphBFS4w/86FbTRtcJ8+H3ScFMnfh21OKwMZ68U3
-        R2ID5phhNjbIgpKvbdE0kL7b
-X-Google-Smtp-Source: ABdhPJwZVxRXEJvGRJ15RlNDFVLXEgu6S6r9GrChiBuiSnATzIxb/C3p+JnlyHroyIF52wWoXRZo2w==
-X-Received: by 2002:a63:b74f:: with SMTP id w15mr34637057pgt.314.1593875306877;
-        Sat, 04 Jul 2020 08:08:26 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
-        by smtp.gmail.com with ESMTPSA id x7sm14946484pfq.197.2020.07.04.08.08.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jul 2020 08:08:26 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 20:38:19 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] bus: mhi: core: Use generic name field for an MHI
- device
-Message-ID: <20200704150819.GE3066@Mani-XPS-13-9360>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
- <1593448782-8385-6-git-send-email-bbhatt@codeaurora.org>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=OOkooQcgZT8G2WjNcK+Cq5ASRRPbRLgNwU0mUCZTWZI=;
+        b=DU1IyXEHq0szioK2dOKcmbWf9AF5ZtFC3bhzKAX86tsYbgYYV1t8/cHEwWR7k7bKM/
+         izEMEhIL8cz8ZtYJ587zrB60/4GP8381hCNeaH/5Z9/RicPH5yLCt4qhZGhHn/q+SAPQ
+         vviKlsF89ahLwPNfnsh87KItPl2ETyOHQhKZ/BF0h9Ephw+UwvTUcPQxV6+hrO7gNqg3
+         DgkDjqb0hhzsI04nhzdMN5NhhcY92aXkGhMT3Xe64pYUeOm+jhjKXqf2kk5OGyz00uxi
+         t7F+PT04KkAbZ5QOPl8KYuMLm13JXFDBYfST7s5YC0A3/0DB5/ufJPoRpJOW9EZmASNU
+         EPfg==
+X-Gm-Message-State: AOAM531DqdCNzkRkpwUCOaM5WVElITjacx9x7ADqNKgj6gh4bRdCQKjW
+        xaNoe20oHlDywdqQmuZGAqc=
+X-Google-Smtp-Source: ABdhPJyYWEY9xvrLxysif9VMRbbPNXdpPaaf7cVFq/ebirldMeLAaEYpHqI6t21b12ayi2VmWj4t2Q==
+X-Received: by 2002:aed:2492:: with SMTP id t18mr42182035qtc.353.1593875484322;
+        Sat, 04 Jul 2020 08:11:24 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z68sm13598056qke.113.2020.07.04.08.11.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 08:11:23 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 4 Jul 2020 11:11:21 -0400
+To:     "Andersen, John" <john.s.andersen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, mchehab+huawei@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        pawan.kumar.gupta@linux.intel.com, Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
+        vineela.tummalapalli@intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Geremy Condra <geremy.condra@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
+        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
+        makarandsonare@google.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 4/4] X86: Use KVM CR pin MSRs
+Message-ID: <20200704151121.GA1611291@rani.riverdale.lan>
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-5-john.s.andersen@intel.com>
+ <CALCETrXwzQDDd1rfBW+ptmijEjc2cMqfWGvJu-qqrqia5Ls=Uw@mail.gmail.com>
+ <20200623200334.GA23@6540770db1d7>
+ <20200703214814.GA25@0e1a9e0069b7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1593448782-8385-6-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200703214814.GA25@0e1a9e0069b7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:39:38AM -0700, Bhaumik Bhatt wrote:
-> An MHI device is not necessarily associated with only channels as we can
-> have one associated with the controller itself. Hence, the chan_name
-> field within the mhi_device structure should instead be replaced with a
-> generic name to accurately reflect any type of MHI device.
+On Fri, Jul 03, 2020 at 09:48:14PM +0000, Andersen, John wrote:
+> > > Is there a plan for fixing this for real?  I'm wondering if there is a
+> > > sane weakening of this feature that still allows things like kexec.
+> > > 
+> > 
+> > I'm pretty sure kexec can be fixed. I had it working at one point, I'm
+> > currently in the process of revalidating this. The issue was though that
+> > kexec only worked within the guest, not on the physical host, which I suspect
+> > is related to the need for supervisor pages to be mapped, which seems to be
+> > required before enabling SMAP (based on what I'd seen with the selftests and
+> > unittests). I was also just blindly turning on the bits without checking for
+> > support when I'd tried this, so that could have been the issue too.
+> > 
+> > I think most of the changes for just blindly enabling the bits were in
+> > relocate_kernel, secondary_startup_64, and startup_32.
+> > 
 > 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> ---
->  drivers/bus/mhi/core/init.c | 5 +++--
->  drivers/bus/mhi/core/main.c | 6 +++---
->  include/linux/mhi.h         | 8 ++++----
->  3 files changed, 10 insertions(+), 9 deletions(-)
+> So I have a naive fix for kexec which has only been tested to work under KVM.
+> When tested on a physical host, it did not boot when SMAP or UMIP were set.
+> Undoubtedly it's not the correct way to do this, as it skips CPU feature
+> identification, opting instead for blindly setting the bits. The physical host
+> I tested this on does not have UMIP so that's likely why it failed to boot when
+> UMIP gets set blindly. Within kvm-unit-tests, the test for SMAP maps memory as
+> supervisor pages before enabling SMAP. I suspect this is why setting SMAP
+> blindly causes the physical host not to boot.
 > 
-> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> index e43a190..e2011ec 100644
-> --- a/drivers/bus/mhi/core/init.c
-> +++ b/drivers/bus/mhi/core/init.c
-> @@ -904,6 +904,7 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->  	mhi_dev->dev_type = MHI_DEVICE_CONTROLLER;
->  	mhi_dev->mhi_cntrl = mhi_cntrl;
->  	dev_set_name(&mhi_dev->dev, "%s", dev_name(mhi_cntrl->cntrl_dev));
-> +	mhi_dev->name = dev_name(mhi_cntrl->cntrl_dev);
->  
->  	/* Init wakeup source */
->  	device_init_wakeup(&mhi_dev->dev, true);
-> @@ -1249,7 +1250,7 @@ static int mhi_uevent(struct device *dev, struct kobj_uevent_env *env)
->  	struct mhi_device *mhi_dev = to_mhi_device(dev);
->  
->  	return add_uevent_var(env, "MODALIAS=" MHI_DEVICE_MODALIAS_FMT,
-> -					mhi_dev->chan_name);
-> +					mhi_dev->name);
->  }
->  
->  static int mhi_match(struct device *dev, struct device_driver *drv)
-> @@ -1266,7 +1267,7 @@ static int mhi_match(struct device *dev, struct device_driver *drv)
->  		return 0;
->  
->  	for (id = mhi_drv->id_table; id->chan[0]; id++)
-> -		if (!strcmp(mhi_dev->chan_name, id->chan)) {
-> +		if (!strcmp(mhi_dev->name, id->chan)) {
->  			mhi_dev->id = id;
->  			return 1;
->  		}
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 8d6ec34..3af0ce6 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -249,7 +249,7 @@ int mhi_destroy_device(struct device *dev, void *data)
->  		put_device(&mhi_dev->dl_chan->mhi_dev->dev);
->  
->  	dev_dbg(&mhi_cntrl->mhi_dev->dev, "destroy device for chan:%s\n",
-> -		 mhi_dev->chan_name);
-> +		 mhi_dev->name);
->  
->  	/* Notify the client and remove the device from MHI bus */
->  	device_del(dev);
-> @@ -327,10 +327,10 @@ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
->  		}
->  
->  		/* Channel name is same for both UL and DL */
-> -		mhi_dev->chan_name = mhi_chan->name;
-> +		mhi_dev->name = mhi_chan->name;
->  		dev_set_name(&mhi_dev->dev, "%s_%s",
->  			     dev_name(mhi_cntrl->cntrl_dev),
-> -			     mhi_dev->chan_name);
-> +			     mhi_dev->name);
->  
->  		/* Init wakeup source if available */
->  		if (mhi_dev->dl_chan && mhi_dev->dl_chan->wake_capable)
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index b008914..7ed785e 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -436,10 +436,10 @@ struct mhi_controller {
->  };
->  
->  /**
-> - * struct mhi_device - Structure representing a MHI device which binds
-> - *                     to channels
-> + * struct mhi_device - Structure representing an MHI device which binds
-> + *                     to channels or is associated with controllers
->   * @id: Pointer to MHI device ID struct
-> - * @chan_name: Name of the channel to which the device binds
-> + * @name: Name of the associated MHI device
->   * @mhi_cntrl: Controller the device belongs to
->   * @ul_chan: UL channel for the device
->   * @dl_chan: DL channel for the device
-> @@ -451,7 +451,7 @@ struct mhi_controller {
->   */
->  struct mhi_device {
->  	const struct mhi_device_id *id;
-> -	const char *chan_name;
-> +	const char *name;
->  	struct mhi_controller *mhi_cntrl;
->  	struct mhi_chan *ul_chan;
->  	struct mhi_chan *dl_chan;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> Within trampoline_32bit_src() if I add more instructions I get an error
+> about "attempt to move .org backwards", which as I understand it means
+> there are only so many instructions allowed in each of those functions.
 > 
+> My suspicion is that someone with more knowledge of this area has a good
+> idea on how best to handle this. Feedback would be much appreciated.
+
+You can simply increase the value of TRAMPOLINE_32BIT_CODE_SIZE in
+pgtable.h, assuming you don't need a very large increase. There's one
+page available for code + stack at present.
