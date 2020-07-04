@@ -2,154 +2,105 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D389C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA18C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF86021927
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593874579;
-	bh=ojbgQmjPTV7D6kXqc4BTRRhR75bviWgGGtdXVdf+q9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GjphzYM5rZZxgiNeTR0L1tMfK4FmLCP/qc4ZKJoM4He6r5hIx4402cq6M8+cOXHc/
-	 JBQqQ95OEGqXZV9aOs/MJ2tAp+brRMng4Ie+kVSkfradNrmIaDsGW5I4TO8szglBq5
-	 P3w+wZ+J/qZDGbsIRSyH6mcWll7P90c+NNCsUTxw=
+	by mail.kernel.org (Postfix) with ESMTP id 2D8BA21883
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGDOzn (ORCPT
+        id S1727043AbgGDO4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgGDOzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:55:43 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 4 Jul 2020 10:56:36 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:55194 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgGDO4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 10:56:35 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 30C231D3582743;
+        Sat,  4 Jul 2020 14:56:33 +0000 (UTC)
+Received: from centaurus (unknown [37.189.45.160])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9260208FE;
-        Sat,  4 Jul 2020 14:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593874542;
-        bh=ojbgQmjPTV7D6kXqc4BTRRhR75bviWgGGtdXVdf+q9I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y3eSMm59oP8v1iEQ7GYqolbPktucp14jR0nXZszhUE2dTmzXPf35N2IOz91wo8Mcb
-         NnXjhBNvxqNPDHdG0mD6FLIiRVM4jtRN2rFAjqBvRz+w1k1J9cVer/BrWEzNCuYFGi
-         R2l9SCKG5o2CfKIQ0NcKo8VAYaUVPaMRsq/J44h0=
-Received: by mail-lj1-f173.google.com with SMTP id n23so40292530ljh.7;
-        Sat, 04 Jul 2020 07:55:41 -0700 (PDT)
-X-Gm-Message-State: AOAM531dss3lHWWAaDALyI1l9TEq9klAiV6Ljs43688svoa5H1mHNF+8
-        nwHG9UWMiUAZuCCAqn0XE2metTTwbJhZtt5rLXE=
-X-Google-Smtp-Source: ABdhPJzIk1tCgJjz4OUWhVlitpIkUcsZm9HDMIiZYK03ivVBzcTjfWnBMrpv0O6qL9pOvJGS1ty5yLoysAERVwX8Y94=
-X-Received: by 2002:a05:651c:2da:: with SMTP id f26mr21209299ljo.377.1593874540221;
- Sat, 04 Jul 2020 07:55:40 -0700 (PDT)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sat,  4 Jul 2020 14:56:32 +0000 (UTC)
+Message-ID: <72aa9cf8c9bc46548c29742f55be7d3b0c002971.camel@archlinux.org>
+Subject: Re: [PATCH v3] HID: logitech-hidpp: add support for Logitech G533
+ headset
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Kamil =?UTF-8?Q?Doma=C5=84ski?= <kamil@domanski.co>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Nestor Lopez Casado <nlopezcasad@logitech.com>
+In-Reply-To: <20200704004745.383271-1-kamil@domanski.co>
+References: <20200704004745.383271-1-kamil@domanski.co>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-GdT9r/VywNZa2Mspbe4R"
+Date:   Sat, 04 Jul 2020 16:01:43 +0100
 MIME-Version: 1.0
-References: <1593833659-26224-1-git-send-email-guoren@kernel.org> <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com>
-In-Reply-To: <CAOJsxLFF4o8AFWzPFJgwaeuA=Lb9VsjMXXfVmbhZBwLPcG=Asg@mail.gmail.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 4 Jul 2020 22:55:28 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
-Message-ID: <CAJF2gTSYyj5rTUJW-yDDrrV7T3hUssAhGc0gnCntcQpuixNJzw@mail.gmail.com>
-Subject: Re: [PATCH V1 0/5] riscv: Add k/uprobe supported
-To:     Pekka Enberg <penberg@gmail.com>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
-        bjorn.topel@gmail.com, Atish Patra <atish.patra@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.36.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pekka,
 
-On Sat, Jul 4, 2020 at 2:40 PM Pekka Enberg <penberg@gmail.com> wrote:
->
-> On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
-> > The patchset includes kprobe/uprobe support and some related fixups.
->
-> Nice!
->
-> On Sat, Jul 4, 2020 at 6:34 AM <guoren@kernel.org> wrote:
-> > There is no single step exception in riscv ISA, so utilize ebreak to
-> > simulate. Some pc related instructions couldn't be executed out of line
-> > and some system/fence instructions couldn't be a trace site at all.
-> > So we give out a reject list and simulate list in decode-insn.c.
->
-> Can you elaborate on what you mean by this? Why would you need a
-> single-step facility for kprobes? Is it for executing the instruction
-> that was replaced with a probe breakpoint?
+--=-GdT9r/VywNZa2Mspbe4R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's the single-step exception, not single-step facility!
+On Sat, 2020-07-04 at 02:47 +0200, Kamil Doma=C5=84ski wrote:
+> Changelog:
+>   v2:
+>   - changed charging status parsing to account for invalid states
+>   v3:
+>   - rebased against Linux v5.7
+>   - changed variable naming in hidpp20_adc_map_status_voltage
+>     to camel case
+>   - corrected comment styling in hidpp_battery_get_property
+>   - dropped usage of test_bit macro in hidpp20_adc_map_status_voltage
+>     to avoid using `long` type
+>   - added bit flag definitions in hidpp20_adc_map_status_voltage
+>=20
+> Signed-off-by: Kamil Doma=C5=84ski <kamil@domanski.co>
 
-Other arches use hardware single-step exception for k/uprobe,  eg:
- - powerpc: regs->msr |=3D MSR_SINGLESTEP
- - arm/arm64: PSTATE.D for enabling software step exceptions
- - s390: Set PER control regs, turns on single step for the given address
- - x86: regs->flags |=3D X86_EFLAGS_TF
- - csky: of course use hw single step :)
+Seems like my concerns were address and the patch looks correct.
 
-Yes, All the above arches use a hardware single-step exception
-mechanism to execute the instruction that was replaced with a probe
-breakpoint.
+Benjamin, Jiri, are there any implications to keep in mind of always
+polling the device every time we need to read the voltage? I don't
+expect anything major, I just thought there might something there I
+should keep in the back of my mind.=20
 
->
-> Also, the "Debug Specification" [1] specifies a single-step facility
-> for RISC-V -- why is that not useful for implementing kprobes?
->
-> 1. https://riscv.org/specifications/debug-specification/
-We need single-step exception not single-step by jtag, so above spec
-is not related to the patchset.
+Cheers,
+Filipe La=C3=ADns
 
-See riscv-Privileged spec:
+--=-GdT9r/VywNZa2Mspbe4R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Interrupt Exception Code-Description
-1 0 Reserved
-1 1 Supervisor software interrupt
-1 2=E2=80=934 Reserved
-1 5 Supervisor timer interrupt
-1 6=E2=80=938 Reserved
-1 9 Supervisor external interrupt
-1 10=E2=80=9315 Reserved
-1 =E2=89=A516 Available for platform use
-0 0 Instruction address misaligned
-0 1 Instruction access fault
-0 2 Illegal instruction
-0 3 Breakpoint
-0 4 Load address misaligned
-0 5 Load access fault
-0 6 Store/AMO address misaligned
-0 7 Store/AMO access fault
-0 8 Environment call from U-mode
-0 9 Environment call from S-mode
-0 10=E2=80=9311 Reserved
-0 12 Instruction page fault
-0 13 Load page fault
-0 14 Reserved
-0 15 Store/AMO page fault
-0 16=E2=80=9323 Reserved
-0 24=E2=80=9331 Available for custom use
-0 32=E2=80=9347 Reserved
-0 48=E2=80=9363 Available for custom use
-0 =E2=89=A564 Reserved
+-----BEGIN PGP SIGNATURE-----
 
-No single step!
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8Amc0ACgkQ+JPGdIFq
+qV2UYQ//RszgLx10wEQNOJcwL2CzwReRT3sHGA8Cjx26fCzqvgofQ7lLBgdrdsIM
+WgYzFiDY6Q9r9Q+P0ZrUlpvOQES2OnA/7kYY9ViydF+sy4fH8LIUciISzVTsvO7i
+YYGRgln5ufeZ3d6McoHvnfjezOYXstGPpcFdGGgCFqk1dmKZ85crDr2Ql9LrbAeB
+of8Lv8IzNwZG8J6q2hHmD5KZV4b/XASsWSyR7zKd17A3EPOfE0vC0IvSKWEveegM
+pnSau/uC9YvSKAZqCyK/WEmCu3L2GqI9GX0WxAzK5jpoxKfYLDk0l4VJfGPHJgyr
+ck1YLhDM8cvQKY/DVkbLrN9dQbcYFDZj6rfOOKxaw+028qrRCJ1I95mvG06wfa2B
+Vbf5gAyv1fe5mrZIGuXR2ksSdKFJpebIzwSNwTtbhr9xTkduA7ZyNH8ovJEvyjIo
+dl8b7LKuutOh/ssB6/zx7yWOWLxmHpBTGaBvJm0g96+cfufLD81Li6PKLbFTAEDc
+yIh9OElKD1JWLdYYucgiMHbplUDzVTBuyZZjs9yOwDZwrFZqqvuKUCrEdQCUS8+1
+m+LSDcr473w5i7vsgh4NEAZz8w/9tIfyxOyTaakBBdGJrpP5fBhI5conQWEHCYld
+kyYlH/iO5df/7tQWLJqifQE+Hns7WbESReFidcIZEF5ozll4AtI=
+=8KEs
+-----END PGP SIGNATURE-----
 
-So I insert a "ebreak" instruction behind the target single-step
-instruction to simulate the same mechanism.
-
---=20
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+--=-GdT9r/VywNZa2Mspbe4R--
