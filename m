@@ -2,130 +2,127 @@ Return-Path: <SRS0=f/ZA=AP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F16C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2985720885
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:35:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lWxatR3C"
+	by mail.kernel.org (Postfix) with ESMTP id 9E5D720885
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jul 2020 14:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgGDOfw (ORCPT
+        id S1726923AbgGDOnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGDOfv (ORCPT
+        Sat, 4 Jul 2020 10:43:24 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:54230 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGDOnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 10:35:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67674C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 07:35:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc15so5457162pjb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 07:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ldDzD6j1Ghnm14TJPHt+NFHPYq/kJXWHkRtC3KR9Jqo=;
-        b=lWxatR3CydK82tXUBLsIuuBMcL/c3ZNFYVQEczjmDaezp/1m6I/njfL94zsnxIkYiJ
-         WwLVgCeRj9qBIgKVAgMJC6TZzNg7eQeG7AMhJSENg992QjpdrXSAB5b0u0Bw/NGryice
-         QLSuEiQbbsv6iV3HSAJNAs8Nsr1NhaWvA0pSfjBqjOYENyg9oUnGRrT9jR7JkuMpy/V5
-         A9njRJa4IyJ9TV+RcrIURMDfLMC99ZvX1XzxwUPP9oHlmIKR/oZL0zxqeDLrgSbf/0wO
-         Gy4SMYWSMNGX55lKdJwvKwFeTA4r8I360YUOXLIWvMJy2E5sPBno3oDNhCysWWcLNqQz
-         GzCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ldDzD6j1Ghnm14TJPHt+NFHPYq/kJXWHkRtC3KR9Jqo=;
-        b=pJW5mjwz/PSQFNAXIqQOsUSjwKT8I1NDeud9XLQp8iLhcK/Srgfv1yZRqBqsX2MaBg
-         0lmalrf4jFkumnj5hM9of79i5EKDDru3CE/CvUyX7dukHP+Jj49WeJqn2lfZA3WnRFIC
-         uaX5WV0DErAqupUwYCD7reSnb+CF0i1mlkpjGGBxcby3XAFP02E/jyuPQC6PcagSv0kr
-         G1sEtRXr2rKoHoCuS3d0quj9ly7a5v5UliyNhFWsd1klXt9aaQPLW0r2klOfSaEo6qba
-         PmwKmAIW1kuX0xOzJaWMMJpTnrAXGnQ00iBNYTQzsK5EMb+lbkRAUiJsZgcmSwQ3DXLG
-         Q4wg==
-X-Gm-Message-State: AOAM533RC+bYQZfbb5lOWOPZ6XlCzY+JsFXq40YQdXkDyoDlvN7fZEyo
-        vUYFgaXq99SOR/zidj1ndS+D
-X-Google-Smtp-Source: ABdhPJysN8fh7LoTfPGTTiQj5wIK/aKwxWQ7RwVppIPe90kMuwiMighz1Ms86yre6kmUCvW+mtRF3Q==
-X-Received: by 2002:a17:90b:1b06:: with SMTP id nu6mr42982907pjb.106.1593873350593;
-        Sat, 04 Jul 2020 07:35:50 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:680:29c6:d74:dc5c:e13f:c458])
-        by smtp.gmail.com with ESMTPSA id s22sm14371481pgv.43.2020.07.04.07.35.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jul 2020 07:35:49 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 20:05:44 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/9] bus: mhi: core: Abort suspends due to outgoing
- pending packets
-Message-ID: <20200704143544.GB3066@Mani-XPS-13-9360>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
- <1593448782-8385-3-git-send-email-bbhatt@codeaurora.org>
+        Sat, 4 Jul 2020 10:43:24 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 860851D3582663;
+        Sat,  4 Jul 2020 14:43:21 +0000 (UTC)
+Received: from centaurus (unknown [37.189.45.160])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sat,  4 Jul 2020 14:43:20 +0000 (UTC)
+Message-ID: <908bf287f370a947e60bc7817b395c91c5be63d9.camel@archlinux.org>
+Subject: Re: [PATCH v2] HID: logitech-hidpp: add support for Logitech G533
+ headset
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Kamil =?UTF-8?Q?Doma=C5=84ski?= <kamil@domanski.co>,
+        linux-kernel@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nestor Lopez Casado <nlopezcasad@logitech.com>
+In-Reply-To: <52609283-6d37-9e0e-be24-7df378e4fead@domanski.co>
+References: <023148f582cc20bef7079508ce417c8ebeb0febb.camel@domanski.co>
+         <137acb00c6ec098d7506901df05067e8d7207aa9.camel@archlinux.org>
+         <52609283-6d37-9e0e-be24-7df378e4fead@domanski.co>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pGP/VXSr2cqvTSWNfpQw"
+Date:   Sat, 04 Jul 2020 15:48:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593448782-8385-3-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Evolution 3.36.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:39:35AM -0700, Bhaumik Bhatt wrote:
-> Add the missing check to abort suspends if a client has pending outgoing
-> packets to send to the device. This allows better utilization of the MHI
-> bus wherein clients on the host are not left waiting for longer suspend
-> or resume cycles to finish for data transfers.
-> 
 
-Just one nitpick: Please always use the terms 'client drivers' referring to the
-MHI client drivers in the kernel and 'client devices' referring to the physical
-MHI client devices. The term 'client' creates ambiguity.
+--=-pGP/VXSr2cqvTSWNfpQw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+On Sat, 2020-07-04 at 02:37 +0200, Kamil Doma=C5=84ski wrote:
+> Hi Filipe,
+>=20
+> > My main point here is that long means different things in different
+> > architectures, and we only want one byte so I would go for u8.
+>=20
+> I used long, because the test_bit macro accepts long and the similar
+> function for voltage reading already used long too.
+> That will be changed in v3 - see next paragraph.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The compiler can handle these conversions. Explicit is generally better
+than implicit, and in cases where the implicit assumptions might break,
+explicit is definitely better. We know the data size, so let's use it
+:D
 
-Thanks,
-Mani
+> > > +
+> > > +	*voltage =3D get_unaligned_be16(data);
+> > > +	isConnected =3D test_bit(0, &flags);
+> > > +	isCharging =3D test_bit(1, &flags);
+> > > +	chargingComplete =3D test_bit(2, &flags);
+> > > +	chargingFault =3D test_bit(3, &flags);
+> > > I don't think this is needed, just do it in the ifs directly.
+> > >=20
+> > > Here I would add a #define for each bit:
+> > >=20
+> > > #define FLAG_ADC_MAP_STATUS_CONNECTED 0
+> > > ...
+> > > if (data[2] & FLAG_ADC_MAP_STATUS_CONNECTED)
+>=20
+> Yeah, I it will do exactly that for v3, which allows to drop the flag
+> variables and avoid using a long.
+>=20
+> =20
+> > Same thing here. We should see if the device supports the DJ protocol
+> > and add it in hid-logitech-dj instead.
+>=20
+> It doesn't seem to be a DJ device. The DJ driver just detects the extra i=
+nterfaces
+> and skips directly to hid_hw_start.
 
-> ---
->  drivers/bus/mhi/core/pm.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> index 7960980..661d704 100644
-> --- a/drivers/bus/mhi/core/pm.c
-> +++ b/drivers/bus/mhi/core/pm.c
-> @@ -686,7 +686,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
->  		return -EIO;
->  
->  	/* Return busy if there are any pending resources */
-> -	if (atomic_read(&mhi_cntrl->dev_wake))
-> +	if (atomic_read(&mhi_cntrl->dev_wake) ||
-> +	    atomic_read(&mhi_cntrl->pending_pkts))
->  		return -EBUSY;
->  
->  	/* Take MHI out of M2 state */
-> @@ -712,7 +713,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
->  
->  	write_lock_irq(&mhi_cntrl->pm_lock);
->  
-> -	if (atomic_read(&mhi_cntrl->dev_wake)) {
-> +	if (atomic_read(&mhi_cntrl->dev_wake) ||
-> +	    atomic_read(&mhi_cntrl->pending_pkts)) {
->  		write_unlock_irq(&mhi_cntrl->pm_lock);
->  		return -EBUSY;
->  	}
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Thanks for looking into this!
+
+Cheers,
+Filipe La=C3=ADns
+
+--=-pGP/VXSr2cqvTSWNfpQw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8AlrcACgkQ+JPGdIFq
+qV0C7g//ak1uA7fSG2ruS8LAvg6Fgy1qtvBPvL54Vs9qFZL+pgilwBidZawahYVs
+48MoS+U2nLLCyjWRtceEFJNDOa0if2aW1V+M1SRHKdf6XhVZ2xHDKxYUk7GAu7Vp
+J0Y9kObMSXNdd4EgUT/n+Dta+9W90UsITIBKpkPQmk0lMGlQI0eONT8oqGqDtSZv
+RJV6GwNjX8fIhTiHhLgl4UeN5boLumFNpM13RGO2+wpvDLUTvaIZRXYcRjPgm/yr
+lb+iqVfKLH50BV5G3yKkEyG8wythxq9+a1FWEBCKHYmalPQX3ZXFGnW17GOozTYj
+OJjWJk3s1esBdK6B30h/lGX+n9ItaxcBz0k4SenepLTPdffZaItRrkbqCBbkjX5l
+91yzwi8FwtVVYdRBPUuNMtMNvqflMg+lsNyfP2iWzxGHl7FQcyaTmR7J/BKYXu+7
+LpaA7o3Qv6LY7s7prle73EvoyXGS6GW17O1HxWm1k0cX+UD4w6TPnA0ljbdA9roe
+EaIG0SPr53yS+pyzNGKl3Sf96WZZVcrgtB+sPo5o7hi+y+T53KgQLWvQBLAT7cF4
+rh3+pC6tmWAaPurdq5lABbdGkAlyGloyUMB3mLDj6p2wJvUUcMJpwvURqtsXKRn3
+GkTA5yaLZcvwpfmMEYuZrcMvYhvmlzV4GlmeX+fRqpS7Pmjj50g=
+=1+tX
+-----END PGP SIGNATURE-----
+
+--=-pGP/VXSr2cqvTSWNfpQw--
