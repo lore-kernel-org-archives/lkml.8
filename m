@@ -2,69 +2,83 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BC2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25A52074F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593972011;
-	bh=+f2ClKeAxNLL30fnpJlYH1C7gmp4MaqQYvMKQCk+eIM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IWkCGonY3IV6Yh1X43oqvfpRqFt6ynvsVynxrNpIXojcWjw3vnmkA/2F5V2z30hyu
-	 kZI4mVY9nFw9h2lRGjy4EKxNQLZHhRSnQxCXDONn5RdcbxncJY3deU/E9ALq2hnZVi
-	 z86lt2hgVism6JXwpPE1dbNjzDi6tbpjinaY6m20=
+	by mail.kernel.org (Postfix) with ESMTP id 70D4320708
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:00:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wowana.me header.i=@wowana.me header.b="Ye8SGNdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGESAH (ORCPT
+        id S1727942AbgGESAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbgGESAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:00:06 -0400
-Subject: Re: [GIT PULL] io_uring fix for 5.8-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593972005;
-        bh=+f2ClKeAxNLL30fnpJlYH1C7gmp4MaqQYvMKQCk+eIM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bH9sxW8/IqXlVVH3ko0DfwRD/MZJxny//rQz51cq5B5KjHg82LywG3vXPwiyQkFTf
-         E477MQPD6nxkRL2qvLLWyEe3G///Y1Ofcglz1GuRFqYQWN8ZIiCFkfiWbD99sHIt87
-         LRrKNWCxYouMnIbqItJfLWfAfOJORbF+eVD84jDY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <39012c6d-b53c-703f-218d-9d8fddd9871f@kernel.dk>
-References: <39012c6d-b53c-703f-218d-9d8fddd9871f@kernel.dk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <39012c6d-b53c-703f-218d-9d8fddd9871f@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/io_uring-5.8-2020-07-05
-X-PR-Tracked-Commit-Id: b7db41c9e03b5189bc94993bd50e4506ac9e34c1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9fbe565cb78d10ca2619ee23eac27262cff45629
-Message-Id: <159397200568.8921.461305026355393362.pr-tracker-bot@kernel.org>
-Date:   Sun, 05 Jul 2020 18:00:05 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Sun, 5 Jul 2020 14:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgGESAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 14:00:10 -0400
+X-Greylist: delayed 564 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 05 Jul 2020 11:00:09 PDT
+Received: from mx1.volatile.bz (mx1.volatile.bz [IPv6:2001:67c:2db8:301:138:0:101:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F2AC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 11:00:09 -0700 (PDT)
+Received: from mahin.wowana.me (unknown [IPv6:2001:67c:2db8:301:1845::2])
+        by mx1.volatile.bz (Postfix) with ESMTPSA id B94DF4E7;
+        Sun,  5 Jul 2020 17:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wowana.me; s=default;
+        t=1593971441; bh=bSmlbJyHSCXLfi+Y6gH6+D6+oj2SR366tyTPTaadWy4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=Ye8SGNdcjLPDZsaSQcm65BclPp1Q4z1zdGR4HRjwcDJ+MQFHZDa53Jilbamfb8Wtw
+         3XZunKgbB2GzDEcOsoWWXDz8y0DJMXU4SjyVGvluekEX0eVVauHG8NHqTaomq6Zq5R
+         AC2DvGzMSPl42Sd9FAp9uRtjySWuCXzNShDb5TKY=
+Date:   Sun, 5 Jul 2020 17:50:31 +0000
+From:   opal hart <opal@wowana.me>
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
+ Inclusive Terminology
+Message-ID: <20200705175031.4d7fa711@mahin.wowana.me>
+In-Reply-To: <CAPM=9tyjdzU-O2nAWFngGSE=aSfUsaRer9x3bk8hpyhCOX0Bew@mail.gmail.com>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <1593897917.7058.11.camel@HansenPartnership.com>
+        <CAPM=9tyjdzU-O2nAWFngGSE=aSfUsaRer9x3bk8hpyhCOX0Bew@mail.gmail.com>
+Organization: Volatile
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Face: &TPnio^VF7_~k^se;yA:fep*U;:Kzv1Q3'cYEY/#q"NyebT}po2wD}dNr}JF,f?%"Dh}(dq1C(0[dS`.(SJ2CDil=W'B9>O7p^P-+|v6Tj}|EJg8.&>YXtniHyR:=nf1,HE(NWu#C.GW
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 5 Jul 2020 07:05:49 -0600:
+On Sun, 5 Jul 2020 09:39:29 +1000
+Dave Airlie <airlied@gmail.com> wrote:
 
-> git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-05
+> I don't totally agree on that, because like the CoC discussion, people
+> need concrete examples. People need reasons, saying simply "be
+> inclusive" doesn't work.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9fbe565cb78d10ca2619ee23eac27262cff45629
+Which people? because so far the only people I've seen take these
+terminologies out of computing context, are those who are only voicing
+their "concern" out of bad faith, as well as those who fall for the
+concern-trolling bait. The meta-discussion serves to stir up noise and
+waste time that's better spent on other things.
 
-Thank you!
+History pains, sure, but I believe it serves no justice to erase every
+trace of bad things that happened in history. That includes use of
+words tangentially related to such events.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+wowaname <https://wowana.me/pgp.xht>
