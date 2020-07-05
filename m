@@ -2,81 +2,94 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DDDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97475C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFB920739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779212075D
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593949751;
-	bh=iCu9UAIJm6TBbuLUaXFLsgTtuafoH/z57UaD3/vrcmY=;
+	s=default; t=1593949822;
+	bh=6H4BG9XUn4FArWwJ1aHdJuAbaZICFxfaIIk6oHWyqSc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tjBSGyRTxdDp4rqEwM/qYq3MJEl/uyinK82mBHY5s5WazdObd46WG7cd/rjDr6nx/
-	 2nicXCa43qUOU6P6lopb7CjKM3dPylZd5GyQ4tgvmxidyJXwRSe/YlBWvdkAZDkiPe
-	 xn4yZPa/mYQI8YvH05C6fxD2Ip6+HrWZ0J00EQng=
+	b=n1rjBhmFVQw1aVHd8ySBzRRxpU0n9KgMm16adSuEpqy8oyuZ3KC6D0cOXIvlrR6YM
+	 sV0akq+4jZT1a8c24PT+5akz0NLPfkhBfYFKDydpWzZrErNPiFbgYUKj5qp79MCmQT
+	 BVgeyZCYHdhsIVWFNgz5b8zs3Z24ZiRfzIVwGWdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgGELtK (ORCPT
+        id S1726948AbgGELuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 07:50:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:49:09 -0400
-Received: from kernel.org (unknown [87.71.40.38])
+        id S1726454AbgGELuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:50:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 497B320723;
-        Sun,  5 Jul 2020 11:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD4A2073E;
+        Sun,  5 Jul 2020 11:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593949749;
-        bh=iCu9UAIJm6TBbuLUaXFLsgTtuafoH/z57UaD3/vrcmY=;
+        s=default; t=1593949819;
+        bh=6H4BG9XUn4FArWwJ1aHdJuAbaZICFxfaIIk6oHWyqSc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U+v1y5YWBABT090Sgp2aqWkr4NhIbv68eNFeO9gutQvgQJ6PrLKshxXBtsfN55hug
-         c4dXoiwlIMX3IV6hfV7+NgUH+JI2IYrXC7wbjUBmVSWyOZgFflvLDpFE0WIn5tIvye
-         l6xWPmZPh7PjDW4iRicXXEPTF18ef06Cy8S9D3ow=
-Date:   Sun, 5 Jul 2020 14:49:01 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Linas Vepstas <linasvepstas@gmail.com>
-Subject: Re: [PATCH 0/4] Documentation: PCI: eliminate doubled words
-Message-ID: <20200705114901.GG2999148@kernel.org>
-References: <20200703212156.30453-1-rdunlap@infradead.org>
+        b=qEndCB28R0sfFMfC1Jsnwtvx3NntdXF6wKOBm9AoAbFI0D0SuHggK8qbd54n7Oklq
+         CpGgbmTxLKfcc1gltZEeyNAmEIxnhGySwZaUq9W3RfDH5g33e/hzIcUhlyNssJh3aO
+         4qvNF3EXSBP/nhQO5JVioPo23rX4w9mFMFkqsvlA=
+Date:   Sun, 5 Jul 2020 13:50:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-man@vger.kernel.org, mtk.manpages@gmail.com,
+        shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705115021.GA1227929@kroah.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703212156.30453-1-rdunlap@infradead.org>
+In-Reply-To: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:21:52PM -0700, Randy Dunlap wrote:
-> Fix doubled (duplicated) words in Documentation/PCI/.
+On Sun, Jul 05, 2020 at 04:06:22AM +0200, Jan Ziak wrote:
+> Hello
 > 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: Linas Vepstas <linasvepstas@gmail.com>
+> At first, I thought that the proposed system call is capable of
+> reading *multiple* small files using a single system call - which
+> would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> operations per second) - but that isn't the case and the proposed
+> system call can read just a single file.
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+If you want to do this for multple files, use io_ring, that's what it
+was designed for.  I think Jens was going to be adding support for the
+open/read/close pattern to it as well, after some other more pressing
+features/fixes were finished.
 
->  Documentation/PCI/endpoint/pci-endpoint-cfs.rst |    2 +-
->  Documentation/PCI/endpoint/pci-endpoint.rst     |    2 +-
->  Documentation/PCI/pci-error-recovery.rst        |    2 +-
->  Documentation/PCI/pci.rst                       |    2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+> Without the ability to read multiple small files using a single system
+> call, it is impossible to increase IOPS (unless an application is
+> using multiple reader threads or somehow instructs the kernel to
+> prefetch multiple files into memory).
 
--- 
-Sincerely yours,
-Mike.
+There's not much (but it is mesurable) need to prefetch virtual files
+into memory first, which is primarily what this syscall is for (procfs,
+sysfs, securityfs, etc.)  If you are dealing with real-disks, then yes,
+the overhead of the syscall might be in the noise compared to the i/o
+path of the data.
+
+> While you are at it, why not also add a readfiles system call to read
+> multiple, presumably small, files? The initial unoptimized
+> implementation of readfiles syscall can simply call readfile
+> sequentially.
+
+Again, that's what io_uring is for.
+
+thanks,
+
+greg k-h
