@@ -2,149 +2,230 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2126EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1FEF20739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593981940;
-	bh=PzWD9Q9qreaWguzKmtjZ782UP/42e9+9BUsUmRGeEjw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iHjsdV2u21bKBoPtG4vGflJPgfmpUthkt68/6+bsT1fDIJVZ/elc4HBaS1xgmuP5z
-	 inrJdaucQvswBnaGXjZ2B84X6OA/NEF6m2M4qay//8NaK45IyexySBL6pSAmiFjGLY
-	 VP1NUL3b9FKVHgQrvYxHx6vjOeF5VFmZxXIINUIs=
+	by mail.kernel.org (Postfix) with ESMTP id EC00E2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgGEUpj (ORCPT
+        id S1728348AbgGEUsn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgGEUpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:45:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85012068F;
-        Sun,  5 Jul 2020 20:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593981938;
-        bh=PzWD9Q9qreaWguzKmtjZ782UP/42e9+9BUsUmRGeEjw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wiVQ9fZXiEvK6iYxV3uu+0ZPPkTnV1ZHaQrQLHuSeweFITpQJFM/C3jpPqsviLrUv
-         NpvGv268nwsmfPFOREOzuVh1XoHSDSPJyyHXH5Z41YznUTDuVSghg9v9zfPrGQVppW
-         ovq36YQgJcNzfurQ3iqsL3VMyL80SUEsAFKuqxq4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jsBW4-009Fhz-Ge; Sun, 05 Jul 2020 21:45:36 +0100
+        Sun, 5 Jul 2020 16:48:43 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48737 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728158AbgGEUsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:48:43 -0400
+Received: from sogo3.sd4.0x35.net (sogo3.sd4.0x35.net [10.200.201.53])
+        (Authenticated sender: kerneldev@karsmulder.nl)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPA id 057661BF207;
+        Sun,  5 Jul 2020 20:48:38 +0000 (UTC)
+From:   "Kars Mulder" <kerneldev@karsmulder.nl>
+In-Reply-To: <CAHp75Ve3m=UK9r2o8bDotQWQBLz-fV8CO_VcTmWjdLW1p5wE-w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+Date:   Sun, 05 Jul 2020 22:48:38 +0200
+Cc:     "David Laight" <David.Laight@aculab.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Pavel Machek" <pavel@ucw.cz>,
+        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
+        <linux-kernel@vger.kernel.org>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 05 Jul 2020 21:45:36 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-In-Reply-To: <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
- <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org>
- <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, afd@ti.com, rogerq@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Message-ID: <6e16-5f023c80-2df-35a18880@71958197>
+Subject: =?utf-8?q?Re=3A?= Writing to a const =?utf-8?q?pointer=3A?= is this 
+ supposed to =?utf-8?q?happen=3F?=
+User-Agent: SOGoMail 4.3.2
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
-> On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
-
-[...]
-
->> It still begs the question: if the HW can support both edge and level
->> triggered interrupts, why isn't the driver supporting this diversity?
->> I appreciate that your HW may only have level interrupts so far, but
->> what guarantees that this will forever be true? It would imply a 
->> change
->> in the DT binding, which isn't desirable.
+On Sunday, July 05, 2020 21:11 CEST, Andy Shevchenko <andy.shevchenko@gmail.com> wrote: 
+> On Sunday, July 5, 2020, Kars Mulder <kerneldev@karsmulder.nl> wrote:
+> > On Saturday, July 04, 2020 22:54 CEST, Andy Shevchenko wrote:
+> > > This and similar are not correct. 1/ They are not replacement per se
+> > > (because of different behaviour). 2/ They simple_strto*() are not
+> > > obsoleted.
+> > >
+> > > Can you correct all places you found and make it consistent?
+> >
+> > Something like the following patch? It changes all occurrences of
+> > "replacement" or "obsolete" (that I'm aware of) with "preferred over".
 > 
-> Ok, I've got your point. I will try to come up with something later
-> on. Probably extending interrupt-cells by one and passing interrupt
-> type will be enough for now. Extending this driver to actually support
-> it can be handled later if needed. Hope it works for you.
+> While at it, makes sense to refer to the functions like func() as per
+> kernel doc format.
 
-Writing a set_type callback to deal with this should be pretty easy.
-Don't delay doing the right thing.
+So I'm working on two patches with tentative names:
 
-[...]
+[PATCH 1/2] kstrto*: Fix references to simple_strto* analogues in comments
+[PATCH 2/2] kstrto*: Do not describe simple_strto* as obsolete/replaced
 
->> >> > +             hwirq = hipir & GENMASK(9, 0);
->> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
->> >>
->> >> And this is where I worry. You seems to have a single irqdomain
->> >> for all the muxes. Are you guaranteed that you will have no
->> >> overlap between muxes? And please use irq_find_mapping(), as
->> >> I have top-secret plans to kill irq_linear_revmap().
->> >
->> > Regarding irq_find_mapping - sure.
->> >
->> > Regarding irqdomains:
->> > It is a single irqdomain since the hwirq (system event) can be mapped
->> > to different irq_host (muxes). Patch #6
->> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
->> > events can be mapped to some output host interrupts through 2 levels
->> > of many-to-one mapping i.e. events to channel mapping and channels to
->> > host interrupts. Mentioned implementation ensures that specific system
->> > event (hwirq) can be mapped through PRUSS specific channel into a
->> > single host interrupt.
->> 
->> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
->> Also, this driver seems to totally ignore the 2-level routing. Where
->> is it set up? map/unmap in this driver do exactly *nothing*, so
->> something somewhere must set it up.
-> 
-> The map/unmap is updated in patch #6 and it deals with those 2-level
-> routing setup. Map is responsible for programming the Channel Map
-> Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
-> provided configuration from the one parsed in the xlate function.
-> Unmap undo whatever was done on the map. More details can be found in
-> patch #6.
-> 
-> Maybe it would be better to squash patch #6 with this one so it would
-> be less confusing. What is your advice?
+(I decided to switch the order since the last mail because the first
+change should be less controversial than the second.)
 
-So am I right in understanding that without patch #6, this driver does
-exactly nothing? If so, it has been a waste of review time.
+The first one makes all simple_strto* references match their respective
+functions and adds parentheses after the function name (I hope this can
+happen in a single patch?), the second one removes mention of "obsolete"
+or "replacement" and instead uses "preferred over".
 
-Please split patch #6 so that this driver does something useful
-for Linux, without any of the PRU interrupt routing stuff. I want
-to see a Linux-only driver that works and doesn't rely on any other
-exotic feature.
+I should probably put you in Suggested-by: for the second patch (and
+maybe the first one as well?), but I need your explicit permission to
+do so. So, do you want to be added as Suggested-by: on one/both of
+these patches?
 
-         M.
+(Maybe I should add you as Acked-by: as well? I'm not actually sure if
+it's even possible to ask you to ack the patch until its form including
+changelog is finalized. Anyway, the current patches have been attached
+below for good measure.)
+
+---
+ include/linux/kernel.h | 4 ++--
+ lib/kstrtox.c          | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 82d91547d122..2d6050f12c64 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Used as a replacement for the simple_strtoul(). Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Used as a replacement for the simple_strtol(). Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index 1006bf70bf74..252ac414ba9a 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -115,7 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
++ * Used as a replacement for the obsolete simple_strtoull(). Return code must
+  * be checked.
+  */
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+@@ -139,7 +139,7 @@ EXPORT_SYMBOL(kstrtoull);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
++ * Used as a replacement for the obsolete simple_strtoll(). Return code must
+  * be checked.
+  */
+ int kstrtoll(const char *s, unsigned int base, long long *res)
+@@ -211,7 +211,7 @@ EXPORT_SYMBOL(_kstrtol);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
++ * Used as a replacement for the obsolete simple_strtoul(). Return code must
+  * be checked.
+  */
+ int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+@@ -242,7 +242,7 @@ EXPORT_SYMBOL(kstrtouint);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
++ * Used as a replacement for the obsolete simple_strtol(). Return code must
+  * be checked.
+  */
+ int kstrtoint(const char *s, unsigned int base, int *res)
 -- 
-Jazz is not dead. It just smells funny...
+2.27.0
+
+---
+ include/linux/kernel.h |  4 ++--
+ lib/kstrtox.c          | 12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 2d6050f12c64..35fd7e0e3f04 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoul(). Return code must be checked.
++ * Preferred over simple_strtoul(). Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtol(). Return code must be checked.
++ * Preferred over simple_strtol(). Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index 252ac414ba9a..a14ccf905055 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull(). Return code must
+- * be checked.
++ * Preferred over simple_strtoull(). Return code must be checked.
+  */
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+ {
+@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoll(). Return code must
+- * be checked.
++ * Preferred over simple_strtoll(). Return code must be checked.
+  */
+ int kstrtoll(const char *s, unsigned int base, long long *res)
+ {
+@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoul(). Return code must
+- * be checked.
++ * Preferred over simple_strtoul(). Return code must be checked.
+  */
+ int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+ {
+@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtol(). Return code must
+- * be checked.
++ * Preferred over simple_strtol(). Return code must be checked.
+  */
+ int kstrtoint(const char *s, unsigned int base, int *res)
+ {
+-- 
+2.27.0
+
