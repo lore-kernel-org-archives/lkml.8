@@ -2,82 +2,159 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E040C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C15C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEFAB2082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E018220786
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HiAajLMN"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V/JlajZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgGEJpU (ORCPT
+        id S1726795AbgGEJrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:45:20 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:54599 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726134AbgGEJpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:45:20 -0400
-X-UUID: 01c2d30a1a264464bfaf3bdfa81b5c77-20200705
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=QLXFgb8ipruaYvgJKRS7Q6ukuCrrcRqCGEhV6ucS7zw=;
-        b=HiAajLMNjaXMw8PKwsFvnhhjmiD1xG5++uTtU9Pm9P8JCDt6qBaeKgX8nMOkz3qCL0fb31ecLkXr82FJ2dY03Gpd+TYrzb7DjEiJqttSnkJEyUt0BUR95EZVwtHxCv3oaiqlNLmenXL04UsOMWKaaXFdVy0qSsYdLetDocRHtN4=;
-X-UUID: 01c2d30a1a264464bfaf3bdfa81b5c77-20200705
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 739802030; Sun, 05 Jul 2020 17:45:10 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 5 Jul
- 2020 17:45:08 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Sun, 5 Jul 2020 17:45:08 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v2 PATCH] drm/panel: auo,b116xw03: fix flash backlight when power on
-Date:   Sun, 5 Jul 2020 17:45:14 +0800
-Message-ID: <20200705094514.34526-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 5 Jul 2020 05:47:12 -0400
+Received: from mout.gmx.net ([212.227.17.20]:60095 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgGEJrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 05:47:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593942424;
+        bh=MCNeehA8ECXCWVknGlQbtVgERyNOAr9qWDtZzmx9HPA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=V/JlajZs9gZLKtCCUmr4lNYXSlQ7FKQtchxSEdBtmTn5dOEKYImJ5n622L63HVq18
+         drKF1nF3CDkh5mUjBifnuc7y1R7SVBRfYTuK/8VLzRmqXXYCOfKsQOjxyR2QW0SVht
+         FnrRQcUeftsjWo6QLA0J7a0asu24X17JLQ14ZaZQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.123.51] ([88.152.145.75]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MF3HU-1k7PRg28k4-00FT20; Sun, 05
+ Jul 2020 11:47:04 +0200
+Subject: Re: [PATCH 3/3] selftests: add readfile(2) selftests
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     viro@zeniv.linux.org.uk, mtk.manpages@gmail.com, shuah@kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
+ <20200704140250.423345-4-gregkh@linuxfoundation.org>
+ <fdaa31b7-b045-e38b-680a-01f0389e6acc@gmx.de>
+ <20200705073426.GA37944@kroah.com>
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+Autocrypt: addr=xypron.glpk@gmx.de; prefer-encrypt=mutual; keydata=
+ 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 Eg==
+Message-ID: <90c28417-3f1d-3a35-c0f9-205b8610ce78@gmx.de>
+Date:   Sun, 5 Jul 2020 11:46:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 17185F853249A3A30FADDE7A20621E16B03AD050448041C032CAE16CCD00B50E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200705073426.GA37944@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:H7+0tMSEmWOnLm21iLXcHFvIOoyt09SFF9sjG0hfN6hp+BzIY5j
+ j9K7ckzKK1fcePecpqJptO/e77zPRnT7Pqquk2owD/bFT3AI71bEn2Oo+7eOkzQUIgenTiQ
+ kydvLUQjq8q8HFsqcBYwufZf5j8d1RdwGrLqPDCzXFKWgLpgES3+kjiDX2zIsDuzySOmPx+
+ U30Pb1FR1hk1sKA9oy3NA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sAnln3YuEuM=:+NOrvhrYibPhK7JBmtgC/g
+ SFv0C7o/5AMXsiYRYo4bINyAecsKAYPi2VSoA/VeNv32XPkzNNaXmZ3Sx5Aedz5Gt6AM09qHf
+ BBErR8Uq1gi2zGgHgrgBX/fiPZiG3wxSH53SOHzxol82LtWqQly7g1fN3LBKhQihWjYdOBF1i
+ gKK2BW0MQJV05p1X2Y86qV+kQSGrG4+TFvnMPH3vHMgy3adVBXNVBKv86Sp6ZXAKniCt54Cpa
+ fekFWmFFBlz9DEm9Abk0ErvvIkuBZb2ll+UttcoD0zYG/jVt/B/OlDgeo2OR8PMIpSoQil2ZG
+ zA8wxHdTzZMMQLAZjqGYLjbP9G7yo4nOhctL3bKtdK287O9cHhoYAUKhclWNgDvmebbnQfyKM
+ KZFoCM+N6zSiioMMzxz1br/AUoFnWCZElWajktWGYLAuuSDJ5tqRbAVu4tS38HKMmnu0VZdyh
+ I1Pow3JpGBrCfnsOd90QHJcCYR+DB0LT9ZjCpG/E4jyg4CnxsDpkI1p8Ps26hdr9CJlKJZHWR
+ X3ZWqK3ni0RlglkqSkmzO2R1qtPLqb/ooPQ5JgLsLILoKf82evDTrtZC5AmjvJmj+blodJG0u
+ 8/KYInoX5SPnqJJryG7AE3/VmCYa9Btm5gMUopy4pExuAwxPrUfgwWZw9io8tQ8NGxlWdpmqK
+ KfWafS7O4O+G6d20b96hejdeO7p5rhgYBtWSursjHAdZWkemQx6jsBxxWVGAHUcusVRMxCmUZ
+ Z9HWVO0ITOuW11tgRg6UwzTHzZPwCBoUV4CQR8aRN4u+DppwZroc4vy7+KYwPcA2IDZiYsafH
+ DzsQ8SUlg11I3NJ0jOaswJ9EIxkus9Nl/SB6XDkN1t5h8xiWrV7YB1PnahtaH4y1l3Jw5+Qbv
+ ZvFOdIOyqy5b6sJ9ixWzEB6UIvdh+YbjDZKqrp+5QTN+iBfBDlijzKBpF8EpOPMh1i3GUWAgj
+ IPSuOLZfLDEVUFoknAM4EZz/L75NGpi9/iLeuf7AZkV5HR1lyy8a25K7IEJqdvXHQKnnyfrdB
+ GZyXkrnmd/teTIFAlV9PpSbF1KhW/8I0xN72nOkDO6G9ZKcXXOTqw/k3NECJNSqbOxwOQTKr/
+ Ch3Ki79ICNVuv3/oft4zX0KTVfH5OaA2okvQ3Wpm3xLaXH08CeD+YIVDTKR361p+wkQhcxz9x
+ FFEZ37QW0MAARB4Z3BscgUTJVNNY2vQO2pdGVLL3VLgds6ebDi5MrwZlKfJE27EeyDiHcoCuX
+ H57raEyyGPlxqZ6wj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVsYXkgdGhlIGJhY2tsaWdodCBvbiB0byBtYWtlIHN1cmUgdGhlIHZpZGVvIHN0YWJsZS4NCg0K
-U2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgNyArKysrKysrDQogMSBmaWxl
-IGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jDQppbmRleCAzYWQ4MjhlYWVmZTEuLjYxNzgxZmZhNzg0MCAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpbXBsZS5jDQpAQCAtNzI0LDYgKzcyNCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fYjExNnh3MDNfbW9kZSA9IHsNCiAJLnZzeW5jX2VuZCA9
-IDc2OCArIDEwICsgMTIsDQogCS52dG90YWwgPSA3NjggKyAxMCArIDEyICsgNiwNCiAJLnZyZWZy
-ZXNoID0gNjAsDQorCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfTlZTWU5DIHwgRFJNX01PREVfRkxB
-R19OSFNZTkMsDQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXVvX2Ix
-MTZ4dzAzID0gew0KQEAgLTczNCw2ICs3MzUsMTIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5l
-bF9kZXNjIGF1b19iMTE2eHcwMyA9IHsNCiAJCS53aWR0aCA9IDI1NiwNCiAJCS5oZWlnaHQgPSAx
-NDQsDQogCX0sDQorCS5kZWxheSA9IHsNCisJCS5lbmFibGUgPSA0MDAsDQorCX0sDQorCS5idXNf
-ZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfU1lOQ19EUklWRV9ORUdFREdFLA0KKwkuYnVzX2Zvcm1hdCA9
-IE1FRElBX0JVU19GTVRfUkdCNjY2XzFYMTgsDQorCS5jb25uZWN0b3JfdHlwZSA9IERSTV9NT0RF
-X0NPTk5FQ1RPUl9lRFAsDQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
-X21vZGUgYXVvX2IxMzN4dG4wMV9tb2RlID0gew0KLS0gDQoyLjI1LjENCg==
+On 7/5/20 9:34 AM, Greg Kroah-Hartman wrote:
+> On Sun, Jul 05, 2020 at 03:41:48AM +0200, Heinrich Schuchardt wrote:
+>> On 7/4/20 4:02 PM, Greg Kroah-Hartman wrote:
+>>> Test the functionality of readfile(2) in various ways.
+>>
+>> Hello Greg,
+>>
+>> I expect readfile() to generate fanotify events FAN_OPEN_PERM, FAN_OPEN=
+,
+>> FAN_ACCESS_PERM, FAN_ACCESS, FAN_CLOSE_NOWRITE in this sequence.
+>
+> Yes, it should, I don't think I do anything unique here when it comes to
+> vfs accesses that would go around those events.
+>
+>> Looking at patch 1/3 you took care of notifications. Would this deserve
+>> testing here?
+>
+> Possibly, do we have other in-tree tests of syscalls that validate those
+> events properly being created?
 
+There is an inotify test in
+tools/testing/selftests/cgroup/test_freezer.c
+
+There is no fanotify test in tree test.
+
+An fanotify test will require running with CAP_SYS_ADMIN. The kselftest
+documentation does not describe that tests should be run as root. So it
+may be preferable to test that the inotify events IN_OPEN, IN_ACCESS,
+IN_CLOSE_NOWRITE are created for readfile().
+
+Example coding is included in the inotify.7 and fanotify.7 manpages.
+
+Best regards
+
+Heinrich
