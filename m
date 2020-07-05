@@ -2,157 +2,248 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6925C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9107920771
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7588A20771
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R/0LXiyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgGEAhU (ORCPT
+        id S1728049AbgGEAlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 20:37:20 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:51316 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgGEAhU (ORCPT
+        Sat, 4 Jul 2020 20:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgGEAlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 20:37:20 -0400
-X-Greylist: delayed 411 seconds by postgrey-1.27 at vger.kernel.org; Sat, 04 Jul 2020 20:37:18 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 7F30B2016B13;
-        Sun,  5 Jul 2020 08:30:26 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7NeF7PWBhov8; Sun,  5 Jul 2020 08:30:26 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 597D920160D4;
-        Sun,  5 Jul 2020 08:30:26 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.122])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 0907CC01F9E;
-        Sun,  5 Jul 2020 08:30:25 +0800 (HKT)
-Subject: Re: [PATCH 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
+        Sat, 4 Jul 2020 20:41:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6EBC061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 17:41:24 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ch3so328476pjb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 17:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QbFiXrrIEyvT0l7kEooCW9inKSOU3LfnxtOYU9+rKpc=;
+        b=R/0LXiyon5iW32zpBoiBvUT6KZjGXecOrCxDzP+nM0LcJLi+ceqmCRIKPRPHPY9Bec
+         rsjNzYGrAnIkaBjaQ6zzgbS3cPLzyHOxmMvBumK3hilOB8CzbpvyP58gcWPSfI8geS+B
+         EolHNrrfZliq2q5diX+E+gBZFHLewCSv/sYWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QbFiXrrIEyvT0l7kEooCW9inKSOU3LfnxtOYU9+rKpc=;
+        b=aggI4xchxYX9jBGnJsSEHF4I4iqIjF1CVJMGlE+2/bQtLS5IVKpwEb7YvUaPCUf+QL
+         dvOjnLWqs9q76/d0Ew9qUKn+2qbKm11EJJ9Mq6GhY68C2neLtpk4oVTFQgI1NNzwZo16
+         ohnJPChQO9tG7hARiUjlMlS3Dbhsj0wg9o3oD1e3utkywmWICxt22Kab5sVCYA68weqs
+         +veiWI7o8ME1dTe+q6UQiXuSYS23T/XzmBk0rvXWhtmaHXIWMfE/5qcB6ZsJtJk9NVKM
+         EFj3txoefcP4ZaJ2omzfU7i9QKHdvE3PQ7jkZ4YQSJEfvbHre9x570PBqv9FrHulOh2/
+         CqGw==
+X-Gm-Message-State: AOAM532FdEHgqo6sloMYvxBPVyAz6j4wis8AeJTp7qeNCPgKnuWthLSS
+        1/u+zBA3DSnukVAbz1VZkWXhng==
+X-Google-Smtp-Source: ABdhPJw+SIuINDri1NDMi5D0Z1z9ASnH5tdB1fzwC8CA2Ht8Fh8zrjBqQRln5he/ExMdVYRFb6O30w==
+X-Received: by 2002:a17:90a:cf01:: with SMTP id h1mr45199854pju.234.1593909684251;
+        Sat, 04 Jul 2020 17:41:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x22sm15623429pfr.11.2020.07.04.17.41.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 17:41:23 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 17:41:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     torvalds@linux-foundation.org, Jonathan Corbet <corbet@lwn.net>,
+        Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        tech-board-discuss@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-References: <20200703034856.12846-1-chris.ruehl@gtsys.com.hk>
- <20200703034856.12846-3-chris.ruehl@gtsys.com.hk>
- <00c1b143-46c4-2621-bd77-fa465fb77774@roeck-us.net>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <9d473b54-94ca-0fc2-2ce7-2c88364c9e94@gtsys.com.hk>
-Date:   Sun, 5 Jul 2020 08:30:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Subject: Re: [PATCH] CodingStyle: Inclusive Terminology
+Message-ID: <202007041703.51F4059CA@keescook>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <00c1b143-46c4-2621-bd77-fa465fb77774@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:
+> Recent events have prompted a Linux position statement on inclusive
+> terminology. Given that Linux maintains a coding-style and its own
+> idiomatic set of terminology here is a proposal to answer the call to
+> replace non-inclusive terminology.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Chris Mason <clm@fb.clm>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-On 3/7/2020 1:49 pm, Guenter Roeck wrote:
-> On 7/2/20 8:48 PM, Chris Ruehl wrote:
->> Add documentation for the newly added DTS support in the shtc1 driver.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->>   .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
->> new file mode 100644
->> index 000000000000..e3e292bc6d7d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
->> @@ -0,0 +1,53 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sensirion SHTC1 Humidity and Temperature Sensor IC
->> +
->> +maintainers:
->> +  - jdelvare@suse.com
->> +
->> +description: |
->> +  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
->> +  designed especially for battery-driven high-volume consumer electronics
->> +  applications.
->> +  For further information refere to Documentation/hwmon/shtc1.rst
->> +
->> +  This binding document describes the binding for the hardware monitor
->> +  portion of the driver.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - sensirion,shtc1
->> +      - sensirion,shtw1
->> +      - sensirion,shtc3
->> +
->> +  reg: I2C address 0x70
->> +
->> +Optional properties:
->> +  sensirion,blocking_io: |
->> +    u8, if > 0 the i2c bus hold until measure finished (default 0)
->> +  sensirion,high_precision: |
->> +    u8, if > 0 aquire data with high precision (default 1)
->> +
-> Why u8 and not boolean ?
->
-> Guenter
-The author of the driver make high_precision default (recommend) in the code,
-if I use boolean, then the device tree _must_ have have the 
-sensirion,high_precision set
-or I need to do the opposite and define sensirion,low_precision.
-(blocking_io = false default, high_precision = true default)
+(nit: isn't this a Co-developed-by chain, not a SoB chain?)
 
-that's the reason I was thinking use a u8 and test with of_property_read_bool to 
-check
-the presence of it and set it if value > 0.
+Acked-by: Kees Cook <keescook@chromium.org>
+
+Comments below...
+
+> ---
+>  Documentation/process/coding-style.rst          |   12 ++++
+>  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
+>  Documentation/process/index.rst                 |    1 
+>  3 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/process/inclusive-terminology.rst
+> 
+> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> index 2657a55c6f12..4b15ab671089 100644
+> --- a/Documentation/process/coding-style.rst
+> +++ b/Documentation/process/coding-style.rst
+> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
+>  problem, which is called the function-growth-hormone-imbalance syndrome.
+>  See chapter 6 (Functions).
+>  
+> +For symbol names, avoid introducing new usage of the words 'slave' and
+> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
+> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
+> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
+> +'denylist'.
+
+Keeping "master" in a "master/slave" pairing (i.e. replacing only
+"slave") seems incomplete to me. If "master" is paired with "slave", it
+should be replaced too. Potential examples: 'primary', 'leader', 'principle',
+'controller', 'sender', 'initial'.
+
+Similarly, for "whitelist/blacklist", "whitelist" needs to replaced when
+"blacklist" has been. For example, seccomp documentation[1] uses
+"allow-list" and "deny-list".
+
+[1] https://man7.org/linux/man-pages/man2/seccomp.2.html
+
+> +Exceptions for introducing new usage is to maintain a userspace ABI, or
+
+and API?
+
+> +when updating code for an existing (as of 2020) hardware or protocol
+> +specification that mandates those terms. For new specifications consider
+> +translating specification usage of the terminology to the kernel coding
+> +standard where possible. See :ref:`process/inclusive-terminology.rst
+> +<inclusiveterminology>` for details.
+
+Let's add:
+
+ Where possible, old instances of this language should be replaced when
+ it is not tied to external specifications nor userspace ABI/API.
+
+>  
+>  5) Typedefs
+>  -----------
+> diff --git a/Documentation/process/inclusive-terminology.rst b/Documentation/process/inclusive-terminology.rst
+> new file mode 100644
+> index 000000000000..a8eb26690eb4
+> --- /dev/null
+> +++ b/Documentation/process/inclusive-terminology.rst
+> @@ -0,0 +1,64 @@
+> +.. _inclusiveterminology:
+> +
+> +Linux kernel inclusive terminology
+> +==================================
+> +
+> +The Linux kernel is a global software project, and in 2020 there was a
+> +global reckoning on race relations that caused many organizations to
+> +re-evaluate their policies and practices relative to the inclusion of
+> +people of African descent. This document describes why the 'Naming'
+> +section in :ref:`process/coding-style.rst <codingstyle>` recommends
+> +avoiding usage of 'slave' and 'blacklist' in new additions to the Linux
+> +kernel.
+
+... usage of 'master/slave', 'slave', 'whitelist/blacklist', and
+'blacklist' in the Linux kernel.
+
+> +
+> +On the triviality of replacing words
+> +====================================
+> +
+> +The African slave trade was a brutal system of human misery deployed at
+> +global scale. Some word choice decisions in a modern software project
+> +does next to nothing to compensate for that legacy. So why put any
+> +effort into something so trivial in comparison? Because the goal is not
+> +to repair, or erase the past. The goal is to maximize availability and
+> +efficiency of the global developer community to participate in the Linux
+> +kernel development process.
+> +
+> +Word choice and developer efficiency
+> +====================================
+> +
+> +Why does any software project go through the trouble of developing a
+> +document like :ref:`process/coding-style.rst <codingstyle>`? It does so
+> +because a common coding style maximizes the efficiency of both
+> +maintainers and developers. Developers learn common design patterns and
+> +idiomatic expressions while maintainers can spot deviations from those
+> +norms. Even non-compliant whitespace is considered a leading indicator
+> +to deeper problems in a patchset. Coding style violations are known to
+> +take a maintainer "out of the zone" of reviewing code. Maintainers are
+> +also sensitive to word choice across specifications and often choose to
+> +deploy Linux terminology to replace non-idiomatic word-choice in a
+> +specification.
+> +
+> +Non-inclusive terminology has that same distracting effect which is why
+> +it is a style issue for Linux, it injures developer efficiency.
+> +
+> +Of course it is around this point someone jumps in with an etymological
+> +argument about why people should not be offended. Etymological arguments
+> +do not scale. The scope and pace of Linux to reach new developers
+> +exceeds the ability of historical terminology defenders to describe "no,
+> +not that connotation". The revelation of 2020 was that black voices were
+> +heard on a global scale and the Linux kernel project has done its small
+> +part to answer that call as it wants black voices, among all voices, in
+> +its developer community.
+> +
+> +Really, 'blacklist' too?
+> +========================
+> +
+> +While 'slave' has a direct connection to human suffering the etymology
+> +of 'blacklist' is devoid of a historical racial connection. However, one
+> +thought exercise is to consider replacing 'blacklist/whitelist' with
+> +'redlist/greenlist'. Realize that the replacement only makes sense if
+> +you have been socialized with the concepts that 'red/green' implies
+> +'stop/go'. Colors to represent a policy requires an indirection. The
+> +socialization of 'black/white' to have the connotation of
+> +'impermissible/permissible' does not support inclusion.
+> +
+> +Inclusion == global developer community efficiency.
+
+Let's add:
+
+ Beyond just Linux
+ =================
+
+ For those of us in the kernel community involved in specification
+ development or similar larger ecosystem conversations, please help
+ steer those discussions to avoid these terms in new specifications
+ or APIs.
 
 
-Chris.
-
->
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +Example:
->> +  &i2c1 {
->> +    status = "okay";
->> +    clock-frequency = <400000>;
->> +
->> +    shtc3@70 {
->> +      compatible = "sensirion,shtc3";
->> +      reg = <0x70>
->> +      sensirion,blocking_io = <1>;
->> +      status = "okay";
->> +    };
->> +  };
->>
+> diff --git a/Documentation/process/index.rst b/Documentation/process/index.rst
+> index f07c9250c3ac..ed861f6f8d25 100644
+> --- a/Documentation/process/index.rst
+> +++ b/Documentation/process/index.rst
+> @@ -27,6 +27,7 @@ Below are the essential guides that every developer should read.
+>     submitting-patches
+>     programming-language
+>     coding-style
+> +   inclusive-terminology
+>     maintainer-pgp-guide
+>     email-clients
+>     kernel-enforcement-statement
+> 
 
 -- 
-GTSYS Limited RFID Technology
-9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
-42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
-Tel (852) 9079 9521
-
-Disclaimer: https://www.gtsys.com.hk/email/classified.html
-
+Kees Cook
