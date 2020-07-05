@@ -2,189 +2,151 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03681C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1061C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D45C92070C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A093A2070C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:48:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwHhDsr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgGESmX (ORCPT
+        id S1728005AbgGESsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:42:23 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40853 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbgGESmW (ORCPT
+        Sun, 5 Jul 2020 14:48:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59366 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727785AbgGESsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:42:22 -0400
-Received: by mail-il1-f197.google.com with SMTP id m64so26286838ill.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 11:42:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=36lIim6U0EVSea9yn5eRaizKMk+KEYlJqS23zYMSLOk=;
-        b=TvUyTopHbn/lvNa9hxPdREwPD51etYiGlv1s/cWvk1zaBOdYZbpY5G3o8s80IC/urn
-         WtFrauQQtgLZYrM6LYHQpqMfkJhZU2AmR/tF3XJVssastWUEnFEdPN+GkKNdnmKczqE2
-         qhrEwZkjpxSdTnllxbzfdGcy1FceRY6z/Mj/Vb1T/bRXU2qMBvi/UqHYfemv067gsLPO
-         /Vs8HeLeypCteVRAug8vh+9d0/vmb9BhF0SN/GjoSG//u5wb8WoBGnjT9G7GF7w/buRu
-         cXWUD75WIZpd5TyGWSsknkvIy52Ajpc99Id7bEIjrrKMYNd78YzFJE2jvGXhduV8h3CK
-         Nyxw==
-X-Gm-Message-State: AOAM5304Qmki4rqBuAROZMsWFpJAIDsQEkQivSPm3yOLhc1+Kx9+C7d8
-        Fn6oG6QH2u+Opv6qghDT1efyPg6RWnF1SFleD0H/1+bgpOfK
-X-Google-Smtp-Source: ABdhPJxI8RfCHebzqFgY01iWDvhaoIwOhyEqBLiFwmY6Vbf1wGjH+aiyZVM2XuALnt4TZHdm/fahuQ+9CJqkHl2qP9/pB+wiO65u
+        Sun, 5 Jul 2020 14:48:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593974890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X2NxAjQStBuOg2nWLcCqhTmnhAGLMIMF1gTvQJHR2fg=;
+        b=EwHhDsr93jiFkZORIK7DNrbe3Zn6PZ8coDGULoDNsEMnl8jlj10IJH1mOu1aOiAdUP/vOS
+        biqY6jm6Wux9nqQo4JzCad5VuEF8rEeHaF+PUcYUV4wnSJm1WOsMOTLPTUEHwlxrtPrV90
+        NaUQhq4nOqVLUJwQCI2TVAyUQjCFBiQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-GaleSg56NYifqcstNxG6TA-1; Sun, 05 Jul 2020 14:48:09 -0400
+X-MC-Unique: GaleSg56NYifqcstNxG6TA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66EA01005510;
+        Sun,  5 Jul 2020 18:48:06 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-238.rdu2.redhat.com [10.10.112.238])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B2E310013C2;
+        Sun,  5 Jul 2020 18:48:02 +0000 (UTC)
+Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Abhishek Bhardwaj <abhishekbh@google.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <dianders@google.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+References: <20200702221237.2517080-1-abhishekbh@google.com>
+ <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
+ <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+ <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
+ <20200703114037.GD2999146@linux.ibm.com>
+ <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
+ <20200705152304.GE2999146@linux.ibm.com>
+ <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
+ <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <48f82669-f1ff-0f5e-e531-ebbd151205f9@redhat.com>
+Date:   Sun, 5 Jul 2020 14:48:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:d8:: with SMTP id z24mr21869065ioe.136.1593974541507;
- Sun, 05 Jul 2020 11:42:21 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 11:42:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000053e07805a9b61e09@google.com>
-Subject: KASAN: use-after-free Read in __cfg8NUM_wpan_dev_from_attrs (2)
-From:   syzbot <syzbot+14e0e4960091ffae7cf7@syzkaller.appspotmail.com>
-To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, stefan@datenfreihafen.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 7/5/20 2:22 PM, Abhishek Bhardwaj wrote:
+> On Sun, Jul 5, 2020 at 8:57 AM Waiman Long <longman@redhat.com> wrote:
+>> On 7/5/20 11:23 AM, Mike Rapoport wrote:
+>>>> Nothing prevents people from continuing to use the command line
+>>>> options if they want, right?  This just allows a different default.
+>>>> So if a distro is security focused and decided that it wanted a slower
+>>>> / more secure default then it could ship that way but individual users
+>>>> could still override, right?
+>>> Well, nothing prevents you from continuing to use the command line as
+>>> well;-)
+>>>
+>>> I can see why whould you want an ability to select compile time default
+>>> for an option, but I'm really not thrilled by the added ifdefery.
+>>>
+>> It turns out that CONFIG_KVM_VMENTRY_L1D_FLUSH values match the enum
+>> vmx_l1d_flush_state values. So one way to reduce the ifdefery is to do,
+>> for example,
+>>
+>> +#ifdef CONFIG_KVM_VMENTRY_L1D_FLUSH
+>> +#define VMENTER_L1D_FLUSH_DEFAULT CONFIG_KVM_VMENTRY_L1D_FLUSH
+>> +#else
+>> +#define VMENTER_L1D_FLUSH_DEFAULT      VMENTER_L1D_FLUSH_AUTO
+>> #endif
+>> -enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+>> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_DEFAULT;
+>>
+>> Of course, we may need to add a comment on enum vmx_l1d_flush_state
+>> definition to highlight the dependency of CONFIG_KVM_VMENTRY_L1D_FLUSH
+>> on it to avoid future mismatch.
+> I explicitly wanted to avoid doing that for this very reason. In my
+> opinion this is brittle and bound to be missed
+> sooner or later.
+>
+That is why I said a comment will have to be added to highlight this 
+dependency. For instance,
 
-syzbot found the following crash on:
++/*
++ * Three of the enums are explicitly assigned as the KVM_VMENTRY_L1D_FLUSH
++ * config entry in arch/x86/kvm/Kconfig depends on these values.
++ */
+  enum vmx_l1d_flush_state {
+         VMENTER_L1D_FLUSH_AUTO,
+-       VMENTER_L1D_FLUSH_NEVER,
+-       VMENTER_L1D_FLUSH_COND,
+-       VMENTER_L1D_FLUSH_ALWAYS,
++       VMENTER_L1D_FLUSH_NEVER = 1,
++       VMENTER_L1D_FLUSH_COND = 2,
++       VMENTER_L1D_FLUSH_ALWAYS = 3,
+         VMENTER_L1D_FLUSH_EPT_DISABLED,
+         VMENTER_L1D_FLUSH_NOT_REQUIRED,
+  };
 
-HEAD commit:    e44f65fd xen-netfront: remove redundant assignment to vari..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=120f87e5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
-dashboard link: https://syzkaller.appspot.com/bug?extid=14e0e4960091ffae7cf7
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11818aa7100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f997d3100000
+Of course, this is just a suggestion.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+14e0e4960091ffae7cf7@syzkaller.appspotmail.com
+Cheers,
+Longman
 
-netlink: 26 bytes leftover after parsing attributes in process `syz-executor982'.
-==================================================================
-BUG: KASAN: use-after-free in nla_len include/net/netlink.h:1135 [inline]
-BUG: KASAN: use-after-free in nla_memcpy+0x9c/0xa0 lib/nlattr.c:724
-Read of size 2 at addr ffff8880a0ca8414 by task syz-executor982/6816
-
-CPU: 0 PID: 6816 Comm: syz-executor982 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- nla_len include/net/netlink.h:1135 [inline]
- nla_memcpy+0x9c/0xa0 lib/nlattr.c:724
- nla_get_u64 include/net/netlink.h:1606 [inline]
- __cfg802154_wpan_dev_from_attrs+0x3e0/0x510 net/ieee802154/nl802154.c:55
- nl802154_prepare_wpan_dev_dump.constprop.0+0xf9/0x490 net/ieee802154/nl802154.c:245
- nl802154_dump_llsec_dev+0xc0/0xb10 net/ieee802154/nl802154.c:1655
- genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
- netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4413c9
-Code: Bad RIP value.
-RSP: 002b:00007fff5b30bca8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004413c9
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402140
-R13: 00000000004021d0 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 6815:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xae/0x550 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 6815:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- skb_free_head net/core/skbuff.c:590 [inline]
- skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb net/core/skbuff.c:678 [inline]
- consume_skb net/core/skbuff.c:837 [inline]
- consume_skb+0xc2/0x160 net/core/skbuff.c:831
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880a0ca8400
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 20 bytes inside of
- 512-byte region [ffff8880a0ca8400, ffff8880a0ca8600)
-The buggy address belongs to the page:
-page:ffffea0002832a00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00029e1288 ffffea00028ef888 ffff8880aa000a80
-raw: 0000000000000000 ffff8880a0ca8000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a0ca8300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880a0ca8380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880a0ca8400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                         ^
- ffff8880a0ca8480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a0ca8500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
