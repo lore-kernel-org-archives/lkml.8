@@ -2,129 +2,94 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1CE2075D
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593963346;
-	bh=yuJ83TAx2kBYVCOqY8A/Yuic2DP3AIi4WtemVta2NEc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mcsd5qcRAUmZz1EmVuY3gNYd3feD70583ZzjabhAqqffaRNVzZpmDhIE5pSUlfzGw
-	 IOMgrBL4zaQdGvOIBm41YP1lb2aqe2z0aDBmYNGnc4GV7AWl977Sx6lFJN2f8XUxxD
-	 dtsBY19XA9gxeav6M+tm2ESXRgEoiuzgg8UdznZk=
+	by mail.kernel.org (Postfix) with ESMTP id 9AEE42073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2nzMMeeQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8K3ycUSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgGEPfo (ORCPT
+        id S1727125AbgGEPrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:35:44 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:18038 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgGEPfo (ORCPT
+        Sun, 5 Jul 2020 11:47:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45976 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgGEPru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:35:44 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 065FZT1p000837
-        for <linux-kernel@vger.kernel.org>; Mon, 6 Jul 2020 00:35:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FZT1p000837
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593963330;
-        bh=cXx2QzW32XcBEbFXoqRu+IpnOfIaV0Q73hhkKTlNd+Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gAekWdUCiGJCPzvaY9EWP3LqcAMn5TxOZjMDKk6H1v46eAXyGxmxgk462uZuw/OXv
-         3sSw6SXKczfbvodI3XAKkf+nhQaj5/Sx+FHcr6cZP6IaSC5ghDB7rgcw101Dw/bYK2
-         prkPrIOJNIbCR83BlD+XqWkTu1/HHTcsoQ6l4q8yzV5OW8WHqmvKQwACJxb/tjqqG3
-         9ONKWN6EwKOFuBVf9ytlX5kkK4tpakksV/qbkd4EID4qRNnBtTNIVbGyPkbQyLE4Wi
-         Tyh0ONeAFPr5k3Z3wdDZt2zQM+hYWH/s4iAEYbBS2vVu1FqGQdelO1GZjJCX5984Nn
-         Am2qt8VbCf75g==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id u6so8589773uau.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 08:35:30 -0700 (PDT)
-X-Gm-Message-State: AOAM5318UHM5Qq441HVkIiGnl5jxl54BbzyfjdbmlTAwLfUAA33ofjcZ
-        QRp8QTByHoZUCWohSDwTNTNpFWKYpzvXFmz6Ww8=
-X-Google-Smtp-Source: ABdhPJySZM2RSvi3BXOy/AaF+QGFR5tz7dSQPdNj9q/HhGTTN+CWZQ/F1MU7kyGvE4tDMlU5eusXpcXwSiBF/lFDQBA=
-X-Received: by 2002:ab0:5b91:: with SMTP id y17mr33118642uae.95.1593963329071;
- Sun, 05 Jul 2020 08:35:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200702111200.39997-1-pmenzel@molgen.mpg.de> <CAK7LNAR7=NCsJ5irVUCStkfCLt0d=R5AX6cEwc9z=b_-V=-0Ng@mail.gmail.com>
- <59a4efc5-f6cb-f00a-fa83-bc7658ca1463@molgen.mpg.de>
-In-Reply-To: <59a4efc5-f6cb-f00a-fa83-bc7658ca1463@molgen.mpg.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 6 Jul 2020 00:34:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS8pTFfhHb_Z+Hh5LWZ2DCCzfGtTq4oizykOYb_QRqgMw@mail.gmail.com>
-Message-ID: <CAK7LNAS8pTFfhHb_Z+Hh5LWZ2DCCzfGtTq4oizykOYb_QRqgMw@mail.gmail.com>
-Subject: Re: [PATCH v2] .gitignore: Do not track `defconfig` from `make savedefconfig`
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 Jul 2020 11:47:50 -0400
+Date:   Sun, 05 Jul 2020 15:46:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593964069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=DRB2pMLaXPlhgSpwFzYAKgzL8JjfxqYnPI2LiwmZh3o=;
+        b=2nzMMeeQwWUolck/VuCz3OrQ+vhUMTiP6uAhoTkzqf/X60Xgg0DnPObJc5CpaBzhT2lIdW
+        y393CYyTKWwVRbgF2/SlC7+quL+O0CCjDZikjd9BSVUnJS2InKuX2hNxyf/FmVJn35xsbu
+        VFc1Is06fXMp/Dcb/7jBwVvzed2kLlF1YqWDOtJOWb0fK5ijk0+Zu59FC7UPJJvn5psts3
+        K2p3zb0Fzf0vk/DQ5IY/jSdwbm6kwiaRYZYQab1gGHAVVRD8u2Cy+rPI47WensRUxKTZ6e
+        AErWdqjKO0G1X9QKzMkdcXAnefsRwBmHmxy45PkDXXXBIB4OYh6fqJKRzXZk+w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593964069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=DRB2pMLaXPlhgSpwFzYAKgzL8JjfxqYnPI2LiwmZh3o=;
+        b=8K3ycUSPIyOgXsGb1OZkFX3RA9zAtf/ahwJPrP3vIYfcsM3OLXLwjPoJqvusbNtvknmOGX
+        Pcli7c3c8wbrAEDw==
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] core/urgent for v5.8-rc4
+Message-ID: <159396401414.28963.18435590961866091585.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 4:19 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Masahiro,
->
->
-> Am 05.07.20 um 09:14 schrieb Masahiro Yamada:
-> > On Thu, Jul 2, 2020 at 8:12 PM Paul Menzel <pmenzel@molgen.mpg.de> wrot=
-e:
-> >>
-> >> Running `make savedefconfig` creates by default `defconfig`, which is,
-> >> currently, on git=E2=80=99s radar, for example, `git status` lists thi=
-s file as
-> >> untracked.
-> >>
-> >> So, add the file to `.gitignore`, so it=E2=80=99s ignored by git.
-> >>
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> >> ---
-> >>   .gitignore | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/.gitignore b/.gitignore
-> >> index 87b9dd8a163b..f07500889fba 100644
-> >> --- a/.gitignore
-> >> +++ b/.gitignore
-> >> @@ -143,6 +143,9 @@ x509.genkey
-> >>   /allrandom.config
-> >>   /allyes.config
-> >>
-> >> +# Kconfig presets, default savedefconfg output
-> >
-> >
-> > I just noticed this comment is wrong
-> > since 'defconfig' is not a preset.
-> >
-> > I will change it to 'Kconfig savedefconfig output'.
->
-> Thank you for finding my error and correcting it.
->
-> I couldn=E2=80=99t find out more about *presets*.
->
->      $ git grep -i preset scripts/kconfig/
->      $
->
-> Where can I look, so I won=E2=80=99t repeat the same mistake next time?
+Linus,
+
+please pull the latest core/urgent branch from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-2020-07-05
+
+up to:  5fdeefa053df: Merge branch 'urgent-for-mingo' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu into core/urgent
+
+A single fix for a printk format warning in RCU.
+
+Thanks,
+
+	tglx
+
+------------------>
+Kefeng Wang (1):
+      rcuperf: Fix printk format warning
 
 
-You can find 'preset' in
-Documentation/kbuild/kconfig.rst
-but it does appear in the source files.
+ kernel/rcu/rcuperf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 16dd1e6b7c09..9eb39c20082c 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -723,7 +723,7 @@ kfree_perf_init(void)
+ 		schedule_timeout_uninterruptible(1);
+ 	}
+ 
+-	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
++	pr_alert("kfree object size=%zu\n", kfree_mult * sizeof(struct kfree_obj));
+ 
+ 	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
+ 			       GFP_KERNEL);
 
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
