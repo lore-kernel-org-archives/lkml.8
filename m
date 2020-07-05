@@ -4,45 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BB420739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BE720724
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgGEVp2 (ORCPT
+        id S1728597AbgGEVpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 17:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgGEVp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 17:45:27 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB2FC061794;
-        Sun,  5 Jul 2020 14:45:27 -0700 (PDT)
+        Sun, 5 Jul 2020 17:45:44 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:49096 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728047AbgGEVpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 17:45:44 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id E4833BC127;
-        Sun,  5 Jul 2020 21:45:23 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 7F219BC127;
+        Sun,  5 Jul 2020 21:45:39 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jmorris@namei.org, serge@hallyn.com, john.johansen@canonical.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org
+To:     aditr@vmware.com, pv-drivers@vmware.com, dledford@redhat.com,
+        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: security
-Date:   Sun,  5 Jul 2020 23:45:12 +0200
-Message-Id: <20200705214512.28498-1-grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: VMWare PVRDMA driver
+Date:   Sun,  5 Jul 2020 23:45:28 +0200
+Message-Id: <20200705214528.28561-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
+X-Spamd-Bar: +++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,148 +65,190 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  If there are any valid, but yet not changed URLs:
  See https://lkml.org/lkml/2020/6/26/837
 
- security/Kconfig                                 | 2 +-
- security/apparmor/Kconfig                        | 2 +-
- security/integrity/ima/Kconfig                   | 2 +-
- security/integrity/ima/ima_template.c            | 2 +-
- security/integrity/ima/ima_template_lib.c        | 2 +-
- security/integrity/ima/ima_template_lib.h        | 2 +-
- security/keys/encrypted-keys/ecryptfs_format.c   | 2 +-
- security/keys/encrypted-keys/ecryptfs_format.h   | 2 +-
- security/keys/encrypted-keys/encrypted.c         | 2 +-
- security/keys/encrypted-keys/masterkey_trusted.c | 2 +-
- 10 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma.h          | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_cmd.c      | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_cq.c       | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_dev_api.h  | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_doorbell.c | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c     | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_misc.c     | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c       | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c       | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_ring.h     | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c      | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c    | 2 +-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.h    | 2 +-
+ 13 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/security/Kconfig b/security/Kconfig
-index cd3cc7da3a55..7561f6f99f1d 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -118,7 +118,7 @@ config INTEL_TXT
- 	  it was configured with, especially since they may be responsible for
- 	  providing such assurances to VMs and services running on it.
- 
--	  See <http://www.intel.com/technology/security/> for more information
-+	  See <https://www.intel.com/technology/security/> for more information
- 	  about Intel(R) TXT.
- 	  See <http://tboot.sourceforge.net> for more information about tboot.
- 	  See Documentation/x86/intel_txt.rst for a description of how to enable
-diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
-index 03fae1bd48a6..348ed6cfa08a 100644
---- a/security/apparmor/Kconfig
-+++ b/security/apparmor/Kconfig
-@@ -77,7 +77,7 @@ config SECURITY_APPARMOR_KUNIT_TEST
- 	  This builds the AppArmor KUnit tests.
- 
- 	  KUnit tests run during boot and output the results to the debug log
--	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  in TAP format (https://testanything.org/). Only useful for kernel devs
- 	  running KUnit test harness and are not for inclusion into a
- 	  production build.
- 
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index edde88dbe576..6a5e4a77601b 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -26,7 +26,7 @@ config IMA
- 	  an aggregate integrity value over this list inside the
- 	  TPM hardware, so that the TPM can prove to a third party
- 	  whether or not critical system files have been modified.
--	  Read <http://www.usenix.org/events/sec04/tech/sailer.html>
-+	  Read <https://www.usenix.org/events/sec04/tech/sailer.html>
- 	  to learn more about IMA.
- 	  If unsure, say N.
- 
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index 5a2def40a733..1e89e2d3851f 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2013 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
+index c142f5e7f25f..862d6c2e8b87 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Author: Roberto Sassu <roberto.sassu@polito.it>
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cmd.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cmd.c
+index 4a78c537d8a1..7d585e0bd56d 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cmd.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cmd.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 635c6ac05050..41a5f435b793 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2013 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cq.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cq.c
+index 4f6cc0de7ef9..05be5c7d1fce 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cq.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_cq.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Author: Roberto Sassu <roberto.sassu@polito.it>
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_dev_api.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_dev_api.h
+index 86a6c054ea26..34522b23dc82 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_dev_api.h
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_dev_api.h
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
-index 9a88c79a7a61..6b3b880637a0 100644
---- a/security/integrity/ima/ima_template_lib.h
-+++ b/security/integrity/ima/ima_template_lib.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2013 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_doorbell.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_doorbell.c
+index bf51357ea3aa..a2dc768a34af 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_doorbell.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_doorbell.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Author: Roberto Sassu <roberto.sassu@polito.it>
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+index 780fd2dfc07e..12f2e19a21a0 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
-index a7339d4de811..8fdd76105ce3 100644
---- a/security/keys/encrypted-keys/ecryptfs_format.c
-+++ b/security/keys/encrypted-keys/ecryptfs_format.c
-@@ -4,7 +4,7 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_misc.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_misc.c
+index 7944c58ded0e..e3f2b516b300 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_misc.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_misc.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Copyright (C) 2006 International Business Machines Corp.
-  * Copyright (C) 2010 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
+index b039f1f00e05..4f6cffcd21f2 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Authors:
-  * Michael A. Halcrow <mahalcro@us.ibm.com>
-diff --git a/security/keys/encrypted-keys/ecryptfs_format.h b/security/keys/encrypted-keys/ecryptfs_format.h
-index 939621d870e4..ed8466578616 100644
---- a/security/keys/encrypted-keys/ecryptfs_format.h
-+++ b/security/keys/encrypted-keys/ecryptfs_format.h
-@@ -4,7 +4,7 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
+index afcc2abcf55c..c27554b0c3c5 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Copyright (C) 2006 International Business Machines Corp.
-  * Copyright (C) 2010 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_ring.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_ring.h
+index 8b558ae234c8..2a99bbb40ca5 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_ring.h
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_ring.h
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Authors:
-  * Michael A. Halcrow <mahalcro@us.ibm.com>
-diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
-index 14cf81d1a30b..20075b1308aa 100644
---- a/security/keys/encrypted-keys/encrypted.c
-+++ b/security/keys/encrypted-keys/encrypted.c
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2010 IBM Corporation
-  * Copyright (C) 2010 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c
+index d330decfb80a..6c54beb9c164 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Authors:
-  * Mimi Zohar <zohar@us.ibm.com>
-diff --git a/security/keys/encrypted-keys/masterkey_trusted.c b/security/keys/encrypted-keys/masterkey_trusted.c
-index c68528aa49c6..e6d22ce77e98 100644
---- a/security/keys/encrypted-keys/masterkey_trusted.c
-+++ b/security/keys/encrypted-keys/masterkey_trusted.c
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2010 IBM Corporation
-  * Copyright (C) 2010 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
+index ccbded2d26ce..0029598ff949 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
   *
-  * Authors:
-  * Mimi Zohar <zohar@us.ibm.com>
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.h
+index 267702226f10..ad4d51ab8cc9 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.h
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.h
+@@ -8,7 +8,7 @@
+  * will be useful, but WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED
+  * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU General Public License version 2 for more details at
+- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
++ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program available in the file COPYING in the main
 -- 
 2.27.0
 
