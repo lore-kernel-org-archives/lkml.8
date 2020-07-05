@@ -2,169 +2,127 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B08C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B39C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A652075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="Ku1PsicO"
+	by mail.kernel.org (Postfix) with ESMTP id 21FBB2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593978411;
+	bh=So53ayXaUDwixK9Wi70gbc/U5lG2ighsH/OMflbnE0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ktEuCZhoXmtBjEMVhQSj1VrOuaFdQ7gNJCVI2gbFRpFiQulkbN55pdHH3e/lZtHBV
+	 GrtowlPLsJu8j23zUdTL1+H+E55/ku/ehFwfhlgmc9AOfcFn5pUPvsevoDD6Vg+Bmt
+	 PJnuUmd7oVxHOEdulzqj58IMu4PgDeNV3KoXo90w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgGEToS (ORCPT
+        id S1728056AbgGETqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:44:18 -0400
-Received: from gateway20.websitewelcome.com ([192.185.59.4]:43863 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727942AbgGEToS (ORCPT
+        Sun, 5 Jul 2020 15:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgGETqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:44:18 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 494E0400CECE4
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 12:58:50 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id sAB5juxxGQyTQsAB5jwR1Z; Sun, 05 Jul 2020 14:19:52 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GfLOfM3WHzU0BIyRJD4iTtlteWnSzQZLlEmD9Xo7d20=; b=Ku1PsicOgEi8DGG1AT5hHZFSw9
-        QC4omYSyirQB4EK2wh3yntLwCqWpXgnLtWqhWcp8CTyFbhy1rYWtUMbbAlVDkG/lmSSMhYP7MEMUQ
-        +HtJTSazIFQl9ZhBUMSwNhmZqu+ShGoP5JDjEexdingJiiYhc644el6LR2vcV9jxUS4NIrjX9GUdR
-        XXse7TN2lDIMN8ad5LaHyl7BYjaz2bmR35udA8JRXZdMptJTDanX3n6qYIVmAVN5qmUUFXpauYHGC
-        f1ZTaBNTY8GC97KaTNgzovFFoBfGlDCzFCFj05oCWKWuxi4WVyjB60kXPxFb4wn3WLpQxeAeMdHyJ
-        qk/hKFZg==;
-Received: from [189.59.31.158] (port=33088 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jsAB5-004Abs-6n; Sun, 05 Jul 2020 16:19:51 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v1] arm64: dts: actions: Fix smp Bringing up secondary CPUs
-Date:   Sun,  5 Jul 2020 16:19:44 -0300
-Message-Id: <20200705191944.404933-1-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.27.0
+        Sun, 5 Jul 2020 15:46:49 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E24AC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 12:46:49 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id g2so21416180lfb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 12:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bBFG9d/htC9G36MGx45SRMUyXh7Ve2HK0iMZdRV3qpA=;
+        b=baoG88n59Iuj1CMHv/JHi7oo+HLqqNYydKxZE7jErHzvnDsB54RoZve7w28hqTs0vs
+         28x97jIUa/msRTRpQ+NU0eMXL3LL0lzOjvNYGKkslxc3seDBWNKZ9DCzevUhVPt83Ubc
+         x0ZXbzymytI/BZGxV7ZstVqjPuBbR0rbQLQ2M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bBFG9d/htC9G36MGx45SRMUyXh7Ve2HK0iMZdRV3qpA=;
+        b=JV9wfw9xkM86r0C1rIXOGOytJPWVBppOqQHS3CgQkNtGNKjjQ8vTJZmzDhUz5L3uC9
+         6r1QSNqu+rYyBdMdLDt+DZJTVfcjJcazRIWfI0h7ANE7MbA4TgJFSbCNhViDj6KI/xZm
+         KZqODAWmhAlJj13S+g6mBVJz1VlGjwy6ER25wJzXMhRDwng1Rf4entHSkVC7E8DQ/ekh
+         slycuXvRX3K/9q+CzZdYFZZAR2F+USQxXZste1BHmXeyVkN4h/tgM7IxygaJVc7cVqyT
+         jsLaHbTkakDCwXbRmE27e1Yn9WwCbCfwVcjNbagaLWz2epRSCfwewUkMUvkx1CE5qbEP
+         bKyQ==
+X-Gm-Message-State: AOAM531QmI2FYZGIEO7n2wre4rp6KRkxGVhXTBvxRhVCEWjytkXAkMfa
+        +P34XQcrBheydyXiNFJFuwCD0OtJasI=
+X-Google-Smtp-Source: ABdhPJzOz9A6ZMQDxveOn/t2onnCI1nlP+I1PsB6whJkOPZj5eBuYuW+5Y0IWdJ4MLcBYZD0bCEHhg==
+X-Received: by 2002:a19:815:: with SMTP id 21mr27302723lfi.119.1593978407100;
+        Sun, 05 Jul 2020 12:46:47 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id y13sm7378965ljd.20.2020.07.05.12.46.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jul 2020 12:46:46 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id k15so21385736lfc.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 12:46:46 -0700 (PDT)
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr28181978lfn.30.1593978405760;
+ Sun, 05 Jul 2020 12:46:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 189.59.31.158
-X-Source-L: No
-X-Exim-ID: 1jsAB5-004Abs-6n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [189.59.31.158]:33088
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 2
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+References: <159396401414.28963.18435590961866091585.tglx@nanos.tec.linutronix.de>
+ <159396401656.28963.9621378879403780463.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <159396401656.28963.9621378879403780463.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 5 Jul 2020 12:46:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgV9toS7GU3KmNpj8hCS9SeF+A0voHS8F275_mgLhL4Lw@mail.gmail.com>
+Message-ID: <CAHk-=wgV9toS7GU3KmNpj8hCS9SeF+A0voHS8F275_mgLhL4Lw@mail.gmail.com>
+Subject: Re: [GIT pull] x86/urgent for v5.8-rc4
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the enable-method to fix the failed to boot errors:
+On Sun, Jul 5, 2020 at 8:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>  - Disable 16 bit segments on XEN PV. It's not supported because XEN PV
+>    does not implement ESPFIX64
 
-[    0.040330] smp: Bringing up secondary CPUs ...
-[    0.040683] psci: failed to boot CPU1 (-22)
-[    0.040691] CPU1: failed to boot: -22
-[    0.041062] psci: failed to boot CPU2 (-22)
-[    0.041071] CPU2: failed to boot: -22
-[    0.041408] psci: failed to boot CPU3 (-22)
-[    0.041417] CPU3: failed to boot: -22
-[    0.041443] smp: Brought up 1 node, 1 CPU
-[    0.041451] SMP: Total of 1 processors activated.
+I don't disagree with this conceptually, and I've pulled it, but
+christ, that warning is over-engineered.
 
-Tested on Caninos Labrador v3 based on Actions Semi S700.
+Seriously, it uses a mutex to protect a "set once" variable. That's just crazy.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+We have "pr_info_once()", which does all of this for you. And no, it's
+not thread-safe, becasue ABSOLUTELY NOBODY CARES.
 
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2006ad5424fa..b28dbbcad27b 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -14,37 +14,50 @@ / {
- 	#size-cells = <2>;
+If you happen to get two or more warnings because they happen on
+separate CPU's at exactly the same time, nobody possibly cares.
 
- 	cpus {
--		#address-cells = <2>;
-+		#address-cells = <1>;
- 		#size-cells = <0>;
--
-+
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
--			reg = <0x0 0x0>;
--			enable-method = "psci";
-+			reg = <0x0>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x1f000020>;
-+			next-level-cache = <&L2>;
- 		};
+And if you really are so anal that you care about that case, using a
+mutex is still the wrong thing to do for something as simple as this.
 
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
--			reg = <0x0 0x1>;
--			enable-method = "psci";
-+			reg = <0x1>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x1f000020>;
-+			next-level-cache = <&L2>;
- 		};
+You could literally have made it just a single atomic variable, and
+that would have been simpler, faster, and be context-safe at the same
+time.
 
- 		cpu2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
--			reg = <0x0 0x2>;
--			enable-method = "psci";
-+			reg = <0x2>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x1f000020>;
-+			next-level-cache = <&L2>;
- 		};
+So using a mutex is not only overkill, it is literally technically
+_inferior_ to just about all the possible ways you can do this.
 
- 		cpu3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
--			reg = <0x0 0x3>;
--			enable-method = "psci";
-+			reg = <0x3>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x1f000020>;
-+			next-level-cache = <&L2>;
- 		};
- 	};
-+
-+	L2: l2-cache {
-+		compatible = "cache";
-+		cache-level = <2>;
-+	};
+I've pulled this, but I found that code so bad as to be actually
+offensive, and added a commit to remove the garbage and just use
+"pr_info_once()".
 
- 	reserved-memory {
- 		#address-cells = <2>;
---
-2.27.0
+And if somebody wants to guarantee the "it really can only happen once
+even in theory", that person can add the code to "pr_info_once()" to
+improve it to first optimistically load the value, and then use a
+"cmpxchg" or whatever.
 
+But that sounds pointless, and I'm not going to waste my time on it.
+
+But I _did_ waste my time on removing this horrendous case of
+re-implementing "pr_info_once()" horribly badly.
+
+Because it physically hurt my eyes to look at that code.
+
+                   Linus
