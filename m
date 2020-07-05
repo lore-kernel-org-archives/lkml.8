@@ -2,102 +2,142 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88944C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65896207CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFB020772
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGEJto (ORCPT
+        id S1726797AbgGEJwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:49:44 -0400
-Received: from elvis.franken.de ([193.175.24.41]:49396 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgGEJtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:49:43 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1js1HF-0002u8-01; Sun, 05 Jul 2020 11:49:37 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id EAED3C077D; Sun,  5 Jul 2020 11:48:11 +0200 (CEST)
-Date:   Sun, 5 Jul 2020 11:48:11 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Xingxing Su <suxingxing@loongson.cn>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH] MIPS: Do not use smp_processor_id() in preemptible code
-Message-ID: <20200705094811.GB4064@alpha.franken.de>
-References: <1593749518-16722-1-git-send-email-suxingxing@loongson.cn>
+        Sun, 5 Jul 2020 05:52:15 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:35532 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgGEJwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 05:52:14 -0400
+Received: by mail-il1-f199.google.com with SMTP id v12so4439864ilg.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 02:52:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0claRtCrm0axoqAPyUKkATGZT88GntWEWTF7k/OLN+4=;
+        b=LNcdxw1UZxvWjPytvmkz+refgmMuk/U1jK0DtYuErEWsosNJNd3Nefh1EIdSZjw25j
+         /pRmmicy0yWfZXM3p6PvwBY62hEdcy7Jfur3Pnon3kzbHaeSoI1qBU1hFSO2WTO/5ukX
+         evX5xNhltnNIRYBj7KxM2UQdAI7197n9sYqnGcuKlWb4U/cAYcm2HLYi76MBx1YJUlEG
+         M8UFoI9t8+q/fa7hkKVdSReUGUaD71WKdLaOc1QYCIfBy4+5X4foRuP1EpGLo7eyZk83
+         C+wwRqUrkuKmDvznQJf7ZkVH0gexUXvdbeYQtNLSHUb0WOwiu3sjMEJEQAqf2rSVjILh
+         XmAA==
+X-Gm-Message-State: AOAM53112TYvKVTmdiQDjoIJuGBugLkwF2MkyBwNv3fT6LF74gHFdX2D
+        lIA2Je9NylwnFB8jdfS8Mgqr5Nq0eIpqcPJQOa+RE3lQq2Ug
+X-Google-Smtp-Source: ABdhPJzoWjT0p/GcTKtpZy98ijeOKxUtLaRgFZ8serTUevZpcUdDlmY5v35hteXSCBooqx1soYvLhbmNIz+0PzgJUzGmMna9zQWL
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593749518-16722-1-git-send-email-suxingxing@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a5d:9590:: with SMTP id a16mr4780500ioo.150.1593942733541;
+ Sun, 05 Jul 2020 02:52:13 -0700 (PDT)
+Date:   Sun, 05 Jul 2020 02:52:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006cd5e905a9aeb60e@google.com>
+Subject: memory leak in qdisc_create_dflt
+From:   syzbot <syzbot+d411cff6ab29cc2c311b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 12:11:58PM +0800, Xingxing Su wrote:
-> Use preempt_disable() to fix the following bug under CONFIG_DEBUG_PREEMPT.
-> 
-> [   21.915305] BUG: using smp_processor_id() in preemptible [00000000] code: qemu-system-mip/1056
-> [   21.923996] caller is do_ri+0x1d4/0x690
-> [   21.927921] CPU: 0 PID: 1056 Comm: qemu-system-mip Not tainted 5.8.0-rc2 #3
-> [   21.934913] Stack : 0000000000000001 ffffffff81370000 ffffffff8071cd60 a80f926d5ac95694
-> [   21.942984]         a80f926d5ac95694 0000000000000000 98000007f0043c88 ffffffff80f2fe40
-> [   21.951054]         0000000000000000 0000000000000000 0000000000000001 0000000000000000
-> [   21.959123]         ffffffff802d60cc 98000007f0043dd8 ffffffff81f4b1e8 ffffffff81f60000
-> [   21.967192]         ffffffff81f60000 ffffffff80fe0000 ffff000000000000 0000000000000000
-> [   21.975261]         fffffffff500cce1 0000000000000001 0000000000000002 0000000000000000
-> [   21.983331]         ffffffff80fe1a40 0000000000000006 ffffffff8077f940 0000000000000000
-> [   21.991401]         ffffffff81460000 98000007f0040000 98000007f0043c80 000000fffba8cf20
-> [   21.999471]         ffffffff8071cd60 0000000000000000 0000000000000000 0000000000000000
-> [   22.007541]         0000000000000000 0000000000000000 ffffffff80212ab4 a80f926d5ac95694
-> [   22.015610]         ...
-> [   22.018086] Call Trace:
-> [   22.020562] [<ffffffff80212ab4>] show_stack+0xa4/0x138
-> [   22.025732] [<ffffffff8071cd60>] dump_stack+0xf0/0x150
-> [   22.030903] [<ffffffff80c73f5c>] check_preemption_disabled+0xf4/0x100
-> [   22.037375] [<ffffffff80213b84>] do_ri+0x1d4/0x690
-> [   22.042198] [<ffffffff8020b828>] handle_ri_int+0x44/0x5c
-> [   24.359386] BUG: using smp_processor_id() in preemptible [00000000] code: qemu-system-mip/1072
-> [   24.368204] caller is do_ri+0x1a8/0x690
-> [   24.372169] CPU: 4 PID: 1072 Comm: qemu-system-mip Not tainted 5.8.0-rc2 #3
-> [   24.379170] Stack : 0000000000000001 ffffffff81370000 ffffffff8071cd60 a80f926d5ac95694
-> [   24.387246]         a80f926d5ac95694 0000000000000000 98001007ef06bc88 ffffffff80f2fe40
-> [   24.395318]         0000000000000000 0000000000000000 0000000000000001 0000000000000000
-> [   24.403389]         ffffffff802d60cc 98001007ef06bdd8 ffffffff81f4b818 ffffffff81f60000
-> [   24.411461]         ffffffff81f60000 ffffffff80fe0000 ffff000000000000 0000000000000000
-> [   24.419533]         fffffffff500cce1 0000000000000001 0000000000000002 0000000000000000
-> [   24.427603]         ffffffff80fe0000 0000000000000006 ffffffff8077f940 0000000000000020
-> [   24.435673]         ffffffff81460020 98001007ef068000 98001007ef06bc80 000000fffbbbb370
-> [   24.443745]         ffffffff8071cd60 0000000000000000 0000000000000000 0000000000000000
-> [   24.451816]         0000000000000000 0000000000000000 ffffffff80212ab4 a80f926d5ac95694
-> [   24.459887]         ...
-> [   24.462367] Call Trace:
-> [   24.464846] [<ffffffff80212ab4>] show_stack+0xa4/0x138
-> [   24.470029] [<ffffffff8071cd60>] dump_stack+0xf0/0x150
-> [   24.475208] [<ffffffff80c73f5c>] check_preemption_disabled+0xf4/0x100
-> [   24.481682] [<ffffffff80213b58>] do_ri+0x1a8/0x690
-> [   24.486509] [<ffffffff8020b828>] handle_ri_int+0x44/0x5c
-> 
-> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
-> ---
->  arch/mips/kernel/traps.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+Hello,
 
-applied to mips-fixes.
+syzbot found the following crash on:
 
-Thomas.
+HEAD commit:    9ebcfadb Linux 5.8-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1577525b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=d411cff6ab29cc2c311b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e579e3100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1007c45b100000
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d411cff6ab29cc2c311b@syzkaller.appspotmail.com
+
+BUG: memory leak
+unreferenced object 0xffff888115aa8c00 (size 512):
+  comm "syz-executor530", pid 6646, jiffies 4294943517 (age 13.870s)
+  hex dump (first 32 bytes):
+    a0 0c be 82 ff ff ff ff f0 0b be 82 ff ff ff ff  ................
+    04 00 00 00 e8 03 00 00 40 c6 72 84 ff ff ff ff  ........@.r.....
+  backtrace:
+    [<00000000ead56edd>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<00000000ead56edd>] kzalloc_node include/linux/slab.h:680 [inline]
+    [<00000000ead56edd>] qdisc_alloc+0x45/0x260 net/sched/sch_generic.c:818
+    [<000000002852d256>] qdisc_create_dflt+0x3d/0x170 net/sched/sch_generic.c:893
+    [<000000002108f663>] atm_tc_init+0x96/0x150 net/sched/sch_atm.c:551
+    [<000000000988e5f0>] qdisc_create+0x1ae/0x670 net/sched/sch_api.c:1246
+    [<00000000c8befd49>] tc_modify_qdisc+0x198/0xb10 net/sched/sch_api.c:1662
+    [<00000000b014fe08>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5460
+    [<00000000da7a0de1>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2469
+    [<0000000069fa5fbe>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<0000000069fa5fbe>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1329
+    [<0000000049c303c5>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1918
+    [<0000000017755dda>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000017755dda>] sock_sendmsg+0x4c/0x60 net/socket.c:672
+    [<00000000294b696a>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2352
+    [<00000000eb7a1f59>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2406
+    [<00000000ba1066c9>] __sys_sendmmsg+0xda/0x230 net/socket.c:2496
+    [<0000000082fdecc3>] __do_sys_sendmmsg net/socket.c:2525 [inline]
+    [<0000000082fdecc3>] __se_sys_sendmmsg net/socket.c:2522 [inline]
+    [<0000000082fdecc3>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2522
+    [<000000009da3552a>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
+    [<00000000b46d0fac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888115aa8a00 (size 512):
+  comm "syz-executor530", pid 6647, jiffies 4294944100 (age 8.040s)
+  hex dump (first 32 bytes):
+    a0 0c be 82 ff ff ff ff f0 0b be 82 ff ff ff ff  ................
+    04 00 00 00 e8 03 00 00 40 c6 72 84 ff ff ff ff  ........@.r.....
+  backtrace:
+    [<00000000ead56edd>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<00000000ead56edd>] kzalloc_node include/linux/slab.h:680 [inline]
+    [<00000000ead56edd>] qdisc_alloc+0x45/0x260 net/sched/sch_generic.c:818
+    [<000000002852d256>] qdisc_create_dflt+0x3d/0x170 net/sched/sch_generic.c:893
+    [<000000002108f663>] atm_tc_init+0x96/0x150 net/sched/sch_atm.c:551
+    [<000000000988e5f0>] qdisc_create+0x1ae/0x670 net/sched/sch_api.c:1246
+    [<00000000c8befd49>] tc_modify_qdisc+0x198/0xb10 net/sched/sch_api.c:1662
+    [<00000000b014fe08>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5460
+    [<00000000da7a0de1>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2469
+    [<0000000069fa5fbe>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<0000000069fa5fbe>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1329
+    [<0000000049c303c5>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1918
+    [<0000000017755dda>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000017755dda>] sock_sendmsg+0x4c/0x60 net/socket.c:672
+    [<00000000294b696a>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2352
+    [<00000000eb7a1f59>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2406
+    [<00000000ba1066c9>] __sys_sendmmsg+0xda/0x230 net/socket.c:2496
+    [<0000000082fdecc3>] __do_sys_sendmmsg net/socket.c:2525 [inline]
+    [<0000000082fdecc3>] __se_sys_sendmmsg net/socket.c:2522 [inline]
+    [<0000000082fdecc3>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2522
+    [<000000009da3552a>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
+    [<00000000b46d0fac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
