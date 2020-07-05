@@ -2,427 +2,121 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2AFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69269C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7805420EDD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDdKVnFu"
+	by mail.kernel.org (Postfix) with ESMTP id 4696320723
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593956869;
+	bh=GRrK3a5skX+hTzje/hiXpCqKg6Ht2lZO8SAGK4bDpLE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TaTlk7+6QGIz6JNRASTgGedmNLb4/BjNls1/9Xjgt+yxx4xx5O1yf1zlGulecyaHq
+	 HehrZSRjNPpmbwEvkq/EF3MGucaBsvZuVw2Kpa/I0JfyQesdiZu2uSQJ037upa1UtQ
+	 eJtyKakxYhDkBk594sC1etlNxjClntAWAMMSnP98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGENjt (ORCPT
+        id S1727094AbgGENp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 09:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgGENjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 09:39:48 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E79FC08C5DE
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:39:48 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i3so27082471qtq.13
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vvVIDc2CLQZDujNmwNntgRGtU/Zrk9Wmx69vehTgRDk=;
-        b=PDdKVnFu1TydlyNKktkWqnCRTDFmteZajPSGtOkv0S+4Y53zL5cCSkYpbpKdywqT0Y
-         NMLmDOBjQtoubs6MUN/7qu7yJJf65N+LuScdGcUQXGkbHmYd+1UwZRR1wOXRQbqv9heO
-         5mScpNZn9mt7qWyYZCJkH+R1i/rNrONbv9jcoDPMfIr/c6J8rMxxWEqpAkuPlVZvGS1A
-         bXcAwDpvyVSM8fCA66MeJwhF7Xsw2jM/cAwttmJikww9LmIdc07pmeqAPWKNx9yC/yph
-         92I9WTCvL2M7K7fzqBnksquRjTjNKZjcC9d96A2SSNbh7YFcfFDnBnb0eCXb4oz7Rju+
-         xKcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vvVIDc2CLQZDujNmwNntgRGtU/Zrk9Wmx69vehTgRDk=;
-        b=TnZHisXOBX3X64luU/AfYVXcPCICbAClt9/DQzruFCE3QYSiPNZ9uJdokYxFx2iDny
-         MkNdcoaIuMSk9ZXVSUuwJZt9ZH0D7GssSkA7/S/Kv0zl5tOc83EzHId8dN5WU8SXW+64
-         0rSmVR/YVJLNRUco4d9Jen5fii2eRRPVPLKXAnUVqi86nfdAf4ByFCr+Cei/nAIGbrKM
-         TuUz0s3eshRO4dCE7JM7dVqEIpnHSwalBSrE8lzxt1e+QdA1P+WVaYwj+jhQCqpkHXPB
-         KoMXKS8sqUmexx4K/ciGyBRNEo9OsPjn2EtCerPryNEr0DDKGl33L9u4gsXEQbrhNCMO
-         KRYA==
-X-Gm-Message-State: AOAM531xNSov/Htgb2zn8wcfLEroOeXQjLvmJD0CWNzxAe7wcxhlqDfA
-        hgvU+cu+0uqJHtlWnUo0qB3sHgdRYjCpu0Hp9veyjAKy
-X-Google-Smtp-Source: ABdhPJxfkj6OZ6hQheX8h0Nb6a4GQGKk923ArjNOCtTDiijain8V2v34ZiBevv3Fd0ldieaZWbE782ngUMwZO1gM6wI=
-X-Received: by 2002:ac8:404f:: with SMTP id j15mr43989782qtl.200.1593956387252;
- Sun, 05 Jul 2020 06:39:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-7-git-send-email-grzegorz.jaszczyk@linaro.org> <46b98790-a393-d66c-1e42-bf2055fc24ff@ti.com>
-In-Reply-To: <46b98790-a393-d66c-1e42-bf2055fc24ff@ti.com>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Sun, 5 Jul 2020 15:39:36 +0200
-Message-ID: <CAMxfBF52X+USBYt4MGs_z3T+SciqoJrGW61ZC39P3Xo8rjqPsg@mail.gmail.com>
-Subject: Re: [PATCHv3 6/6] irqchip/irq-pruss-intc: Add event mapping support
-To:     Suman Anna <s-anna@ti.com>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jul 2020 09:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbgGENp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 09:45:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDC820723;
+        Sun,  5 Jul 2020 13:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593956727;
+        bh=GRrK3a5skX+hTzje/hiXpCqKg6Ht2lZO8SAGK4bDpLE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tlMbk8BFB3Cf38eIKF6bcjDadn6ROhQxNApdZu6PHfr/OKUANDk5dhaQJMwUGPCOU
+         2nmsiAFVPw/9Dq6aWsKsdxcxqev0E3HtvoPNRNvUa1US7uoNmFVgSMHHH1xUQtCHA9
+         aRNUg3dLB2Rzb4ZegnmWnLHShJz7crOdlq0/fg7c=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1js4xS-009BZX-4Z; Sun, 05 Jul 2020 14:45:26 +0100
+Date:   Sun, 05 Jul 2020 14:45:25 +0100
+Message-ID: <87pn9adqiy.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH v4 08/15] arm64: kvm: Duplicate hyp/tlb.c for VHE/nVHE
+In-Reply-To: <20200625131420.71444-9-dbrazdil@google.com>
+References: <20200625131420.71444-1-dbrazdil@google.com>
+        <20200625131420.71444-9-dbrazdil@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman,
+On Thu, 25 Jun 2020 14:14:13 +0100,
+David Brazdil <dbrazdil@google.com> wrote:
+> 
+> tlb.c contains code for flushing the TLB, with code shared between VHE/nVHE.
+> Because common code is small, duplicate tlb.c and specialize each copy for
+> VHE/nVHE.
+> 
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/kernel/image-vars.h      |  14 +--
+>  arch/arm64/kvm/hyp/Makefile         |   2 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile    |   2 +-
+>  arch/arm64/kvm/hyp/{ => nvhe}/tlb.c |  94 +---------------
+>  arch/arm64/kvm/hyp/vhe/Makefile     |   2 +-
+>  arch/arm64/kvm/hyp/vhe/tlb.c        | 162 ++++++++++++++++++++++++++++
+>  6 files changed, 178 insertions(+), 98 deletions(-)
+>  rename arch/arm64/kvm/hyp/{ => nvhe}/tlb.c (62%)
+>  create mode 100644 arch/arm64/kvm/hyp/vhe/tlb.c
+> 
 
-On Thu, 2 Jul 2020 at 18:25, Suman Anna <s-anna@ti.com> wrote:
->
-> Hi Greg,
->
-> On 7/2/20 9:17 AM, Grzegorz Jaszczyk wrote:
-> > The PRUSS INTC receives a number of system input interrupt source events
-> > and supports individual control configuration and hardware prioritization.
-> > These input events can be mapped to some output host interrupts through 2
-> > levels of many-to-one mapping i.e. events to channel mapping and channels
-> > to host interrupts.
-> >
-> > This mapping information is provided through the PRU firmware that is
-> > loaded onto a PRU core/s or through the device tree node of the PRU
-> > application. The mapping configuration is triggered by the PRU
-> > remoteproc driver, and is setup before the PRU core is started and
-> > cleaned up after the PRU core is stopped. This event mapping
-> > configuration logic programs the Channel Map Registers (CMRx) and
-> > Host-Interrupt Map Registers (HMRx) only when a new program is being
-> > loaded/started and the same events and interrupt channels are reset to
-> > zero when stopping a PRU.
-> >
-> > Reference counting is used to allow multiple system events to share a
-> > single channel and to allow multiple channels to share a single host
-> > event.
-> >
-> > The remoteproc driver can register mappings read from a firmware blob
-> > as shown below.
-> >
-> >       struct irq_fwspec fwspec;
-> >       int irq;
-> >
-> >       fwspec.fwnode = of_node_to_fwnode(dev->of_node);
-> >       fwspec.param_count = 3;
-> >       fwspec.param[0] = 63; // system event
-> >       fwspec.param[1] = 5;  // channel
-> >       fwspec.param[2] = 6;  // host event
-> >
-> >       irq = irq_create_fwspec_mapping(&fwspec);
-> >       if (irq < 0) {
-> >               dev_err(dev, "failed to get irq\n");
-> >               return irq;
-> >       }
-> >
-> > Suggested-by: David Lechner <david@lechnology.com>
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> > ---
-> > v3:
-> > - This patch replaces https://patchwork.kernel.org/patch/11069753/
-> >    according to received feedback. Instead of exporting custom functions
-> >    from interrupt driver, the xlate and irq domain map is used for
-> >    interrupt parsing and mapping.
->
-> Thanks for reworking this. Only have couple of very minor comments below.
->
-> > ---
-> >   drivers/irqchip/irq-pruss-intc.c | 265 ++++++++++++++++++++++++++++++++++++++-
-> >   1 file changed, 264 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-> > index 362aa01..cf40a97 100644
-> > --- a/drivers/irqchip/irq-pruss-intc.c
-> > +++ b/drivers/irqchip/irq-pruss-intc.c
-> > @@ -51,14 +51,42 @@
-> >   #define PRU_INTC_HIER               0x1500
-> >
-> >   /* CMR register bit-field macros */
-> > +#define CMR_EVT_MAP_MASK     0xf
-> > +#define CMR_EVT_MAP_BITS     8
-> >   #define CMR_EVT_PER_REG             4
-> >
-> >   /* HMR register bit-field macros */
-> > +#define HMR_CH_MAP_MASK              0xf
-> > +#define HMR_CH_MAP_BITS              8
-> >   #define HMR_CH_PER_REG              4
-> >
-> >   /* HIPIR register bit-fields */
-> >   #define INTC_HIPIR_NONE_HINT        0x80000000
-> >
-> > +#define MAX_PRU_SYS_EVENTS 160
-> > +#define MAX_PRU_CHANNELS 20
-> > +
-> > +/**
-> > + * struct pruss_intc_hwirq_data - additional metadata associated with a PRU
-> > + * system event
-> > + * @channel: The PRU INTC channel that the system event should be mapped to
-> > + * @host: The PRU INTC host that the channel should be mapped to
-> > + */
-> > +struct pruss_intc_hwirq_data {
-> > +     u8 channel;
-> > +     u8 host;
-> > +};
-> > +
-> > +/**
-> > + * struct pruss_intc_map_record - keeps track of actual mapping state
-> > + * @value: The currently mapped value (channel or host)
-> > + * @ref_count: Keeps track of number of current users of this resource
-> > + */
-> > +struct pruss_intc_map_record {
-> > +     u8 value;
-> > +     u8 ref_count;
-> > +};
-> > +
-> >   /**
-> >    * struct pruss_intc_match_data - match data to handle SoC variations
-> >    * @num_system_events: number of input system events handled by the PRUSS INTC
-> > @@ -71,18 +99,29 @@ struct pruss_intc_match_data {
-> >
-> >   /**
-> >    * struct pruss_intc - PRUSS interrupt controller structure
-> > + * @hwirq_data: table of additional mapping data received from device tree
-> > + *   or PRU firmware
-> > + * @event_channel: current state of system event to channel mappings
-> > + * @channel_host: current state of channel to host mappings
-> >    * @irqs: kernel irq numbers corresponding to PRUSS host interrupts
-> >    * @base: base virtual address of INTC register space
-> >    * @domain: irq domain for this interrupt controller
-> >    * @soc_config: cached PRUSS INTC IP configuration data
-> > + * @lock: mutex to serialize access to INTC
-> > + * @dev: PRUSS INTC device pointer
-> >    * @shared_intr: bit-map denoting if the MPU host interrupt is shared
-> >    * @invalid_intr: bit-map denoting if host interrupt is not connected to MPU
-> >    */
-> >   struct pruss_intc {
-> > +     struct pruss_intc_hwirq_data hwirq_data[MAX_PRU_SYS_EVENTS];
-> > +     struct pruss_intc_map_record event_channel[MAX_PRU_SYS_EVENTS];
-> > +     struct pruss_intc_map_record channel_host[MAX_PRU_CHANNELS];
-> >       unsigned int irqs[MAX_NUM_HOST_IRQS];
-> >       void __iomem *base;
-> >       struct irq_domain *domain;
-> >       const struct pruss_intc_match_data *soc_config;
-> > +     struct mutex lock; /* PRUSS INTC lock */
-> > +     struct device *dev;
-> >       u16 shared_intr;
-> >       u16 invalid_intr;
-> >   };
-> > @@ -98,6 +137,165 @@ static inline void pruss_intc_write_reg(struct pruss_intc *intc,
-> >       writel_relaxed(val, intc->base + reg);
-> >   }
-> >
-> > +static void pruss_intc_update_cmr(struct pruss_intc *intc, int evt, s8 ch)
-> > +{
-> > +     u32 idx, offset, val;
-> > +
-> > +     idx = evt / CMR_EVT_PER_REG;
-> > +     offset = (evt % CMR_EVT_PER_REG) * CMR_EVT_MAP_BITS;
-> > +
-> > +     val = pruss_intc_read_reg(intc, PRU_INTC_CMR(idx));
-> > +     val &= ~(CMR_EVT_MAP_MASK << offset);
-> > +     val |= ch << offset;
-> > +     pruss_intc_write_reg(intc, PRU_INTC_CMR(idx), val);
-> > +
-> > +     dev_dbg(intc->dev, "SYSEV%u -> CH%d (CMR%d 0x%08x)\n", evt, ch,
-> > +             idx, pruss_intc_read_reg(intc, PRU_INTC_CMR(idx)));
-> > +}
-> > +
-> > +static void pruss_intc_update_hmr(struct pruss_intc *intc, int ch, s8 host)
-> > +{
-> > +     u32 idx, offset, val;
-> > +
-> > +     idx = ch / HMR_CH_PER_REG;
-> > +     offset = (ch % HMR_CH_PER_REG) * HMR_CH_MAP_BITS;
-> > +
-> > +     val = pruss_intc_read_reg(intc, PRU_INTC_HMR(idx));
-> > +     val &= ~(HMR_CH_MAP_MASK << offset);
-> > +     val |= host << offset;
-> > +     pruss_intc_write_reg(intc, PRU_INTC_HMR(idx), val);
-> > +
-> > +     dev_dbg(intc->dev, "CH%d -> HOST%d (HMR%d 0x%08x)\n", ch, host, idx,
-> > +             pruss_intc_read_reg(intc, PRU_INTC_HMR(idx)));
-> > +}
-> > +
-> > +/**
-> > + * pruss_intc_map() - configure the PRUSS INTC
-> > + * @intc: PRUSS interrupt controller pointer
-> > + * @hwirq: the system event number
-> > + *
-> > + * Configures the PRUSS INTC with the provided configuration from the one
-> > + * parsed in the xlate function. Any existing event to channel mappings or
-> > + * channel to host interrupt mappings are checked to make sure there are no
-> > + * conflicting configuration between both the PRU cores.
-> > + *
-> > + * Returns 0 on success, or a suitable error code otherwise
-> > + */
-> > +static int pruss_intc_map(struct pruss_intc *intc, unsigned long hwirq)
-> > +{
-> > +     struct device *dev = intc->dev;
-> > +     int ret = 0;
-> > +     u8 ch, host, reg_idx;
-> > +     u32 val;
-> > +
-> > +     if (hwirq >= intc->soc_config->num_system_events)
-> > +             return -EINVAL;
-> > +
-> > +     mutex_lock(&intc->lock);
-> > +
-> > +     ch = intc->hwirq_data[hwirq].channel;
-> > +     host = intc->hwirq_data[hwirq].host;
-> > +
-> > +     /* check if sysevent already assigned */
-> > +     if (intc->event_channel[hwirq].ref_count > 0 &&
-> > +         intc->event_channel[hwirq].value != ch) {
-> > +             dev_err(dev, "event %lu (req. channel %d) already assigned to channel %d\n",
-> > +                     hwirq, ch, intc->event_channel[hwirq].value);
-> > +             ret = -EBUSY;
-> > +             goto unlock;
-> > +     }
-> > +
-> > +     /* check if channel already assigned */
-> > +     if (intc->channel_host[ch].ref_count > 0 &&
-> > +         intc->channel_host[ch].value != host) {
-> > +             dev_err(dev, "channel %d (req. host %d) already assigned to host %d\n",
-> > +                     ch, host, intc->channel_host[ch].value);
-> > +             ret = -EBUSY;
-> > +             goto unlock;
-> > +     }
-> > +
-> > +     if (++intc->event_channel[hwirq].ref_count == 1) {
-> > +             intc->event_channel[hwirq].value = ch;
-> > +
-> > +             pruss_intc_update_cmr(intc, hwirq, ch);
-> > +
-> > +             reg_idx = hwirq / 32;
-> > +             val = BIT(hwirq  % 32);
-> > +
-> > +             /* clear and enable system event */
-> > +             pruss_intc_write_reg(intc, PRU_INTC_ESR(reg_idx), val);
-> > +             pruss_intc_write_reg(intc, PRU_INTC_SECR(reg_idx), val);
-> > +     }
-> > +
-> > +     if (++intc->channel_host[ch].ref_count == 1) {
-> > +             intc->channel_host[ch].value = host;
-> > +
-> > +             pruss_intc_update_hmr(intc, ch, host);
-> > +
-> > +             /* enable host interrupts */
-> > +             pruss_intc_write_reg(intc, PRU_INTC_HIEISR, host);
-> > +     }
-> > +
-> > +     dev_dbg(dev, "mapped system_event = %lu channel = %d host = %d",
-> > +              hwirq, ch, host);
-> > +
-> > +     /* global interrupt enable */
-> > +     pruss_intc_write_reg(intc, PRU_INTC_GER, 1);
-> > +
-> > +unlock:
-> > +     mutex_unlock(&intc->lock);
-> > +     return ret;
-> > +}
-> > +
-> > +/**
-> > + * pruss_intc_unmap() - unconfigure the PRUSS INTC
-> > + * @intc: PRUSS interrupt controller pointer
-> > + * @hwirq: the system event number
-> > + *
-> > + * Undo whatever was done in pruss_intc_map() for a PRU core.
-> > + * Mappings are reference counted, so resources are only disabled when there
-> > + * are no longer any users.
-> > + */
-> > +static void pruss_intc_unmap(struct pruss_intc *intc, unsigned long hwirq)
-> > +{
-> > +     u8 ch, host, reg_idx;
-> > +     u32 val;
-> > +
-> > +     if (hwirq >= intc->soc_config->num_system_events)
-> > +             return;
-> > +
-> > +     mutex_lock(&intc->lock);
-> > +
-> > +     ch = intc->event_channel[hwirq].value;
-> > +     host = intc->channel_host[ch].value;
-> > +
-> > +     if (--intc->channel_host[ch].ref_count == 0) {
-> > +             /* disable host interrupts */
-> > +             pruss_intc_write_reg(intc, PRU_INTC_HIDISR, host);
-> > +
-> > +             /* clear the map using reset value 0 */
-> > +             pruss_intc_update_hmr(intc, ch, 0);
-> > +     }
-> > +
-> > +     if (--intc->event_channel[hwirq].ref_count == 0) {
-> > +             reg_idx = hwirq / 32;
-> > +             val = BIT(hwirq  % 32);
-> > +
-> > +             /* disable system events */
-> > +             pruss_intc_write_reg(intc, PRU_INTC_ECR(reg_idx), val);
-> > +             /* clear any pending status */
-> > +             pruss_intc_write_reg(intc, PRU_INTC_SECR(reg_idx), val);
-> > +
-> > +             /* clear the map using reset value 0 */
-> > +             pruss_intc_update_cmr(intc, hwirq, 0);
-> > +     }
-> > +
-> > +     dev_dbg(intc->dev, "unmapped system_event = %lu channel = %d host = %d\n",
-> > +             hwirq, ch, host);
-> > +
-> > +     mutex_unlock(&intc->lock);
-> > +}
-> > +
-> >   static void pruss_intc_init(struct pruss_intc *intc)
-> >   {
-> >       const struct pruss_intc_match_data *soc_config = intc->soc_config;
-> > @@ -212,10 +410,67 @@ static struct irq_chip pruss_irqchip = {
-> >       .irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state,
-> >   };
-> >
-> > +static int
-> > +pruss_intc_irq_domain_xlate(struct irq_domain *d, struct device_node *node,
-> > +                         const u32 *intspec, unsigned int intsize,
-> > +                         unsigned long *out_hwirq, unsigned int *out_type)
-> > +{
-> > +     struct pruss_intc *intc = d->host_data;
-> > +     struct device *dev = intc->dev;
-> > +     int sys_event, channel, host;
-> > +
-> > +     if (intsize == 1) {
-> > +             /*
-> > +              * In case of short version (intsize == 1) verify if sysevent
-> > +              * already mapped to channel/host irq if not return error
-> > +              */
-> > +             sys_event = intspec[0];
-> > +             if (intc->event_channel[sys_event].ref_count)
-> > +                     goto already_mapped;
-> > +             else
-> > +                     return -EINVAL;
->
-> Perhaps revise this to check the error condition first and skipping the
-> else, similar to the change you have done in Patch 3.
+[...]
 
-Ok. I will do that for v4.
+> diff --git a/arch/arm64/kvm/hyp/vhe/tlb.c b/arch/arm64/kvm/hyp/vhe/tlb.c
+> new file mode 100644
+> index 000000000000..35e8e112ba28
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/vhe/tlb.c
 
->
-> > +     }
-> > +
-> > +     if (intsize < 3)
-> > +             return -EINVAL;
-> > +
-> > +     sys_event = intspec[0];
-> > +     if (sys_event < 0 || sys_event >= intc->soc_config->num_system_events) {
-> > +             dev_err(dev, "not valid event number\n");
->
-> Would be useful to print the invalid event numbers here, and each of
-> channel and host below.
+[...]
 
-Yes, good point.
+> +void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+> +{
+> +	struct tlb_inv_context cxt;
+> +
+> +	dsb(ishst);
+> +
+> +	/* Switch to requested VMID */
+> +	kvm = kern_hyp_va(kvm);
 
-Thank you,
-Grzegorz
+nit: this is now superfluous. I'll drop it locally.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
