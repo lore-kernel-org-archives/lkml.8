@@ -2,137 +2,137 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF19C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3423A2088E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4772088E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RfXmPGTt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3O12iI2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgGEFq2 (ORCPT
+        id S1726355AbgGEFrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 01:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37444 "EHLO
+        Sun, 5 Jul 2020 01:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGEFq2 (ORCPT
+        with ESMTP id S1725941AbgGEFrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 01:46:28 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25545C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:46:28 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m9so5371645pfh.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 22:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I2a5PLdldX+tMxKx3O4LIv9xtAhMAmYRl6zJFR/hXiA=;
-        b=RfXmPGTto0Gz+MbvGo1QMO6md2BCUQfRW1QqjLWmCbGgpWhv+ZjlhVMZhByyZ81nCy
-         yJEuOCfrQd1bVCiwemfHjqROV85NLuWzERnY/7MDfjpl9aHezsWWv0QcqSlKhSSlBftW
-         6ywG3JjDEuoLx9YNUQFFYdIEENn7bAlblo42A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I2a5PLdldX+tMxKx3O4LIv9xtAhMAmYRl6zJFR/hXiA=;
-        b=qOpCe0g/Gnu5ZVJp37JEWrh1vT0GH9QN5de8/wzemSPT7reC5HHxZaMNThvDRlGsQm
-         foc67sUDUnazMAcCzuYVTIuKE5DNLeBmXe/U+NoaglxVj/z3OJ9hLch/2S6JhfJt9zxX
-         gQxOOjKn6N90mLyitU5qvQfFKxM35reUwmVwVn7NJ9i41AFwtILhb7QJbLT+J2IAGE3r
-         rojm6wfB2rii7wH+7bgfCHdhzfcq3c/lGR+0huS/kdN1+mnoWUrCjBr+ss/9u1HgDENt
-         7AJJmYX+gN+WTgcxupEnXzWqO13KKo0icWF6AvWmWi49gfVpPzLZrIa1wxYB7Lwy5U3R
-         P27w==
-X-Gm-Message-State: AOAM532pb63sJs9XDQiLx3dHuDSulTR8RQF66WiA/oW746/ked4SZRy7
-        8BMO8l/INuNcyoBL2nORENaXJw==
-X-Google-Smtp-Source: ABdhPJxLxBTBtwYIHio0yADOjvtvwnRBa62ORSVaTpJlmeQsJN600nicdVw6a1IlkKRlRiQpgmTtGA==
-X-Received: by 2002:aa7:9d9a:: with SMTP id f26mr7487491pfq.26.1593927987520;
-        Sat, 04 Jul 2020 22:46:27 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j3sm4663264pfe.102.2020.07.04.22.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 22:46:26 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 22:46:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        David Gow <davidgow@google.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Bird, Tim" <Tim.Bird@sony.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
+        Sun, 5 Jul 2020 01:47:05 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DC9C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=4qY9OjUIgaxXnuAuS1ury4SidM23kgQAcoG5OlSPyBE=; b=3O12iI2xcJ+P2JAvDlypgqjgh/
+        miZ2CXQ5YEJDB+0DVEkVJ7L5DDTixjT4xSSux6r4kFYOCMlutnQaSJJRxSljNLOp9p2IJLNE3jDiZ
+        1n+IrdtmBK76VPCQ/aUTwsbxooSG1UUY67l5s58khN7eJC0gHQtHr4umu48E/RGgrnLHMwzSIOcaf
+        yexhMgUo5I96s8kZB6TDfJLxWmMBy/FErK02boEz7WhaZLHBQiRQi54WHGZ5Bxda3L3/isLu95vw0
+        YDBjWH8L1lWlr5d0jZFIlPUJvL7lsFs61387lA0wArLRqJThzgUWid8g1dbm7caSz2rpksh+HpOO0
+        7PncVi/w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrxUK-0003Pg-Eg; Sun, 05 Jul 2020 05:46:53 +0000
+Subject: Re: [PATCH v3 1/3] Correct asm VMXOFF side effects
+To:     "David P. Reed" <dpreed@deepplum.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] selftests/harness: Switch to TAP output
-Message-ID: <202007042245.BCC693126@keescook>
-References: <20200622181651.2795217-1-keescook@chromium.org>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200629214956.GA12962@linux.intel.com>
+ <20200704203809.76391-1-dpreed@deepplum.com>
+ <20200704203809.76391-2-dpreed@deepplum.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <66a04b73-32ad-6982-f4c9-c85b890e37b1@infradead.org>
+Date:   Sat, 4 Jul 2020 22:46:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622181651.2795217-1-keescook@chromium.org>
+In-Reply-To: <20200704203809.76391-2-dpreed@deepplum.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:16:43AM -0700, Kees Cook wrote:
-> Hi,
-> 
-> v2:
-> - switch harness from XFAIL to SKIP
-> - pass skip reason from test into TAP output
-> - add acks/reviews
-> v1: https://lore.kernel.org/lkml/20200611224028.3275174-1-keescook@chromium.org/
-> 
-> 
-> I finally got around to converting the kselftest_harness.h API to actually
-> use the kselftest.h API so all the tools using it can actually report
-> TAP correctly. As part of this, there are a bunch of related cleanups,
-> API updates, and additions.
+On 7/4/20 1:38 PM, David P. Reed wrote:
+> Tell gcc that VMXOFF instruction clobbers condition codes
+> and memory when executed.
+> Also, correct original comments to remove kernel-doc syntax
+> per Randy Dunlap's request.
 
-Friendly ping -- I'd love to get this landed for -next, it makes doing
-seccomp testing much nicer. :)
+Looks good. Thanks.  For the comment changes:
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Thanks!
+> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: David P. Reed <dpreed@deepplum.com>
+> ---
+>  arch/x86/include/asm/virtext.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+> index 9aad0e0876fb..0ede8d04535a 100644
+> --- a/arch/x86/include/asm/virtext.h
+> +++ b/arch/x86/include/asm/virtext.h
+> @@ -30,7 +30,7 @@ static inline int cpu_has_vmx(void)
+>  }
+>  
+>  
+> -/** Disable VMX on the current CPU
+> +/* Disable VMX on the current CPU
+>   *
+>   * vmxoff causes a undefined-opcode exception if vmxon was not run
+>   * on the CPU previously. Only call this function if you know VMX
+> @@ -38,7 +38,7 @@ static inline int cpu_has_vmx(void)
+>   */
+>  static inline void cpu_vmxoff(void)
+>  {
+> -	asm volatile ("vmxoff");
+> +	asm volatile ("vmxoff" ::: "cc", "memory");
+>  	cr4_clear_bits(X86_CR4_VMXE);
+>  }
+>  
+> @@ -47,7 +47,7 @@ static inline int cpu_vmx_enabled(void)
+>  	return __read_cr4() & X86_CR4_VMXE;
+>  }
+>  
+> -/** Disable VMX if it is enabled on the current CPU
+> +/* Disable VMX if it is enabled on the current CPU
+>   *
+>   * You shouldn't call this if cpu_has_vmx() returns 0.
+>   */
+> @@ -57,7 +57,7 @@ static inline void __cpu_emergency_vmxoff(void)
+>  		cpu_vmxoff();
+>  }
+>  
+> -/** Disable VMX if it is supported and enabled on the current CPU
+> +/* Disable VMX if it is supported and enabled on the current CPU
+>   */
+>  static inline void cpu_emergency_vmxoff(void)
+>  {
+> 
 
--Kees
-
-> 
-> Thanks!
-> 
-> -Kees
-> 
-> Kees Cook (8):
->   selftests/clone3: Reorder reporting output
->   selftests: Remove unneeded selftest API headers
->   selftests/binderfs: Fix harness API usage
->   selftests: Add header documentation and helpers
->   selftests/harness: Switch to TAP output
->   selftests/harness: Refactor XFAIL into SKIP
->   selftests/harness: Display signed values correctly
->   selftests/harness: Report skip reason
-> 
->  tools/testing/selftests/clone3/clone3.c       |   2 +-
->  .../selftests/clone3/clone3_clear_sighand.c   |   3 +-
->  .../testing/selftests/clone3/clone3_set_tid.c |   2 +-
->  .../filesystems/binderfs/binderfs_test.c      | 284 +++++++++---------
->  tools/testing/selftests/kselftest.h           |  78 ++++-
->  tools/testing/selftests/kselftest_harness.h   | 169 ++++++++---
->  .../pid_namespace/regression_enomem.c         |   1 -
->  .../selftests/pidfd/pidfd_getfd_test.c        |   1 -
->  .../selftests/pidfd/pidfd_setns_test.c        |   1 -
->  tools/testing/selftests/seccomp/seccomp_bpf.c |   8 +-
->  .../selftests/uevent/uevent_filtering.c       |   1 -
->  11 files changed, 356 insertions(+), 194 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
 
 -- 
-Kees Cook
+~Randy
+
