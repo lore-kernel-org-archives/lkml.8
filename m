@@ -2,153 +2,161 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 04:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A58C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A362088E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 04:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA6E20874
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RHOugun7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tX4VUWRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgGEE4x (ORCPT
+        id S1726052AbgGEFFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 00:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
+        Sun, 5 Jul 2020 01:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgGEE4x (ORCPT
+        with ESMTP id S1725773AbgGEFFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 00:56:53 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072FBC061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 21:56:53 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f2so14064643plr.8
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 21:56:53 -0700 (PDT)
+        Sun, 5 Jul 2020 01:05:37 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34387C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:05:37 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bj10so8844389plb.11
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 22:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hk9Xb46s0HA05k2AliYM1cAP/H+z0yxhR3RbIpRRNns=;
-        b=RHOugun7I0mjBZaN6nDx0tAcduf1GDPM7uZU6AtTl194aIHwKmuOJmvCdK0yo+4PEd
-         kLWo2CysMxrij3wrqgn+7B5tcFbCn/a9jU9OY1ZdSBl1Z/13v1XXrqgXmS6WQT046cpj
-         StjGY2ckU9dxEl8gEXWdhX4Tgq/nsFQgUUBGM=
+         :content-disposition:in-reply-to:user-agent;
+        bh=xgO5po79eWxovFEEuw7kMLwjskBHCz/x+ddLprK8PdM=;
+        b=tX4VUWRYvoHdrCVERbPNHdPtP+VsHJGj8hyfoSXniwb2cgVmcWux/0VAeBFvPvnDlC
+         b+dsGXhmSg/KLkbU95L8fHN88HqT28KNPz633bxJfrWRPI55+rDjTlFYyoeod7v8rAup
+         iMPwDxXgdI+fHhLBHufi/DsNk6rrOz6CQf3i5BCIxetHed9MX1MJJwGeEEJbVuoW+Tai
+         5f7/oc/n/D/48uOd08Ov0ZN2gNdWlmkxOamo7I0Fycd07ZWxWjp7knw+52CSo3zKwQmC
+         GJBrciJOuzIyafBCVQbOOlEeJ6mS4eBewIJF59TodNm5cGgLYBqjx0uN9eKKuVDQEJSp
+         Ax9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hk9Xb46s0HA05k2AliYM1cAP/H+z0yxhR3RbIpRRNns=;
-        b=QgOgGZ0ZJq7bp1q0FR14NO52ONHuqVwyGXmLKxd0GJEgHHTVcEzOprM0Elnx8rNdUe
-         2lMrOybmVWA7Fbev7rCjUo1aIlGa3Kp9XPS19w77QrzDGV/i9kFiBBVMlefToDPi3TyI
-         lwLEuzAQ27AaNhQoZ7x9hRLoP2EiTrnWpGsHg1/b2aXhSeWmS8Tne1kI9v63Uo+X0TDO
-         HgY9xXcEG+K7lSqqA6/l/r16ASQID6KZjQnHGAV/ftGQKIj5HQfbtLD4a+ZB4AzYpBQI
-         5mZT/TvvpDHs1t8xDP/p8HFMAaaDVP9Lk1EoVxkIjDcmUC+oK79m6tAQiogpOurjUF33
-         2ZSA==
-X-Gm-Message-State: AOAM531Ss20Z2+GkCPFr7rMVIzbzpfJy/OvSolRrl0LxCOh3NHawJbWv
-        MAS9AzGyBO2NUPnOF3EZuxFphQ==
-X-Google-Smtp-Source: ABdhPJyzncEyQFV+H6LbJ1hWrEX3ZvEFydKSu37Z22L5R34lFIS4JHzqTKaheOX8al0P1V9ubWch9A==
-X-Received: by 2002:a17:90a:21c3:: with SMTP id q61mr25600934pjc.207.1593925012323;
-        Sat, 04 Jul 2020 21:56:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5sm15547709pfa.71.2020.07.04.21.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 21:56:51 -0700 (PDT)
-Date:   Sat, 4 Jul 2020 21:56:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: ptrace: seccomp: Return value when the call was already invalid
-Message-ID: <202007042132.DAFA2C2@keescook>
-References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
- <20200703083914.GA18516@willie-the-truck>
- <202007030815.744AAB35D@keescook>
- <20200703154426.GA19406@willie-the-truck>
- <202007030851.D11F1EFA@keescook>
- <20200704123355.GA21185@willie-the-truck>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xgO5po79eWxovFEEuw7kMLwjskBHCz/x+ddLprK8PdM=;
+        b=c1whYV+GCORQ7oF6Ifa4wqHfthfCZy+wgOpFuOSioxav8NAjK3mevBWdJ+bv3JUrEJ
+         IygMmroT9ksnMA5QNgjJB7o6tryGCThJ50HctZRUDpHkw2cL8t3YL9sHSq9WZDePP4UJ
+         yPSzgI+fCeJvVPDeoFb3b/biJ/rHCO/4er4imD1N2fG2s+R2D0nGpfzImJfVY2s27bZN
+         +va0GW9QGX+vZxH/ZUnQPMatKLwdJ+MXLeDZcao5yixy2RbvaKe5s0nyUroUjYqbchY+
+         16Z+WkB203NVAW3XqNuUZpfhkvctVGT94CCmvRDM8FOVkGxOhO1AR3Uq0y75egZ6Ewip
+         +Jkg==
+X-Gm-Message-State: AOAM531wA8QUbriIVlj8j6CAYLaD8eflbYZabKxsUk8AQm8ooruQyF3w
+        0Ph5+CXoFMr73x5m9Gba/ptq+A==
+X-Google-Smtp-Source: ABdhPJwiAXDyeCtORifUigLyfsFxra2XSOawq6pEQMfSZebGAuT/NyTKhNFeJ6zm6pBTtXhlmy57nQ==
+X-Received: by 2002:a17:90a:ff03:: with SMTP id ce3mr48875619pjb.174.1593925535924;
+        Sat, 04 Jul 2020 22:05:35 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id h6sm15868276pfg.25.2020.07.04.22.05.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jul 2020 22:05:35 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 13:05:27 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Clark <james.clark@arm.com>
+Subject: Re: [PATCH 1/2] perf tools: ARM SPE code cleanup
+Message-ID: <20200705050527.GA14142@leoy-ThinkPad-X240s>
+References: <20200623123141.27747-1-liwei391@huawei.com>
+ <20200623123141.27747-2-liwei391@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200704123355.GA21185@willie-the-truck>
+In-Reply-To: <20200623123141.27747-2-liwei391@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 01:33:56PM +0100, Will Deacon wrote:
-> On Fri, Jul 03, 2020 at 08:52:05AM -0700, Kees Cook wrote:
-> > On Fri, Jul 03, 2020 at 04:44:27PM +0100, Will Deacon wrote:
-> > > On Fri, Jul 03, 2020 at 08:17:19AM -0700, Kees Cook wrote:
-> > > > On Fri, Jul 03, 2020 at 09:39:14AM +0100, Will Deacon wrote:
-> > > > > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> > > > > index 5f5b868292f5..a13661f44818 100644
-> > > > > --- a/arch/arm64/kernel/syscall.c
-> > > > > +++ b/arch/arm64/kernel/syscall.c
-> > > > > @@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
-> > > > >  	user_exit();
-> > > > >  
-> > > > >  	if (has_syscall_work(flags)) {
-> > > > > -		/* set default errno for user-issued syscall(-1) */
-> > > > > -		if (scno == NO_SYSCALL)
-> > > > > -			regs->regs[0] = -ENOSYS;
-> > > > > -		scno = syscall_trace_enter(regs);
-> > > > > -		if (scno == NO_SYSCALL)
-> > > > > +		if (syscall_trace_enter(regs))
-> > > > >  			goto trace_exit;
-> > > > > +
-> > > > > +		scno = regs->syscallno;
-> > > > >  	}
-> > > > >  
-> > > > >  	invoke_syscall(regs, scno, sc_nr, syscall_table);
-> > > > 
-> > > > What effect do either of these patches have on the existing seccomp
-> > > > selftests: tools/testing/selftests/seccomp/seccomp_bpf ?
-> > > 
-> > > Tests! Thanks, I'll have a look.
-> > 
-> > Thanks!
-> > 
-> > (And either way, that this behavioral difference went unnoticed means we
-> > need to add a test to the selftests for this patch.)
+Hi Wei,
+
+On Tue, Jun 23, 2020 at 08:31:40PM +0800, Wei Li wrote:
+> Remove the useless check code to make it clear.
 > 
-> Unsurprisingly, I don't think the tests go near this. I get 75/77 passes
-> on arm64 defconfig with or without these changes.
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  tools/perf/arch/arm/util/auxtrace.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 0a6e75b8777a..62b7b03d691a 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -57,7 +57,7 @@ struct auxtrace_record
+>  	struct evsel *evsel;
+>  	bool found_etm = false;
+>  	bool found_spe = false;
+> -	static struct perf_pmu **arm_spe_pmus = NULL;
+> +	static struct perf_pmu **arm_spe_pmus;
 
-(What doesn't pass for you? I tried to go find kernelci.org test output,
-but it doesn't appear to actually run selftests yet?)
+Here the 'static' should be removed as well.
 
-Anyway, good that the test output doesn't change, bad that seccomp has
-missed a corner of this architecture interface. (i.e. the entire
-TRACE_syscall fixture is dedicated to exercising the changing/skipping
-interface, but I see now that it doesn't at all exercise any area of
-ENOSYS results.)
+Just for more complete background info, IIUC, at the beginning to
+enable SPE's PMU event, since SPE is micro-architecture dependent
+(though it's defined in ARMv8-ARM, but it might be different for
+different ARM micro-architectures).  So this is why here it uses
+'static' for varaible "arm_spe_pmus", it wants to initialize the
+variable with finding all SPE PMU structure at the first time when
+invoke the function auxtrace_record__init(), and afterwards we can
+reuse the variable "arm_spe_pmus" and without calling
+find_all_arm_spe_pmus() anymore.
 
-> We could add a test, but then we'd have to agree on what it's supposed to
-> be doing ;)
+So I struggled to figure out what's good thing to do with multiple SPE
+PMU events, and your change is good thing to me.  The reason is:
 
-Well, if you look at change_syscall() in seccomp_bpf.c (once you stop
-screaming) you'll likely share my desire to have more things that are
-common across architectures. ;) So, to that end, yes, please, let's
-define what we'd like to see, and then build out the (likely wildly
-different per-architecture expectations). If I read this thread
-correctly, we need to test:
+- Firstly, the function auxtrace_record__init() will be invoked only
+  once, the variable "arm_spe_pmus" will not be used afterwards, thus
+  we don't need to check "arm_spe_pmus" is NULL or not;
+- Another reason is, even though SPE is micro-architecture dependent,
+  but so far it only supports "statistical-profiling-extension-v1" and
+  we have no chance to use multiple SPE's PMU events in Perf command.
 
-	syscall(-1), direct,  returns ENOSYS
-	syscall(-10), direct, returns ENOSYS
-	syscall(-1), SECCOMP_RET_TRACE+PTRACE_CONT, returns ENOSYS
-	syscall(-10), SECCOMP_RET_TRACE+PTRACE_CONT, returns ENOSYS
-	syscall(-1), ptrace+PTRACE_SYSCALL, returns ENOSYS
-	syscall(-10), ptrace+PTRACE_SYSCALL, returns ENOSYS
 
-do we need to double-check that registers before/after are otherwise
-unchanged too? (I *think* just looking at syscall return should be
-sufficient to catch the visible results.)
+So after removing 'static' for varaible "arm_spe_pmus":
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
--- 
-Kees Cook
+
+P.s. Sorry if it's my reason that James Clark's patch [1] has not been
+merged in the mainline kernel and introduced duplicate efforts at here.
+James's patch used similiar method to resolve this same issue.
+
+[1] https://lkml.org/lkml/2019/12/20/293
+
+>  	static int nr_spes = 0;
+>  	int i = 0;
+>  
+> @@ -65,9 +65,7 @@ struct auxtrace_record
+>  		return NULL;
+>  
+>  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+> -
+> -	if (!arm_spe_pmus)
+> -		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+> +	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+>  		if (cs_etm_pmu &&
+> -- 
+> 2.17.1
+> 
