@@ -2,173 +2,119 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAE020708
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6243C20715
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593972176;
-	bh=+AoCgWZsUCnFW+SEdgd8ByRUF6SgDVmc8jdOn2zLvo4=;
+	s=default; t=1593972592;
+	bh=c2a55McBd7AMkKjyMUYwDFgVECADqGqhXoBBFONf7hY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ouiOF/NERkK4zs5lgirXZ0aQnvY3BjqASsQk5l/2EE2CQlj5v8jAu0BmpDh2cAqyF
-	 HSmTwAX/1uwR/zCeMrV6kRFhxywPJKWXW2jqcY32QQoJNRqpThVHzopptU/tcBcFX7
-	 HqAfacTSgAl/sqU3IpeYN5LAZdhPCoU3KK3MPZYM=
+	b=uWydjHqdTCAo9eT1s7AmQCXrphonBRZIyiVlesyBWz7aXK+gGwXs8PHrAhXyjMnBR
+	 uSXrzhc47WgrgADn3MvcBUALUqaJ3uH4aijEsfwkdeVEc4gO990mfA8UQlpPCgUHec
+	 8f0dpPuPT1ceOSLflMy/bLM4UAPxHbn0iUqMvd/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgGESCy (ORCPT
+        id S1727888AbgGESJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:02:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54388 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgGESCx (ORCPT
+        Sun, 5 Jul 2020 14:09:51 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53642 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgGESJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:02:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o8so36776406wmh.4;
-        Sun, 05 Jul 2020 11:02:52 -0700 (PDT)
+        Sun, 5 Jul 2020 14:09:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id j18so36795630wmi.3;
+        Sun, 05 Jul 2020 11:09:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uPHomDteoTeqD1Zdsfu51U2CvSKbygx5cXktKVzxSNQ=;
-        b=SJZ6nrkPHfbGh5k/coEtKtpKoXOle9+mPZD3hbqxce2nspFHJyx5i6aV1dV7FO6PbR
-         MQiik9H+EoK3U6mpGRzoTC8Onoip4YRRghUBAiA01udpB4H5Bpe7KZGPPFey13XHRrzd
-         i7ACU70MUvBfNeh1LlCjNbXqTm7mnvQgcO8ECUPzWw9qD6uYDQ8HfPhAEUvY8TomOcRO
-         +a81Lnu5V51bnYUKT9xRKsg4Zy9o89V1GdTAWM1EDoZPTTkjRoj+EVQWJ50ouSBUYjmv
-         xTjjr2QBp2HOP2/MOi4woqm/lQWvXeZnkULaXLly+XrKvqydZz2SjqfeFR900HSGMc6I
-         q0hA==
-X-Gm-Message-State: AOAM531Lf5lFSUclI1eDuanX63mUHMDBogRSvVkdQWmBnzw5xzDPqV/1
-        n8MdowUzLq4VgokSOgnzUSE=
-X-Google-Smtp-Source: ABdhPJwnfTrvsdcHqKUfAzn5bksiQ7r5jv+emzW58WvipXFMrOlRo1gOQT1r+OV6UuZiEEBDtCYzwQ==
-X-Received: by 2002:a7b:ce97:: with SMTP id q23mr46389395wmj.89.1593972171899;
-        Sun, 05 Jul 2020 11:02:51 -0700 (PDT)
+        bh=WFXUuYLx9z7kdQD8cxQDN+qE9M0mmvVhR4YuFlGCggU=;
+        b=NoUtpVLssoof5gl60JAvsz4GNZ29f6UcAsXBMBlrZEvz20f8GcF3M5OuwnXgNQB9/j
+         grCfzFalzoad3IJ6e7B5YCyOsDueGnC6IwO5ED9OMG2VXaddy09098WdJ2Ugr7qBVErS
+         3zh7k7aGv7XK8Ki3ZZjmukofZh1CsHgB3SfhBRdu0Lul+8uQGu+wQQWtou658MABtXam
+         wM0td0+/si7vt8/hc8LjFumptI/UIcVhnpd5n/Bi2PdsHYFWwaioxZN7CON/aC7m6+HQ
+         je3fq0J+PlTyDXBNN/c1S+6p65xtE2wRWRvCUum33AgoplKtHZDTiSed6FiYDGtsSnpz
+         iipw==
+X-Gm-Message-State: AOAM532RksK9adTQ4Zq8n8xDTYHSOpRTBUF8tASsf1HQr0aKXQkou8i1
+        dCZVwnvd4Ej+monX9NRn6NA=
+X-Google-Smtp-Source: ABdhPJxjI4yFt1EotH4VAiKnZjhxmDAOFtIsBKxuNGU1hyL2uOKUIKD6daN9NG2yCKPfXkNal/526Q==
+X-Received: by 2002:a1c:cc0c:: with SMTP id h12mr3373057wmb.140.1593972588223;
+        Sun, 05 Jul 2020 11:09:48 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id d28sm22653770wrc.50.2020.07.05.11.02.50
+        by smtp.googlemail.com with ESMTPSA id 138sm15606042wmb.1.2020.07.05.11.09.46
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Jul 2020 11:02:51 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 20:02:48 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
+        Sun, 05 Jul 2020 11:09:46 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 20:09:44 +0200
+From:   'Krzysztof Kozlowski' <krzk@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] phy: samsung: Use readl_poll_timeout function
-Message-ID: <20200705180248.GA2765@kozik-lap>
-References: <20200705060435.504-1-linux.amoon@gmail.com>
+        robh+dt@kernel.org
+Subject: Re: [PATCH] arm64: dts: exynos: Add minimal bootargs
+Message-ID: <20200705180944.GB2765@kozik-lap>
+References: <CGME20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba@epcas5p4.samsung.com>
+ <20200703182536.9190-1-alim.akhtar@samsung.com>
+ <000801d6516a$b6efcb40$24cf61c0$@samsung.com>
+ <20200704102246.GA5975@kozik-lap>
+ <004c01d6526d$18c365e0$4a4a31a0$@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200705060435.504-1-linux.amoon@gmail.com>
+In-Reply-To: <004c01d6526d$18c365e0$4a4a31a0$@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 06:04:35AM +0000, Anand Moon wrote:
-> User readl_poll_timeout function instead of open
-> coded handling in crport_handshake function.
-
-Your change does not replace only the "open coded handling" with
-readl_poll_timeout(). Your change does more - switches busy waiting with
-udelay to a sleeping mode. I am not sure if it is correct but definitly
-it should be mentioned.  Otherwise how can we be sure that you checked
-if this is allowed in this section? Did you test everything with
-DEBUG_ATOMIC_SLEEP?
-
+On Sun, Jul 05, 2020 at 07:09:14AM +0530, Alim Akhtar wrote:
+> Hi Krzysztof,
+> > Also, why did you use different serial for console?
+> > 
+> Once UART driver gets probed then console changes to ttySAC0. In case I am using stdout-path only,
+> after bootconsole is disabled, kernel logs re-start printing from beginning (which might be expected behaviour?)
 > 
-> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes v2:
-> --used the default timeout values.
-> --Added missing Fixed tags.
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 37 +++++++++---------------
->  1 file changed, 13 insertions(+), 24 deletions(-)
+> [    0.012416] printk: console [tty0] enabled
+> [    0.016491] printk: bootconsole [exynos4210] disabled
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd032]
+> [    0.000000] Linux version 5.8.0-rc3-next-20200703-00008-g4af626444f4a-dirty (alim@alim) (aarch64-linux-gnu-gcc (Linaro GCC 7.4-2019.02) 7.4.1 20181213 [l0
+> [    0.000000] Machine model: Samsung Exynos7 Espresso board based on Exynos7
 > 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index e510732afb8b..c97f5fb6a9a0 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/iopoll.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -556,40 +557,28 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
->  			    u32 val, u32 cmd)
->  {
-> -	u32 usec = 100;
-> +	u32 timeout_us = 100, sleep_us = 1;
 
-No need for the variables actually and their type does not match. Just
-use the values directly.
+No, this is not desired. The fix for it should not be redefining the
+console to wrong argument.
 
->  	unsigned int result;
-> +	int err;
->  
->  	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (result & PHYREG1_CR_ACK)
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout1 (0x%08x)\n", val);
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-> +	if (err) {
-> +		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
->  		return -ETIME;
->  	}
->  
-> -	usec = 100;
-> +	timeout_us = 100;
-> +	sleep_us = 1;
+For example on Odroid MC1 this problem does not exist:
 
-Why defining then again?
+[    0.000000] earlycon: exynos4210 at MMIO 0x12c20000 (options '115200n8')
+[    0.000000] printk: bootconsole [exynos4210] enabled
+[    3.111883] printk: console [ttySAC2] enabled
+[    3.111883] printk: console [ttySAC2] enabled
+[    3.120102] printk: bootconsole [exynos4210] disabled
+[    3.120102] printk: bootconsole [exynos4210] disabled
+
+
+but your console for some reason is tty0... why? Is your console
+ttySAC2? Maybe it is the effect of alias:
+serial0 = &serial_2;
+
+> > However the question is, are you sure you want earlycon on every, including
+> > successful boot? On most of the boards we do not enable by default. If
+> > developer needs, he can choose it for example via U-Boot "setenv opts
+> > earlycon".
+> > 
+> Using U-Boot is not the case always, any bootload can be used to boot the Linux, currently I am Coreboot.
+> And 'earlycon' is not setup by default.
+> As Espresson board is development board, IMO it is ok to keep it enable all the time, this helps in quickly knowing what going on incase boot fails early.
+> Let me know if it is ok to keep " console=ttySAC0,115200n8" or shell I just re-spin with only 'earlycon'? or any other suggestion?
+
+It should be just earlycon.
 
 Best regards,
 Krzysztof
 
-
->  
->  	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (!(result & PHYREG1_CR_ACK))
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout2 (0x%08x)\n", val);
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	!(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-> +	if (err) {
-> +		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
->  		return -ETIME;
->  	}
->  
-> -- 
-> 2.27.0
-> 
