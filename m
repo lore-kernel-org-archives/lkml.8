@@ -2,72 +2,68 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA654C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D172A206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B26820674
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593970518;
+	bh=N52v7tpjBjAodZ6DAstdTJ2KsFHBhXdLqjU0/Qxpbb0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=CkTeLB/V2JvOdBbWEs2MAK8UmkSGKnKIvTxAxh7OhnthMjAoDbdO6fV049UIScX/6
+	 zhtnevKMraamff0I6yTtn0Dw+wmDGlZJAliltY4tMMkkzCz712v/yrB/z8yhTs644v
+	 rfdGW9LsknMY03/pDAPhMhx99QuoVVGXuwsn3ACE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgGERfM (ORCPT
+        id S1727905AbgGERfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 13:35:12 -0400
-Received: from vps-vb.mhejs.net ([37.28.154.113]:53130 "EHLO vps-vb.mhejs.net"
+        Sun, 5 Jul 2020 13:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgGERfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 13:35:09 -0400
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.93.0.4)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1js8Xf-0001OF-CT; Sun, 05 Jul 2020 19:35:03 +0200
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Harry Cutts <hcutts@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: logitech-hidpp: avoid repeated "multiplier = " log messages
-Date:   Sun,  5 Jul 2020 19:34:57 +0200
-Message-Id: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726956AbgGERfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 13:35:06 -0400
+Subject: Re: [GIT PULL] MIPS fixes for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593970506;
+        bh=N52v7tpjBjAodZ6DAstdTJ2KsFHBhXdLqjU0/Qxpbb0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=pTX6UwtVWfaCmIga44xwnG+XAtjlgmc4CQSyXQadoNFqi9FJ818NmLANTcs+MBX7m
+         +NMVKbVrz9eXE6ZO1kIXCD/KWAhnB45ScZwjh7Pjhfe/OoEdxLv9iYQEcJvanIGnJ7
+         RShFRgS3KOjOJfuQLnZYLOuevQwp1D2N0S9p4+tk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200705104008.GA5156@alpha.franken.de>
+References: <20200705104008.GA5156@alpha.franken.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200705104008.GA5156@alpha.franken.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/
+ tags/mips_fixes_5.8_1
+X-PR-Tracked-Commit-Id: 5868347a192afb99b189d72946ab6a321b6115ac
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 45a5ac7a5cc3c71739d240c422c3818a5bc97fc4
+Message-Id: <159397050615.12702.13393919043064094175.pr-tracker-bot@kernel.org>
+Date:   Sun, 05 Jul 2020 17:35:06 +0000
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     torvalds@linux-foundation.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These messages appear each time the mouse wakes from sleep, in my case
-(Logitech M705), every minute or so.
-Let's downgrade them to the "debug" level so they don't fill the kernel log
-by default.
+The pull request you sent on Sun, 5 Jul 2020 12:40:08 +0200:
 
-While we are at it, let's make clear that this is a wheel multiplier (and
-not, for example, XY movement multiplier).
+> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_fixes_5.8_1
 
-Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling on Logitech mice")
-Cc: stable@vger.kernel.org
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
-Sending again since the previous message bounced for most recipients.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/45a5ac7a5cc3c71739d240c422c3818a5bc97fc4
 
- drivers/hid/hid-logitech-hidpp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you!
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 1e1cf8eae649..b8b53dc95e86 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
- 		multiplier = 1;
- 
- 	hidpp->vertical_wheel_counter.wheel_multiplier = multiplier;
--	hid_info(hidpp->hid_dev, "multiplier = %d\n", multiplier);
-+	hid_dbg(hidpp->hid_dev, "wheel multiplier = %d\n", multiplier);
- 	return 0;
- }
- 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
