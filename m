@@ -2,95 +2,137 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A822CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485A920782
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8678720782
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:46:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NSrJ6ieT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssPl4zuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGECok (ORCPT
+        id S1728208AbgGECqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 22:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38000 "EHLO
+        Sat, 4 Jul 2020 22:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgGECok (ORCPT
+        with ESMTP id S1728004AbgGECql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 22:44:40 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D652C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 19:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=2aRzJJZ6llsJJNnz5pBbngiYwHyozuVHCDy1h81iPNE=; b=NSrJ6ieT3Z24MjVhs62Z22VWio
-        TBtG5TGQgNnPYEkKJMDGQgQtPutcc6vjlWoDmJsqQ5e2Bpn4bPyJFkvP2O048xJ/opl55tp3kQBmN
-        UgmA0t/6qdV7m5JvFbB4h0DpdnG3ucxAGT8rgpqTvblCTalK/HX+coDcPfbQA6AINRdwtotTHUE8j
-        JyvQ8kyUwN0FjjdhwnQHvswwX0q/a64WuQPOHjJ/76zvsUEUkF9vB+fK6kXo8/ekhxqcm7auwoRol
-        kEyRBtO8DJNz4v6YJnnS5RzxDtWRoBROh5R+vjX1DFZ8/kYe1EmNoj50rNeIk8db04OnUg+tcISKc
-        HRj0oPuw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrudx-0004eY-0Z; Sun, 05 Jul 2020 02:44:37 +0000
-Subject: Re: [Tech-board-discuss] [Ksummit-discuss] [PATCH] CodingStyle:
- Inclusive Terminology
-To:     Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy6545@gmail.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <920e6dc0-628b-9bad-926a-d1238a373cda@infradead.org>
- <CAPM=9ty0tiL_qM_UFv0S0VtARKz_f-Anngc+amDM5LjGAHazhA@mail.gmail.com>
- <CAFhKne9MA_G-UsvBFfX-gZRcu9Gb7Xt7UxQ14MTppdU3X1VYdQ@mail.gmail.com>
- <202007041804.B5E229E2B6@keescook>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0a7dd50b-b4b3-d9fa-dbb0-8c30d522b945@infradead.org>
-Date:   Sat, 4 Jul 2020 19:44:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 4 Jul 2020 22:46:41 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B869BC061794;
+        Sat,  4 Jul 2020 19:46:41 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g37so5501668otb.9;
+        Sat, 04 Jul 2020 19:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E53jDZaWWL2m81Ppybls7LxIkJox19KnU003mBoW+40=;
+        b=ssPl4zuIwOlMx9wCkmm52mHTPbSodV15CQPxHhtnh1wp9MBNuyzQss/Lh8nZED2h2r
+         rXN73lftKU6BG3K+KFLIE37DVXpXU25DF5ArybQgG3k9N0k++lnuozJgm9xd8s6iLFhk
+         tJlCk+aeCTW0tDN9u5PxEezKEm7que1Ygt9HkpJi/PbUWRKpaVEIiEgyH7wSabKWIOD+
+         h6sjR4NmHP37to18535jnS0svOcvHUeXJ0SFO64ptW5EF4N38JnTL/0kSVluhThmVmWi
+         BcLNoIovqT+8mQW6ygxt2XhzYVBl+HMV6cKT6hc5g1Z6YZmTbyhVgLJA+3RMIsKWcA8I
+         cvEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E53jDZaWWL2m81Ppybls7LxIkJox19KnU003mBoW+40=;
+        b=W/Iy0iYbijHJUC+09amSsqxfcLMwL0thhfTWS/p1edHh72QqWUgN7sN6UsvxGr9zwu
+         Bc1IboCswL1VfpAZvh6nvHIGZMUfkQ4g72+hLbHXa/oNQ2Q8c5yBAunC2azi2rKEJAWK
+         5gM87mO1eGo9o6I0TCD4g8y8wTXyUGwBOm2hAkgMUj3eLUw/uXnZddz9yiWitahPhMz1
+         n6AKet4XVm5jbtGX4lMsTyezPh809Xaq0VOIxlFKaG70DcRnE9cQa9TMr3yadaF6G/la
+         /U+CNaXz3jspVuGPYZvUZqEJeRPOA7AmtpSYV8IrjmcXjlFAmVyk8iaIjf4vfsiRcmXj
+         iCNQ==
+X-Gm-Message-State: AOAM530Jjf1exN+bq+cdUEGA9pUizABU+ipLURJlc4BCGmlJ6B/fqdJI
+        GKN3WQd2m191WombRzKBDZ7F/HwI96eGIqjqZ/U=
+X-Google-Smtp-Source: ABdhPJxnI6oRywmjWNvF7YTeEWGlfdMx/Xk6t7WM1gAUyf5ZCyVkvZgHajkDpcySKwrdUqmrIx3bvAjss4CWllE/aQo=
+X-Received: by 2002:a9d:4d1a:: with SMTP id n26mr26986993otf.54.1593917201031;
+ Sat, 04 Jul 2020 19:46:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202007041804.B5E229E2B6@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+In-Reply-To: <20200705021631.GR25523@casper.infradead.org>
+From:   Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Date:   Sun, 5 Jul 2020 04:46:04 +0200
+Message-ID: <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     gregkh@linuxfoundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/20 6:10 PM, Kees Cook wrote:
-> On Sat, Jul 04, 2020 at 08:10:33PM -0400, Matthew Wilcox wrote:
->> Left-right tree makes no sense. It doesn't distinguish the rbtree from its
->> predecessor the avl tree.  I don't think it's helpful to rename a standard
->> piece of computing terminology unless it's actually hurting us to have it.
->> Obviously if it were called a "master-slave" tree, I would be in favour of
->> renaming it.
-> 
-> (No one has suggested renaming red/black trees, so I think the
-> slippery-slope argument can be set aside here.)
+On Sun, Jul 5, 2020 at 4:16 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Sun, Jul 05, 2020 at 04:06:22AM +0200, Jan Ziak wrote:
+> > Hello
+> >
+> > At first, I thought that the proposed system call is capable of
+> > reading *multiple* small files using a single system call - which
+> > would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> > operations per second) - but that isn't the case and the proposed
+> > system call can read just a single file.
+> >
+> > Without the ability to read multiple small files using a single system
+> > call, it is impossible to increase IOPS (unless an application is
+> > using multiple reader threads or somehow instructs the kernel to
+> > prefetch multiple files into memory).
+>
+> What API would you use for this?
+>
+> ssize_t readfiles(int dfd, char **files, void **bufs, size_t *lens);
+>
+> I pretty much hate this interface, so I hope you have something better
+> in mind.
 
-Did you read this message?
+I am proposing the following:
 
-https://lore.kernel.org/ksummit-discuss/CAPM=9ty0tiL_qM_UFv0S0VtARKz_f-Anngc+amDM5LjGAHazhA@mail.gmail.com/
+struct readfile_t {
+  int dirfd;
+  const char *pathname;
+  void *buf;
+  size_t count;
+  int flags;
+  ssize_t retval; // set by kernel
+  int reserved; // not used by kernel
+};
 
-> As for the actual proposal on white/black-list, I've always been annoyed
-> by the poor description it provides (and I get to see it A LOT being
-> the seccomp maintainer). I welcome allow/deny-list (though the change is
-> not new for seccomp -- the man pages were updated last year (thanks
-> mkerrisk). :)
-> 
+int readfiles(struct readfile_t *requests, size_t count);
 
+Returns zero if all requests succeeded, otherwise the returned value
+is non-zero (glibc wrapper: -1) and user-space is expected to check
+which requests have succeeded and which have failed. retval in
+readfile_t is set to what the single-file readfile syscall would
+return if it was called with the contents of the corresponding
+readfile_t struct.
 
--- 
-~Randy
+The glibc library wrapper of this system call is expected to store the
+errno in the "reserved" field. Thus, a programmer using glibc sees:
 
+struct readfile_t {
+  int dirfd;
+  const char *pathname;
+  void *buf;
+  size_t count;
+  int flags;
+  ssize_t retval; // set by glibc (-1 on error)
+  int errno; // set by glibc if retval is -1
+};
+
+retval and errno in glibc's readfile_t are set to what the single-file
+glibc readfile would return (retval) and set (errno) if it was called
+with the contents of the corresponding readfile_t struct. In case of
+an error, glibc will pick one readfile_t which failed (such as: the
+1st failed one) and use it to set glibc's errno.
