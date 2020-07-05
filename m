@@ -2,124 +2,64 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A53C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C24C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7C6207CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilGMCJ4O"
+	by mail.kernel.org (Postfix) with ESMTP id DFCE820771
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGEKHh (ORCPT
+        id S1726792AbgGEKTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 06:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGEKHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 06:07:35 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F478C061794;
-        Sun,  5 Jul 2020 03:07:35 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x8so13325047plm.10;
-        Sun, 05 Jul 2020 03:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjWtuhASvQz4/9O5AuUktdFCzgZ5baafsc2h9IOgUhU=;
-        b=ilGMCJ4OEbjAqkUkfO9wJUDww3eA+plnp5o6CMwT+drE0vBsX0K9Rn99ZQ5Wa8CF3u
-         KqTaIrzlq2UVsdZGLnC/Vx9eKAf9dGz7psBYrKBqYbUYXkfSho27rE+uxZ7LZhqVLDSK
-         ljreP2q07rvuI7PKvBjCycsvkaigPbWA+mqHJnBBj1N5MpgkyXyto907qlJXNb9+IMJe
-         XMelf0POfRSQBtF+Kwe3CtwqbAQMbUiXXbvXdxRum0XolDjjiyoRsm9BWbJ20YIzq0mB
-         m635ccLpwxwoPggmetxG9mbZ3aRQB7qjKJBn/lbG75rBEUAzLaiBLPoInog7UT8D3oLG
-         qOMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjWtuhASvQz4/9O5AuUktdFCzgZ5baafsc2h9IOgUhU=;
-        b=c0M9TAbG0SNMl/5eBuz71uZNDphgovTxRG5ln2cuy99bqyVO/R99rGqfgomCOwhyqf
-         uHf4+L/aRexZBG9TPUH3yjBFaHfgg1rIFVfUCDOfVc9eHSt79PoXDyYTOSLGN9p462Ip
-         0eSYJ4Jf8VCBKPlEHEaXAqA9i2guiip6ep80dCeQ/Cs3vEsrlVjXIOek9bv/dW+Eg1t/
-         ZOd+h68LD7GmmWP+I8r1pkDhlHAs+L4Xy2L5vjYxI4n8UfyEtcSNtMEKIhKfM6dMBU+e
-         GypahD4zbg9EKqu3+GwDvKO+PPfExVAZzvh82rjPnkhcfN/jY+u8Sc5a2W2CgbeCkO8J
-         wmtw==
-X-Gm-Message-State: AOAM533hv8dV2xDgJCUcJuqpP+MVUFUJLqbKtmPj5K1FUdnKHHMptpWL
-        J/F3KCKV3I4aVk112mwbMcFbzhE0s8OD1VzjXOM=
-X-Google-Smtp-Source: ABdhPJw6Cm73j7dskOrTyfxjjqhqU6eXkTo6ceG9dOgr6boF/oD6TZ8fP6Rg1h35WWDdOgnV20P7nST13efQg+gDqQg=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr20691981pjb.181.1593943654465;
- Sun, 05 Jul 2020 03:07:34 -0700 (PDT)
+        Sun, 5 Jul 2020 06:19:07 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:50514 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgGEKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 06:19:06 -0400
+Received: from p57b773cb.dip0.t-ipconnect.de ([87.183.115.203] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1js1jb-0001qi-Ap; Sun, 05 Jul 2020 12:18:55 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     ezequiel@collabora.com, mturquette@baylibre.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-clk@vger.kernel.org, jagan@amarulasolutions.com,
+        mylene.josserand@collabora.com, linux-kernel@vger.kernel.org,
+        sboyd@kernel.org
+Subject: Re: [PATCH v2] clk: rockchip: use separate compatibles for rk3288w-cru
+Date:   Sun,  5 Jul 2020 12:18:54 +0200
+Message-Id: <159394432444.305208.6716969954746405813.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200703154948.260369-1-heiko@sntech.de>
+References: <20200703154948.260369-1-heiko@sntech.de>
 MIME-Version: 1.0
-References: <20200705092736.1030598-1-maz@kernel.org>
-In-Reply-To: <20200705092736.1030598-1-maz@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 5 Jul 2020 13:07:18 +0300
-Message-ID: <CAHp75VfFNO=oqHX9EeNdVgcQUfu7RBr6SDTWi3XF4gSQNjqzUw@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: meson_uart: Init port lock early
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 12:32 PM Marc Zyngier <maz@kernel.org> wrote:
->
-> The meson UART driver triggers a lockdep splat at boot time, due
-> to the new expectation that the driver has to initialize the
-> per-port spinlock itself.
->
-> It remains unclear why a double initialization of the port
-> spinlock is a desirable outcome, but in the meantime let's
-> fix the splat.
->
+On Fri, 3 Jul 2020 17:49:48 +0200, Heiko Stuebner wrote:
+> Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
+> added the check for rk3288w-specific clock-tree changes but in turn would
+> require a double-compatible due to re-using the main rockchip,rk3288-cru
+> compatible as entry point.
+> 
+> The binding change actually describes the compatibles as one or the other
+> so adapt the code accordingly and add a real second entry-point for the
+> clock controller.
 
-Thanks!
+Applied, thanks!
 
-Can you test patch from [1] if it helps and doesn't break anything in your case?
+[1/1] clk: rockchip: use separate compatibles for rk3288w-cru
+      commit: 0a7f99aad259d223ce69c03e792c7e2bfcf8c2c6
 
-[1]: https://lore.kernel.org/linux-serial/20200217114016.49856-1-andriy.shevchenko@linux.intel.com/T/#m9255e2a7474b160e66c7060fca5323ca3df49cfd
-
-> Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/tty/serial/meson_uart.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/tty/serial/meson_uart.c b/drivers/tty/serial/meson_uart.c
-> index d2c08b760f83..386e39c90628 100644
-> --- a/drivers/tty/serial/meson_uart.c
-> +++ b/drivers/tty/serial/meson_uart.c
-> @@ -759,6 +759,9 @@ static int meson_uart_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> +       /* Init the spinlock early in case this is the console */
-> +       spin_lock_init(&port->lock);
-> +
->         port->iotype = UPIO_MEM;
->         port->mapbase = res_mem->start;
->         port->mapsize = resource_size(res_mem);
-> --
-> 2.26.2
->
-
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
+Heiko Stuebner <heiko@sntech.de>
