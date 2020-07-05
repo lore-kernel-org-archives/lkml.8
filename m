@@ -2,220 +2,115 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A50C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4A12068F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593958609;
-	bh=Wz6tmJZ7X6vLJFgWNa4oF4UuJ7+Eb1kGF2rczNiaB5g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XZLhEOh9gvF/maq0pIT/BoqFY8vFE+FeqUPTulV9nb3eDDmL8M3/ZbIVrHEifWW7t
-	 13OwKTUoM1npVL57XOSxbUkVZuAF1vMU/vKcUXxY0yV3vfipMCr4a9B/pG6ZkbR4fc
-	 JAF4KezdPVBhTtEaVvaZgMDkvVybFVheX0sM74v4=
+	by mail.kernel.org (Postfix) with ESMTP id BF3602068F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGEOQs (ORCPT
+        id S1726996AbgGEOT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 10:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 10:19:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:55728 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgGEOQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 10:16:47 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E97208D5;
-        Sun,  5 Jul 2020 14:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593958607;
-        bh=Wz6tmJZ7X6vLJFgWNa4oF4UuJ7+Eb1kGF2rczNiaB5g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hjNqScfasUzOcxbE8S7M8xKI9Yc/aWMmWGfCSmkAHPTCaohVrm0edmqSca4yFlalt
-         HPO8QNirKUedOWHnjk4rEil/Nh0Bjv5PLsCh9uQNH0T5oHlPVqonThB7+jvxkpa1IM
-         iWVJcEXcoKMbEmzqEfRKx1xkvP3C1LFoMtCfCfCk=
-Received: by mail-lj1-f182.google.com with SMTP id n23so42295853ljh.7;
-        Sun, 05 Jul 2020 07:16:46 -0700 (PDT)
-X-Gm-Message-State: AOAM532qlxk+vTIPpX547w7La916DR6SbtZN/oFrWOtF5FNYKaTHspLu
-        JaAb/5oLeOZnIICr8PU5heJzhyOcAKcJHiElfA0=
-X-Google-Smtp-Source: ABdhPJzOPwNtu8aM2X+c8NB4WS8eePD9/vHUi3xAaqCbYxF0wbpU9DWEDf+I1RNMWWggfT6/FhQ05llzyWCn/y8YIiA=
-X-Received: by 2002:a2e:7e08:: with SMTP id z8mr19960078ljc.66.1593958604762;
- Sun, 05 Jul 2020 07:16:44 -0700 (PDT)
+        id S1726781AbgGEOT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 10:19:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C87C1042;
+        Sun,  5 Jul 2020 07:19:55 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 377F83F718;
+        Sun,  5 Jul 2020 07:19:53 -0700 (PDT)
+References: <20200614010755.9129-1-valentin.schneider@arm.com> <20200614010755.9129-2-valentin.schneider@arm.com> <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com> <20200620174912.GA18358@arm.com> <jhjmu4xcqyk.mognet@arm.com> <CAKfTPtDG26Y9s4c+MbdmbxJaiCv6s6WTqmzztcoFsm2SnRL=vQ@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        "open list\:THERMAL" <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal pressure definition
+In-reply-to: <CAKfTPtDG26Y9s4c+MbdmbxJaiCv6s6WTqmzztcoFsm2SnRL=vQ@mail.gmail.com>
+Date:   Sun, 05 Jul 2020 15:19:44 +0100
+Message-ID: <jhjlfjyf3i7.mognet@arm.com>
 MIME-Version: 1.0
-References: <1593930255-12378-1-git-send-email-guoren@kernel.org> <202007042350.4C153C4F8@keescook>
-In-Reply-To: <202007042350.4C153C4F8@keescook>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sun, 5 Jul 2020 22:16:14 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQFqH7GMvRgmtb=hBwvUy6NZyM8xLqOsUTvnYhO48tQbg@mail.gmail.com>
-Message-ID: <CAJF2gTQFqH7GMvRgmtb=hBwvUy6NZyM8xLqOsUTvnYhO48tQbg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Add STACKPROTECTOR supported
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Atish Patra <atish.patra@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
 
-On Sun, Jul 5, 2020 at 2:53 PM Kees Cook <keescook@chromium.org> wrote:
+Sorry for getting back to this only now;
+
+On 22/06/20 09:37, Vincent Guittot wrote:
+> On Sun, 21 Jun 2020 at 00:28, Valentin Schneider <valentin.schneider@arm.com> wrote:
+>> On 20/06/20 18:49, Ionela Voinescu wrote:
+>> > On Thursday 18 Jun 2020 at 17:03:24 (+0200), Vincent Guittot wrote:
+>> >> Having this weak function declared in cpufreq_cooling is weird. This
+>> >> means that we will have to do so for each one that wants to use it.
+>> >>
+>> >> Can't you declare an empty function in a common header file ?
+>> >
+>> > Do we expect anyone other than cpufreq_cooling to call
+>> > arch_set_thermal_pressure()?
+>> >
+>> > I'm not against any of the options, either having it here as a week
+>> > default definition (same as done for arch_set_freq_scale() in cpufreq.c)
+>> > or in a common header (as done for arch_scale_freq_capacity() in sched.h).
+>> >
+>>
+>> Same thoughts here; I was going for the arch_set_freq_scale() way.
+>>
+>> > But for me, Valentin's implementation seems more natural as setters are
+>> > usually only called from within the framework that does the control
+>> > (throttling for thermal or frequency setting for cpufreq) and we
+>> > probably want to think twice if we want to call them from other places.
+>> >
+>>
+>> Well TBH I was tempted to go the other way and keep the definition in
+>> core.c, given a simple per-cpu value is fairly generic. More precisely, it
 >
-> On Sun, Jul 05, 2020 at 06:24:15AM +0000, guoren@kernel.org wrote:
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > The -fstack-protector & -fstack-protector-strong features are from
-> > gcc. The patch only add basic kernel support to stack-protector
-> > feature and some arch could have its own solution such as
-> > ARM64_PTR_AUTH.
-> >
-> > After enabling STACKPROTECTOR and STACKPROTECTOR_STRONG, the .text
-> > size is expanded from  0x7de066 to 0x81fb32 (only 5%) to add canary
-> > checking code.
-> >
-> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> > Cc: Palmer Dabbelt <palmerdabbelt@google.com>
-> > Cc: Albert Ou <aou@eecs.berkeley.edu>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
-> > Cc: Greentime Hu <green.hu@gmail.com>
-> > Cc: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  arch/riscv/Kconfig                      |  1 +
-> >  arch/riscv/include/asm/stackprotector.h | 29 +++++++++++++++++++++++++=
-++++
-> >  arch/riscv/kernel/process.c             |  6 ++++++
-> >  3 files changed, 36 insertions(+)
-> >  create mode 100644 arch/riscv/include/asm/stackprotector.h
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index f927a91..4b0e308 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -63,6 +63,7 @@ config RISCV
-> >       select HAVE_PERF_EVENTS
-> >       select HAVE_PERF_REGS
-> >       select HAVE_PERF_USER_STACK_DUMP
-> > +     select HAVE_STACKPROTECTOR
-> >       select HAVE_SYSCALL_TRACEPOINTS
-> >       select IRQ_DOMAIN
-> >       select MODULES_USE_ELF_RELA if MODULES
-> > diff --git a/arch/riscv/include/asm/stackprotector.h b/arch/riscv/inclu=
-de/asm/stackprotector.h
-> > new file mode 100644
-> > index 00000000..5962f88
-> > --- /dev/null
-> > +++ b/arch/riscv/include/asm/stackprotector.h
-> > @@ -0,0 +1,29 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _ASM_RISCV_STACKPROTECTOR_H
-> > +#define _ASM_RISCV_STACKPROTECTOR_H
-> > +
-> > +#include <linux/random.h>
-> > +#include <linux/version.h>
-> > +
-> > +extern unsigned long __stack_chk_guard;
-> > +
-> > +/*
-> > + * Initialize the stackprotector canary value.
-> > + *
-> > + * NOTE: this must only be called from functions that never return,
-> > + * and it must always be inlined.
-> > + */
-> > +static __always_inline void boot_init_stack_canary(void)
-> > +{
-> > +     unsigned long canary;
-> > +
-> > +     /* Try to get a semi random initial value. */
-> > +     get_random_bytes(&canary, sizeof(canary));
-> > +     canary ^=3D LINUX_VERSION_CODE;
-> > +     canary &=3D CANARY_MASK;
+> Having all definitions in the same place is my main concern here.
+> If topology.c defines arch_set_thermal_pressure it should also provide
+> the empty function when the feature is not available or possible
+> instead of relying of each user of the interface to define a weak
+> function just in case.
 >
-> Does riscv have any kind of instruction counters or other trivial timers
-> that could be mixed in here? (e.g. x86's TSC)
-Do you mean:
-  get_random_bytes(&canary, sizeof(canary));
-+ canary +=3D get_cycles64() + (get_cycles64() << 32UL);
-  canary ^=3D LINUX_VERSION_CODE;
-  canary &=3D CANARY_MASK;
 
-Ok ?
+include/linux/sched/topology.h already defines a stub for
+arch_scale_thermal_pressure(), I suppose we could have one for
+arch_set_thermal_pressure() there.
 
->
-> > +
-> > +     current->stack_canary =3D canary;
-> > +     __stack_chk_guard =3D current->stack_canary;
->
-> What's needed for riscv to support a per-task canary? (e.g. x86's TLS or
-> arm64's register-specific methods)
-Some archs change __stack_chk_guard in _switch_to of entry.S, but it
-depends on !CONFIG_SMP.
+That would require having something like
 
-#if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP)
-        get  value  from next_task->stack_canary
-        store  value to __stack_chk_guard
-#endif
+#define arch_set_thermal_pressure topology_set_thermal_pressure
 
-It's a so limitation solution for per-task canary, so I didn't copy it
-into riscv?
+in the arm & arm64 include/asm/topology.h headers, with
+topology_set_thermal_pressure() being what arch_set_thermal_pressure()
+currently is in this patchset.
 
-For the register-specific, I prefer arm64's then x86, let's continue
-talk in this mail thread:
 
-https://lore.kernel.org/linux-riscv/1593958397-62466-1-git-send-email-guore=
-n@kernel.org/T/#u
+This would set an odd precedent in that so far we only ever had to #define
+getter functions, the setters being either:
+- entirely contained within arch_topology. (for the CPU scale)
+- defined in arch_topology, declared in cpufreq and contained there (for
+  the freq scale).
 
->
-> > +}
-> > +#endif /* _ASM_RISCV_STACKPROTECTOR_H */
-> > diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> > index 824d117..6548929 100644
-> > --- a/arch/riscv/kernel/process.c
-> > +++ b/arch/riscv/kernel/process.c
-> > @@ -24,6 +24,12 @@
-> >
-> >  register unsigned long gp_in_global __asm__("gp");
-> >
-> > +#ifdef CONFIG_STACKPROTECTOR
-> > +#include <linux/stackprotector.h>
-> > +unsigned long __stack_chk_guard __read_mostly;
-> > +EXPORT_SYMBOL(__stack_chk_guard);
-> > +#endif
-> > +
-> >  extern asmlinkage void ret_from_fork(void);
-> >  extern asmlinkage void ret_from_kernel_thread(void);
-> >
-> > --
-> > 2.7.4
-> >
->
-> But yes, as a starting point, better to have a single per-boot global
-> canary than none at all. :)
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-Thank you :)
-
---
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+It made the most sense to me to follow the arch_set_freq_scale() pattern
+and contain the thermal pressure setter within cpufreq_cooling, especially
+since I didn't see a strong point in breaking the current patterns.
