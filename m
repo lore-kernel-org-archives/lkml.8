@@ -2,120 +2,136 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1792C20739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U0xvOvuX"
+	by mail.kernel.org (Postfix) with ESMTP id 56BC02073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGEUTb (ORCPT
+        id S1728297AbgGEUWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
+        Sun, 5 Jul 2020 16:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgGEUTa (ORCPT
+        with ESMTP id S1728145AbgGEUWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:19:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CC3C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 13:19:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so17436326pgc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+eZV+j8eeFdPL7ONsmuokgRfsTEj+RVF3Zfsba4wHfM=;
-        b=U0xvOvuXhudjDoBG+0i7o4XZqsk9kQ1pmOzKAJi8NTpaqdwkOAJCFbBTmvNmLU1mx2
-         cov3g0kKS/RbI1mPqNukvoRPoGAQgMe265ZEkjknljF5Y4PwvMEsDYhQ8wDcwKjievyJ
-         f5sL5Eyl+6oZIKIqIV/1y30e3zOLE7wWjd9TQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+eZV+j8eeFdPL7ONsmuokgRfsTEj+RVF3Zfsba4wHfM=;
-        b=DwPSC9A+laVOnie4YsOEWLwxXFfCV33Difqn8VuvOiQVsD9wMiOAJ2wg+iw3XbYdHH
-         8CdE21lQCuqNQHdDbYrDu3ZH56aGgQaZ2egncjWTiVN5wGnWoITHe/L9iGByc4X9zVMz
-         MOTbrsESXJqHjBPfU+bhquzv2zyTa1zL7AgPF56p4+UOjc5Ev+yeznerEEOwSDzgQ2Ds
-         eXqIV3Xu5v2sKsGSLy3zUUUW01VqPTQDglMNR9NyXBSb5ZUIKbi/USy5WefYy41Fu0Oa
-         Hl/uwUa9ee/CyUVSZxuGAbZMLy8fCAOJzyN4FOpRVJ4x8fVVROYrZGUsLyiMsoktZP/r
-         VqSA==
-X-Gm-Message-State: AOAM530aFYCk/jGB8tMBIgueGVyGVsrs8SoK+MxKk0xaLizg8PrQd34T
-        FlN+O38Zsq17F2lsAiDYNAKyyA==
-X-Google-Smtp-Source: ABdhPJwUhUfKUYtmlsWvQMFnUPyfezn5Vv/jyidaFG9Inycnc/k4yYuK1QdR1r4fgYhzZSuXNwkQyw==
-X-Received: by 2002:a63:525a:: with SMTP id s26mr36603596pgl.155.1593980369927;
-        Sun, 05 Jul 2020 13:19:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n62sm6691891pjb.28.2020.07.05.13.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 13:19:28 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 13:19:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        stable <stable@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] kprobes: Do not expose probe addresses to
- non-CAP_SYSLOG
-Message-ID: <202007051318.CA51091A@keescook>
-References: <20200702232638.2946421-1-keescook@chromium.org>
- <20200702232638.2946421-5-keescook@chromium.org>
- <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
- <202007030848.265EA58@keescook>
- <CAHk-=wgEkTsNRvEM9W_JiVN6t70SnPuP=-1=LyhLS_BJ25Q4sQ@mail.gmail.com>
+        Sun, 5 Jul 2020 16:22:02 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95BAC061794;
+        Sun,  5 Jul 2020 13:22:02 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 0DF09739;
+        Sun,  5 Jul 2020 20:22:02 +0000 (UTC)
+Date:   Sun, 5 Jul 2020 14:22:00 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        axboe@kernel.dk, mchehab+samsung@kernel.org,
+        drbd-dev@lists.linbit.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: DRBD driver
+Message-ID: <20200705142200.2154779f@lwn.net>
+In-Reply-To: <20200627103111.71771-1-grandmaster@al2klimov.de>
+References: <20200627103111.71771-1-grandmaster@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgEkTsNRvEM9W_JiVN6t70SnPuP=-1=LyhLS_BJ25Q4sQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 01:10:54PM -0700, Linus Torvalds wrote:
-> On Fri, Jul 3, 2020 at 8:50 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > With 67 kthreads on a booted system, this patch does not immediately
-> > blow up...
+On Sat, 27 Jun 2020 12:31:11 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Did you try making read/write inc/dec that thing too? Or does that
-> just blow up with tons of warnings?
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-I hadn't gotten to that yet. I need to catch up on other stuff first,
-and I thought I'd give people time to scream if they tested this
-themselves. :)
+So I've applied this but...
+> ---
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  Documentation/admin-guide/blockdev/drbd/index.rst | 2 +-
+>  Documentation/admin-guide/blockdev/floppy.rst     | 6 +++---
+>  drivers/block/drbd/Kconfig                        | 2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/blockdev/drbd/index.rst b/Documentation/admin-guide/blockdev/drbd/index.rst
+> index 68ecd5c113e9..561fd1e35917 100644
+> --- a/Documentation/admin-guide/blockdev/drbd/index.rst
+> +++ b/Documentation/admin-guide/blockdev/drbd/index.rst
+> @@ -10,7 +10,7 @@ Description
+>    clusters and in this context, is a "drop-in" replacement for shared
+>    storage. Simplistically, you could see it as a network RAID 1.
+>  
+> -  Please visit http://www.drbd.org to find out more.
+> +  Please visit https://www.drbd.org to find out more.
 
--- 
-Kees Cook
+This link redirects to a somewhat commercial page and may not be what was
+intended back then.
+
+>  
+>  .. toctree::
+>     :maxdepth: 1
+> diff --git a/Documentation/admin-guide/blockdev/floppy.rst b/Documentation/admin-guide/blockdev/floppy.rst
+> index 4a8f31cf4139..0328438ebe2c 100644
+> --- a/Documentation/admin-guide/blockdev/floppy.rst
+> +++ b/Documentation/admin-guide/blockdev/floppy.rst
+> @@ -6,7 +6,7 @@ FAQ list:
+>  =========
+>  
+>  A FAQ list may be found in the fdutils package (see below), and also
+> -at <http://fdutils.linux.lu/faq.html>.
+> +at <https://fdutils.linux.lu/faq.html>.
+
+This page hasn't been updated in 15 years, and may be of limited utility.
+The document itself talks about LILO on a 2.6.9 kernel, PS/2 floppies, and
+other such bleeding-edge things.  It sure needs more help than this.
+
+>  
+>  
+>  LILO configuration options (Thinkpad users, read this)
+> @@ -220,11 +220,11 @@ It also contains additional documentation about the floppy driver.
+>  
+>  The latest version can be found at fdutils homepage:
+>  
+> - http://fdutils.linux.lu
+> + https://fdutils.linux.lu
+>  
+>  The fdutils releases can be found at:
+>  
+> - http://fdutils.linux.lu/download.html
+> + https://fdutils.linux.lu/download.html
+>  
+>   http://www.tux.org/pub/knaff/fdutils/
+
+That link is completely dead and should just come out.
+
+But at least we have some HTTPS links.  
+
+jon
