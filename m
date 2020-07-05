@@ -2,554 +2,449 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F52CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552692073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D432073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgGEUds (ORCPT
+        id S1728386AbgGEUfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:33:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34705 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgGEUdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:33:47 -0400
-IronPort-SDR: ih02fOzbhR8ZLr24V3EguFRQw7qa7dlq3U1MR9ecYAxuLRdIIq6ZNLcryRhyhRhG4ABZXoKLG7
- wx0sq46xxguw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="208841359"
-X-IronPort-AV: E=Sophos;i="5.75,317,1589266800"; 
-   d="gz'50?scan'50,208,50";a="208841359"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 13:30:43 -0700
-IronPort-SDR: EAQf3INPmKdhycE2qGo/Lfc8geMroe8/kvR/dI9NHP5V5JCo6TJBPiBY6vy7EOuyYrykMYmdBJ
- xyq5kNto6Gdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,317,1589266800"; 
-   d="gz'50?scan'50,208,50";a="305070672"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jul 2020 13:30:42 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jsBHd-0001vd-Df; Sun, 05 Jul 2020 20:30:41 +0000
-Date:   Mon, 6 Jul 2020 04:30:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after
- initialization to constant on line 42
-Message-ID: <202007060424.eviReSsQ%lkp@intel.com>
+        Sun, 5 Jul 2020 16:35:01 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:39218 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgGEUfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:35:00 -0400
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id DF0791A402E6; Sun,  5 Jul 2020 13:34:59 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 13:34:59 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705203459.ojli5uruxqt2cq2s@shells.gnugeneration.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org>
+ <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
+ <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
+ <20200705114454.GB1224775@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="LZvS9be/3tNcYl/X"
+Content-Type: multipart/mixed; boundary="eioqlffteccd2lzb"
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200705114454.GB1224775@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---LZvS9be/3tNcYl/X
+--eioqlffteccd2lzb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   19a61a753d0705fcb41e7aa130351e0a0a54c3bd
-commit: 0096214a59a72b3c3c943e27bd03307324d3ce0f staging: wfx: add support for I/O access
-date:   9 months ago
-config: c6x-randconfig-c024-20200705 (attached as .config)
-compiler: c6x-elf-gcc (GCC) 9.3.0
+On Sun, Jul 05, 2020 at 01:44:54PM +0200, Greg KH wrote:
+> On Sun, Jul 05, 2020 at 01:07:14AM -0700, Vito Caputo wrote:
+> > On Sun, Jul 05, 2020 at 04:27:32AM +0100, Matthew Wilcox wrote:
+> > > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
+> > > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > > >
+> > > > > You should probably take a look at io_uring.  That has the level of
+> > > > > complexity of this proposal and supports open/read/close along with many
+> > > > > other opcodes.
+> > > > 
+> > > > Then glibc can implement readfile using io_uring and there is no need
+> > > > for a new single-file readfile syscall.
+> > > 
+> > > It could, sure.  But there's also a value in having a simple interface
+> > > to accomplish a simple task.  Your proposed API added a very complex
+> > > interface to satisfy needs that clearly aren't part of the problem space
+> > > that Greg is looking to address.
+> > 
+> > I disagree re: "aren't part of the problem space".
+> > 
+> > Reading small files from procfs was specifically called out in the
+> > rationale for the syscall.
+> > 
+> > In my experience you're rarely monitoring a single proc file in any
+> > situation where you care about the syscall overhead.  You're
+> > monitoring many of them, and any serious effort to do this efficiently
+> > in a repeatedly sampled situation has cached the open fds and already
+> > uses pread() to simply restart from 0 on every sample and not
+> > repeatedly pay for the name lookup.
+> 
+> That's your use case, but many other use cases are just "read a bunch of
+> sysfs files in one shot".  Examples of that are tools that monitor
+> uevents and lots of hardware-information gathering tools.
+> 
+> Also not all tools sem to be as smart as you think they are, look at
+> util-linux for loads of the "open/read/close" lots of files pattern.  I
+> had a half-baked patch to convert it to use readfile which I need to
+> polish off and post with the next series to show how this can be used to
+> both make userspace simpler as well as use less cpu time.
+> 
+> > Basically anything optimally using the existing interfaces for
+> > sampling proc files needs a way to read multiple open file descriptors
+> > in a single syscall to move the needle.
+> 
+> Is psutils using this type of interface, or do they constantly open
+> different files?
+> 
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+When I last checked, psutils was not an optimal example, nor did I
+suggest it was.
 
+> What about fun tools like bashtop:
+> 	https://github.com/aristocratos/bashtop.git
+> which thankfully now relies on python's psutil package to parse proc in
+> semi-sane ways, but that package does loads of constant open/read/close
+> of proc files all the time from what I can tell.
+> 
+> And lots of people rely on python's psutil, right?
 
-coccinelle warnings: (new ones prefixed by >>)
+If python's psutil is constantly reopening the same files in /proc,
+this is an argument to go improve python's psutil, especially if it's
+popular.
 
->> drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after initialization to constant on line 42
+Your proposed syscall doesn't magically make everything suboptimally
+sampling proc more efficient.  It still requires going out and
+modifying everything to use the new syscall.
 
-vim +47 drivers/staging/wfx/main.c
+In order to actually realize a gain comparable to what can be done
+using existing interfaces, but with your new syscall, if the code
+wasn't already reusing the open fd it still requires a refactor to do
+so with your syscall, to eliminate the directory lookup on every
+sample.
 
-    30	
-    31	struct gpio_desc *wfx_get_gpio(struct device *dev, int override, const char *label)
-    32	{
-    33		struct gpio_desc *ret;
-    34		char label_buf[256];
-    35	
-    36		if (override >= 0) {
-    37			snprintf(label_buf, sizeof(label_buf), "wfx_%s", label);
-    38			ret = ERR_PTR(devm_gpio_request_one(dev, override, GPIOF_OUT_INIT_LOW, label_buf));
-    39			if (!ret)
-    40				ret = gpio_to_desc(override);
-    41		} else if (override == -1) {
-  > 42			ret = NULL;
-    43		} else {
-    44			ret = devm_gpiod_get(dev, label, GPIOD_OUT_LOW);
-    45		}
-    46		if (IS_ERR(ret) || !ret) {
-  > 47			if (!ret || PTR_ERR(ret) == -ENOENT)
-    48				dev_warn(dev, "gpio %s is not defined\n", label);
-    49			else
-    50				dev_warn(dev, "error while requesting gpio %s\n", label);
-    51			ret = NULL;
-    52		} else {
-    53			dev_dbg(dev, "using gpio %d for %s\n", desc_to_gpio(ret), label);
-    54		}
-    55		return ret;
-    56	}
-    57	
+At the end of the day, if you did all this work, you'd have code that
+only works on kernels with the new syscall, didn't enjoy a significant
+performance gain over what could have been achieved using the existing
+interfaces, and still required basically the same amount of work as
+optimizing for the existing interfaces would have.  For what gain?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
+> > This syscall doesn't provide that.  It doesn't really give any
+> > advantage over what we can achieve already.  It seems basically
+> > pointless to me, from a monitoring proc files perspective.
+> 
+> What "good" monitoring programs do you suggest follow the pattern you
+> recommend?
+> 
 
---LZvS9be/3tNcYl/X
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+"Good" is not generally a word I'd use to describe software, surely
+that's not me you're quoting... but I assume you mean "optimal".
 
-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
+I'm sure sysprof is at least reusing open files when sampling proc,
+because we discussed the issue when Christian took over maintenance.
 
---LZvS9be/3tNcYl/X--
+It appears he's currently using the lseek()->read() sequence:
+
+https://gitlab.gnome.org/GNOME/sysprof/-/blob/master/src/libsysprof/sysprof-netdev-source.c#L223
+https://gitlab.gnome.org/GNOME/sysprof/-/blob/master/src/libsysprof/sysprof-memory-source.c#L210
+https://gitlab.gnome.org/GNOME/sysprof/-/blob/master/src/libsysprof/sysprof-diskstat-source.c#L185
+
+It'd be more efficient to just use pread() and lose the lseek(), at
+which point it'd be just a single pread() call per sample per proc
+file.  Nothing your proposed syscall would improve upon, not that it'd
+be eligible for software that wants to work on existing kernels from
+distros like Debian and Centos/RHEL anyways.
+
+If this were a conversation about providing something like a better
+scatter-gather interface akin to p{read,write}v but with the fd in the
+iovec, then we'd be talking about something very lucrative for proc
+sampling. But like you've said elsewhere in this thread, io_uring()
+may suffice as an alternative solution in that vein.
+
+My personal interest in this topic stems from an experimental window
+manager I made, and still use, which monitors every descendant process
+for the X session at frequencies up to 60HZ.  The code opens a bunch
+of proc files for every process, and keeps them open until the process
+goes away or falls out of scope.  See the attachment for some idea of
+what /proc/$(pidof wm)/fd looks like.  All those proc files are read
+at up to 60HZ continuously.
+
+All top-like tools are really no different, and already shouldn't be
+reopening things on every sample.  They should be fixed if not - with
+or without your syscall, it's equal effort, but the existing
+interfaces... exist.
+
+Regards,
+Vito Caputo
+
+--eioqlffteccd2lzb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="vwm-fds.txt"
+
+total 0
+lrwx------ 1 vcaputo vcaputo 64 Jul  5 13:16 0 -> /dev/tty1
+l-wx------ 1 vcaputo vcaputo 64 Jul  5 13:16 1 -> /home/vcaputo/.xsession-errors
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 10 -> /proc/829/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 100 -> /proc/8427/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 101 -> /proc/8428/task/8428/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 102 -> /proc/8428/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 103 -> /proc/8428/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 104 -> /proc/8428/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 105 -> /proc/8428/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 106 -> /proc/8430/task/8430/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 107 -> /proc/8430/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 108 -> /proc/8430/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 109 -> /proc/8430/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 11 -> /proc/830/task/830/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 110 -> /proc/8430/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 111 -> /proc/8433/task/8433/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 112 -> /proc/8433/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 113 -> /proc/8433/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 114 -> /proc/8433/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 115 -> /proc/8433/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 116 -> /proc/8434/task/8434/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 117 -> /proc/8434/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 118 -> /proc/8434/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 119 -> /proc/8434/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 12 -> /proc/830/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 120 -> /proc/8434/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 121 -> /proc/12400/task/12400/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 122 -> /proc/12400/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 123 -> /proc/12400/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 124 -> /proc/12400/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 125 -> /proc/12400/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 126 -> /proc/11921/task/11921/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 127 -> /proc/11921/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 128 -> /proc/11921/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 129 -> /proc/11921/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 13 -> /proc/830/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 130 -> /proc/11921/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 131 -> /proc/30440/task/30440/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 132 -> /proc/30440/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 133 -> /proc/30440/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 134 -> /proc/30440/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 135 -> /proc/30440/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 136 -> /proc/5841/task/5841/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 137 -> /proc/5841/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 138 -> /proc/5841/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 139 -> /proc/5841/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 14 -> /proc/830/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 140 -> /proc/5841/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 141 -> /proc/25853/task/25853/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 142 -> /proc/25853/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 143 -> /proc/25853/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 144 -> /proc/25853/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 145 -> /proc/25853/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 146 -> /proc/25854/task/25854/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 147 -> /proc/25854/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 148 -> /proc/25854/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 149 -> /proc/25854/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 15 -> /proc/830/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 150 -> /proc/25854/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 151 -> /proc/25856/task/25856/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 152 -> /proc/25856/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 153 -> /proc/25856/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 154 -> /proc/25856/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 155 -> /proc/25856/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 156 -> /proc/25859/task/25859/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 157 -> /proc/25859/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 158 -> /proc/25859/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 159 -> /proc/25859/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 16 -> /proc/831/task/831/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 160 -> /proc/25859/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 161 -> /proc/5843/task/5843/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 162 -> /proc/5843/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 163 -> /proc/5843/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 164 -> /proc/5843/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 165 -> /proc/5843/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 166 -> /proc/5848/task/5848/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 167 -> /proc/5848/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 168 -> /proc/5848/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 169 -> /proc/5848/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 17 -> /proc/831/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 170 -> /proc/5848/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 171 -> /proc/5848/task
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 172 -> /proc/5848/task/5848/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 173 -> /proc/5848/task/5848/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 174 -> /proc/5848/task/5848/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 175 -> /proc/5848/task/5848/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 176 -> /proc/5849/task/5849/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 177 -> /proc/5849/task/5849/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 178 -> /proc/5849/task/5849/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 179 -> /proc/5849/task/5849/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 18 -> /proc/831/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 180 -> /proc/5850/task/5850/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 181 -> /proc/30441/task/30441/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 182 -> /proc/30441/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 183 -> /proc/30441/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 184 -> /proc/30441/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 185 -> /proc/30441/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 186 -> /proc/30443/task/30443/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 187 -> /proc/30443/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 188 -> /proc/30443/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 189 -> /proc/30443/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 19 -> /proc/831/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 190 -> /proc/30443/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 191 -> /proc/30446/task/30446/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 192 -> /proc/30446/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 193 -> /proc/30446/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 194 -> /proc/30446/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 195 -> /proc/30446/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 196 -> /proc/30447/task/30447/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 197 -> /proc/30447/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 198 -> /proc/30447/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 199 -> /proc/30447/wchan
+l-wx------ 1 vcaputo vcaputo 64 Jul  5 13:16 2 -> /home/vcaputo/.xsession-errors
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 20 -> /proc/831/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 200 -> /proc/30447/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 201 -> /proc/30448/task/30448/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 202 -> /proc/30448/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 203 -> /proc/30448/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 204 -> /proc/30448/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 205 -> /proc/30448/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 206 -> /proc/30451/task/30451/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 207 -> /proc/30451/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 208 -> /proc/30451/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 209 -> /proc/30451/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 21 -> /proc/832/task/832/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 210 -> /proc/30451/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 211 -> /proc/30451/task
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 212 -> /proc/30451/task/30451/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 213 -> /proc/30451/task/30451/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 214 -> /proc/30451/task/30451/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 215 -> /proc/30451/task/30451/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 216 -> /proc/30452/task/30452/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 217 -> /proc/30452/task/30452/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 218 -> /proc/30452/task/30452/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 219 -> /proc/30452/task/30452/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 22 -> /proc/832/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 220 -> /proc/30453/task/30453/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 221 -> /proc/30453/task/30453/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 222 -> /proc/30453/task/30453/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 223 -> /proc/30453/task/30453/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 224 -> /proc/30454/task/30454/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 225 -> /proc/30454/task/30454/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 226 -> /proc/30454/task/30454/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 227 -> /proc/30454/task/30454/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 228 -> /proc/30455/task/30455/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 229 -> /proc/30455/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 23 -> /proc/832/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 230 -> /proc/30455/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 231 -> /proc/30455/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 232 -> /proc/30455/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 233 -> /proc/30458/task/30458/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 234 -> /proc/30458/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 235 -> /proc/30458/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 236 -> /proc/30458/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 237 -> /proc/30458/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 238 -> /proc/5850/task/5850/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 239 -> /proc/5850/task/5850/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 24 -> /proc/832/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 240 -> /proc/5850/task/5850/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 241 -> /proc/5851/task/5851/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 242 -> /proc/5851/task/5851/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 243 -> /proc/5851/task/5851/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 244 -> /proc/5851/task/5851/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 245 -> /proc/5853/task/5853/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 246 -> /proc/5853/task/5853/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 247 -> /proc/5853/task/5853/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 248 -> /proc/5853/task/5853/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 249 -> /proc/5856/task/5856/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 25 -> /proc/832/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 250 -> /proc/5856/task/5856/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 251 -> /proc/5856/task/5856/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 252 -> /proc/5856/task/5856/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 253 -> /proc/6844/task/6844/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 254 -> /proc/6844/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 255 -> /proc/6844/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 256 -> /proc/6844/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 257 -> /proc/6844/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 26 -> /proc/833/task/833/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 27 -> /proc/833/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 28 -> /proc/833/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 29 -> /proc/833/wchan
+lrwx------ 1 vcaputo vcaputo 64 Jul  5 13:16 3 -> socket:[19590]
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 30 -> /proc/833/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 31 -> /proc/839/task/839/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 32 -> /proc/839/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 33 -> /proc/839/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 34 -> /proc/839/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 35 -> /proc/839/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 36 -> /proc/840/task/840/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 37 -> /proc/840/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 38 -> /proc/840/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 39 -> /proc/840/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 4 -> /proc
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 40 -> /proc/840/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 41 -> /proc/842/task/842/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 42 -> /proc/842/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 43 -> /proc/842/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 44 -> /proc/842/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 45 -> /proc/842/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 46 -> /proc/5858/task/5858/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 47 -> /proc/5858/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 48 -> /proc/5858/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 49 -> /proc/5858/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 5 -> /proc/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 50 -> /proc/5858/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 51 -> /proc/6841/task/6841/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 52 -> /proc/6841/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 53 -> /proc/6841/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 54 -> /proc/6841/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 55 -> /proc/6841/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 56 -> /proc/6842/task/6842/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 57 -> /proc/6842/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 58 -> /proc/6842/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 59 -> /proc/6842/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 6 -> /proc/829/task/829/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 60 -> /proc/6842/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 61 -> /proc/5840/task/5840/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 62 -> /proc/5840/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 63 -> /proc/5840/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 64 -> /proc/5840/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 65 -> /proc/5840/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 66 -> /proc/896/task/896/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 67 -> /proc/896/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 68 -> /proc/896/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 69 -> /proc/896/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 7 -> /proc/829/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 70 -> /proc/896/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 71 -> /proc/897/task/897/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 72 -> /proc/897/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 73 -> /proc/897/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 74 -> /proc/897/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 75 -> /proc/897/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 76 -> /proc/899/task/899/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 77 -> /proc/899/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 78 -> /proc/899/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 79 -> /proc/899/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 8 -> /proc/829/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 80 -> /proc/899/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 81 -> /proc/2293/task/2293/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 82 -> /proc/2293/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 83 -> /proc/2293/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 84 -> /proc/2293/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 85 -> /proc/2293/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 86 -> /proc/2294/task/2294/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 87 -> /proc/2294/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 88 -> /proc/2294/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 89 -> /proc/2294/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 9 -> /proc/829/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 90 -> /proc/2294/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 91 -> /proc/2296/task/2296/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 92 -> /proc/2296/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 93 -> /proc/2296/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 94 -> /proc/2296/wchan
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 95 -> /proc/2296/stat
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 96 -> /proc/8427/task/8427/children
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 97 -> /proc/8427/comm
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 98 -> /proc/8427/cmdline
+lr-x------ 1 vcaputo vcaputo 64 Jul  5 13:16 99 -> /proc/8427/wchan
+
+--eioqlffteccd2lzb--
