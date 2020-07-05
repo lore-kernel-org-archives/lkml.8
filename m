@@ -6,39 +6,40 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D359DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC1420739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C2B2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgGEUjA (ORCPT
+        id S1728418AbgGEUkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:39:00 -0400
-Received: from ms.lwn.net ([45.79.88.28]:51734 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgGEUi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:38:59 -0400
+        Sun, 5 Jul 2020 16:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgGEUkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:40:03 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59156C061794;
+        Sun,  5 Jul 2020 13:40:03 -0700 (PDT)
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 21ADE823;
-        Sun,  5 Jul 2020 20:38:59 +0000 (UTC)
-Date:   Sun, 5 Jul 2020 14:38:58 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id D83C5846;
+        Sun,  5 Jul 2020 20:40:02 +0000 (UTC)
+Date:   Sun, 5 Jul 2020 14:40:01 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
 To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH 0/3] Documentation: arm64: eliminate duplicated words
-Message-ID: <20200705143858.4cd8491e@lwn.net>
-In-Reply-To: <20200703205110.29873-1-rdunlap@infradead.org>
-References: <20200703205110.29873-1-rdunlap@infradead.org>
+        linux-pci@vger.kernel.org, Linas Vepstas <linasvepstas@gmail.com>
+Subject: Re: [PATCH 0/4] Documentation: PCI: eliminate doubled words
+Message-ID: <20200705144001.07ec8bf4@lwn.net>
+In-Reply-To: <20200703212156.30453-1-rdunlap@infradead.org>
+References: <20200703212156.30453-1-rdunlap@infradead.org>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -48,28 +49,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Jul 2020 13:51:07 -0700
+On Fri,  3 Jul 2020 14:21:52 -0700
 Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> Drop doubled words in Documentation/arm64/.
-> 
+> Fix doubled (duplicated) words in Documentation/PCI/.
 > 
 > Cc: Jonathan Corbet <corbet@lwn.net>
 > Cc: linux-doc@vger.kernel.org
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
 > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Dave Martin <Dave.Martin@arm.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: Linas Vepstas <linasvepstas@gmail.com>
 > 
->  Documentation/arm64/acpi_object_usage.rst |    2 +-
->  Documentation/arm64/arm-acpi.rst          |    2 +-
->  Documentation/arm64/sve.rst               |    2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-
+>  Documentation/PCI/endpoint/pci-endpoint-cfs.rst |    2 +-
+>  Documentation/PCI/endpoint/pci-endpoint.rst     |    2 +-
+>  Documentation/PCI/pci-error-recovery.rst        |    2 +-
+>  Documentation/PCI/pci.rst                       |    2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
 Applied, thanks.
 
 jon
