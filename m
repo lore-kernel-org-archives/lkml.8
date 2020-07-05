@@ -2,143 +2,144 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD575C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33383C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4122073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c8sPHhxF"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6D420739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgGEOpJ (ORCPT
+        id S1727102AbgGEOsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 10:45:09 -0400
-Received: from mail-eopbgr130055.outbound.protection.outlook.com ([40.107.13.55]:6116
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726747AbgGEOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 10:45:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L0xTMnR3epr5FCs8gHyuYyqqx096EaJ3ulJTlYLlIrVkndUP/ifNB4WFnjBCsYB0bzXOP/7+k9OweY3Kleu+ykGGOzGzsYsxP0KONNH5M2ugwhF6yy3v4ET5eTsn9RwUWvFAYWHlkagjWRjQiFI7jEFG1VpBnsLWDMHswGOuxbpiDtNxRY7o4LIz0L6uqYvG6SO7yNoOpKzzcEiymOsUxWttrr0Vcww3UkmAlt2PocFL4AjZ7NsvJG1BesFUwxsSq2YOKWj0K2mWdCJwGGig0qhMfPhEcLDbLsapFHpIFx/BuRlXp6Urz6dHnHCuCd4PflRl2mp9W8cyNHXBEYbbAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iz/phFwq43MMxpKtdiuafRnMPxlJQBjtqPOQhYIWbH8=;
- b=XVpRDwq9hj61EmZCyrZ5bjE40+qW14Lp1x3CS99dvXTSFjQ5ONQi5FFX7S0EdfskyQBSFkMfOv5wXLbu/twFTGEu+GfDxcXfmnM8mDRXRhBnFLwPQHJkb90vP5KPV1GATrgomdKMsycnQVsb/sJIGmApcgmuOBRsmFgs6rtXPK0DuL1O3OP3S5+Z8wj9sdnyxOGWXII6D/qzIsqbnXGr07KMAJi5h6jNevO+F27CqlrcGbAUmkJz/LVIJyUzEVvjtzdSmjXIaVFWCSbRd8rm5Z4Xg9bqQU82zwqY3iLzAC3xh5aVUqx5eFUJbHxe7naUsiJxVxwcSMrLJHrxvJz23g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iz/phFwq43MMxpKtdiuafRnMPxlJQBjtqPOQhYIWbH8=;
- b=c8sPHhxFSQNn9tZw0Xt0fTtx2gr7G8e0X6ed+5um3T3nQxyv5Qq4VoKWl2R+QQTc5v+XqmL27lo2C34pt5cLN+UJlO6ueRD/N4rcPTKmXdY97GDdb5VMw78uMqhCqjRpfco0UqDGXdd9htRuxpmdeO0+a/Yxok1bY/tRZ6texEM=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR04MB5062.eurprd04.prod.outlook.com
- (2603:10a6:20b:11::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Sun, 5 Jul
- 2020 14:45:03 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Sun, 5 Jul 2020
- 14:45:03 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>
-CC:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
- internal routing of clk_enet_ref
-Thread-Topic: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
- internal routing of clk_enet_ref
-Thread-Index: AQHWUMBIY0/PmQIJzUKZXhlXPuzWDKj3d74AgAGaMEA=
-Date:   Sun, 5 Jul 2020 14:45:02 +0000
-Message-ID: <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <20200702175352.19223-1-TheSven73@gmail.com>
- <20200702175352.19223-3-TheSven73@gmail.com>
- <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
- <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
-In-Reply-To: <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [101.86.4.40]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1e7efb26-a777-45bc-8af6-08d820f20034
-x-ms-traffictypediagnostic: AM6PR04MB5062:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5062530C1E60E87253EF2DD5FF680@AM6PR04MB5062.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 045584D28C
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XtnfNpoz9VfktgUHJ9GraROv+zMM1KcRLRDt0sFYBy5uXqQ7/TexpxALFi7NdMh91sXjilDkbjnD72ydmt+U3kXGQBJPYafCDfIJJ37Nl1qMccX2TVUO7J3rbvDyyGHcA6p9Cdyjex3fHPvbFLN8on8PqApSVXLCwJXiG/w5TzH2s67M3NLx4BbsE4AC03ZE3xtnltGbrXTiRzqmWVBGE91fgWXQo3zTn0fMjWY2SJxQvWjzvcpe9To7vQ87WKhD5spDsDPjTmJ+e8zVhqzZZeebUbMpttrUgHDrXmvqGiHqgT3k0Wa7kcbNhfu9xeZ5hJWJGUwG6zm+C9+lKtsY2FJCOXQoutO1HJAIsOK7Km9htgkejN/xWeRVOTY4zEbS
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(136003)(366004)(376002)(346002)(4326008)(54906003)(110136005)(52536014)(2906002)(316002)(66476007)(86362001)(7416002)(66446008)(66556008)(66946007)(71200400001)(76116006)(64756008)(55016002)(33656002)(9686003)(8936002)(5660300002)(186003)(53546011)(6506007)(83380400001)(26005)(8676002)(7696005)(478600001)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: qfXiU1zxmhxM8+AxyzO+ZSQ6MmgYqkV4fP8Spat8MNAP9AayBtYuyEKtAJgeTsvm0soZd1b2oVgiovb/yUYdSKLcL4kfQgXs1EIyNp4rOvS29r4itwlWwbQR2d5ijfYE8qFxL66JemmtmriVauR+jQ+0joBx1+Y4OhSEhcuwoTxX9eFyjYLC2XQCaAKxge9SOd8Y8CUVm4D5soY0kvMWX/VUPa52cxGMupcW6dJ1L4PMpyEJOoRwvZaU5hiJAdndlqeTIXUoRerxWYFj7FxnX7yCtyjb05bRqGq6V++Vxu9dimLrcwaZ7VeBnHCTZHuiACB/L02Sv7QbF6BS2uwzqjAAjWAFi3SWJinAQWfP1oRpXKEW6QIXOkfoaMMsvSIC0AZZvNUV92UDHKc9a1d+ly4+vR1p8HcBHifPGSkf/UqSG/fedZ8avshSwnbOFAOSkzapdhovCjpqrg253YOIiy+abHc8jD5ZurItOHxExqM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Jul 2020 10:48:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54460 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726826AbgGEOsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 10:48:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 283E7AB7D;
+        Sun,  5 Jul 2020 14:48:19 +0000 (UTC)
+Subject: Re: [PATCH] btfrs: initialize return of btrfs_extent_same
+To:     trix@redhat.com, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200705142058.28305-1-trix@redhat.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <885129e4-d6d6-57d3-21d3-a83bd98c3994@suse.com>
+Date:   Sun, 5 Jul 2020 17:48:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e7efb26-a777-45bc-8af6-08d820f20034
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2020 14:45:02.9833
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yN4j8Dde77IdX8cm/X7P3G+4gHrK3fqKubzSe2ZwptrPcNWdAXcd2Fp8atSKZDuxJMWv2jAAgQf35nPVvvX5Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5062
+In-Reply-To: <20200705142058.28305-1-trix@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU3ZlbiBWYW4gQXNicm9lY2sgPHRoZXN2ZW43M0BnbWFpbC5jb20+DQo+IEhpIEZhYmlv
-LCBBbmR5LA0KPiANCj4gT24gVGh1LCBKdWwgMiwgMjAyMCBhdCA2OjI5IFBNIEZhYmlvIEVzdGV2
-YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBXaXRoIHRoZSBkZXZpY2Ug
-dHJlZSBhcHByb2FjaCwgSSB0aGluayB0aGF0IGEgYmV0dGVyIHBsYWNlIHRvIHRvdWNoDQo+ID4g
-R1BSNSB3b3VsZCBiZSBpbnNpZGUgdGhlIGZlYyBkcml2ZXIuDQo+ID4NCj4gDQo+IEFyZSB3ZSAx
-MDAlIHN1cmUgdGhpcyBpcyB0aGUgYmVzdCB3YXkgZm9yd2FyZCwgdGhvdWdoPw0KPiANCj4gQWxs
-IHRoZSBGRUMgZHJpdmVyIHNob3VsZCBjYXJlIGFib3V0IGlzIHRoZSBGRUMgbG9naWMgYmxvY2sg
-aW5zaWRlIHRoZSBTb0MuIEl0DQo+IHNob3VsZCBub3QgY29uY2VybiBpdHNlbGYgd2l0aCB0aGUg
-d2F5IGEgU29DIGhhcHBlbnMgdG8gYnJpbmcgYSBjbG9jayAoUFRQDQo+IGNsb2NrKSB0byB0aGUg
-aW5wdXQgb2YgdGhlIEZFQyBsb2dpYyBibG9jayAtIHRoYXQgaXMgcHVyZWx5IGEgU29DIGltcGxl
-bWVudGF0aW9uDQo+IGRldGFpbC4NCg0KSSBhbHNvIGFncmVlIHdpdGggdGhhdCByZWxhdGVzIHRv
-IFNPQyBpbnRlZ3JhdGlvbi4gDQo+IA0KPiBJdCBtYWtlcyBzZW5zZSB0byBhZGQgZnNsLHN0b3At
-bW9kZSAoPSBhIEdQUiBiaXQpIHRvIHRoZSBGRUMgZHJpdmVyLCBhcyB0aGlzIGJpdA0KPiBpcyBh
-IGxvZ2ljIGlucHV0IHRvIHRoZSBGRUMgYmxvY2ssIHdoaWNoIHRoZSBkcml2ZXIgbmVlZHMgdG8g
-ZHluYW1pY2FsbHkgZmxpcC4NCj4gDQo+IEJ1dCB0aGUgUFRQIGNsb2NrIGlzIGRpZmZlcmVudCwg
-YmVjYXVzZSBpdCdzIHN0YXRpY2FsbHkgcm91dGVkIGJ5IHRoZSBTb0MuDQo+IA0KPiBNYXliZSB0
-aGlzIHByb2JsZW0gbmVlZHMgYSBjbG9jayByb3V0aW5nIHNvbHV0aW9uPw0KPiBJc24ndCB0aGVy
-ZSBhbiBpbXg2cSBwbHVzIGNsb2NrIG11eCB3ZSdyZSBub3QgbW9kZWxsaW5nPw0KPiANCj4gICBl
-bmV0X3JlZi1vLS0tLS0tPmV4dD4tLS1wYWRfY2xrLS18IFwNCj4gICAgICAgICAgICB8ICAgICAg
-ICAgICAgICAgICAgICAgICB8TSB8LS0tLWZlY19wdHBfY2xrDQo+ICAgICAgICAgICAgby0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tfF8vDQo+IA0KPiBXaGVyZSBNID0gbXV4IGNvbnRyb2xsZWQgYnkg
-R1BSNVs5XQ0KPiANCj4gVGhlIGlzc3VlIGhlcmUgaXMgdGhhdCBwYWRfY2xrIGlzIHJvdXRlZCBl
-eHRlcm5hbGx5LCBzbyBpdHMgcGFyZW50IGNvdWxkIGJlIGFueQ0KPiBpbnRlcm5hbCBvciBleHRl
-cm5hbCBjbG9jay4gSSBoYXZlIG5vIGlkZWEgaG93IHRvIG1vZGVsIHRoaXMgaW4gdGhlIGNsb2Nr
-DQo+IGZyYW1ld29yay4NCkRvbid0IGNvbnNpZGVyIGl0IGNvbXBsZXgsIEdQUjVbOV0ganVzdCBz
-ZWxlY3QgdGhlIHJnbWlpIGd0eCBzb3VyY2UgZnJvbSBQQUQgb3IgaW50ZXJuYWwNCkxpa2XvvJoN
-CkdQUjVbOV0gaXMgY2xlYXJlZDogUEFEIC0+IE1BQyBndHgNCkdQUjVbOV0gaXMgc2V0OiBQbGxf
-ZW5ldCAtPiBNQUMgZ3R4DQpBcyB5b3Ugc2FpZCwgcmVnaXN0ZXIgb25lIGNsb2NrIG11eCBmb3Ig
-dGhlIHNlbGVjdGlvbiwgYXNzaWduIHRoZSBjbG9jayBwYXJlbnQgYnkgYm9hcmQgZHRzDQpmaWxl
-LCBidXQgbm93IGN1cnJlbnQgY2xvY2sgZHJpdmVyIGRvZXNuJ3Qgc3VwcG9ydCBHUFIgY2xvY2su
-IA0K
+
+
+On 5.07.20 г. 17:20 ч., trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analysis flags a garbage return
+> 
+> fs/btrfs/reflink.c:611:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+>         return ret;
+>         ^~~~~~~~~~
+> ret will not be set when olen is 0
+> When olen is 0, this function does no work.
+> 
+> So initialize ret to 0
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
+
+Patch itself is good however, the bug cannot currently be triggered, due
+to the following code in the sole caller (btrfs_remap_file_range):
+
+
+
+   15         if (ret < 0 || len == 0)
+
+   14                 goto out_unlock;
+
+   13
+
+   12         if (remap_flags & REMAP_FILE_DEDUP)
+
+   11                 ret = btrfs_extent_same(src_inode, off, len,
+dst_inode, destoff);
+   10         else
+
+    9                 ret = btrfs_clone_files(dst_file, src_file, off,
+len, destoff);
+
+
+
+i.e len is guaranteed to be non-zero
+
+> ---
+>  fs/btrfs/reflink.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/btrfs/reflink.c b/fs/btrfs/reflink.c
+> index 040009d1cc31..200a80fcbecb 100644
+> --- a/fs/btrfs/reflink.c
+> +++ b/fs/btrfs/reflink.c
+> @@ -572,7 +572,7 @@ static int btrfs_extent_same_range(struct inode *src, u64 loff, u64 len,
+>  static int btrfs_extent_same(struct inode *src, u64 loff, u64 olen,
+>  			     struct inode *dst, u64 dst_loff)
+>  {
+> -	int ret;
+> +	int ret = 0;
+>  	u64 i, tail_len, chunk_count;
+>  	struct btrfs_root *root_dst = BTRFS_I(dst)->root;
+>  
+> 
