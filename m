@@ -2,142 +2,70 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83287C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ACCC433E1
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 23:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A0B206E2
+	by mail.kernel.org (Postfix) with ESMTP id 92AA0206E2
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 23:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="oD9PdhP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGEXEJ (ORCPT
+        id S1728183AbgGEXFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 19:04:09 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.239]:37716 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727894AbgGEXEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 19:04:09 -0400
-X-Greylist: delayed 1316 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Jul 2020 19:04:08 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id C39F96FD94
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 17:42:10 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id sDKsj6oGuBb5dsDKsjC8GZ; Sun, 05 Jul 2020 17:42:10 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WH9xGcE98lBPtINc6g51Vn8ZOXiCuySEHOPSXvbspoE=; b=oD9PdhP4YiLCbHKYjIrZJqLv3N
-        yj4GbnjnqcfNtkKwzitFufj22iQ0fISg2nzU2EIcRSn+ZkYaeWk6hgvQdj/GZgyevcfNGL7G89EPJ
-        7OHdgXZ42Uji6NPbp3ij5VPZw8FwwPpTk9Z7KfNXvKNpSj2wP8VAgzDALpO4Ga8tBor5qXpVDBpb/
-        tdzzjLoT6Hr33JPAVCJ7wnnHIJHGGciPg37EakNM6ZJcd+WkgnvJ4CKEXn9UIGkn6sfGCiIXRo6Du
-        a++elEIy+8MmALVaBw6JaEt6C4gINfhwbG52kt1Oe+Dd3YV6YKUFgqM9ttbXyi5YEJiTauXHFgv3o
-        lCI/vKhQ==;
-Received: from [189.59.31.158] (port=57190 helo=[192.168.15.5])
-        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jsDKs-000TzD-D1; Sun, 05 Jul 2020 19:42:10 -0300
-Subject: Re: [PATCH v1] arm64: dts: actions: Fix smp Bringing up secondary
- CPUs
-To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Cc:     manivannan.sadhasivam@linaro.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-References: <20200705191944.404933-1-matheus@castello.eng.br>
- <60c25ef8-761d-9108-a8b1-ea15678c496c@suse.de>
-From:   Matheus Castello <matheus@castello.eng.br>
-Message-ID: <24c87b5b-d378-bcfa-d557-0dcba5199c1b@castello.eng.br>
-Date:   Sun, 5 Jul 2020 19:42:06 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <60c25ef8-761d-9108-a8b1-ea15678c496c@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: pt-BR
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 189.59.31.158
-X-Source-L: No
-X-Exim-ID: 1jsDKs-000TzD-D1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [189.59.31.158]:57190
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 7
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+        Sun, 5 Jul 2020 19:05:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22784 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgGEXFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 19:05:11 -0400
+IronPort-SDR: l1XRvknSfJpxrIl3BdiqmlF5ASTMWJw/RCb7dOnZwyxcIC/SW1uGP1pM35AJ8sFxdi4l4IWDwA
+ 0A7JXw3U+zeQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="147344297"
+X-IronPort-AV: E=Sophos;i="5.75,317,1589266800"; 
+   d="scan'208";a="147344297"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 16:05:10 -0700
+IronPort-SDR: i0jCGVlWBSYwbFFrXWQhgxWDVRBwjxs/MsO0mwfKmvr3XN1mUpgZnvqFTrCNdpfjeSSe7VA7TR
+ 232RjCbNGKRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,317,1589266800"; 
+   d="scan'208";a="388043365"
+Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.238.156.127])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Jul 2020 16:05:07 -0700
+From:   Cathy Zhang <cathy.zhang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
+        kyung.min.park@intel.com, Cathy Zhang <cathy.zhang@intel.com>
+Subject: [PATCH 0/2] Expose new features for intel processor
+Date:   Mon,  6 Jul 2020 06:59:50 +0800
+Message-Id: <1593989992-10019-1-git-send-email-cathy.zhang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+This patchset is to expose two new features for intel
+processors which support them, like Sapphire Rapids.
+SERIALIZE is a faster serializing instruction which
+does not modify registers, arithmetic flags or memory,
+will not cause VM exit. TSX suspend load tracking
+instruction aims to give a way to choose which memory
+accesses do not need to be tracked in the TSX read set.
 
-Em 7/5/20 7:09 PM, Andreas Färber escreveu:
-> Hi Matheus,
-> 
-> Am 05.07.20 um 21:19 schrieb Matheus Castello:
->> Change the enable-method to fix the failed to boot errors:
->>
->> [    0.040330] smp: Bringing up secondary CPUs ...
->> [    0.040683] psci: failed to boot CPU1 (-22)
->> [    0.040691] CPU1: failed to boot: -22
->> [    0.041062] psci: failed to boot CPU2 (-22)
->> [    0.041071] CPU2: failed to boot: -22
->> [    0.041408] psci: failed to boot CPU3 (-22)
->> [    0.041417] CPU3: failed to boot: -22
->> [    0.041443] smp: Brought up 1 node, 1 CPU
->> [    0.041451] SMP: Total of 1 processors activated.
->>
->> Tested on Caninos Labrador v3 based on Actions Semi S700.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->> ---
->>   arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++--------
->>   1 file changed, 23 insertions(+), 10 deletions(-)
-> 
-> NACK.
-> 
-> For starters, if this were an actual fix, it should have a Fixes header.
-> 
-> Don't do random changes in a single patch and call it a "fix". I don't 
-> see what changing the cell size has to do with smp, nor adding L2 cache. 
-> The latter could be a patch of its own, after fixes are applied (to 
-> avoid conflicts when backporting that fix to older branches). A cell 
-> size of two used to be perfectly valid, please checking the DT binding.
->  > Finally, you're changing generic S700 code here - you can't just break
-> Cubieboard7 just because your Labrador has too old BL31 firmware. Can't 
+Cathy Zhang (2):
+  x86: Expose SERIALIZE for supported cpuid
+  x86: Expose TSX Suspend Load Address Tracking
 
-Sorry for that, got it.
+ arch/x86/kvm/cpuid.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> you just update its TF-A firmware and use the standard PSCI interface 
-> for Linux? If not, then you should add your workaround to your 
-> module's/board's .dts(i) instead of the SoC's .dtsi.
-> 
+-- 
+1.8.3.1
 
-Yes, the vendor does not seem to support this for now. I think for now 
-the best thing to do is to leave the workaround on the module's .dtsi.
-Thank you for the tips.
-
-> Thanks,
-> Andreas
-> 
-
-BR,
-Matheus Castello
