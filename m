@@ -2,115 +2,105 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A50C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF3602068F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BC720CC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 14:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNMaDET+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGEOT4 (ORCPT
+        id S1727064AbgGEOVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 10:19:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:55728 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgGEOT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 10:19:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C87C1042;
-        Sun,  5 Jul 2020 07:19:55 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 377F83F718;
-        Sun,  5 Jul 2020 07:19:53 -0700 (PDT)
-References: <20200614010755.9129-1-valentin.schneider@arm.com> <20200614010755.9129-2-valentin.schneider@arm.com> <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com> <20200620174912.GA18358@arm.com> <jhjmu4xcqyk.mognet@arm.com> <CAKfTPtDG26Y9s4c+MbdmbxJaiCv6s6WTqmzztcoFsm2SnRL=vQ@mail.gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        "open list\:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal pressure definition
-In-reply-to: <CAKfTPtDG26Y9s4c+MbdmbxJaiCv6s6WTqmzztcoFsm2SnRL=vQ@mail.gmail.com>
-Date:   Sun, 05 Jul 2020 15:19:44 +0100
-Message-ID: <jhjlfjyf3i7.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sun, 5 Jul 2020 10:21:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29000 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726848AbgGEOVK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 10:21:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593958868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=x1Iud6K4rDmN/FDvTgcgeFfvkXG/zP8SYWAjvE24riE=;
+        b=SNMaDET+UdmQPgH2dUS1uuUuewyuiEcJYBunNy4j4WrBwhwgfivxKU96BJ/RZDYw+gg9yr
+        pA3a2kxKTQamQo/9beGMAk91LtQIPDbHI+80naO3CUC36O8VCX3djAdoqw/PxzbAoGqec4
+        F/OysolibrvPcfRQdCcFUUG+wQAiihU=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-174-gRLlFLtjOwSIpVGArXnPYw-1; Sun, 05 Jul 2020 10:21:06 -0400
+X-MC-Unique: gRLlFLtjOwSIpVGArXnPYw-1
+Received: by mail-qt1-f197.google.com with SMTP id g6so26268545qtr.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 07:21:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x1Iud6K4rDmN/FDvTgcgeFfvkXG/zP8SYWAjvE24riE=;
+        b=AK2F7/vdK72FFvBFJOrHyDLRML2sqsYUVhtBtO8Lvx4wZXM5bo6smuN4mK8/saW/sZ
+         xhV16SRwKlNZAkZALwS+OhqRUy/2ujVhp7MNoCEk1+pU6Aiv6lnbXqsgx80cRdgQFCgI
+         x5CuSYP1aToJw1CXd9sDhIp6W75PzQeoU4ctpcLJWUlTLlCy5yR0+wFvqfGbNNwke1Mc
+         nNgv09I8ahPCXHLKHT8Hdi/5rhzhlbUN/TNP8UfJA/QXeuHHcx+c8rJsqHZliGK7j4RU
+         jKu+XLzUfptBiq8Fhguzxve3tHZH8PFi7ZxMA9Vfe2y5pFwWElhK7gLxwIjD6apfVApE
+         Q9Eg==
+X-Gm-Message-State: AOAM531DSwQPjKM9Lxas5qutfp2VSpili1wgq2MhN7X+258vhXr0Ho6A
+        +U71CUw0E8vArddLvEPg+snfpxzYSlatyIMZ6v7BsiJSz9c2qErdsCAzrBFMsc2nhpgkU7VyrJ6
+        sbGGC/KUHmT7+IgzRNgXLag/s
+X-Received: by 2002:aed:3386:: with SMTP id v6mr46763993qtd.187.1593958866372;
+        Sun, 05 Jul 2020 07:21:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwqLT8l+X8+IIDTGgRATWGOoMqAoWnwXKY1M0zgzdVJt+57plmmrH1oECkWQan9yUcfCkA7wQ==
+X-Received: by 2002:aed:3386:: with SMTP id v6mr46763977qtd.187.1593958866161;
+        Sun, 05 Jul 2020 07:21:06 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id d53sm16474232qtc.47.2020.07.05.07.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 07:21:05 -0700 (PDT)
+From:   trix@redhat.com
+To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] btfrs: initialize return of btrfs_extent_same
+Date:   Sun,  5 Jul 2020 07:20:58 -0700
+Message-Id: <20200705142058.28305-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
-Sorry for getting back to this only now;
+clang static analysis flags a garbage return
 
-On 22/06/20 09:37, Vincent Guittot wrote:
-> On Sun, 21 Jun 2020 at 00:28, Valentin Schneider <valentin.schneider@arm.com> wrote:
->> On 20/06/20 18:49, Ionela Voinescu wrote:
->> > On Thursday 18 Jun 2020 at 17:03:24 (+0200), Vincent Guittot wrote:
->> >> Having this weak function declared in cpufreq_cooling is weird. This
->> >> means that we will have to do so for each one that wants to use it.
->> >>
->> >> Can't you declare an empty function in a common header file ?
->> >
->> > Do we expect anyone other than cpufreq_cooling to call
->> > arch_set_thermal_pressure()?
->> >
->> > I'm not against any of the options, either having it here as a week
->> > default definition (same as done for arch_set_freq_scale() in cpufreq.c)
->> > or in a common header (as done for arch_scale_freq_capacity() in sched.h).
->> >
->>
->> Same thoughts here; I was going for the arch_set_freq_scale() way.
->>
->> > But for me, Valentin's implementation seems more natural as setters are
->> > usually only called from within the framework that does the control
->> > (throttling for thermal or frequency setting for cpufreq) and we
->> > probably want to think twice if we want to call them from other places.
->> >
->>
->> Well TBH I was tempted to go the other way and keep the definition in
->> core.c, given a simple per-cpu value is fairly generic. More precisely, it
->
-> Having all definitions in the same place is my main concern here.
-> If topology.c defines arch_set_thermal_pressure it should also provide
-> the empty function when the feature is not available or possible
-> instead of relying of each user of the interface to define a weak
-> function just in case.
->
+fs/btrfs/reflink.c:611:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+        return ret;
+        ^~~~~~~~~~
+ret will not be set when olen is 0
+When olen is 0, this function does no work.
 
-include/linux/sched/topology.h already defines a stub for
-arch_scale_thermal_pressure(), I suppose we could have one for
-arch_set_thermal_pressure() there.
+So initialize ret to 0
 
-That would require having something like
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ fs/btrfs/reflink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-#define arch_set_thermal_pressure topology_set_thermal_pressure
+diff --git a/fs/btrfs/reflink.c b/fs/btrfs/reflink.c
+index 040009d1cc31..200a80fcbecb 100644
+--- a/fs/btrfs/reflink.c
++++ b/fs/btrfs/reflink.c
+@@ -572,7 +572,7 @@ static int btrfs_extent_same_range(struct inode *src, u64 loff, u64 len,
+ static int btrfs_extent_same(struct inode *src, u64 loff, u64 olen,
+ 			     struct inode *dst, u64 dst_loff)
+ {
+-	int ret;
++	int ret = 0;
+ 	u64 i, tail_len, chunk_count;
+ 	struct btrfs_root *root_dst = BTRFS_I(dst)->root;
+ 
+-- 
+2.18.1
 
-in the arm & arm64 include/asm/topology.h headers, with
-topology_set_thermal_pressure() being what arch_set_thermal_pressure()
-currently is in this patchset.
-
-
-This would set an odd precedent in that so far we only ever had to #define
-getter functions, the setters being either:
-- entirely contained within arch_topology. (for the CPU scale)
-- defined in arch_topology, declared in cpufreq and contained there (for
-  the freq scale).
-
-It made the most sense to me to follow the arch_set_freq_scale() pattern
-and contain the thermal pressure setter within cpufreq_cooling, especially
-since I didn't see a strong point in breaking the current patterns.
