@@ -2,123 +2,195 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9131C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB9D2074F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D2B20739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPAw+UuK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="aCnNa8qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgGETvf (ORCPT
+        id S1728225AbgGETvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgGETvd (ORCPT
+        Sun, 5 Jul 2020 15:51:40 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.155]:41616 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728192AbgGETvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:51:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69290C061794;
-        Sun,  5 Jul 2020 12:51:33 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j19so10539794pgm.11;
-        Sun, 05 Jul 2020 12:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1DM6xVZWZJvMpDAjz6LICmJeK1B/WJSbpsotDSZl8bo=;
-        b=SPAw+UuKw/tc6ApBfi4rN3P+pttZynhKwUcVcFYKjqUkKctxLFn2VoCr3QEqTlxy5R
-         djmSMDePYrzvTBaL/umG7PRUYgOxbs4YQ/m6cuXJJaNtYQQR16mIctgtJWtODWsHmraR
-         0+BOXSMK0BcPHEjbXtycUdTyDmdqDnFR1DKlmc35OCN3YoRhkL3/Bq67iC1LLv6A/kHa
-         hJ/GXUO0R6ruDn2rnEBGEnq4AUJQ22b9Kpb9yS8j017V61tVXi1bDChx/dA5yU/1EZjX
-         M8VeCKdMKCOdiv8S7QzUWSUnx05TiL1CXExHk49vefmlzzmDMEwdA4rowrrPRElSyUZ1
-         lloA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1DM6xVZWZJvMpDAjz6LICmJeK1B/WJSbpsotDSZl8bo=;
-        b=GUqKUCy6bszKGsl65awK7MVEjK9u4YnNWowyCnhsCaAKXOdbv70VhffXiKLLH0NY9o
-         1d8gZDW3lUIUlTpmeSIpClT/7hqKNUnya19fCtm9JPKvOrOY8tyqXJvt24zlkVuvyb0y
-         dmDUJ4c92tgAwjqB2E6K2JTWvGAskS/uF5o8djnzMI+p9LJ4dIyaKemcL3ZJbvqUYYJ+
-         VpuIjH2oCpqOjbbOZgtMzYJJ46ZcLhZ4+n5BGpc0kHSjfaslXXFFiKN6T29T5SwK4Kvm
-         JgW9ZNFoOH9WxP4NILiy1UjOh5PiPr1v72y4WXq8YZqV/zQQeWRF1VnfJHG3Hd4JP/+w
-         YLFQ==
-X-Gm-Message-State: AOAM533ZhvgVddogdm04NAWznHjU0t1nfAUjTjpUDvvjx1yRSNnw3ajg
-        VsAo6+jEDLelpVkZrNdB7PM=
-X-Google-Smtp-Source: ABdhPJywhEIbbZJi+sfs9qoPVmo6wP+zmVvWXONJnb9edBcUmKAyA7A9x6PsWAfDc8TF7Hc/tKx3Vg==
-X-Received: by 2002:a65:5c08:: with SMTP id u8mr7911082pgr.184.1593978693025;
-        Sun, 05 Jul 2020 12:51:33 -0700 (PDT)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id g9sm16072879pfm.151.2020.07.05.12.51.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 12:51:32 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        Ondrej Jirman <megous@megous.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 3/3] arm64: allwinner: a64: enable Bluetooth On Pinebook
-Date:   Sun,  5 Jul 2020 12:51:10 -0700
-Message-Id: <20200705195110.405139-4-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200705195110.405139-1-anarsoul@gmail.com>
-References: <20200705195110.405139-1-anarsoul@gmail.com>
+        Sun, 5 Jul 2020 15:51:39 -0400
+X-Greylist: delayed 1445 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Jul 2020 15:51:38 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 9C38E40101C20
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 14:27:33 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id sAIXjWm4LhmVTsAIXjDFvi; Sun, 05 Jul 2020 14:27:33 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vrjr1nj8KOe3zMr+d74rhqHv+pmipDyhk9OOQDkG6PI=; b=aCnNa8qtRFecnacf/0d8erolWb
+        PeicM4hfCmDNxbhwShy2xbLAHTN1/eA5zBxWWd5u5OILpDsTbGLgMvxDqwZVj49AayAZXabcyOhny
+        VmbDQjg55BZQ2QA2Uwg/6T58TP8XpA2VEmwXl1njtWb2FXO3nWo8C9RAV8BWBxHAlW97Xmwb7Vb+j
+        UiczfePJDJfe0xYZ1h2qV3Ih6hftSs4xGc8yBCSOHdzPuloVV6ijN/GFFwUPSqucVU2Ms+lODk8y9
+        frGaoGhjwdzhCAvoralcTYrU75zdZfhqqV5+BIE6HZhlOd6wjxWDpjA8/W0O6qc2fIY+XEUZswsEX
+        nEdNXpVA==;
+Received: from [189.59.31.158] (port=55228 helo=[192.168.15.5])
+        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jsAIX-004CGN-7r; Sun, 05 Jul 2020 16:27:33 -0300
+Subject: Re: [PATCH v6 3/3] ARM: dts: Add Caninos Loucos Labrador
+To:     afaerber@suse.de
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, edgar.righi@lsitec.org.br,
+        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+References: <20200525132218.190841-1-matheus@castello.eng.br>
+ <20200525132218.190841-4-matheus@castello.eng.br>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <755962b7-c66b-a27f-c0ec-2eec416f1528@castello.eng.br>
+Date:   Sun, 5 Jul 2020 16:27:29 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200525132218.190841-4-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: pt-BR
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 189.59.31.158
+X-Source-L: No
+X-Exim-ID: 1jsAIX-004CGN-7r
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [189.59.31.158]:55228
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 18
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinebook has an RTL8723CS WiFi + BT chip, BT is connected to UART1
-and uses PL5 as device wake GPIO, PL6 as host wake GPIO the I2C
-controlling signals are connected to R_I2C bus.
+Hi Andreas,
 
-Enable it in the device tree.
+let me know if there are any more concerns about this series.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+BR,
+Matheus Castello
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 64b1c54f87c0..e63ff271be4e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -408,6 +408,18 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723cs-bt";
-+		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
-+		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+	};
-+};
-+
- &usb_otg {
- 	dr_mode = "host";
- };
--- 
-2.27.0
-
+Em 5/25/20 10:22 AM, Matheus Castello escreveu:
+> Add Device Trees for Caninos Loucos Labrador CoM and base board.
+> Based on the work of Andreas Färber on Lemaker Guitar device tree.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Andreas Färber <afaerber@suse.de>
+> ---
+>   arch/arm/boot/dts/Makefile                    |  1 +
+>   .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
+>   arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
+>   3 files changed, 57 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+>   create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd99201397..0f8c1f255574 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -856,6 +856,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+>   dtb-$(CONFIG_ARCH_ACTIONS) += \
+>   	owl-s500-cubieboard6.dtb \
+>   	owl-s500-guitar-bb-rev-b.dtb \
+> +	owl-s500-labrador-base-m.dtb \
+>   	owl-s500-sparky.dtb
+>   dtb-$(CONFIG_ARCH_PRIMA2) += \
+>   	prima2-evb.dtb
+> diff --git a/arch/arm/boot/dts/owl-s500-labrador-base-m.dts b/arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+> new file mode 100644
+> index 000000000000..044568fec25e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+> @@ -0,0 +1,34 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Caninos Labrador Base Board
+> + *
+> + * Copyright (c) 2019-2020 Matheus Castello
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "owl-s500-labrador-v2.dtsi"
+> +
+> +/ {
+> +	model = "Caninos Labrador Base-M v1.0a";
+> +	compatible = "caninos,labrador-base-m", "actions,s500";
+> +
+> +	aliases {
+> +		serial3 = &uart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial3:115200n8";
+> +	};
+> +
+> +	uart3_clk: uart3-clk {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <921600>;
+> +		#clock-cells = <0>;
+> +	};
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +	clocks = <&uart3_clk>;
+> +};
+> diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+> new file mode 100644
+> index 000000000000..883ff2f9886d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Caninos Labrador SoM V2
+> + *
+> + * Copyright (c) 2019-2020 Matheus Castello
+> + */
+> +
+> +#include "owl-s500.dtsi"
+> +
+> +/ {
+> +	model = "Caninos Labrador Core V2.1";
+> +	compatible = "caninos,labrador-v2", "actions,s500";
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000>;
+> +	};
+> +};
+> +
+> +&timer {
+> +	clocks = <&hosc>;
+> +};
+> --
+> 2.26.2
+> 
