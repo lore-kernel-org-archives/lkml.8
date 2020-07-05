@@ -2,115 +2,91 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28593C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41762206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114AE2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgGEKfX (ORCPT
+        id S1726851AbgGEKkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 06:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgGEKfW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 06:35:22 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1327C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 03:35:22 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1js1zD-0008RR-9i; Sun, 05 Jul 2020 12:35:03 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c] (unknown [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 24E5A529203;
-        Sun,  5 Jul 2020 10:34:57 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CAN network drivers
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        wg@grandegger.com, davem@davemloft.net, kuba@kernel.org,
-        robh+dt@kernel.org, dmurphy@ti.com, sriram.dash@samsung.com,
-        hpeter@gmail.com, masahiroy@kernel.org, leon@kernel.org,
-        krzk@kernel.org, kvalo@codeaurora.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200705075606.22802-1-grandmaster@al2klimov.de>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <7d4f2aa8-b63a-1c2d-961f-3ab1dbb386cd@pengutronix.de>
-Date:   Sun, 5 Jul 2020 12:34:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 5 Jul 2020 06:40:16 -0400
+Received: from elvis.franken.de ([193.175.24.41]:49460 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726355AbgGEKkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 06:40:16 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1js24E-0003Dc-00; Sun, 05 Jul 2020 12:40:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 4E5B7C077D; Sun,  5 Jul 2020 12:40:08 +0200 (CEST)
+Date:   Sun, 5 Jul 2020 12:40:08 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     torvalds@linux-foundation.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS fixes for v5.8
+Message-ID: <20200705104008.GA5156@alpha.franken.de>
 MIME-Version: 1.0
-In-Reply-To: <20200705075606.22802-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 9:56 AM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Hi Linus,
 
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+please pull the few MIPS fixes.
 
-regards,
-Marc
+Thomas.
 
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_fixes_5.8_1
+
+for you to fetch changes up to 5868347a192afb99b189d72946ab6a321b6115ac:
+
+  MIPS: Do not use smp_processor_id() in preemptible code (2020-07-05 11:43:52 +0200)
+
+----------------------------------------------------------------
+A few MIPS fixes:
+
+- fix for missing hazard barrier
+
+- DT fix for ingenic
+
+- DT fix of GPHY names for lantiq
+
+- fix usage of smp_processor_id() while preemption is enabled
+
+----------------------------------------------------------------
+Hauke Mehrtens (1):
+      MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+
+João H. Spies (1):
+      MIPS: ingenic: gcw0: Fix HP detection GPIO.
+
+Martin Blumenstingl (1):
+      MIPS: lantiq: xway: sysctrl: fix the GPHY clock alias names
+
+Xingxing Su (1):
+      MIPS: Do not use smp_processor_id() in preemptible code
+
+ arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
+ arch/mips/kernel/traps.c            | 9 ++++++---
+ arch/mips/lantiq/xway/sysctrl.c     | 8 ++++----
+ 3 files changed, 11 insertions(+), 8 deletions(-)
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
