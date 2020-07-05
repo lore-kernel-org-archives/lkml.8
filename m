@@ -2,139 +2,220 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B99C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93120C56
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n12YwTLb"
+	by mail.kernel.org (Postfix) with ESMTP id AEF312073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgGETdm (ORCPT
+        id S1728159AbgGETio convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:33:42 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:38231 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgGETdk (ORCPT
+        Sun, 5 Jul 2020 15:38:44 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:57375 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgGETio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:33:40 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200705193338epoutp0405b408082c1b00bdc62a5f466e4f09e6~e8jLwG2Ax0782307823epoutp04D
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:33:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200705193338epoutp0405b408082c1b00bdc62a5f466e4f09e6~e8jLwG2Ax0782307823epoutp04D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593977618;
-        bh=+bk2lmZ7gPPPzttyHRqxEmsrZ661RY3hev7QPoHymss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n12YwTLbuOZ8sDvazG6o5Ig5khq2QBGP7KHi9INq9NJz/KiwsZ4L5GhUBbRKyO26+
-         jBpDcnslHuEpA07TodfsDXeQSqC71fgGPOgZo21UAHguuNLihkAeoTwjX1C02azQrV
-         03sTDAQpWkm5sioyS0qttCKA1afObWHSbGJtWLL0=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200705193337epcas5p38b3241a80f295a850f02f80116223afd~e8jLC2ESo1042010420epcas5p3V;
-        Sun,  5 Jul 2020 19:33:37 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CB.56.09475.11B220F5; Mon,  6 Jul 2020 04:33:37 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200705193337epcas5p4b15eec1bbd6dd687f706f9b8fd93c14a~e8jKnGSe71079210792epcas5p4V;
-        Sun,  5 Jul 2020 19:33:37 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200705193337epsmtrp2f9305ac5378e00d951f1adcb31de8bb8~e8jKmYTgC0744407444epsmtrp2H;
-        Sun,  5 Jul 2020 19:33:37 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-3d-5f022b11a440
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D1.B4.08382.11B220F5; Mon,  6 Jul 2020 04:33:37 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.110.206.5]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200705193335epsmtip104c777968086b6fa02de6131c3251a7d~e8jJJoqDZ3114531145epsmtip1R;
-        Sun,  5 Jul 2020 19:33:35 +0000 (GMT)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Damien.LeMoal@wdc.com, Kanchan Joshi <joshi.k@samsung.com>,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: [PATCH v2] block: fix error code for zone-append
-Date:   Mon,  6 Jul 2020 00:59:53 +0530
-Message-Id: <1593977393-21446-2-git-send-email-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593977393-21446-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWy7bCmhq6gNlO8wap5Jha/p09htVh9t5/N
-        orX9G5PF4zuf2S2O/n/LZrH3lrbF5V1z2Cy2/Z7PbHFlyiJmi9c/TrI5cHlcPlvq0bdlFaPH
-        501yHu0HupkCWKK4bFJSczLLUov07RK4Mu61TWIpeMlW8fnHRMYGxmusXYycHBICJhKvTy0A
-        srk4hAR2M0p07XzEAuF8YpS4/PU0VOYbo8S3m9uYYFoWXGxjhkjsZZS4svQ8I0hCSOAzo8TE
-        x+xdjBwcbAKaEhcml4KERQSEJfZ3tIJNZRb4xSixd8EusN3CApYSO88/ZAOxWQRUJbqv32MF
-        6eUVcJaY9kIRYpecxM1zncwgNqeAi8TmSSsZQeZICFxjlzh+ejnUQS4SP959Z4awhSVeHd/C
-        DmFLSXx+t5cNwi6W+HXnKDNEcwejxPWGmSwQCXuJi3v+MoEsZgY6ev0ufZAwswCfRO/vJ2Bh
-        CQFeiY42IYhqRYl7k55Cg05c4uGMJVC2h8TWXTfZIWEynVHiwoc2pgmMsrMQpi5gZFzFKJla
-        UJybnlpsWmCcl1quV5yYW1yal66XnJ+7iRGcCLS8dzA+evBB7xAjEwfjIUYJDmYlEd5ebcZ4
-        Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxKP87ECQmkJ5akZqemFqQWwWSZODilGpjOvHA4dPP+
-        inS55U6H5Vzvyp4KfXfSaJLJ5Z05nz9nzhFZfKdhp1LY2s/u5/k6PySmn9bZ/v5k2PKwQ6d+
-        xa76Np+t0q1aw/gUU9ak4zaBPxc8imrxLX9RaMGUH/NhkoTQujWXvMIXekSynjet3qem6Pyl
-        xi2BI2zGuzWr//7k+h/Nzzv9wsGb25NnWXjGXhHcrbo+9947pgZNnsw3TwyNnibz2d/x6rzs
-        I7G+YEPbdC0J9k0TW0zd0i9tt36j8P763yPs/xvOlBZ8WW/9TlT0931ppn9Gb+tsH7UUB2Xy
-        P5m621LQTPHVMxe9p+eKJQvafzFsYpa/Xd4qG2B34e85u7m6zuvMtGxTznbu6/qhxFKckWio
-        xVxUnAgAGH+xhHMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHLMWRmVeSWpSXmKPExsWy7bCSnK6gNlO8QW+LlMXv6VNYLVbf7Wez
-        aG3/xmTx+M5ndouj/9+yWey9pW1xedccNottv+czW1yZsojZ4vWPk2wOXB6Xz5Z69G1Zxejx
-        eZOcR/uBbqYAligum5TUnMyy1CJ9uwSujHttk1gKXrJVfP4xkbGB8RprFyMnh4SAicSCi23M
-        XYxcHEICuxklbm47yQiREJdovvaDHcIWllj57zk7RNFHRolHTVNYuhg5ONgENCUuTC4FqREB
-        qtnf0coCUsMs0MAkcanhJhNIQljAUmLn+YdsIDaLgKpE9/V7rCC9vALOEtNeKELMl5O4ea6T
-        GcTmFHCR2DxpJdgNQkAlz7bdZ5/AyLeAkWEVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7u
-        JkZwEGpp7mDcvuqD3iFGJg7GQ4wSHMxKIry92ozxQrwpiZVVqUX58UWlOanFhxilOViUxHlv
-        FC6MExJITyxJzU5NLUgtgskycXBKNTDNLXNJ9IxlWCHgqpWyYd615sTS5Lzdvo3Tdvybd/b8
-        knRJdpniRK9f/j9+qB/SvXX4hGK5/k/Xk74Hfi29YvUq0jlJJlx7NZcv671bdjUHHwnVph9M
-        rbsgfmzu+tIU1xk/Uz6UNltN42Pdr1EuNeVwySnJTqPHv1Sq7u69NTv/67ObD2bzrb04w/Lm
-        ktnTHHrm3Pix+sf9CbMnOHJWLDcTnxvyjbdxfs4yzsQvZ1dq3XhUP/eMGfv+9KfsTIZWK1xf
-        tdz+Ic2io/9nXnHJE/byl9KLv0uGNPwVW33mf417/sNrf95ce3h+35z565y3LvaQWHIuWU9i
-        RvnN3pf1DddFQnIM1uZaV0/4XB0bssFZV4mlOCPRUIu5qDgRAF+U1DSxAgAA
-X-CMS-MailID: 20200705193337epcas5p4b15eec1bbd6dd687f706f9b8fd93c14a
-X-Msg-Generator: CA
+        Sun, 5 Jul 2020 15:38:44 -0400
+Received: from sogo3.sd4.0x35.net (sogo3.sd4.0x35.net [10.200.201.53])
+        (Authenticated sender: kerneldev@karsmulder.nl)
+        by relay10.mail.gandi.net (Postfix) with ESMTPA id 782F7240003;
+        Sun,  5 Jul 2020 19:38:40 +0000 (UTC)
+From:   "Kars Mulder" <kerneldev@karsmulder.nl>
+In-Reply-To: <CAHp75Vf9ygQ++DL4ETMy54d=x6oS1qqHLhfyh58f7JCVvM17yA@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200705193337epcas5p4b15eec1bbd6dd687f706f9b8fd93c14a
-References: <1593977393-21446-1-git-send-email-joshi.k@samsung.com>
-        <CGME20200705193337epcas5p4b15eec1bbd6dd687f706f9b8fd93c14a@epcas5p4.samsung.com>
+X-Forward: 127.0.0.1
+Date:   Sun, 05 Jul 2020 21:38:40 +0200
+Cc:     "David Laight" <David.Laight@aculab.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Pavel Machek" <pavel@ucw.cz>,
+        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
+        <linux-kernel@vger.kernel.org>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+MIME-Version: 1.0
+Message-ID: <6e16-5f022c80-2cb-35a18880@71923877>
+Subject: =?utf-8?q?Re=3A?= Writing to a const =?utf-8?q?pointer=3A?= is this 
+ supposed to =?utf-8?q?happen=3F?=
+User-Agent: SOGoMail 4.3.2
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid returning success when max_append_sectors is zero. This prevents
-infinite loop in bio_iov_iter_get_pages().
+On Sunday, July 05, 2020 21:05 CEST, Andy Shevchenko <andy.shevchenko@gmail.com> wrote: 
+> On Sunday, July 5, 2020, Kars Mulder <kerneldev@karsmulder.nl> wrote:
+> > On Saturday, July 04, 2020 22:54 CEST, Andy Shevchenko wrote:
+> > > This and similar are not correct. 1/ They are not replacement per se
+> > > (because of different behaviour). 2/ They simple_strto*() are not
+> > > obsoleted.
+> > >
+> > > Can you correct all places you found and make it consistent?
+> >
+> > Something like the following patch? It changes all occurrences of
+> > "replacement" or "obsolete" (that I'm aware of) with "preferred over".
+> >
+> Yes, thanks!
 
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Okay. Then I shall start writing a changelog and formally submit this patch.
+
+... While I'm at that, I realised that I had taken the liberty to correct
+the references to the functions they replace (e.g. kstrtol now says it's
+preferred over simple_strtol rather than simple_strtoull), which is
+a semantically different change than changing replacement/obsolete to
+"preferred over".
+
+Does this mean that I should should split my patch into two patches?
+
 ---
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kernel.h |  4 ++--
+ lib/kstrtox.c          | 12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index a7366c0..0cecdbc 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1044,7 +1044,7 @@ static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
- 	size_t offset;
- 
- 	if (WARN_ON_ONCE(!max_append_sectors))
--		return 0;
-+		return -EINVAL;
- 
- 	/*
- 	 * Move page array up in the allocated memory for the bio vecs as far as
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 82d91547d122..cec7b1e1677a 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index 1006bf70bf74..233c7282cf5f 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+ {
+@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoll(const char *s, unsigned int base, long long *res)
+ {
+@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+ {
+@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoint(const char *s, unsigned int base, int *res)
+ {
 -- 
-2.7.4
+2.27.0
+
+---
+ include/linux/kernel.h |  4 ++--
+ lib/kstrtox.c          | 12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 82d91547d122..cec7b1e1677a 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoull. Return code must be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index 1006bf70bf74..233c7282cf5f 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+ {
+@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoll(const char *s, unsigned int base, long long *res)
+ {
+@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+ {
+@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Preferred over simple_strtoull. Return code must be checked.
+  */
+ int kstrtoint(const char *s, unsigned int base, int *res)
+ {
+-- 
+2.27.0
 
