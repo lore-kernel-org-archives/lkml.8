@@ -2,105 +2,115 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9485420786
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="XMwrHK4p"
+	by mail.kernel.org (Postfix) with ESMTP id 41762206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgGEKdp (ORCPT
+        id S1726903AbgGEKfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 06:33:45 -0400
-Received: from mail-eopbgr60112.outbound.protection.outlook.com ([40.107.6.112]:60228
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726355AbgGEKdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 06:33:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QgnP8vgE4cqOjdnjzxBGvi1YcByUWyhloE9cwheQXQgh3Ruj9SxMDVtDIh2ydtVTzHfgEW+p/kDPS2W2LooQUpQvkzxhbp8AwU9OPwGpWCvLeCbawX7kqyjOslD0PkVEDkqBfj2Bjfh8euchX6qSZwm5jVn7lpS1DiQg/pUunLmQpCIMza/IA3p7uq6iSvVZryxuYZnNZro17jiGULAjKgv6drE8E5C9SIE2MMVLMXjwPQoyekKxhPxKdmAkK+lB1mViTE+Xr65GTfZpKqo0AynCuLgqaaUiFXqags9DSQgBeOOEao6uHb0CfhMAujbpAGir3g9Oifq5YCErYgixcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQFQu07tTYFf3HPBC8o4JFj2MmetAJ1FZ4esCCtbEXg=;
- b=iNHEovVYD8kIQGCPUa1wONgjdzyE0TaMxV9r6IOz6WxJ9ja6PB/nEO3eW9pqPEuytAn46M+9NJX5Os8JwSFcB5PFqs2DY3xppOwxu0rtPDPVVVkkL+apGLVgCBAsok8ZkH19ydu+eAqDnvwKY0nSS7BqbbTndPXl9vAIt1Ul+l6NRc8/4DnAPaUT3x9jpV8YO0dRj5nUcQ1sfqc8mfi5iqUerMXLwZe9Ayol0iyTK4z5nmORodn4wk5H32VROhoQi9ENbsrjNuVS1xrJ3toBrjzfSMtCentS2KS/uZvu8azoQNjKOxowOAtm80dWgJGgfNhahorWFc12qAjD+qgxEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQFQu07tTYFf3HPBC8o4JFj2MmetAJ1FZ4esCCtbEXg=;
- b=XMwrHK4psW8+HV7HoPjdpadg+bSGvqfM12EN9GMkkSRM/Pfs2Q2IjKVVVWfHebNfTGF/06HSTbdpmiYs6Ad59l+pLtvcWx+Q1F7q+28x/IGfIvcr360txmvEErtp4VTHIcwClVg2sIStyTXTf9kgSOtjULi3YS3tbjLJA+kIW6o=
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (2603:10a6:208:15e::24)
- by AM4PR0201MB2179.eurprd02.prod.outlook.com (2603:10a6:200:4d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Sun, 5 Jul
- 2020 10:33:41 +0000
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::ec0b:a8c:1064:db6e]) by AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::ec0b:a8c:1064:db6e%7]) with mapi id 15.20.3153.029; Sun, 5 Jul 2020
- 10:33:41 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SW_Drivers <SW_Drivers@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH 1/2] habanalabs: block WREG_BULK packet on PDMA
-Thread-Topic: [PATCH 1/2] habanalabs: block WREG_BULK packet on PDMA
-Thread-Index: AQHWUkpABPsgrZ1TkEaTQseD2ND4Kaj4wz3Q
-Date:   Sun, 5 Jul 2020 10:33:41 +0000
-Message-ID: <AM0PR02MB552333DB1C4C6EAA0C752AFEB8680@AM0PR02MB5523.eurprd02.prod.outlook.com>
-References: <20200704212951.20062-1-oded.gabbay@gmail.com>
-In-Reply-To: <20200704212951.20062-1-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-x-originating-ip: [94.230.83.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bfc00a45-e365-446e-7de7-08d820cee2c5
-x-ms-traffictypediagnostic: AM4PR0201MB2179:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM4PR0201MB21792877148D0E1837A30933B8680@AM4PR0201MB2179.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:949;
-x-forefront-prvs: 045584D28C
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1qmh+1CHKAVxgSfO/St+6m2zG6biRV+IIICBGYLo4YDaufcoSoFlR/ZMzqSn0MElp1mv4/X+XTJux8YMK17wlC4pDwpGmjWHv9QM18vAyWioqLtcE6Q+7W5DuZWFYUimtvUPyUT0vNkz3eztg5eUa9OBfAyl46lx3yucbQz52W8y3H8MCrNA53PNc6g4HeaIwNlSBA4nBTwmID5zvCU1c4p6S62wwO6QfiHTrqf/28Yvx4cD1WcqCX7z6mgzwCFheWmm0StPb4d2Y+zPNSHlHwdgyHgZ3R51KZdOYlt2yUCmxryxQ5o8FZaNLnw99w9j892ZvuPVlTvuz2hF9YK6IA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB5523.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(39840400004)(376002)(136003)(346002)(478600001)(316002)(110136005)(8676002)(9686003)(86362001)(26005)(33656002)(53546011)(5660300002)(6506007)(52536014)(4744005)(2906002)(66446008)(66556008)(6636002)(66476007)(64756008)(55016002)(66946007)(8936002)(71200400001)(4326008)(186003)(76116006)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oOtVx6JdSEeIWxxHyf0/q9qdlAKeqXfF0kimcHB98knm2qabmcURSHzK5+YCq/acYCdfs4IJ2V6TrhzHnz/L0SCWBKMX6acHEyeKXm4LIM7/kfsaDVuKYeJscP8KtVOQORbePVs4G1D0yoVcc41z3siekNnKtMC+On9gS1V6TFGayjg/e9hhMGPnSsDwU/vpXlnmG3YjSY5NXVCGrrqTJY/pDElVA6A/XyyhSESDqPfmVtK+Z1936Z6sDeDqbkA80waZKmF3JAjW0o11VQnLC324XLSsoD+37wgEXOoiIfl14MBQ3Krn3lXRPLijnajJsVyz9elyEwb6EEDH/jB033q55oJEsoHpTfP+Hyb7c2apMx3BJ2nBgv+ntarbZ2CBShA7/GUmYiiVNqyCm07Ic/UYlGWtbChSfw2aw6xmEbk+nsAl6kn+MShDFrSn7f9+083/eVwPDzTJT5tFs8sJaRZmKKmHt2bPWPjOc8nGhXA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Jul 2020 06:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgGEKfW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 06:35:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1327C061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 03:35:22 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1js1zD-0008RR-9i; Sun, 05 Jul 2020 12:35:03 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c] (unknown [IPv6:2a03:f580:87bc:d400:44c0:f67d:f3f1:540c])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 24E5A529203;
+        Sun,  5 Jul 2020 10:34:57 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CAN network drivers
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        wg@grandegger.com, davem@davemloft.net, kuba@kernel.org,
+        robh+dt@kernel.org, dmurphy@ti.com, sriram.dash@samsung.com,
+        hpeter@gmail.com, masahiroy@kernel.org, leon@kernel.org,
+        krzk@kernel.org, kvalo@codeaurora.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200705075606.22802-1-grandmaster@al2klimov.de>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <7d4f2aa8-b63a-1c2d-961f-3ab1dbb386cd@pengutronix.de>
+Date:   Sun, 5 Jul 2020 12:34:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR02MB5523.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfc00a45-e365-446e-7de7-08d820cee2c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2020 10:33:41.2370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pUs4IvztGBIFT4pJ2V4DkJtsNkOoqMmpUT3oZKUzTrUliRyS3kUClH6b9kTgxsZzk6m/szIZaHoZc7Kj5ZXchQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0201MB2179
+In-Reply-To: <20200705075606.22802-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBKdWwgNSwgMjAyMCBhdCAwMDozMCBBTSwgT2RlZCBHYWJiYXkgPG9kZWQuZ2FiYmF5
-QGdtYWlsLmNvbT4gd3JvdGU6DQo+IFdSRUdfQlVMSyBpcyBhIHNwZWNpYWwgcGFja2V0IHRoYXQg
-aGFzIGEgdmFyaWFibGUgbGVuZ3RoLiBUaGVyZWZvcmUsIHdlIGNhbid0DQo+IHBhcnNlIGl0IHdo
-ZW4gdmFsaWRhdGluZyBDQnMgdGhhdCBnbyB0byB0aGUgUENJIERNQSBxdWV1ZS4gSW4gY2FzZSB0
-aGUgdXNlcg0KPiBuZWVkcyB0byB1c2UgaXQsIGl0IGNhbiBwdXQgbXVsdGlwbGUgV1JFRzMyIHBh
-Y2tldHMgaW5zdGVhZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9kZWQgR2FiYmF5IDxvZGVkLmdh
-YmJheUBnbWFpbC5jb20+DQoNClJldmlld2VkLWJ5OiBPbWVyIFNocGlnZWxtYW4gPG9zaHBpZ2Vs
-bWFuQGhhYmFuYS5haT4NCg==
+On 7/5/20 9:56 AM, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+regards,
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
