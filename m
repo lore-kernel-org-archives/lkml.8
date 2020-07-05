@@ -8,62 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A997CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E99F20747
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80452075D
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRKNHjez"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRdeBB5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgGENMu (ORCPT
+        id S1727078AbgGENMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 09:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
+        Sun, 5 Jul 2020 09:12:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgGENMs (ORCPT
+        with ESMTP id S1726819AbgGENMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 09:12:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A938BC061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:12:47 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so37877340wrv.9
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:12:47 -0700 (PDT)
+        Sun, 5 Jul 2020 09:12:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A6CC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:12:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so38818792wml.3
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=v73geGNQdJRSU+D/5TIQX1X5VJYVJpSHvUsz4xsJQmA=;
-        b=lRKNHjezwtZTmTkeBX9SunbIIFxAC4q+npjWnJMgBGmegnvSYvg67c8V7qfSDCFCAy
-         rRR3MXf0SFCmsmDlt2w0fh7cux/YVF7+gj0Kyu3PCOw/OPLYwqCYmsjY6WGQdiKVmAcg
-         SVT7V3STuYaX7DsdcUJXS6VpBb4ys1+Z7XYyQPc8rLBJyyaC4uOm3dGAAmsNUu2td3lc
-         WoAa3tDw1/nAiWNheq3KMmnEoNddcQAyV1WSxM/3HDWMj1UmXoA14cWdXDenhR3KEpA+
-         OkJMJVYsMtiQgJl0KDRVUSSP04Xu6Kxr2JFIZG4ZGqgxdYH+1yZmzI4xXENGAI+n3j5A
-         UY1A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=oYJarRYk6o1F2ye7TmGbn9RIA3mYpXI9HqDJ3GfMipE=;
+        b=cRdeBB5KgKVOsp+qhFRdYCoRNAJ9Q906WrypglcI/9dx8ed1kBbvI9WhMKM9lYcb9q
+         VaTQQJfFPtbtvduUiphg/jCmAxm2EbDAJgflVoreemcbjIqjL2JKJzcVeuUhQ3Dtg+kX
+         J/TZdgplQBQTBiEz6VS2ZslLIde7BL/ZojVPpxEKx7ML4X5Abx2FQdO0GzCbhqO+F9MF
+         gsqyYWVrdQJVxMTFZX5TuPdvi6e25bCuyUQT4rFcGlwDo8dA9XIx6xrQSBnUBG8/T+te
+         8q+VNNvNoctu7XfNRLAj+mCZGstmi8XWSgrmwIK0BZxifKrcqVIjJvhkQQYoX7iISlVq
+         S6oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=v73geGNQdJRSU+D/5TIQX1X5VJYVJpSHvUsz4xsJQmA=;
-        b=Nxq32XWQkHY+qFY1V8+HzX1MpsqmyCMbWCsjBYSmmlf/7iaZWqdCSq5PT0ybijmRvV
-         rj+WWODyV6yuFz04MeQ5zyth4j/EEByYV3tpeP6xmRJ1rVku8sEpnEHSWGmY2NVG3MqL
-         7PGwxGgCFHTCDyvL0U9u2afBsz6OBa2JJMsPWpP0gVnGGunnowcYRb9//S7hf5IHMXW2
-         FdeFxYDHhoRZ5tFMzPTPEvH1PudCkqRa099V5GmTf6GdzrTLulBjxuYcLgwrN+ZSqkCO
-         Uk4h1YWa7PbuGoV8ZonGXOv7GO34OwMavlqOA4RaoOJHnOb95JoLY7vUPzquuEGfHDjv
-         YYAg==
-X-Gm-Message-State: AOAM530Y/7w67S2pd95VPyXGUvaFyvJxAfMWBQX92O0PEjGwC7p6/zf0
-        yvnJYLFUk23XYI+OO19tWZw2rUkr
-X-Google-Smtp-Source: ABdhPJyYkLN4gMCaVA6nLKAIB60NKjW36QNlqorhiaIkB7W9Sdli9LBTiNrZEIQ4jgbVcLpzftAM/Q==
-X-Received: by 2002:adf:c3c7:: with SMTP id d7mr42970669wrg.51.1593954766111;
-        Sun, 05 Jul 2020 06:12:46 -0700 (PDT)
+        bh=oYJarRYk6o1F2ye7TmGbn9RIA3mYpXI9HqDJ3GfMipE=;
+        b=BGoOCiXrOiSwWDgLVOn7lkwz04VyxZvVokEQHhh5SapSS1kWBoyjSzez/SzRrx083j
+         GJTeNBHFEjkX6Dp5rWYb7KGCUkVJ2gxBVhi3+4UbV2LXANlBIlbjOIB2UImU1R3t3AN4
+         DkIEQbh9MKhg8H1iv8zodxZBysTp+CVTahwpSLD5CbJGsLyIneYtVM1wvCSQ4kxn7YMT
+         AkjNtxkeaLaJvLHyg5XVRrYFTnQtPFVbrUQzd1NKz7GSMFR1ujHIpvPILAzQiTXzWD89
+         kmbwwzOncLnO40BSzeGgGE/1Rhkw7+RcqMHZTMs9eyWxMjpRAIAmBAKhx4DcAj8+NTZT
+         nlog==
+X-Gm-Message-State: AOAM5326exb8eSrZ90qKHFM7bflFZf9SPLqqBxs0K3H630nZgsM0tF1Q
+        PCK2XxV84u7Bw5C/WKPWKbmIYHpB
+X-Google-Smtp-Source: ABdhPJzOB1YF8M+yoK71jn/I9lP/WHwSdg2HrzmrUiNMGxqarEeLQ4sCtVqPFAWFenG+J4Amle8sGw==
+X-Received: by 2002:a1c:e910:: with SMTP id q16mr44779246wmc.188.1593954768108;
+        Sun, 05 Jul 2020 06:12:48 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id 26sm19401809wmj.25.2020.07.05.06.12.44
+        by smtp.gmail.com with ESMTPSA id 26sm19401809wmj.25.2020.07.05.06.12.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 06:12:45 -0700 (PDT)
+        Sun, 05 Jul 2020 06:12:46 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Subject: [PATCH 2/9] habanalabs: rephrase error messages
-Date:   Sun,  5 Jul 2020 16:12:38 +0300
-Message-Id: <20200705131245.9368-2-oded.gabbay@gmail.com>
+Cc:     Christine Gharzuzi <cgharzuzi@habana.ai>
+Subject: [PATCH 3/9] habanalabs: extract cpu boot status lookup
+Date:   Sun,  5 Jul 2020 16:12:39 +0300
+Message-Id: <20200705131245.9368-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200705131245.9368-1-oded.gabbay@gmail.com>
 References: <20200705131245.9368-1-oded.gabbay@gmail.com>
@@ -72,121 +73,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rephrase some error/warning/notice messages to make them more accessible to
-ordinary users.
+From: Christine Gharzuzi <cgharzuzi@habana.ai>
 
-There is no need to print context ASID as the driver currently doesn't
-support multiple contexts.
+Extract detection of the cpu boot status to a function
+to allow code reuse
 
+Signed-off-by: Christine Gharzuzi <cgharzuzi@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/command_submission.c | 20 +++++++++++++-------
- drivers/misc/habanalabs/context.c            |  3 +--
- drivers/misc/habanalabs/firmware_if.c        |  4 ++--
- drivers/misc/habanalabs/memory.c             |  3 +--
- 4 files changed, 17 insertions(+), 13 deletions(-)
+ drivers/misc/habanalabs/firmware_if.c | 92 ++++++++++++++-------------
+ 1 file changed, 48 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index 62dab99dda98..f81d6685e011 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -373,9 +373,9 @@ static void cs_timedout(struct work_struct *work)
- 	hdev = cs->ctx->hdev;
- 	ctx_asid = cs->ctx->asid;
- 
--	/* TODO: add information about last signaled seq and last emitted seq */
--	dev_err(hdev->dev, "User %d command submission %llu got stuck!\n",
--		ctx_asid, cs->sequence);
-+	dev_err(hdev->dev,
-+		"Command submission %llu has not finished in time!\n",
-+		cs->sequence);
- 
- 	cs_put(cs);
- 
-@@ -1130,7 +1130,7 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 		rc = PTR_ERR(fence);
- 		if (rc == -EINVAL)
- 			dev_notice_ratelimited(hdev->dev,
--				"Can't wait on seq %llu because current CS is at seq %llu\n",
-+				"Can't wait on CS %llu because current CS is at seq %llu\n",
- 				seq, ctx->cs_sequence);
- 	} else if (fence) {
- 		rc = dma_fence_wait_timeout(fence, true, timeout);
-@@ -1163,15 +1163,21 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
- 	memset(args, 0, sizeof(*args));
- 
- 	if (rc < 0) {
--		dev_err_ratelimited(hdev->dev,
--				"Error %ld on waiting for CS handle %llu\n",
--				rc, seq);
- 		if (rc == -ERESTARTSYS) {
-+			dev_err_ratelimited(hdev->dev,
-+				"user process got signal while waiting for CS handle %llu\n",
-+				seq);
- 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
- 			rc = -EINTR;
- 		} else if (rc == -ETIMEDOUT) {
-+			dev_err_ratelimited(hdev->dev,
-+				"CS %llu has timed-out while user process is waiting for it\n",
-+				seq);
- 			args->out.status = HL_WAIT_CS_STATUS_TIMEDOUT;
- 		} else if (rc == -EIO) {
-+			dev_err_ratelimited(hdev->dev,
-+				"CS %llu has been aborted while user process is waiting for it\n",
-+				seq);
- 			args->out.status = HL_WAIT_CS_STATUS_ABORTED;
- 		}
- 		return rc;
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index 1b96fefa4a65..1e3e5b19ecd9 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -112,8 +112,7 @@ void hl_ctx_free(struct hl_device *hdev, struct hl_ctx *ctx)
- 		return;
- 
- 	dev_warn(hdev->dev,
--		"Context %d closed or terminated but its CS are executing\n",
--		ctx->asid);
-+		"user process released device but its command submissions are still executing\n");
- }
- 
- int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
 diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
-index 6900c01d060f..9e7f203a09d7 100644
+index 9e7f203a09d7..3be1549cd137 100644
 --- a/drivers/misc/habanalabs/firmware_if.c
 +++ b/drivers/misc/habanalabs/firmware_if.c
-@@ -289,7 +289,7 @@ int hl_fw_armcp_info_get(struct hl_device *hdev)
- 					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
- 	if (rc) {
- 		dev_err(hdev->dev,
--			"Failed to send ArmCP info pkt, error %d\n", rc);
-+			"Failed to handle ArmCP info pkt, error %d\n", rc);
- 		goto out;
- 	}
+@@ -393,6 +393,53 @@ static void fw_read_errors(struct hl_device *hdev, u32 boot_err0_reg)
+ 			"Device boot error - NIC F/W initialization failed\n");
+ }
  
-@@ -340,7 +340,7 @@ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size)
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
--			"Failed to send ArmCP EEPROM packet, error %d\n", rc);
-+			"Failed to handle ArmCP EEPROM packet, error %d\n", rc);
- 		goto out;
- 	}
- 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index 47da84a17719..e4e1693e5c6c 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -1730,8 +1730,7 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
++static void hl_detect_cpu_boot_status(struct hl_device *hdev, u32 status)
++{
++	switch (status) {
++	case CPU_BOOT_STATUS_NA:
++		dev_err(hdev->dev,
++			"Device boot error - BTL did NOT run\n");
++		break;
++	case CPU_BOOT_STATUS_IN_WFE:
++		dev_err(hdev->dev,
++			"Device boot error - Stuck inside WFE loop\n");
++		break;
++	case CPU_BOOT_STATUS_IN_BTL:
++		dev_err(hdev->dev,
++			"Device boot error - Stuck in BTL\n");
++		break;
++	case CPU_BOOT_STATUS_IN_PREBOOT:
++		dev_err(hdev->dev,
++			"Device boot error - Stuck in Preboot\n");
++		break;
++	case CPU_BOOT_STATUS_IN_SPL:
++		dev_err(hdev->dev,
++			"Device boot error - Stuck in SPL\n");
++		break;
++	case CPU_BOOT_STATUS_IN_UBOOT:
++		dev_err(hdev->dev,
++			"Device boot error - Stuck in u-boot\n");
++		break;
++	case CPU_BOOT_STATUS_DRAM_INIT_FAIL:
++		dev_err(hdev->dev,
++			"Device boot error - DRAM initialization failed\n");
++		break;
++	case CPU_BOOT_STATUS_UBOOT_NOT_READY:
++		dev_err(hdev->dev,
++			"Device boot error - u-boot stopped by user\n");
++		break;
++	case CPU_BOOT_STATUS_TS_INIT_FAIL:
++		dev_err(hdev->dev,
++			"Device boot error - Thermal Sensor initialization failed\n");
++		break;
++	default:
++		dev_err(hdev->dev,
++			"Device boot error - Invalid status code %d\n",
++			status);
++		break;
++	}
++}
++
+ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 			u32 msg_to_cpu_reg, u32 cpu_msg_status_reg,
+ 			u32 boot_err0_reg, bool skip_bmc,
+@@ -466,50 +513,7 @@ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 	 * versions but we keep them here for backward compatibility
  	 */
- 	if (!hdev->hard_reset_pending && !hash_empty(ctx->mem_hash))
- 		dev_notice(hdev->dev,
--				"ctx %d is freed while it has va in use\n",
--				ctx->asid);
-+			"user released device without removing its memory mappings\n");
- 
- 	hash_for_each_safe(ctx->mem_hash, i, tmp_node, hnode, node) {
- 		dev_dbg(hdev->dev,
+ 	if (rc) {
+-		switch (status) {
+-		case CPU_BOOT_STATUS_NA:
+-			dev_err(hdev->dev,
+-				"Device boot error - BTL did NOT run\n");
+-			break;
+-		case CPU_BOOT_STATUS_IN_WFE:
+-			dev_err(hdev->dev,
+-				"Device boot error - Stuck inside WFE loop\n");
+-			break;
+-		case CPU_BOOT_STATUS_IN_BTL:
+-			dev_err(hdev->dev,
+-				"Device boot error - Stuck in BTL\n");
+-			break;
+-		case CPU_BOOT_STATUS_IN_PREBOOT:
+-			dev_err(hdev->dev,
+-				"Device boot error - Stuck in Preboot\n");
+-			break;
+-		case CPU_BOOT_STATUS_IN_SPL:
+-			dev_err(hdev->dev,
+-				"Device boot error - Stuck in SPL\n");
+-			break;
+-		case CPU_BOOT_STATUS_IN_UBOOT:
+-			dev_err(hdev->dev,
+-				"Device boot error - Stuck in u-boot\n");
+-			break;
+-		case CPU_BOOT_STATUS_DRAM_INIT_FAIL:
+-			dev_err(hdev->dev,
+-				"Device boot error - DRAM initialization failed\n");
+-			break;
+-		case CPU_BOOT_STATUS_UBOOT_NOT_READY:
+-			dev_err(hdev->dev,
+-				"Device boot error - u-boot stopped by user\n");
+-			break;
+-		case CPU_BOOT_STATUS_TS_INIT_FAIL:
+-			dev_err(hdev->dev,
+-				"Device boot error - Thermal Sensor initialization failed\n");
+-			break;
+-		default:
+-			dev_err(hdev->dev,
+-				"Device boot error - Invalid status code %d\n",
+-				status);
+-			break;
+-		}
+-
++		hl_detect_cpu_boot_status(hdev, status);
+ 		rc = -EIO;
+ 		goto out;
+ 	}
 -- 
 2.17.1
 
