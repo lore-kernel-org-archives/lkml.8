@@ -2,140 +2,118 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0673C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1293520739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4032070C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n4MHVO8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgGETMV (ORCPT
+        id S1728137AbgGETdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:12:21 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:54370 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgGETMU (ORCPT
+        Sun, 5 Jul 2020 15:33:41 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:46709 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgGETdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:12:20 -0400
-Received: by mail-io1-f69.google.com with SMTP id t23so22360997iog.21
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 12:12:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Sl5/QP84bh2XxnAfKFwY88vpKb0Kww2/Do1jEci7GLs=;
-        b=buhUViqqifIM7eCbyJbELs5XvbyRZcKRmOa0VWuIC9RfqQcObq17qis/Z/GuqloYeE
-         /CPCErf+73m+oprea+vil0epEO0aeRhQsIpCUOOZ96LkXbWd/qgfkyqJ/hhinpvuYzlx
-         IzULew5u0zad+H0dMI75HezXCJnvVd+/i7zBs9W7o+Q/vzHAmqDoLHW8uttQWhV6T2aY
-         qsrV6V3RJQ6BrUBHQBltpMbGmbDdbZ3yED/r2QhygljfK8jJh3PKG09jeaTOqeNMH4Rd
-         bAu0Fn24uH/+enWzLKIG8wYJUMm9uwXpSSiQmIuK4WIUwIlliaUxLZ7CfbW32p0thQyj
-         1iyQ==
-X-Gm-Message-State: AOAM531/haM+mmuni+qQuu/fFbebNiK7Ed5Z+0AO4uDZ1ArUizZ3JJDm
-        dLaUb04QkIu+Ncb0lncYKWI6v2PL9LHPq2+CUqJqRyM30Da/
-X-Google-Smtp-Source: ABdhPJzWjNzar+P72KKdkIVF+DZ40jOXCSUNpjoq3IH8gtvzQBLAlN4ZtpkRp7YaQTqzLA0ezWTZA4EJ+Ull5RrmQRfAQfZXUJLC
-MIME-Version: 1.0
-X-Received: by 2002:a02:30c4:: with SMTP id q187mr48480579jaq.102.1593976339427;
- Sun, 05 Jul 2020 12:12:19 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 12:12:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007df63d05a9b68960@google.com>
-Subject: general protection fault in bdev_read_page (2)
-From:   syzbot <syzbot+662448179365dddc1880@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jul 2020 15:33:40 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200705193337epoutp01253c3a5d2a217251d44126564702693d~e8jK0W9aI1568315683epoutp01F
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:33:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200705193337epoutp01253c3a5d2a217251d44126564702693d~e8jK0W9aI1568315683epoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593977617;
+        bh=SyMl7bBNaD9Z9xCVsaajbmXskTQfdvRXW5zIIM5T2sY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=n4MHVO8AjjO+hwC4oDGmuVLdwiMpHFgNcKJaLaZdaHoO83OzTH8VDNd0wvFh7O79V
+         3sGDBV4Q+nEKNj4IXWNkqm2U7+VCeRKTRYZif7c268gULJz3btRktUkx6reX/i7suT
+         I1IfyulsZ0gdfLRCzqMbhogy/HjXJfCLnnRgMzRI=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200705193333epcas5p2f55f1788164e8bdc86339be76df8b452~e8jGv8g_X3112531125epcas5p2S;
+        Sun,  5 Jul 2020 19:33:33 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2B.56.09475.D0B220F5; Mon,  6 Jul 2020 04:33:33 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200705193332epcas5p409173a9d12f203d3817305dd3250ca59~e8jFrKK-N1079210792epcas5p4S;
+        Sun,  5 Jul 2020 19:33:32 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200705193332epsmtrp1c2d9bc67b21166afde626bd5d5757836~e8jFqUjNQ2501025010epsmtrp1m;
+        Sun,  5 Jul 2020 19:33:32 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-36-5f022b0d0703
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        51.B4.08382.B0B220F5; Mon,  6 Jul 2020 04:33:32 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200705193330epsmtip166b64ca6c2ff895983125b8c909de754~e8jEhUCT_2520125201epsmtip1b;
+        Sun,  5 Jul 2020 19:33:30 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Damien.LeMoal@wdc.com, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v2] Fix zone-append error code
+Date:   Mon,  6 Jul 2020 00:59:52 +0530
+Message-Id: <1593977393-21446-1-git-send-email-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCmhi6vNlO8wdtZvBa/p09htVh9t5/N
+        orX9G5PF0f9v2Sz23tK2uLxrDpvFlSmLmB3YPS6fLfXo27KK0ePzJjmP9gPdTAEsUVw2Kak5
+        mWWpRfp2CVwZX86dYi24w1ix58dUlgbGZYxdjJwcEgImEg37F7B1MXJxCAnsZpT4Nv0llPOJ
+        UWL9swOMEM43Rol1WycAORxgLS8maULE9zJKzN6/GarjM6PE1C0bmECK2AQ0JS5MLgVZISIg
+        LLG/o5UFxGYWqJaYdPsWK4gtLKAn8Xv2byYQm0VAVeLLri3sIDavgLPEvsefWCHOk5O4ea6T
+        GcJexC5x8HcdhO0iMXHSLzYIW1ji1XGIXgkBKYmX/W1QdrHErztHmUFukxDoYJS43jCTBSJh
+        L3Fxz1+wO5mB7ly/Sx/iNj6J3t9PmCB+5JXoaBOCqFaUuDfpKdQ54hIPZyxhhSjxkJh+yxok
+        LCQQK3F4yV/GCYwysxBmLmBkXMUomVpQnJueWmxaYJyXWq5XnJhbXJqXrpecn7uJERzNWt47
+        GB89+KB3iJGJg/EQowQHs5IIb682Y7wQb0piZVVqUX58UWlOavEhRmkOFiVxXqUfZ+KEBNIT
+        S1KzU1MLUotgskwcnFINTLyfzLrquNvu/3BfzHXt++SG7qVffK7M4/mnxrGrd8rbNhWVlDof
+        rnWPy0wyhbPviL28u5KZJ+zMbsuSkJriVesPRWuF/1u2b12NK7fh4pddqjdO2ZQIPxfqfr2O
+        e8eBS1M5V/Rv+PlJ/85Ck851ljk7UuprjW7yJb5Nerd1+ku19ocP7r3J4zBd5d6XwhV91zj8
+        SIeiwtqlx+6q3a1knXVd6M7TX71+XlzsMvfdOJOOa1pVLl8c8sVJXMex12fBjdam2ZwfH723
+        WRkrc9/nzen7HAo8Ze86jB7b6RYvnNAY6pJTXHn92VrFc0HvV/n1vDh31e5p0cT2PfvcLs/T
+        thfg8pq+/UHa1Q9aj+ds1lNiKc5INNRiLipOBADQzFbmVQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKJMWRmVeSWpSXmKPExsWy7bCSnC6PNlO8Qd8zJovf06ewWqy+289m
+        0dr+jcni6P+3bBZ7b2lbXN41h83iypRFzA7sHpfPlnr0bVnF6PF5k5xH+4FupgCWKC6blNSc
+        zLLUIn27BK6ML+dOsRbcYazY82MqSwPjMsYuRg4OCQETiReTNLsYuTiEBHYzSkw/1wMU5wSK
+        i0s0X/vBDmELS6z895wdougjo8Tn223MIM1sApoSFyaXgtSIANXs72hlAQkzC9RL9GxnAQkL
+        C+hJ/J79mwnEZhFQlfiyawvYSF4BZ4l9jz+xQoyXk7h5rpN5AiPPAkaGVYySqQXFuem5xYYF
+        hnmp5XrFibnFpXnpesn5uZsYwSGjpbmDcfuqD3qHGJk4GA8xSnAwK4nw9mozxgvxpiRWVqUW
+        5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgmy8TBKdXAZNixsOm044e1VpNjfe3O
+        vzvvtYg5Oti9WLn6xL7zmv7zlaZUHd37532PrrPiGdbIo/OthUKtsxa5H9u+NCSXfcGR2xXO
+        8zN0RWurvrmLfuXlM4rZsSPOQeSmlqvtIe3HL76vtvta8T95uuaZedrzmXdqzlg9uyLF8cSF
+        fbUx/Zp7/vFXztP7mnTiu/vSgzcjs614E/fkfJSde/xIemKvY3B1cuCutPScs8kiNvc6eA5I
+        eE3ceXT2Pv/WuEU9K5YL7WuWC/zycP0No3MJ4k9u61xXn15RZJNtPbP66ra599Sux7aVXlb9
+        qFbhftbdpOFLxKQE350y3hdNtIws/mxNipieP3GiZkbpzhtm+7qZlViKMxINtZiLihMBnJ2G
+        GogCAAA=
+X-CMS-MailID: 20200705193332epcas5p409173a9d12f203d3817305dd3250ca59
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200705193332epcas5p409173a9d12f203d3817305dd3250ca59
+References: <CGME20200705193332epcas5p409173a9d12f203d3817305dd3250ca59@epcas5p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Changes since v1:
+- updated commit description
+- added reviewed-by
 
-syzbot found the following crash on:
+Kanchan Joshi (1):
+  block: fix error code for zone-append
 
-HEAD commit:    7c30b859 Merge tag 'spi-fix-v5.8-rc3' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1279b86b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=662448179365dddc1880
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bd80a3100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16af525b100000
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+662448179365dddc1880@syzkaller.appspotmail.com
+-- 
+2.7.4
 
-general protection fault, probably for non-canonical address 0xdffffc000000001e: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000f0-0x00000000000000f7]
-CPU: 0 PID: 7121 Comm: systemd-udevd Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:bdev_read_page+0x35/0x290 fs/block_dev.c:700
-Code: f5 53 48 89 fb 48 83 ec 08 48 89 14 24 e8 03 12 a5 ff 48 8d bb f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e7 01 00 00 4c 8b bb f0 00 00 00 48 b8 00 00 00
-RSP: 0018:ffffc90001b57530 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81cf749a
-RDX: 000000000000001e RSI: ffffffff81cea51d RDI: 00000000000000f0
-RBP: fff89719b6b00000 R08: 0000000000000001 R09: ffffea0002871787
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffc90001b57748
-FS:  00007fde67d458c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055f65ed31138 CR3: 00000000a78d8000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- do_mpage_readpage+0x10ca/0x1ef0 fs/mpage.c:302
- mpage_readahead+0x3a2/0x870 fs/mpage.c:391
- read_pages+0x1df/0x8d0 mm/readahead.c:130
- page_cache_readahead_unbounded+0x572/0x850 mm/readahead.c:244
- __do_page_cache_readahead mm/readahead.c:273 [inline]
- force_page_cache_readahead+0x2e9/0x460 mm/readahead.c:303
- page_cache_sync_readahead mm/readahead.c:580 [inline]
- page_cache_sync_readahead+0x113/0x130 mm/readahead.c:567
- generic_file_buffered_read+0x108c/0x27e0 mm/filemap.c:2033
- generic_file_read_iter+0x396/0x4e0 mm/filemap.c:2307
- blkdev_read_iter+0x11b/0x180 fs/block_dev.c:2044
- call_read_iter include/linux/fs.h:1901 [inline]
- new_sync_read+0x41a/0x6e0 fs/read_write.c:415
- __vfs_read+0xc9/0x100 fs/read_write.c:428
- vfs_read+0x1f6/0x420 fs/read_write.c:462
- ksys_read+0x12d/0x250 fs/read_write.c:588
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fde66e8c210
-Code: Bad RIP value.
-RSP: 002b:00007fff13285fd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 000055f65ed30d00 RCX: 00007fde66e8c210
-RDX: 0000000000000400 RSI: 000055f65ed30d28 RDI: 000000000000000f
-RBP: 000055f65ed34e80 R08: 00007fde66e76f88 R09: 0000000000000430
-R10: 000000000000006d R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000400 R14: 000055f65ed34ed0 R15: 0000000000000400
-Modules linked in:
----[ end trace 5b6f53a9af7ced6f ]---
-RIP: 0010:bdev_read_page+0x35/0x290 fs/block_dev.c:700
-Code: f5 53 48 89 fb 48 83 ec 08 48 89 14 24 e8 03 12 a5 ff 48 8d bb f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e7 01 00 00 4c 8b bb f0 00 00 00 48 b8 00 00 00
-RSP: 0018:ffffc90001b57530 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81cf749a
-RDX: 000000000000001e RSI: ffffffff81cea51d RDI: 00000000000000f0
-RBP: fff89719b6b00000 R08: 0000000000000001 R09: ffffea0002871787
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffc90001b57748
-FS:  00007fde67d458c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f5807cc2ab4 CR3: 00000000a78d8000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
