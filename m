@@ -2,114 +2,88 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C234C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6FAB2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fF9zYQi0"
+	by mail.kernel.org (Postfix) with ESMTP id 5C4BD20747
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgGEJBP (ORCPT
+        id S1726688AbgGEJST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgGEJBO (ORCPT
+        Sun, 5 Jul 2020 05:18:19 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726434AbgGEJSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:01:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218C9C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 02:01:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so38458653wmh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 02:01:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=przTgcny48jd36+oUDZM5VqCUdMOADezAA8z959EYFc=;
-        b=fF9zYQi0OpwzjVvrADGQzgm2O41ekp6ploUjNNPvEqx5jng5xwHlHbfYptRi64sPpg
-         y9iYB7gdR12OKlD4m+vpzQ5HWVD/r2X/aXXkxecU8KXbkdyhQXG566LN+gYJJNhSfyS/
-         0kCQ3Zc84FPQ3TKpJDQDW4mVezKPtKnTDxmNkz5FM55PWSYtAqq+DqYEmgLh2V4jfrz2
-         JdqbhWl/ZYq2OW8Rw/xe0vw0KzeTxr7oWAN7tLvKB0oXTNY2y+LPpugCEZoIKz7Kqeug
-         BLRT93sRc2OPX/gEwNf1uRSW/pD/rDyhI4EEsmUjNRqk1kJ/8FPgzO0k1kNaBgIWS6kd
-         2VCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=przTgcny48jd36+oUDZM5VqCUdMOADezAA8z959EYFc=;
-        b=DlrHSEFuycRTAIz1aIDvLzMAv2nT/Bv2eD0I6GaBL3HiHYtpRHlxrmA5TdHupgIcj2
-         Bb7+O/bh50jVd9P2T2WlVe9gqZuOApYO3pKKJ52BAgFyqBnIjDaQ73QYvifUuOPWkWrx
-         ht+iZS15z8X3pZKFL7TW+KmwNN79qNY++oIuPOYdCAwbO8ToRkCk5un9ghVVQkbSSj/w
-         jBZzbWQ66YHwMYmtip9AlxHBPswBQSLn7ZliMJbS1Fp8t0W1oThqTBQVVvp3p2SF1KAc
-         yIkbKAGvFsUhPYIBQBQL5dJhhdkyyKHxZz6+NUBCq8rXGUnkAwQyDXGH79kPZwgPtlXb
-         vnsg==
-X-Gm-Message-State: AOAM532nVG1xwQPOwf1B3uLLwVQXzHEZg7xCFasNK8EePqvAeiVZOxt+
-        nrFRy+44sX64Z+e0uwP5l0SrjlyEoR4yXvUco/5X0A==
-X-Google-Smtp-Source: ABdhPJynH7yvwhYRqBjAT6B2crW294fuviv7qzPIHYptEd/zWVZKZnYRZ8CfSV3sTGh2SAjw5YIHx6qxn3RjWJpV3bo=
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr17960976wmg.116.1593939672936;
- Sun, 05 Jul 2020 02:01:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701013320.130441-1-drew@beagleboard.org>
-In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
-From:   Haojian Zhuang <haojian.zhuang@linaro.org>
-Date:   Sun, 5 Jul 2020 17:01:02 +0800
-Message-ID: <CAD6h2NQWQj1frtfVNorc_wt7CqsOZS7PLaPHZxABFhvEPxkKzw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jul 2020 05:18:17 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 40AE721355; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, svarbanov@mm-sol.com,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        sivaprak@codeaurora.org, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 0/9] Add PCIe support for IPQ8074
+Date:   Sun,  5 Jul 2020 14:47:51 +0530
+Message-Id: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 09:33, Drew Fustini <drew@beagleboard.org> wrote:
->
-> Currently, pinctrl-single only allows #pinctrl-cells = 1.
->
-> This series will allow pinctrl-single to also support #pinctrl-cells = 2
->
-> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
-> get the value to store in the register.
->
-> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
-> omap.h is modified to keep pin conf and pin mux values separate.
->
-> change log:
-> - v4: squash patches 2 and 3 together so that git biesct will not result
->   in a boot failure
->
-> - v3: change order of patches to make sure the pinctrl-single.c patch
->   does not break anything without the dts patches
->
-> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
->   compile error in dtc.  I had added it per suggestion from checkpatch
->   about having parentheses around complex values.
->
-> Drew Fustini (2):
->   pinctrl: single: parse #pinctrl-cells = 2
->   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
->
->  arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
->  drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
->  include/dt-bindings/pinctrl/omap.h |  2 +-
->  3 files changed, 11 insertions(+), 4 deletions(-)
->
-> --
-> 2.25.1
->
+IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
+controller. while it was assumed that PCIe support for IPQ8074 was already
+available. PCIe was not functional until now.
 
-Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+This patch series adds support for PCIe ports on IPQ8074.
+
+First PCIe port is of gen2 synposis version is 2_3_2 which has already been
+enabled. But it had some problems on phy init and needed dt updates.
+
+Second PCIe port is gen3 synopsis version is 2_9_0. This series adds
+support for this PCIe port while fixing dt nodes.
+
+Patch 1 on this series depends on qcom pcie bindings patch
+https://lkml.org/lkml/2020/6/24/162
+
+Sivaprakash Murugesan (9):
+  dt-bindings: pci: Add ipq8074 gen3 pci compatible
+  dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
+  clk: qcom: ipq8074: Add missing bindings for pcie
+  clk: qcom: ipq8074: Add missing clocks for pcie
+  phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+  phy: qcom-qmp: Add compatible for ipq8074 pcie gen3 qmp phy
+  pci: dwc: qcom: do phy power on before pcie init
+  pci: qcom: Add support for ipq8074 pci controller
+  arm64: dts: ipq8074: Fixup pcie dts nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 ++++++
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
+ drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 187 +++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 132 +++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 188 ++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
+ 10 files changed, 683 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+
+-- 
+2.7.4
+
