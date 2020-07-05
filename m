@@ -2,174 +2,69 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58314C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF51D2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hjZ+nHV3"
+	by mail.kernel.org (Postfix) with ESMTP id 3139320786
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgGFDcw (ORCPT
+        id S1728740AbgGFDqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 23:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgGFDcv (ORCPT
+        Sun, 5 Jul 2020 23:46:23 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:60898 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgGFDqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 23:32:51 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B093C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 20:32:51 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g67so16851564pgc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 20:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dJ6KC89zq4JHk4HwHxXJeuQRbWKXL9v2dmGLn/RXOwQ=;
-        b=hjZ+nHV3lTcZ+01aIKLB+dzeetHzoQdvvxOzyZNfNlbqqkMgwfMtp9tXKOxOyrpS2y
-         ie4OLrhQkJp940oZJyyy3LeOiP1Pfi0yzbPf36LczrG5OZslSkAgiOpjUvEUuvppiDtk
-         GMzehUp2bnqH7S5OThRfcfQ3EUMXa+Si4/FVw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dJ6KC89zq4JHk4HwHxXJeuQRbWKXL9v2dmGLn/RXOwQ=;
-        b=f1QDQDfwvNCYeTQngSYIUbgKhkii7vB2j40BGAD9z76Rox7cakxFDuVweJfgm8PTGd
-         NBpCvlpjYwO3ZYs/AH8J6+mrLFJV57h4DNbgTWluPV+IdvAFVGmHYmdpVeJXbAwQuPYJ
-         Mcit4mimtHTeqxgZvWktReBgvA6PqcOHjKOHlVYLQggLcHgWjasyHbEzbRcMvZr0FuYb
-         h6Ol0mvaWt85eCTBtAal1xpUPqrGVHiSPNLZtECxRuxXOqv7BzapT1OUEBGpOViMfXNz
-         I2KXHPLQMZ/vK651VrvdMqRr2gW3Yxb2H8BaIAye6p0m152hGZJ66WWDouruZVkEC7fb
-         me8g==
-X-Gm-Message-State: AOAM531AHwgG6+ir7Xe1pbsHNkwHDK/mpJymitK6Gu1FjBaocWU7wn29
-        uETRP/sNnCiO9kizmL+oGHuNqA==
-X-Google-Smtp-Source: ABdhPJyXLbBZZRqMW0IFSiPfcpoFoDD04pDA5gw2IyyJHGwCVkr/7j8KHqWKBMg/0Sj3/ImpBH9j6Q==
-X-Received: by 2002:aa7:8f2a:: with SMTP id y10mr41288831pfr.182.1594006370798;
-        Sun, 05 Jul 2020 20:32:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bg6sm16835521pjb.51.2020.07.05.20.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 20:32:49 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 20:32:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Cc:     davem@davemloft.net, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+7dd7f2f77a7a01d1dc14@syzkaller.appspotmail.com>,
-        Michael Scott <mike@foundries.io>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: use-after-free in Bluetooth: 6lowpan (was Re: KASAN:
- use-after-free Write in refcount_warn_saturate)
-Message-ID: <202007052022.984BAD97@keescook>
-References: <00000000000055e1a9059f9e169f@google.com>
+        Sun, 5 Jul 2020 23:46:23 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 0663kA2F020619
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Sun, 5 Jul 2020 20:46:10 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 5 Jul 2020 20:45:54 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <balbi@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <colin.king@canonical.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: gadget: function: fix missing spinlock in f_uac1_legacy
+Date:   Sun, 5 Jul 2020 09:59:41 +0800
+Message-ID: <20200705015941.40485-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000055e1a9059f9e169f@google.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:50:11PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    f8788d86 Linux 5.6-rc3
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13005fd9e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7dd7f2f77a7a01d1dc14
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e3ebede00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a9f8f9e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+7dd7f2f77a7a01d1dc14@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_set include/asm-generic/atomic-instrumented.h:44 [inline]
-> BUG: KASAN: use-after-free in refcount_set include/linux/refcount.h:123 [inline]
-> BUG: KASAN: use-after-free in refcount_warn_saturate+0x1f/0x1f0 lib/refcount.c:15
-> Write of size 4 at addr ffff888090eb4018 by task kworker/1:24/2888
-> 
-> CPU: 1 PID: 2888 Comm: kworker/1:24 Not tainted 5.6.0-rc3-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: events do_enable_set
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x197/0x210 lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->  __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:641
->  check_memory_region_inline mm/kasan/generic.c:185 [inline]
->  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->  __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
->  atomic_set include/asm-generic/atomic-instrumented.h:44 [inline]
->  refcount_set include/linux/refcount.h:123 [inline]
->  refcount_warn_saturate+0x1f/0x1f0 lib/refcount.c:15
->  refcount_sub_and_test include/linux/refcount.h:261 [inline]
->  refcount_dec_and_test include/linux/refcount.h:281 [inline]
->  kref_put include/linux/kref.h:64 [inline]
->  l2cap_chan_put+0x1d9/0x240 net/bluetooth/l2cap_core.c:498
->  do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
->  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->  kthread+0x361/0x430 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Allocated by task 2888:
->  save_stack+0x23/0x90 mm/kasan/common.c:72
->  set_track mm/kasan/common.c:80 [inline]
->  __kasan_kmalloc mm/kasan/common.c:515 [inline]
->  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
->  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
->  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
->  kmalloc include/linux/slab.h:555 [inline]
->  kzalloc include/linux/slab.h:669 [inline]
->  l2cap_chan_create+0x45/0x3a0 net/bluetooth/l2cap_core.c:446
->  chan_create+0x10/0xe0 net/bluetooth/6lowpan.c:640
->  bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
->  do_enable_set+0x583/0x960 net/bluetooth/6lowpan.c:1078
->  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->  kthread+0x361/0x430 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Freed by task 2975:
->  save_stack+0x23/0x90 mm/kasan/common.c:72
->  set_track mm/kasan/common.c:80 [inline]
->  kasan_set_free_info mm/kasan/common.c:337 [inline]
->  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
->  kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
->  __cache_free mm/slab.c:3426 [inline]
->  kfree+0x10a/0x2c0 mm/slab.c:3757
->  l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
->  kref_put include/linux/kref.h:65 [inline]
->  l2cap_chan_put+0x1b7/0x240 net/bluetooth/l2cap_core.c:498
->  do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
->  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->  kthread+0x361/0x430 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-The free and use-after-free are both via the same do_enable_set() path
-which implies there are racing writes to the debugfs write handler. It
-seems locking is missing for both listen_chan and enable_6lowpan. The
-latter seems misused in is_bt_6lowpan(), which should likely just be
-checking for chan->ops == &bt_6lowpan_chan_ops, I think?
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ drivers/usb/gadget/function/f_uac1_legacy.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I have no way to actually test changes to this code...
-
+diff --git a/drivers/usb/gadget/function/f_uac1_legacy.c b/drivers/usb/gadget/function/f_uac1_legacy.c
+index 349deae7cabd..e2d7f69128a0 100644
+--- a/drivers/usb/gadget/function/f_uac1_legacy.c
++++ b/drivers/usb/gadget/function/f_uac1_legacy.c
+@@ -336,7 +336,9 @@ static int f_audio_out_ep_complete(struct usb_ep *ep, struct usb_request *req)
+ 
+ 	/* Copy buffer is full, add it to the play_queue */
+ 	if (audio_buf_size - copy_buf->actual < req->actual) {
++		spin_lock_irq(&audio->lock);
+ 		list_add_tail(&copy_buf->list, &audio->play_queue);
++		spin_unlock_irq(&audio->lock);
+ 		schedule_work(&audio->playback_work);
+ 		copy_buf = f_audio_buffer_alloc(audio_buf_size);
+ 		if (IS_ERR(copy_buf))
 -- 
-Kees Cook
+2.24.1
+
