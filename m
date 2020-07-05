@@ -2,71 +2,102 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1918C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 16:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89D2D2082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 16:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593968021;
-	bh=tjL78wxIVG1upw7m/DW1G6vT4WoY+4jEPS2ZMixS96M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2dQADoXEJh6AfyLJofFtHZAauc6FcCRpJkn1M3OrSoc6jrqX3yw4qHsjFUpoIhqAR
-	 H89bVg82z1YpdTvNLL/caCuhRlCn8axthxUggGwckiLsuf/cgHMbVuie06ycjov2up
-	 xSy4Bu0N3VXn5bI1mYqUtMit+Tja2ybmz1hfw25Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4C3EF206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="lqOkXpJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgGEQxj (ORCPT
+        id S1727845AbgGEQ75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 12:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 12:59:57 -0400
+Received: from mail.cock.li ([37.120.193.124]:40164 "EHLO mail.cock.li"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbgGEQxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 12:53:39 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2FD20760;
-        Sun,  5 Jul 2020 16:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593968019;
-        bh=tjL78wxIVG1upw7m/DW1G6vT4WoY+4jEPS2ZMixS96M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nZl7wxHORfsXqpkNhWfkE83hwq6OoGl9xka/xZCbarK7flihQXxRa5n2aWfZQvf4F
-         LYale6U5MdRezdUBTaW23FnG7hv8YH3BQQcxLrRM/EtHdKAh6OP6aA1fKAzAVoPe51
-         wiEqBnL06R0aC7WaZxMUtCz9CKeVdt27I2nv/0ZI=
-Date:   Sun, 5 Jul 2020 09:53:37 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Oleg Nesterov <oleg@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] selftests/seccomp: Refactor to use fixture variants
-Message-ID: <20200705095337.367278bd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200705061232.4151319-3-keescook@chromium.org>
-References: <20200705061232.4151319-1-keescook@chromium.org>
-        <20200705061232.4151319-3-keescook@chromium.org>
+        id S1726956AbgGEQ75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 12:59:57 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1593968394; bh=0Z+2driqVJi6cAeWesKAUnXKCFa2gru9OFGNz60n+DA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lqOkXpJeNnWh8GGoUNhEgyQPAUHBaLw5YaDQXtBq0lGA6ezbOqh5RYmnJbWaivGfx
+         Xze+kGIkHyy1KejZaZNgqlrj+lk3kCZrBQEPrNIxE0U/SuAK/gY3U3HI/7uhPetBiY
+         03brgZJC92r58cFQX5iJ8/6UKhm+LHxIDn+pn/b7nnqmp8Rr1txV3k4E4ZSfjbHi7s
+         c7nAftuZL4YhvIZf1ds6q4GkB4smy2658lpNINAZPCeOoMB10nQeRbu5DmLUIbh7N7
+         Et4SbXu28vL0/vkWDaR7+NqL3kVxStbbqAT/LNbmHjCAafsIz45VNaRKMF2+thNMeS
+         JtRD8ObyY3t+w==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Sun, 05 Jul 2020 16:59:54 +0000
+From:   nipponmail@firemail.cc
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@osdl.org, esr@thyrsus.com, rms@gnu.org, bugs@gnu.support,
+        rms@gnu.org, dag@gnui.org, alex@vapaa.xyz
+Subject: Re: [PATCH] CodingStyle: Inclusive Terminology -- Black and white
+ does not refer to race.
+Message-ID: <7b9afa3cfaa96223719e9d17dd5eefc7@firemail.cc>
+X-Sender: nipponmail@firemail.cc
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  4 Jul 2020 23:12:31 -0700 Kees Cook wrote:
-> Now that the selftest harness has variants, use them to eliminate a
-> bunch of copy/paste duplication.
-> 
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Will Drewry <wad@chromium.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+You have it all wrong. The black in blacklist refers to women,
+as in the yin and the yang. The white refers to men: a constructive
+force. (While the women are destructive in society: always pitting
+the whitelist (men) against each-other, because said list didn't
+obey the blacklist (where women belong).
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+You also have failed on the master/slave terminology:
+Slave refers to cute little girls: which were traditionally
+the slaves to men.
+
+Of-course you white idiots don't understand this:
+You don't like girls: you'd rather dominate other men.
+
+In the past, before the perfidy of the western man infected the entirety
+of the world, men were the ba'al (master) of you cute young girls.
+Men married little girls, and more than one of them.
+Men were happy. Then the "white" man happened and corrupted even
+the colours themselves.
+
+(Un)Naturally you wouldn't notice any of this because none of you
+actually like girls: you want to dominate other men; so
+that's what's on your mind: Dominating Black Men.
+
+Except linus. He caved to all of this due to the influence of
+his daughters, and why is that? Because his daughters are the only
+young girls he's ever been around; thus being denied child brides;
+like our next President Biden, he fell under the influence of his
+own young female relatives.
+
+And why is that? Because you idiot white men bar him and all from
+marrying a harem of cute young girls. You'd give your life to stop
+that.
+
+----
+
+YHWH explicitly allows child brides.
+> The Torah explicitly allows men to marry female children, including in
+> cases of the rape (tahphas) of the girl child: Devarim chapter 22,
+> verse 28. Key words: Na'ar (child (hebrew masoretic text)), Padia
+> (child: padia+philos = paedophillia (greek septuagint)) Puella (young
+> girl (latin vulgate))
+> Nachmanides points out that a child may be called na'ar from the moment
+> he is born
+
+Rebecca was a child, not an adult.
+Na'ar means child in ancient hebrew, not adult, and the original hebrew
+in these passages is na'ar, not na'arah. All you have to do is read the
+actual hebrew glyphs, not whatever your interlinear renders them as. You
+/pol/s are illiterate.
+
+discover-the-truth.com/2016/11/17/what-was-rebeccas-age-when-given-away-in-marriage-naar/
+
