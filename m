@@ -2,534 +2,548 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C88EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5002C2075D
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Id/gojCm"
+	by mail.kernel.org (Postfix) with ESMTP id 6FF732075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgGELMy (ORCPT
+        id S1726804AbgGELRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
+        Sun, 5 Jul 2020 07:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgGELMv (ORCPT
+        with ESMTP id S1726631AbgGELRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:12:51 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C88BC061794;
-        Sun,  5 Jul 2020 04:12:51 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id z13so37706165wrw.5;
-        Sun, 05 Jul 2020 04:12:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=EKX8dSCjfJnsXayAuV5fFPbkEz8xh03G9U0eVSl+/d0=;
-        b=Id/gojCmK3fGyIjQ3GTKqKH3e1cz2dO2HQgVlGhvKt9LIe2VVBxIdYP1spjjRSN3KC
-         8rvVNqOEKY46cq2RaoUHirQ2bY72VyHL3lpcCiUdUU8ZmBX8tMAIDgwQ/QORkH0HSejo
-         AEXN8KMVO/6n+odGniA/4Mc/aUVIyT9M9h+Ky2z5CH6vK9Vvxt5w+UnF8pyvRc8422VT
-         NdpICa6W0L1rOcr+MQl/8QM2hKYRaykU7Hzrn66ck4jWPJZ35xjsl17cQHz3m4/vpQ4s
-         44FbufOGPSQdQ9x0TChZNPFKJ8kx2J4BzfO4lfAkTcSLgWafOy2ffOFt70NZMv/8xkyW
-         y3GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=EKX8dSCjfJnsXayAuV5fFPbkEz8xh03G9U0eVSl+/d0=;
-        b=Q/aLoPOyN0hm9O/dJoI+6t4jW4Imb+4uUj47fwjAA0MSc4YmMMwLdYEiy/0jvVfG37
-         AEiRB3vuNWxIkM2i7bzNBqb+x+NmxOT5hmDcjxRZ6lvG1hgYrfc9h7XEVw7Gh25NkLAs
-         8n7ePEshGMeVROzzZCm9v9sQlBDRTg34SzATuFSP0oA4VFAIBojtmHvI2ejB3+ET52Hr
-         8hHSQ9D89psMavdXptHCNugZcsrD+Gso6zhJ80mSzAP3KSQyLLCMw4Xef3/EoViyYtmf
-         WhT44w1L0KNNr7B85IFumdZjGdr/fYESCFm6GoUf+WbtTvoxS2lAO8UAuXtQe6VvXm4m
-         I5ow==
-X-Gm-Message-State: AOAM532T4qsgn/hxSFY4NY4UmBAfVfwRYmjfL+CFGRC1FYZBoh8NYWN/
-        5edHXFSX2zcfSH/xTr6TF58ddqrg
-X-Google-Smtp-Source: ABdhPJzJxnTIShUZa/LixhUE0KcGFRMOv1H680BRCmeNrvqDiY6PE+f1Gm9wFcID6/+36mOK0H735w==
-X-Received: by 2002:a5d:4707:: with SMTP id y7mr21404882wrq.261.1593947569449;
-        Sun, 05 Jul 2020 04:12:49 -0700 (PDT)
-Received: from [192.168.0.48] (HSI-KBW-046-005-005-059.hsi8.kabel-badenwuerttemberg.de. [46.5.5.59])
-        by smtp.gmail.com with ESMTPSA id v15sm1844165wmh.24.2020.07.05.04.12.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 Jul 2020 04:12:48 -0700 (PDT)
-From:   Edward Shishkin <edward.shishkin@gmail.com>
-Subject: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     ReiserFS development mailing list 
-        <reiserfs-devel@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc:     Pavel Machek <pavel@ucw.cz>
-Message-ID: <0e016c92-5127-d454-f84e-f969ec2465d5@gmail.com>
-Date:   Sun, 5 Jul 2020 13:12:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Sun, 5 Jul 2020 07:17:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD89C061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 04:17:22 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1js2di-0003OU-Ky; Sun, 05 Jul 2020 13:16:54 +0200
+Received: from mfe by dude02.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1js2dc-0005lJ-JB; Sun, 05 Jul 2020 13:16:48 +0200
+Date:   Sun, 5 Jul 2020 13:16:48 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org, corbet@lwn.net,
+        marcus.folkesson@gmail.com, rydberg@bitmath.org,
+        Henk.Vergonet@gmail.com, andriy.shevchenko@linux.intel.com,
+        lee.jones@linaro.org, arnd@arndb.de, krzk@kernel.org,
+        ronald@innovation.ch, christophe.jaillet@wanadoo.fr,
+        jeff@labundy.com, Anson.Huang@nxp.com, swboyd@chromium.org,
+        luzmaximilian@gmail.com, linus.walleij@linaro.org,
+        masneyb@onstation.org, ben.dooks@codethink.co.uk,
+        megous@megous.com, a.fatoum@pengutronix.de, p.zabel@pengutronix.de,
+        mylene.josserand@bootlin.com, oneukum@suse.com,
+        james.hilliard1@gmail.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, usbb2k-api-dev@nongnu.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: input drivers
+Message-ID: <20200705111648.GA9801@pengutronix.de>
+References: <20200705074959.22533-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200705074959.22533-1-grandmaster@al2klimov.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:15:19 up 134 days, 22:32, 236 users,  load average: 11.83,
+ 10.21, 9.64
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-                   Reiser5: selective file migration.
-                Setting/clearing file "immobile" status
-
-
-Earlier any migration of data blocks in reiser5 logical volumes
-occurred only in the context of some volume balancing procedure, which
-actually is a massive migration, aiming to keep fairness of
-distribution on the whole logical volume. Typically such migrations
-complete some volume operations, e.g. adding a device to a logical
-volume, removing a device from a logical volume, increasing data
-capacity of a device, flushing a proxy-device, etc).
-
-Now user can perform selective data migration. That is, migrate only
-data of some specified regular file to any specified device-component
-of the logical volume.
-
-Also, for any specified regular file user can mark it as "immobile",
-so that volume balancing procedures will ignore that file.
-
-Finally, for any specified regular file user can clear its "immobile"
-status, so that the file will be movable again by volume balancing
-procedures.
-
-In particular, using this functionality, user is able to push out
-"hot" files on any high-performance device (e.g. proxy device) and pin
-them there.
-
-To test the new functionality use reiser4-for-5.7.4.patch of
-v5-unstable branch(*) and reiser4progs-2.0.2 (or newer stuff)
-
-(*) https://sourceforge.net/projects/reiser4/files/v5-unstable/
-
-
------------------------- File Migration: API -------------------------
-
-
-/*
-  * Migrate file to specified target device.
-  * @fd: file descriptor
-  * @idx: serial number of target device in the logical volume
-  */
-
-/*
-  * Provide correct path here.
-  * This header file can be found in reiser4 kernel module, or
-  * reiser4progs sources
-  */
-#include "reiser4/ioctl.h"
-
-struct reiser4_vol_op_args args;
-memset(&args, 0, sizeof(args));
-args.opcode = REISER4_MIGRATE_FILE;
-args.val = idx;
-result = ioctl(fd, REISER4_IOC_VOLUME, &args);
-
-
-----------------------------------------------------------------------
-
-
-COMMENT. After ioctl successful completion the file is not necessarily
-written to the target device! To make sure of it, call fsync(2) after
-successful ioctl completion, or open the file with O_SYNC flag before
-migration.
-
-COMMENT. File migration is a volume operation (like adding, removing a
-device to/from a logical volumes), and all volume operations are
-serialized. So, any attempt to migrate a file, while performing other
-operation on that volume will fail. If some file migration procedure
-fails (with EBUSY, or other errors), or was interrupted by user, then
-it should be repeated in the current mount session. File migration
-procedures interrupted by system crash, hared reset, etc) should be
-repeated in the next mount sessions.
-
-
------------------- Set file immobile status: API ---------------------
-
-
-/*
-  * Set file "immobile".
-  * @fd: file descriptor
-  */
-
-/*
-  * Provide correct path here.
-  * This header file can be found in reiser4 kernel module, or
-  * reiser4progs sources
-  */
-#include "reiser4/ioctl.h"
-
-struct reiser4_vol_op_args args;
-memset(&args, 0, sizeof(args));
-args.opcode = REISER4_SET_FILE_IMMOBILE;
-result = ioctl(fd, REISER4_IOC_VOLUME, &args);
-
-COMMENT. The immobile status guarantees that any data block of that
-file won't migrate to another device-component of the logical volume.
-Note, however, that such block can be easily relocated within device
-where it currently resides (once the file system finds better location
-for that block, etc).
-
-
-----------------------------------------------------------------------
-
-
-NOTE: All balancing procedures, which complete device removal, will
-ignore "immobile" status of any file. After device removal successful
-completion all data blocks of "immobile" files will be relocated to
-the remaining devices in accordance with current distribution policy.
-
-NOTE: Any selective file migration described above will ignore
-"immobile" status of the file! So the "immobile" status is honored
-only by volume balancing procedures, completing some operations such
-as adding a device to the logical volume, changing capacity of some
-device or flushing a proxy device.
-
-
------------------ Clear File immobile status: API --------------------
-
-
-/*
-  * Clear file "immobile" status.
-  * @fd: file descriptor
-  */
-
-/*
-  * Provide correct path here.
-  * This header file can be found in reiser4 kernel module, or
-  * reiser4progs sources
-  */
-#include "reiser4/ioctl.h"
-
-struct reiser4_vol_op_args args;
-memset(&args, 0, sizeof(args));
-args.opcode = REISER4_CLR_FILE_IMMOBILE;
-result = ioctl(fd, REISER4_IOC_VOLUME, &args);
-
-
-----------------------------------------------------------------------
-
-
-NOTE: Selective file migration can make your distribution unfair!
-Currently it is strongly recommended to migrate files only to devices,
-which don't participate in regular data distribution e.g. proxy device
-
-In the future it will be possible to turn off builtin distribution on
-any volume. in this case user will be responsible for appointing a
-destination device for any file on that volume.
-
-
-                File migration by volume.reiser4 tool
-
-
-You can use volume.reiser4(8) utility for file migration as well as
-for setting/clearing file "immobile" status.
-
-To migrate a regular file just execute
-
-#volume.reiser4 -m N FILENAME
-
-where N is serial number of target device (i.e. device, that the file
-is supposed to migrate to), FILENAME is name of the file to migrate.
-
-To set immobile status simply execute
-
-#volume.reiser4 -i FILENAME
-
-To clear immobile status:
-
-#volume.reiser4 -e FILENAME
-
-
-                Holding "hot" files on Proxy Device
-
-
-It makes sense to relocate data of "hot" files to one, or more
-devices, which have the highest performance in the logical volume,
-e.g. to proxy device. For this you will need to mark every such file
-as "immobile" and move it to the desired device, so that balancing
-procedures (including flushing a proxy device) will ignore those
-files. See Appendix below for example.
-
-
-                                FAQ
-
-
-Q: How to find out serial number of device /dev/sdc1 in my logical
-    volume mounted at /mnt
-
-A: Find out total number of devices in your logical volume, executing
-    "volume.reiser4 /mnt". Then print all volume components by
-    executing "volume.reiser4 /mnt -p i" in a loop for i = 0,.., N-1,
-    where N - number of devices in your logical volume. Find out, which
-    i is corresponding to /dev/sdc1
-
-    If you find this too complicated, feel free to send a patch for
-    more simple procedure of serial number calculation :)
-
-
-           Migration and immobile status of directories (TODO)
-
-
-Relocation of individual files and marking them as immobile/mobile is
-rather expensive operations. If you want all files of some directory
-to be stored on the same specified device, it makes sense to mark that
-directory by a special way, so that data of all regular files -
-children will be automatically dispatched to that device and all
-directories - children will inherit the immobile property from the
-parent directory. Reiser4 has all needed means for this (so-called
-per-inode "heir set").
-
-
-                               Appendix
-
-
-   Migrating a file to specified device and pinning it there (examples)
-
-
-In this example we'll move a file to 1) proxy and 2) regular data
-brick and pin it there.
-
-Create ID of logical volume:
-
-# VOL_ID=`uuidgen`
-
-Prepare 2 bricks for our logical volume, /dev/vdc2 for meta-data
-brick and /dev/vdc3 for proxy-device:
-
-# DEV1=/dev/vdc2
-# DEV2=/dev/vdc3
-
-# mkfs.reiser4 -U $VOL_ID -y    -t 256K $DEV1
-# mkfs.reiser4 -U $VOL_ID -y -a -t 256K $DEV2
-
-Mount a logical volume consisting of one meta-data brick:
-
-# MNT=/mnt/test
-# mount $DEV1 $MNT
-
-Add proxy-device to the logical volume
-
-# volume.reiser4 -x $DEV2 $MNT
-
-Create a 400K file (100 logical blocks) on our logical volume:
-
-# dd if=/dev/zero of=${MNT}/myfile bs=4K count=100
-# sync
-
-Print all bricks:
-
-# volume.reiser4 $MNT -p0
-
-Brick Info:
-internal ID:	0 (meta-data brick)
-external ID:	6ee9927e-04c3-4683-a451-f1329de66222
-device name:	/dev/vdc2
-num replicas:	0
-block count:	2621440
-blocks used:	116
-system blocks:	115
-data capacity:	1843119
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-# volume.reiser4 $MNT -p1
-
-Brick Info:
-internal ID:	1 (data brick)
-external ID:	2cc41c8a-b3cd-4690-b3fc-bd840e067131
-device name:	/dev/vdc3
-num replicas:	0
-block count:	2621440
-blocks used:	215
-system blocks:	115
-data capacity:	2621325
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		No
-is proxy:	Yes
-
-As we can see, the proxy device /dev/vdc3 contains 100
-data blocks (blocks used - system blocks) = 215 - 115
-
-Flush proxy device:
-
-# volume.reiser4 -b $MNT
-
-Print all bricks:
-
-# sync
-# volume.reiser4 $MNT -p0
-
-Brick Info:
-internal ID:	0 (meta-data brick)
-external ID:	6ee9927e-04c3-4683-a451-f1329de66222
-device name:	/dev/vdc2
-num replicas:	0
-block count:	2621440
-blocks used:	216
-system blocks:	115
-data capacity:	1843119
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-# volume.reiser4 $MNT -p1
-
-Brick Info:
-internal ID:	1 (data brick)
-external ID:	2cc41c8a-b3cd-4690-b3fc-bd840e067131
-device name:	/dev/vdc3
-num replicas:	0
-block count:	2621440
-blocks used:	115
-system blocks:	115
-data capacity:	2621325
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		No
-is proxy:	Yes
-
-As we can see all 100 data blocks were migrated to the
-meta-data brick /dev/vdc2 (block used = system blocks + data blocks +
-meta-data blocks = 115 + 100 + 1 = 216)
-
-Mark myfile as immobile and migrate it to the proxy-device:
-
-# volume.reiser4 -i ${MNT}/myfile
-# volume.reiser4 -m 1 ${MNT}/myfile
-
-Print all bricks:
-
-# sync
-# volume.reiser4 $MNT -p0
-
-Brick Info:
-internal ID:	0 (meta-data brick)
-external ID:	6ee9927e-04c3-4683-a451-f1329de66222
-device name:	/dev/vdc2
-num replicas:	0
-block count:	2621440
-blocks used:	116
-system blocks:	115
-data capacity:	1843119
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-# volume.reiser4 $MNT -p1
-
-Brick Info:
-internal ID:	1 (data brick)
-external ID:	2cc41c8a-b3cd-4690-b3fc-bd840e067131
-device name:	/dev/vdc3
-num replicas:	0
-block count:	2621440
-blocks used:	215
-system blocks:	115
-data capacity:	2621325
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		No
-is proxy:	Yes
-
-As we can see, the proxy device /dev/vdc3 again contains
-all the data blocks. NOTE: file was migrated in spite of
-immobile status, because selective migration ignores that
-status.
-
-Now flush proxy device and make sure that the file remains
-on the proxy device:
-
-# volume.reiser4 -b $MNT
-
-# sync
-# volume.reiser4 $MNT -p0
-# volume.reiser4 $MNT -p1
-
-As we can see, flushing procedure respects immobile status.
-
-Finally, remove the proxy device from the logical volume:
-
-# volume.reiser4 -r $DEV2 $MNT
-
-Print the single remaining brick of our logical volume:
-
-# volume.reiser4 $MNT -p0
-
-Brick Info:
-internal ID:	0 (meta-data brick)
-external ID:	6ee9927e-04c3-4683-a451-f1329de66222
-device name:	/dev/vdc2
-num replicas:	0
-block count:	2621440
-blocks used:	216
-system blocks:	115
-data capacity:	1843119
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-As we can see, file was migrated to the remaining brick /dev/vdc2 in
-spite of its immobile status. This is because operation of removing a
-device ignores that status.
-
-NOTE: the file remains immobile!
-
-Now add /dev/vdc3 as regular device (not proxy) and move the file to
-that device:
-
-# volume.reiser4 -a $DEV2 $MNT
-# volume.reiser4 -m 1 ${MNT}/myfile
-
-Print info about all bricks:
-
-# sync
-# volume.reiser4 $MNT -p0
-
-Brick Info:
-internal ID:	0 (meta-data brick)
-external ID:	6ee9927e-04c3-4683-a451-f1329de66222
-device name:	/dev/vdc2
-num replicas:	0
-block count:	2621440
-blocks used:	116
-system blocks:	115
-data capacity:	1843119
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-# volume.reiser4 $MNT -p1
-
-Brick Info:
-internal ID:	1 (data brick)
-external ID:	2cc41c8a-b3cd-4690-b3fc-bd840e067131
-device name:	/dev/vdc3
-num replicas:	0
-block count:	2621440
-blocks used:	215
-system blocks:	115
-data capacity:	2621325
-space usage:	0.000
-volinfo addr:	0 (none)
-in DSA:		Yes
-is proxy:	No
-
-As we can see, all data blocks of the file now reside at /dev/vdc3
+Hi Alexander,
+
+thanks for the patch.
+
+On 20-07-05 09:49, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+for the "edt-ft5x06":
+
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de> 
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  .../devicetree/bindings/input/ps2keyb-mouse-apbps2.txt        | 2 +-
+>  .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt          | 2 +-
+>  Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt      | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv260x.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv2665.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv2667.txt        | 2 +-
+>  Documentation/input/devices/appletouch.rst                    | 2 +-
+>  Documentation/input/devices/bcm5974.rst                       | 4 ++--
+>  Documentation/input/devices/iforce-protocol.rst               | 2 +-
+>  Documentation/input/devices/joystick-parport.rst              | 2 +-
+>  Documentation/input/devices/ntrig.rst                         | 2 +-
+>  Documentation/input/devices/pxrc.rst                          | 2 +-
+>  Documentation/input/multi-touch-protocol.rst                  | 2 +-
+>  drivers/input/keyboard/Kconfig                                | 2 +-
+>  drivers/input/keyboard/lkkbd.c                                | 2 +-
+>  drivers/input/keyboard/opencores-kbd.c                        | 2 +-
+>  drivers/input/keyboard/tca8418_keypad.c                       | 2 +-
+>  drivers/input/misc/Kconfig                                    | 2 +-
+>  drivers/input/misc/cm109.c                                    | 2 +-
+>  drivers/input/misc/gpio_decoder.c                             | 2 +-
+>  drivers/input/misc/palmas-pwrbutton.c                         | 2 +-
+>  drivers/input/misc/powermate.c                                | 2 +-
+>  drivers/input/misc/tps65218-pwrbutton.c                       | 2 +-
+>  drivers/input/misc/yealink.c                                  | 2 +-
+>  drivers/input/mouse/vsxxxaa.c                                 | 2 +-
+>  drivers/input/serio/apbps2.c                                  | 2 +-
+>  drivers/input/touchscreen/edt-ft5x06.c                        | 2 +-
+>  drivers/input/touchscreen/iqs5xx.c                            | 2 +-
+>  drivers/input/touchscreen/mc13783_ts.c                        | 2 +-
+>  drivers/input/touchscreen/ti_am335x_tsc.c                     | 2 +-
+>  drivers/input/touchscreen/usbtouchscreen.c                    | 2 +-
+>  include/uapi/linux/input-event-codes.h                        | 2 +-
+>  32 files changed, 33 insertions(+), 33 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/ps2keyb-mouse-apbps2.txt b/Documentation/devicetree/bindings/input/ps2keyb-mouse-apbps2.txt
+> index 3029c5694cf6..4606b07317ff 100644
+> --- a/Documentation/devicetree/bindings/input/ps2keyb-mouse-apbps2.txt
+> +++ b/Documentation/devicetree/bindings/input/ps2keyb-mouse-apbps2.txt
+> @@ -13,4 +13,4 @@ Required properties:
+>  - interrupts : Interrupt numbers for this device
+>  
+>  For further information look in the documentation for the GLIB IP core library:
+> -http://www.gaisler.com/products/grlib/grip.pdf
+> +https://www.gaisler.com/products/grlib/grip.pdf
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> index 9afffbdf6e28..f0906e90cb35 100644
+> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> @@ -9,7 +9,7 @@ Documentation/devicetree/bindings/input/rmi4.
+>  
+>  RMI4 Function 11 and Function 12 are for 2D touch position sensing.
+>  Additional documentation for F11 can be found at:
+> -http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
+> +https://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
+>  
+>  Optional Touch Properties:
+>  Description in Documentation/devicetree/bindings/input/touchscreen
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
+> index 079cad2b6843..23186fce40a1 100644
+> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
+> @@ -7,7 +7,7 @@ for transports and other functions can be found in:
+>  Documentation/devicetree/bindings/input/rmi4.
+>  
+>  Additional documentation for F01 can be found at:
+> -http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
+> +https://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
+>  
+>  Optional Properties:
+>  - syna,nosleep-mode: If set the device will run at full power without sleeping.
+> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+> index 4c5312eaaa85..5dd745946b22 100644
+> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
+> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+> @@ -47,4 +47,4 @@ haptics: haptics@5a {
+>  }
+>  
+>  For more product information please see the link below:
+> -http://www.ti.com/product/drv2605
+> +https://www.ti.com/product/drv2605
+> diff --git a/Documentation/devicetree/bindings/input/ti,drv2665.txt b/Documentation/devicetree/bindings/input/ti,drv2665.txt
+> index 1ba97ac04305..5bc229895626 100644
+> --- a/Documentation/devicetree/bindings/input/ti,drv2665.txt
+> +++ b/Documentation/devicetree/bindings/input/ti,drv2665.txt
+> @@ -14,4 +14,4 @@ haptics: haptics@59 {
+>  };
+>  
+>  For more product information please see the link below:
+> -http://www.ti.com/product/drv2665
+> +https://www.ti.com/product/drv2665
+> diff --git a/Documentation/devicetree/bindings/input/ti,drv2667.txt b/Documentation/devicetree/bindings/input/ti,drv2667.txt
+> index 996382cf994a..b1d1308a14c0 100644
+> --- a/Documentation/devicetree/bindings/input/ti,drv2667.txt
+> +++ b/Documentation/devicetree/bindings/input/ti,drv2667.txt
+> @@ -14,4 +14,4 @@ haptics: haptics@59 {
+>  };
+>  
+>  For more product information please see the link below:
+> -http://www.ti.com/product/drv2667
+> +https://www.ti.com/product/drv2667
+> diff --git a/Documentation/input/devices/appletouch.rst b/Documentation/input/devices/appletouch.rst
+> index c94470e66533..b0f84700141d 100644
+> --- a/Documentation/input/devices/appletouch.rst
+> +++ b/Documentation/input/devices/appletouch.rst
+> @@ -89,6 +89,6 @@ or::
+>  
+>  .. Links:
+>  
+> -.. [#f1] http://johannes.sipsolutions.net/PowerBook/touchpad/
+> +.. [#f1] https://johannes.sipsolutions.net/PowerBook/touchpad/
+>  
+>  .. [#f2] `<http://web.archive.org/web/*/http://web.telia.com/~u89404340/touchpad/index.html>`_
+> diff --git a/Documentation/input/devices/bcm5974.rst b/Documentation/input/devices/bcm5974.rst
+> index 4aca199b0aa6..22cc112819f0 100644
+> --- a/Documentation/input/devices/bcm5974.rst
+> +++ b/Documentation/input/devices/bcm5974.rst
+> @@ -66,5 +66,5 @@ a more permanent home at bitmath.org [#f2]_.
+>  
+>  .. Links
+>  
+> -.. [#f1] http://ubuntuforums.org/showthread.php?t=840040
+> -.. [#f2] http://bitmath.org/code/
+> +.. [#f1] https://ubuntuforums.org/showthread.php?t=840040
+> +.. [#f2] https://bitmath.org/code/
+> diff --git a/Documentation/input/devices/iforce-protocol.rst b/Documentation/input/devices/iforce-protocol.rst
+> index 8634beac3fdb..c4b3c13e593b 100644
+> --- a/Documentation/input/devices/iforce-protocol.rst
+> +++ b/Documentation/input/devices/iforce-protocol.rst
+> @@ -375,7 +375,7 @@ URLS
+>  ====
+>  
+>  Check http://www.immerse.com for Immersion Studio,
+> -and http://www.fcoder.com for ComPortSpy.
+> +and https://www.fcoder.com for ComPortSpy.
+>  
+>  
+>  I-Force is trademark of Immersion Corp.
+> diff --git a/Documentation/input/devices/joystick-parport.rst b/Documentation/input/devices/joystick-parport.rst
+> index e8ce16ee799a..e4b50a0a8ecb 100644
+> --- a/Documentation/input/devices/joystick-parport.rst
+> +++ b/Documentation/input/devices/joystick-parport.rst
+> @@ -324,7 +324,7 @@ since this doesn't work reliably on all parallel ports, the turbografx.c driver
+>  supports only one button per joystick. For more information on how to build the
+>  interface, see:
+>  
+> -	http://www2.burg-halle.de/~schwenke/parport.html
+> +	https://www2.burg-halle.de/~schwenke/parport.html
+>  
+>  Sony Playstation
+>  ----------------
+> diff --git a/Documentation/input/devices/ntrig.rst b/Documentation/input/devices/ntrig.rst
+> index a6b22ce6c61c..85c98ba1c31b 100644
+> --- a/Documentation/input/devices/ntrig.rst
+> +++ b/Documentation/input/devices/ntrig.rst
+> @@ -127,7 +127,7 @@ Calibration
+>  The N-Trig windows tools provide calibration and testing routines.  Also an
+>  unofficial unsupported set of user space tools including a calibrator is
+>  available at:
+> -http://code.launchpad.net/~rafi-seas/+junk/ntrig_calib
+> +https://code.launchpad.net/~rafi-seas/+junk/ntrig_calib
+>  
+>  
+>  Tracking
+> diff --git a/Documentation/input/devices/pxrc.rst b/Documentation/input/devices/pxrc.rst
+> index ca11f646bae8..b8ab08ffae8c 100644
+> --- a/Documentation/input/devices/pxrc.rst
+> +++ b/Documentation/input/devices/pxrc.rst
+> @@ -53,5 +53,5 @@ To print all input events from input `devnr`.
+>  References
+>  ==========
+>  
+> -.. [1] http://www.phoenix-sim.com/
+> +.. [1] https://www.phoenix-sim.com/
+>  .. [2] https://www.kraxel.org/cgit/input/
+> diff --git a/Documentation/input/multi-touch-protocol.rst b/Documentation/input/multi-touch-protocol.rst
+> index 307fe22d9668..db83ca3b44cf 100644
+> --- a/Documentation/input/multi-touch-protocol.rst
+> +++ b/Documentation/input/multi-touch-protocol.rst
+> @@ -406,6 +406,6 @@ subsequent events of the same type refer to different fingers.
+>  
+>  .. [#f1] Also, the difference (TOOL_X - POSITION_X) can be used to model tilt.
+>  .. [#f2] The list can of course be extended.
+> -.. [#f3] The mtdev project: http://bitmath.org/code/mtdev/.
+> +.. [#f3] The mtdev project: https://bitmath.org/code/mtdev/.
+>  .. [#f4] See the section on event computation.
+>  .. [#f5] See the section on finger tracking.
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 793ecbbda32c..c88576c2b2bc 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -521,7 +521,7 @@ config KEYBOARD_OPENCORES
+>  	depends on HAS_IOMEM
+>  	help
+>  	  Say Y here if you want to use the OpenCores Keyboard Controller
+> -	  http://www.opencores.org/project,keyboardcontroller
+> +	  https://www.opencores.org/project,keyboardcontroller
+>  
+>  	  To compile this driver as a module, choose M here; the
+>  	  module will be called opencores-kbd.
+> diff --git a/drivers/input/keyboard/lkkbd.c b/drivers/input/keyboard/lkkbd.c
+> index e4a1839ca934..92fe4cbafcd4 100644
+> --- a/drivers/input/keyboard/lkkbd.c
+> +++ b/drivers/input/keyboard/lkkbd.c
+> @@ -43,7 +43,7 @@
+>   * has. These need to be switched on with the LK_CMD_ENABLE_LK401
+>   * command. You'll find this document (scanned .pdf file) on MANX,
+>   * a search engine specific to DEC documentation. Try
+> - * http://www.vt100.net/manx/details?pn=EK-104AA-TM-001;id=21;cp=1
+> + * https://www.vt100.net/manx/details?pn=EK-104AA-TM-001;id=21;cp=1
+>   */
+>  
+>  /*
+> diff --git a/drivers/input/keyboard/opencores-kbd.c b/drivers/input/keyboard/opencores-kbd.c
+> index b0ea387414c1..692b4afba7b1 100644
+> --- a/drivers/input/keyboard/opencores-kbd.c
+> +++ b/drivers/input/keyboard/opencores-kbd.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * OpenCores Keyboard Controller Driver
+> - * http://www.opencores.org/project,keyboardcontroller
+> + * https://www.opencores.org/project,keyboardcontroller
+>   *
+>   * Copyright 2007-2009 HV Sistemas S.L.
+>   */
+> diff --git a/drivers/input/keyboard/tca8418_keypad.c b/drivers/input/keyboard/tca8418_keypad.c
+> index 3bbd7e652533..58ae9744e321 100644
+> --- a/drivers/input/keyboard/tca8418_keypad.c
+> +++ b/drivers/input/keyboard/tca8418_keypad.c
+> @@ -20,7 +20,7 @@
+>   * Boston, MA 021110-1307, USA.
+>   *
+>   * If you can't comply with GPLv2, alternative licensing terms may be
+> - * arranged. Please contact Fuel7, Inc. (http://fuel7.com/) for proprietary
+> + * arranged. Please contact Fuel7, Inc. (https://fuel7.com/) for proprietary
+>   * alternative licensing inquiries.
+>   */
+>  
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 362e8a01980c..9c0c95398ba2 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -394,7 +394,7 @@ config INPUT_POWERMATE
+>  	  which can be instructed to pulse or to switch to a particular intensity.
+>  
+>  	  You can download userspace tools from
+> -	  <http://sowerbutts.com/powermate/>.
+> +	  <https://sowerbutts.com/powermate/>.
+>  
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called powermate.
+> diff --git a/drivers/input/misc/cm109.c b/drivers/input/misc/cm109.c
+> index c09b9628ad34..60aed8a36f8a 100644
+> --- a/drivers/input/misc/cm109.c
+> +++ b/drivers/input/misc/cm109.c
+> @@ -258,7 +258,7 @@ static unsigned short keymap_usbph01(int scancode)
+>   * Keymap for ATCom AU-100
+>   * http://www.atcom.cn/products.html 
+>   * http://www.packetizer.com/products/au100/
+> - * http://www.voip-info.org/wiki/view/AU-100
+> + * https://www.voip-info.org/wiki/view/AU-100
+>   *
+>   * Contributed by daniel@gimpelevich.san-francisco.ca.us
+>   */
+> diff --git a/drivers/input/misc/gpio_decoder.c b/drivers/input/misc/gpio_decoder.c
+> index 145826a1a9a1..b77bffd6fdd2 100644
+> --- a/drivers/input/misc/gpio_decoder.c
+> +++ b/drivers/input/misc/gpio_decoder.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com/
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> diff --git a/drivers/input/misc/palmas-pwrbutton.c b/drivers/input/misc/palmas-pwrbutton.c
+> index 1e1baed63929..2a624f091546 100644
+> --- a/drivers/input/misc/palmas-pwrbutton.c
+> +++ b/drivers/input/misc/palmas-pwrbutton.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Texas Instruments' Palmas Power Button Input Driver
+>   *
+> - * Copyright (C) 2012-2014 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2012-2014 Texas Instruments Incorporated - https://www.ti.com/
+>   *	Girish S Ghongdemath
+>   *	Nishanth Menon
+>   *
+> diff --git a/drivers/input/misc/powermate.c b/drivers/input/misc/powermate.c
+> index c4e0e1886061..8d88a528eed9 100644
+> --- a/drivers/input/misc/powermate.c
+> +++ b/drivers/input/misc/powermate.c
+> @@ -25,7 +25,7 @@
+>   *
+>   * Griffin were very happy to provide documentation and free hardware for development.
+>   *
+> - * Some userspace tools are available on the web: http://sowerbutts.com/powermate/
+> + * Some userspace tools are available on the web: https://sowerbutts.com/powermate/
+>   *
+>   */
+>  
+> diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
+> index f011447c44fb..9aa948614c92 100644
+> --- a/drivers/input/misc/tps65218-pwrbutton.c
+> +++ b/drivers/input/misc/tps65218-pwrbutton.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Texas Instruments' TPS65217 and TPS65218 Power Button Input Driver
+>   *
+> - * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+>   * Author: Felipe Balbi <balbi@ti.com>
+>   * Author: Marcin Niestroj <m.niestroj@grinn-global.com>
+>   *
+> diff --git a/drivers/input/misc/yealink.c b/drivers/input/misc/yealink.c
+> index 8ab01c7601b1..71e393b85939 100644
+> --- a/drivers/input/misc/yealink.c
+> +++ b/drivers/input/misc/yealink.c
+> @@ -14,7 +14,7 @@
+>   *	- ...
+>   *
+>   * This driver is based on:
+> - *   - the usbb2k-api	http://savannah.nongnu.org/projects/usbb2k-api/
+> + *   - the usbb2k-api	https://savannah.nongnu.org/projects/usbb2k-api/
+>   *   - information from	http://memeteau.free.fr/usbb2k
+>   *   - the xpad-driver	drivers/input/joystick/xpad.c
+>   *
+> diff --git a/drivers/input/mouse/vsxxxaa.c b/drivers/input/mouse/vsxxxaa.c
+> index bd415f4b574e..8836c31bd50e 100644
+> --- a/drivers/input/mouse/vsxxxaa.c
+> +++ b/drivers/input/mouse/vsxxxaa.c
+> @@ -61,7 +61,7 @@
+>   * The mice and tablet are described in "VCB02 Video Subsystem - Technical
+>   * Manual", DEC EK-104AA-TM-001. You'll find it at MANX, a search engine
+>   * specific for DEC documentation. Try
+> - * http://www.vt100.net/manx/details?pn=EK-104AA-TM-001;id=21;cp=1
+> + * https://www.vt100.net/manx/details?pn=EK-104AA-TM-001;id=21;cp=1
+>   */
+>  
+>  #include <linux/delay.h>
+> diff --git a/drivers/input/serio/apbps2.c b/drivers/input/serio/apbps2.c
+> index 594ac4e6f8ea..e45a4b5e651b 100644
+> --- a/drivers/input/serio/apbps2.c
+> +++ b/drivers/input/serio/apbps2.c
+> @@ -6,7 +6,7 @@
+>   * VHDL IP core library.
+>   *
+>   * Full documentation of the APBPS2 core can be found here:
+> - * http://www.gaisler.com/products/grlib/grip.pdf
+> + * https://www.gaisler.com/products/grlib/grip.pdf
+>   *
+>   * See "Documentation/devicetree/bindings/input/ps2keyb-mouse-apbps2.txt" for
+>   * information on open firmware properties.
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index 3a4f18d3450d..ea0c78bff74b 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -10,7 +10,7 @@
+>   * based on the FocalTech FT5x06 line of chips.
+>   *
+>   * Development of this driver has been sponsored by Glyn:
+> - *    http://www.glyn.com/Products/Displays
+> + *    https://www.glyn.com/Products/Displays
+>   */
+>  
+>  #include <linux/debugfs.h>
+> diff --git a/drivers/input/touchscreen/iqs5xx.c b/drivers/input/touchscreen/iqs5xx.c
+> index 5875bb1099a8..515218c3ac00 100644
+> --- a/drivers/input/touchscreen/iqs5xx.c
+> +++ b/drivers/input/touchscreen/iqs5xx.c
+> @@ -9,7 +9,7 @@
+>   * made available by the vendor. Firmware files may be pushed to the device's
+>   * nonvolatile memory by writing the filename to the 'fw_file' sysfs control.
+>   *
+> - * Link to PC-based configuration tool and data sheet: http://www.azoteq.com/
+> + * Link to PC-based configuration tool and data sheet: https://www.azoteq.com/
+>   */
+>  
+>  #include <linux/delay.h>
+> diff --git a/drivers/input/touchscreen/mc13783_ts.c b/drivers/input/touchscreen/mc13783_ts.c
+> index ae0d978c83bf..c422af33d2fb 100644
+> --- a/drivers/input/touchscreen/mc13783_ts.c
+> +++ b/drivers/input/touchscreen/mc13783_ts.c
+> @@ -6,7 +6,7 @@
+>   * Copyright (C) 2009 Sascha Hauer, Pengutronix
+>   *
+>   * Initial development of this code was funded by
+> - * Phytec Messtechnik GmbH, http://www.phytec.de/
+> + * Phytec Messtechnik GmbH, https://www.phytec.de/
+>   */
+>  #include <linux/platform_device.h>
+>  #include <linux/mfd/mc13783.h>
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> index 83e685557a19..25173d729b13 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * TI Touch Screen driver
+>   *
+> - * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+> index 397cb1d3f481..5c55e18f0d3d 100644
+> --- a/drivers/input/touchscreen/usbtouchscreen.c
+> +++ b/drivers/input/touchscreen/usbtouchscreen.c
+> @@ -665,7 +665,7 @@ static int gunze_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+>   *
+>   * Documentation about the controller and it's protocol can be found at
+>   *   http://www.dmccoltd.com/files/controler/tsc10usb_pi_e.pdf
+> - *   http://www.dmccoltd.com/files/controler/tsc25_usb_e.pdf
+> + *   https://www.dmccoltd.com/files/controler/tsc25_usb_e.pdf
+>   */
+>  #ifdef CONFIG_TOUCHSCREEN_USB_DMC_TSC10
+>  
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index b6a835d37826..4e62d4941ea7 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -65,7 +65,7 @@
+>   * Keys and buttons
+>   *
+>   * Most of the keys/buttons are modeled after USB HUT 1.12
+> - * (see http://www.usb.org/developers/hidpage).
+> + * (see https://www.usb.org/developers/hidpage).
+>   * Abbreviations in the comments:
+>   * AC - Application Control
+>   * AL - Application Launch Button
+> -- 
+> 2.27.0
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
