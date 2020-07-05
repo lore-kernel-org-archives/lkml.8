@@ -2,109 +2,109 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84305C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E770C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5AF20724
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593983400;
-	bh=/CSI7abxLv8Pc3WAATfmk0MQHaUctOQmqgjenee+WS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o2Oo5HsXo9XlmKwfz26oZ36Mib22pfj7Rnz+4PgIWZxpf9SwjfFOlGkKbh49hMKIy
-	 1ncMgggeCMr1fkuMXNCciwyrv5Up2z9vMZlAZY14yAtJU/e8yST+VbgSZxpIQIpU7Z
-	 yRR5yB3FSKVz11RzJM2LNnoCHbMDr9cW/xGaoliE=
+	by mail.kernel.org (Postfix) with ESMTP id 4C18120708
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HR+x47TM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgGEVJ7 (ORCPT
+        id S1728529AbgGEVKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 5 Jul 2020 17:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgGEVJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 Jul 2020 17:09:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbgGEVJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 17:09:58 -0400
-Received: from localhost (p54b33111.dip0.t-ipconnect.de [84.179.49.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66BD920708;
-        Sun,  5 Jul 2020 21:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593983397;
-        bh=/CSI7abxLv8Pc3WAATfmk0MQHaUctOQmqgjenee+WS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hVbmiwgQ+gyxLGOWmEQrsr/+QFj3HrZ6kILQ9SdqDqD71MSP+avP5cp+0NXZ5WGKy
-         mtCciswcqwa+VB1OpLoiH016DRJ6IVwEJNbsJOWE8rurmnkR8oPHVWzogfLVXoEarj
-         8dbk6u7VMdQYtjR3ZVUwIMYq+k9ZppWVGZuh2rL8=
-Date:   Sun, 5 Jul 2020 23:09:42 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 0/4] i2c: core: add generic GPIO bus recovery
-Message-ID: <20200705210942.GA1055@kunai>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1B7C061794;
+        Sun,  5 Jul 2020 14:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=inEU3oQ+fuWuXfgS+GP0UuqV3tTNV60gtBVc6wGf3Ok=; b=HR+x47TMeyPHIiGV39gQ2Eb4O7
+        4xn/to8UIqb9ftEyDpin0981+exRR3sVrjFtyGGT7pRo7fKAlq8c31K24Bs6evBOzctgktXIlX7Tf
+        ygQACE7/o+8v6j+WNbkgVoWNhSiNDK++kNo27iUr0EDlXEQVS4azhIX9d7YS/+MTW4LmxUdP0T+Vr
+        jWXpzu09rr3rYiZbfDGEXDeyM3fZTMRz4/mLClbEd2Hq5+5Qw+8YcBXu9f/7ZXFzojqizagexJR6Y
+        2WMHQJPP8HbqkU2bU03r7rkLOAxN/jFoOD6JazojpBBiGedzP4a00iYzFvxZPPzgfT/z+xpe5/Whm
+        w19qQPyA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsBtT-0000IB-CY; Sun, 05 Jul 2020 21:09:47 +0000
+Date:   Sun, 5 Jul 2020 22:09:47 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200705210947.GW25523@casper.infradead.org>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+In-Reply-To: <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
+> > From: Selvakumar S <selvakuma.s1@samsung.com>
+> > 
+> > For zone-append, block-layer will return zone-relative offset via ret2
+> > of ki_complete interface. Make changes to collect it, and send to
+> > user-space using cqe->flags.
+> > 
+> > Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
+> > Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> > Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> > Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+> > ---
+> >  fs/io_uring.c | 21 +++++++++++++++++++--
+> >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 155f3d8..cbde4df 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -402,6 +402,8 @@ struct io_rw {
+> >  	struct kiocb			kiocb;
+> >  	u64				addr;
+> >  	u64				len;
+> > +	/* zone-relative offset for append, in sectors */
+> > +	u32			append_offset;
+> >  };
+> 
+> I don't like this very much at all. As it stands, the first cacheline
+> of io_kiocb is set aside for request-private data. io_rw is already
+> exactly 64 bytes, which means that you're now growing io_rw beyond
+> a cacheline and increasing the size of io_kiocb as a whole.
+> 
+> Maybe you can reuse io_rw->len for this, as that is only used on the
+> submission side of things.
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm surprised you aren't more upset by the abuse of cqe->flags for the
+address.
 
-On Fri, Jun 19, 2020 at 05:19:00PM +0300, Codrin Ciubotariu wrote:
-> GPIO recovery has been added already for some I2C bus drivers, such as
-> imx, pxa and at91. These drivers use similar bindings and have more or
-> less the same code for recovery. For this reason, we aim to move the
-> GPIO bus recovery implementation to the I2C core so that other drivers
-> can benefit from it, with small modifications.
-> This implementation initializes the pinctrl states and the SDA/SCL
-> GPIOs based on common bindings. The I2C bus drivers can still use
-> different bindings or other particular recovery steps if needed.
-> The ugly part with this patch series is the handle of PROBE_DEFER
-> which could be returned by devm_gpiod_get(). This changes things a
-> little for i2c_register_adapter() and for this reason this step is
-> implemented in a sperate patch.
-> The at91 Microchip driver is the first to use this implementation,
-> with an AI to move the rest of the drivers in the following steps.
+What do you think to my idea of interpreting the user_data as being a
+pointer to somewhere to store the address?  Obviously other things
+can be stored after the address in the user_data.
 
-Thanks for doing this! On a first high level review, this looks very
-good. I have one question in patch 1. From Tuesday on, I'll be
-off-the-net for two weeks. Still I think it will be all good for the 5.9
-merge window unless we encounter an unexpected problem. But as said, so
-far it is looking good!
-
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8CQZIACgkQFA3kzBSg
-KbZSFw//V/RqkgvKSxNeOBqifHvPPJFZFRuqwrFgRyi0NpSS8q7zgZBRvd1uVk9Q
-eRLfGCd6DPjbpi8M2FfNaPHoROvZEQ6pFdQw61Uqd2Z1ELrTBpG2Pvq0J9FFaWbl
-U6U5MA+9EaAXSKAA/ylVU3kyCFDgaqpqSRBGGYydIQsUOSf5Bj3lJs1ep4Jtpuq/
-nBjbGhuKUP7kegTM8MwRcQuHTG/vX+2FBssKtsqgULgeBwuNjS4BHsXTcE7cJIeV
-Egz0998d1vTQsy4GvUc1qfHtcYivCsoG7NKsKA8reos5aPrIjlhMWQ5/YPJDma65
-ePGye2rMUdH2bUPBtZ01Px6+4DSJmON6vlAtbseay21yvWr0PaDgpuPTD7jvvMwq
-VjHdCEE1EapZTEVySj1plRiPX80wcKlR8RqQZErpdQxEsG911lKEuItG2ppZodOv
-25hGQr+R0Cm91WzHvtgKibHoBmauGhHhJWx1yvc+h6S0ZHCE+IeskqEUzetNbZqw
-XaJCsD0l1iUY6o5ph5z2NrD1GZ4aCxvNlt/8oyIUvxzyUk8KrQKwXAZW02saIiu+
-p87dpYOYLWp/IDri/JZ6tNoehnoeX355UqVb1Wqhk0gfWqQZTIOGmbsLU1D2cTJa
-Ti108H0CVqSfuAmkwdUIJAe1BjIVYnaB9INhiYHBgGLzuaX9ft4=
-=jI5N
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+Or we could have a separate flag to indicate that is how to interpret
+the user_data.
