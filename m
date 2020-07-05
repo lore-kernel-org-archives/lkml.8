@@ -2,103 +2,196 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB7F20739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A2A20723
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593949018;
-	bh=94G3FO32Kyz6wpkKsaBq7CitAiXlUf0xrn8UFv2qFwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VpHlBtTM+RX7NXGHE9tb/FgR0d3CL7sjSeMoShX+HungrRvtwWK2dNJTSvMoabb8z
-	 yJTGQNnOz0Vogo5qWGOQeyKADPy1T21aN/xLmRGdHDucDHaLwrB5RiGZJ3mpl8FQE0
-	 c6F2wsWNddzsJ2HGbg8w0Nr/SxTQUdmJtx0y9AZU=
+	s=default; t=1593949353;
+	bh=osIqCvX4+ivPwL8+fsRDv25DW8yCHi04b5BbNz7bvVs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TCKFTg+u0Uh8corkYrna7eKP88xcMAvo0FPjnS9M2OyzVEoAkNBPsBs+9CN1TgZPQ
+	 do+ZWobg6P8ApbrvZEgU39QxKY27sbdnnPY1LsNh3HJ52IpN0fsIksoVTbCfJGee4x
+	 Vh7gM2FOGYLiuKa6VYmHYiZS8r1A6Tjtoq370UQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgGELg5 (ORCPT
+        id S1726792AbgGELmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53864 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 07:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:36:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726454AbgGELmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:42:25 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92B120723;
-        Sun,  5 Jul 2020 11:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7129620723;
+        Sun,  5 Jul 2020 11:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593949016;
-        bh=94G3FO32Kyz6wpkKsaBq7CitAiXlUf0xrn8UFv2qFwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BuURtRM1WoGQXApJms+b95y0FqDTuZ3MxD2CGCJQH8UG40SRvowIbe+vw1u+jtLq9
-         fs/IGt+2cSopQJiVBCfR5iRvUQGNfUuZYw3GwC5HSMsxFbW7p7Tn8KIfUVVrQ4olZW
-         G356Ub9u8H7WFqQJMBmbF2W2Bn/40Fg+V/QZCi3U=
-Date:   Sun, 5 Jul 2020 13:36:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-man@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/3] selftests: add readfile(2) selftests
-Message-ID: <20200705113658.GA1224775@kroah.com>
-References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
- <20200704140250.423345-4-gregkh@linuxfoundation.org>
- <CAMuHMdXck1u+Djv1xOvRA7riMN4m3qp8o4zmXVvqrC1S+0fifA@mail.gmail.com>
- <20200705065514.GA34145@kroah.com>
- <CAMuHMdVWebaq24=cC_LYkxuLMVrSRW3FDohE2CiueUWC15Tm7A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVWebaq24=cC_LYkxuLMVrSRW3FDohE2CiueUWC15Tm7A@mail.gmail.com>
+        s=default; t=1593949344;
+        bh=osIqCvX4+ivPwL8+fsRDv25DW8yCHi04b5BbNz7bvVs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AdVX8Vk4fwtJeKRNNP90+6latAq3QxT9WX0vb3GSjvvZDc4Urv7LtGq/qOiFPp39P
+         vLren38X0sXAUl+eRRAW9wRRhXcTRlgnA/MhgcEnzZF3cPtlgr3ic8FGYjWQ8VBvOP
+         cPoWpDdI9pNk2veOezHToQ4JGjaZmvzCvx5jzKek=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1js32M-009AZX-VF; Sun, 05 Jul 2020 12:42:23 +0100
+Date:   Sun, 05 Jul 2020 12:42:16 +0100
+Message-ID: <87sge6dw87.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com, Andrew Scull <ascull@google.com>
+Subject: Re: [PATCH v4 07/15] arm64: kvm: Move hyp-init.S to nVHE
+In-Reply-To: <20200625131420.71444-8-dbrazdil@google.com>
+References: <20200625131420.71444-1-dbrazdil@google.com>
+        <20200625131420.71444-8-dbrazdil@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com, ascull@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 01:24:07PM +0200, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Sun, Jul 5, 2020 at 8:55 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Sat, Jul 04, 2020 at 08:38:26PM +0200, Geert Uytterhoeven wrote:
-> > > On Sat, Jul 4, 2020 at 4:05 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > > Test the functionality of readfile(2) in various ways.
-> > > >
-> > > > Also provide a simple speed test program to benchmark using readfile()
-> > > > instead of using open()/read()/close().
-> > > >
-> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> > > > --- /dev/null
-> > > > +++ b/tools/testing/selftests/readfile/readfile.c
-> > >
-> > > > +static void readfile(const char *filename)
-> > > > +{
-> > > > +//     int root_fd;
-> > >
-> > > ???
-> >
-> > Ugh, sorry about that, I obviously didn't clean up my last tests from
-> > this file, thanks for catching that.
-> 
-> Reading about seq_file behavior, did the commented-out test for
-> "/sys/kernel/debug/usb/devices" work?
+Hi David,
 
-Yes it did, which means I need to go dig to try to find a "problem"
-seq_file procfs file to try to debug that behavior...
+On Thu, 25 Jun 2020 14:14:12 +0100,
+David Brazdil <dbrazdil@google.com> wrote:
+> 
+> From: Andrew Scull <ascull@google.com>
+> 
+> hyp-init.S contains the identity mapped initialisation code for the
+> non-VHE code that runs at EL2. It is only used for non-VHE.
+> 
+> Adjust code that calls into this to use the prefixed symbol name.
+> 
+> Signed-off-by: Andrew Scull <ascull@google.com>
+> 
+> [David: pass idmap_t0sz as an argument]
 
-thanks,
+It is unclear to me why moving the way idmap_t0sz is passed is
+required at this stage. I understand that you want to minimise the
+amount of shared data between EL1 and EL2, but it hardly seems
+relevant here.
 
-greg k-h
+Or is it, as I expect, to avoid yet another symbol renaming issue?
+If so, it would be preferable to have the symbol alias, keep the setup
+hypercall as is, and have a later, separate patch that deals with the
+the idmap. And I am pretty sure that, as we move to a more autonomous
+EL2, we won't have to deal with it at all and we'll simply delete this
+code.
+
+I'm planning to squash the following diff into this patch, effectively
+reverting the idmap_t0sz related changes. Let me know if you're OK
+with it.
+
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index 8ba32bff7bb2..9e897c500237 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -83,6 +83,9 @@ KVM_NVHE_ALIAS(panic);
+ /* Vectors installed by hyp-init on reset HVC. */
+ KVM_NVHE_ALIAS(__hyp_stub_vectors);
+ 
++/* IDMAP TCR_EL1.T0SZ as computed by the EL1 init code */
++KVM_NVHE_ALIAS(idmap_t0sz);
++
+ /* Kernel symbol used by icache_is_vpipt(). */
+ KVM_NVHE_ALIAS(__icache_flags);
+ 
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 8ca2c111cec2..0bf2cf5614c6 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -1296,7 +1296,7 @@ static void cpu_init_hyp_mode(void)
+ 	 * cpus_have_const_cap() wrapper.
+ 	 */
+ 	BUG_ON(!system_capabilities_finalized());
+-	__kvm_call_hyp((void *)pgd_ptr, hyp_stack_ptr, vector_ptr, tpidr_el2, idmap_t0sz);
++	__kvm_call_hyp((void *)pgd_ptr, hyp_stack_ptr, vector_ptr, tpidr_el2);
+ 
+ 	/*
+ 	 * Disabling SSBD on a non-VHE system requires us to enable SSBS
+diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-init.S b/arch/arm64/kvm/hyp/nvhe/hyp-init.S
+index 7bb75acbede0..6e6ed5581eed 100644
+--- a/arch/arm64/kvm/hyp/nvhe/hyp-init.S
++++ b/arch/arm64/kvm/hyp/nvhe/hyp-init.S
+@@ -47,24 +47,23 @@ __invalid:
+ 	 * x1: HYP stack
+ 	 * x2: HYP vectors
+ 	 * x3: per-CPU offset
+-	 * x4: idmap_t0sz
+ 	 */
+ __do_hyp_init:
+ 	/* Check for a stub HVC call */
+ 	cmp	x0, #HVC_STUB_HCALL_NR
+ 	b.lo	__kvm_handle_stub_hvc
+ 
+-	phys_to_ttbr x5, x0
++	phys_to_ttbr x4, x0
+ alternative_if ARM64_HAS_CNP
+-	orr	x5, x5, #TTBR_CNP_BIT
++	orr	x4, x4, #TTBR_CNP_BIT
+ alternative_else_nop_endif
+-	msr	ttbr0_el2, x5
++	msr	ttbr0_el2, x4
+ 
+-	mrs	x5, tcr_el1
+-	mov_q	x6, TCR_EL2_MASK
+-	and	x5, x5, x6
+-	mov	x6, #TCR_EL2_RES1
+-	orr	x5, x5, x6
++	mrs	x4, tcr_el1
++	mov_q	x5, TCR_EL2_MASK
++	and	x4, x4, x5
++	mov	x5, #TCR_EL2_RES1
++	orr	x4, x4, x5
+ 
+ 	/*
+ 	 * The ID map may be configured to use an extended virtual address
+@@ -80,14 +79,15 @@ alternative_else_nop_endif
+ 	 *
+ 	 * So use the same T0SZ value we use for the ID map.
+ 	 */
+-	bfi	x5, x4, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
++	ldr_l	x5, idmap_t0sz
++	bfi	x4, x5, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
+ 
+ 	/*
+ 	 * Set the PS bits in TCR_EL2.
+ 	 */
+-	tcr_compute_pa_size x5, #TCR_EL2_PS_SHIFT, x4, x6
++	tcr_compute_pa_size x4, #TCR_EL2_PS_SHIFT, x5, x6
+ 
+-	msr	tcr_el2, x5
++	msr	tcr_el2, x4
+ 
+ 	mrs	x4, mair_el1
+ 	msr	mair_el2, x4
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
