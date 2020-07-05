@@ -2,144 +2,110 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 22:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 22:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9092075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 22:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1F1206E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 22:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmh.eng.br header.i=@hmh.eng.br header.b="QfRTNG8O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P4NMHawI"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QuNoNlMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgGEWTg (ORCPT
+        id S1728491AbgGEWba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 18:19:36 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:58245 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbgGEWTf (ORCPT
+        Sun, 5 Jul 2020 18:31:30 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51379 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgGEWb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 18:19:35 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 7DE945A5;
-        Sun,  5 Jul 2020 18:19:34 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Sun, 05 Jul 2020 18:19:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=e/NX5vYxQ7aKi+cgflABISV+bap
-        fSySPZCJVg0OvBuE=; b=QfRTNG8OFPg/678fvC1n9yAWw818SkKgW30DWbYyqfx
-        msn97Ca4QhMFVO16dEHIYWlvgE4rGBT1xV/Av5wg7nI7i1TAjQHXgysUEWn+P9Ln
-        ucazLqYS8+PaDYzOpvKSCglYB6l0W4lU3hN7XeJ6TosQSs3L2eF0TxcG50BEhOOm
-        3jkg757mL+tKP2G+SNyVejHPLpVVKbHyDmEo6nAKT1CsH1MQFJtNcIElGvHPNi8g
-        8HYG/+/FzgD+h2r6lMsZKuQ/ckEL46mILbE220S7GYFcMo+nXBLy5X8yOmlo0/3P
-        RLewy9VnoHmiUYM9jxdbBY938xP2dj7CZUVc+6DR9cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=e/NX5v
-        YxQ7aKi+cgflABISV+bapfSySPZCJVg0OvBuE=; b=P4NMHawIDFlLRlv+lauV3h
-        7dtyR530c1NOjgRDAgBVCKPnyMQc4hduirUdYlycczwatwOCtoQZfLGxzJysAh4W
-        KP7mFd6j4Ehl0LbfmxqH6EzBImSj4/JZbxxhU8HokvGbi0svzMTqJHZ83hehjBq8
-        9ySwtd9MagwE5z396IqP3hPIOs5aIK6WQwKuECmGUzfDsCnjgMYiXCcEwGzzZfA0
-        MC2znx2TYsNw7vJBgQXhL3NBk7ShxBwMWhHGVsX4Aph0/Fv4hXIc6ifEiRqj8QsC
-        4vAYbhnRSDkqfHa3paaxul70M6JccDInCIbEbeJ3dpDgveSJ6nrlqenOsWOkLRiA
-        ==
-X-ME-Sender: <xms:9VECXz4L2LQ5NhanODtDieopxRifv8yHjx7Og-TtsFs1-84VH-Ugbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgddtiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttddttddtredvnecuhfhrohhmpefjvghnrhhi
-    qhhuvgcuuggvucfoohhrrggvshcujfholhhstghhuhhhuceohhhmhheshhhmhhdrvghngh
-    drsghrqeenucggtffrrghtthgvrhhnpeevudetjeegiedufeeugfeiheeljeekfeduhfej
-    feegkeehkedvvdehheelgeevieenucfkphepudejjedrudelgedrjedrfedvnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhephhhmhheshhhmhhdr
-    vghnghdrsghr
-X-ME-Proxy: <xmx:9VECX46ZNINoIjfcL6Zy0KcTMIaj9iiZwiTNT8XX3-KVvWg2PZrSQQ>
-    <xmx:9VECX6dNo8m19Z0ioeoY0ZmQ3RAkdt6sgY5-eE9jMvlh1Fnyz9yV5A>
-    <xmx:9VECX0KGIz9o_rTPwFcEbhB6-nexr4Pq_Ts-ZgZ1rti-aoT8v0AFSQ>
-    <xmx:9lECX0H846O_LOVqF5y7oMqWZneDkKKzjML-tOhQCCI-ptxVmRx5-Q>
-Received: from khazad-dum.debian.net (unknown [177.194.7.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 48E743280063;
-        Sun,  5 Jul 2020 18:19:33 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id 3322C340016C;
-        Sun,  5 Jul 2020 19:19:31 -0300 (-03)
-X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
-Received: from khazad-dum.debian.net ([127.0.0.1])
-        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id YgCQtOJdWjXr; Sun,  5 Jul 2020 19:19:29 -0300 (-03)
-Received: by khazad-dum.debian.net (Postfix, from userid 1000)
-        id C06FC3400168; Sun,  5 Jul 2020 19:19:29 -0300 (-03)
-Date:   Sun, 5 Jul 2020 19:19:29 -0300
-From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Simon Arlott <simon@octiron.net>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
-Message-ID: <20200705221929.GD8285@khazad-dum.debian.net>
-References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200623204234.GA16156@khazad-dum.debian.net>
- <CACVXFVNdC1U-gXdMr-B6i0WJdiYF+JvBcF3MkhFApEw_ZPx7pA@mail.gmail.com>
+        Sun, 5 Jul 2020 18:31:29 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2ED9B891B0;
+        Mon,  6 Jul 2020 10:31:26 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593988286;
+        bh=TqEWnjH6epoIDYsLN1Vn1x9frVtAn9euvR2ZctAOVNs=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=QuNoNlMd4rIvNvfyajz+sACU3FJ1HaeiVt287rUC0FAG4P+rxakilcVWBJmdZrbGK
+         gQU+ddFfGGcFSkQ53jlFhKzwz1OV9URjTdn4z3uXNfsjVicAPF2BFWhCVpE0xLS1gF
+         0zZKt+5rHGeW6tUKjfrfIiLepjwSkEFsCQV1uzPQmKagZ1ttgA/RdYhhMdhlNBxA8d
+         cPhPkDUH1We9RFKPnNkFpopBP8IY6ke0WZAGKHfMhvDiaxCkDuPCX9FPlvYLH+kMR6
+         iZmwwZnuarrFebBUwjAwEwOTjNWraq1yUzX/AtGg9hHtIwUWpPnNpEL0vKmqV53eqp
+         4mESDG02NGxrA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f0254bc0001>; Mon, 06 Jul 2020 10:31:24 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Mon, 6 Jul 2020 10:31:25 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Mon, 6 Jul 2020 10:31:25 +1200
+From:   Matt Bennett <Matt.Bennett@alliedtelesis.co.nz>
+To:     "ebiederm@xmission.com" <ebiederm@xmission.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "zbr@ioremap.net" <zbr@ioremap.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 0/5] RFC: connector: Add network namespace awareness
+Thread-Topic: [PATCH 0/5] RFC: connector: Add network namespace awareness
+Thread-Index: AQHWUAeZm1sYS5RHpkWGl2iqUbu926j0pzwVgAQnkoA=
+Date:   Sun, 5 Jul 2020 22:31:25 +0000
+Message-ID: <94defa61204731d7dce37edeb98069c8647722c2.camel@alliedtelesis.co.nz>
+References: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz>
+         <87k0zlspxs.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87k0zlspxs.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-NZ
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:25:2e4d:54ff:fe4c:9ff0]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DCB490D546836C4A83811EF4083AFC9F@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACVXFVNdC1U-gXdMr-B6i0WJdiYF+JvBcF3MkhFApEw_ZPx7pA@mail.gmail.com>
-X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
- 0BD9 E811 39CB 4807
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020, Ming Lei wrote:
-> On Wed, Jun 24, 2020 at 5:01 AM Henrique de Moraes Holschuh
-> <hmh@hmh.eng.br> wrote:
-> > Cache flushes do not matter that much when SSDs and sudden power cuts
-> > are involved.  Power cuts at the wrong time harm the FLASH itself, it is
-> > not about still-in-flight data.
-> >
-> > Keep in mind that SSDs do a _lot_ of background writing, and power cuts
-> 
-> What is the __lot__ of SSD's BG writing? GC?
-
-GC, and scrubbing.
-
-> > during a FLASH write or erase can cause from weakened cells, to much
-> > larger damage.  It is possible to harden the chip or the design against
-> > this, but it is *expensive*.  And even if warded off by hardening and no
-> > FLASH damage happens, an erase/program cycle must be done on the whole
-> > erase block to clean up the incomplete program cycle.
-> 
-> It should have been SSD's(including FW) responsibility to avoid data loss when
-> the SSD is doing its own BG writing, because power cut can happen any time
-> from SSD's viewpoint.
-
-Oh, I fully agree.  And yet, we had devices from several large vendors
-complaining about unclean shutdowns.  So, "it should have been", as
-usual, amounts to very little in the end.
-
-> > When you do not follow these rules, well, excellent datacenter-class
-> > SSDs have super-capacitor power banks that actually work.  Most SSDs do
-> > not, although they hopefully came a long way and hopefully modern SSDs
-> > are not as easily to brick as they were reported to be three or four
-> > years ago.
-> 
-> I remember that DC SSDs often don't support BG GC.
-
-And have proper supercap local power banks, etc.  I'd say they're not
-really relevant to this thread.
-
--- 
-  Henrique Holschuh
+T24gVGh1LCAyMDIwLTA3LTAyIGF0IDEzOjU5IC0wNTAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
+ZToNCj4gTWF0dCBCZW5uZXR0IDxtYXR0LmJlbm5ldHRAYWxsaWVkdGVsZXNpcy5jby5uej4gd3Jp
+dGVzOg0KPiANCj4gPiBQcmV2aW91c2x5IHRoZSBjb25uZWN0b3IgZnVuY3Rpb25hbGl0eSBjb3Vs
+ZCBvbmx5IGJlIHVzZWQgYnkgcHJvY2Vzc2VzIHJ1bm5pbmcgaW4gdGhlDQo+ID4gZGVmYXVsdCBu
+ZXR3b3JrIG5hbWVzcGFjZS4gVGhpcyBtZWFudCB0aGF0IGFueSBwcm9jZXNzIHRoYXQgdXNlcyB0
+aGUgY29ubmVjdG9yIGZ1bmN0aW9uYWxpdHkNCj4gPiBjb3VsZCBub3Qgb3BlcmF0ZSBjb3JyZWN0
+bHkgd2hlbiBydW4gaW5zaWRlIGEgY29udGFpbmVyLiBUaGlzIGlzIGEgZHJhZnQgcGF0Y2ggc2Vy
+aWVzIHRoYXQNCj4gPiBhdHRlbXB0cyB0byBub3cgYWxsb3cgdGhpcyBmdW5jdGlvbmFsaXR5IG91
+dHNpZGUgb2YgdGhlIGRlZmF1bHQgbmV0d29yayBuYW1lc3BhY2UuDQo+ID4gDQo+ID4gSSBzZWUg
+dGhpcyBoYXMgYmVlbiBkaXNjdXNzZWQgcHJldmlvdXNseSBbMV0sIGJ1dCBhbSBub3Qgc3VyZSBo
+b3cgbXkgY2hhbmdlcyByZWxhdGUgdG8gYWxsDQo+ID4gb2YgdGhlIHRvcGljcyBkaXNjdXNzZWQg
+dGhlcmUgYW5kL29yIGlmIHRoZXJlIGFyZSBhbnkgdW5pbnRlbmRlZCBzaWRlDQo+ID4gZWZmZWN0
+cyBmcm9tIG15IGRyYWZ0DQo+IA0KPiBJbiBhIHF1aWNrIHNraW0gdGhpcyBwYXRjaHNldCBkb2Vz
+IG5vdCBsb29rIGxpa2UgaXQgYXBwcm9hY2hlcyBhIGNvcnJlY3QNCj4gY29udmVyc2lvbiB0byBo
+YXZpbmcgY29kZSB0aGF0IHdvcmtzIGluIG11bHRpcGxlIG5hbWVzcGFjZXMuDQo+IA0KPiBJIHdp
+bGwgdGFrZSB0aGUgY2hhbmdlcyB0byBwcm9jX2lkX2Nvbm5lY3RvciBmb3IgZXhhbXBsZS4NCj4g
+WW91IHJlcG9ydCB0aGUgdmFsdWVzIGluIHRoZSBjYWxsZXJzIGN1cnJlbnQgbmFtZXNwYWNlcy4N
+Cj4gDQo+IFdoaWNoIG1lYW5zIGFuIHVucHJpdmlsZWdlZCB1c2VyIGNhbiBjcmVhdGUgYSB1c2Vy
+IG5hbWVzcGFjZSBhbmQgZ2V0DQo+IGNvbm5lY3RvciB0byByZXBvcnQgd2hpY2hldmVyIGlkcyB0
+aGV5IHdhbnQgdG8gdXNlcnMgaW4gYW5vdGhlcg0KPiBuYW1lc3BhY2UuICBBS0EgbGllLg0KPiAN
+Cj4gU28gdGhpcyBhcHBlYXJzIHRvIG1ha2UgY29ubmVjdG9yIGNvbXBsZXRlbHkgdW5yZWxpYWJs
+ZS4NCj4gDQo+IEVyaWMNCj4gDQoNCkhpIEVyaWMsDQoNClRoYW5rIHlvdSBmb3IgdGFraW5nIHRo
+ZSB0aW1lIHRvIHJldmlldy4gSSB3cm90ZSB0aGVzZSBwYXRjaGVzIGluIGFuIGF0dGVtcHQgdG8g
+c2hvdyB0aGF0IEkgd2FzIHdpbGxpbmcgdG8gZG8gdGhlIHdvcmsgbXlzZWxmIHJhdGhlciB0aGFu
+IHNpbXBseQ0KYXNraW5nIGZvciBzb21lb25lIGVsc2UgdG8gZG8gaXQgZm9yIG1lLiBUaGUgY2hh
+bmdlcyB3b3JrZWQgZm9yIG15IHVzZSBjYXNlcyB3aGVuIEkgdGVzdGVkIHRoZW0sIGJ1dCBJIGV4
+cGVjdGVkIHRoYXQgc29tZSBvZiB0aGUgY2hhbmdlcyB3b3VsZCBiZQ0KaW5jb3JyZWN0IGFuZCB0
+aGF0IEkgd291bGQgbmVlZCBzb21lIGd1aWRhbmNlLiBJIGNhbiBzcGVuZCBzb21lIHRpbWUgdG8g
+cmVhbGx5IGRpZyBpbiBhbmQgZnVsbHkgdW5kZXJzdGFuZCB0aGUgY2hhbmdlcyBJIGFtIHRyeWlu
+ZyB0byBtYWtlIChJIGhhdmUNCmxpbWl0ZWQga2VybmVsIGRldmVsb3BtZW50IGV4cGVyaWVuY2Up
+IGJ1dCBiYXNlZCBvbiB0aGUgcmVzdCBvZiB0aGUgZGlzY3Vzc2lvbiB0aHJlYWRzIGl0IHNlZW1z
+IHRoYXQgdGhlcmUgaXMgbGlrZWx5IG5vIGFwcGV0aXRlIHRvIGV2ZXIgc3VwcG9ydA0KbmFtZXNw
+YWNlcyB3aXRoIHRoZSBjb25uZWN0b3IuDQoNCkJlc3QgcmVnYXJkcywNCk1hdHQNCg==
