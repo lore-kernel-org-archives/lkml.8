@@ -2,154 +2,112 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D711AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCD12073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593950693;
-	bh=BUvEgg07BsbzXg3xUAGWCHDXPCqYfHqTl28IwFSl+pg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NBkvQBp0BBZn0ChA10X4cA6ys0uhM7TRIgF/xyCAsIj7czaPHzMHyJZboCf5fgA06
-	 cFsfTOLVH9c1fLFcYzSm5WL5L6L5bUF9ZC1vPc0bhrcRx1zKY8rpIf9JIv6sj4pN6F
-	 MRDhqgIqtHQLOIE+EaOHLhK+cdEIiYcBh4it+6PQ=
+	by mail.kernel.org (Postfix) with ESMTP id B1C2020724
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwtX5+90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgGEMEw (ORCPT
+        id S1726924AbgGEMMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 08:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGEMEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 08:04:51 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909A720720;
-        Sun,  5 Jul 2020 12:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593950690;
-        bh=BUvEgg07BsbzXg3xUAGWCHDXPCqYfHqTl28IwFSl+pg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lsfmCtH7zy+Zt7Vkxh2KOFSCuDm+h5ifkCUujzbsV4sZfHXOVSQPM5K+QvJ2k9uPr
-         m7Ru62sfhBqXt1WQ0+6D+5GuCWzqee8Y8ud76VJTRGoJIdltxm4MrKUY6V+2YTOccY
-         +/WAGjBxwv8W8ujZedNRhsK4xZtv2SGv2oF79hBQ=
-Date:   Sun, 5 Jul 2020 13:04:46 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rachna@ti.com>, <mugunthanvnm@ti.com>, <vigneshr@ti.com>,
-        <afd@ti.com>
-Subject: Re: [PATCH 2/3] iio: adc: ti_am335x_adc: alloc kfifo & IRQ via
- devm_ functions
-Message-ID: <20200705130446.2261f08c@archlinux>
-In-Reply-To: <20200428111430.71723-2-alexandru.ardelean@analog.com>
-References: <20200428111430.71723-1-alexandru.ardelean@analog.com>
-        <20200428111430.71723-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 5 Jul 2020 08:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgGEML7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 08:11:59 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2A5C061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 05:11:59 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so35109730eje.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 05:11:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=isrInYoUXrbFffPc47IJyxGU9lKhBtrchnU6KHdwR2M=;
+        b=RwtX5+900ZFC8SeHyTCdRlw3uUTyMSGBW7Q7hy8nF2oeq5HqT/Y5rxC1oKlf4+LTyh
+         NpcwaASIJldFKLJa9sGubeQpgRm9FS1bAhwyZ7E1J2wX0Vh5hzKU3etEKoH+m8MRcBy4
+         RUSqPUMGmFngCpVf79vVvoPXieVtbWUxevTsDyu2q4fsoIZHqE1qOofyp4FFbGsKuPW/
+         B7bIi3NRRI3/u8iMOd03aTqKPpn7lhD6WOj3N76552CdNKuFS/406twIt8pORcbP1Msm
+         9HL9fhDqLMlSD1OEcuC8rh1XeUGzCzVNXWOEYPK+C/9MGduuCXDO511fH5rs4S4W5sal
+         +ZoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=isrInYoUXrbFffPc47IJyxGU9lKhBtrchnU6KHdwR2M=;
+        b=bSzu2hEkzJeSaAuWNA5rFe40s7ys4Pft+oWnjjMLZzdAse2vY57CmuY4CH8h4b8G70
+         H55dyRI8pTJj+DgcgF++HmHTLF2+VbHHL/xy5XyBwG+FBoWw4Wd5xUWYYy5F5MzNKHv8
+         OUzjIPLXOUuAsOig5ZODK5sADk2jEMi7S0fmd6aY4fbE2Yzl4jJZb7tChW2EYuGNhnS6
+         lcKut+HOF0Plb43mdhoQGkWu7m9SXGXvRgCRscCgdTFv6ZXPTocdjcYzSVv2d9lBiVXY
+         T6IgJPkmUaWoGHBmpkZUywVFUyDeEzsTvzHxj9qzVIqEDmy4cGtYIZUKE6NiNEMX6L/D
+         AurA==
+X-Gm-Message-State: AOAM531IetdHJ084jZZaReyJCzXpPY7DmIsDRZMVaXDsbAsBpDM/2w9/
+        pbXvIoyLo6A/t90hcyJ3dc/PiKFNUJpEjA==
+X-Google-Smtp-Source: ABdhPJz7vzannraogjdgriWNq5/RhT6Q0BO5Oyk8QjUHuW2mXs/JhrqP+IIoHk9maSx2np3HDe1OxQ==
+X-Received: by 2002:a17:906:1747:: with SMTP id d7mr31399376eje.39.1593951117954;
+        Sun, 05 Jul 2020 05:11:57 -0700 (PDT)
+Received: from localhost.localdomain (212-5-158-133.ip.btc-net.bg. [212.5.158.133])
+        by smtp.gmail.com with ESMTPSA id j64sm1517458edd.61.2020.07.05.05.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 05:11:57 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH 0/4] Make Frame Skip Mode control a standard
+Date:   Sun,  5 Jul 2020 15:11:24 +0300
+Message-Id: <20200705121128.5250-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:14:29 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Hello,
 
-> This change attaches the life-cycle of the kfifo buffer & IRQ to the
-> parent-device. This in turn cleans up the exit & error paths, since we
-> don't need to explicitly cleanup these resources.
-> 
-> The main intent here is to remove the explicit cleanup of the
-> 'indio_dev->buffer' via 'iio_kfifo_free(indio_dev->buffer);'.
-> 
-> As we want to add support for multiple buffers per IIO device, having it
-> exposed like this makes it tricky to consider a safe backwards compatible
-> approach for it.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
+Suggested by Hans at [1], this patchset is promoting a standard control
+for frame skip mode.
 
-> ---
->  drivers/iio/adc/ti_am335x_adc.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
-> index d932fe383a24..03b2ab649cc3 100644
-> --- a/drivers/iio/adc/ti_am335x_adc.c
-> +++ b/drivers/iio/adc/ti_am335x_adc.c
-> @@ -377,7 +377,8 @@ static const struct iio_buffer_setup_ops tiadc_buffer_setup_ops = {
->  	.postdisable = &tiadc_buffer_postdisable,
->  };
->  
-> -static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
-> +static int tiadc_iio_buffered_hardware_setup(struct device *dev,
-> +	struct iio_dev *indio_dev,
->  	irqreturn_t (*pollfunc_bh)(int irq, void *p),
->  	irqreturn_t (*pollfunc_th)(int irq, void *p),
->  	int irq,
-> @@ -387,13 +388,13 @@ static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
->  	struct iio_buffer *buffer;
->  	int ret;
->  
-> -	buffer = iio_kfifo_allocate();
-> +	buffer = devm_iio_kfifo_allocate(dev);
->  	if (!buffer)
->  		return -ENOMEM;
->  
->  	iio_device_attach_buffer(indio_dev, buffer);
->  
-> -	ret = request_threaded_irq(irq,	pollfunc_th, pollfunc_bh,
-> +	ret = devm_request_threaded_irq(dev, irq, pollfunc_th, pollfunc_bh,
->  				flags, indio_dev->name, indio_dev);
->  	if (ret)
->  		goto error_kfifo_free;
-> @@ -408,15 +409,6 @@ static int tiadc_iio_buffered_hardware_setup(struct iio_dev *indio_dev,
->  	return ret;
->  }
->  
-> -static void tiadc_iio_buffered_hardware_remove(struct iio_dev *indio_dev)
-> -{
-> -	struct tiadc_device *adc_dev = iio_priv(indio_dev);
-> -
-> -	free_irq(adc_dev->mfd_tscadc->irq, indio_dev);
-> -	iio_kfifo_free(indio_dev->buffer);
-> -}
-> -
-> -
->  static const char * const chan_name_ain[] = {
->  	"AIN0",
->  	"AIN1",
-> @@ -636,7 +628,7 @@ static int tiadc_probe(struct platform_device *pdev)
->  	if (err < 0)
->  		return err;
->  
-> -	err = tiadc_iio_buffered_hardware_setup(indio_dev,
-> +	err = tiadc_iio_buffered_hardware_setup(&pdev->dev, indio_dev,
->  		&tiadc_worker_h,
->  		&tiadc_irq_h,
->  		adc_dev->mfd_tscadc->irq,
-> @@ -661,7 +653,6 @@ static int tiadc_probe(struct platform_device *pdev)
->  err_dma:
->  	iio_device_unregister(indio_dev);
->  err_buffer_unregister:
-> -	tiadc_iio_buffered_hardware_remove(indio_dev);
->  err_free_channels:
->  	return err;
->  }
-> @@ -679,7 +670,6 @@ static int tiadc_remove(struct platform_device *pdev)
->  		dma_release_channel(dma->chan);
->  	}
->  	iio_device_unregister(indio_dev);
-> -	tiadc_iio_buffered_hardware_remove(indio_dev);
->  
->  	step_en = get_adc_step_mask(adc_dev);
->  	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
+The original private V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE control is
+applicable and can be used by Venus driver too (and probably other drivers).
+In order to make that possible make a new V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE
+standard menu control (a copy of the private one).
+
+Also, to keep mfc driver backward compatible kept the private one, and mark
+it as depricated in docs.
+
+regards,
+Stan
+
+[1] https://lkml.org/lkml/2020/5/19/122
+
+Stanimir Varbanov (4):
+  media: v4l2-ctrl: Add frame-skip std encoder control
+  venus: venc: Add support for frame-skip mode v4l2 control
+  media: s5p-mfc: Use standard frame skip mode control
+  media: docs: Depricate mfc frame skip control
+
+ .../media/v4l/ext-ctrls-codec.rst             | 37 +++++++++++++++++++
+ drivers/media/platform/qcom/venus/core.h      |  1 +
+ drivers/media/platform/qcom/venus/venc.c      |  6 ++-
+ .../media/platform/qcom/venus/venc_ctrls.c    | 12 +++++-
+ drivers/media/platform/s5p-mfc/s5p_mfc_enc.c  |  6 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 10 +++++
+ include/uapi/linux/v4l2-controls.h            |  6 +++
+ 7 files changed, 75 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
 
