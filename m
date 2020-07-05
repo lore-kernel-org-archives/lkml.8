@@ -2,87 +2,88 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 08:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 08:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2B32075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 08:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C3D20760
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 08:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgGEIGn (ORCPT
+        id S1726497AbgGEIOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 04:06:43 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36188 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgGEIGn (ORCPT
+        Sun, 5 Jul 2020 04:14:43 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:48028 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgGEIOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 04:06:43 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 97B27804E6;
-        Sun,  5 Jul 2020 10:06:38 +0200 (CEST)
-Date:   Sun, 5 Jul 2020 10:06:37 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, ck.hu@mediatek.com,
-        stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH] drm/panel: auo,b116xw03: fix flash backlight when power
- on
-Message-ID: <20200705080637.GA1745670@ravnborg.org>
-References: <20200703095113.55712-1-jitao.shi@mediatek.com>
+        Sun, 5 Jul 2020 04:14:42 -0400
+X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Jul 2020 04:14:42 EDT
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 1E45E1A401F9; Sun,  5 Jul 2020 01:07:15 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 01:07:14 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>, gregkh@linuxfoundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-man@vger.kernel.org, mtk.manpages@gmail.com,
+        shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org>
+ <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703095113.55712-1-jitao.shi@mediatek.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8 a=zYKW7BbRKYs78E-HfYEA:9
-        a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
+In-Reply-To: <20200705032732.GT25523@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
-
-On Fri, Jul 03, 2020 at 05:51:13PM +0800, Jitao Shi wrote:
-> Delay the backlight on to make sure the video stable.
+On Sun, Jul 05, 2020 at 04:27:32AM +0100, Matthew Wilcox wrote:
+> On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
+> > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > You should probably take a look at io_uring.  That has the level of
+> > > complexity of this proposal and supports open/read/close along with many
+> > > other opcodes.
+> > 
+> > Then glibc can implement readfile using io_uring and there is no need
+> > for a new single-file readfile syscall.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 3ad828eaefe1..18f34f286d3d 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -734,6 +734,9 @@ static const struct panel_desc auo_b116xw03 = {
->  		.width = 256,
->  		.height = 144,
->  	},
-> +	.delay = {
-> +		.enable = 400,
-> +	},
->  };
->  
->  static const struct drm_display_mode auo_b133xtn01_mode = {
+> It could, sure.  But there's also a value in having a simple interface
+> to accomplish a simple task.  Your proposed API added a very complex
+> interface to satisfy needs that clearly aren't part of the problem space
+> that Greg is looking to address.
 
-Patch did not apply to drm-misc-next.
-Please update - and when you do so also add:
-.bus_flags
-.bus_format
-.connector_type
+I disagree re: "aren't part of the problem space".
 
-So we have this panel properly defined.
+Reading small files from procfs was specifically called out in the
+rationale for the syscall.
 
-	Sam
+In my experience you're rarely monitoring a single proc file in any
+situation where you care about the syscall overhead.  You're
+monitoring many of them, and any serious effort to do this efficiently
+in a repeatedly sampled situation has cached the open fds and already
+uses pread() to simply restart from 0 on every sample and not
+repeatedly pay for the name lookup.
+
+Basically anything optimally using the existing interfaces for
+sampling proc files needs a way to read multiple open file descriptors
+in a single syscall to move the needle.
+
+This syscall doesn't provide that.  It doesn't really give any
+advantage over what we can achieve already.  It seems basically
+pointless to me, from a monitoring proc files perspective.
+
+Regards,
+Vito Caputo
