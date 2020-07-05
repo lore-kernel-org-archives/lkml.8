@@ -2,104 +2,296 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7280C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB678C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67C520786
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593955844;
-	bh=uZhavRfS83kzq/SUf4yegabPSTT9sCmTWgMYRuGVoLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BZaBIWiDuINCqfWhBHcMYWLIgO6Ek+LypXD8mV4e8OTot21XF9a6d1BzzoKdVUKso
-	 Oaq89ZL1k587mYZT3ePOpcbAuQfiNpDlM2a4xDndFDD1OF708cCQbiw8I+UiozI43d
-	 1hyrPDXD2fBufeTrnFPiDj/6Mbh8F3ICTjXqljno=
+	by mail.kernel.org (Postfix) with ESMTP id C289C2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="ToZHG4Yo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgGENan (ORCPT
+        id S1727823AbgGENbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 09:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgGENam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 09:30:42 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 5 Jul 2020 09:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgGENbJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 09:31:09 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC1DC061794;
+        Sun,  5 Jul 2020 06:31:08 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F89220771;
-        Sun,  5 Jul 2020 13:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593955842;
-        bh=uZhavRfS83kzq/SUf4yegabPSTT9sCmTWgMYRuGVoLQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RfX9f/ChfM6YRkPguNwad1Lr9jG7JWtUIbsIMF/4JvPOAukTE7pX9UWjGZOW6aaqZ
-         DaauDysuYpJe5bVVpoHd7oAeHV1vG5phWlBSHVV3tkATQxwSbjI6nOGksYdKdZKe6u
-         yGnmAPa/NhR4kyybxjc35qNv42tNeLMoqmwrW3ig=
-Date:   Sun, 5 Jul 2020 09:30:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [FOR-STABLE-3.9+] sched/rt: Show the 'sched_rr_timeslice'
- SCHED_RR timeslice tuning knob in milliseconds
-Message-ID: <20200705133041.GI2722994@sasha-vm>
-References: <ffdfb849a11b9cd66e0aded2161869e36aec7fc0.1593757471.git.viresh.kumar@linaro.org>
- <20200703074025.GA2390868@kroah.com>
- <20200703074354.btmylgn5mxhbxywc@vireshk-i7>
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B08jP0JgpzQlHt;
+        Sun,  5 Jul 2020 15:31:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1593955862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ce0tV1PIU1POYpnsSZxB0iFhytkwDCzMi3ju2tYJTxw=;
+        b=ToZHG4YoVjWrV+0oG9vLuUqS2270j96I8VDbIJp0XhVCqPkjCJlVdqzSFgm/wGGngjv3CG
+        0SjKqfS9QyUYXWsTA4YfSjv7HoVPpiG06/8npYLga92YjhBxOEF0y7IptPXuj4AcJRr0Yt
+        UibCXAlJN8AnTCn9spdVMGzb40Eq18oS5APrsXusTxVFDBjahkAF+PP8SAkOLIistyUk+p
+        7l/y79fpGf1NTfbsFJMfMmb0oLaan9mZO/rLu9qmBZMW/+3tGczc21XOllq06hi6s03bDm
+        Zmr990/jBZGtH5Mbx5FWekmev+EzUqlr7XP+AuM7ypk6N/zxN0Na+ry6uLba/g==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id DPmn9X-5-ZHh; Sun,  5 Jul 2020 15:31:00 +0200 (CEST)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+Date:   Sun,  5 Jul 2020 22:30:38 +0900
+Message-Id: <20200705133038.161547-1-mans0n@gorani.run>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200703074354.btmylgn5mxhbxywc@vireshk-i7>
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 1
+X-Rspamd-Score: 0.21 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 7A06B1802
+X-Rspamd-UID: 935507
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 01:13:54PM +0530, Viresh Kumar wrote:
->On 03-07-20, 09:40, Greg KH wrote:
->> On Fri, Jul 03, 2020 at 12:54:04PM +0530, Viresh Kumar wrote:
->> > From: Shile Zhang <shile.zhang@nokia.com>
->> >
->> > We added the 'sched_rr_timeslice_ms' SCHED_RR tuning knob in this commit:
->> >
->> >   ce0dbbbb30ae ("sched/rt: Add a tuning knob to allow changing SCHED_RR timeslice")
->> >
->> > ... which name suggests to users that it's in milliseconds, while in reality
->> > it's being set in milliseconds but the result is shown in jiffies.
->> >
->> > This is obviously confusing when HZ is not 1000, it makes it appear like the
->> > value set failed, such as HZ=100:
->> >
->> >   root# echo 100 > /proc/sys/kernel/sched_rr_timeslice_ms
->> >   root# cat /proc/sys/kernel/sched_rr_timeslice_ms
->> >   10
->> >
->> > Fix this to be milliseconds all around.
->> >
->> > Cc: <stable@vger.kernel.org> # v3.9+
->> > Signed-off-by: Shile Zhang <shile.zhang@nokia.com>
->> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
->> > Cc: Mike Galbraith <efault@gmx.de>
->> > Cc: Peter Zijlstra <peterz@infradead.org>
->> > Cc: Thomas Gleixner <tglx@linutronix.de>
->> > Link: http://lkml.kernel.org/r/1485612049-20923-1-git-send-email-shile.zhang@nokia.com
->> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
->> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->>
->> What is the git commit id of this patch in Linus's tree?
->
->I am really sorry for missing the only thing I was required to do :(
->
->commit 975e155ed8732cb81f55c021c441ae662dd040b5 upstream.
+NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+Its ports are controlled only by a data byte without register address.
 
-I've queued it for 4.9 and 4.4.
+Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
 
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+---
+v5:
+* amended the commit message
+* removed unnecessary castings
+* added data to of_match_table
+
+v4:
+* removed ->direction_input() and ->direction_output()
+  (Seems unnecessary to me)
+* removed ->set_multiple()
+  (I'm not sure this implementation is really correct)
+* added ->get()
+  (DS says we can read the status from the device)
+* read current status during probe
+
+v3:
+* remove mutex
+* rename buffer to out
+* simplify return statements
+* replace ->probe() to ->probe_new()
+* move ngpio to driver_data
+  (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+
+v2:
+* move the direction functions below the set functions
+* use devm_gpiochip_add_data() and remove the remove callback
+
+v1:
+Tested in kernel 5.4 on an ipq40xx platform.
+
+This is my first time submitting a whole driver patch, and I'm not really
+familiar with this PCA expander series.
+Please let me know how I can improve this patch further.
+
+FYI there's an unmerged patch for this chip.
+http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+I don't have PCA9571 either so I didn't add support for it.
+---
+ drivers/gpio/Kconfig        |   8 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-pca9570.c | 138 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 147 insertions(+)
+ create mode 100644 drivers/gpio/gpio-pca9570.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c6b5c65c8405..d10dcb81b841 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+ 	  Say yes here to enable the pca953x to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
+ 
++config GPIO_PCA9570
++	tristate "PCA9570 4-Bit I2C GPO expander"
++	help
++	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gpio-pca9570.
++
+ config GPIO_PCF857X
+ 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+ 	select GPIOLIB_IRQCHIP
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e4894e0bf0f..33cb40c28a61 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
+ obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
+ obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
+ obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
++obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
+ obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
+ obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
+ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
+diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+new file mode 100644
+index 000000000000..d420c4f55766
+--- /dev/null
++++ b/drivers/gpio/gpio-pca9570.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Driver for PCA9570 I2C GPO expander
++ *
++ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
++ *
++ * Based on gpio-tpic2810.c
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++
++/**
++ * struct pca9570 - GPIO driver data
++ * @chip: GPIO controller chip
++ * @client: I2C device pointer
++ * @out: Buffer for device register
++ */
++struct pca9570 {
++	struct gpio_chip chip;
++	struct i2c_client *client;
++	u8 out;
++};
++
++static int pca9570_read(struct pca9570 *gpio, u8 *value)
++{
++	int ret;
++
++	ret = i2c_smbus_read_byte(gpio->client);
++	if (ret < 0)
++		return ret;
++
++	*value = ret;
++	return 0;
++}
++
++static int pca9570_write(struct pca9570 *gpio, u8 value)
++{
++	return i2c_smbus_write_byte(gpio->client, value);
++}
++
++static int pca9570_get_direction(struct gpio_chip *chip,
++				 unsigned offset)
++{
++	/* This device always output */
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int pca9570_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct pca9570 *gpio = gpiochip_get_data(chip);
++	u8 buffer;
++	int ret;
++
++	ret = pca9570_read(gpio, &buffer);
++	if (ret)
++		return ret;
++
++	return !!(buffer & BIT(offset));
++}
++
++static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct pca9570 *gpio = gpiochip_get_data(chip);
++	u8 buffer = gpio->out;
++	int ret;
++
++	if (value)
++		buffer |= BIT(offset);
++	else
++		buffer &= ~BIT(offset);
++
++	ret = pca9570_write(gpio, buffer);
++	if (ret)
++		return;
++
++	gpio->out = buffer;
++}
++
++static const struct gpio_chip template_chip = {
++	.label			= "pca9570",
++	.owner			= THIS_MODULE,
++	.get_direction		= pca9570_get_direction,
++	.get			= pca9570_get,
++	.set			= pca9570_set,
++	.base			= -1,
++	.can_sleep		= true,
++};
++
++static const struct i2c_device_id pca9570_id_table[] = {
++	{ "pca9570", 4 },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
++
++static const struct of_device_id pca9570_of_match_table[] = {
++	{ .compatible = "nxp,pca9570", .data = (void *)4 },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
++
++static int pca9570_probe(struct i2c_client *client)
++{
++	struct pca9570 *gpio;
++
++	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	gpio->chip = template_chip;
++	gpio->chip.parent = &client->dev;
++	gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
++	gpio->client = client;
++
++	/* Read the current output level */
++	pca9570_read(gpio, &gpio->out);
++
++	i2c_set_clientdata(client, gpio);
++
++	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
++}
++
++static struct i2c_driver pca9570_driver = {
++	.driver = {
++		.name = "pca9570",
++		.of_match_table = pca9570_of_match_table,
++	},
++	.probe_new = pca9570_probe,
++	.id_table = pca9570_id_table,
++};
++module_i2c_driver(pca9570_driver);
++
++MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
++MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
++MODULE_LICENSE("GPL v2");
 -- 
-Thanks,
-Sasha
+2.27.0
+
