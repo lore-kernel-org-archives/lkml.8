@@ -2,100 +2,153 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E759C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E962082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640E420870
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593932119;
-	bh=kBMlJanR1enACjjFDoR+XJ5J4RiDm9o74tcWF6LEt+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d+ZckBy3WmIzbVXC6K1uGwBpuBCriE3Gjpf9E+2ZGI8TzFQz+NrVx7IwC/vOCAZKz
-	 Bhtiq8v4MKtFdgPh/IllAiP6vr9mU2LcR4KdnuEUKrbtOuNCt+HK/FpZDtPeJSFUa3
-	 gjuNRCmJ10QZCrDVk7UZU99rekaUJQj9pMOMSyLY=
+	s=default; t=1593932202;
+	bh=aAnhab5Td6gyYsvl9oPoynXib/ICM9SQvl8ML3UYUro=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=jdHbzf9iowfq37wvIBwhvLeU4145V6xOO3GtpXh2eoIXs1ojNwpGS3BYD7JgluzpV
+	 WJYbow7gb/68QTHPvZ9YduAcymJtkSpwuqE3cjq0XRKhbYvX3Chy8IVEcj4x2eVpyJ
+	 b7v4suVlmcu6F5H45Yrfh2mfpzI014JXQVbEZbYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgGEGzS (ORCPT
+        id S1726631AbgGEG4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 02:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 02:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgGEGzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 02:55:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725873AbgGEG4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 02:56:40 -0400
+Received: from localhost (p54b33111.dip0.t-ipconnect.de [84.179.49.17])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD96B20771;
-        Sun,  5 Jul 2020 06:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F1420786;
+        Sun,  5 Jul 2020 06:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593932117;
-        bh=kBMlJanR1enACjjFDoR+XJ5J4RiDm9o74tcWF6LEt+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wb3qZj3CnNZxBoPTvh7p6HB4/tGtTeV11dCiNMA1QWiwXZ2N8IyhuogdQUhlLNNOM
-         NIKiy3C/HWOmNGuLmp3EhGI3R+XOAb15g4SCDejhGdQtisAf+WdoRNr55sAUXGCLNp
-         J57TWI3lwdht4d84rQIRhIZ/Vh79TiUzX71QFP1o=
-Date:   Sun, 5 Jul 2020 08:55:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-man@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/3] selftests: add readfile(2) selftests
-Message-ID: <20200705065514.GA34145@kroah.com>
-References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
- <20200704140250.423345-4-gregkh@linuxfoundation.org>
- <CAMuHMdXck1u+Djv1xOvRA7riMN4m3qp8o4zmXVvqrC1S+0fifA@mail.gmail.com>
+        s=default; t=1593932199;
+        bh=aAnhab5Td6gyYsvl9oPoynXib/ICM9SQvl8ML3UYUro=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RDvNdu2b5k8bicUwG02dE1ms6AvTLCS0JRKGZaF4Tp4/JvMpardboWK3c7jbDsOWl
+         FoA1SUsMNgWKf0qtisbCm6cmwvF7cSszu+iN1zBw1vmdf+8Wpr2jTcQ85kLKSWmxJ1
+         /LjXMyCWdgRD8zxvjh48M49i6KJs6ByMFF4vM5eA=
+Date:   Sun, 5 Jul 2020 08:56:33 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.8
+Message-ID: <20200705065633.GA1175@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXck1u+Djv1xOvRA7riMN4m3qp8o4zmXVvqrC1S+0fifA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 08:38:26PM +0200, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Sat, Jul 4, 2020 at 4:05 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > Test the functionality of readfile(2) in various ways.
-> >
-> > Also provide a simple speed test program to benchmark using readfile()
-> > instead of using open()/read()/close().
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Any benchmark results to share?
 
-Yes, the readfile_speed.c file will show you that on your machine, I'll
-post the results of that for two of my machines when I send the next
-version of this patch series.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/readfile/readfile.c
-> 
-> > +static void readfile(const char *filename)
-> > +{
-> > +//     int root_fd;
-> 
-> ???
+Linus,
 
-Ugh, sorry about that, I obviously didn't clean up my last tests from
-this file, thanks for catching that.
+I2C has some usual driver fixes and documentation updates.
 
-I should add more tests to validate the flag handling as well, will do
-all of that for the next version, thanks for noticing this.
+Please pull.
 
-greg k-h
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-curre=
+nt
+
+for you to fetch changes up to 597911287fcd13c3a4b4aa3e0a52b33d431e0a8e:
+
+  i2c: mlxcpld: check correct size of maximum RECV_LEN packet (2020-07-04 0=
+8:20:38 +0200)
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      i2c: eg20t: Load module automatically if ID matches
+
+Chris Packham (1):
+      i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+
+Ricardo Ribalda (1):
+      i2c: designware: platdrv: Set class based on DMI
+
+Wolfram Sang (3):
+      i2c: slave-eeprom: update documentation
+      i2c: add Kconfig help text for slave mode
+      i2c: mlxcpld: check correct size of maximum RECV_LEN packet
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      (Rev.) i2c: designware: platdrv: Set class based on DMI
+      (Rev.) i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+
+Geert Uytterhoeven (1):
+      (Rev.) i2c: add Kconfig help text for slave mode
+
+Luca Ceresoli (1):
+      (Rev.) i2c: slave-eeprom: update documentation
+
+Michael Shych (2):
+      (Rev.) i2c: mlxcpld: check correct size of maximum RECV_LEN packet
+      (Test) i2c: mlxcpld: check correct size of maximum RECV_LEN packet
+
+Niklas S=C3=B6derlund (2):
+      (Rev.) i2c: add Kconfig help text for slave mode
+      (Rev.) i2c: slave-eeprom: update documentation
+
+ Documentation/i2c/slave-eeprom-backend.rst  | 22 +++++++++++++++++-----
+ drivers/i2c/Kconfig                         |  7 +++++++
+ drivers/i2c/algos/i2c-algo-pca.c            |  3 ++-
+ drivers/i2c/busses/i2c-designware-platdrv.c | 15 ++++++++++++++-
+ drivers/i2c/busses/i2c-eg20t.c              |  1 +
+ drivers/i2c/busses/i2c-mlxcpld.c            |  4 ++--
+ 6 files changed, 43 insertions(+), 9 deletions(-)
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8BeZsACgkQFA3kzBSg
+KbYlcg/+JoVj4W2jIPGKRpCznsQtnBxCFC2M4AZvk5lOM0coxKIlwVTcbLVS9NQT
+pyYwt9ybrrMfl2XEC3xO2IBLg3YDRGk6/dqjJ5bBU+kZDRPA0r+90baulAcul2LD
+BB7DcsLcf7TG0E0EnyYheqk1YxbpRtXhMv+BU7z3Gxc7FymgKyfQ2sBw+Tpjs9Mt
+VlyIl5yjkStg0h44g7XOi2s28oHNSNVYuDRZRxWsZN+q2Wf6mHGQBg62fxTm58sZ
+/hyvWaOcHDJBT3TX/SQjQ4i+imjKWPg5ST6OdmBpB8zLH1vS93OADLUFd2wlw/a7
+vvBrP08OssCy9Z62Hjd9kMthU6zih3xdWOgdhtuxuKJaSyGVJ/kolSEMjDlwO3Tx
+C2/RFtSS9iEPub8RuR23AZgZVyL7oEZJve3psM9WuCyxFae5TidyuQ/pByhgwLEd
+akZ+jq8GkB9QEPjD6abvShrF/ZXNLbY9i057UmBkFF0ccHWOsBCJ5YR7K5HqawX5
+vEaAakW3M+osd1MDA1ubKQ0uikPp+Fw02kZUqFyeHU+/ateVSkTAUhqWe5RGBt/2
+bOtRXSfKibOuiobl9gdRRxfj0lTRUicj/br+WzPCDAQ5LOEHi1xxnco7Z6/jLjg0
+tJhfNkxKOOTrAxxfpbgtfkaGu4S1dKNSRZsryD1rjAtiDoEo4JA=
+=ezI0
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
