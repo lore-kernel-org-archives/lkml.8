@@ -2,102 +2,136 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D081DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD079C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A931C20720
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9922075D
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593950381;
-	bh=jbRIrixoWn2wn5oaON87KKkPJd5FmrO9b7ka7N4hgrk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bBILWzqpGtpqaP7LWaky/cqL+sXxd+7IIsuoJMMBSqcS7rgYQjdj8N43le+ro69tV
-	 sYr+yV8G6PBqT7axJDUVGxvfYDxIWV/pbq3304wBkBRovaE/Ke7xDzuSvYI+KFR2UW
-	 rT1MhRxBvfdyGIvoX4FVcz9Bw5erBEelNM0k6dpo=
+	s=default; t=1593950403;
+	bh=EYV4BEyFaXQt1VRsg7oCnvXDXA2qdM5fANKa6Er1s9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EtiUkrb3DHRbjCusItdqw14rcmCp8fmVHxP/xCvkGrzGtPxXl8/WtvVXHBmZrfqaW
+	 1tms+zzcgYzf/DSjHvQ491Pe7S9dXWZ7rudrjJv+PUEbHe8lvb2NPXzRPjlv+mW50Q
+	 x9ZBQ3SYfrvfiWLfLE9vkZePABzrfneOb9DcgQ5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGEL7k (ORCPT
+        id S1726936AbgGEMAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 08:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGEL7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:59:39 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726454AbgGEMAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 08:00:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B676920708;
-        Sun,  5 Jul 2020 11:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5834C20708;
+        Sun,  5 Jul 2020 12:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593950379;
-        bh=jbRIrixoWn2wn5oaON87KKkPJd5FmrO9b7ka7N4hgrk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ANj26gvSSKhAJ6k+Pnrg6oJP4v0rt8rdFOz/5D7I6wlHQKJeTVj+5OGSsz6xJuOQt
-         5trO/iUy3WPHHsh2DOuSjRBR8XpWJFNIz8JSxaBZ8lRlFTB/HsYm2XGdoSd0UZ6uk/
-         SAO3o8UXeiBHbaO1CgPjfj/S/bqPnn3JhNxTnASM=
-Date:   Sun, 5 Jul 2020 12:59:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Michael.Hennerich@analog.com, lars@metafoo.de, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, giuliano.belinassi@usp.br,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7780: Fix a resource handling path in
- 'ad7780_probe()'
-Message-ID: <20200705125935.025cfa12@archlinux>
-In-Reply-To: <20200518022129.xkcuw4yxotnll7ym@renatolg>
-References: <20200517095953.278950-1-christophe.jaillet@wanadoo.fr>
-        <20200518022129.xkcuw4yxotnll7ym@renatolg>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1593950400;
+        bh=EYV4BEyFaXQt1VRsg7oCnvXDXA2qdM5fANKa6Er1s9w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NLiuvOSW5tG3I+Wl+TUTcoFnA88jTQg7/nqpmOXC/AOuyKSf8z0A8iFO0gkgmV5NT
+         iwFKSFGaeJ+WICwzHmBK6zmyuJpKw6mKFTopQjG3V0/abiELcEa5OyomHym4mEF2hh
+         q+A8071zcTBOofSS9H3c3eg2HLN3c6XvNhTcwGnI=
+Date:   Sun, 5 Jul 2020 14:00:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-man@vger.kernel.org, mtk.manpages@gmail.com,
+        shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705120003.GC1227929@kroah.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <37170CC1-C132-40BE-8ABA-B14E3419975C@dilger.ca>
+ <CAODFU0qT07ERWVH7F3rO1CK6CckmoF4p8ArHk09S9DCojD8M4w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAODFU0qT07ERWVH7F3rO1CK6CckmoF4p8ArHk09S9DCojD8M4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 23:21:29 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
-
-> Acked-by: Renato Lui Geh <renatogeh@gmail.com>
+On Sun, Jul 05, 2020 at 09:25:39AM +0200, Jan Ziak wrote:
+> On Sun, Jul 5, 2020 at 8:32 AM Andreas Dilger <adilger@dilger.ca> wrote:
+> >
+> > On Jul 4, 2020, at 8:46 PM, Jan Ziak <0xe2.0x9a.0x9b@gmail.com> wrote:
+> > >
+> > > On Sun, Jul 5, 2020 at 4:16 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >>
+> > >> On Sun, Jul 05, 2020 at 04:06:22AM +0200, Jan Ziak wrote:
+> > >>> Hello
+> > >>>
+> > >>> At first, I thought that the proposed system call is capable of
+> > >>> reading *multiple* small files using a single system call - which
+> > >>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> > >>> operations per second) - but that isn't the case and the proposed
+> > >>> system call can read just a single file.
+> > >>>
+> > >>> Without the ability to read multiple small files using a single system
+> > >>> call, it is impossible to increase IOPS (unless an application is
+> > >>> using multiple reader threads or somehow instructs the kernel to
+> > >>> prefetch multiple files into memory).
+> > >>
+> > >> What API would you use for this?
+> > >>
+> > >> ssize_t readfiles(int dfd, char **files, void **bufs, size_t *lens);
+> > >>
+> > >> I pretty much hate this interface, so I hope you have something better
+> > >> in mind.
+> > >
+> > > I am proposing the following:
+> > >
+> > > struct readfile_t {
+> > >  int dirfd;
+> > >  const char *pathname;
+> > >  void *buf;
+> > >  size_t count;
+> > >  int flags;
+> > >  ssize_t retval; // set by kernel
+> > >  int reserved; // not used by kernel
+> > > };
+> >
+> > If you are going to pass a struct from userspace to the kernel, it
+> > should not mix int and pointer types (which may be 64-bit values,
+> > so that there are not structure packing issues, like:
+> >
+> > struct readfile {
+> >         int     dirfd;
+> >         int     flags;
+> >         const char *pathname;
+> >         void    *buf;
+> >         size_t  count;
+> >         ssize_t retval;
+> > };
+> >
+> > It would be better if "retval" was returned in "count", so that
+> > the structure fits nicely into 32 bytes on a 64-bit system, instead
+> > of being 40 bytes per entry, which adds up over many entries, like.
 > 
-> On 05/17, Christophe JAILLET wrote:
-> >If 'ad7780_init_gpios()' fails, we must not release some resources that
-> >have not been allocated yet. Return directly instead.
-> >
-> >Fixes: 5bb30e7daf00 ("staging: iio: ad7780: move regulator to after GPIO init")
-> >Fixes: 9085daa4abcc ("staging: iio: ad7780: add gain & filter gpio support")
-> >Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Applied to the fixes-togreg branch of iio.git.
+> I know what you mean and it is a valid point, but in my opinion it
+> shouldn't (in most cases) be left to the programmer to decide what the
+> binary layout of a data structure is - instead it should be left to an
+> optimizing compiler to decide it.
 
-Thanks,
+We don't get that luxury when creating user/kernel apis in C, sorry.
 
-Jonathan
+I suggest using the pahole tool if you are interested in seeing the
+"best" way a structure can be layed out, it can perform that
+optimization for you so that you know how to fix your code.
 
-> >---
-> > drivers/iio/adc/ad7780.c | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
-> >index f47606ebbbbe..b33fe6c3907e 100644
-> >--- a/drivers/iio/adc/ad7780.c
-> >+++ b/drivers/iio/adc/ad7780.c
-> >@@ -329,7 +329,7 @@ static int ad7780_probe(struct spi_device *spi)
-> >
-> > 	ret = ad7780_init_gpios(&spi->dev, st);
-> > 	if (ret)
-> >-		goto error_cleanup_buffer_and_trigger;
-> >+		return ret;
-> >
-> > 	st->reg = devm_regulator_get(&spi->dev, "avdd");
-> > 	if (IS_ERR(st->reg))
-> >-- 
-> >2.25.1
-> >  
+thanks,
 
+greg k-h
