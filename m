@@ -2,106 +2,189 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03681C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFBB2070C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxEabW/l"
+	by mail.kernel.org (Postfix) with ESMTP id D45C92070C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGESlp (ORCPT
+        id S1728103AbgGESmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgGESlo (ORCPT
+        Sun, 5 Jul 2020 14:42:23 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:40853 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgGESmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:41:44 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB7F7C061794;
-        Sun,  5 Jul 2020 11:41:44 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id a12so37159143ion.13;
-        Sun, 05 Jul 2020 11:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=WMam9KMN4N8PeAEM40GNpNo2zYpfT1xm+vr06Ee2x14=;
-        b=AxEabW/lzyZ2qlTf+PHt+KOYjnTp/SIT47axfbz/xNCoCqaeVUM3xzTmWeAcfiLKOW
-         jJjegqyiMnpF8BtbFW7UCZm5RajW69M91jc+AUkZfmbju0UwEiLNrwvzGzGn7MkUiORs
-         EVUnHKWbUMYyl0brpJVmufSrpUNtsg5n3E69x7mykxozCy/okobAZ7FObIAt05D2CxB/
-         FROsqXlr7TddUDivxEFn3CDR6NVi78hVhVM/sYQI6xoT2VVTmliYTXrsCYlRIxOx681N
-         HPnMVdz8wcjOw4cehpOuzxOjWNicCwQxlWLOqJtYFFPtup93zarw2kE9POpsdJXATGNn
-         oE3g==
+        Sun, 5 Jul 2020 14:42:22 -0400
+Received: by mail-il1-f197.google.com with SMTP id m64so26286838ill.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 11:42:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=WMam9KMN4N8PeAEM40GNpNo2zYpfT1xm+vr06Ee2x14=;
-        b=q+ouYmmRS+iEbnCz9jJr4b6CCm/R2gHYwl3papxt+dlNxVjxt5tFkYJaNP2uDKi4Dz
-         4bbZcXf7UV+QBnxyve7MjeONAbkhYsOAZ7WD10xw2jN9zMGxm5ue4Fm9+cjDA0ChEPQz
-         pado5hGPjIFRjyBWlGwNaknTtnWLmpOIaMUxPGgGAw+VDeaKALYd5P6yEi78ZusRLLlr
-         B6euNL0522SF8ePMGO+Pr4ZD4lbS7Rtft3fin61BWxnoQDPYbu5wAVO+ipBLc+zpbsex
-         nMd+hKBlrbPkmTAQPSUCh1jh4/I6jFGOTJnqmmDV4gPcCbRtGFD+/zG8fZHSDKfqHhs0
-         rVng==
-X-Gm-Message-State: AOAM532mk9WeXf72tHugjbOHewkExgRG9vK2RyJKlkqyw57PZ1jbz6fK
-        apsvsaP7p7xpPHOAUxNhZbTLch47RyS1IM/Owsw=
-X-Google-Smtp-Source: ABdhPJxK/S7BemaC7I1AoTKGocPOpRoy6dfNruNY70JrVKJMhu9vEH11u0LMDqGDvyIyydjnFOGfcx6Z3KHCmPW0okY=
-X-Received: by 2002:a05:6638:252:: with SMTP id w18mr37241264jaq.42.1593974504022;
- Sun, 05 Jul 2020 11:41:44 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=36lIim6U0EVSea9yn5eRaizKMk+KEYlJqS23zYMSLOk=;
+        b=TvUyTopHbn/lvNa9hxPdREwPD51etYiGlv1s/cWvk1zaBOdYZbpY5G3o8s80IC/urn
+         WtFrauQQtgLZYrM6LYHQpqMfkJhZU2AmR/tF3XJVssastWUEnFEdPN+GkKNdnmKczqE2
+         qhrEwZkjpxSdTnllxbzfdGcy1FceRY6z/Mj/Vb1T/bRXU2qMBvi/UqHYfemv067gsLPO
+         /Vs8HeLeypCteVRAug8vh+9d0/vmb9BhF0SN/GjoSG//u5wb8WoBGnjT9G7GF7w/buRu
+         cXWUD75WIZpd5TyGWSsknkvIy52Ajpc99Id7bEIjrrKMYNd78YzFJE2jvGXhduV8h3CK
+         Nyxw==
+X-Gm-Message-State: AOAM5304Qmki4rqBuAROZMsWFpJAIDsQEkQivSPm3yOLhc1+Kx9+C7d8
+        Fn6oG6QH2u+Opv6qghDT1efyPg6RWnF1SFleD0H/1+bgpOfK
+X-Google-Smtp-Source: ABdhPJxI8RfCHebzqFgY01iWDvhaoIwOhyEqBLiFwmY6Vbf1wGjH+aiyZVM2XuALnt4TZHdm/fahuQ+9CJqkHl2qP9/pB+wiO65u
 MIME-Version: 1.0
-References: <20200705065917.22285-1-lukas.bulwahn@gmail.com> <20200705113017.mostxjvatkqkhqf6@core.my.home>
-In-Reply-To: <20200705113017.mostxjvatkqkhqf6@core.my.home>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Sun, 5 Jul 2020 20:41:33 +0200
-Message-ID: <CAKXUXMz_usPZw5-UPLxSqBRVP4-RFZTLO-tt5pEfiTPrxifFWg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust entry to renaming and conversion
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6602:d8:: with SMTP id z24mr21869065ioe.136.1593974541507;
+ Sun, 05 Jul 2020 11:42:21 -0700 (PDT)
+Date:   Sun, 05 Jul 2020 11:42:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000053e07805a9b61e09@google.com>
+Subject: KASAN: use-after-free Read in __cfg8NUM_wpan_dev_from_attrs (2)
+From:   syzbot <syzbot+14e0e4960091ffae7cf7@syzkaller.appspotmail.com>
+To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, stefan@datenfreihafen.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 1:30 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
->
-> Hello Lukas,
->
-> On Sun, Jul 05, 2020 at 08:59:17AM +0200, Lukas Bulwahn wrote:
-> > Commit a74e81a56405 ("drm/panel: rocktech-jh057n00900: Rename the drive=
-r to
-> > st7703") and commit 7317f4574492 ("dt-bindings: panel: Convert
-> > rocktech,jh057n00900 to yaml") renamed and converted the files mentione=
-d in
-> > DRM DRIVER FOR ROCKTECH JH057N00900 PANELS, but did not adjust the entr=
-ies
-> > in MAINTAINERS.
->
-> A similar patch was already posted:
->
-> https://lkml.kernel.org/lkml/20200701184640.1674969-1-megous@megous.com/
->
+Hello,
 
-Thanks, Ondrej. This patch posted here shall be IGNORED.
+syzbot found the following crash on:
 
-Lukas
+HEAD commit:    e44f65fd xen-netfront: remove redundant assignment to vari..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=120f87e5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
+dashboard link: https://syzkaller.appspot.com/bug?extid=14e0e4960091ffae7cf7
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11818aa7100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f997d3100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+14e0e4960091ffae7cf7@syzkaller.appspotmail.com
+
+netlink: 26 bytes leftover after parsing attributes in process `syz-executor982'.
+==================================================================
+BUG: KASAN: use-after-free in nla_len include/net/netlink.h:1135 [inline]
+BUG: KASAN: use-after-free in nla_memcpy+0x9c/0xa0 lib/nlattr.c:724
+Read of size 2 at addr ffff8880a0ca8414 by task syz-executor982/6816
+
+CPU: 0 PID: 6816 Comm: syz-executor982 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ nla_len include/net/netlink.h:1135 [inline]
+ nla_memcpy+0x9c/0xa0 lib/nlattr.c:724
+ nla_get_u64 include/net/netlink.h:1606 [inline]
+ __cfg802154_wpan_dev_from_attrs+0x3e0/0x510 net/ieee802154/nl802154.c:55
+ nl802154_prepare_wpan_dev_dump.constprop.0+0xf9/0x490 net/ieee802154/nl802154.c:245
+ nl802154_dump_llsec_dev+0xc0/0xb10 net/ieee802154/nl802154.c:1655
+ genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
+ netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4413c9
+Code: Bad RIP value.
+RSP: 002b:00007fff5b30bca8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004413c9
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402140
+R13: 00000000004021d0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 6815:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0xae/0x550 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+ netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 6815:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ skb_free_head net/core/skbuff.c:590 [inline]
+ skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
+ skb_release_all net/core/skbuff.c:664 [inline]
+ __kfree_skb net/core/skbuff.c:678 [inline]
+ consume_skb net/core/skbuff.c:837 [inline]
+ consume_skb+0xc2/0x160 net/core/skbuff.c:831
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff8880a0ca8400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 20 bytes inside of
+ 512-byte region [ffff8880a0ca8400, ffff8880a0ca8600)
+The buggy address belongs to the page:
+page:ffffea0002832a00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00029e1288 ffffea00028ef888 ffff8880aa000a80
+raw: 0000000000000000 ffff8880a0ca8000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a0ca8300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a0ca8380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880a0ca8400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff8880a0ca8480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a0ca8500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
