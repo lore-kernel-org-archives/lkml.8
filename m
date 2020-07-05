@@ -2,184 +2,109 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84305C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE1520708
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="BnniX7fd"
+	by mail.kernel.org (Postfix) with ESMTP id 5F5AF20724
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593983400;
+	bh=/CSI7abxLv8Pc3WAATfmk0MQHaUctOQmqgjenee+WS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o2Oo5HsXo9XlmKwfz26oZ36Mib22pfj7Rnz+4PgIWZxpf9SwjfFOlGkKbh49hMKIy
+	 1ncMgggeCMr1fkuMXNCciwyrv5Up2z9vMZlAZY14yAtJU/e8yST+VbgSZxpIQIpU7Z
+	 yRR5yB3FSKVz11RzJM2LNnoCHbMDr9cW/xGaoliE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgGEVJ0 (ORCPT
+        id S1728514AbgGEVJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 17:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgGEVJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 17:09:25 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B83C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 14:09:25 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b185so22565986qkg.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 14:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=91i38o75PUdG0X5h8mF7xqf2WadKC8dcUXQh6Pbzwi8=;
-        b=BnniX7fd6bDlySmdSW+WNAkklobN26yxGjstPMYAVEbGxeUk5OhklluUIKgdukQRfq
-         GyDzlFePj7kpsWa5E/iv+rD0Nu63ZPC1RepPnyp+x0Bq7SMFWGXzrajKFOCNpbeMEdmr
-         Q7c1r+Is9S4zxRlTRUpuXs00REsO7RA9pMbBh3DpSrg0zAfn0otgYJjWvUXrocyXx/go
-         qODd+MPdmocun2PhRn63rWYPqT+h6/u6aBpDLDiEu5doTuVn8Cudd2Y93OARyc0DDEIG
-         8qgU1QPE3aME8iO8edkYTlPa4Ifa6PrZdLaffG1Wfz3pRQDUjGkaYiX25iWLzgLcgnBL
-         KhiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=91i38o75PUdG0X5h8mF7xqf2WadKC8dcUXQh6Pbzwi8=;
-        b=JGgg8YAI02B1vBTni52kKMiBmIdEFShHu2oHKKx+IxIlb+sD83rp2dGHOwvlfSLrmN
-         6zQEc3oIG9OH/H8glPGp0i/n88ViJ5BmrR71lFwiX/WzvQ3IHDlsH8HjGPpREbBbtcwy
-         g1g7ESd0TqCE67ysIQK1OWzy+FCqfnJZT6t2VTvCyyM9tBBprWmwwYPsxHI55iA1e/86
-         MQGFn/z9j7IZGKEi6zXDjNi5ZvG+tVKt/6ehpWMacFc92/WEmWX3m1ucwqTrbVkrdjey
-         QwZvKRrz0j2BBGoDnczq9TM0pkP6b0AxN8mqe7oYWu/o6XLFDaV9WlEUMkckl+t0+RQq
-         fzXA==
-X-Gm-Message-State: AOAM531qTHuyrQWIPeYedAgFUW+OVUOrVxvRVdo9hybOfqtIMiemUwDL
-        RzQAUZ4PnYIx0DjmReRvuhEPSA==
-X-Google-Smtp-Source: ABdhPJwArG1iIsJeVKeu1y9Mqy5i5wOn3RYeFKpbPMKzZ4g+AKo+9bRCdb/m1zz+QbqKO7CDfSainA==
-X-Received: by 2002:a37:4b0f:: with SMTP id y15mr2517345qka.236.1593983364560;
-        Sun, 05 Jul 2020 14:09:24 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id m26sm17725759qtc.83.2020.07.05.14.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jul 2020 14:09:24 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 00/13] Enable GPU for SM8150 and SM8250
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Deepak Katragadda <dkatraga@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
-References: <20200629211725.2592-1-jonathan@marek.ca>
- <011a1f99-46bb-12f2-ee07-8cd14d891947@linaro.org>
- <1887f23d-57ef-c83a-4eaf-a8f8d5024ebf@marek.ca>
- <a82bd8ed-fc8f-ea94-7687-cdc17190900a@linaro.org>
- <04900059-6af8-1b48-33f9-7b8426a55fd0@linaro.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <0ad7638f-7310-f84e-0ce9-a2f1d1d64079@marek.ca>
-Date:   Sun, 5 Jul 2020 17:08:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 5 Jul 2020 17:09:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgGEVJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 17:09:58 -0400
+Received: from localhost (p54b33111.dip0.t-ipconnect.de [84.179.49.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66BD920708;
+        Sun,  5 Jul 2020 21:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593983397;
+        bh=/CSI7abxLv8Pc3WAATfmk0MQHaUctOQmqgjenee+WS4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hVbmiwgQ+gyxLGOWmEQrsr/+QFj3HrZ6kILQ9SdqDqD71MSP+avP5cp+0NXZ5WGKy
+         mtCciswcqwa+VB1OpLoiH016DRJ6IVwEJNbsJOWE8rurmnkR8oPHVWzogfLVXoEarj
+         8dbk6u7VMdQYtjR3ZVUwIMYq+k9ZppWVGZuh2rL8=
+Date:   Sun, 5 Jul 2020 23:09:42 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
+Subject: Re: [RFC PATCH 0/4] i2c: core: add generic GPIO bus recovery
+Message-ID: <20200705210942.GA1055@kunai>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <04900059-6af8-1b48-33f9-7b8426a55fd0@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/20 1:29 PM, Dmitry Baryshkov wrote:
-> On 03/07/2020 18:14, Dmitry Baryshkov wrote:
->> On 03/07/2020 18:08, Jonathan Marek wrote:
->>> On 7/3/20 11:03 AM, Dmitry Baryshkov wrote:
->>>> On 30/06/2020 00:17, Jonathan Marek wrote:
->>>>> This series adds the missing clock drivers and dts nodes to enable
->>>>> the GPU on both SM8150 and SM8250.
->>>>>
->>>>> Note an extra patch [1] is still required for GPU to work on SM8250.
->>>>>
->>>>> Changes in V2:
->>>>> * Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the 
->>>>> newly added
->>>>>    SM8150 GPU gcc clocks
->>>>> * Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove 
->>>>> unused/incorrect PLL_CAL_VAL"
->>>>> * Added yaml schemas to gpucc dt-bindings patches
->>>>> * Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc 
->>>>> drivers" and changed
->>>>>    gpucc patches to use it.
->>>>> * Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
->>>>> * Added missing rpmh regulator level for sm8250 GPU clock levels
->>>>> * Use sm8150/sm8250 iommu compatibles in dts
->>>>> * Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc 
->>>>> clocks in dts
->>>>>
->>>>> [1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
->>>>
->>>> With your patches applied:
->>>>
->>>> [   56.751977] msm msm: [drm:adreno_request_fw] loaded 
->>>> qcom/a650_sqe.fw from new location
->>>> [   56.760166] msm msm: [drm:adreno_request_fw] loaded 
->>>> qcom/a650_gmu.bin from new location
->>>> [   56.768485] arm-smmu 3da0000.iommu: genpd_runtime_resume()
->>>> [   56.774196] PM: gpu_cx_gdsc: Power-on latency exceeded, new value 
->>>> 49531 ns
->>>> [   56.781730] arm-smmu 3da0000.iommu: resume latency exceeded, 
->>>> 462604 ns
->>>> [   56.799559] platform 3d6a000.gmu: [drm:a6xx_gmu_resume] *ERROR* 
->>>> GMU firmware initialization timed out
->>>> [   56.809260] arm-smmu 3da0000.iommu: genpd_runtime_suspend()
->>>> [   56.813062] msm msm: [drm:adreno_load_gpu] *ERROR* Couldn't power 
->>>> up the GPU: -110
->>>>
->>>>
->>>
->>> Do you have your branch published somewhere so I can see what 
->>> could've went wrong?
->>
->> I've applied your patches (this series + the extra one for 
->> gpu/drm/msm) on top of 
->> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git 
->> branch integration-linux-qcomlt .
-> 
-> A trimmed down version: 
-> git.linaro.org/people/dmitry.baryshkov/kernel.git branch sm8250-gpu-test
-> 
-> 
 
-Hi,
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I tried this branch, with only the sm8250-hdk.dts from my other series 
-added (USB nodes removed as you don't have those in your branch), and 
-the GPU starts up without problems.
+On Fri, Jun 19, 2020 at 05:19:00PM +0300, Codrin Ciubotariu wrote:
+> GPIO recovery has been added already for some I2C bus drivers, such as
+> imx, pxa and at91. These drivers use similar bindings and have more or
+> less the same code for recovery. For this reason, we aim to move the
+> GPIO bus recovery implementation to the I2C core so that other drivers
+> can benefit from it, with small modifications.
+> This implementation initializes the pinctrl states and the SDA/SCL
+> GPIOs based on common bindings. The I2C bus drivers can still use
+> different bindings or other particular recovery steps if needed.
+> The ugly part with this patch series is the handle of PROBE_DEFER
+> which could be returned by devm_gpiod_get(). This changes things a
+> little for i2c_register_adapter() and for this reason this step is
+> implemented in a sperate patch.
+> The at91 Microchip driver is the first to use this implementation,
+> with an AI to move the rest of the drivers in the following steps.
 
-Possible differences I can think of:
+Thanks for doing this! On a first high level review, this looks very
+good. I have one question in patch 1. From Tuesday on, I'll be
+off-the-net for two weeks. Still I think it will be all good for the 5.9
+merge window unless we encounter an unexpected problem. But as said, so
+far it is looking good!
 
-1) Different firmware version which behaves differently? These are the 
-checksums for the firmware I have:
 
-/lib/firmware# md5sum a650_*
-f6536ba45c2f9f64ec31438217b6a027  a650_gmu.bin
-897be740bed67deaa1943e9c36293165  a650_sqe.fw
-00f1b291a2b30c98f05c25506e3f4761  a650_zap.b00
-bec0f79c7c6f5b32254facf3c7e046c7  a650_zap.b01
-35273e4135147a269076144a3051b498  a650_zap.b02
-ce0dd1af27306eb341a01bda642f1c64  a650_zap.elf
-09834955a8865073f6ee483f69a98b33  a650_zap.mdt
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-2) GPU revision is not 650.2 (the downstream driver had workarounds for 
-bugs in the first revisions, which I didn't include in the upstream driver)
+-----BEGIN PGP SIGNATURE-----
 
-3) Something in the kernel config is making a difference. Here is the 
-kernel config I used to test this: 
-https://gist.github.com/flto/c6b1bc48abda6fb580a2f21c51039c81
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8CQZIACgkQFA3kzBSg
+KbZSFw//V/RqkgvKSxNeOBqifHvPPJFZFRuqwrFgRyi0NpSS8q7zgZBRvd1uVk9Q
+eRLfGCd6DPjbpi8M2FfNaPHoROvZEQ6pFdQw61Uqd2Z1ELrTBpG2Pvq0J9FFaWbl
+U6U5MA+9EaAXSKAA/ylVU3kyCFDgaqpqSRBGGYydIQsUOSf5Bj3lJs1ep4Jtpuq/
+nBjbGhuKUP7kegTM8MwRcQuHTG/vX+2FBssKtsqgULgeBwuNjS4BHsXTcE7cJIeV
+Egz0998d1vTQsy4GvUc1qfHtcYivCsoG7NKsKA8reos5aPrIjlhMWQ5/YPJDma65
+ePGye2rMUdH2bUPBtZ01Px6+4DSJmON6vlAtbseay21yvWr0PaDgpuPTD7jvvMwq
+VjHdCEE1EapZTEVySj1plRiPX80wcKlR8RqQZErpdQxEsG911lKEuItG2ppZodOv
+25hGQr+R0Cm91WzHvtgKibHoBmauGhHhJWx1yvc+h6S0ZHCE+IeskqEUzetNbZqw
+XaJCsD0l1iUY6o5ph5z2NrD1GZ4aCxvNlt/8oyIUvxzyUk8KrQKwXAZW02saIiu+
+p87dpYOYLWp/IDri/JZ6tNoehnoeX355UqVb1Wqhk0gfWqQZTIOGmbsLU1D2cTJa
+Ti108H0CVqSfuAmkwdUIJAe1BjIVYnaB9INhiYHBgGLzuaX9ft4=
+=jI5N
+-----END PGP SIGNATURE-----
 
--Jonathan
-
+--ikeVEW9yuYc//A+q--
