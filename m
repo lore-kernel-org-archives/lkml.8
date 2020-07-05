@@ -2,75 +2,83 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17104C433EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C2520772
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44FE206BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGEJTE (ORCPT
+        id S1726817AbgGEJVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:19:04 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22188 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726491AbgGEJSR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:18:17 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 90DE9213B6; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, svarbanov@mm-sol.com,
-        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
-        sivaprak@codeaurora.org, mgautam@codeaurora.org,
-        smuthayy@codeaurora.org, varada@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 3/9] clk: qcom: ipq8074: Add missing bindings for pcie
-Date:   Sun,  5 Jul 2020 14:47:54 +0530
-Message-Id: <1593940680-2363-4-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
-References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+        Sun, 5 Jul 2020 05:21:09 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7372 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726355AbgGEJVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 05:21:09 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 111141996C1192924428;
+        Sun,  5 Jul 2020 17:21:05 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.202.129) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 5 Jul 2020 17:20:58 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <wangzhou1@hisilicon.com>, <jonathan.cameron@huawei.com>,
+        <akpm@linux-foundation.org>, <linux-crypto@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH v3 0/3] crypto: allow users to specify acomp hardware from a desired NUMA node
+Date:   Sun, 5 Jul 2020 21:18:57 +1200
+Message-ID: <20200705091900.29232-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.202.129]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing clock bindings for pcie port0 of ipq8074.
+For a typical Linux server, probably there are multiple ZIP modules.
+For example, numa node0 has a compressor, numa node2 has a same module.
+Some drivers are automatically using the module near the CPU calling
+acomp_alloc.
+But it isn't necessarily correct. Just like memory allocation API like
+kmalloc and kmalloc_node. Similar optimization may be done for crypto.
 
-Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- include/dt-bindings/clock/qcom,gcc-ipq8074.h | 4 ++++
- 1 file changed, 4 insertions(+)
+-v3:
+  move to use kzalloc_node according to Herbert's comment
+-v2:
+  cleanup according to Jonathan Cameron's comment
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-index 4de4811a3540..e3e018565add 100644
---- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-+++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-@@ -362,5 +362,9 @@
- #define GCC_PCIE1_AXI_SLAVE_ARES		128
- #define GCC_PCIE1_AHB_ARES			129
- #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
-+#define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		131
-+#define GCC_PCIE0_AXI_S_BRIDGE_CLK		132
-+#define GCC_PCIE0_RCHNG_CLK_SRC			133
-+#define GCC_PCIE0_RCHNG_CLK			134
- 
- #endif
+Barry Song (3):
+  crypto: permit users to specify numa node of acomp hardware
+  crypto: hisilicon/zip - permit users to specify NUMA node
+  mm/zswap: allocate acomp on the numa node committing acomp_req[1]
+
+[1] This patch is againest a zswap patch which has not been merged yet:
+ "[PATCH v3] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration"
+ https://lkml.org/lkml/2020/6/26/95
+
+ crypto/acompress.c                        |  8 ++++++++
+ crypto/api.c                              | 24 ++++++++++++++---------
+ crypto/internal.h                         | 23 ++++++++++++++++++----
+ drivers/crypto/hisilicon/zip/zip.h        |  2 +-
+ drivers/crypto/hisilicon/zip/zip_crypto.c |  6 +++---
+ drivers/crypto/hisilicon/zip/zip_main.c   |  5 +++--
+ include/crypto/acompress.h                | 18 +++++++++++++++++
+ include/linux/crypto.h                    |  2 ++
+ mm/zswap.c                                |  2 +-
+ 9 files changed, 70 insertions(+), 20 deletions(-)
+
 -- 
-2.7.4
+2.27.0
+
 
