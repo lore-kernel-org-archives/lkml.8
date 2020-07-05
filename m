@@ -2,94 +2,114 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE41DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 989F220782
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC1720936
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 02:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DRV+xQmi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiDqrpMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgGECs0 (ORCPT
+        id S1728193AbgGECyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 22:48:26 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:45801 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgGECsZ (ORCPT
+        Sat, 4 Jul 2020 22:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728004AbgGECya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 22:48:25 -0400
-Date:   Sun, 05 Jul 2020 02:48:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1593917302;
-        bh=pmMW5RuvGxW1tpO1VhOI282KLL4Jyl1FTQA9xHHkje0=;
-        h=Date:To:From:Reply-To:Subject:From;
-        b=DRV+xQmisuiAsx1+Yha2dlCbDHytWWCnUPz0BqGWq+248/rATeQ+YR+wM2wyy+cVb
-         coT2B9en+mgxOKUFdNKenoVW4CKQ9Q3czSpS/uCksg5QtgTMck0Tl4IY8Wn5LesWeC
-         vY4tfGQgEokDWfOLTibNNYo8ByXWON5Ex4KcpnRs=
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: [PATCH] HID: logitech: Use HIDPP_RECEIVER_INDEX instead of 0xff
-Message-ID: <FW0Ps9vggIuA-9asmWgfQkNKSlcwuAhNfFXxK3QGSu4uJRAEykUGdoL5sbJsAlehWv__Eq4LKejp0QpxQRj5LYn5tOrVRDbjrcn3JVDGLAQ=@protonmail.com>
+        Sat, 4 Jul 2020 22:54:30 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20229C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 19:54:30 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id h28so31670859edz.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 19:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dvqshmDN/tsxghSmW5OA1k02BKJNMJmYoR6UGK4L9Lg=;
+        b=NiDqrpMf/AJsvghlpr+Lt8VZU0ifVzoi9xQN5xZ9wUxz12wjosKVh7dkVnC5Kz+rSv
+         fDUhm8HZAeEiZ2dx8QgVZyiHKp3dEeqIGmJyaV1r5cQ9RkGWT1v9XYnZdMbdLWXa3T47
+         lBlY6I8D9ySNLODit4mDwh6Vyxsm23NM9aUDMJZ1iXdX+UCI/KQ4WmQLYcBS6GH4qwxx
+         AJcW4YV3cQRABe9qVGtqqEs80wfl9JeYpPwOS5EfMJom1CnNjteO7xuafuTFt9rkFAZ/
+         BJVLVZcI7VeD8jzQnFDZ0fMYSQ4VTjB+Ihv+K662F0Sk7r1XoQJcoSc7vJFjiX3eFVdB
+         y/xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dvqshmDN/tsxghSmW5OA1k02BKJNMJmYoR6UGK4L9Lg=;
+        b=T4J3N3LKWqBZGyVxlqylxw7ibrtSK4BJOJVd7m9Uzyy9/73nzx0jMTqC/WGqe4u5df
+         o1zNbHR8jDQhB++8lo5DZEM5q5Wz87QLc1R4j72GSHJQItOnILeIoNtbuRV/dMkgPMlM
+         /osFRT1e7StHk8RYpnX9AR+To267wF37RIETrNb/xOSl4FPLV82LrCiXyFUjpnadsIBU
+         W2yyLmeR/9+yeub8kOMKBPnNMIP31jqhVbExDImwTndeayAFdP6qgRvbUHH+wtmctvdD
+         Q8pkYcDoWFZlC9VJx4Kr8a3rSFpIWocHiCQJrrEV2XLTXIT1Ced254Sbe5JTfZW97U15
+         fyRA==
+X-Gm-Message-State: AOAM532Sw8w1ghFeFd+o5yI/XE2SHaic1ytk30nL+eYMXMvkJyrnvOni
+        h9+CtEYtvMKuRCcDzHPBMCWKG1mFok2IROyZaxxF35XdvmA=
+X-Google-Smtp-Source: ABdhPJwsIgz43ZzWE+J2JD/Bh+9Jueukwp1CnUfHkq5hnTEl+gW/egfyKyE+uVLoskAeK4yKwxHQ6juZC9NEdeccJNw=
+X-Received: by 2002:a05:6402:796:: with SMTP id d22mr50886256edy.78.1593917668742;
+ Sat, 04 Jul 2020 19:54:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <920e6dc0-628b-9bad-926a-d1238a373cda@infradead.org> <CAPM=9ty0tiL_qM_UFv0S0VtARKz_f-Anngc+amDM5LjGAHazhA@mail.gmail.com>
+ <CAFhKne9MA_G-UsvBFfX-gZRcu9Gb7Xt7UxQ14MTppdU3X1VYdQ@mail.gmail.com>
+In-Reply-To: <CAFhKne9MA_G-UsvBFfX-gZRcu9Gb7Xt7UxQ14MTppdU3X1VYdQ@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Sun, 5 Jul 2020 12:54:17 +1000
+Message-ID: <CAPM=9txhJvp8dvJA7HWa=dEaTgKCzrNc5evof+z7ZW8+e=cKTQ@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+To:     Matthew Wilcox <willy6545@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some parts of hid-logitech-dj explicitly referred to 0xff for the
-receiver index. This patch changes those references to the
-HIDPP_RECEIVER_INDEX definition.
+On Sun, 5 Jul 2020 at 10:10, Matthew Wilcox <willy6545@gmail.com> wrote:
+>
+> Erm, red-black trees don't have a derivation from gambling terminology ei=
+ther. The wikipedia article says:
+>
+> In a 1978 paper, "A Dichromatic Framework for Balanced Trees",[6] Leonida=
+s J. Guibas and Robert Sedgewick derived the red-black tree from the symmet=
+ric binary B-tree.[7] The color "red" was chosen because it was the best-lo=
+oking color produced by the color laser printer available to the authors wh=
+ile working at Xerox PARC.[8] Another response from Guibas states that it w=
+as because of the red and black pens available to them to draw the trees.[9=
+]
+>
+> Left-right tree makes no sense. It doesn't distinguish the rbtree from it=
+s predecessor the avl tree.  I don't think it's helpful to rename a standar=
+d piece of computing terminology unless it's actually hurting us to have it=
+. Obviously if it were called a "master-slave" tree, I would be in favour o=
+f renaming it.
 
-Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
----
- drivers/hid/hid-logitech-dj.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+As I said "it means nothing if you've never interacted with gambling
+culture," red black in the context of the trees as zero meaning other
+than as a name to find it on the internet, Search for that name enough
+and you will undoubtedly be getting ads for online roulette sites
+within hours, if you have a problem gambling past, this might not be
+the desired effect you'd want.
 
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 48dff5d6b605..a78c13cc9f47 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -1153,7 +1153,7 @@ static int logi_dj_recv_query_paired_devices(struct d=
-j_receiver_dev *djrcv_dev)
- =09if (!dj_report)
- =09=09return -ENOMEM;
- =09dj_report->report_id =3D REPORT_ID_DJ_SHORT;
--=09dj_report->device_index =3D 0xFF;
-+=09dj_report->device_index =3D HIDPP_RECEIVER_INDEX;
- =09dj_report->report_type =3D REPORT_TYPE_CMD_GET_PAIRED_DEVICES;
- =09retval =3D logi_dj_recv_send_report(djrcv_dev, dj_report);
- =09kfree(dj_report);
-@@ -1175,7 +1175,7 @@ static int logi_dj_recv_switch_to_dj_mode(struct dj_r=
-eceiver_dev *djrcv_dev,
+The reasons something was named a particular thing can and will be
+different from what a societal context for them means now, and I
+believe it's more important to worry about current societal contexts
+than legacy historical namings. I'm not seriously suggesting we rename
+red-black trees, but if someone who had a problematic gambling
+background had issues with them I'd definitely be open for considering
+it.
 
- =09if (djrcv_dev->type =3D=3D recvr_type_dj) {
- =09=09dj_report->report_id =3D REPORT_ID_DJ_SHORT;
--=09=09dj_report->device_index =3D 0xFF;
-+=09=09dj_report->device_index =3D HIDPP_RECEIVER_INDEX;
- =09=09dj_report->report_type =3D REPORT_TYPE_CMD_SWITCH;
- =09=09dj_report->report_params[CMD_SWITCH_PARAM_DEVBITFIELD] =3D 0x3F;
- =09=09dj_report->report_params[CMD_SWITCH_PARAM_TIMEOUT_SECONDS] =3D
-@@ -1204,7 +1204,7 @@ static int logi_dj_recv_switch_to_dj_mode(struct dj_r=
-eceiver_dev *djrcv_dev,
- =09memset(buf, 0, HIDPP_REPORT_SHORT_LENGTH);
-
- =09buf[0] =3D REPORT_ID_HIDPP_SHORT;
--=09buf[1] =3D 0xFF;
-+=09buf[1] =3D HIDPP_RECEIVER_INDEX;
- =09buf[2] =3D 0x80;
- =09buf[3] =3D 0x00;
- =09buf[4] =3D 0x00;
---
-2.27.0
+Dave.
