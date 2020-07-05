@@ -2,124 +2,130 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD3F2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB2020720
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593950333;
+	bh=pEThZSurgEAGI6bD+iWUpXIlCqpTIfabn5t/AHWOQ6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qzoEqHKfMH0BRVU7TSreUC72nt6H/N6/QifJHUQTZuuXagB3NuUrV1jUEsNsdp6X2
+	 0qeLFQ6X/8uYQMYgTHqPP0LoVgUeDig6gPy8NH5ZjDY0lS31HCHcF1d4Cd2TJDsuae
+	 l6ojDO8XJylT3VTjwkPFbSuH0umpf6C3En9uufCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgGELwQ (ORCPT
+        id S1726819AbgGEL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:52:16 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:34403 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgGELwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:52:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id y3so13759442ily.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 04:52:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kI2hWc85ElXBDp49zGFIxRME9u7T+l5L6TLjyZSAFs4=;
-        b=jD4rnPuaSYfFBKwM2KKQ1G1bRN69hiFEEo+rhVafiBSHm3HfQvGKAefaGPwI5A2Umy
-         /j5ep44us4vY3EYRQUz8jZRNTNLx+rN7smymt2OjsJn6F5C3NPThhq1oMffmzb0kUzt7
-         R68kGJPcu/sHFrzG7HxhuxmUpqiB3s3tRt/dSUY7yJJJkqWW7tiulI7Mpp5BFFz8jcjj
-         qo8FqjT3V/x9JY0m80nE+/3oiAmE6qygbbgdV//roNYHyTX3nyvBu1tq8688jsgjEGl3
-         C/lKyg9ffzK35bInTaGcwTK6NsnOaHD27y55wxBU8e3AKQIXy+Kq2md9tEMEHEIo8AfK
-         Jntg==
-X-Gm-Message-State: AOAM532HB9BJZnz9YgCOymvPFzUB/UZi/EKODY926Aqpr0B+/QWGUaF8
-        qcYnk4oj86Q9UN66X+iSPb7uuYb9iLm/j4gOEiEvQ40x0OT3
-X-Google-Smtp-Source: ABdhPJxz8iv8sDWWqygYoSnTBw3J+tox/oNRyTbYWIxOWQMDjG45/plb5Tn0mBUyg2KErJbpgxb5fYDplDXZAmY2OGSN1H2iKGB8
+        Sun, 5 Jul 2020 07:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbgGEL6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:58:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F5820708;
+        Sun,  5 Jul 2020 11:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593950329;
+        bh=pEThZSurgEAGI6bD+iWUpXIlCqpTIfabn5t/AHWOQ6M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QdZlzL5SQXxiIeV3CUEn3VhPIvbTnfU6UpG6IjAHEklPweIXNnomInzKT+zTi2sHy
+         AMdqOR/QdJN3kK4RgJ5Q5WL+pyNevx/K6ERDjL6AD0zpE5VTy2Lp9kCdMf6Mwpb42t
+         X/oL4jT+z/nmZEHkoVxsWSUSG6NcJoiCGry+TBw0=
+Date:   Sun, 5 Jul 2020 13:58:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705115851.GB1227929@kroah.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org>
+ <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
+ <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:c50d:: with SMTP id s13mr41360163jam.109.1593949934233;
- Sun, 05 Jul 2020 04:52:14 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 04:52:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009eaa8605a9b0632e@google.com>
-Subject: INFO: trying to register non-static key in red_destroy
-From:   syzbot <syzbot+6e95a4fabf88dc217145@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jul 05, 2020 at 06:09:03AM +0200, Jan Ziak wrote:
+> On Sun, Jul 5, 2020 at 5:27 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
+> > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > You should probably take a look at io_uring.  That has the level of
+> > > > complexity of this proposal and supports open/read/close along with many
+> > > > other opcodes.
+> > >
+> > > Then glibc can implement readfile using io_uring and there is no need
+> > > for a new single-file readfile syscall.
+> >
+> > It could, sure.  But there's also a value in having a simple interface
+> > to accomplish a simple task.  Your proposed API added a very complex
+> > interface to satisfy needs that clearly aren't part of the problem space
+> > that Greg is looking to address.
+> 
+> I believe that we should look at the single-file readfile syscall from
+> a performance viewpoint. If an application is expecting to read a
+> couple of small/medium-size files per second, then neither readfile
+> nor readfiles makes sense in terms of improving performance. The
+> benefits start to show up only in case an application is expecting to
+> read at least a hundred of files per second. The "per second" part is
+> important, it cannot be left out. Because readfile only improves
+> performance for many-file reads, the syscall that applications
+> performing many-file reads actually want is the multi-file version,
+> not the single-file version.
 
-syzbot found the following crash on:
+It also is a measurable increase over reading just a single file.
+Here's my really really fast AMD system doing just one call to readfile
+vs. one call sequence to open/read/close:
 
-HEAD commit:    2b04a661 Merge branch 'cxgb4-add-mirror-action-support-for..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=161887bb100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2172f4d0dbc37e27
-dashboard link: https://syzkaller.appspot.com/bug?extid=6e95a4fabf88dc217145
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13809e6d100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1527be6d100000
+	$ ./readfile_speed -l 1
+	Running readfile test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
+	Took 3410 ns
+	Running open/read/close test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
+	Took 3780 ns
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6e95a4fabf88dc217145@syzkaller.appspotmail.com
+370ns isn't all that much, yes, but it is 370ns that could have been
+used for something else :)
 
-batman_adv: batadv0: Interface activated: batadv_slave_1
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 6788 Comm: syz-executor510 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:894 [inline]
- register_lock_class+0x157d/0x1630 kernel/locking/lockdep.c:1206
- __lock_acquire+0xfa/0x56e0 kernel/locking/lockdep.c:4259
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- del_timer_sync+0xab/0x270 kernel/time/timer.c:1354
- red_destroy+0x33/0x70 net/sched/sch_red.c:219
- qdisc_create+0xcd9/0x12e0 net/sched/sch_api.c:1294
- tc_modify_qdisc+0x4c8/0x1990 net/sched/sch_api.c:1661
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x331/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmmsg+0x195/0x480 net/socket.c:2496
- __do_sys_sendmmsg net/socket.c:2525 [inline]
- __se_sys_sendmmsg net/socket.c:2522 [inline]
- __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4434e9
-Code: Bad RIP value.
-RSP: 002b:00007ffc7993dc38 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004434e9
-RDX: 0492492492492642 RSI: 0000000020000180 RDI: 0000000000000004
-RBP: 00007ffc7993dc40 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc7993dc50
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-------------[ cut here ]------------
-ODEBUG: assert_init not available (active state 0) object type: timer_list hint: 0x0
+Look at the overhead these days of a syscall using something like perf
+to see just how bad things have gotten on Intel-based systems (above was
+AMD which doesn't suffer all the syscall slowdowns, only some).
 
+I'm going to have to now dig up my old rpi to get the stats on that
+thing, as well as some Intel boxes to show the problem I'm trying to
+help out with here.  I'll post that for the next round of this patch
+series.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> I am not sure I understand why you think that a pointer to an array of
+> readfile_t structures is very complex. If it was very complex then it
+> would be a deep tree or a large graph.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Of course you can make it more complex if you want, but look at the
+existing tools that currently do many open/read/close sequences.  The
+apis there don't lend themselves very well to knowing the larger list of
+files ahead of time.  But I could be looking at the wrong thing, what
+userspace programs are you thinking of that could be easily converted
+into using something like this?
+
+thanks,
+
+greg k-h
