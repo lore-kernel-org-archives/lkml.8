@@ -2,142 +2,151 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81389C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5806B20720
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851212073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593950415;
-	bh=Hrki0NWbQnR7mFDJ86LIf/24cbRDX0SnjCAQfKCMf88=;
+	s=default; t=1593950662;
+	bh=xElX9DIEPWBIPNDGxqYSPWbTFAH+JqylYPH3jjP06p0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=APnKKbtHpEsSN8jUmg6XDGBNro2NO0EuKZiw3MLDgCxG9gfmxwdJ6EJb+UJ5kNENH
-	 FgXuvjVLSoC1OOHMFjTpFoCFM9sQwBcOGgr50ZNDU/cLeS0MwpomxZ8H6mmhBH5YN4
-	 3kGTIpAzmbkeeCWINLAGo/M+ONA/yMFzxDCvP9LI=
+	b=xjcCoMMV3mRQefg8Q2p1M6LE/shrEFXbBG8Eo4joerq3K/J0cDF7Za8N1PA3RSdxW
+	 YRgc8LqX255zCdjznzhfBpai1TDeqQL0e7ZTj8bFCRYnmBzm3phcVtHXhi1zvOsD6H
+	 39yvJ6SlXfhsp4riY+7vnXk91/MdyXkwFafiSbhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgGEMAO (ORCPT
+        id S1726804AbgGEMET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 08:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58326 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 08:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGEMAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 08:00:13 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726454AbgGEMET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 08:04:19 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4C4720708;
-        Sun,  5 Jul 2020 12:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8612D20720;
+        Sun,  5 Jul 2020 12:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593950412;
-        bh=Hrki0NWbQnR7mFDJ86LIf/24cbRDX0SnjCAQfKCMf88=;
+        s=default; t=1593950658;
+        bh=xElX9DIEPWBIPNDGxqYSPWbTFAH+JqylYPH3jjP06p0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qUDLk+TioO8qTy6bLwzuhK91dy/Jhc9T383RiyVLYx5MZpH3sY8Kdq2JlP1BAQf1B
-         NDMyjsOkTIdBD38VpLqV/rjb17LE0W8VQWGhV43kMpjRLO0O0GFEe/FLnpS3zO7duQ
-         G30D2gqEmI+J8C3FkfYibJHLOvfWTzYozou6/G50=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1js3Jb-009AjB-3s; Sun, 05 Jul 2020 13:00:11 +0100
-Date:   Sun, 05 Jul 2020 13:00:10 +0100
-Message-ID: <87r1tqdved.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH v4 08/15] arm64: kvm: Duplicate hyp/tlb.c for VHE/nVHE
-In-Reply-To: <20200625131420.71444-9-dbrazdil@google.com>
-References: <20200625131420.71444-1-dbrazdil@google.com>
-        <20200625131420.71444-9-dbrazdil@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+        b=ETAWNp3GiDl1HL3EWbbtWa0geFnXEExjcnjBLZSWwm4hFos38WH5+boqIDQp3/2lh
+         1r4NpWa+h9bmtw8LNTEetVNV7uYwwg6gzloBTFTRP+EPstbvznQacNP/PxylqP4dg9
+         GFw0BWd5h7sRxeFduUDZG9JRcXoFhpNU+/0jr0hc=
+Date:   Sun, 5 Jul 2020 13:04:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rachna@ti.com>, <mugunthanvnm@ti.com>, <vigneshr@ti.com>,
+        <afd@ti.com>
+Subject: Re: [PATCH 1/3] iio: adc: ti_am335x_adc: alloc channels via
+ devm_kcalloc()
+Message-ID: <20200705130414.0aa2ac9b@archlinux>
+In-Reply-To: <20200428111430.71723-1-alexandru.ardelean@analog.com>
+References: <20200428111430.71723-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 14:14:13 +0100,
-David Brazdil <dbrazdil@google.com> wrote:
+On Tue, 28 Apr 2020 14:14:28 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> This change attaches the life-cycle of the channels array to the parent
+> device object that is attached to the IIO device.
+> This way we can remove from the cleanup code, the explicit
+> tiadc_channels_remove() which simply does a kfree() on the channels array.
 > 
-> tlb.c contains code for flushing the TLB, with code shared between VHE/nVHE.
-> Because common code is small, duplicate tlb.c and specialize each copy for
-> VHE/nVHE.
-> 
-> Signed-off-by: David Brazdil <dbrazdil@google.com>
-> ---
->  arch/arm64/kernel/image-vars.h      |  14 +--
->  arch/arm64/kvm/hyp/Makefile         |   2 +-
->  arch/arm64/kvm/hyp/nvhe/Makefile    |   2 +-
->  arch/arm64/kvm/hyp/{ => nvhe}/tlb.c |  94 +---------------
->  arch/arm64/kvm/hyp/vhe/Makefile     |   2 +-
->  arch/arm64/kvm/hyp/vhe/tlb.c        | 162 ++++++++++++++++++++++++++++
->  6 files changed, 178 insertions(+), 98 deletions(-)
->  rename arch/arm64/kvm/hyp/{ => nvhe}/tlb.c (62%)
->  create mode 100644 arch/arm64/kvm/hyp/vhe/tlb.c
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Still not sure on patch 3 but I'll pick up the first 2 so we can forget
+about those.
 
-[...]
-
-> diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/nvhe/tlb.c
-> similarity index 62%
-> rename from arch/arm64/kvm/hyp/tlb.c
-> rename to arch/arm64/kvm/hyp/nvhe/tlb.c
-> index d063a576d511..9513ad41db9a 100644
-> --- a/arch/arm64/kvm/hyp/tlb.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/tlb.c
-> @@ -4,8 +4,6 @@
->   * Author: Marc Zyngier <marc.zyngier@arm.com>
->   */
->  
-> -#include <linux/irqflags.h>
-> -
->  #include <asm/kvm_hyp.h>
->  #include <asm/kvm_mmu.h>
->  #include <asm/tlbflush.h>
-> @@ -16,52 +14,8 @@ struct tlb_inv_context {
->  	u64		sctlr;
->  };
-
-nit: You seem to have overlooked that some of the tlb_inv_context
-fields are now unused. I plan to squash the following patch in:
-
-diff --git a/arch/arm64/kvm/hyp/nvhe/tlb.c b/arch/arm64/kvm/hyp/nvhe/tlb.c
-index 6fe190bb930a..d4475f8340c4 100644
---- a/arch/arm64/kvm/hyp/nvhe/tlb.c
-+++ b/arch/arm64/kvm/hyp/nvhe/tlb.c
-@@ -9,9 +9,7 @@
- #include <asm/tlbflush.h>
- 
- struct tlb_inv_context {
--	unsigned long	flags;
- 	u64		tcr;
--	u64		sctlr;
- };
- 
- static void __tlb_switch_to_guest(struct kvm *kvm, struct tlb_inv_context *cxt)
-
-
-Otherwise, this looks good to me.
+Applied to the togreg branch of iio.git and pushed out as testing for
+all the usual reasons.
 
 Thanks,
 
-	M.
+Jonathan
 
--- 
-Without deviation from the norm, progress is not possible.
+> ---
+> 
+> The reason I'm targetting this driver, is because it's among the few
+> places where 'indio_dev->buffer' is accessed directly in the driver, and
+> that makes it difficult to think of a sane-backwards-compatible way to
+> do multiple IIO buffers.
+> 
+>  drivers/iio/adc/ti_am335x_adc.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+> index 9d984f2a8ba7..d932fe383a24 100644
+> --- a/drivers/iio/adc/ti_am335x_adc.c
+> +++ b/drivers/iio/adc/ti_am335x_adc.c
+> @@ -428,7 +428,8 @@ static const char * const chan_name_ain[] = {
+>  	"AIN7",
+>  };
+>  
+> -static int tiadc_channel_init(struct iio_dev *indio_dev, int channels)
+> +static int tiadc_channel_init(struct device *dev, struct iio_dev *indio_dev,
+> +			      int channels)
+>  {
+>  	struct tiadc_device *adc_dev = iio_priv(indio_dev);
+>  	struct iio_chan_spec *chan_array;
+> @@ -436,7 +437,8 @@ static int tiadc_channel_init(struct iio_dev *indio_dev, int channels)
+>  	int i;
+>  
+>  	indio_dev->num_channels = channels;
+> -	chan_array = kcalloc(channels, sizeof(*chan_array), GFP_KERNEL);
+> +	chan_array = devm_kcalloc(dev, channels, sizeof(*chan_array),
+> +				  GFP_KERNEL);
+>  	if (chan_array == NULL)
+>  		return -ENOMEM;
+>  
+> @@ -459,11 +461,6 @@ static int tiadc_channel_init(struct iio_dev *indio_dev, int channels)
+>  	return 0;
+>  }
+>  
+> -static void tiadc_channels_remove(struct iio_dev *indio_dev)
+> -{
+> -	kfree(indio_dev->channels);
+> -}
+> -
+>  static int tiadc_read_raw(struct iio_dev *indio_dev,
+>  		struct iio_chan_spec const *chan,
+>  		int *val, int *val2, long mask)
+> @@ -635,7 +632,7 @@ static int tiadc_probe(struct platform_device *pdev)
+>  	tiadc_writel(adc_dev, REG_FIFO1THR, FIFO1_THRESHOLD);
+>  	mutex_init(&adc_dev->fifo1_lock);
+>  
+> -	err = tiadc_channel_init(indio_dev, adc_dev->channels);
+> +	err = tiadc_channel_init(&pdev->dev, indio_dev, adc_dev->channels);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -666,7 +663,6 @@ static int tiadc_probe(struct platform_device *pdev)
+>  err_buffer_unregister:
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+>  err_free_channels:
+> -	tiadc_channels_remove(indio_dev);
+>  	return err;
+>  }
+>  
+> @@ -684,7 +680,6 @@ static int tiadc_remove(struct platform_device *pdev)
+>  	}
+>  	iio_device_unregister(indio_dev);
+>  	tiadc_iio_buffered_hardware_remove(indio_dev);
+> -	tiadc_channels_remove(indio_dev);
+>  
+>  	step_en = get_adc_step_mask(adc_dev);
+>  	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
+
