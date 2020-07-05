@@ -2,142 +2,158 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88944C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFB020772
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E67620772
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kokH5V2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgGEJwP (ORCPT
+        id S1727017AbgGEJ4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:52:15 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:35532 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgGEJwO (ORCPT
+        Sun, 5 Jul 2020 05:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgGEJ4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:52:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id v12so4439864ilg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 02:52:13 -0700 (PDT)
+        Sun, 5 Jul 2020 05:56:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5EFEC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 02:56:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so29540687wrs.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 02:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VvvmotkcreCkunyFDHoCINthVwki6Zcg3uI33EtJQCo=;
+        b=kokH5V2PsQ38hABOU5WOwvp71zv0WLZGiVYknksqrcmFy4auI7pPbUtTQ2xqp61+RM
+         CbhwuQmLcnWlxEkAsDP8wtkijf8dyqQXjXY+gSr5mB4FMIXQauYCrs7Dc8LDT+V0AWX4
+         WragB8E8mLg1WdEpuHlJWnsc89cGq3pej5vLN14QjwbBJxH9IErfBGcJC5OxeqMQLLjI
+         yos6GkiyP8glsvIwN+Q0+US7qAerIjetGDdmlfphbOCoc8Wl7B3FKNnQ50JxMZSih9cK
+         tiQDMJku7/jP6IZDxDRO1TUdEKSRf+MazDoMCX6tiqLxOBHitaHYYc94JMJUNz8c7o0s
+         X25Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0claRtCrm0axoqAPyUKkATGZT88GntWEWTF7k/OLN+4=;
-        b=LNcdxw1UZxvWjPytvmkz+refgmMuk/U1jK0DtYuErEWsosNJNd3Nefh1EIdSZjw25j
-         /pRmmicy0yWfZXM3p6PvwBY62hEdcy7Jfur3Pnon3kzbHaeSoI1qBU1hFSO2WTO/5ukX
-         evX5xNhltnNIRYBj7KxM2UQdAI7197n9sYqnGcuKlWb4U/cAYcm2HLYi76MBx1YJUlEG
-         M8UFoI9t8+q/fa7hkKVdSReUGUaD71WKdLaOc1QYCIfBy4+5X4foRuP1EpGLo7eyZk83
-         C+wwRqUrkuKmDvznQJf7ZkVH0gexUXvdbeYQtNLSHUb0WOwiu3sjMEJEQAqf2rSVjILh
-         XmAA==
-X-Gm-Message-State: AOAM53112TYvKVTmdiQDjoIJuGBugLkwF2MkyBwNv3fT6LF74gHFdX2D
-        lIA2Je9NylwnFB8jdfS8Mgqr5Nq0eIpqcPJQOa+RE3lQq2Ug
-X-Google-Smtp-Source: ABdhPJzoWjT0p/GcTKtpZy98ijeOKxUtLaRgFZ8serTUevZpcUdDlmY5v35hteXSCBooqx1soYvLhbmNIz+0PzgJUzGmMna9zQWL
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VvvmotkcreCkunyFDHoCINthVwki6Zcg3uI33EtJQCo=;
+        b=f7jEK5ZAjxlua39Md31Bvo4ZCLN33c7oZQaW60zQY646+b0FUGOtRxCgHo9W5nyhzY
+         6E46aiznlIJcuYPFUvWUZ1yap9Bt91r/ocWwDMYh5DSKQ2mOZ7pNpatIJkTF4crPFcmg
+         jCVMogJfTzzRp/Nz0uUWaZf+z6PMoS6dAXJlMZnHj/Twue69A56+aq9MWQhLNGE3tw1N
+         48LShXcpXsSRARAtSMG3ZXkKefaVV8dx3boNmMgrkkROsqRNMINnssjZVi00/N5cXVi3
+         2MQ+NPO6n/qYINVK90pnPf8IfKYVYty6xyyvNrYZgB7p7NN0LfgiQeewRR7SUmULV7+C
+         aefQ==
+X-Gm-Message-State: AOAM530Dx093W1uKyi7O7WarkJ1J177AXX2M1njAemBwd64eY8S93SV2
+        AdFmuMHk/PCcZVy7dg0SYVakeg==
+X-Google-Smtp-Source: ABdhPJx0eClwan21mf6twIBb6IiwAabsnV88Z3hj0O9AMB0NM4BXoawQf3Jxc24R1IvFY74V/I/UMw==
+X-Received: by 2002:a5d:4dc2:: with SMTP id f2mr44802365wru.399.1593942965475;
+        Sun, 05 Jul 2020 02:56:05 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id d28sm21106192wrc.50.2020.07.05.02.56.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 02:56:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH net-next] net: phy: add a Kconfig option for mdio_devres
+Date:   Sun,  5 Jul 2020 11:55:47 +0200
+Message-Id: <20200705095547.22527-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9590:: with SMTP id a16mr4780500ioo.150.1593942733541;
- Sun, 05 Jul 2020 02:52:13 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 02:52:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006cd5e905a9aeb60e@google.com>
-Subject: memory leak in qdisc_create_dflt
-From:   syzbot <syzbot+d411cff6ab29cc2c311b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-syzbot found the following crash on:
+If phylib is built as a module and CONFIG_MDIO_DEVICE is 'y', the
+mdio_device and mdio_bus code will be in the phylib module, not in the
+kernel image. Meanwhile we build mdio_devres depending on the
+CONFIG_MDIO_DEVICE symbol, so if it's 'y', it will go into the kernel
+and we'll hit the following linker error:
 
-HEAD commit:    9ebcfadb Linux 5.8-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1577525b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=d411cff6ab29cc2c311b
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e579e3100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1007c45b100000
+   ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_alloc_size':
+>> drivers/net/phy/mdio_devres.c:38: undefined reference to `mdiobus_alloc_size'
+   ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_free':
+>> drivers/net/phy/mdio_devres.c:16: undefined reference to `mdiobus_free'
+   ld: drivers/net/phy/mdio_devres.o: in function `__devm_mdiobus_register':
+>> drivers/net/phy/mdio_devres.c:87: undefined reference to `__mdiobus_register'
+   ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_unregister':
+>> drivers/net/phy/mdio_devres.c:53: undefined reference to `mdiobus_unregister'
+   ld: drivers/net/phy/mdio_devres.o: in function `devm_of_mdiobus_register':
+>> drivers/net/phy/mdio_devres.c:120: undefined reference to `of_mdiobus_register'
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d411cff6ab29cc2c311b@syzkaller.appspotmail.com
+Add a hidden Kconfig option for MDIO_DEVRES which will be currently
+selected by CONFIG_PHYLIB as there are no non-phylib users of these
+helpers.
 
-BUG: memory leak
-unreferenced object 0xffff888115aa8c00 (size 512):
-  comm "syz-executor530", pid 6646, jiffies 4294943517 (age 13.870s)
-  hex dump (first 32 bytes):
-    a0 0c be 82 ff ff ff ff f0 0b be 82 ff ff ff ff  ................
-    04 00 00 00 e8 03 00 00 40 c6 72 84 ff ff ff ff  ........@.r.....
-  backtrace:
-    [<00000000ead56edd>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<00000000ead56edd>] kzalloc_node include/linux/slab.h:680 [inline]
-    [<00000000ead56edd>] qdisc_alloc+0x45/0x260 net/sched/sch_generic.c:818
-    [<000000002852d256>] qdisc_create_dflt+0x3d/0x170 net/sched/sch_generic.c:893
-    [<000000002108f663>] atm_tc_init+0x96/0x150 net/sched/sch_atm.c:551
-    [<000000000988e5f0>] qdisc_create+0x1ae/0x670 net/sched/sch_api.c:1246
-    [<00000000c8befd49>] tc_modify_qdisc+0x198/0xb10 net/sched/sch_api.c:1662
-    [<00000000b014fe08>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5460
-    [<00000000da7a0de1>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2469
-    [<0000000069fa5fbe>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<0000000069fa5fbe>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1329
-    [<0000000049c303c5>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1918
-    [<0000000017755dda>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<0000000017755dda>] sock_sendmsg+0x4c/0x60 net/socket.c:672
-    [<00000000294b696a>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2352
-    [<00000000eb7a1f59>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2406
-    [<00000000ba1066c9>] __sys_sendmmsg+0xda/0x230 net/socket.c:2496
-    [<0000000082fdecc3>] __do_sys_sendmmsg net/socket.c:2525 [inline]
-    [<0000000082fdecc3>] __se_sys_sendmmsg net/socket.c:2522 [inline]
-    [<0000000082fdecc3>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2522
-    [<000000009da3552a>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
-    [<00000000b46d0fac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff888115aa8a00 (size 512):
-  comm "syz-executor530", pid 6647, jiffies 4294944100 (age 8.040s)
-  hex dump (first 32 bytes):
-    a0 0c be 82 ff ff ff ff f0 0b be 82 ff ff ff ff  ................
-    04 00 00 00 e8 03 00 00 40 c6 72 84 ff ff ff ff  ........@.r.....
-  backtrace:
-    [<00000000ead56edd>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<00000000ead56edd>] kzalloc_node include/linux/slab.h:680 [inline]
-    [<00000000ead56edd>] qdisc_alloc+0x45/0x260 net/sched/sch_generic.c:818
-    [<000000002852d256>] qdisc_create_dflt+0x3d/0x170 net/sched/sch_generic.c:893
-    [<000000002108f663>] atm_tc_init+0x96/0x150 net/sched/sch_atm.c:551
-    [<000000000988e5f0>] qdisc_create+0x1ae/0x670 net/sched/sch_api.c:1246
-    [<00000000c8befd49>] tc_modify_qdisc+0x198/0xb10 net/sched/sch_api.c:1662
-    [<00000000b014fe08>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5460
-    [<00000000da7a0de1>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2469
-    [<0000000069fa5fbe>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<0000000069fa5fbe>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1329
-    [<0000000049c303c5>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1918
-    [<0000000017755dda>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<0000000017755dda>] sock_sendmsg+0x4c/0x60 net/socket.c:672
-    [<00000000294b696a>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2352
-    [<00000000eb7a1f59>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2406
-    [<00000000ba1066c9>] __sys_sendmmsg+0xda/0x230 net/socket.c:2496
-    [<0000000082fdecc3>] __do_sys_sendmmsg net/socket.c:2525 [inline]
-    [<0000000082fdecc3>] __se_sys_sendmmsg net/socket.c:2522 [inline]
-    [<0000000082fdecc3>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2522
-    [<000000009da3552a>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
-    [<00000000b46d0fac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: ac3a68d56651 ("net: phy: don't abuse devres in devm_mdiobus_register()")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/net/phy/Kconfig  | 4 ++++
+ drivers/net/phy/Makefile | 3 +--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index e351d65533aa..7ffa8a4529a8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -21,6 +21,9 @@ config MDIO_BUS
+ 
+ if MDIO_BUS
+ 
++config MDIO_DEVRES
++	tristate
++
+ config MDIO_ASPEED
+ 	tristate "ASPEED MDIO bus controller"
+ 	depends on ARCH_ASPEED || COMPILE_TEST
+@@ -252,6 +255,7 @@ menuconfig PHYLIB
+ 	tristate "PHY Device support and infrastructure"
+ 	depends on NETDEVICES
+ 	select MDIO_DEVICE
++	select MDIO_DEVRES
+ 	help
+ 	  Ethernet controllers are usually attached to PHY
+ 	  devices.  This option provides infrastructure for
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index c9a9adf194d5..d84bab489a53 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -4,7 +4,6 @@
+ libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
+ 				   linkmode.o
+ mdio-bus-y			+= mdio_bus.o mdio_device.o
+-mdio-devres-y			+= mdio_devres.o
+ 
+ ifdef CONFIG_MDIO_DEVICE
+ obj-y				+= mdio-boardinfo.o
+@@ -18,7 +17,7 @@ libphy-y			+= $(mdio-bus-y)
+ else
+ obj-$(CONFIG_MDIO_DEVICE)	+= mdio-bus.o
+ endif
+-obj-$(CONFIG_MDIO_DEVICE)	+= mdio-devres.o
++obj-$(CONFIG_MDIO_DEVRES)	+= mdio_devres.o
+ libphy-$(CONFIG_SWPHY)		+= swphy.o
+ libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
+ 
+-- 
+2.26.1
+
