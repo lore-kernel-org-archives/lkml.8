@@ -2,127 +2,224 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51870C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 07:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF448C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 07:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F7E20724
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 07:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994B120702
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 07:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtFTmZri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgGEHUU (ORCPT
+        id S1726454AbgGEH0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 03:20:20 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:53355 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgGEHUT (ORCPT
+        Sun, 5 Jul 2020 03:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGEH0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 03:20:19 -0400
-Received: by mail-il1-f197.google.com with SMTP id r4so25388276ilq.20
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 00:20:18 -0700 (PDT)
+        Sun, 5 Jul 2020 03:26:16 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7B3C061794;
+        Sun,  5 Jul 2020 00:26:16 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w17so29026401oie.6;
+        Sun, 05 Jul 2020 00:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKw4EpxGN0YdG0VPpIynr/J1EkJpB2HGlu3HY3J+Zvk=;
+        b=LtFTmZribUAaCdwyIEUFNXYwJHgjPTnGLn20NUfrHIqEC1c8KqMwnEBhRMxf/n6MJz
+         xwg82lZsH2MTD+zSzhgXYQNMX174cC3ouCR19rBLQYwC5ht8pBaZzserIIqxOKRLuWZe
+         qq8zvDda+9Y3Crrf43PPHsyDNiKOWmf5TOu4ML2Ce3tW/pn0ryEJ2bVi1MonyfKm9o5m
+         KbCeuM4cRQQz5MTwJfbj/Ao5c2mCBM1FYLjno8VxA9q/1JxWN+cbizX4AM+XxhvSsE2v
+         bK0s2bN2UGZtmBG9mckhr8PpsWBwhvpwGe8/rSvhXSEMCyhli8KZ1C9Xbo5soGR+4+Aw
+         vaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pAcGC6+psa2V/SCa2Ha9u6KtoRKdEBhZ1vBT1tVTLzA=;
-        b=UgcGu3gcmBwV1UahmNGrimur4UN+tbpmhXofsDozOOnyjo/plEFltX+RZOAyfD3co5
-         0CkeKANt9Dvq3SLUUTSB1aytVmdx7h+hdZpYPg/pkHx9v8L3EDELtAwgU+GYRvhytTVT
-         VFmHkGzyv5nT66K/fFWfUsMm6o86Ujg54O4m0CTiRCfFcoFAEtW9JrZGQU+ncqi/lTIl
-         VPc5VnKl+/YpNqQdetkgEOo8vFwqskpE30YrWno9qp8NuO0MU0CkxTGFNIy2PfKJ4efb
-         s3dQ7Gikhsv1feEx8IslfEwrTHB/3byNrBfH7dpN7EaCbj0VsGDlwDyy0NW/nKcGsR/4
-         w7DQ==
-X-Gm-Message-State: AOAM532xl122V8R1jrraXx/kvqOu6XxmXSE7xRrVXB6Dk6ueNMMmO++7
-        i59f4WyKOyMc7TWp6/HhA1k8R6V6SBim/49yweVw4XqPHML5
-X-Google-Smtp-Source: ABdhPJypt9Y88ghxSt7nKGHMiTroHIa8PUIpQE7HmqOZgR/TJrvXzaoQmIe5gSGdebYCw2uYqRXiWqiOvKXygaOqCvKxZyJ+3RoA
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKw4EpxGN0YdG0VPpIynr/J1EkJpB2HGlu3HY3J+Zvk=;
+        b=po5skEOSXOlhqO6g0kGu8XUi81B3gGkre4y2bi0IsHiIPI1vuNnBo+aq4b2+JryqUk
+         vXrBEtfAB8GCKaowWvH/mWsoZnOVT131gHZyu4fJO+BkYqFrlz/Z49zEhSrniu0bZGKn
+         UTESYumeOvTF5/CzV+JqIjwlurwH8mHiqPezVbNZZ/WOYjPpR0Jk2qG55euE3U//pWIR
+         KtCEsFgfMutdM8Ws/GHPweSsNe1XwqAtBFE0qaxQepAm0iAYQ2pV4MI8Ey+vV3vyZAgi
+         c5v0ujLGO8lf/FsHab6xAIunPFzdOfUST7baDXXApKWP6g7JVThFZjGgYn6O2Utx+jY7
+         QFbw==
+X-Gm-Message-State: AOAM532Uhb8/wu7ZQDDxMuxAkcYEJGpQIwZQ7PonvPxpGfFGZpHhWrzY
+        Qq+CuTVU02F7tA1OB3ggxSm26whXgJun7ghHdOezgnp5ArE=
+X-Google-Smtp-Source: ABdhPJw9w+l+t+8XHnfWcnulUprNuPdfKXpniuXmwOiRq9JDCafp1hy2ZINwxadA8jTnzoD4Vz9cmvpWiYaua4eS3uI=
+X-Received: by 2002:aca:fc97:: with SMTP id a145mr22033692oii.149.1593933975349;
+ Sun, 05 Jul 2020 00:26:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2d89:: with SMTP id k9mr19915215iow.41.1593933618033;
- Sun, 05 Jul 2020 00:20:18 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 00:20:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001936ab05a9ac97d1@google.com>
-Subject: WARNING in bpf_xdp_adjust_tail
-From:   syzbot <syzbot+c3157bda041952444952@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org> <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <37170CC1-C132-40BE-8ABA-B14E3419975C@dilger.ca>
+In-Reply-To: <37170CC1-C132-40BE-8ABA-B14E3419975C@dilger.ca>
+From:   Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Date:   Sun, 5 Jul 2020 09:25:39 +0200
+Message-ID: <CAODFU0qT07ERWVH7F3rO1CK6CckmoF4p8ArHk09S9DCojD8M4w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Matthew Wilcox <willy@infradead.org>, gregkh@linuxfoundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-man@vger.kernel.org, mtk.manpages@gmail.com,
+        shuah@kernel.org, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jul 5, 2020 at 8:32 AM Andreas Dilger <adilger@dilger.ca> wrote:
+>
+> On Jul 4, 2020, at 8:46 PM, Jan Ziak <0xe2.0x9a.0x9b@gmail.com> wrote:
+> >
+> > On Sun, Jul 5, 2020 at 4:16 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >>
+> >> On Sun, Jul 05, 2020 at 04:06:22AM +0200, Jan Ziak wrote:
+> >>> Hello
+> >>>
+> >>> At first, I thought that the proposed system call is capable of
+> >>> reading *multiple* small files using a single system call - which
+> >>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> >>> operations per second) - but that isn't the case and the proposed
+> >>> system call can read just a single file.
+> >>>
+> >>> Without the ability to read multiple small files using a single system
+> >>> call, it is impossible to increase IOPS (unless an application is
+> >>> using multiple reader threads or somehow instructs the kernel to
+> >>> prefetch multiple files into memory).
+> >>
+> >> What API would you use for this?
+> >>
+> >> ssize_t readfiles(int dfd, char **files, void **bufs, size_t *lens);
+> >>
+> >> I pretty much hate this interface, so I hope you have something better
+> >> in mind.
+> >
+> > I am proposing the following:
+> >
+> > struct readfile_t {
+> >  int dirfd;
+> >  const char *pathname;
+> >  void *buf;
+> >  size_t count;
+> >  int flags;
+> >  ssize_t retval; // set by kernel
+> >  int reserved; // not used by kernel
+> > };
+>
+> If you are going to pass a struct from userspace to the kernel, it
+> should not mix int and pointer types (which may be 64-bit values,
+> so that there are not structure packing issues, like:
+>
+> struct readfile {
+>         int     dirfd;
+>         int     flags;
+>         const char *pathname;
+>         void    *buf;
+>         size_t  count;
+>         ssize_t retval;
+> };
+>
+> It would be better if "retval" was returned in "count", so that
+> the structure fits nicely into 32 bytes on a 64-bit system, instead
+> of being 40 bytes per entry, which adds up over many entries, like.
 
-syzbot found the following crash on:
+I know what you mean and it is a valid point, but in my opinion it
+shouldn't (in most cases) be left to the programmer to decide what the
+binary layout of a data structure is - instead it should be left to an
+optimizing compiler to decide it. Just like code optimization,
+determining the physical layout of data structures can be subject to
+automatic optimizations as well. It is kind of unfortunate that in
+C/C++, and in many other statically compiled languages (even recent
+ones), the physical layout of all data structures is determined by the
+programmer rather than the compiler. Also, tagging fields as "input",
+"output", or both (the default) would be helpful in obtaining smaller
+sizes:
 
-HEAD commit:    2ce578ca net: ipv4: Fix wrong type conversion from hint to..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1190cf23100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=c3157bda041952444952
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+struct readfile_t {
+  input int dirfd;
+  input const char *pathname;
+  input void *buf;
+  input size_t count;
+  input int flags;
+  output ssize_t retval; // set by kernel
+  output int reserved; // not used by kernel
+};
 
-Unfortunately, I don't have any reproducer for this crash yet.
+int readfiles(struct readfile_t *requests, size_t count);
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c3157bda041952444952@syzkaller.appspotmail.com
+struct readfile_t r[10];
+// Write r[i] inputs
+int status = readfiles(r, nelem(r));
+// Read r[i] outputs
 
-WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 ____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
-WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 22595 Comm: syz-executor.4 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
-RIP: 0010:____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
-RIP: 0010:bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
-Code: 37 fb 84 db 74 09 49 c7 c4 ea ff ff ff eb c7 e8 f8 f5 37 fb 44 89 e6 48 c7 c7 e0 fc fd 88 c6 05 dc f5 6d 04 01 e8 94 3b 09 fb <0f> 0b eb d8 e8 d9 48 77 fb e9 c5 fe ff ff e8 df 48 77 fb e9 92 fe
-RSP: 0018:ffffc900018878e0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000040000 RSI: ffffffff815ce8d7 RDI: fffff52000310f0e
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880ae620fcb
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000020000
-R13: ffff88804c20feef R14: ffff88804c20feef R15: 0000000000000000
- bpf_prog_4add87e5301a4105+0x20/0x818
- bpf_prog_run_xdp include/linux/filter.h:734 [inline]
- netif_receive_generic_xdp+0x70f/0x1760 net/core/dev.c:4647
- do_xdp_generic net/core/dev.c:4735 [inline]
- do_xdp_generic+0x96/0x1a0 net/core/dev.c:4728
- tun_get_user+0x22d2/0x35b0 drivers/net/tun.c:1905
- tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:1999
- call_write_iter include/linux/fs.h:1907 [inline]
- new_sync_write+0x422/0x650 fs/read_write.c:484
- __vfs_write+0xc9/0x100 fs/read_write.c:497
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x12d/0x250 fs/read_write.c:612
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416661
-Code: Bad RIP value.
-RSP: 002b:00007f8bc3971c60 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000005095a0 RCX: 0000000000416661
-RDX: 000000000000fdef RSI: 0000000020000080 RDI: 00000000000000f0
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007f8bc39729d0 R11: 0000000000000293 R12: 00000000ffffffff
-R13: 0000000000000bfd R14: 00000000004ce559 R15: 00007f8bc39726d4
-Kernel Offset: disabled
+A data-layout optimizing compiler should be able to determine that the
+optimal layout of readfile_t is UNION(INPUT: 2*int+2*pointer+1*size_t,
+OUTPUT: 1*ssize_t+1*int).
 
+In the unfortunate case of the non-optimizing C language and if it is
+just a micro-optimization (optimizing readfile_t is a
+micro-optimization), it is better to leave the data structure in a
+form that is appropriate for being efficiently readable by programmers
+rather than to micro-optimize it and make it confusing to programmers.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> struct readfile {
+>         int     dirfd;
+>         int     flags;
+>         const char *pathname;
+>         void    *buf;
+>         ssize_t count;  /* input: bytes requested, output: bytes read or -errno */
+> };
+>
+>
+> However, there is still an issue with passing pointers from userspace,
+> since they may be 32-bit userspace pointers on a 64-bit kernel.
+>
+> > int readfiles(struct readfile_t *requests, size_t count);
+>
+> It's not clear why count is a "size_t" since it is not a size.
+> An unsigned int is fine here, since it should never be negative.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Generally speaking, size_t reflects the size of the address space
+while unsigned int doesn't and therefore it is easier for unsigned int
+to overflow on very large data sets.
+
+> > Returns zero if all requests succeeded, otherwise the returned value
+> > is non-zero (glibc wrapper: -1) and user-space is expected to check
+> > which requests have succeeded and which have failed. retval in
+> > readfile_t is set to what the single-file readfile syscall would
+> > return if it was called with the contents of the corresponding
+> > readfile_t struct.
+> >
+> > The glibc library wrapper of this system call is expected to store the
+> > errno in the "reserved" field. Thus, a programmer using glibc sees:
+> >
+> > struct readfile_t {
+> >  int dirfd;
+> >  const char *pathname;
+> >  void *buf;
+> >  size_t count;
+> >  int flags;
+> >  ssize_t retval; // set by glibc (-1 on error)
+> >  int errno; // set by glibc if retval is -1
+> > };
+>
+> Why not just return the errno directly in "retval", or in "count" as
+> proposed?  That avoids further bloating the structure by another field.
+>
+> > retval and errno in glibc's readfile_t are set to what the single-file
+> > glibc readfile would return (retval) and set (errno) if it was called
+> > with the contents of the corresponding readfile_t struct. In case of
+> > an error, glibc will pick one readfile_t which failed (such as: the
+> > 1st failed one) and use it to set glibc's errno.
+>
+>
+> Cheers, Andreas
