@@ -2,134 +2,106 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E21C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A112070C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFBB2070C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxEabW/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgGESlV (ORCPT
+        id S1728059AbgGESlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:41:21 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:51664 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgGESlU (ORCPT
+        Sun, 5 Jul 2020 14:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbgGESlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:41:20 -0400
-Received: by mail-il1-f200.google.com with SMTP id m3so26104367ila.18
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 11:41:19 -0700 (PDT)
+        Sun, 5 Jul 2020 14:41:44 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB7F7C061794;
+        Sun,  5 Jul 2020 11:41:44 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a12so37159143ion.13;
+        Sun, 05 Jul 2020 11:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=WMam9KMN4N8PeAEM40GNpNo2zYpfT1xm+vr06Ee2x14=;
+        b=AxEabW/lzyZ2qlTf+PHt+KOYjnTp/SIT47axfbz/xNCoCqaeVUM3xzTmWeAcfiLKOW
+         jJjegqyiMnpF8BtbFW7UCZm5RajW69M91jc+AUkZfmbju0UwEiLNrwvzGzGn7MkUiORs
+         EVUnHKWbUMYyl0brpJVmufSrpUNtsg5n3E69x7mykxozCy/okobAZ7FObIAt05D2CxB/
+         FROsqXlr7TddUDivxEFn3CDR6NVi78hVhVM/sYQI6xoT2VVTmliYTXrsCYlRIxOx681N
+         HPnMVdz8wcjOw4cehpOuzxOjWNicCwQxlWLOqJtYFFPtup93zarw2kE9POpsdJXATGNn
+         oE3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wwEam32TmxH45e9sLjA3XeLOu5dFb4Fi6bFCRKi5JYw=;
-        b=nTrhXDNudT1J++q2uDC41LByTPN5MLTVST1418KrVq/JEQPY5gflhBzxfVDf4JBU65
-         e3bHpB4KyIDg1jkeehL+iYl2vXrFiRE35JAPG8MAWzk7/99TSzfWGcyfXXqQwMfV3lUj
-         oTbLYjqCgFvZmacaO9pGBlVICfUb7cFvLG1Ch41GaoJRReceQ2ksXc1JVUm7WFhU8L5y
-         AyWQ9ZyzhOGSH5Q1nf+yWJUTtClhc1a2TbWwj53i0sPSabeHWPazndM2pcrYa07Bgw1e
-         z7x8VeGWO89cMuO0m7N7M/Z4MXuAor9kaCXQeggpcciwbo81C9AdvVlG8qIJGwwmCqTn
-         vGiw==
-X-Gm-Message-State: AOAM530NzFFLQeubjEvG5kTzAG1nAqheZKX5MNjXL+u+pLTD66USrUJk
-        IIozp+L2FuNmMgDDBVAynEImK0uJw4QZzP68Ky8E3iOaIEx7
-X-Google-Smtp-Source: ABdhPJyx4TFwKSNypIjQEOlcBOSjN8j+FzwTS1I52dhkPmJTXGgkqmNZurlrxqIgQJw++74hijOceMDZ7OHK315H+Vhwfw5Lfxmz
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=WMam9KMN4N8PeAEM40GNpNo2zYpfT1xm+vr06Ee2x14=;
+        b=q+ouYmmRS+iEbnCz9jJr4b6CCm/R2gHYwl3papxt+dlNxVjxt5tFkYJaNP2uDKi4Dz
+         4bbZcXf7UV+QBnxyve7MjeONAbkhYsOAZ7WD10xw2jN9zMGxm5ue4Fm9+cjDA0ChEPQz
+         pado5hGPjIFRjyBWlGwNaknTtnWLmpOIaMUxPGgGAw+VDeaKALYd5P6yEi78ZusRLLlr
+         B6euNL0522SF8ePMGO+Pr4ZD4lbS7Rtft3fin61BWxnoQDPYbu5wAVO+ipBLc+zpbsex
+         nMd+hKBlrbPkmTAQPSUCh1jh4/I6jFGOTJnqmmDV4gPcCbRtGFD+/zG8fZHSDKfqHhs0
+         rVng==
+X-Gm-Message-State: AOAM532mk9WeXf72tHugjbOHewkExgRG9vK2RyJKlkqyw57PZ1jbz6fK
+        apsvsaP7p7xpPHOAUxNhZbTLch47RyS1IM/Owsw=
+X-Google-Smtp-Source: ABdhPJxK/S7BemaC7I1AoTKGocPOpRoy6dfNruNY70JrVKJMhu9vEH11u0LMDqGDvyIyydjnFOGfcx6Z3KHCmPW0okY=
+X-Received: by 2002:a05:6638:252:: with SMTP id w18mr37241264jaq.42.1593974504022;
+ Sun, 05 Jul 2020 11:41:44 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8f0b:: with SMTP id f11mr22021918iof.200.1593974479552;
- Sun, 05 Jul 2020 11:41:19 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 11:41:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a2851c05a9b61ad8@google.com>
-Subject: general protection fault in __btf_resolve_helper_id
-From:   syzbot <syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <20200705065917.22285-1-lukas.bulwahn@gmail.com> <20200705113017.mostxjvatkqkhqf6@core.my.home>
+In-Reply-To: <20200705113017.mostxjvatkqkhqf6@core.my.home>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Sun, 5 Jul 2020 20:41:33 +0200
+Message-ID: <CAKXUXMz_usPZw5-UPLxSqBRVP4-RFZTLO-tt5pEfiTPrxifFWg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust entry to renaming and conversion
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jul 5, 2020 at 1:30 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
+>
+> Hello Lukas,
+>
+> On Sun, Jul 05, 2020 at 08:59:17AM +0200, Lukas Bulwahn wrote:
+> > Commit a74e81a56405 ("drm/panel: rocktech-jh057n00900: Rename the drive=
+r to
+> > st7703") and commit 7317f4574492 ("dt-bindings: panel: Convert
+> > rocktech,jh057n00900 to yaml") renamed and converted the files mentione=
+d in
+> > DRM DRIVER FOR ROCKTECH JH057N00900 PANELS, but did not adjust the entr=
+ies
+> > in MAINTAINERS.
+>
+> A similar patch was already posted:
+>
+> https://lkml.kernel.org/lkml/20200701184640.1674969-1-megous@megous.com/
+>
 
-syzbot found the following crash on:
+Thanks, Ondrej. This patch posted here shall be IGNORED.
 
-HEAD commit:    9e50b94b Add linux-next specific files for 20200703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10327e6d100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
-dashboard link: https://syzkaller.appspot.com/bug?extid=ee09bda7017345f1fbe6
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9e39b100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b597d3100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000009: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000048-0x000000000000004f]
-CPU: 0 PID: 6799 Comm: syz-executor682 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__btf_resolve_helper_id+0x149/0xb10 kernel/bpf/btf.c:4102
-Code: 80 3c 03 00 0f 85 dd 08 00 00 48 8b 05 70 46 0a 0b 48 8d 78 48 48 89 04 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 50 09 00 00 48 8b 04 24 31 ff
-RSP: 0018:ffffc90001637378 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 1ffffffff1926068 RCX: ffffffff816aa4b6
-RDX: 0000000000000009 RSI: ffffffff8188bcb1 RDI: 0000000000000048
-RBP: ffffffff818ba3d0 R08: ffffc900016373e4 R09: ffffc90001637670
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff888096648260 R15: ffff888096648000
-FS:  0000000000cc2880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000282 CR3: 00000000a6dbe000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- btf_resolve_helper_id+0x10c/0x1c0 kernel/bpf/btf.c:4164
- check_helper_call+0x1641/0x5650 kernel/bpf/verifier.c:4721
- do_check kernel/bpf/verifier.c:8938 [inline]
- do_check_common+0x7253/0xc2d0 kernel/bpf/verifier.c:10574
- do_check_main kernel/bpf/verifier.c:10640 [inline]
- bpf_check+0x857f/0xce51 kernel/bpf/verifier.c:11093
- bpf_prog_load+0xdaf/0x1b50 kernel/bpf/syscall.c:2194
- __do_sys_bpf+0x1edf/0x4b10 kernel/bpf/syscall.c:4112
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:367
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440379
-Code: Bad RIP value.
-RSP: 002b:00007ffee37aa6d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440379
-RDX: 0000000000000048 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401c00
-R13: 0000000000401c90 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace d5a7c4fec6f343c9 ]---
-RIP: 0010:__btf_resolve_helper_id+0x149/0xb10 kernel/bpf/btf.c:4102
-Code: 80 3c 03 00 0f 85 dd 08 00 00 48 8b 05 70 46 0a 0b 48 8d 78 48 48 89 04 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 50 09 00 00 48 8b 04 24 31 ff
-RSP: 0018:ffffc90001637378 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 1ffffffff1926068 RCX: ffffffff816aa4b6
-RDX: 0000000000000009 RSI: ffffffff8188bcb1 RDI: 0000000000000048
-RBP: ffffffff818ba3d0 R08: ffffc900016373e4 R09: ffffc90001637670
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff888096648260 R15: ffff888096648000
-FS:  0000000000cc2880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000282 CR3: 00000000a6dbe000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Lukas
