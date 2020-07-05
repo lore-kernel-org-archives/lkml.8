@@ -2,273 +2,86 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3DF220786
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E24207CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNWbrbYi"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G1t2Xboh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgGEJkm (ORCPT
+        id S1726694AbgGEJoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:40:42 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21929 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726134AbgGEJkm (ORCPT
+        Sun, 5 Jul 2020 05:44:22 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:7634 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726134AbgGEJoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:40:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593942039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R3S9naE26LLsywlsiEVd6KhNGZPK/yDfgjAfGIlEZ8Q=;
-        b=WNWbrbYiQDSD8ROlprFon+5OV5cfbIimwZ1PqX49Jz6ILAtuROvntAT19vix12WwIWPzm9
-        dyLEfGx1oBkMfrj+MvIlVUATEJtjr+REiB9wyvUAPtRvl2mTzhlFlLbWGWvdDRTNtsPvmQ
-        KZfD90Kr8CTHeAANqxfjMPpFcZQDk1I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-473-hD2BViJVP0Og5_7dP_yKXA-1; Sun, 05 Jul 2020 05:40:34 -0400
-X-MC-Unique: hD2BViJVP0Og5_7dP_yKXA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4258C800D5C;
-        Sun,  5 Jul 2020 09:40:32 +0000 (UTC)
-Received: from starship (unknown [10.35.206.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C67310013D0;
-        Sun,  5 Jul 2020 09:40:27 +0000 (UTC)
-Message-ID: <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
-Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Date:   Sun, 05 Jul 2020 12:40:25 +0300
-In-Reply-To: <20200702181606.GF3575@linux.intel.com>
-References: <20200702174455.282252-1-mlevitsk@redhat.com>
-         <20200702181606.GF3575@linux.intel.com>
+        Sun, 5 Jul 2020 05:44:21 -0400
+X-UUID: 33ba9c41c393484594545a3bc23d7c7f-20200705
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bVAN/Pr8hp2riddPU0Ip98uCQV+TayeMJMDOKh3eCMI=;
+        b=G1t2XbohuX5vrSHUSv00rfOOvnOD7dzzgBrqvUOjVP2NR+ys05ynEDkgxkFzIMiDZYxpCGwEt8iRA34aK4RUqjWzULJbiC80tDdzl0hda9Rw1psiKq/Xj+NPfMNO3p0gnXBABb+adNrlKWn9RvRn4NvepK/pRXgtSDPr/b/2cGg=;
+X-UUID: 33ba9c41c393484594545a3bc23d7c7f-20200705
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1955651590; Sun, 05 Jul 2020 17:44:13 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 5 Jul
+ 2020 17:44:12 +0800
+Received: from [10.16.6.141] (10.16.6.141) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 5 Jul 2020 17:44:11 +0800
+Message-ID: <1593942260.24547.0.camel@mszsdaap41>
+Subject: Re: [PATCH] drm/panel: auo,b116xw03: fix flash backlight when power
+ on
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>
+Date:   Sun, 5 Jul 2020 17:44:20 +0800
+In-Reply-To: <20200705080637.GA1745670@ravnborg.org>
+References: <20200703095113.55712-1-jitao.shi@mediatek.com>
+         <20200705080637.GA1745670@ravnborg.org>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-TM-SNTS-SMTP: A3D6659F2DC4FFFA11B5C6F5A8FFA03230239A4D2ADD46D9DBF384DD810AE9CF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-02 at 11:16 -0700, Sean Christopherson wrote:
-> On Thu, Jul 02, 2020 at 08:44:55PM +0300, Maxim Levitsky wrote:
-> > There are few cases when this function was creating a bogus #GP condition,
-> > for example case when and AMD host supports STIBP but doesn't support SSBD.
-> > 
-> > Follow the rules for AMD and Intel strictly instead.
-> 
-> Can you elaborate on the conditions that are problematic, e.g. what does
-> the guest expect to exist that KVM isn't providing?
-
-Hi Sean Christopherson!
-Sorry that I haven't explained the issue here.
-I explained it in bugzilla I opened in details and forgot to explain it
-in the commit message.
-https://bugzilla.redhat.com/show_bug.cgi?id=1853447
- 
- 
-The issue is that on my cpu (3970X), it does not support IBRS,
-but it does support STIBP, and thus guest gets the STIBP cpuid bits enabled
-(both the amd one and KVM also enables the intel's cpuid bit for this feature).
- 
-Then, when guest actually starts to use STIBP, it gets #GP because both of these conditions
-potentially don't allow STIBP bit to be set when IBRS is not supported:
- 
-	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL) &&
-	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS))
-		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL) &&
-	    !boot_cpu_has(X86_FEATURE_AMD_IBRS))
-		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
- 
-Most likely it fails on the second condition, since X86_FEATURE_SPEC_CTRL
-is enabled in the guest because host does support IBPB which X86_FEATURE_SPEC_CTRL also cover.
- 
-But the host doesn't support X86_FEATURE_SPEC_CTRL and it doesn't support X86_FEATURE_AMD_IBRS
-thus second condition clears the SPEC_CTRL_STIBP wrongly.
- 
-Now in addition to that, I long ago had known that win10 guests on my machine started to
-crash when qemu added ability to pass through X86_FEATURE_AMD_IBRS.
-I haven't paid much attention to that other than bisecting this and adding '-amd-stibp' to my cpu flags.
- 
-I did notice that I am not the only one to have that issue, for example
-https://www.reddit.com/r/VFIO/comments/gf53o8/upgrading_to_qemu_5_broke_my_setup_windows_bsods/
-https://forum.level1techs.com/t/amd-fix-for-host-passthrough-on-qemu-5-0-0-kernel-5-6/157710
- 
-Now after I debugged this issue in Linux, it occured to me that this might be the same issue as in Windows,
-and indeed it is. The only difference is that Windows doesn't start to play with STIBP when Intel
-specific cpuid bit is set on AMD machine (which KVM sets for long time) but starts to enable it when AMD specific
-bit is set, that is X86_FEATURE_AMD_IBRS, the bit that qemu recently started to set and it gets the same #GP and crashes.
- 
-From findings on my machine, if we cross-reference this with the above posts, I can assume that many Ryzens have this configuration 
-of no support for IBRS but support STIBP.
-In fact I don't see the kernel use IBRS much (it seem only used around firmware calls or so), so it makes sense
-that AMD chose to not enable it.
- 
-For the fix itself,
-I can fix this by only changing the above condition, but then I read the AMD whitepaper on
-this and they mention that bits in IA32_SPEC_CTRL don't #GP even if not supported,
-and to implement this correctly would be too complicated with current logic,
-thus I rewrote the logic to be as simple as possible and as close to the official docs as possible
-as well.
- 
-
-> 
-> > AMD #GP rules for IA32_SPEC_CTRL can be found here:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=199889
-> > 
-> > Fixes: 6441fa6178f5 ("KVM: x86: avoid incorrect writes to host MSR_IA32_SPEC_CTRL")
-> > 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 57 ++++++++++++++++++++++++++++++++++------------
-> >  1 file changed, 42 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 00c88c2f34e4..a6bed4670b7f 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -10670,27 +10670,54 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
-> >  
-> > -u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> > +
-> > +static u64 kvm_spec_ctrl_valid_bits_host(void)
-> > +{
-> > +	uint64_t bits = 0;
-> > +
-> > +	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL))
-> > +		bits |= SPEC_CTRL_IBRS;
-> > +	if (boot_cpu_has(X86_FEATURE_INTEL_STIBP))
-> > +		bits |= SPEC_CTRL_STIBP;
-> > +	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-> > +		bits |= SPEC_CTRL_SSBD;
-> > +
-> > +	if (boot_cpu_has(X86_FEATURE_AMD_IBRS) || boot_cpu_has(X86_FEATURE_AMD_STIBP))
-> > +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS;
-> > +
-> > +	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> > +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS | SPEC_CTRL_SSBD;
-> > +
-> > +	return bits;
-> > +}
-> 
-> Rather than compute the mask every time, it can be computed once on module
-> load and stashed in a global.  Note, there's a RFC series[*] to support
-> reprobing bugs at runtime, but that has bigger issues with existing KVM
-> functionality to be addressed, i.e. it's not our problem, yet :-).
-> 
-> [*] https://lkml.kernel.org/r/1593703107-8852-1-git-send-email-mihai.carabas@oracle.com
-
-Thanks for the pointer!
- 
-Note though that the above code only runs once, since after a single successful (non #GP) set
-of it to non-zero value, it is cleared in MSR bitmap for both reads and writes on
-both VMX and SVM.
-This is done because of performance reasons which in this case are more important than absolute correctness.
-Thus to some extent the guest checks in the above are pointless.
- 
-If you ask
-me, I would just remove the kvm_spec_ctrl_valid_bits, and pass this msr to guest
-right away and not on first access.
- 
-I talked with Paulo about this and his opinion if I understand correctly is that the
-above is
-a best effort correctness wise since at least we emulate the bits correctly on first access.
-
-> 
-> > +
-> > +static u64 kvm_spec_ctrl_valid_bits_guest(struct kvm_vcpu *vcpu)
-> >  {
-> > -	uint64_t bits = SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD;
-> > +	uint64_t bits = 0;
-> >  
-> > -	/* The STIBP bit doesn't fault even if it's not advertised */
-> > -	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL) &&
-> > -	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS))
-> > -		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> > -	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL) &&
-> > -	    !boot_cpu_has(X86_FEATURE_AMD_IBRS))
-> > -		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> > +		bits |= SPEC_CTRL_IBRS;
-> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_INTEL_STIBP))
-> > +		bits |= SPEC_CTRL_STIBP;
-> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD))
-> > +		bits |= SPEC_CTRL_SSBD;
-> >  
-> > -	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD) &&
-> > -	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-> > -		bits &= ~SPEC_CTRL_SSBD;
-> > -	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) &&
-> > -	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> > -		bits &= ~SPEC_CTRL_SSBD;
-> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS) ||
-> > +			guest_cpuid_has(vcpu, X86_FEATURE_AMD_STIBP))
-> 
-> Bad indentation.
-True.
-
-> 
-> > +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS;
-> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-> > +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS | SPEC_CTRL_SSBD;
-> 
-> Would it be feasible to split into two patches?  The first (tagged Fixes:)
-> to make the functional changes without inverting the logic or splitting, and
-> then do the cleanup?  It's really hard to review this patch because I can't
-> easily tease out what's different in terms of functionality.
-
-The new logic follows (hopefully) Intel's spec and AMD spec.
-I will try to split it though.
-
-
-
-> 
-> >  	return bits;
-> >  }
-> > +
-> > +u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> > +{
-> > +	return kvm_spec_ctrl_valid_bits_host() &
-> > +	       kvm_spec_ctrl_valid_bits_guest(vcpu);
-> > +}
-> > +
-> > +
-> >  EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
-> >  
-> >  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
-> > -- 
-> > 2.25.4
-> > 
-
-Thanks for the review,
-	Best regards,
-		Maxim Levitsky
-
-
+T24gU3VuLCAyMDIwLTA3LTA1IGF0IDEwOjA2ICswMjAwLCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+
+IEhpIEppdGFvLg0KPiANCj4gT24gRnJpLCBKdWwgMDMsIDIwMjAgYXQgMDU6NTE6MTNQTSArMDgw
+MCwgSml0YW8gU2hpIHdyb3RlOg0KPiA+IERlbGF5IHRoZSBiYWNrbGlnaHQgb24gdG8gbWFrZSBz
+dXJlIHRoZSB2aWRlbyBzdGFibGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hp
+IDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAzICsrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNl
+cnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KPiA+
+IGluZGV4IDNhZDgyOGVhZWZlMS4uMThmMzRmMjg2ZDNkIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KPiA+IEBAIC03MzQsNiArNzM0LDkgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19iMTE2eHcwMyA9IHsNCj4gPiAgCQkud2lkdGggPSAy
+NTYsDQo+ID4gIAkJLmhlaWdodCA9IDE0NCwNCj4gPiAgCX0sDQo+ID4gKwkuZGVsYXkgPSB7DQo+
+ID4gKwkJLmVuYWJsZSA9IDQwMCwNCj4gPiArCX0sDQo+ID4gIH07DQo+ID4gIA0KPiA+ICBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYXVvX2IxMzN4dG4wMV9tb2RlID0gew0K
+PiANCj4gUGF0Y2ggZGlkIG5vdCBhcHBseSB0byBkcm0tbWlzYy1uZXh0Lg0KPiBQbGVhc2UgdXBk
+YXRlIC0gYW5kIHdoZW4geW91IGRvIHNvIGFsc28gYWRkOg0KPiAuYnVzX2ZsYWdzDQo+IC5idXNf
+Zm9ybWF0DQo+IC5jb25uZWN0b3JfdHlwZQ0KPiANCj4gU28gd2UgaGF2ZSB0aGlzIHBhbmVsIHBy
+b3Blcmx5IGRlZmluZWQuDQo+IA0KPiAJU2FtDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQpJ
+J2xsIGFkZCB0aG9zZSBuZXh0IHZlcnNpb24uDQoNCkppdGFvDQo=
 
