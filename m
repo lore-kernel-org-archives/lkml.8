@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC12AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86061C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944A720747
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6801420771
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgGEJSU (ORCPT
+        id S1726802AbgGEJS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:18:20 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
+        Sun, 5 Jul 2020 05:18:27 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:47006 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726494AbgGEJSR (ORCPT
+        by vger.kernel.org with ESMTP id S1726496AbgGEJSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 05:18:17 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
+        Sun, 5 Jul 2020 05:18:24 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:23 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 6C0F6213B2; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id F0F51213CC; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -37,9 +37,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 2/9] dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
-Date:   Sun,  5 Jul 2020 14:47:53 +0530
-Message-Id: <1593940680-2363-3-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH 7/9] pci: dwc: qcom: do phy power on before pcie init
+Date:   Sun,  5 Jul 2020 14:47:58 +0530
+Message-Id: <1593940680-2363-8-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
@@ -48,29 +48,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ipq8074 has two different phy blocks for two pcie ports, with pcie gen2
-compatible already available, specify the pcie phy compatible
-for gen3 pcie port.
+Commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
+changed phy ops from init/deinit to power on/off, due to this phy enable
+is getting called after pcie init.
 
+On some platforms like ipq8074 phy should be inited before accessing the
+pcie register space, otherwise the system would hang.
+
+So move phy_power_on API before pcie init API.
+
+Fixes: commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-index f80f8896d527..3e8681679f53 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-@@ -18,6 +18,7 @@ properties:
-   compatible:
-     enum:
-       - qcom,ipq8074-qmp-pcie-phy
-+      - qcom,ipq8074-qmp-pcie-gen3-phy
-       - qcom,msm8996-qmp-pcie-phy
-       - qcom,msm8996-qmp-ufs-phy
-       - qcom,msm8996-qmp-usb3-phy
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 138e1a2d21cc..aa52a2124760 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1222,18 +1222,18 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 
+ 	qcom_ep_reset_assert(pcie);
+ 
+-	ret = pcie->ops->init(pcie);
++	ret = phy_power_on(pcie->phy);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = phy_power_on(pcie->phy);
++	ret = pcie->ops->init(pcie);
+ 	if (ret)
+-		goto err_deinit;
++		goto err_disable_phy;
+ 
+ 	if (pcie->ops->post_init) {
+ 		ret = pcie->ops->post_init(pcie);
+ 		if (ret)
+-			goto err_disable_phy;
++			goto err_deinit;
+ 	}
+ 
+ 	dw_pcie_setup_rc(pp);
+@@ -1252,10 +1252,10 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 	qcom_ep_reset_assert(pcie);
+ 	if (pcie->ops->post_deinit)
+ 		pcie->ops->post_deinit(pcie);
+-err_disable_phy:
+-	phy_power_off(pcie->phy);
+ err_deinit:
+ 	pcie->ops->deinit(pcie);
++err_disable_phy:
++	phy_power_off(pcie->phy);
+ 
+ 	return ret;
+ }
 -- 
 2.7.4
 
