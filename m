@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF9C20724
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB5B20739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 12:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vbZMpbtL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HdJZqMAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGEMMF (ORCPT
+        id S1727059AbgGEMMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 08:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+        Sun, 5 Jul 2020 08:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgGEMMD (ORCPT
+        with ESMTP id S1727017AbgGEMMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 08:12:03 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFD0C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 05:12:03 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y10so39508014eje.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 05:12:03 -0700 (PDT)
+        Sun, 5 Jul 2020 08:12:06 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A09C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 05:12:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dp18so39528087ejc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 05:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=c3pGEpF7DAEXcC0pN3mSKCevTRzMwQB5I1tTMzDxF0M=;
-        b=vbZMpbtLs7CMVmEYX3n7vzrtz2n0vXIVLeeIYUduO9/JCmDVzmpE694X79b/QX8vbk
-         g79hDHalKGmtcUL12AUmRKvMKm1EBXLb1nyJH7sS/R7R/YunYkUlpLDWakrxNIHfvO6m
-         EKYd5Rghwsgo34jU1V8Kk0yV/7jBrcc2tPGQupqn0K7yl83ucAPK/zzudLC2BH4e65tx
-         X6O3YYZ4f1tloPGYPuULuSiNoZMYUuIBy6Osww1D0Bmx0lXeoKn9uByUILggLchm9IKF
-         grffUmDqIbnH+zRGIG70MjEr5QUfwh2NgcV/iWw1zagwRdSt8ZqA9jRqThntJprFW5Ar
-         nqwg==
+        bh=PVmLU+hVnh8Nuu06hzfy+sP04k3OApAgFHgahioSu+I=;
+        b=HdJZqMAC9vwDwq/2+iB7h9yJXCGAIGf8xNMQ9liFjhLi/fvb1XZzTeWNBYjSiMHKOa
+         98mdSBS50YvGC0BDVIhjIAFTKcDlIyz92ScwSNbaxLdwW6nf7N6Cj/zKQIe4jq7t2GvX
+         wi+NVJRogKGWybka9wuVMlNXfLtjuhLHL0rZlVSNg//AcGoqJU1V43CPFBxjCSoK6zrB
+         71KTZXPIyrDe+8RGyBhMaNUxMYCKdwbTc1Ghw6QNClu8AH4nbo72658WQJefPVrbG/51
+         wDZsc7GMLht95gL3fkIsHaXRHdSFYj3mdO7pfHCvFX2yjFo0NPMC+JiMfVWs7wEH1dte
+         i9+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=c3pGEpF7DAEXcC0pN3mSKCevTRzMwQB5I1tTMzDxF0M=;
-        b=B6eYwbfMrQUKO9MijJgvERoKh+LygUOdx2b0f2L9sDUo+j830CHgkqWBPj74dmmnhk
-         mRc0lS+4h9lfuDeirbGve6WcaNDaqKKmydT/GxJV3I4KdYiaaTTA0plSUBKeaz1RF2Yw
-         17mEKrJshug8QQbA1ojD/4pzB87ColNyjf3tmp8hRWATdDl/TFm6OB2Z4BmU4Avjaf9z
-         EMU+oVB3djdJnSFmLdfOIAzBF8x/CyIZRNbM7ANFjK84VzOiq+HLz+xXogL9x2PfpZ2p
-         wDPrGh/COPLo2oA+rr88LnaZFyeqSk0+HL2CShU0ztB6ZMLLd6ES48rvsWB57KvuamMG
-         R5EQ==
-X-Gm-Message-State: AOAM530POK9rWvmmsxLQZ9Lk68rCzQjDNJKCTVlv9WybU+UAzjkoXUaa
-        Goold/67rPRBXASen3+PGrlnpQ==
-X-Google-Smtp-Source: ABdhPJwegaq+qx2Qs3TctwwlzOm8u+gVW6hpz/YzvS9BnNgGVly0C6L2+37x3HsFr6j0j1L5FmD2LA==
-X-Received: by 2002:a17:906:8316:: with SMTP id j22mr38504760ejx.97.1593951122243;
-        Sun, 05 Jul 2020 05:12:02 -0700 (PDT)
+        bh=PVmLU+hVnh8Nuu06hzfy+sP04k3OApAgFHgahioSu+I=;
+        b=AyNpBsr5LWlnzob19sg6L0Q9n11tBgxFKthFedxZvuaB5ghEQDYvqoHNg5OQDoOTnp
+         k2tKMpjEKZLjCCb7saDIUNEw7b11aF4dMou3RfbCRUdryxomYF/Cv2ncoFXYr17U6tPt
+         wPCxnj5Uw51/9AVfYxqeoMvj2gjcnQ+1LBmh8Z3C1JVEtqi51d7RvdI9BZ9qd5MfdNLN
+         qG0tjy83ETyE48lCSki1ar1n2cvM4jJBirb6T/+8QElp+lUyp8ttkbhbKznt4uHRtYa7
+         CVGJwlXm1XOZP+LV35P+Z+nf7Ikz323vDIKpx0nMJXdS+8FdUGEU6r0SvPduyk6j+Onj
+         geoQ==
+X-Gm-Message-State: AOAM533M40eS+BPNM4bNIyu2BQnDOCQRInn5crkx79jQ3/dp+bRtIo6f
+        KKix97W3Oijrl0mXgirK4hqorg==
+X-Google-Smtp-Source: ABdhPJy4XaYVS+16tekoMGYfBYwnsNfJBNfDgfK15oRSsNfDpEBBKvFHSmrSAPvlhLCTRmzxo2y36w==
+X-Received: by 2002:a17:906:1a59:: with SMTP id j25mr37496895ejf.398.1593951125047;
+        Sun, 05 Jul 2020 05:12:05 -0700 (PDT)
 Received: from localhost.localdomain (212-5-158-133.ip.btc-net.bg. [212.5.158.133])
-        by smtp.gmail.com with ESMTPSA id j64sm1517458edd.61.2020.07.05.05.12.00
+        by smtp.gmail.com with ESMTPSA id j64sm1517458edd.61.2020.07.05.05.12.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 05:12:01 -0700 (PDT)
+        Sun, 05 Jul 2020 05:12:04 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -68,9 +68,9 @@ Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Maheshwar Ajja <majja@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 1/4] media: v4l2-ctrl: Add frame-skip std encoder control
-Date:   Sun,  5 Jul 2020 15:11:25 +0300
-Message-Id: <20200705121128.5250-2-stanimir.varbanov@linaro.org>
+Subject: [PATCH 2/4] venus: venc: Add support for frame-skip mode v4l2 control
+Date:   Sun,  5 Jul 2020 15:11:26 +0300
+Message-Id: <20200705121128.5250-3-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200705121128.5250-1-stanimir.varbanov@linaro.org>
 References: <20200705121128.5250-1-stanimir.varbanov@linaro.org>
@@ -79,119 +79,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds encoders standard v4l2 control for frame-skip. The control
-is a copy of a custom encoder control so that other v4l2 encoder
-drivers can use it.
+This adds support for frame-skip-mode standard v4l2 control in
+encoder driver. The control is implemented based on the
+combination of client selected bitrate-mode and frame-skip-mode.
+Once The client selected bitrate-mode (constant or variable) and
+the frame-skip-mode is not disabled we set variable framerate for
+rate controller.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- .../media/v4l/ext-ctrls-codec.rst             | 32 +++++++++++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++
- include/uapi/linux/v4l2-controls.h            |  6 ++++
- 3 files changed, 48 insertions(+)
+ drivers/media/platform/qcom/venus/core.h       |  1 +
+ drivers/media/platform/qcom/venus/venc.c       |  6 ++++--
+ drivers/media/platform/qcom/venus/venc_ctrls.c | 12 +++++++++++-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index d0d506a444b1..a8b4c0b40747 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -592,6 +592,38 @@ enum v4l2_mpeg_video_bitrate_mode -
-     the average video bitrate. It is ignored if the video bitrate mode
-     is set to constant bitrate.
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 7118612673c9..5e74d0441592 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -201,6 +201,7 @@ struct venc_controls {
+ 	u32 bitrate;
+ 	u32 bitrate_peak;
+ 	u32 rc_enable;
++	u32 frame_skip_mode;
  
-+``V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE (enum)``
-+
-+enum v4l2_mpeg_video_frame_skip_mode -
-+    Indicates in what conditions the encoder should skip frames. If
-+    encoding a frame would cause the encoded stream to be larger then a
-+    chosen data limit then the frame will be skipped. Possible values
-+    are:
-+
-+
-+.. tabularcolumns:: |p{9.2cm}|p{8.3cm}|
-+
-+.. raw:: latex
-+
-+    \small
-+
-+.. flat-table::
-+    :header-rows:  0
-+    :stub-columns: 0
-+
-+    * - ``V4L2_MPEG_FRAME_SKIP_MODE_DISABLED``
-+      - Frame skip mode is disabled.
-+    * - ``V4L2_MPEG_FRAME_SKIP_MODE_LEVEL_LIMIT``
-+      - Frame skip mode enabled and buffer limit is set by the chosen
-+	level and is defined by the standard.
-+    * - ``V4L2_MPEG_FRAME_SKIP_MODE_BUF_LIMIT``
-+      - Frame skip mode enabled and buffer limit is set by the VBV
-+	(MPEG1/2/4) or CPB (H264) buffer size control.
-+
-+.. raw:: latex
-+
-+    \normalsize
-+
- ``V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION (integer)``
-     For every captured frame, skip this many subsequent frames (default
-     0).
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 3f3fbcd60cc6..d088acfa6dd8 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -590,6 +590,12 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		"External",
- 		NULL,
- 	};
-+	static const char * const mpeg_video_frame_skip[] = {
-+		"Disabled",
-+		"Level Limit",
-+		"VBV/CPB Limit",
-+		NULL,
-+	};
+ 	u32 h264_i_period;
+ 	u32 h264_entropy_mode;
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 513bbc07f7bc..2279596d4d60 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -739,9 +739,11 @@ static int venc_set_properties(struct venus_inst *inst)
+ 	if (!ctr->rc_enable)
+ 		rate_control = HFI_RATE_CONTROL_OFF;
+ 	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
+-		rate_control = HFI_RATE_CONTROL_VBR_CFR;
++		rate_control = ctr->frame_skip_mode ? HFI_RATE_CONTROL_VBR_VFR :
++						      HFI_RATE_CONTROL_VBR_CFR;
+ 	else
+-		rate_control = HFI_RATE_CONTROL_CBR_CFR;
++		rate_control = ctr->frame_skip_mode ? HFI_RATE_CONTROL_CBR_VFR :
++						      HFI_RATE_CONTROL_CBR_CFR;
  
- 	switch (id) {
- 	case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
-@@ -651,6 +657,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		return flash_strobe_source;
- 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:
- 		return header_mode;
+ 	ptype = HFI_PROPERTY_PARAM_VENC_RATE_CONTROL;
+ 	ret = hfi_session_set_property(inst, ptype, &rate_control);
+diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
+index 8362dde7949e..a418d7d6db0c 100644
+--- a/drivers/media/platform/qcom/venus/venc_ctrls.c
++++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
+@@ -202,6 +202,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+ 		ctr->rc_enable = ctrl->val;
+ 		break;
 +	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
-+		return mpeg_video_frame_skip;
- 	case V4L2_CID_MPEG_VIDEO_MULTI_SLICE_MODE:
- 		return multi_slice;
- 	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
-@@ -844,6 +852,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264 MB Level Rate Control";
- 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return "Sequence Header Mode";
- 	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max Number of Reference Pics";
-+	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:		return "Frame Skip Mode";
- 	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame QP Value";
-@@ -1265,6 +1274,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_FLASH_LED_MODE:
- 	case V4L2_CID_FLASH_STROBE_SOURCE:
- 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:
-+	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
- 	case V4L2_CID_MPEG_VIDEO_MULTI_SLICE_MODE:
- 	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
- 	case V4L2_CID_MPEG_VIDEO_H264_LEVEL:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 62271418c1be..4e1526175a4c 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -742,6 +742,12 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-+#define V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE		(V4L2_CID_MPEG_BASE + 645)
-+enum v4l2_mpeg_video_frame_skip_mode {
-+	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED	= 0,
-+	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_LEVEL_LIMIT	= 1,
-+	V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT	= 2,
-+};
++		ctr->frame_skip_mode = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -217,7 +220,7 @@ int venc_ctrl_init(struct venus_inst *inst)
+ {
+ 	int ret;
  
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+-	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
++	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 32);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -357,6 +360,13 @@ int venc_ctrl_init(struct venus_inst *inst)
+ 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
+ 			  V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
+ 
++	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, &venc_ctrl_ops,
++			V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE,
++			V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT,
++			~((1 << V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED) |
++			  (1 << V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT)),
++			V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED);
++
+ 	ret = inst->ctrl_handler.error;
+ 	if (ret)
+ 		goto err;
 -- 
 2.17.1
 
