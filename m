@@ -2,220 +2,120 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B99C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF312073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56282073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yhKH9OTM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d5ATdZkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGETio convert rfc822-to-8bit (ORCPT
+        id S1728113AbgGEToI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:38:44 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57375 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgGETio (ORCPT
+        Sun, 5 Jul 2020 15:44:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47004 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgGEToI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:38:44 -0400
-Received: from sogo3.sd4.0x35.net (sogo3.sd4.0x35.net [10.200.201.53])
-        (Authenticated sender: kerneldev@karsmulder.nl)
-        by relay10.mail.gandi.net (Postfix) with ESMTPA id 782F7240003;
-        Sun,  5 Jul 2020 19:38:40 +0000 (UTC)
-From:   "Kars Mulder" <kerneldev@karsmulder.nl>
-In-Reply-To: <CAHp75Vf9ygQ++DL4ETMy54d=x6oS1qqHLhfyh58f7JCVvM17yA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-Date:   Sun, 05 Jul 2020 21:38:40 +0200
-Cc:     "David Laight" <David.Laight@aculab.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Pavel Machek" <pavel@ucw.cz>,
-        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
-        <linux-kernel@vger.kernel.org>,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+        Sun, 5 Jul 2020 15:44:08 -0400
+Date:   Sun, 05 Jul 2020 19:44:04 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593978245;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=kJjqNi98jZ2gWU0Juh5kKC1w6QkusqiMwIY+neDalHo=;
+        b=yhKH9OTMlmK9YL5b4llaQDuWUmt4ctnOrCo/9MjQXIH1yjSciFJh8WfavirpU2BjD9ak4D
+        JBTpQFtY74vj9BADO+6/Kx7IEUtIIvSaUai+I2g0dZZihbBsNTJQsUXq510mBYKbVLU/nW
+        izjniF5UFz75ddqDHi/FSYTKTfWrvsu5FQ/6XfqnPycvSmJB/iQ5Vs2xKLmplN7IsjKBKd
+        7f39Rpank/n9GKmkbyxR/mNzou+6UPrFUlOT6lb84qDXuA/1sIgNK+t1zaYfXtfHHmlhXP
+        VEEN19eiGgHaV0q9GqbFTjJhblBOJeJG5n0aBoea0MMq4sLc3/wF7iE3uOkldw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593978245;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=kJjqNi98jZ2gWU0Juh5kKC1w6QkusqiMwIY+neDalHo=;
+        b=d5ATdZkrosSwyZ5dvTeP7VMw0hRmSamY+6VmVU2iz5OkZwdAfE66wjOYLeAJcrPADzM5Mm
+        Z0YWa0EDjiUCLqAQ==
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/entry/32: Fix XEN_PV build dependency
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>
 MIME-Version: 1.0
-Message-ID: <6e16-5f022c80-2cb-35a18880@71923877>
-Subject: =?utf-8?q?Re=3A?= Writing to a const =?utf-8?q?pointer=3A?= is this 
- supposed to =?utf-8?q?happen=3F?=
-User-Agent: SOGoMail 4.3.2
-Content-Transfer-Encoding: 8BIT
+Message-ID: <159397824429.4006.6604251447325788449.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, July 05, 2020 21:05 CEST, Andy Shevchenko <andy.shevchenko@gmail.com> wrote: 
-> On Sunday, July 5, 2020, Kars Mulder <kerneldev@karsmulder.nl> wrote:
-> > On Saturday, July 04, 2020 22:54 CEST, Andy Shevchenko wrote:
-> > > This and similar are not correct. 1/ They are not replacement per se
-> > > (because of different behaviour). 2/ They simple_strto*() are not
-> > > obsoleted.
-> > >
-> > > Can you correct all places you found and make it consistent?
-> >
-> > Something like the following patch? It changes all occurrences of
-> > "replacement" or "obsolete" (that I'm aware of) with "preferred over".
-> >
-> Yes, thanks!
+The following commit has been merged into the x86/urgent branch of tip:
 
-Okay. Then I shall start writing a changelog and formally submit this patch.
+Commit-ID:     a4c0e91d1d65bc58f928b80ed824e10e165da22c
+Gitweb:        https://git.kernel.org/tip/a4c0e91d1d65bc58f928b80ed824e10e165da22c
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Sun, 05 Jul 2020 21:33:11 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 05 Jul 2020 21:39:23 +02:00
 
-... While I'm at that, I realised that I had taken the liberty to correct
-the references to the functions they replace (e.g. kstrtol now says it's
-preferred over simple_strtol rather than simple_strtoull), which is
-a semantically different change than changing replacement/obsolete to
-"preferred over".
+x86/entry/32: Fix XEN_PV build dependency
 
-Does this mean that I should should split my patch into two patches?
+xenpv_exc_nmi() and xenpv_exc_debug() are only defined on 64-bit kernels,
+but they snuck into the 32-bit build via <asm/identry.h>, causing the link
+to fail:
 
+  ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_nmi':
+  (.entry.text+0x817): undefined reference to `xenpv_exc_nmi'
+
+  ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_debug':
+  (.entry.text+0x827): undefined reference to `xenpv_exc_debug'
+
+Only use them on 64-bit kernels.
+
+Fixes: f41f0824224e: ("x86/entry/xen: Route #DB correctly on Xen PV")
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/kernel.h |  4 ++--
- lib/kstrtox.c          | 12 ++++--------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/idtentry.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..cec7b1e1677a 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
- */
- static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
- {
-@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
- {
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 1006bf70bf74..233c7282cf5f 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
- {
-@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoll(const char *s, unsigned int base, long long *res)
- {
-@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtouint(const char *s, unsigned int base, unsigned int *res)
- {
-@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoint(const char *s, unsigned int base, int *res)
- {
--- 
-2.27.0
-
----
- include/linux/kernel.h |  4 ++--
- lib/kstrtox.c          | 12 ++++--------
- 2 files changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..cec7b1e1677a 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
- */
- static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
- {
-@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
- {
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 1006bf70bf74..233c7282cf5f 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
- {
-@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoll(const char *s, unsigned int base, long long *res)
- {
-@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtouint(const char *s, unsigned int base, unsigned int *res)
- {
-@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Preferred over simple_strtoull. Return code must be checked.
-  */
- int kstrtoint(const char *s, unsigned int base, int *res)
- {
--- 
-2.27.0
-
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index eeac6dc..f3d7083 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -553,7 +553,7 @@ DECLARE_IDTENTRY_RAW(X86_TRAP_MC,	exc_machine_check);
+ 
+ /* NMI */
+ DECLARE_IDTENTRY_NMI(X86_TRAP_NMI,	exc_nmi);
+-#ifdef CONFIG_XEN_PV
++#if defined(CONFIG_XEN_PV) && defined(CONFIG_X86_64)
+ DECLARE_IDTENTRY_RAW(X86_TRAP_NMI,	xenpv_exc_nmi);
+ #endif
+ 
+@@ -563,7 +563,7 @@ DECLARE_IDTENTRY_DEBUG(X86_TRAP_DB,	exc_debug);
+ #else
+ DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	exc_debug);
+ #endif
+-#ifdef CONFIG_XEN_PV
++#if defined(CONFIG_XEN_PV) && defined(CONFIG_X86_64)
+ DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	xenpv_exc_debug);
+ #endif
+ 
