@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C605FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBEE2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFD721531
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593982435;
-	bh=9RDRMuJ1yhkI0FV1AmxTqXQufZf4YIfBZSX0VGAC754=;
+	s=default; t=1593982557;
+	bh=Er1cSupQus9TnIpV2t16NGTYwoMgLeV2WAfF/89/hpw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j2XrsHmSVlPLvP08G4LsmdMioY6ZkmL1c88mo2pKmlFBcKEoWeDNuwWy9auOq4psc
-	 Nwu5sqhWSQFVxFjxQuy4pvEsqw2Mu19GbtmVX4VaXpwgAq4HwJsZS7xhjEdS3mHXYj
-	 o9r3Yuf4oKcsn1tncOl1/HHsjUgTyjmj+parcAOA=
+	b=uq7NeY/vE+XkX7qWZs1GCFCRFXtHn2aQYD/WZN31H8EQyzTMZ0Rbs524n/x0Pe/R5
+	 iJmJyiuCyDVw6ber0pzWpSVyvzFSyVn3e7FgzQfVx9iUcrtEuhBS/KF4QSL4JRfhRo
+	 3MKOuFYb2neo8fzxSpXYE9oQ0TQiFjJLtZJlYyzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgGEUxy (ORCPT
+        id S1728374AbgGEUz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 16:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgGEUxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:53:53 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        id S1728038AbgGEUzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:55:55 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99627207CD
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 20:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D984821919
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 20:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593982432;
-        bh=9RDRMuJ1yhkI0FV1AmxTqXQufZf4YIfBZSX0VGAC754=;
+        s=default; t=1593982555;
+        bh=Er1cSupQus9TnIpV2t16NGTYwoMgLeV2WAfF/89/hpw=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rjex7168IsEZxqMOEM89tSwWdcgHFTWxfIRRE6y7r0PeX4xBRtBGkx1vXnvWpK9F7
-         Fqb5MhXysKX4gdE+s8diN/OPTo3b9QSUBAkE/yjw7vx104ny8usrQNdNkoxNS+/aOe
-         A3RJVwzDf18eBEefVapZU7SAB9/bwf0B4FioEftM=
-Received: by mail-wm1-f44.google.com with SMTP id j18so37087154wmi.3
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:53:52 -0700 (PDT)
-X-Gm-Message-State: AOAM531yom3Q8MSqwCOzhULOUJIgy9WLDJmGHTmBrdjKEI85TgG9xVtT
-        4OpLzbe/L7akpOOR633HALS3BD7HmWUSmRrTVMyZ/Q==
-X-Google-Smtp-Source: ABdhPJzuQ6plxy80tbtbQd+NzybOqhoLg+qifCKUvr+VlsnymWmGHkQPGcN3oDo470m0y41UYsYiJOi2qOdoiH5QwT0=
-X-Received: by 2002:a7b:c09a:: with SMTP id r26mr45511123wmh.176.1593982431130;
- Sun, 05 Jul 2020 13:53:51 -0700 (PDT)
+        b=mXjOt4fK68MU3jlvN3QsElD7RRwGxT7ogtTD+y3gmOyHQFztDUn3l7EVlSAM3c52j
+         Npt+YkGIyndAVBE1xBjf4BQUOOXjXgZ+hV3Zob2ML66OTRH7nfFplsWphGjLOGOOpN
+         4uF5bmejh4qSEf+0lmfzpEf0IBMG7wyAWo0ST/58=
+Received: by mail-wm1-f54.google.com with SMTP id o8so37082718wmh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:55:54 -0700 (PDT)
+X-Gm-Message-State: AOAM531ouUavOcT1xaysp0iitWfOOkl/oXFFCUW72/7DQYZOjOs4b80y
+        l9PQli7mnPLObsUVsmiUuTfkmifh+uHcu5ChNp8Llg==
+X-Google-Smtp-Source: ABdhPJwEhRKGcZrOM6YtAyEC4U3024d9j6rfeBXjMlWVMgaTuFbzng9N4g1JFrUcvOTgj4XIctOZQg6SDR2w1cjYssI=
+X-Received: by 2002:a1c:1b90:: with SMTP id b138mr45880509wmb.21.1593982553413;
+ Sun, 05 Jul 2020 13:55:53 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200629214956.GA12962@linux.intel.com> <20200704203809.76391-1-dpreed@deepplum.com>
- <20200704203809.76391-4-dpreed@deepplum.com> <CALCETrWzh03fefGuSTM9hr9QY9_=xqbHg3hQ-_vo2PLUXuZ4wg@mail.gmail.com>
- <1593979233.22877148@apps.rackspace.com>
-In-Reply-To: <1593979233.22877148@apps.rackspace.com>
+ <20200704203809.76391-3-dpreed@deepplum.com> <CALCETrVZx4VA9rg-Hn7KdER866ZOtZtmTkR0MSacnj5jGO-Pag@mail.gmail.com>
+ <1593978728.059424180@apps.rackspace.com>
+In-Reply-To: <1593978728.059424180@apps.rackspace.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 5 Jul 2020 13:53:39 -0700
-X-Gmail-Original-Message-ID: <CALCETrWnef+Q=Pyrf1h5tcPSrp7tW6eSVozjfONC+OsqbGcj-Q@mail.gmail.com>
-Message-ID: <CALCETrWnef+Q=Pyrf1h5tcPSrp7tW6eSVozjfONC+OsqbGcj-Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] Force all cpus to exit VMX root operation on
- crash/panic reliably
+Date:   Sun, 5 Jul 2020 13:55:42 -0700
+X-Gmail-Original-Message-ID: <CALCETrVCEP6bLrwTYg7h_Rx-XHEsOXT4QZ=BnwpReM-n8eco6g@mail.gmail.com>
+Message-ID: <CALCETrVCEP6bLrwTYg7h_Rx-XHEsOXT4QZ=BnwpReM-n8eco6g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu
+ on crash or panic
 To:     "David P. Reed" <dpreed@deepplum.com>
 Cc:     Andy Lutomirski <luto@kernel.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -74,97 +74,93 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 1:00 PM David P. Reed <dpreed@deepplum.com> wrote:
+On Sun, Jul 5, 2020 at 12:52 PM David P. Reed <dpreed@deepplum.com> wrote:
 >
+> Thanks, will handle these. 2 questions below.
 >
+> On Sunday, July 5, 2020 2:22pm, "Andy Lutomirski" <luto@kernel.org> said:
 >
-> On Sunday, July 5, 2020 2:26pm, "Andy Lutomirski" <luto@kernel.org> said:
->
-> > On Sat, Jul 4, 2020 at 1:38 PM David P. Reed <dpreed@deepplum.com> wrot=
-e:
+> > On Sat, Jul 4, 2020 at 1:38 PM David P. Reed <dpreed@deepplum.com> wrote:
 > >>
-> >> Fix the logic during crash/panic reboot on Intel processors that
-> >> can support VMX operation to ensure that all processors are not
-> >> in VMX root operation. Prior code made optimistic assumptions
-> >> about other cpus that would leave other cpus in VMX root operation
-> >> depending on timing of crash/panic reboot.
-> >> Builds on cpu_ermergency_vmxoff() and __cpu_emergency_vmxoff() created
-> >> in a prior patch.
+> >> Fix: Mask undefined operation fault during emergency VMXOFF that must be
+> >> attempted to force cpu exit from VMX root operation.
+> >> Explanation: When a cpu may be in VMX root operation (only possible when
+> >> CR4.VMXE is set), crash or panic reboot tries to exit VMX root operation
+> >> using VMXOFF. This is necessary, because any INIT will be masked while cpu
+> >> is in VMX root operation, but that state cannot be reliably
+> >> discerned by the state of the cpu.
+> >> VMXOFF faults if the cpu is not actually in VMX root operation, signalling
+> >> undefined operation.
+> >> Discovered while debugging an out-of-tree x-visor with a race. Can happen
+> >> due to certain kinds of bugs in KVM.
+> >
+> > Can you re-wrap lines to 68 characters?  Also, the Fix: and
+>
+> I used 'scripts/checkpatch.pl' and it had me wrap to 75 chars:
+> "WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)"
+>
+> Should I submit a fix to checkpatch.pl to say 68?
+
+75 is probably fine too, but something is odd about your wrapping.
+You have long lines mostly alternating with short lines.  It's as if
+you wrote 120-ish character lines and then wrapped to 75 without
+reflowing.
+
+>
+> > Explanation: is probably unnecessary.  You could say:
+> >
+> > Ignore a potential #UD failut during emergency VMXOFF ...
+> >
+> > When a cpu may be in VMX ...
+> >
 > >>
+> >> Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
+> >> Reported-by: David P. Reed <dpreed@deepplum.com>
+> >
+> > It's not really necessary to say that you, the author, reported the
+> > problem, but I guess it's harmless.
+> >
+> >> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 > >> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> Suggested-by: Andy Lutomirski <luto@kernel.org>
 > >> Signed-off-by: David P. Reed <dpreed@deepplum.com>
 > >> ---
-> >>  arch/x86/kernel/reboot.c | 20 +++++++-------------
-> >>  1 file changed, 7 insertions(+), 13 deletions(-)
+> >>  arch/x86/include/asm/virtext.h | 20 ++++++++++++++------
+> >>  1 file changed, 14 insertions(+), 6 deletions(-)
 > >>
-> >> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> >> index 0ec7ced727fe..c8e96ba78efc 100644
-> >> --- a/arch/x86/kernel/reboot.c
-> >> +++ b/arch/x86/kernel/reboot.c
-> >> @@ -543,24 +543,18 @@ static void emergency_vmx_disable_all(void)
-> >>          * signals when VMX is enabled.
-> >>          *
-> >>          * We can't take any locks and we may be on an inconsistent
-> >> -        * state, so we use NMIs as IPIs to tell the other CPUs to dis=
-able
-> >> -        * VMX and halt.
-> >> +        * state, so we use NMIs as IPIs to tell the other CPUs to exi=
-t
-> >> +        * VMX root operation and halt.
-> >>          *
-> >>          * For safety, we will avoid running the nmi_shootdown_cpus()
-> >>          * stuff unnecessarily, but we don't have a way to check
-> >> -        * if other CPUs have VMX enabled. So we will call it only if =
-the
-> >> -        * CPU we are running on has VMX enabled.
-> >> -        *
-> >> -        * We will miss cases where VMX is not enabled on all CPUs. Th=
-is
-> >> -        * shouldn't do much harm because KVM always enable VMX on all
-> >> -        * CPUs anyway. But we can miss it on the small window where K=
-VM
-> >> -        * is still enabling VMX.
-> >> +        * if other CPUs might be in VMX root operation.
-> >>          */
-> >> -       if (cpu_has_vmx() && cpu_vmx_enabled()) {
-> >> -               /* Disable VMX on this CPU. */
-> >> -               cpu_vmxoff();
-> >> +       if (cpu_has_vmx()) {
-> >> +               /* Safely force out of VMX root operation on this CPU.=
- */
-> >> +               __cpu_emergency_vmxoff();
+> >> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+> >> index 0ede8d04535a..0e0900eacb9c 100644
+> >> --- a/arch/x86/include/asm/virtext.h
+> >> +++ b/arch/x86/include/asm/virtext.h
+> >> @@ -30,11 +30,11 @@ static inline int cpu_has_vmx(void)
+> >>  }
 > >>
-> >> -               /* Halt and disable VMX on the other CPUs */
-> >> +               /* Halt and exit VMX root operation on the other CPUs =
-*/
-> >>                 nmi_shootdown_cpus(vmxoff_nmi);
 > >>
-> >>         }
+> >> -/* Disable VMX on the current CPU
+> >> +/* Exit VMX root mode and isable VMX on the current CPU.
 > >
-> > Seems reasonable to me.
+> > s/isable/disable/
 > >
-> > As a minor caveat, doing cr4_clear_bits() in NMI context is not really
-> > okay, but we're about to reboot, so nothing too awful should happen.
-> > And this has very little to do with your patch.
+> >
+> >>  /* Disable VMX if it is supported and enabled on the current CPU
+> >> --
+> >> 2.26.2
+> >>
+> >
+> > Other than that:
+> >
+> > Reviewed-by: Andy Lutomirski <luto@kernel.org>
 >
-> I had wondered why the bit is cleared, too. (I assumed it was OK or desir=
-able, because it was being cleared in NMI context before). Happy to submit =
-a separate patch to eliminate that issue as well, since the point of emerge=
-ncy vmxoff is only to get out of VMX root mode - CR4.VMXE's state is irrele=
-vant. Of course, clearing it prevents any future emergency vmxoff attempts.=
- (there seemed to be some confusion about "enabling" VMX vs. "in VMX operat=
-ion" in the comments)  Should I?
+> As a newbie, I have a process question - should I resend the patch with the 'Reviewed-by' line, as well as correcting the other wording? Thanks!
 
-I have a vague recollection of some firmwares that got upset if
-rebooted with CR4.VMXE set.  Sean?
-
-The real issue here is that the percpu CR4 machinery uses IRQ-offness
-as a lock, and NMI breaks this.
+Probably.  Sometimes a maintainer will apply the patch and make these
+types of cosmetic changes, but it's easier if you resubmit.  That
+being said, for non-urgent patches, it's usually considered polite to
+wait a day or two to give other people a chance to comment.
 
 --Andy
