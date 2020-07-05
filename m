@@ -2,153 +2,67 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640E420870
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593932202;
-	bh=aAnhab5Td6gyYsvl9oPoynXib/ICM9SQvl8ML3UYUro=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jdHbzf9iowfq37wvIBwhvLeU4145V6xOO3GtpXh2eoIXs1ojNwpGS3BYD7JgluzpV
-	 WJYbow7gb/68QTHPvZ9YduAcymJtkSpwuqE3cjq0XRKhbYvX3Chy8IVEcj4x2eVpyJ
-	 b7v4suVlmcu6F5H45Yrfh2mfpzI014JXQVbEZbYo=
+	by mail.kernel.org (Postfix) with ESMTP id EB87820786
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 06:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgGEG4k (ORCPT
+        id S1726660AbgGEG5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 02:56:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgGEG4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 02:56:40 -0400
-Received: from localhost (p54b33111.dip0.t-ipconnect.de [84.179.49.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F1420786;
-        Sun,  5 Jul 2020 06:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593932199;
-        bh=aAnhab5Td6gyYsvl9oPoynXib/ICM9SQvl8ML3UYUro=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RDvNdu2b5k8bicUwG02dE1ms6AvTLCS0JRKGZaF4Tp4/JvMpardboWK3c7jbDsOWl
-         FoA1SUsMNgWKf0qtisbCm6cmwvF7cSszu+iN1zBw1vmdf+8Wpr2jTcQ85kLKSWmxJ1
-         /LjXMyCWdgRD8zxvjh48M49i6KJs6ByMFF4vM5eA=
-Date:   Sun, 5 Jul 2020 08:56:33 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.8
-Message-ID: <20200705065633.GA1175@kunai>
+        Sun, 5 Jul 2020 02:57:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40126 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgGEG5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 02:57:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e18so16956263pgn.7
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 23:57:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=kI3Snp2u4CWX9wFdA6BXk8yZequxCI3QMAj0Sw2LsWHn9PmM+JwtDYHABvxXHZXfW/
+         rUSo2NoUrusG8/1y1ZNGpEq/gVm6V8PdWFJ4nfmCEwuxM+01twTLsLXG7pUgy6kDcnqK
+         Trq3Ng/bU4+TPSx01dxH6QRW0aRLyQRdE6ynieluHW6w6fC1ktOSt1bkNZlw00MEKPCS
+         WVT2+OAVa7y2XNY7xBhQaE5bO+JsQclsVm9ceFVxTpELBOSn6ATmBASaAiFgYoy+25xV
+         TOakVkNR22AYsU9CFopYC43YhYxOsoJ6ZrT054WohtuWXCIVBzEaePqwEMDKe5zh5I4H
+         ovOg==
+X-Gm-Message-State: AOAM533RlwdeVPDQisBSDrSJKKWwJJLK2fvQJATCUssaslAWJMosPzfK
+        BbkLZzuBknGBkcYPcYJRYY0Nsy3s
+X-Google-Smtp-Source: ABdhPJySiIKdxUgJ5KvNkSJIlMB6oJcFhp/aQflJgSvhdfl1UVB4puezU51EnI++76D74RV4ZWqE9Q==
+X-Received: by 2002:a63:29c8:: with SMTP id p191mr36769320pgp.333.1593932264458;
+        Sat, 04 Jul 2020 23:57:44 -0700 (PDT)
+Received: from [10.10.10.239] (068-186-033-250.biz.spectrum.com. [68.186.33.250])
+        by smtp.gmail.com with ESMTPSA id y12sm15886090pfm.158.2020.07.04.23.57.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jul 2020 23:57:43 -0700 (PDT)
+Subject: Re: [PATCH 1/5] nvme-pci: Fix some comments issues
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de
+Cc:     baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
+ <3820a0fc3c74f9a70a8856172d499de4dee3c2b7.1593743937.git.baolin.wang@linux.alibaba.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <3c46f453-f215-0478-2acb-87d73ee477ae@grimberg.me>
+Date:   Sat, 4 Jul 2020 23:57:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
+In-Reply-To: <3820a0fc3c74f9a70a8856172d499de4dee3c2b7.1593743937.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Linus,
-
-I2C has some usual driver fixes and documentation updates.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
-
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-curre=
-nt
-
-for you to fetch changes up to 597911287fcd13c3a4b4aa3e0a52b33d431e0a8e:
-
-  i2c: mlxcpld: check correct size of maximum RECV_LEN packet (2020-07-04 0=
-8:20:38 +0200)
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      i2c: eg20t: Load module automatically if ID matches
-
-Chris Packham (1):
-      i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-
-Ricardo Ribalda (1):
-      i2c: designware: platdrv: Set class based on DMI
-
-Wolfram Sang (3):
-      i2c: slave-eeprom: update documentation
-      i2c: add Kconfig help text for slave mode
-      i2c: mlxcpld: check correct size of maximum RECV_LEN packet
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      (Rev.) i2c: designware: platdrv: Set class based on DMI
-      (Rev.) i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-
-Geert Uytterhoeven (1):
-      (Rev.) i2c: add Kconfig help text for slave mode
-
-Luca Ceresoli (1):
-      (Rev.) i2c: slave-eeprom: update documentation
-
-Michael Shych (2):
-      (Rev.) i2c: mlxcpld: check correct size of maximum RECV_LEN packet
-      (Test) i2c: mlxcpld: check correct size of maximum RECV_LEN packet
-
-Niklas S=C3=B6derlund (2):
-      (Rev.) i2c: add Kconfig help text for slave mode
-      (Rev.) i2c: slave-eeprom: update documentation
-
- Documentation/i2c/slave-eeprom-backend.rst  | 22 +++++++++++++++++-----
- drivers/i2c/Kconfig                         |  7 +++++++
- drivers/i2c/algos/i2c-algo-pca.c            |  3 ++-
- drivers/i2c/busses/i2c-designware-platdrv.c | 15 ++++++++++++++-
- drivers/i2c/busses/i2c-eg20t.c              |  1 +
- drivers/i2c/busses/i2c-mlxcpld.c            |  4 ++--
- 6 files changed, 43 insertions(+), 9 deletions(-)
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8BeZsACgkQFA3kzBSg
-KbYlcg/+JoVj4W2jIPGKRpCznsQtnBxCFC2M4AZvk5lOM0coxKIlwVTcbLVS9NQT
-pyYwt9ybrrMfl2XEC3xO2IBLg3YDRGk6/dqjJ5bBU+kZDRPA0r+90baulAcul2LD
-BB7DcsLcf7TG0E0EnyYheqk1YxbpRtXhMv+BU7z3Gxc7FymgKyfQ2sBw+Tpjs9Mt
-VlyIl5yjkStg0h44g7XOi2s28oHNSNVYuDRZRxWsZN+q2Wf6mHGQBg62fxTm58sZ
-/hyvWaOcHDJBT3TX/SQjQ4i+imjKWPg5ST6OdmBpB8zLH1vS93OADLUFd2wlw/a7
-vvBrP08OssCy9Z62Hjd9kMthU6zih3xdWOgdhtuxuKJaSyGVJ/kolSEMjDlwO3Tx
-C2/RFtSS9iEPub8RuR23AZgZVyL7oEZJve3psM9WuCyxFae5TidyuQ/pByhgwLEd
-akZ+jq8GkB9QEPjD6abvShrF/ZXNLbY9i057UmBkFF0ccHWOsBCJ5YR7K5HqawX5
-vEaAakW3M+osd1MDA1ubKQ0uikPp+Fw02kZUqFyeHU+/ateVSkTAUhqWe5RGBt/2
-bOtRXSfKibOuiobl9gdRRxfj0lTRUicj/br+WzPCDAQ5LOEHi1xxnco7Z6/jLjg0
-tJhfNkxKOOTrAxxfpbgtfkaGu4S1dKNSRZsryD1rjAtiDoEo4JA=
-=ezI0
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
