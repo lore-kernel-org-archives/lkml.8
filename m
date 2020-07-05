@@ -2,116 +2,304 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5693820772
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7263207CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 00:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au1fFnyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgGEAWB (ORCPT
+        id S1728061AbgGEAbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 20:22:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:42988 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgGEAWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 20:22:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B336830E;
-        Sat,  4 Jul 2020 17:22:00 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D2CD3F73C;
-        Sat,  4 Jul 2020 17:21:59 -0700 (PDT)
-References: <20200703133259.GE4781@hirez.programming.kicks-ass.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        vincent.guittot@linaro.org, mgorman@suse.de,
-        Oleg Nesterov <oleg@redhat.com>, david@fromorbit.com,
-        pauld@redhat.com, dietmar.eggemann@arm.com
-Subject: Re: [PATCH] sched: Better document ttwu()
-In-reply-to: <20200703133259.GE4781@hirez.programming.kicks-ass.net>
-Date:   Sun, 05 Jul 2020 01:21:57 +0100
-Message-ID: <jhjmu4eg6ai.mognet@arm.com>
+        Sat, 4 Jul 2020 20:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgGEAbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jul 2020 20:31:41 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BF5C061794
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 17:31:41 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id o8so35549082wmh.4
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 17:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=DSh/Jwvy65gqNgEUvzillgjncz9/zO3XiLAWGc8Crwg=;
+        b=au1fFnyI+/hEHdy0F3zh4Y8MY2NyTolhs2uCMpU+e1nLSOmewGGstp9+nJX+PZNPrY
+         /sKHbdT8YnDNBQxWK9zzP5cz/obiT2iWn68ediWdyu7dy8QDn5jYIyz/O6TZ3OFjIv7S
+         MRPskFUrUd4CNYrU/rdccW/fREqMwjPTp6Dpe0i+s7ZieZ9778p3x5pkWJBtbaYYJ7/w
+         llv1+sX4PIyBQX3oxY1IGE3XzwETRdRXX0DepB7xJ1W4yNQIuNqL3IwgmPGu16mXgnM2
+         BxDx/AfuO2j71csyapFnS3a9n+NfceSN/a2S30H7aM1GuCDhGHIxbzmdJUb56gMfDIiN
+         qDcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=DSh/Jwvy65gqNgEUvzillgjncz9/zO3XiLAWGc8Crwg=;
+        b=OdQ5Ewr7PEUWHb0au0V/BpOJtcktql0lQayloF34iqttUv3+mEegJTSMHx/zSYr+69
+         763jAJsGV95JdpRR4LYmnTKi78BQqsl8Mthp2gYDDe8G1ccKK3h4YttCorRyV4dm+uhs
+         8eKRscaQKO1dXauC0hR7XNqQUq1sbS7g1Hb7VJLr55T17uf/d1DHVLJt+lQdPbt275tB
+         PRZk0pfmk6eo81TMuL6grPOkpH9u2bVqMEKpZzAxb2TW7AzP3AxqefeA3XWvOBXbI8gB
+         LWvdN2jSS+LHBwYDTE30lo38+ZWvVMpZyXsvBp6gg1BLJsLq8chkUAYfSkpERtkSJE24
+         qWJg==
+X-Gm-Message-State: AOAM530M8EcZ9R1gcXK+zsUa/DQBHZvpA4SJ0+ajPL0s9O2efYSiwHQX
+        wwnOf9Y089eemJCo8xBEI6W3WdgE
+X-Google-Smtp-Source: ABdhPJxwbywwydoRP4xr3ysOKoYZh+PZemPotlJbOcQ6YQ0THMYFivVZYMGHqO88+PKh2PNkcmUp9w==
+X-Received: by 2002:a1c:bb43:: with SMTP id l64mr44183919wmf.151.1593909099954;
+        Sat, 04 Jul 2020 17:31:39 -0700 (PDT)
+Received: from [192.168.1.64] (bl8-158-27.dsl.telepac.pt. [85.241.158.27])
+        by smtp.gmail.com with ESMTPSA id v12sm5952959wrt.31.2020.07.04.17.31.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jul 2020 17:31:39 -0700 (PDT)
+To:     linux-kernel@vger.kernel.org
+From:   Andre Coelho <andrealbergaria@gmail.com>
+Subject: fast binary calculator
+Message-ID: <2199f3d5-cac9-99d8-3b69-55f0d8b245a0@gmail.com>
+Date:   Sun, 5 Jul 2020 01:31:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/mixed;
+ boundary="------------192E6EDDE2BA7E8FAF798DA4"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------192E6EDDE2BA7E8FAF798DA4
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 03/07/20 14:32, Peter Zijlstra wrote:
-> Dave hit the problem fixed by commit:
->
->   b6e13e85829f ("sched/core: Fix ttwu() race")
->
-> and failed to understand much of the code involved. Per his request a
-> few comments to (hopefully) clarify things.
->
-> Requested-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+ey
 
-Small extra comment below, otherwise FWIW:
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Ive made a program, that uses bit flips to quickly represent binary numbers
 
-> +++ b/kernel/sched/core.c
-> @@ -79,6 +79,100 @@ __read_mostly int scheduler_running;
->   */
->  int sysctl_sched_rt_runtime = 950000;
->
-> +
-> +/*
-> + * Serialization rules:
-> + *
-> + * Lock order:
-> + *
-> + *   p->pi_lock
-> + *     rq->lock
-> + *       hrtimer_cpu_base->lock (hrtimer_start() for bandwidth controls)
-> + *
-> + *  rq1->lock
-> + *    rq2->lock  where: rq1 < rq2
-> + *
-> + * Regular state:
-> + *
-> + * Normal scheduling state is serialized by rq->lock. __schedule() takes the
-> + * local CPU's rq->lock, it optionally removes the task from the runqueue and
-> + * always looks at the local rq data structures to find the most elegible task
-> + * to run next.
-> + *
-> + * Task enqueue is also under rq->lock, possibly taken from another CPU.
-> + * Wakeups from another LLC domain might use an IPI to transfer the enqueue to
-> + * the local CPU to avoid bouncing the runqueue state around [ see
-> + * ttwu_queue_wakelist() ]
-> + *
-> + * Task wakeup, specifically wakeups that involve migration, are horribly
-> + * complicated to avoid having to take two rq->locks.
-> + *
-> + * Special state:
-> + *
-> + * System-calls and anything external will use task_rq_lock() which acquires
-> + * both p->pi_lock and rq->lock. As a consequence the state they change is
-> + * stable while holding either lock:
-> + *
-> + *  - sched_setaffinity()/
-> + *    set_cpus_allowed_ptr():	p->cpus_ptr, p->nr_cpus_allowed
-> + *  - set_user_nice():		p->se.load, p->*prio
-> + *  - __sched_setscheduler():	p->sched_class, p->policy, p->*prio,
-> + *				p->se.load, p->rt_priority,
-> + *				p->dl.dl_{runtime, deadline, period, flags, bw, density}
+for instance, if i use a 128bit number than the algorithm uses
 
-Uclamp stuff can also get updated in __sched_setscheduler(); see
-__setscheduler_uclamp(). It's only p->uclamp_req AFAICT, but I don't think
-there's harm in just saying p->uclamp*.
+128+128+128 (and not 128*128)
 
-> + *  - sched_setnuma():		p->numa_preferred_nid
-> + *  - sched_move_task()/
-> + *    cpu_cgroup_fork():	p->sched_task_group
-> + *  - uclamp_update_active()	p->uclamp*
-> + *
+for each bit.
+
+Basically, it assigns slots to bits, so for instance
+
+pos 1    pos 2 pos 3
+
+0             0       0
+
+1            1      1
+
+so that reduces the time it takes to scan them. I also use bit flips to 
+change the bit on a particular slot.
+
+
+i wrote both c and java files.
+
+
+later
+
+
+Here is the code in c
+
+#include <stdio.h>
+
+
+char flipBit(char c);
+
+char flipBit(char c) {
+     if (c == '0')
+         return '1';
+     else
+         return '0';
+
+
+
+}
+
+
+int main() {
+
+
+
+
+
+                         char binaryNumber[] = { '0','0','0','0',0 };
+                         int slot1,slot2,slot3,slot4;
+
+
+                         for (slot1=0 ; slot1 < 2 ; slot1++) {
+                             printf("\n%s",binaryNumber);
+                             for (slot2 =1 ; slot2 < 2 ; slot2++) {
+                                 binaryNumber[slot2] = 
+flipBit(binaryNumber[slot2]);
+
+                                 printf("\n%s",binaryNumber);
+
+                                 for (slot3=2 ; slot3 < 3 ; slot3++) {
+                                     binaryNumber[slot3] = 
+flipBit(binaryNumber[slot3]);
+                                     printf("\n%s",binaryNumber);
+
+
+                                     for (slot4=3 ; slot4 < 4 ; slot4++) {
+                                         binaryNumber[slot4] = 
+flipBit(binaryNumber[slot4]);
+printf("\n%s",binaryNumber);
+                                     }
+                                 }
+
+                             }
+                             binaryNumber[slot1] = 
+flipBit(binaryNumber[slot1]);
+                             printf("\n");
+                         }
+
+
+
+}
+
+-- 
+André Albergaria Coelho
+andrealbergaria@gmail.com
+
+
+--------------192E6EDDE2BA7E8FAF798DA4
+Content-Type: text/x-csrc; charset=UTF-8;
+ name="binPath.c"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="binPath.c"
+
+#include <stdio.h>
+
+char flipBit(char c);
+
+char flipBit(char c) {
+    if (c == '0')
+        return '1';
+    else 
+        return '0';
+}
+    
+int main() {
+                        
+						char binaryNumber[] = { '0','0','0','0',0 };
+						int slot1,slot2,slot3,slot4;
+
+
+						for (slot1=0 ; slot1 < 2 ; slot1++) {
+							printf("\n%s",binaryNumber);
+							for (slot2 =1 ; slot2 < 2 ; slot2++) {
+								binaryNumber[slot2] = flipBit(binaryNumber[slot2]);
+								
+								printf("\n%s",binaryNumber);
+
+								for (slot3=2 ; slot3 < 3 ; slot3++) {
+									binaryNumber[slot3] = flipBit(binaryNumber[slot3]);
+                                    printf("\n%s",binaryNumber);
+
+
+									for (slot4=3 ; slot4 < 4 ; slot4++) {
+										binaryNumber[slot4] = flipBit(binaryNumber[slot4]);
+										printf("\n%s",binaryNumber);
+									}
+								}
+
+							}
+							binaryNumber[slot1] = flipBit(binaryNumber[slot1]);
+                            printf("\n");
+						}
+}
+
+--------------192E6EDDE2BA7E8FAF798DA4
+Content-Type: text/x-java; charset=UTF-8;
+ name="binPath.java"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="binPath.java"
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+
+
+public class binPath {
+
+	// ao inves de se usar o numero , usas a posicao dele na posicao do  numero (na array)
+	// ao inves de se usar o sistema de numeros (cada posicao ocupa um elemento vezes a base)
+	
+	 
+		
+		public static void main(String[] args) {
+		 
+					byte[] plaintext = {0,0,0,1,1,1,0,1};
+					
+					
+					
+					// prints bits and positions
+					/*byte[] b = {0,0,0,0,0,0,0,0};
+					byte[] b2 = {1,1,1,1,1,1,1,1};
+					
+				
+					for (int pos=0; pos < 8; pos++) {
+						System.out.println("position "+pos+" "+b[pos]);
+						System.out.println("position "+pos+" "+b2[pos]);
+					}
+					*/
+					byte[] t = { 0,0,0,0 };
+					
+					
+					
+					for (int slot1 = 0 ; slot1 < 2 ; slot1++) {
+						System.out.println();
+						System.out.print(Arrays.toString(t));
+						for (int slot2 = 1; slot2 < 2 ; slot2++) {
+							t[slot2] = bitFlip(t[slot2]);
+							System.out.println();
+							System.out.print(Arrays.toString(t));
+							
+							for (int slot3 = 2; slot3 < 3 ; slot3++) {
+								t[slot3] = bitFlip(t[slot3]);
+								System.out.println();
+								System.out.print(Arrays.toString(t));
+								
+								for (int slot4=3; slot4 < 4 ; slot4++) {
+									t[slot4] = bitFlip(t[slot4]);
+									System.out.println();
+									System.out.print(Arrays.toString(t));
+								}
+							}
+							
+						}
+						t[slot1] = bitFlip(t[slot1]);
+					}
+					
+						
+		}		
+												
+			
+					
+					
+	
+	// Flips bits
+	public static byte bitFlip(byte b) {
+		if (b == 0)
+			return 1;
+		else
+			return 0;
+		
+	}
+	
+}
+
+--------------192E6EDDE2BA7E8FAF798DA4--
