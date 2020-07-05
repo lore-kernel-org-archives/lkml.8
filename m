@@ -6,39 +6,44 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F639C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C37C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8786C20724
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D5720724
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgGEULW (ORCPT
+        id S1728270AbgGEUNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:11:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgGEULT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:11:19 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F98C061794;
-        Sun,  5 Jul 2020 13:11:19 -0700 (PDT)
+        Sun, 5 Jul 2020 16:13:18 -0400
+Received: from ms.lwn.net ([45.79.88.28]:51566 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728139AbgGEUNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:13:17 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 703EB739;
-        Sun,  5 Jul 2020 20:11:19 +0000 (UTC)
-Date:   Sun, 5 Jul 2020 14:11:18 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 30160739;
+        Sun,  5 Jul 2020 20:13:16 +0000 (UTC)
+Date:   Sun, 5 Jul 2020 14:13:15 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Manbing <manbing3@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] trace doc: fix typo of trace/ftrace.rst
-Message-ID: <20200705141118.491a8045@lwn.net>
-In-Reply-To: <20200630185356.3467-1-manbing3@gmail.com>
-References: <20200630185356.3467-1-manbing3@gmail.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     j.neuschaefer@gmx.net, cohuck@redhat.com,
+        mchehab+samsung@kernel.org, logang@deltatee.com,
+        mgreer@animalcreek.com, abbotti@mev.co.uk,
+        gregkh@linuxfoundation.org, jacob.e.keller@intel.com,
+        colin.king@canonical.com, tytso@mit.edu, ebiggers@google.com,
+        jack@suse.cz, tglx@linutronix.de, akpm@linux-foundation.org,
+        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
+        jgross@suse.com, mike.kravetz@oracle.com, oneukum@suse.com,
+        andy.shevchenko@gmail.com, pavel@ucw.cz,
+        jacek.anaszewski@gmail.com, alex@alexanderweb.de,
+        dwlsalmeida@gmail.com, dsterba@suse.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Replace HTTP links with HTTPS ones:
+ Documentation/admin-guide
+Message-ID: <20200705141315.17b4d70a@lwn.net>
+In-Reply-To: <20200627072935.62652-1-grandmaster@al2klimov.de>
+References: <20200627072935.62652-1-grandmaster@al2klimov.de>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -48,24 +53,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 11:53:55 -0700
-Manbing <manbing3@gmail.com> wrote:
+On Sat, 27 Jun 2020 09:29:35 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-> Some documents was converted from the plain text documentation
-> to reStructuredText format.
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Signed-off-by: Manbing <manbing3@gmail.com>
-> ---
->  Documentation/trace/ftrace.rst | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-I've applied this, thanks.  I did change the subject line, though, since a
-failure to update the names of some documents is not exactly a "typo".
-
-In the future, please include your full name in the Signed-off-by tag.
-For something this trivial it wasn't worth making a fuss about, but
-maintainers are likely to balk with more significant changes.
-
-Thanks,
+Applied, thanks.
 
 jon
