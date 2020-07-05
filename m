@@ -2,196 +2,131 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A2A20723
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4F120739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593949353;
-	bh=osIqCvX4+ivPwL8+fsRDv25DW8yCHi04b5BbNz7bvVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TCKFTg+u0Uh8corkYrna7eKP88xcMAvo0FPjnS9M2OyzVEoAkNBPsBs+9CN1TgZPQ
-	 do+ZWobg6P8ApbrvZEgU39QxKY27sbdnnPY1LsNh3HJ52IpN0fsIksoVTbCfJGee4x
-	 Vh7gM2FOGYLiuKa6VYmHYiZS8r1A6Tjtoq370UQI=
+	s=default; t=1593949495;
+	bh=A49BrhVeW4i0gMdACaS6R6Bgo64PtoM0qL8tcoWxIAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DqmhDrPkk86wGvoV1VpuyGhY/OH1DF+FabnIw5e8Uc1zeQ+69ebrj6Y3eMuyhWw+A
+	 lTKpghC+jUUdr3oUy3b9jEWwZYc3UAcg6c28QmeWOKJj8FQA7mT4KJHGSwdXcv3RSv
+	 XjIEAnnfQsVM6Cg90LitJnpuKcJe7IHAn3GgfuC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgGELmZ (ORCPT
+        id S1726819AbgGELoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 07:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:42:25 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726454AbgGELox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:44:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7129620723;
-        Sun,  5 Jul 2020 11:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4064720723;
+        Sun,  5 Jul 2020 11:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593949344;
-        bh=osIqCvX4+ivPwL8+fsRDv25DW8yCHi04b5BbNz7bvVs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AdVX8Vk4fwtJeKRNNP90+6latAq3QxT9WX0vb3GSjvvZDc4Urv7LtGq/qOiFPp39P
-         vLren38X0sXAUl+eRRAW9wRRhXcTRlgnA/MhgcEnzZF3cPtlgr3ic8FGYjWQ8VBvOP
-         cPoWpDdI9pNk2veOezHToQ4JGjaZmvzCvx5jzKek=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1js32M-009AZX-VF; Sun, 05 Jul 2020 12:42:23 +0100
-Date:   Sun, 05 Jul 2020 12:42:16 +0100
-Message-ID: <87sge6dw87.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com, Andrew Scull <ascull@google.com>
-Subject: Re: [PATCH v4 07/15] arm64: kvm: Move hyp-init.S to nVHE
-In-Reply-To: <20200625131420.71444-8-dbrazdil@google.com>
-References: <20200625131420.71444-1-dbrazdil@google.com>
-        <20200625131420.71444-8-dbrazdil@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com, ascull@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1593949493;
+        bh=A49BrhVeW4i0gMdACaS6R6Bgo64PtoM0qL8tcoWxIAw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JTW6kU/mEPS4lUzNYBF2hVwi/8EhViX1SAwXw4Z/RD0VF2iMd9YFDO1t4U2t0Y1es
+         zUgKZxfagndBWCUbksdrlEon3iyEB4CbnvEMVeycpjNnmxl6LqKPMWAT7PK9hjrm4E
+         1o2+vwokkrc5EynLt8FLENYxMsnAD7cm5x5kGOZE=
+Date:   Sun, 5 Jul 2020 13:44:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vito Caputo <vcaputo@pengaru.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705114454.GB1224775@kroah.com>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org>
+ <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
+ <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-On Thu, 25 Jun 2020 14:14:12 +0100,
-David Brazdil <dbrazdil@google.com> wrote:
+On Sun, Jul 05, 2020 at 01:07:14AM -0700, Vito Caputo wrote:
+> On Sun, Jul 05, 2020 at 04:27:32AM +0100, Matthew Wilcox wrote:
+> > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
+> > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > You should probably take a look at io_uring.  That has the level of
+> > > > complexity of this proposal and supports open/read/close along with many
+> > > > other opcodes.
+> > > 
+> > > Then glibc can implement readfile using io_uring and there is no need
+> > > for a new single-file readfile syscall.
+> > 
+> > It could, sure.  But there's also a value in having a simple interface
+> > to accomplish a simple task.  Your proposed API added a very complex
+> > interface to satisfy needs that clearly aren't part of the problem space
+> > that Greg is looking to address.
 > 
-> From: Andrew Scull <ascull@google.com>
+> I disagree re: "aren't part of the problem space".
 > 
-> hyp-init.S contains the identity mapped initialisation code for the
-> non-VHE code that runs at EL2. It is only used for non-VHE.
+> Reading small files from procfs was specifically called out in the
+> rationale for the syscall.
 > 
-> Adjust code that calls into this to use the prefixed symbol name.
-> 
-> Signed-off-by: Andrew Scull <ascull@google.com>
-> 
-> [David: pass idmap_t0sz as an argument]
+> In my experience you're rarely monitoring a single proc file in any
+> situation where you care about the syscall overhead.  You're
+> monitoring many of them, and any serious effort to do this efficiently
+> in a repeatedly sampled situation has cached the open fds and already
+> uses pread() to simply restart from 0 on every sample and not
+> repeatedly pay for the name lookup.
 
-It is unclear to me why moving the way idmap_t0sz is passed is
-required at this stage. I understand that you want to minimise the
-amount of shared data between EL1 and EL2, but it hardly seems
-relevant here.
+That's your use case, but many other use cases are just "read a bunch of
+sysfs files in one shot".  Examples of that are tools that monitor
+uevents and lots of hardware-information gathering tools.
 
-Or is it, as I expect, to avoid yet another symbol renaming issue?
-If so, it would be preferable to have the symbol alias, keep the setup
-hypercall as is, and have a later, separate patch that deals with the
-the idmap. And I am pretty sure that, as we move to a more autonomous
-EL2, we won't have to deal with it at all and we'll simply delete this
-code.
+Also not all tools sem to be as smart as you think they are, look at
+util-linux for loads of the "open/read/close" lots of files pattern.  I
+had a half-baked patch to convert it to use readfile which I need to
+polish off and post with the next series to show how this can be used to
+both make userspace simpler as well as use less cpu time.
 
-I'm planning to squash the following diff into this patch, effectively
-reverting the idmap_t0sz related changes. Let me know if you're OK
-with it.
+> Basically anything optimally using the existing interfaces for
+> sampling proc files needs a way to read multiple open file descriptors
+> in a single syscall to move the needle.
 
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 8ba32bff7bb2..9e897c500237 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -83,6 +83,9 @@ KVM_NVHE_ALIAS(panic);
- /* Vectors installed by hyp-init on reset HVC. */
- KVM_NVHE_ALIAS(__hyp_stub_vectors);
- 
-+/* IDMAP TCR_EL1.T0SZ as computed by the EL1 init code */
-+KVM_NVHE_ALIAS(idmap_t0sz);
-+
- /* Kernel symbol used by icache_is_vpipt(). */
- KVM_NVHE_ALIAS(__icache_flags);
- 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 8ca2c111cec2..0bf2cf5614c6 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -1296,7 +1296,7 @@ static void cpu_init_hyp_mode(void)
- 	 * cpus_have_const_cap() wrapper.
- 	 */
- 	BUG_ON(!system_capabilities_finalized());
--	__kvm_call_hyp((void *)pgd_ptr, hyp_stack_ptr, vector_ptr, tpidr_el2, idmap_t0sz);
-+	__kvm_call_hyp((void *)pgd_ptr, hyp_stack_ptr, vector_ptr, tpidr_el2);
- 
- 	/*
- 	 * Disabling SSBD on a non-VHE system requires us to enable SSBS
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-init.S b/arch/arm64/kvm/hyp/nvhe/hyp-init.S
-index 7bb75acbede0..6e6ed5581eed 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-init.S
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-init.S
-@@ -47,24 +47,23 @@ __invalid:
- 	 * x1: HYP stack
- 	 * x2: HYP vectors
- 	 * x3: per-CPU offset
--	 * x4: idmap_t0sz
- 	 */
- __do_hyp_init:
- 	/* Check for a stub HVC call */
- 	cmp	x0, #HVC_STUB_HCALL_NR
- 	b.lo	__kvm_handle_stub_hvc
- 
--	phys_to_ttbr x5, x0
-+	phys_to_ttbr x4, x0
- alternative_if ARM64_HAS_CNP
--	orr	x5, x5, #TTBR_CNP_BIT
-+	orr	x4, x4, #TTBR_CNP_BIT
- alternative_else_nop_endif
--	msr	ttbr0_el2, x5
-+	msr	ttbr0_el2, x4
- 
--	mrs	x5, tcr_el1
--	mov_q	x6, TCR_EL2_MASK
--	and	x5, x5, x6
--	mov	x6, #TCR_EL2_RES1
--	orr	x5, x5, x6
-+	mrs	x4, tcr_el1
-+	mov_q	x5, TCR_EL2_MASK
-+	and	x4, x4, x5
-+	mov	x5, #TCR_EL2_RES1
-+	orr	x4, x4, x5
- 
- 	/*
- 	 * The ID map may be configured to use an extended virtual address
-@@ -80,14 +79,15 @@ alternative_else_nop_endif
- 	 *
- 	 * So use the same T0SZ value we use for the ID map.
- 	 */
--	bfi	x5, x4, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
-+	ldr_l	x5, idmap_t0sz
-+	bfi	x4, x5, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
- 
- 	/*
- 	 * Set the PS bits in TCR_EL2.
- 	 */
--	tcr_compute_pa_size x5, #TCR_EL2_PS_SHIFT, x4, x6
-+	tcr_compute_pa_size x4, #TCR_EL2_PS_SHIFT, x5, x6
- 
--	msr	tcr_el2, x5
-+	msr	tcr_el2, x4
- 
- 	mrs	x4, mair_el1
- 	msr	mair_el2, x4
+Is psutils using this type of interface, or do they constantly open
+different files?
 
-Thanks,
+What about fun tools like bashtop:
+	https://github.com/aristocratos/bashtop.git
+which thankfully now relies on python's psutil package to parse proc in
+semi-sane ways, but that package does loads of constant open/read/close
+of proc files all the time from what I can tell.
 
-	M.
+And lots of people rely on python's psutil, right?
 
--- 
-Without deviation from the norm, progress is not possible.
+> This syscall doesn't provide that.  It doesn't really give any
+> advantage over what we can achieve already.  It seems basically
+> pointless to me, from a monitoring proc files perspective.
+
+What "good" monitoring programs do you suggest follow the pattern you
+recommend?
+
+thanks,
+
+greg k-h
