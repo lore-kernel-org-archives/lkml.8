@@ -2,151 +2,197 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1061C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15802C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A093A2070C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9352073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwHhDsr9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vfn1H4Bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGESsN (ORCPT
+        id S1728094AbgGESwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:48:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59366 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727785AbgGESsM (ORCPT
+        Sun, 5 Jul 2020 14:52:10 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:39885 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbgGESwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:48:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593974890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X2NxAjQStBuOg2nWLcCqhTmnhAGLMIMF1gTvQJHR2fg=;
-        b=EwHhDsr93jiFkZORIK7DNrbe3Zn6PZ8coDGULoDNsEMnl8jlj10IJH1mOu1aOiAdUP/vOS
-        biqY6jm6Wux9nqQo4JzCad5VuEF8rEeHaF+PUcYUV4wnSJm1WOsMOTLPTUEHwlxrtPrV90
-        NaUQhq4nOqVLUJwQCI2TVAyUQjCFBiQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-GaleSg56NYifqcstNxG6TA-1; Sun, 05 Jul 2020 14:48:09 -0400
-X-MC-Unique: GaleSg56NYifqcstNxG6TA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66EA01005510;
-        Sun,  5 Jul 2020 18:48:06 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-238.rdu2.redhat.com [10.10.112.238])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B2E310013C2;
-        Sun,  5 Jul 2020 18:48:02 +0000 (UTC)
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Abhishek Bhardwaj <abhishekbh@google.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Doug Anderson <dianders@google.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
-References: <20200702221237.2517080-1-abhishekbh@google.com>
- <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
- <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
- <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
- <20200703114037.GD2999146@linux.ibm.com>
- <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
- <20200705152304.GE2999146@linux.ibm.com>
- <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
- <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <48f82669-f1ff-0f5e-e531-ebbd151205f9@redhat.com>
-Date:   Sun, 5 Jul 2020 14:48:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Sun, 5 Jul 2020 14:52:09 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200705185206epoutp01927c615533e31a09ee3985559d3fe5e8~e7_6yewp61672016720epoutp01a
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 18:52:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200705185206epoutp01927c615533e31a09ee3985559d3fe5e8~e7_6yewp61672016720epoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593975126;
+        bh=hQPezt3s8OlsiuExPu77NlEiYYJbDQhcCBCIducGDuk=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Vfn1H4BtPwXy4+Mu8sDvEt25ifHaqhB+ADZdkO4NXeKu28djW+Gq4Bo+XlS87QVa7
+         DFGjNKNI8ZViRr1hq5hUwh59cboTVe7Gl2aoImIuXKWvPAo5WvwHewZeaRQsCFaC85
+         Oq1QSctTxs+2IvU2M9RdYDf3XNvDlwyPHDSP62Cs=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200705185205epcas5p180e3a8deef1fcacdb76d934a7fef28e7~e7_6C_L5Y0734507345epcas5p1U;
+        Sun,  5 Jul 2020 18:52:05 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8D.B7.09703.551220F5; Mon,  6 Jul 2020 03:52:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200705185204epcas5p3adeb4fc3473c5fc0472a7396783c5267~e7_5JGHy90482204822epcas5p3n;
+        Sun,  5 Jul 2020 18:52:04 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200705185204epsmtrp2f0e02848992e9a6786497f596d97f99f~e7_5IS-JF1855618556epsmtrp2w;
+        Sun,  5 Jul 2020 18:52:04 +0000 (GMT)
+X-AuditID: b6c32a4a-4b5ff700000025e7-2a-5f022155462e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        48.37.08303.451220F5; Mon,  6 Jul 2020 03:52:04 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200705185202epsmtip2da00bd83855b850f39e7db1e956e44a9~e7_3DMwUB3251332513epsmtip2u;
+        Sun,  5 Jul 2020 18:52:02 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org
+Cc:     hch@infradead.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v3 0/4] zone-append support in io-uring and aio
+Date:   Mon,  6 Jul 2020 00:17:46 +0530
+Message-Id: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSZ0wTYRjmux7ttUnlrEQ/qqJUTKQoKGI4FcWI0QtGozGg4oBGLoiy2hNQ
+        ooQIZZQUCZQpGEPE1PoDrCejFMSW4UCw4ohGVgTFAZpWkbDU0qL/nu9Z7/Pjw1iCdEchFhV7
+        jpLFSqJFbB5aa/QQrwt2Q8LW11k8ialilSNRrqkFxO3eK2xCMcughDxzHCGe5FUixJi8CyXa
+        fo+yCVXRZUA0vfUk9E2PUKJHV84m1HWtKPFCVckiumc6HHc4kQ1lvRzyrlpM9jxNILXmfA6Z
+        83ICkLmMBpAWrSuZ2ZKDkNqhUeQAN5TnH0FFRyVSMu/t4bzTg51VaHyn63lT/xd2KlBBBeBi
+        EPeFv6s/AgXgYQK8EcCX12ZQ28MM4HjLbbtiAfBm62POfKT5oZZjE3R/Bcss55+reliFKACG
+        sXEP+KwgwQqdcX/YcMPdamHhWQicvcUAK78ID4C6EqG1E8VXw+zRCcSK+XggrK2ZZNtuucI3
+        XdksaxbicgxeVlbbR+yC9a8y7aZF8HMHY+eF0DLWZOdpOPmuzR7OAvB1ailqEwKgST8zt5P1
+        d2e1zttKs/AFUDk1NEdDnA+zMgQ2txvsyx92tOElcLDkhh2T8EGPaa5RgJ+A6UoG5IFlZf9L
+        rwOgAS5UPB0TSdGb4n1iqSQvWhJDJ8RGep2Ki9GCuY8iDqoHgwPfvQwAwYABQIwlcuYrPUGY
+        gB8huZBMyeLCZAnRFG0ASzFUtIQvmug8KcAjJeeosxQVT8nmVQTjClMRkeJTtMJdNdJ4fGtI
+        wzI6Qu8V3OC+y2l2+fRARss184qK8JTncYVRNVJRJnHgeZG4fcSwB6vadnfzk4vCLa4rjT9G
+        u1OD8yfWJkv18uKR4o4Lx5uD1D0h+8LLy893/pQKjfr9Lcd+Lb9zSL5zfwWjWV23hZOd6MQp
+        ZdRnC/qTVOPfUmo2Xu0+Oj3+tH23j480L2a4CRH4nTjJVKYZ90nDx9bcCjxyqbWQCn39QMc9
+        86HYr+Jrn3pwYVdir9bZN7dtb8fw/fQNh0fe378nC1N+8i9AGMzoZ5IMFJhdKImDyFc21YwY
+        tNykXIM5oMth1czBRhN/MU+68IzmR5rbTU6VCKVPSzaIWTJa8geHwFSrlwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSvG6IIlO8waH92ha/p09htZizahuj
+        xeq7/WwWXf+2sFi0tn9jsjg9YRGTxbvWcywWR/+/ZbOYMq2J0WLvLW2LPXtPslhc3jWHzWLF
+        9iMsFlemLGK2OP/3OKsDv8fOWXfZPTav0PK4fLbUY9OnSewe3Vd/MHr0bVnF6PF5k5xH+4Fu
+        Jo9NT94yBXBGcdmkpOZklqUW6dslcGU8PLOUpeCMXMXF+6/ZGhinSHQxcnJICJhI7Duxib2L
+        kYtDSGAHo8SRvidsEAlxieZrP9ghbGGJlf+eQxV9ZJS4NmcXSxcjBwebgKbEhcmlIDUiAg4S
+        XccfM4HUMAtMYZJ4emo+M0iNsIC9xK4ZUiA1LAKqEp1vfzCB2LwCzhLbNvyC2iUncfNcJ/ME
+        Rp4FjAyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGCw1ZLawfjnlUf9A4xMnEwHmKU
+        4GBWEuHt1WaMF+JNSaysSi3Kjy8qzUktPsQozcGiJM77ddbCOCGB9MSS1OzU1ILUIpgsEwen
+        VAPTubkV7x5OZbyulNne23vFza//vP9NV3lPjb8P1zxiSpvu1TInkXuXpvkH+8rbRyOjNgaW
+        yp7pV+qeu3Gb52f12VL9dku417FcENA13RRyPUru0z5j525Omc1c82L4o1ZO4uy32nunpvP+
+        f6VTVzguf5ybzyGmrrnh+KZJN+6pPHz3SOT8drOm1/sOG3Zz3f24oeRyZ/E5k3DT/7N1DXUU
+        niz8v2DdGqb1LwOD6uwPa+94z2gtf69ZmWOn9LniiVEvDHae3+UmNfVp/ostv01M182/wFGt
+        c3NHWpfbx7b/C/r4XFtuLbBMK6rnPvHQ7mZ8IIu5uFDGUxVz20edqcZz1jyauCDrokPKK0MN
+        jwO6SizFGYmGWsxFxYkAwPqMfMoCAAA=
+X-CMS-MailID: 20200705185204epcas5p3adeb4fc3473c5fc0472a7396783c5267
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200705185204epcas5p3adeb4fc3473c5fc0472a7396783c5267
+References: <CGME20200705185204epcas5p3adeb4fc3473c5fc0472a7396783c5267@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 2:22 PM, Abhishek Bhardwaj wrote:
-> On Sun, Jul 5, 2020 at 8:57 AM Waiman Long <longman@redhat.com> wrote:
->> On 7/5/20 11:23 AM, Mike Rapoport wrote:
->>>> Nothing prevents people from continuing to use the command line
->>>> options if they want, right?  This just allows a different default.
->>>> So if a distro is security focused and decided that it wanted a slower
->>>> / more secure default then it could ship that way but individual users
->>>> could still override, right?
->>> Well, nothing prevents you from continuing to use the command line as
->>> well;-)
->>>
->>> I can see why whould you want an ability to select compile time default
->>> for an option, but I'm really not thrilled by the added ifdefery.
->>>
->> It turns out that CONFIG_KVM_VMENTRY_L1D_FLUSH values match the enum
->> vmx_l1d_flush_state values. So one way to reduce the ifdefery is to do,
->> for example,
->>
->> +#ifdef CONFIG_KVM_VMENTRY_L1D_FLUSH
->> +#define VMENTER_L1D_FLUSH_DEFAULT CONFIG_KVM_VMENTRY_L1D_FLUSH
->> +#else
->> +#define VMENTER_L1D_FLUSH_DEFAULT      VMENTER_L1D_FLUSH_AUTO
->> #endif
->> -enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
->> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_DEFAULT;
->>
->> Of course, we may need to add a comment on enum vmx_l1d_flush_state
->> definition to highlight the dependency of CONFIG_KVM_VMENTRY_L1D_FLUSH
->> on it to avoid future mismatch.
-> I explicitly wanted to avoid doing that for this very reason. In my
-> opinion this is brittle and bound to be missed
-> sooner or later.
->
-That is why I said a comment will have to be added to highlight this 
-dependency. For instance,
+Changes since v2:
+- Use file append infra (O_APPEND/RWF_APPEND) to trigger zone-append
+(Christoph, Wilcox)
+- Added Block I/O path changes (Damien). Avoided append split into multi-bio.
+- Added patch to extend zone-append in block-layer to support bvec iov_iter.
+Append using io-uring fixed-buffer is enabled with this.
+- Made io-uring support code more concise, added changes mentioned by Pavel.
 
-+/*
-+ * Three of the enums are explicitly assigned as the KVM_VMENTRY_L1D_FLUSH
-+ * config entry in arch/x86/kvm/Kconfig depends on these values.
-+ */
-  enum vmx_l1d_flush_state {
-         VMENTER_L1D_FLUSH_AUTO,
--       VMENTER_L1D_FLUSH_NEVER,
--       VMENTER_L1D_FLUSH_COND,
--       VMENTER_L1D_FLUSH_ALWAYS,
-+       VMENTER_L1D_FLUSH_NEVER = 1,
-+       VMENTER_L1D_FLUSH_COND = 2,
-+       VMENTER_L1D_FLUSH_ALWAYS = 3,
-         VMENTER_L1D_FLUSH_EPT_DISABLED,
-         VMENTER_L1D_FLUSH_NOT_REQUIRED,
-  };
+v2: https://lore.kernel.org/io-uring/1593105349-19270-1-git-send-email-joshi.k@samsung.com/
 
-Of course, this is just a suggestion.
+Changes since v1:
+- No new opcodes in uring or aio. Use RWF_ZONE_APPEND flag instead.
+- linux-aio changes vanish because of no new opcode
+- Fixed the overflow and other issues mentioned by Damien
+- Simplified uring support code, fixed the issues mentioned by Pavel
+- Added error checks for io-uring fixed-buffer and sync kiocb
 
-Cheers,
-Longman
+v1: https://lore.kernel.org/io-uring/1592414619-5646-1-git-send-email-joshi.k@samsung.com/
+
+Cover letter (updated):
+
+This patchset enables zone-append using io-uring/linux-aio, on block IO path.
+Purpose is to provide zone-append consumption ability to applications which are
+using zoned-block-device directly.
+Application can send write with existing O/RWF_APPEND;On a zoned-block-device
+this will trigger zone-append. On regular block device existing behavior is
+retained. However, infra allows zone-append to be triggered on any file if
+FMODE_ZONE_APPEND (new kernel-only fmode) is set during open.
+
+With zone-append, written-location within zone is known only after completion.
+So apart from usual return value of write, additional mean is needed to obtain
+the actual written location.
+
+In aio, this is returned to application using res2 field of io_event -
+
+struct io_event {
+        __u64           data;           /* the data field from the iocb */
+        __u64           obj;            /* what iocb this event came from */
+        __s64           res;            /* result code for this event */
+        __s64           res2;           /* secondary result */
+};
+
+In io-uring, cqe->flags is repurposed for zone-append result.
+
+struct io_uring_cqe {
+        __u64   user_data;      /* sqe->data submission passed back */
+        __s32   res;            /* result code for this event */
+        __u32   flags;
+};
+
+32 bit flags is not sufficient, to cover zone-size represented by chunk_sectors.
+Discussions in the LKML led to following ways to go about it -
+Option 1: Return zone-relative offset in sector/512b unit
+Option 2: Return zone-relative offset in bytes
+
+With option #1, io-uring changes remain minimal, relatively clean, and extra
+checks and conversions are avoided in I/O path. Also ki_complete interface change
+is avoided (last parameter ret2 is of long type, which cannot store return value
+in bytes). Bad part of the choice is - return value is in 512b units and not in
+bytes. To hide that, a wrapper needs to be written in user-space that converts
+cqe->flags value to bytes and combines with zone-start.
+
+Option #2 requires pulling some bits from cqe->res and combine those with
+cqe->flags to store result in bytes. This bitwise scattering needs to be done
+by kernel in I/O path, and application still needs to have a relatively
+heavyweight wrapper to assemble the pieces so that both cqe->res and append
+location are derived correctly.
+
+Patchset picks option #1.
+
+Kanchan Joshi (2):
+  fs: introduce FMODE_ZONE_APPEND and IOCB_ZONE_APPEND
+  block: enable zone-append for iov_iter of bvec type
+
+Selvakumar S (2):
+  block: add zone append handling for direct I/O path
+  io_uring: add support for zone-append
+
+ block/bio.c        | 31 ++++++++++++++++++++++++++++---
+ fs/block_dev.c     | 49 ++++++++++++++++++++++++++++++++++++++++---------
+ fs/io_uring.c      | 21 +++++++++++++++++++--
+ include/linux/fs.h | 14 ++++++++++++--
+ 4 files changed, 99 insertions(+), 16 deletions(-)
+
+-- 
+2.7.4
 
