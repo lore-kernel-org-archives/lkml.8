@@ -2,144 +2,139 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E32C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A78C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0C7420739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p5/pIAXf"
+	by mail.kernel.org (Postfix) with ESMTP id A8D5320739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593973579;
+	bh=9Y2dAgEVUZNawhiry+/FDAV6jSDC2JPLURF27eusN2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Itw9JSaFrHcLqUdjfyUu+rXmOJA/SJUrMEAkkMMqyDg+IQR1BICFEULbx2DNrwp65
+	 QRjzBChJIrt02LuC+KVGsH/xB58WWiRbM/HmWsfQqKrmjV9LeXMJ3mI7fvYdEyPEfy
+	 mPNjc71ph06MrNBsHLdiHE58+0gijVeksJ8C8D2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgGESXU (ORCPT
+        id S1727991AbgGES0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgGESXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:23:19 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8884C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 11:23:18 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id q8so37118989iow.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 11:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HMEHe+br8dXcHI+hB4O6nEY5v7Sg6St98G6CWcHOLAY=;
-        b=p5/pIAXf3CKYBu7XQ+eET85u6p43lVcZZCEJzOCn6xIig95QPwz/9I/2x+weOJLgxn
-         Cie31azzWN79bqQqUdusC9nA9+hbL9kvsl1MJwazGnkcJn1kiG3l6fQ1dV2Ib6ejFaTp
-         WjCjV1l5Ehh2ZrunNBhIrGkQMyglDkpgtqJ2U/MIXQ8luL+uaTBJn1aWJKcwAkBhMVAX
-         P2IY3nJQcZI7yfOYlFzUvVdgsBKEMcyevYLUwC1XYkeeD6Sw4vzLu0lMNHRQSsnMpPsK
-         1dNu8PjzqnGWr0G9s2y6gBF3/WNe3mf2YHQmY+3ZgezLAq1YbzpBMbbRVlAbJ+hGGI6R
-         U4qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HMEHe+br8dXcHI+hB4O6nEY5v7Sg6St98G6CWcHOLAY=;
-        b=XkKXmVUj2FzfuI8taGXVpkK8Axm8v4vzhfr4Ae83CeVDKNgDvidkrvKGxJ47lUVYin
-         clhxGLjcMzqG4/bFZ6K6n5AARtjB3jcr+UtjyjWtHfv/N1wskzxwcPNosr5O3ghSzUt3
-         BnsZM8F2lczHjufYqh8QY0JZPDWE/eueoB9+RUIDrq/DU1OuMRFZfNfZhCizYgbTIn+g
-         mnh5ZvRTl2WgjsFttHT4Tm+Vkjlk0DSCQ2pJWrYnKxdWhE45qs1D/NGpKsq2FFrQCUGt
-         /qop9xrBwTu5r4DwkwwwYWwa/6RFPfkwOQ473KynxBKTRdjo9lXa8zxQyHl920FEMQF9
-         gEOw==
-X-Gm-Message-State: AOAM533nuqWVKUoIbQFoc9qXzvM0UzZ7ZUi+KsfUBC9ix7zqZwDOZ5V9
-        E2IrxQZZSsAB2LlahkW6hKmSMao8qxA+JFQSzv7Tlw==
-X-Google-Smtp-Source: ABdhPJyBOWuLUXOzG6o2lDDAnLH070zEuFx/Po3XVCpmBC/ky8dEjid7/3THBJAz32DNG7JWCQm++YJmtgD+wfcVmls=
-X-Received: by 2002:a5e:cb42:: with SMTP id h2mr21634185iok.43.1593973397858;
- Sun, 05 Jul 2020 11:23:17 -0700 (PDT)
+        Sun, 5 Jul 2020 14:26:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbgGES0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 14:26:17 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9718820CC7
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 18:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593973576;
+        bh=9Y2dAgEVUZNawhiry+/FDAV6jSDC2JPLURF27eusN2o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Bh/WEhEeg3fvfU8ctQ3Y++4KK3G+KanSoTTILlXnT5CmdM1T2IpZAn/R3wvnceLo3
+         i/ENZVy1c8+j5t1PfgPllDgTueQEYciZAxAcD/B+GRM/SAZLpwpcQhCX1Pl0e+sHhb
+         rwBnlfRRCNVX81K4/BeYGA6+srfoWgmrIJZuU3Zw=
+Received: by mail-wm1-f43.google.com with SMTP id j18so36819879wmi.3
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 11:26:16 -0700 (PDT)
+X-Gm-Message-State: AOAM530jJhcIr4/7Jnjqi6G5Kq8RhoQibFHpBMXC/or7N/lGeaD4DKNf
+        mp2XvkCuU16j3x7u9vhIqorJp4yQ9PONAKm8NtXH0Q==
+X-Google-Smtp-Source: ABdhPJyFKWdJhjEdznHVBnyaF0gBEethlygSuTswNDuDcbBl4xVknlUwLf6XfQTaiqN9ib+hF5+Mx3nZLUdnESwdxvE=
+X-Received: by 2002:a1c:e4d4:: with SMTP id b203mr16971530wmh.49.1593973575062;
+ Sun, 05 Jul 2020 11:26:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200702221237.2517080-1-abhishekbh@google.com>
- <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
- <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
- <20200703114037.GD2999146@linux.ibm.com> <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
- <20200705152304.GE2999146@linux.ibm.com> <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
-In-Reply-To: <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
-From:   Abhishek Bhardwaj <abhishekbh@google.com>
-Date:   Sun, 5 Jul 2020 11:22:42 -0700
-Message-ID: <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Waiman Long <longman@redhat.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Doug Anderson <dianders@google.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+References: <20200629214956.GA12962@linux.intel.com> <20200704203809.76391-1-dpreed@deepplum.com>
+ <20200704203809.76391-4-dpreed@deepplum.com>
+In-Reply-To: <20200704203809.76391-4-dpreed@deepplum.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 5 Jul 2020 11:26:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrWzh03fefGuSTM9hr9QY9_=xqbHg3hQ-_vo2PLUXuZ4wg@mail.gmail.com>
+Message-ID: <CALCETrWzh03fefGuSTM9hr9QY9_=xqbHg3hQ-_vo2PLUXuZ4wg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] Force all cpus to exit VMX root operation on
+ crash/panic reliably
+To:     "David P. Reed" <dpreed@deepplum.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 8:57 AM Waiman Long <longman@redhat.com> wrote:
+On Sat, Jul 4, 2020 at 1:38 PM David P. Reed <dpreed@deepplum.com> wrote:
 >
-> On 7/5/20 11:23 AM, Mike Rapoport wrote:
-> >> Nothing prevents people from continuing to use the command line
-> >> options if they want, right?  This just allows a different default.
-> >> So if a distro is security focused and decided that it wanted a slower
-> >> / more secure default then it could ship that way but individual users
-> >> could still override, right?
-> > Well, nothing prevents you from continuing to use the command line as
-> > well;-)
-> >
-> > I can see why whould you want an ability to select compile time default
-> > for an option, but I'm really not thrilled by the added ifdefery.
-> >
+> Fix the logic during crash/panic reboot on Intel processors that
+> can support VMX operation to ensure that all processors are not
+> in VMX root operation. Prior code made optimistic assumptions
+> about other cpus that would leave other cpus in VMX root operation
+> depending on timing of crash/panic reboot.
+> Builds on cpu_ermergency_vmxoff() and __cpu_emergency_vmxoff() created
+> in a prior patch.
 >
-> It turns out that CONFIG_KVM_VMENTRY_L1D_FLUSH values match the enum
-> vmx_l1d_flush_state values. So one way to reduce the ifdefery is to do,
-> for example,
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: David P. Reed <dpreed@deepplum.com>
+> ---
+>  arch/x86/kernel/reboot.c | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 >
-> +#ifdef CONFIG_KVM_VMENTRY_L1D_FLUSH
-> +#define VMENTER_L1D_FLUSH_DEFAULT CONFIG_KVM_VMENTRY_L1D_FLUSH
-> +#else
-> +#define VMENTER_L1D_FLUSH_DEFAULT      VMENTER_L1D_FLUSH_AUTO
-> #endif
-> -enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_DEFAULT;
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 0ec7ced727fe..c8e96ba78efc 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -543,24 +543,18 @@ static void emergency_vmx_disable_all(void)
+>          * signals when VMX is enabled.
+>          *
+>          * We can't take any locks and we may be on an inconsistent
+> -        * state, so we use NMIs as IPIs to tell the other CPUs to disable
+> -        * VMX and halt.
+> +        * state, so we use NMIs as IPIs to tell the other CPUs to exit
+> +        * VMX root operation and halt.
+>          *
+>          * For safety, we will avoid running the nmi_shootdown_cpus()
+>          * stuff unnecessarily, but we don't have a way to check
+> -        * if other CPUs have VMX enabled. So we will call it only if the
+> -        * CPU we are running on has VMX enabled.
+> -        *
+> -        * We will miss cases where VMX is not enabled on all CPUs. This
+> -        * shouldn't do much harm because KVM always enable VMX on all
+> -        * CPUs anyway. But we can miss it on the small window where KVM
+> -        * is still enabling VMX.
+> +        * if other CPUs might be in VMX root operation.
+>          */
+> -       if (cpu_has_vmx() && cpu_vmx_enabled()) {
+> -               /* Disable VMX on this CPU. */
+> -               cpu_vmxoff();
+> +       if (cpu_has_vmx()) {
+> +               /* Safely force out of VMX root operation on this CPU. */
+> +               __cpu_emergency_vmxoff();
 >
-> Of course, we may need to add a comment on enum vmx_l1d_flush_state
-> definition to highlight the dependency of CONFIG_KVM_VMENTRY_L1D_FLUSH
-> on it to avoid future mismatch.
-
-I explicitly wanted to avoid doing that for this very reason. In my
-opinion this is brittle and bound to be missed
-sooner or later.
-
-I'd rather have the value assignment be explicit rather than some
-clever hack. Notice, this wouldn't work if the enum
-values were not contiguous. We just got lucky.
-
-Do people feel strongly against this ifdef ladder ?
-
+> -               /* Halt and disable VMX on the other CPUs */
+> +               /* Halt and exit VMX root operation on the other CPUs */
+>                 nmi_shootdown_cpus(vmxoff_nmi);
 >
-> Cheers,
-> Longman
->
+>         }
 
+Seems reasonable to me.
 
+As a minor caveat, doing cr4_clear_bits() in NMI context is not really
+okay, but we're about to reboot, so nothing too awful should happen.
+And this has very little to do with your patch.
 
---
-Abhishek
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
