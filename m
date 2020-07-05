@@ -2,120 +2,132 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51033C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C801C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2685E20737
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="1/6AOOiC"
+	by mail.kernel.org (Postfix) with ESMTP id 526AF20737
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593962057;
+	bh=bKkXeKpKQKOrya2osciLsczxnGIRt/CX9n8JXMDcEyU=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=t+VgTA+CTcMaYCUhrQCAM5+YvZiOZVX0saj5SRWSZqjiRkKbGBFycYQix0GMyjP5j
+	 8yXQZfNGs6tky4AVLjNYRkFy19QaChAokDqXHGaiTNP/lgKyrp8yqEZgayBb6GFlW+
+	 KiPqqG7ZxHu3BCdr5CGhQ8Nr6aSVfS6yjRMIq2IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgGEPMD (ORCPT
+        id S1727106AbgGEPOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgGEPMA (ORCPT
+        Sun, 5 Jul 2020 11:14:15 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:36677 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgGEPOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:12:00 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49580C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 08:12:00 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so39706821ejb.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 08:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BI1aAShmO7FXnwtN8B6Od+9nVsaMtVkeWnOGj2Zvm4Y=;
-        b=1/6AOOiCg9ot1+F9UhkykucC0qMYgzK2GA9zYzKmMovooAnH48coFkCRo57BXWCcAp
-         7CF9ClAVqv7j/oaBJkTGbl26Rszr/MUIfDjdNl7f5JnJxKj2yn0TKisOxrCwtEbFgNGQ
-         /PqTAREqKfODffSK5H0TJGvTykPpy5976yQ7kuXJRMMseZOA5Ew/izF5q5DOEnUEoRD4
-         ESr2tMdE8VI3TJe1XP8JUoKk5p9bUKtecSGxZUYV+q3k6YAqd72YHNOSHy2+GpdRqEFx
-         dcvTHlVfR+822lyGWe9L3viPVcELzcQa2U96GrkmRWDqUDYx+kBFP2kg/4CFOsa4vnMk
-         aSxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BI1aAShmO7FXnwtN8B6Od+9nVsaMtVkeWnOGj2Zvm4Y=;
-        b=SulPc8eKxkLg4OCTl9P/ZFY0Ds+ttvPXXHUur5Kv78jsog6RZ5COiO9XglZzNFb7H6
-         5ISCcV7srVoMXtR2rk0LMzN52OvXBZiDQfOEZBlhUAhmjFs+KUaaBgKefz64mPlx7yeL
-         OnclJdHf/juNiNOZbPXcN/DpUAir3j7eCRyK6qAlW6YkGpmujmSM6DQjLEHOf9nQFV/h
-         4395uMQUMg5lIM8Lgtmz+zoPpK83OpnMeKZMMWig2HFhJbrxAoIuBYPLXwpoPS24fTZ2
-         bddYP7V2iW7rmZtJMHzBaymvStc5xW0BXty5UnDFfECE8/po4aYjOrvIhJ2XgpDUhVlK
-         8Zjw==
-X-Gm-Message-State: AOAM530Hz9/h74oR0AcLiz1VBmVcz5wvoNmFQiyd8rvydAD1nNhWtk5n
-        DuMOWcAiuKxnGOzS7+dor04FXeHgjvPgRLlCXCKn
-X-Google-Smtp-Source: ABdhPJy+1+ndZZah7VkLTSj7twGu3m1RKvwdW+PIAE3WsheefQt0o8KCRqSrelgLi4drC0Gf6mOHLfy4/pYyZRxzQXY=
-X-Received: by 2002:a17:906:1a59:: with SMTP id j25mr37962178ejf.398.1593961918982;
- Sun, 05 Jul 2020 08:11:58 -0700 (PDT)
+        Sun, 5 Jul 2020 11:14:14 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 065FDkTX024909;
+        Mon, 6 Jul 2020 00:13:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FDkTX024909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593962027;
+        bh=fQuQFv/SLNfuMXM4t3LK7AbKKjdn4MSwV7JTU0JwejQ=;
+        h=From:Date:Subject:To:Cc:From;
+        b=DhzU25nptdakYBf8ByeZ7suYEVZ/ElBsYlGkgGAVzK8XaFomlKwQioGa2DQiQFQkO
+         ghyuXf/W2iPlDwtpj2CtD0g1NlGeYcumLB61oH0iGD8PB58Pujw1zhZ6yUrjUHQmRE
+         EDajLE0D94tF/qjvh7Jg5X7cQir5y1Fn9+ntnBp9OuX4nESvIb2May0yiqC7OoRJvx
+         IenfPY4gmPBbMouR4ovr5PIvtM7kDJwOukdKvUHm3tIbH4EyfC2X7Is4raMIb04cl2
+         7pKPitdNcndERz5wvTMxGSHaDIlCRmWPBkk/7JaKSTG4u3zNEn2eBQ+Qtux2Ih3VBZ
+         K+5dIQInQaZBA==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id 64so13095962vsl.3;
+        Sun, 05 Jul 2020 08:13:46 -0700 (PDT)
+X-Gm-Message-State: AOAM533CcXWymqm5jJDlbPMOpvw8R+uRTDkgzR/m4F8RkdPRrZbqC3Lt
+        7HJop4uS/YG2ndyUcR5p8ITTU+NS1tlybRYSqb8=
+X-Google-Smtp-Source: ABdhPJyn6UHdLo8/SXtPLDScAGDcUJn5XiDdR0H5IC/iw0NIPtCmHZpJQAvGwOup566GhpVLBOxaFs+gBBjsuKjjB3M=
+X-Received: by 2002:a67:694d:: with SMTP id e74mr34092030vsc.155.1593962025474;
+ Sun, 05 Jul 2020 08:13:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1593198710.git.rgb@redhat.com> <b6cb5500cfd7e8686ac2a7758103688c2da7f4ce.1593198710.git.rgb@redhat.com>
-In-Reply-To: <b6cb5500cfd7e8686ac2a7758103688c2da7f4ce.1593198710.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sun, 5 Jul 2020 11:11:47 -0400
-Message-ID: <CAHC9VhRvuu-_+gh9ejr0sFDNR6erV2BAig6qrT9gOEB6GczXvw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V9 13/13] audit: add capcontid to set contid
- outside init_user_ns
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
-        dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Jul 2020 00:13:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQEMNSM2PRaTwPoX+2hn3FpU2=kQEyJdFjH2xkz+eq5gg@mail.gmail.com>
+Message-ID: <CAK7LNAQEMNSM2PRaTwPoX+2hn3FpU2=kQEyJdFjH2xkz+eq5gg@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.8-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 9:24 AM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> process in a non-init user namespace the capability to set audit
-> container identifiers of individual children.
->
-> Provide the /proc/$PID/audit_capcontid interface to capcontid.
-> Valid values are: 1==enabled, 0==disabled
->
-> Writing a "1" to this special file for the target process $PID will
-> enable the target process to set audit container identifiers of its
-> descendants.
->
-> A process must already have CAP_AUDIT_CONTROL in the initial user
-> namespace or have had audit_capcontid enabled by a previous use of this
-> feature by its parent on this process in order to be able to enable it
-> for another process.  The target process must be a descendant of the
-> calling process.
->
-> Report this action in new message type AUDIT_SET_CAPCONTID 1022 with
-> fields opid= capcontid= old-capcontid=
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  fs/proc/base.c             | 57 +++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/audit.h      | 14 ++++++++++++
->  include/uapi/linux/audit.h |  1 +
->  kernel/audit.c             | 38 ++++++++++++++++++++++++++++++-
->  4 files changed, 108 insertions(+), 2 deletions(-)
+Hi Linus,
 
-This seems very similar to the capable/ns_capable combination I
-mentioned in patch 11/13; any reasons why you feel that this might be
-a better approach?  My current thinking is that the capable/ns_capable
-approach is preferable as it leverages existing kernel mechanisms and
-doesn't require us to reinvent the wheel in the audit subsystem.
+Please pull some more Kbuild fixes.
+Thanks.
 
 
---
-paul moore
-www.paul-moore.com
+
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.8-2
+
+for you to fetch changes up to ba77dca584f5abf30340672bc752fe7912731af5:
+
+  .gitignore: Do not track `defconfig` from `make savedefconfig`
+(2020-07-05 16:15:46 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.8 (2nd)
+
+ - fix various bugs in xconfig
+
+ - fix some issues in cross-compilation using Clang
+
+ - fix documentation
+
+----------------------------------------------------------------
+Dov Murik (1):
+      docs: kbuild: fix ReST formatting
+
+Masahiro Yamada (3):
+      gcc-plugins: fix gcc-plugins directory path in documentation
+      kbuild: fix CONFIG_CC_CAN_LINK(_STATIC) for cross-compilation with Clang
+      kbuild: make Clang build userprogs for target architecture
+
+Mauro Carvalho Chehab (8):
+      kconfig: qconf: cleanup includes
+      kconfig: qconf: make search fully work again on split mode
+      kconfig: qconf: make debug links work again
+      kconfig: qconf: re-implement setSelected()
+      kconfig: qconf: simplify the goBack() logic
+      kconfig: qconf: don't show goback button on splitMode
+      kconfig: qconf: navigate menus on hyperlinks
+      kconfig: qconf: parse newer types at debug info
+
+Paul Menzel (1):
+      .gitignore: Do not track `defconfig` from `make savedefconfig`
+
+ .gitignore                                   |   3 +
+ Documentation/kbuild/modules.rst             |   7 +-
+ Documentation/kbuild/reproducible-builds.rst |   2 +-
+ Makefile                                     |   4 +-
+ init/Kconfig                                 |   8 +-
+ scripts/gcc-plugins/Kconfig                  |   2 +-
+ scripts/kconfig/qconf.cc                     | 173 ++++++++++++++++-----------
+ scripts/kconfig/qconf.h                      |  23 ++--
+ 8 files changed, 136 insertions(+), 86 deletions(-)
+
+
+-- 
+Best Regards
+Masahiro Yamada
