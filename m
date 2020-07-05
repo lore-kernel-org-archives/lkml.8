@@ -2,149 +2,135 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8349A20708
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593963016;
-	bh=u+TT0dt4a71xmMxPOu1iuo1JR9JgPyMypgM/YjzQKsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cG+sxosqNyF481GIzysEPbPoGrx/54BL/VklbfW1RKZPcgCfMzTPAq+I3UDVV2+7r
-	 Wa/MgwB4QUiIWS+pSdR0wYZ79JZQaW/tpICFgg76TrL6UarTxF23Lmqe54JitlelA7
-	 HiGw/93U/oADYCNOcqtmpL4kk0Qrl6J0hfNnBsqA=
+	by mail.kernel.org (Postfix) with ESMTP id A8D1720739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dl9FtyNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgGEPaP (ORCPT
+        id S1727785AbgGEPeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:30:15 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:59550 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgGEPaO (ORCPT
+        Sun, 5 Jul 2020 11:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgGEPea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:30:14 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 065FTsUq031049;
-        Mon, 6 Jul 2020 00:29:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FTsUq031049
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593962995;
-        bh=bXQYGMwFGx1Mq9judW5YHmqoj9lB8SkXZtg1zFbHUec=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=T/EFA6EN2ET/Fi6UgSlwzebkiMFqUpevgSyBdh7548He6gem+BOhfz3jKq+p1i1Rm
-         MxZHmpQqWWh4cj7mhBsMQzjSEQQcU0xazBxNfTjWzoB3OqJzNZHmjc9pViVUnogWpz
-         hptPMVeCBBeNtpP7A7hJcmQa2MkmlV5+Z5S93NSlTXogg5p+yCsWby68tqtrBHk9zX
-         WMIirG1kcciEI7UzU5aqQOvG0kFkoXtaIP27L/sry66UnkHyMzoub8+3a0x7LSdpZg
-         0oLX+CHJ5Jm7ygMN0W4/Lbff0Jel+WYYzJcQ4y240FaO9xWE57JUgyjalZoQ+Resmg
-         xaXs8EdFtZ12A==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id f11so840777uao.9;
-        Sun, 05 Jul 2020 08:29:54 -0700 (PDT)
-X-Gm-Message-State: AOAM5335DQfvEMKfBqf6FiknErD1aMSx5G5BTKsw12y5tlHaJdDsGCZU
-        bM5GJcmF2YGK9rgBiHD1s3b8iK96JLl4JrtvNic=
-X-Google-Smtp-Source: ABdhPJwRWWyAw5fo1xg0Q+IpoYY9kvqqZaqHPXsF7B2eb9XTN0c68Rg8Zi3Nw5VoVzlomxmzgCAPQ1b4TP+6GThMZDc=
-X-Received: by 2002:ab0:21c6:: with SMTP id u6mr15213472uan.109.1593962993363;
- Sun, 05 Jul 2020 08:29:53 -0700 (PDT)
+        Sun, 5 Jul 2020 11:34:30 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25944C061794;
+        Sun,  5 Jul 2020 08:34:30 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id k4so30215963oik.2;
+        Sun, 05 Jul 2020 08:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5HJIdd7gKlD53rdhkJtd0Sa3kCw7Ak/DxXpdwM9MXZM=;
+        b=dl9FtyNp4AIe7c4jh3KeUdz1KrBSELg99uF8Z5iTiUO19NkyfKaAIP+LkaP0iJ1xka
+         nJcy86ERAxvU1YDqYNDVvZqoSE0LCB44J05s9u3UE9FiSZVO7RfmMZClugEUceOrvIoQ
+         KZ3F+45dZgECnzPvAD0pUhg1qTDj1AgR1j9DREnzv+yNOr9fqEwVGkgG2FJcTIeG/J6q
+         qKSKuF+Ph9xsU31hXSdgJ3MAZvdUf0gFd7iEnTvgWB7l5LjB8XLMZ+LHI5yplbAQmNZE
+         cwubV30g3SqxGBKbt9p5XVzpo2q0VnQXiP6Hjmk7QmUT8he5wQxs9y5PmrF/wM9V87AT
+         RCHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5HJIdd7gKlD53rdhkJtd0Sa3kCw7Ak/DxXpdwM9MXZM=;
+        b=iCSRuOaZ0/MJ95dy0BjTV87Ts4n1IwE6vlxoZGSaD1XHIjTuUamdrHLZzcO9vb0T6x
+         K6uyJ/FkLSV4cHcPFxSS5rjWoMAv5aaQT6QLbiw+9F9sLYPpkZFE1ZvzrbnZE4dUmzUp
+         Yj3htLxlssQYpr7madsh/cZj50dhHLH0RnGHiJY+tamxKE4lKZHdqV4tsoO1B9ngIkMx
+         L8jD/23jTUuftyGBUtYa2eDXLwGLiDzP0APRPFB/O0720o0ec81P/LQxOvDVPD6zPHGy
+         95dNIz0NhSvpt+L3ViAjnzuyHXHPoE8KZ4jQjtgek7bMOnwfPOcMkJaEDGgEw7AUerb/
+         sAdg==
+X-Gm-Message-State: AOAM532lt5dAK2+LOsERgGYr1dmhrYFCavOMlPvKi30FHGSACizQE423
+        cQKasVLk0v3TzGtyYXdXO0uRiimE4BCYHLJZpn8=
+X-Google-Smtp-Source: ABdhPJyyJZ77mDPIvsdV6TjKCH4oypKdCmfebWnB6v2kvJ4ptKycucICKlPQEGgCMRGl1AaCgA67EhIwQCEJ5Z5YgyQ=
+X-Received: by 2002:aca:ecc7:: with SMTP id k190mr31219068oih.92.1593963269320;
+ Sun, 05 Jul 2020 08:34:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200629085911.1676554-1-masahiroy@kernel.org>
- <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
- <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com> <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
-In-Reply-To: <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 6 Jul 2020 00:29:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
-Message-ID: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com> <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sun, 5 Jul 2020 11:34:18 -0400
+Message-ID: <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 4:13 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+Hi Andy, thank you so much for your time and attention. See below.
+
+On Sun, Jul 5, 2020 at 10:45 AM Andy Duan <fugang.duan@nxp.com> wrote:
 >
-> On Tue, Jun 30, 2020 at 6:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > I can reproduce this in the following
-> > simple test code:
-> >
-> >
-> > ----------------->8----------------
-> > #include <stdio.h>
-> >
-> > int main(void)
-> > {
-> >         ssize_t x = 1;
-> >
-> >         printf("%zd", x);
-> >
-> >         return 0;
-> > }
-> > --------------->8-------------------
->
-> That is the old implicit int rule. Try including sys/types.h or
-> compiling with a standard like -std=c99 for instance.
->
-> Cheers,
-> Miguel
+> Don't consider it complex, GPR5[9] just select the rgmii gtx source from =
+PAD or internal
+> Like=EF=BC=9A
+> GPR5[9] is cleared: PAD -> MAC gtx
+> GPR5[9] is set: Pll_enet -> MAC gtx
+> As you said, register one clock mux for the selection, assign the clock p=
+arent by board dts
+> file, but now current clock driver doesn't support GPR clock.
 
-Hmm, adding '#include <sys/types.h>' did not make any difference.
+Ok, so for imx6q plus only, we create two new clocks (MAC_GTX and PAD)
+and a new clock mux, controlled by GPR5[9]:
 
+  enet_ref-o------>ext>---pad------| \
+           |                       |M |----mac_gtx
+           o-----------------------|_/
 
+Where M =3D mux controlled by GPR5[9]
 
+clk_mac_gtx -> clk_pad -> clk_enet_ref is the default. when a board
+wants internal routing, it can just do:
 
-If I add -std=c99, I get a different error.
+&fec {
+assigned-clocks =3D <&clks IMX6QDL_CLK_MAC_GTX>;
+assigned-clock-parents =3D <&clks IMX6QDL_CLK_ENET_REF>;
+};
 
+But, how do we manage clk_pad? It is routed externally, and can be
+connected to:
+- enet_ref (typically via GPIO_16)
+- an external oscillator
+- an external PHY clock
 
-$ clang -std=c99 --target=aarch64-linux-gnu test.c
-test.c:5:10: error: unknown type name 'ssize_t'; did you mean 'size_t'?
-         ssize_t x = 1;
-         ^~~~~~~
-         size_t
-/home/masahiro/tools/clang-latest/lib/clang/11.0.0/include/stddef.h:46:23:
-note: 'size_t' declared here
-typedef __SIZE_TYPE__ size_t;
-                      ^
-1 error generated.
+  ext phy---------| \
+                  |  |
+  enet_ref-o------|M |----pad------| \
+           |      |_/              |  |
+           |                       |M |----mac_gtx
+           |                       |  |
+           o-----------------------|_/
 
 
-
-
-
-In contrast, 'size_t' has no problem.
-
-
------------------>8----------------
-#include <stdio.h>
-
-int main(void)
-{
-         size_t x = 1;
-
-         printf("%zu", x);
-
-         return 0;
-}
---------------->8-------------------
-
-$ clang  --target=aarch64-linux-gnu test.c
-[ No warning ]
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+How do we tell the clock framework that clk_pad has a mux that can
+be connected to _any_ external clock? and also enet_ref?
