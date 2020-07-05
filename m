@@ -8,189 +8,185 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8257BC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A997CC433DF
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D47F20739
+	by mail.kernel.org (Postfix) with ESMTP id 7E99F20747
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzX5iTSA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRKNHjez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgGENMr (ORCPT
+        id S1727053AbgGENMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 09:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49284 "EHLO
+        Sun, 5 Jul 2020 09:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgGENMq (ORCPT
+        with ESMTP id S1726819AbgGENMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 09:12:46 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECB1C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:12:46 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r12so37787738wrj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:12:46 -0700 (PDT)
+        Sun, 5 Jul 2020 09:12:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A938BC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:12:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id o11so37877340wrv.9
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TIMWex1bzxSjXlZ+zlgh0Ik6rG406/F6/kfESusS0KE=;
-        b=fzX5iTSAtB/uzjPpRQGdrVjJ3C1sATbyKd8OqWDp4GOn2NiekG6zcAJiqPUoenJIbe
-         UGPo0WLUDjQKvm2H+x75gEbtBoj09k529GZiGePOfV1RB8sQhXxx9Pg6mwzV8owq+MtT
-         axelAmOnV5skyM4wtqvYZFMPERQ2LhR35TnWL244cEtHZWqVsC1yxRkeq7ly6XPG79QB
-         w/aFA7qRERLFOqwyk8oV27WZiYFsV9iWFczrcl59qXaEtuom0H4OosEwO3LAdyRz0pCU
-         NbeVP7iqXJ9CrrNae95SA1pqg/J5aud8w+kzcPsMINuEIQ2DOLaUZYv7VdJzFebYQzHz
-         i1iA==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=v73geGNQdJRSU+D/5TIQX1X5VJYVJpSHvUsz4xsJQmA=;
+        b=lRKNHjezwtZTmTkeBX9SunbIIFxAC4q+npjWnJMgBGmegnvSYvg67c8V7qfSDCFCAy
+         rRR3MXf0SFCmsmDlt2w0fh7cux/YVF7+gj0Kyu3PCOw/OPLYwqCYmsjY6WGQdiKVmAcg
+         SVT7V3STuYaX7DsdcUJXS6VpBb4ys1+Z7XYyQPc8rLBJyyaC4uOm3dGAAmsNUu2td3lc
+         WoAa3tDw1/nAiWNheq3KMmnEoNddcQAyV1WSxM/3HDWMj1UmXoA14cWdXDenhR3KEpA+
+         OkJMJVYsMtiQgJl0KDRVUSSP04Xu6Kxr2JFIZG4ZGqgxdYH+1yZmzI4xXENGAI+n3j5A
+         UY1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TIMWex1bzxSjXlZ+zlgh0Ik6rG406/F6/kfESusS0KE=;
-        b=CV4czKtxVAPo+QdQOfbxRGzckkXc+YM964Gq+BABOVmS45NYn+BcA7WJgPX7rKhcnv
-         XTIs+U6pSTBKTOqkBw2BJIPSQM5K9J3p7sLXSPGtGtuRbzc8EscU2m5hI9TOcpz6avD+
-         VH3AJE4MDtQo49Z8fV/JEVk/lsizEtjON/7UcDbwKUT1NG0+BTs+DUGKsbFWsPqDjdzZ
-         TPih9G2DslfTu+L078EnNBo7WWhcbZ7SEFN4GVkSD6JgsINC2gkE1sOkQ/IgTDEonPxy
-         npwIce6RIPbYsFAXvxoIQbqy3vi0oADcKFMI0sTrWGVpAWks8EPMny66gfmLER2SDxKC
-         FQtA==
-X-Gm-Message-State: AOAM530NMe0hmEWnV0E0MslGplB552FlBUwhWDYeMDGPLJEkD34Y7nt5
-        5/iRZbQ+IY+Mv0XBYkese8crU3cO
-X-Google-Smtp-Source: ABdhPJzQD9Pv/oFpggRJ6RrLJ1rG4fgJToxUglzuWELchnFQrO+hNVwRcX05Y/5CU8q9P7jE/jsolg==
-X-Received: by 2002:adf:82a1:: with SMTP id 30mr47504889wrc.210.1593954764854;
-        Sun, 05 Jul 2020 06:12:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=v73geGNQdJRSU+D/5TIQX1X5VJYVJpSHvUsz4xsJQmA=;
+        b=Nxq32XWQkHY+qFY1V8+HzX1MpsqmyCMbWCsjBYSmmlf/7iaZWqdCSq5PT0ybijmRvV
+         rj+WWODyV6yuFz04MeQ5zyth4j/EEByYV3tpeP6xmRJ1rVku8sEpnEHSWGmY2NVG3MqL
+         7PGwxGgCFHTCDyvL0U9u2afBsz6OBa2JJMsPWpP0gVnGGunnowcYRb9//S7hf5IHMXW2
+         FdeFxYDHhoRZ5tFMzPTPEvH1PudCkqRa099V5GmTf6GdzrTLulBjxuYcLgwrN+ZSqkCO
+         Uk4h1YWa7PbuGoV8ZonGXOv7GO34OwMavlqOA4RaoOJHnOb95JoLY7vUPzquuEGfHDjv
+         YYAg==
+X-Gm-Message-State: AOAM530Y/7w67S2pd95VPyXGUvaFyvJxAfMWBQX92O0PEjGwC7p6/zf0
+        yvnJYLFUk23XYI+OO19tWZw2rUkr
+X-Google-Smtp-Source: ABdhPJyYkLN4gMCaVA6nLKAIB60NKjW36QNlqorhiaIkB7W9Sdli9LBTiNrZEIQ4jgbVcLpzftAM/Q==
+X-Received: by 2002:adf:c3c7:: with SMTP id d7mr42970669wrg.51.1593954766111;
+        Sun, 05 Jul 2020 06:12:46 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id 26sm19401809wmj.25.2020.07.05.06.12.43
+        by smtp.gmail.com with ESMTPSA id 26sm19401809wmj.25.2020.07.05.06.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 06:12:43 -0700 (PDT)
+        Sun, 05 Jul 2020 06:12:45 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH 1/9] habanalabs: Increase queues depth
-Date:   Sun,  5 Jul 2020 16:12:37 +0300
-Message-Id: <20200705131245.9368-1-oded.gabbay@gmail.com>
+Subject: [PATCH 2/9] habanalabs: rephrase error messages
+Date:   Sun,  5 Jul 2020 16:12:38 +0300
+Message-Id: <20200705131245.9368-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200705131245.9368-1-oded.gabbay@gmail.com>
+References: <20200705131245.9368-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+rephrase some error/warning/notice messages to make them more accessible to
+ordinary users.
 
-After recent concurrent cs amount increase, we must also
-increase queues depth since much more concurrent work can be done.
-All external queue depths were increased to 4096 as gaudi's
-internal queue depths were also increased to 1024.
+There is no need to print context ASID as the driver currently doesn't
+support multiple contexts.
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/gaudi/gaudiP.h |  6 ++---
- drivers/misc/habanalabs/habanalabs.h   | 31 ++++----------------------
- drivers/misc/habanalabs/hw_queue.c     |  2 --
- drivers/misc/habanalabs/irq.c          |  4 ----
- 4 files changed, 7 insertions(+), 36 deletions(-)
+ drivers/misc/habanalabs/command_submission.c | 20 +++++++++++++-------
+ drivers/misc/habanalabs/context.c            |  3 +--
+ drivers/misc/habanalabs/firmware_if.c        |  4 ++--
+ drivers/misc/habanalabs/memory.c             |  3 +--
+ 4 files changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudiP.h b/drivers/misc/habanalabs/gaudi/gaudiP.h
-index 3958fe38c8ee..bdc5f96085a7 100644
---- a/drivers/misc/habanalabs/gaudi/gaudiP.h
-+++ b/drivers/misc/habanalabs/gaudi/gaudiP.h
-@@ -123,14 +123,14 @@
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index 62dab99dda98..f81d6685e011 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -373,9 +373,9 @@ static void cs_timedout(struct work_struct *work)
+ 	hdev = cs->ctx->hdev;
+ 	ctx_asid = cs->ctx->asid;
  
- /* Internal QMANs PQ sizes */
+-	/* TODO: add information about last signaled seq and last emitted seq */
+-	dev_err(hdev->dev, "User %d command submission %llu got stuck!\n",
+-		ctx_asid, cs->sequence);
++	dev_err(hdev->dev,
++		"Command submission %llu has not finished in time!\n",
++		cs->sequence);
  
--#define MME_QMAN_LENGTH			64
-+#define MME_QMAN_LENGTH			1024
- #define MME_QMAN_SIZE_IN_BYTES		(MME_QMAN_LENGTH * QMAN_PQ_ENTRY_SIZE)
+ 	cs_put(cs);
  
--#define HBM_DMA_QMAN_LENGTH		64
-+#define HBM_DMA_QMAN_LENGTH		1024
- #define HBM_DMA_QMAN_SIZE_IN_BYTES	\
- 				(HBM_DMA_QMAN_LENGTH * QMAN_PQ_ENTRY_SIZE)
+@@ -1130,7 +1130,7 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
+ 		rc = PTR_ERR(fence);
+ 		if (rc == -EINVAL)
+ 			dev_notice_ratelimited(hdev->dev,
+-				"Can't wait on seq %llu because current CS is at seq %llu\n",
++				"Can't wait on CS %llu because current CS is at seq %llu\n",
+ 				seq, ctx->cs_sequence);
+ 	} else if (fence) {
+ 		rc = dma_fence_wait_timeout(fence, true, timeout);
+@@ -1163,15 +1163,21 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	memset(args, 0, sizeof(*args));
  
--#define TPC_QMAN_LENGTH			64
-+#define TPC_QMAN_LENGTH			1024
- #define TPC_QMAN_SIZE_IN_BYTES		(TPC_QMAN_LENGTH * QMAN_PQ_ENTRY_SIZE)
+ 	if (rc < 0) {
+-		dev_err_ratelimited(hdev->dev,
+-				"Error %ld on waiting for CS handle %llu\n",
+-				rc, seq);
+ 		if (rc == -ERESTARTSYS) {
++			dev_err_ratelimited(hdev->dev,
++				"user process got signal while waiting for CS handle %llu\n",
++				seq);
+ 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
+ 			rc = -EINTR;
+ 		} else if (rc == -ETIMEDOUT) {
++			dev_err_ratelimited(hdev->dev,
++				"CS %llu has timed-out while user process is waiting for it\n",
++				seq);
+ 			args->out.status = HL_WAIT_CS_STATUS_TIMEDOUT;
+ 		} else if (rc == -EIO) {
++			dev_err_ratelimited(hdev->dev,
++				"CS %llu has been aborted while user process is waiting for it\n",
++				seq);
+ 			args->out.status = HL_WAIT_CS_STATUS_ABORTED;
+ 		}
+ 		return rc;
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 1b96fefa4a65..1e3e5b19ecd9 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -112,8 +112,7 @@ void hl_ctx_free(struct hl_device *hdev, struct hl_ctx *ctx)
+ 		return;
  
- #define SRAM_USER_BASE_OFFSET  GAUDI_DRIVER_SRAM_RESERVED_SIZE_FROM_START
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 4e68a41cce77..e4d6f7c91194 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -378,38 +378,15 @@ struct hl_cb {
+ 	dev_warn(hdev->dev,
+-		"Context %d closed or terminated but its CS are executing\n",
+-		ctx->asid);
++		"user process released device but its command submissions are still executing\n");
+ }
  
- struct hl_cs_job;
+ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index 6900c01d060f..9e7f203a09d7 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -289,7 +289,7 @@ int hl_fw_armcp_info_get(struct hl_device *hdev)
+ 					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
+ 	if (rc) {
+ 		dev_err(hdev->dev,
+-			"Failed to send ArmCP info pkt, error %d\n", rc);
++			"Failed to handle ArmCP info pkt, error %d\n", rc);
+ 		goto out;
+ 	}
  
--/*
-- * Currently, there are two limitations on the maximum length of a queue:
-- *
-- * 1. The memory footprint of the queue. The current allocated space for the
-- *    queue is PAGE_SIZE. Because each entry in the queue is HL_BD_SIZE,
-- *    the maximum length of the queue can be PAGE_SIZE / HL_BD_SIZE,
-- *    which currently is 4096/16 = 256 entries.
-- *
-- *    To increase that, we need either to decrease the size of the
-- *    BD (difficult), or allocate more than a single page (easier).
-- *
-- * 2. Because the size of the JOB handle field in the BD CTL / completion queue
-- *    is 10-bit, we can have up to 1024 open jobs per hardware queue.
-- *    Therefore, each queue can hold up to 1024 entries.
-- *
-- * HL_QUEUE_LENGTH is in units of struct hl_bd.
-- * HL_QUEUE_LENGTH * sizeof(struct hl_bd) should be <= HL_PAGE_SIZE
-- */
--
--#define HL_PAGE_SIZE			4096 /* minimum page size */
--/* Must be power of 2 (HL_PAGE_SIZE / HL_BD_SIZE) */
--#define HL_QUEUE_LENGTH			256
-+/* Queue length of external and HW queues */
-+#define HL_QUEUE_LENGTH			4096
- #define HL_QUEUE_SIZE_IN_BYTES		(HL_QUEUE_LENGTH * HL_BD_SIZE)
+@@ -340,7 +340,7 @@ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size)
  
--/*
-- * HL_CQ_LENGTH is in units of struct hl_cq_entry.
-- * HL_CQ_LENGTH should be <= HL_PAGE_SIZE
-- */
-+/* HL_CQ_LENGTH is in units of struct hl_cq_entry */
- #define HL_CQ_LENGTH			HL_QUEUE_LENGTH
- #define HL_CQ_SIZE_IN_BYTES		(HL_CQ_LENGTH * HL_CQ_ENTRY_SIZE)
+ 	if (rc) {
+ 		dev_err(hdev->dev,
+-			"Failed to send ArmCP EEPROM packet, error %d\n", rc);
++			"Failed to handle ArmCP EEPROM packet, error %d\n", rc);
+ 		goto out;
+ 	}
  
--/* Must be power of 2 (HL_PAGE_SIZE / HL_EQ_ENTRY_SIZE) */
-+/* Must be power of 2 */
- #define HL_EQ_LENGTH			64
- #define HL_EQ_SIZE_IN_BYTES		(HL_EQ_LENGTH * HL_EQ_ENTRY_SIZE)
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 47da84a17719..e4e1693e5c6c 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -1730,8 +1730,7 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
+ 	 */
+ 	if (!hdev->hard_reset_pending && !hash_empty(ctx->mem_hash))
+ 		dev_notice(hdev->dev,
+-				"ctx %d is freed while it has va in use\n",
+-				ctx->asid);
++			"user released device without removing its memory mappings\n");
  
-diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-index 27f0c34b63b9..f5a10a5ac300 100644
---- a/drivers/misc/habanalabs/hw_queue.c
-+++ b/drivers/misc/habanalabs/hw_queue.c
-@@ -780,8 +780,6 @@ static int queue_init(struct hl_device *hdev, struct hl_hw_queue *q,
- {
- 	int rc;
- 
--	BUILD_BUG_ON(HL_QUEUE_SIZE_IN_BYTES > HL_PAGE_SIZE);
--
- 	q->hw_queue_id = hw_queue_id;
- 
- 	switch (q->queue_type) {
-diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
-index 6981d67153b1..7a4878edb1a3 100644
---- a/drivers/misc/habanalabs/irq.c
-+++ b/drivers/misc/habanalabs/irq.c
-@@ -220,8 +220,6 @@ int hl_cq_init(struct hl_device *hdev, struct hl_cq *q, u32 hw_queue_id)
- {
- 	void *p;
- 
--	BUILD_BUG_ON(HL_CQ_SIZE_IN_BYTES > HL_PAGE_SIZE);
--
- 	p = hdev->asic_funcs->asic_dma_alloc_coherent(hdev, HL_CQ_SIZE_IN_BYTES,
- 				&q->bus_address, GFP_KERNEL | __GFP_ZERO);
- 	if (!p)
-@@ -282,8 +280,6 @@ int hl_eq_init(struct hl_device *hdev, struct hl_eq *q)
- {
- 	void *p;
- 
--	BUILD_BUG_ON(HL_EQ_SIZE_IN_BYTES > HL_PAGE_SIZE);
--
- 	p = hdev->asic_funcs->cpu_accessible_dma_pool_alloc(hdev,
- 							HL_EQ_SIZE_IN_BYTES,
- 							&q->bus_address);
+ 	hash_for_each_safe(ctx->mem_hash, i, tmp_node, hnode, node) {
+ 		dev_dbg(hdev->dev,
 -- 
 2.17.1
 
