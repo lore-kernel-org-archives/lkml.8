@@ -2,90 +2,86 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4028EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F82D20723
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62BE20739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593949540;
-	bh=1vDyPYB8P+w9epdFK6knYfZZJXgI1oimuZxcouCLZnI=;
+	s=default; t=1593949626;
+	bh=iS+dEu4ZlbKVi61KnZ+UXpVxu0dHrpYBvIX4WV8E5m4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o4SMjHfwadaH3CVBlfCIGxizA3Bg6CyncGH8MpjdTfb8U5lW8KSTme5QNdLZWz8wT
-	 zMDqSCXFfvgle6z6GJq1D7PQJ5UUz8c2FwF/+3jAmpqjhQWbQ0PyF6wCIBHfDdwUq2
-	 L9A4NHeoKDmmhLgpIllu/f20x4/aBkmEgMSdLO+8=
+	b=rdfRquhHeWGnQxk7PvmPfwvz2iThaCgopO854LEiy+wvS30QGQelGvoTtZZj6ZTy1
+	 vjhidIQPtsXq+XhE1kTUHJGkLjzO2SX40Cowlo41WB223LTbQ+08GTnomZRbZqLa5h
+	 0p32FPzXpYvIP1r3FKQxADB3J0bA9Bjxfa4G2Wyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgGELpj (ORCPT
+        id S1726845AbgGELrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54868 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 07:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:45:38 -0400
-Received: from kernel.org (unknown [87.71.40.38])
+        id S1726454AbgGELrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:47:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52362206B6;
-        Sun,  5 Jul 2020 11:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D71820723;
+        Sun,  5 Jul 2020 11:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593949538;
-        bh=1vDyPYB8P+w9epdFK6knYfZZJXgI1oimuZxcouCLZnI=;
+        s=default; t=1593949624;
+        bh=iS+dEu4ZlbKVi61KnZ+UXpVxu0dHrpYBvIX4WV8E5m4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UgEEh28GtfHOApvp+2oPFQuqFen4lGbGwNelUp54OSjCgqF/afgYLpDnHQoUcR8BG
-         b5sXaiFnFI9blHvXHvcgXCNoDUYwFQT+CSqpvzHAc/totY5KOJzjX34SgVTIIQ6+jC
-         HSb7NP5vB0bsLkNI4tAgkgv84Kx2cp0UuZ1vObnI=
-Date:   Sun, 5 Jul 2020 14:45:29 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH 0/3] Documentation: arm64: eliminate duplicated words
-Message-ID: <20200705114529.GE2999148@kernel.org>
-References: <20200703205110.29873-1-rdunlap@infradead.org>
+        b=1c7gRkP8UaxVu6l1OoEYgLWfENAntRpmlfRdEJxsaxYkWDJ7glW+16ivqzObROx6Y
+         qNzvkQqgD68TqZIIwsevTFQzBaNCHSWlJqgwmjbLYlVcmsjC6idJBNq6O6VI0aK6NG
+         89qr1JRxgy2i/92FdgY7lUVvt05/uiLfQoMtLbwQ=
+Date:   Sun, 5 Jul 2020 13:47:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     mtk.manpages@gmail.com, shuah@kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200705114706.GA1227487@kroah.com>
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
+ <20200704193040.GC2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703205110.29873-1-rdunlap@infradead.org>
+In-Reply-To: <20200704193040.GC2786714@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 01:51:07PM -0700, Randy Dunlap wrote:
-> Drop doubled words in Documentation/arm64/.
+On Sat, Jul 04, 2020 at 08:30:40PM +0100, Al Viro wrote:
+> On Sat, Jul 04, 2020 at 04:02:46PM +0200, Greg Kroah-Hartman wrote:
+> > Here is a tiny new syscall, readfile, that makes it simpler to read
+> > small/medium sized files all in one shot, no need to do open/read/close.
+> > This is especially helpful for tools that poke around in procfs or
+> > sysfs, making a little bit of a less system load than before, especially
+> > as syscall overheads go up over time due to various CPU bugs being
+> > addressed.
 > 
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Dave Martin <Dave.Martin@arm.com>
+> Nice series, but you are 3 months late with it...  Next AFD, perhaps?
 
+Perhaps :)
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+> Seriously, the rationale is bollocks.  If the overhead of 2 extra
+> syscalls is anywhere near the costs of the real work being done by
+> that thing, we have already lost and the best thing to do is to
+> throw the system away and start with saner hardware.
 
-> 
->  Documentation/arm64/acpi_object_usage.rst |    2 +-
->  Documentation/arm64/arm-acpi.rst          |    2 +-
->  Documentation/arm64/sve.rst               |    2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+The real-work the kernel does is almost neglegant compared to the
+open/close overhead of the syscalls on some platforms today.  I'll post
+benchmarks with the next version of this patch series to hopefully show
+that.  If not, then yeah, this isn't worth it, but it was fun to write.
 
--- 
-Sincerely yours,
-Mike.
+thanks,
+
+greg k-h
