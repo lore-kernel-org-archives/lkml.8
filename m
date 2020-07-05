@@ -2,107 +2,149 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A04C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574A620747
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oeze1jbH"
+	by mail.kernel.org (Postfix) with ESMTP id 8349A20708
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593963016;
+	bh=u+TT0dt4a71xmMxPOu1iuo1JR9JgPyMypgM/YjzQKsg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cG+sxosqNyF481GIzysEPbPoGrx/54BL/VklbfW1RKZPcgCfMzTPAq+I3UDVV2+7r
+	 Wa/MgwB4QUiIWS+pSdR0wYZ79JZQaW/tpICFgg76TrL6UarTxF23Lmqe54JitlelA7
+	 HiGw/93U/oADYCNOcqtmpL4kk0Qrl6J0hfNnBsqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgGEP37 (ORCPT
+        id S1727123AbgGEPaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:29:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgGEP37 (ORCPT
+        Sun, 5 Jul 2020 11:30:15 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:59550 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgGEPaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:29:59 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B4AC061794;
-        Sun,  5 Jul 2020 08:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=KwonaS4ZUVQA/penKUCvFe9Q0+8Q/JPmxWHqhQkbcK4=; b=Oeze1jbH+oDedKFNqUNMHTa9TP
-        mNQaDm4L/M1SLVm7KUNJcEOMS/q+kHNG/sG3n0YG1HyoYvR4BGGwxiUncCc3g8xPFOfdu6IO1Gv5R
-        DdMPMIp2JOoIMjlloHDl8qhkCluPYhaicxsKzPzOlMUQO2diVdR40fyrgAp8EJ23mSJb7/hyWeF99
-        X3HU1GMWRBJXcdGdCZlVBUx1+XJCLsfOLyeMhNzXqLw3gB4+oRhsPaR+lM7KFTOvWkBkZ+xHuedvQ
-        AZW/h64wwlIXNvthXIRhn2CIVpVkV4SuQ1ckhGNMkAxfXi9VK/YPAkNxkGBJ0YYRvpD6zJkBP4ZeJ
-        6LdQf/Mg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1js6aR-0002Z6-8B; Sun, 05 Jul 2020 15:29:47 +0000
-Subject: Re: [PATCH 4/4] media: docs: Depricate mfc frame skip control
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Maheshwar Ajja <majja@codeaurora.org>
-References: <20200705121128.5250-1-stanimir.varbanov@linaro.org>
- <20200705121128.5250-5-stanimir.varbanov@linaro.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <721a6a24-6fbe-8413-e7fb-cf471a7211df@infradead.org>
-Date:   Sun, 5 Jul 2020 08:29:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 5 Jul 2020 11:30:14 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 065FTsUq031049;
+        Mon, 6 Jul 2020 00:29:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FTsUq031049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593962995;
+        bh=bXQYGMwFGx1Mq9judW5YHmqoj9lB8SkXZtg1zFbHUec=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T/EFA6EN2ET/Fi6UgSlwzebkiMFqUpevgSyBdh7548He6gem+BOhfz3jKq+p1i1Rm
+         MxZHmpQqWWh4cj7mhBsMQzjSEQQcU0xazBxNfTjWzoB3OqJzNZHmjc9pViVUnogWpz
+         hptPMVeCBBeNtpP7A7hJcmQa2MkmlV5+Z5S93NSlTXogg5p+yCsWby68tqtrBHk9zX
+         WMIirG1kcciEI7UzU5aqQOvG0kFkoXtaIP27L/sry66UnkHyMzoub8+3a0x7LSdpZg
+         0oLX+CHJ5Jm7ygMN0W4/Lbff0Jel+WYYzJcQ4y240FaO9xWE57JUgyjalZoQ+Resmg
+         xaXs8EdFtZ12A==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id f11so840777uao.9;
+        Sun, 05 Jul 2020 08:29:54 -0700 (PDT)
+X-Gm-Message-State: AOAM5335DQfvEMKfBqf6FiknErD1aMSx5G5BTKsw12y5tlHaJdDsGCZU
+        bM5GJcmF2YGK9rgBiHD1s3b8iK96JLl4JrtvNic=
+X-Google-Smtp-Source: ABdhPJwRWWyAw5fo1xg0Q+IpoYY9kvqqZaqHPXsF7B2eb9XTN0c68Rg8Zi3Nw5VoVzlomxmzgCAPQ1b4TP+6GThMZDc=
+X-Received: by 2002:ab0:21c6:: with SMTP id u6mr15213472uan.109.1593962993363;
+ Sun, 05 Jul 2020 08:29:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200705121128.5250-5-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200629085911.1676554-1-masahiroy@kernel.org>
+ <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
+ <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com> <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
+In-Reply-To: <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Jul 2020 00:29:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
+Message-ID: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 5:11 AM, Stanimir Varbanov wrote:
-> Depricate mfc private frame skip mode control for new
+On Wed, Jul 1, 2020 at 4:13 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Tue, Jun 30, 2020 at 6:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > I can reproduce this in the following
+> > simple test code:
+> >
+> >
+> > ----------------->8----------------
+> > #include <stdio.h>
+> >
+> > int main(void)
+> > {
+> >         ssize_t x = 1;
+> >
+> >         printf("%zd", x);
+> >
+> >         return 0;
+> > }
+> > --------------->8-------------------
+>
+> That is the old implicit int rule. Try including sys/types.h or
+> compiling with a standard like -std=c99 for instance.
+>
+> Cheers,
+> Miguel
 
-  Deprecate
-
-Also in $subject.
-
-> clients and use the standard one instead.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index a8b4c0b40747..c0760bfc54d4 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -2805,6 +2805,11 @@ MFC 5.1 Control IDs
->  ``V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE``
->      (enum)
->  
-> +    .. note::
-> +
-> +       This control is depricated. Use the standard one
-
-                          deprecated.
-
-
-> +       ``V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE`` instead.
-> +
->  enum v4l2_mpeg_mfc51_video_frame_skip_mode -
->      Indicates in what conditions the encoder should skip frames. If
->      encoding a frame would cause the encoded stream to be larger then a
-> 
+Hmm, adding '#include <sys/types.h>' did not make any difference.
 
 
--- 
-~Randy
 
+
+If I add -std=c99, I get a different error.
+
+
+$ clang -std=c99 --target=aarch64-linux-gnu test.c
+test.c:5:10: error: unknown type name 'ssize_t'; did you mean 'size_t'?
+         ssize_t x = 1;
+         ^~~~~~~
+         size_t
+/home/masahiro/tools/clang-latest/lib/clang/11.0.0/include/stddef.h:46:23:
+note: 'size_t' declared here
+typedef __SIZE_TYPE__ size_t;
+                      ^
+1 error generated.
+
+
+
+
+
+In contrast, 'size_t' has no problem.
+
+
+----------------->8----------------
+#include <stdio.h>
+
+int main(void)
+{
+         size_t x = 1;
+
+         printf("%zu", x);
+
+         return 0;
+}
+--------------->8-------------------
+
+$ clang  --target=aarch64-linux-gnu test.c
+[ No warning ]
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
