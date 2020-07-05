@@ -3,229 +3,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2126EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DED7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC00E2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F383C20724
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgGEUsn convert rfc822-to-8bit (ORCPT
+        id S1728412AbgGEUug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:48:43 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48737 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgGEUsn (ORCPT
+        Sun, 5 Jul 2020 16:50:36 -0400
+Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:50974 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728056AbgGEUug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:48:43 -0400
-Received: from sogo3.sd4.0x35.net (sogo3.sd4.0x35.net [10.200.201.53])
-        (Authenticated sender: kerneldev@karsmulder.nl)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPA id 057661BF207;
-        Sun,  5 Jul 2020 20:48:38 +0000 (UTC)
-From:   "Kars Mulder" <kerneldev@karsmulder.nl>
-In-Reply-To: <CAHp75Ve3m=UK9r2o8bDotQWQBLz-fV8CO_VcTmWjdLW1p5wE-w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-Date:   Sun, 05 Jul 2020 22:48:38 +0200
-Cc:     "David Laight" <David.Laight@aculab.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Pavel Machek" <pavel@ucw.cz>,
-        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
-        <linux-kernel@vger.kernel.org>,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+        Sun, 5 Jul 2020 16:50:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 19E2A182CED28;
+        Sun,  5 Jul 2020 20:50:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pull35_340319026ea6
+X-Filterd-Recvd-Size: 3449
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  5 Jul 2020 20:50:33 +0000 (UTC)
+Message-ID: <0334ec747d2e44a2ec3fd6147cfe139200d8b853.camel@perches.com>
+Subject: Re: [PATCH 5/5] virtio_console: Constify some static variables
+From:   Joe Perches <joe@perches.com>
+To:     Amit Shah <amitshah@gmx.net>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Sun, 05 Jul 2020 13:50:32 -0700
+In-Reply-To: <20200703175529.GE3150@trundl.on>
+References: <20200701200950.30314-1-rikard.falkeborn@gmail.com>
+         <20200701200950.30314-6-rikard.falkeborn@gmail.com>
+         <20200703175529.GE3150@trundl.on>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Message-ID: <6e16-5f023c80-2df-35a18880@71958197>
-Subject: =?utf-8?q?Re=3A?= Writing to a const =?utf-8?q?pointer=3A?= is this 
- supposed to =?utf-8?q?happen=3F?=
-User-Agent: SOGoMail 4.3.2
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, July 05, 2020 21:11 CEST, Andy Shevchenko <andy.shevchenko@gmail.com> wrote: 
-> On Sunday, July 5, 2020, Kars Mulder <kerneldev@karsmulder.nl> wrote:
-> > On Saturday, July 04, 2020 22:54 CEST, Andy Shevchenko wrote:
-> > > This and similar are not correct. 1/ They are not replacement per se
-> > > (because of different behaviour). 2/ They simple_strto*() are not
-> > > obsoleted.
-> > >
-> > > Can you correct all places you found and make it consistent?
-> >
-> > Something like the following patch? It changes all occurrences of
-> > "replacement" or "obsolete" (that I'm aware of) with "preferred over".
+On Sun, 2020-07-05 at 20:30 +0200, Amit Shah wrote:
+> On (Wed) 01 Jul 2020 [22:09:50], Rikard Falkeborn wrote:
+> > The id_table and feature_table pointers in struct virtio_driver are
+> > pointers to const. Mark the corresponding static variables const to
+> > allow the compiler to put them in read-only memory.
+> > 
+> > Before:
+> >    text    data     bss     dec     hex filename
+> >   25447     713      76   26236    667c drivers/char/virtio_console.o
+> > 
+> > After:
+> >    text    data     bss     dec     hex filename
+> >   25488     673      76   26237    667d drivers/char/virtio_console.o
+> > 
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 > 
-> While at it, makes sense to refer to the functions like func() as per
-> kernel doc format.
+> Reviewed-by: Amit Shah <amit@kernel.org>
+> 
+> Please CC me on the entire series instead of individual patches in the
+> future.
 
-So I'm working on two patches with tentative names:
+CC'ing individual maintainers on entire patch sets
+that span multiple subsystems doesn't scale.
 
-[PATCH 1/2] kstrto*: Fix references to simple_strto* analogues in comments
-[PATCH 2/2] kstrto*: Do not describe simple_strto* as obsolete/replaced
+Given that lore.kernel.org now stores all emails
+sent to lkml, it's a reasonable thing to add a
+reference to the cover letter below the --- line
+to make it easier for individual recipients of
+patches in a series to find the entire patch set.
 
-(I decided to switch the order since the last mail because the first
-change should be less controversial than the second.)
+i.e. Send emails with something like:
 
-The first one makes all simple_strto* references match their respective
-functions and adds parentheses after the function name (I hope this can
-happen in a single patch?), the second one removes mention of "obsolete"
-or "replacement" and instead uses "preferred over".
+Subject: [PATCH N/M] foo: bar
 
-I should probably put you in Suggested-by: for the second patch (and
-maybe the first one as well?), but I need your explicit permission to
-do so. So, do you want to be added as Suggested-by: on one/both of
-these patches?
+commit message
 
-(Maybe I should add you as Acked-by: as well? I'm not actually sure if
-it's even possible to ask you to ack the patch until its form including
-changelog is finalized. Anyway, the current patches have been attached
-below for good measure.)
+Signed-off-by: J. Random Developer <address@domain.tld>
+---
+
+Link: https://lore.kernel.org/r/<message_id_of_cover_letter>
+
+[patch]
+
+A trivial script to insert these links if all patches
+in a series are stored in a separate directory:
+
+$ bash insert_cover_letter_link.bash <patch_directory>
 
 ---
- include/linux/kernel.h | 4 ++--
- lib/kstrtox.c          | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+$ cat insert_cover_letter_link.bash
+#!/bin/bash
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..2d6050f12c64 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Used as a replacement for the simple_strtoul(). Return code must be checked.
- */
- static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
- {
-@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoull. Return code must be checked.
-+ * Used as a replacement for the simple_strtol(). Return code must be checked.
-  */
- static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
- {
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 1006bf70bf74..252ac414ba9a 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -115,7 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-+ * Used as a replacement for the obsolete simple_strtoull(). Return code must
-  * be checked.
-  */
- int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-@@ -139,7 +139,7 @@ EXPORT_SYMBOL(kstrtoull);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-+ * Used as a replacement for the obsolete simple_strtoll(). Return code must
-  * be checked.
-  */
- int kstrtoll(const char *s, unsigned int base, long long *res)
-@@ -211,7 +211,7 @@ EXPORT_SYMBOL(_kstrtol);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-+ * Used as a replacement for the obsolete simple_strtoul(). Return code must
-  * be checked.
-  */
- int kstrtouint(const char *s, unsigned int base, unsigned int *res)
-@@ -242,7 +242,7 @@ EXPORT_SYMBOL(kstrtouint);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-+ * Used as a replacement for the obsolete simple_strtol(). Return code must
-  * be checked.
-  */
- int kstrtoint(const char *s, unsigned int base, int *res)
--- 
-2.27.0
+find $@ -name "*.patch" | sort | \
+    while read file ; do
 
----
- include/linux/kernel.h |  4 ++--
- lib/kstrtox.c          | 12 ++++--------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+	echo "File: <$file>"
+	if [[ $(basename $file) =~ ^0000- ]] ; then
+	    message_id=$(grep '^Message-Id: <' $file)
+	    if [ $? -ne 0 ] ; then
+		echo "Message_Id not found"
+		exit 1
+	    fi
+	    message_id=$(echo $message_id | \
+			     sed -r -e 's/^Message-Id:\s*<//' -e 's/>\s*$//')
+	    separator="-- "
+	    echo "Message_Id: <$message_id>"
+	else
+	    separator="---"
+	fi
+	
+	if [[ "$message_id" == "" ]] ; then
+	    echo "Patch series cover letter Message_Id not found"
+	    exit 1
+	fi
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 2d6050f12c64..35fd7e0e3f04 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtoul(). Return code must be checked.
-+ * Preferred over simple_strtoul(). Return code must be checked.
- */
- static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
- {
-@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the simple_strtol(). Return code must be checked.
-+ * Preferred over simple_strtol(). Return code must be checked.
-  */
- static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
- {
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 252ac414ba9a..a14ccf905055 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull(). Return code must
-- * be checked.
-+ * Preferred over simple_strtoull(). Return code must be checked.
-  */
- int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
- {
-@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoll(). Return code must
-- * be checked.
-+ * Preferred over simple_strtoll(). Return code must be checked.
-  */
- int kstrtoll(const char *s, unsigned int base, long long *res)
- {
-@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoul(). Return code must
-- * be checked.
-+ * Preferred over simple_strtoul(). Return code must be checked.
-  */
- int kstrtouint(const char *s, unsigned int base, unsigned int *res)
- {
-@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtol(). Return code must
-- * be checked.
-+ * Preferred over simple_strtol(). Return code must be checked.
-  */
- int kstrtoint(const char *s, unsigned int base, int *res)
- {
--- 
-2.27.0
+	perl -n -i -e "if (\$_ =~ /^$separator$/) { print; print \"\\n\"; print \"Link: https://lore.kernel.org/r/\" . '$message_id' . \"\\n\"; print \"\\n\"; } else { print; }" $file
+
+    done
+
+exit 0
+
 
