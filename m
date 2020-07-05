@@ -2,117 +2,140 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C548BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A824F20739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="PokwTfkL"
+	by mail.kernel.org (Postfix) with ESMTP id 1293520739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgGETLn (ORCPT
+        id S1728094AbgGETMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgGETLm (ORCPT
+        Sun, 5 Jul 2020 15:12:21 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54370 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgGETMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:11:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA10C08C5DE
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 12:11:42 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w16so40222027ejj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 12:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xt3dOuMU6eTwoXcY8IjEkhHFc+2w+XryW8TVkin2ZTU=;
-        b=PokwTfkLrg/bmM8c13myLwZt3KcUH8zV5xC962EE89+3RJyCJybDmdF5P0hHyoiEBx
-         SbDQTSK5sdWOGsabemoZqA3fkToEAqMR84VdCLxu97SpYIh+R1PmlFGfdHMbWHv14lKM
-         VmH5/fBkrq8jmYeqHNu3qL2rAxPXJZXo2EyMY=
+        Sun, 5 Jul 2020 15:12:20 -0400
+Received: by mail-io1-f69.google.com with SMTP id t23so22360997iog.21
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 12:12:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xt3dOuMU6eTwoXcY8IjEkhHFc+2w+XryW8TVkin2ZTU=;
-        b=NIaeA4YPq4oE7mqKtTW7LbsnxZrj8Zle6yt9GVaLAyl5U4Xw1zcVQlq7RsaqK3Pz8p
-         fUac35DLCDHi5JPzB4Dn15QZX7kSZoiqb77CMpXXVbukwcYjf/pabOnJmXqY1ADu8ZGl
-         KSHLtjYpO5Kf2e1Hy78UREeKGssY7VligOx1m8skstuTgnoYHFLjVYvf2scOlUkxO5SB
-         ESpL3AngQRbWBx64iW7+lkgU60nnP2mz2mXIkMjnS22Add/AtzaCn6r1gs5ITB4Bqmg0
-         3WszRW98kakq9LJbY9ql7aHmAl/TeaAjCxewTI60pxxQS31zV/h4pc1fX0DzvNVr3yGH
-         6SgA==
-X-Gm-Message-State: AOAM533GitY/K/2BeZqryja160W7HAzLjTv1fYd5bmE0srjz54pUYre4
-        ebCbJSgasIAUaf3NOClD2pJFZz0JslvnLQ==
-X-Google-Smtp-Source: ABdhPJxiTpppeAh2jceWrIULklFnFR7tpoaFOd+aNldck56zwzDpUkkVseaUjAhTOi+cGJtsrBs/oQ==
-X-Received: by 2002:a17:906:26d6:: with SMTP id u22mr5832091ejc.271.1593976300766;
-        Sun, 05 Jul 2020 12:11:40 -0700 (PDT)
-Received: from [192.168.0.112] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.googlemail.com with ESMTPSA id b98sm21583091edf.24.2020.07.05.12.11.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jul 2020 12:11:40 -0700 (PDT)
-Subject: Re: [PATCH net] bridge: mcast: Fix MLD2 Report IPv6 payload length
- check
-To:     =?UTF-8?Q?Linus_L=c3=bcssing?= <linus.luessing@c0d3.blue>
-Cc:     netdev@vger.kernel.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Martin Weinelt <martin@linuxlounge.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        bridge@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200705182234.10257-1-linus.luessing@c0d3.blue>
- <093beb97-87e8-e112-78ad-b3e4fe230cdb@cumulusnetworks.com>
- <20200705190851.GC2648@otheros>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <4728ef5e-0036-7de6-8b6f-f29885d76473@cumulusnetworks.com>
-Date:   Sun, 5 Jul 2020 22:11:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Sl5/QP84bh2XxnAfKFwY88vpKb0Kww2/Do1jEci7GLs=;
+        b=buhUViqqifIM7eCbyJbELs5XvbyRZcKRmOa0VWuIC9RfqQcObq17qis/Z/GuqloYeE
+         /CPCErf+73m+oprea+vil0epEO0aeRhQsIpCUOOZ96LkXbWd/qgfkyqJ/hhinpvuYzlx
+         IzULew5u0zad+H0dMI75HezXCJnvVd+/i7zBs9W7o+Q/vzHAmqDoLHW8uttQWhV6T2aY
+         qsrV6V3RJQ6BrUBHQBltpMbGmbDdbZ3yED/r2QhygljfK8jJh3PKG09jeaTOqeNMH4Rd
+         bAu0Fn24uH/+enWzLKIG8wYJUMm9uwXpSSiQmIuK4WIUwIlliaUxLZ7CfbW32p0thQyj
+         1iyQ==
+X-Gm-Message-State: AOAM531/haM+mmuni+qQuu/fFbebNiK7Ed5Z+0AO4uDZ1ArUizZ3JJDm
+        dLaUb04QkIu+Ncb0lncYKWI6v2PL9LHPq2+CUqJqRyM30Da/
+X-Google-Smtp-Source: ABdhPJzWjNzar+P72KKdkIVF+DZ40jOXCSUNpjoq3IH8gtvzQBLAlN4ZtpkRp7YaQTqzLA0ezWTZA4EJ+Ull5RrmQRfAQfZXUJLC
 MIME-Version: 1.0
-In-Reply-To: <20200705190851.GC2648@otheros>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:30c4:: with SMTP id q187mr48480579jaq.102.1593976339427;
+ Sun, 05 Jul 2020 12:12:19 -0700 (PDT)
+Date:   Sun, 05 Jul 2020 12:12:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007df63d05a9b68960@google.com>
+Subject: general protection fault in bdev_read_page (2)
+From:   syzbot <syzbot+662448179365dddc1880@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 10:08 PM, Linus Lüssing wrote:
-> On Sun, Jul 05, 2020 at 09:33:13PM +0300, Nikolay Aleksandrov wrote:
->> On 05/07/2020 21:22, Linus Lüssing wrote:
->>> Commit e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in
->>> igmp3/mld2 report handling") introduced a small bug which would potentially
->>> lead to accepting an MLD2 Report with a broken IPv6 header payload length
->>> field.
->>>
->>> The check needs to take into account the 2 bytes for the "Number of
->>> Sources" field in the "Multicast Address Record" before reading it.
->>> And not the size of a pointer to this field.
->>>
->>> Fixes: e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling")
->>> Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
->>> ---
->>>   net/bridge/br_multicast.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>
->> I'd rather be more concerned with it rejecting a valid report due to wrong size. The ptr
->> size would always be bigger. :)
->>
->> Thanks!
->> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> 
-> Aiy, you're right, it's the other way round. I'll update the
-> commit message and send a v2 in a minute, with your Acked-by
-> included.
-> 
+Hello,
 
-By the way, I can't verify at the moment, but I think we can drop that whole
-hunk altogether since skb_header_pointer() is used and it will simply return
-an error if there isn't enough data for nsrcs.
+syzbot found the following crash on:
 
+HEAD commit:    7c30b859 Merge tag 'spi-fix-v5.8-rc3' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1279b86b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
+dashboard link: https://syzkaller.appspot.com/bug?extid=662448179365dddc1880
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bd80a3100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16af525b100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+662448179365dddc1880@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc000000001e: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000f0-0x00000000000000f7]
+CPU: 0 PID: 7121 Comm: systemd-udevd Not tainted 5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bdev_read_page+0x35/0x290 fs/block_dev.c:700
+Code: f5 53 48 89 fb 48 83 ec 08 48 89 14 24 e8 03 12 a5 ff 48 8d bb f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e7 01 00 00 4c 8b bb f0 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90001b57530 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81cf749a
+RDX: 000000000000001e RSI: ffffffff81cea51d RDI: 00000000000000f0
+RBP: fff89719b6b00000 R08: 0000000000000001 R09: ffffea0002871787
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffc90001b57748
+FS:  00007fde67d458c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055f65ed31138 CR3: 00000000a78d8000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ do_mpage_readpage+0x10ca/0x1ef0 fs/mpage.c:302
+ mpage_readahead+0x3a2/0x870 fs/mpage.c:391
+ read_pages+0x1df/0x8d0 mm/readahead.c:130
+ page_cache_readahead_unbounded+0x572/0x850 mm/readahead.c:244
+ __do_page_cache_readahead mm/readahead.c:273 [inline]
+ force_page_cache_readahead+0x2e9/0x460 mm/readahead.c:303
+ page_cache_sync_readahead mm/readahead.c:580 [inline]
+ page_cache_sync_readahead+0x113/0x130 mm/readahead.c:567
+ generic_file_buffered_read+0x108c/0x27e0 mm/filemap.c:2033
+ generic_file_read_iter+0x396/0x4e0 mm/filemap.c:2307
+ blkdev_read_iter+0x11b/0x180 fs/block_dev.c:2044
+ call_read_iter include/linux/fs.h:1901 [inline]
+ new_sync_read+0x41a/0x6e0 fs/read_write.c:415
+ __vfs_read+0xc9/0x100 fs/read_write.c:428
+ vfs_read+0x1f6/0x420 fs/read_write.c:462
+ ksys_read+0x12d/0x250 fs/read_write.c:588
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fde66e8c210
+Code: Bad RIP value.
+RSP: 002b:00007fff13285fd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 000055f65ed30d00 RCX: 00007fde66e8c210
+RDX: 0000000000000400 RSI: 000055f65ed30d28 RDI: 000000000000000f
+RBP: 000055f65ed34e80 R08: 00007fde66e76f88 R09: 0000000000000430
+R10: 000000000000006d R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000400 R14: 000055f65ed34ed0 R15: 0000000000000400
+Modules linked in:
+---[ end trace 5b6f53a9af7ced6f ]---
+RIP: 0010:bdev_read_page+0x35/0x290 fs/block_dev.c:700
+Code: f5 53 48 89 fb 48 83 ec 08 48 89 14 24 e8 03 12 a5 ff 48 8d bb f0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e7 01 00 00 4c 8b bb f0 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90001b57530 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81cf749a
+RDX: 000000000000001e RSI: ffffffff81cea51d RDI: 00000000000000f0
+RBP: fff89719b6b00000 R08: 0000000000000001 R09: ffffea0002871787
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffc90001b57748
+FS:  00007fde67d458c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5807cc2ab4 CR3: 00000000a78d8000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
