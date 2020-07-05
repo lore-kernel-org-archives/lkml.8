@@ -2,132 +2,244 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C801C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A163EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526AF20737
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593962057;
-	bh=bKkXeKpKQKOrya2osciLsczxnGIRt/CX9n8JXMDcEyU=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=t+VgTA+CTcMaYCUhrQCAM5+YvZiOZVX0saj5SRWSZqjiRkKbGBFycYQix0GMyjP5j
-	 8yXQZfNGs6tky4AVLjNYRkFy19QaChAokDqXHGaiTNP/lgKyrp8yqEZgayBb6GFlW+
-	 KiPqqG7ZxHu3BCdr5CGhQ8Nr6aSVfS6yjRMIq2IQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6A0E320739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TCJdhGoj";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TCJdhGoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgGEPOP (ORCPT
+        id S1727064AbgGEPWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:14:15 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:36677 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgGEPOO (ORCPT
+        Sun, 5 Jul 2020 11:22:53 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47330 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726833AbgGEPWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:14:14 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 065FDkTX024909;
-        Mon, 6 Jul 2020 00:13:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FDkTX024909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593962027;
-        bh=fQuQFv/SLNfuMXM4t3LK7AbKKjdn4MSwV7JTU0JwejQ=;
-        h=From:Date:Subject:To:Cc:From;
-        b=DhzU25nptdakYBf8ByeZ7suYEVZ/ElBsYlGkgGAVzK8XaFomlKwQioGa2DQiQFQkO
-         ghyuXf/W2iPlDwtpj2CtD0g1NlGeYcumLB61oH0iGD8PB58Pujw1zhZ6yUrjUHQmRE
-         EDajLE0D94tF/qjvh7Jg5X7cQir5y1Fn9+ntnBp9OuX4nESvIb2May0yiqC7OoRJvx
-         IenfPY4gmPBbMouR4ovr5PIvtM7kDJwOukdKvUHm3tIbH4EyfC2X7Is4raMIb04cl2
-         7pKPitdNcndERz5wvTMxGSHaDIlCRmWPBkk/7JaKSTG4u3zNEn2eBQ+Qtux2Ih3VBZ
-         K+5dIQInQaZBA==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id 64so13095962vsl.3;
-        Sun, 05 Jul 2020 08:13:46 -0700 (PDT)
-X-Gm-Message-State: AOAM533CcXWymqm5jJDlbPMOpvw8R+uRTDkgzR/m4F8RkdPRrZbqC3Lt
-        7HJop4uS/YG2ndyUcR5p8ITTU+NS1tlybRYSqb8=
-X-Google-Smtp-Source: ABdhPJyn6UHdLo8/SXtPLDScAGDcUJn5XiDdR0H5IC/iw0NIPtCmHZpJQAvGwOup566GhpVLBOxaFs+gBBjsuKjjB3M=
-X-Received: by 2002:a67:694d:: with SMTP id e74mr34092030vsc.155.1593962025474;
- Sun, 05 Jul 2020 08:13:45 -0700 (PDT)
-MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 6 Jul 2020 00:13:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQEMNSM2PRaTwPoX+2hn3FpU2=kQEyJdFjH2xkz+eq5gg@mail.gmail.com>
-Message-ID: <CAK7LNAQEMNSM2PRaTwPoX+2hn3FpU2=kQEyJdFjH2xkz+eq5gg@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v5.8-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        Sun, 5 Jul 2020 11:22:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C5C7E8EE1FC;
+        Sun,  5 Jul 2020 08:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593962572;
+        bh=OLhaHU/vz2Tng4cyS8WmDVBZm28HLgOU760RKdtZ1I8=;
+        h=Subject:From:To:Cc:Date:From;
+        b=TCJdhGojJOQBMHe45VrBwizRGOzSBroMT2eYHdrtrbAzes6PsWgkg4soKhKWaApj+
+         pWLXvKebJcAfMoQMa3bIdkHq2jhJUuZc3/tpN7G5sf5X2EHsrm2t+Eqd9trCBMNZJk
+         zZLELaDqxgdLOeXqmF3AyV2GHzTsgDohDZsPe2t0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id znkL1FObznCV; Sun,  5 Jul 2020 08:22:52 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 066E78EE116;
+        Sun,  5 Jul 2020 08:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593962572;
+        bh=OLhaHU/vz2Tng4cyS8WmDVBZm28HLgOU760RKdtZ1I8=;
+        h=Subject:From:To:Cc:Date:From;
+        b=TCJdhGojJOQBMHe45VrBwizRGOzSBroMT2eYHdrtrbAzes6PsWgkg4soKhKWaApj+
+         pWLXvKebJcAfMoQMa3bIdkHq2jhJUuZc3/tpN7G5sf5X2EHsrm2t+Eqd9trCBMNZJk
+         zZLELaDqxgdLOeXqmF3AyV2GHzTsgDohDZsPe2t0=
+Message-ID: <1593962570.4657.5.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.8-rc3
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sun, 05 Jul 2020 08:22:50 -0700
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Four small fixes in three drivers.  The mptfusion one has actually
+caused use visible issues in certain kernel configurations.
 
-Please pull some more Kbuild fixes.
-Thanks.
+The patch is available here:
 
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
+The short changelog is:
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+Christoph Hellwig (1):
+      scsi: mptfusion: Don't use GFP_ATOMIC for larger DMA allocations
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+Dan Carpenter (1):
+      scsi: qla2xxx: Fix a condition in qla2x00_find_all_fabric_devs()
 
-are available in the Git repository at:
+Javed Hasan (2):
+      scsi: libfc: Skip additional kref updating work event
+      scsi: libfc: Handling of extra kref
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v5.8-2
+And the diffstat:
 
-for you to fetch changes up to ba77dca584f5abf30340672bc752fe7912731af5:
+ drivers/message/fusion/mptbase.c | 41 ++++++++++++++++++++--------------------
+ drivers/scsi/libfc/fc_rport.c    | 13 ++++++++-----
+ drivers/scsi/qla2xxx/qla_init.c  |  2 +-
+ 3 files changed, 29 insertions(+), 27 deletions(-)
 
-  .gitignore: Do not track `defconfig` from `make savedefconfig`
-(2020-07-05 16:15:46 +0900)
+With full diff below.
 
-----------------------------------------------------------------
-Kbuild fixes for v5.8 (2nd)
+James
 
- - fix various bugs in xconfig
+---
 
- - fix some issues in cross-compilation using Clang
-
- - fix documentation
-
-----------------------------------------------------------------
-Dov Murik (1):
-      docs: kbuild: fix ReST formatting
-
-Masahiro Yamada (3):
-      gcc-plugins: fix gcc-plugins directory path in documentation
-      kbuild: fix CONFIG_CC_CAN_LINK(_STATIC) for cross-compilation with Clang
-      kbuild: make Clang build userprogs for target architecture
-
-Mauro Carvalho Chehab (8):
-      kconfig: qconf: cleanup includes
-      kconfig: qconf: make search fully work again on split mode
-      kconfig: qconf: make debug links work again
-      kconfig: qconf: re-implement setSelected()
-      kconfig: qconf: simplify the goBack() logic
-      kconfig: qconf: don't show goback button on splitMode
-      kconfig: qconf: navigate menus on hyperlinks
-      kconfig: qconf: parse newer types at debug info
-
-Paul Menzel (1):
-      .gitignore: Do not track `defconfig` from `make savedefconfig`
-
- .gitignore                                   |   3 +
- Documentation/kbuild/modules.rst             |   7 +-
- Documentation/kbuild/reproducible-builds.rst |   2 +-
- Makefile                                     |   4 +-
- init/Kconfig                                 |   8 +-
- scripts/gcc-plugins/Kconfig                  |   2 +-
- scripts/kconfig/qconf.cc                     | 173 ++++++++++++++++-----------
- scripts/kconfig/qconf.h                      |  23 ++--
- 8 files changed, 136 insertions(+), 86 deletions(-)
-
-
--- 
-Best Regards
-Masahiro Yamada
+diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
+index 68aea22f2b89..5216487db4fb 100644
+--- a/drivers/message/fusion/mptbase.c
++++ b/drivers/message/fusion/mptbase.c
+@@ -1324,13 +1324,13 @@ mpt_host_page_alloc(MPT_ADAPTER *ioc, pIOCInit_t ioc_init)
+ 			return 0; /* fw doesn't need any host buffers */
+ 
+ 		/* spin till we get enough memory */
+-		while(host_page_buffer_sz > 0) {
+-
+-			if((ioc->HostPageBuffer = pci_alloc_consistent(
+-			    ioc->pcidev,
+-			    host_page_buffer_sz,
+-			    &ioc->HostPageBuffer_dma)) != NULL) {
+-
++		while (host_page_buffer_sz > 0) {
++			ioc->HostPageBuffer =
++				dma_alloc_coherent(&ioc->pcidev->dev,
++						host_page_buffer_sz,
++						&ioc->HostPageBuffer_dma,
++						GFP_KERNEL);
++			if (ioc->HostPageBuffer) {
+ 				dinitprintk(ioc, printk(MYIOC_s_DEBUG_FMT
+ 				    "host_page_buffer @ %p, dma @ %x, sz=%d bytes\n",
+ 				    ioc->name, ioc->HostPageBuffer,
+@@ -2741,8 +2741,8 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
+ 		sz = ioc->alloc_sz;
+ 		dexitprintk(ioc, printk(MYIOC_s_INFO_FMT "free  @ %p, sz=%d bytes\n",
+ 		    ioc->name, ioc->alloc, ioc->alloc_sz));
+-		pci_free_consistent(ioc->pcidev, sz,
+-				ioc->alloc, ioc->alloc_dma);
++		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->alloc,
++				ioc->alloc_dma);
+ 		ioc->reply_frames = NULL;
+ 		ioc->req_frames = NULL;
+ 		ioc->alloc = NULL;
+@@ -2751,8 +2751,8 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
+ 
+ 	if (ioc->sense_buf_pool != NULL) {
+ 		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
+-		pci_free_consistent(ioc->pcidev, sz,
+-				ioc->sense_buf_pool, ioc->sense_buf_pool_dma);
++		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->sense_buf_pool,
++				ioc->sense_buf_pool_dma);
+ 		ioc->sense_buf_pool = NULL;
+ 		ioc->alloc_total -= sz;
+ 	}
+@@ -2802,7 +2802,7 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
+ 			"HostPageBuffer free  @ %p, sz=%d bytes\n",
+ 			ioc->name, ioc->HostPageBuffer,
+ 			ioc->HostPageBuffer_sz));
+-		pci_free_consistent(ioc->pcidev, ioc->HostPageBuffer_sz,
++		dma_free_coherent(&ioc->pcidev->dev, ioc->HostPageBuffer_sz,
+ 		    ioc->HostPageBuffer, ioc->HostPageBuffer_dma);
+ 		ioc->HostPageBuffer = NULL;
+ 		ioc->HostPageBuffer_sz = 0;
+@@ -4497,7 +4497,8 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
+ 			 	ioc->name, sz, sz, num_chain));
+ 
+ 		total_size += sz;
+-		mem = pci_alloc_consistent(ioc->pcidev, total_size, &alloc_dma);
++		mem = dma_alloc_coherent(&ioc->pcidev->dev, total_size,
++				&alloc_dma, GFP_KERNEL);
+ 		if (mem == NULL) {
+ 			printk(MYIOC_s_ERR_FMT "Unable to allocate Reply, Request, Chain Buffers!\n",
+ 				ioc->name);
+@@ -4574,8 +4575,8 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
+ 		spin_unlock_irqrestore(&ioc->FreeQlock, flags);
+ 
+ 		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
+-		ioc->sense_buf_pool =
+-			pci_alloc_consistent(ioc->pcidev, sz, &ioc->sense_buf_pool_dma);
++		ioc->sense_buf_pool = dma_alloc_coherent(&ioc->pcidev->dev, sz,
++				&ioc->sense_buf_pool_dma, GFP_KERNEL);
+ 		if (ioc->sense_buf_pool == NULL) {
+ 			printk(MYIOC_s_ERR_FMT "Unable to allocate Sense Buffers!\n",
+ 				ioc->name);
+@@ -4613,18 +4614,16 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
+ 
+ 	if (ioc->alloc != NULL) {
+ 		sz = ioc->alloc_sz;
+-		pci_free_consistent(ioc->pcidev,
+-				sz,
+-				ioc->alloc, ioc->alloc_dma);
++		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->alloc,
++				ioc->alloc_dma);
+ 		ioc->reply_frames = NULL;
+ 		ioc->req_frames = NULL;
+ 		ioc->alloc_total -= sz;
+ 	}
+ 	if (ioc->sense_buf_pool != NULL) {
+ 		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
+-		pci_free_consistent(ioc->pcidev,
+-				sz,
+-				ioc->sense_buf_pool, ioc->sense_buf_pool_dma);
++		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->sense_buf_pool,
++				ioc->sense_buf_pool_dma);
+ 		ioc->sense_buf_pool = NULL;
+ 	}
+ 
+diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
+index 773c45af9387..278d15ff1c5a 100644
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -133,8 +133,10 @@ struct fc_rport_priv *fc_rport_create(struct fc_lport *lport, u32 port_id)
+ 	lockdep_assert_held(&lport->disc.disc_mutex);
+ 
+ 	rdata = fc_rport_lookup(lport, port_id);
+-	if (rdata)
++	if (rdata) {
++		kref_put(&rdata->kref, fc_rport_destroy);
+ 		return rdata;
++	}
+ 
+ 	if (lport->rport_priv_size > 0)
+ 		rport_priv_size = lport->rport_priv_size;
+@@ -481,10 +483,11 @@ static void fc_rport_enter_delete(struct fc_rport_priv *rdata,
+ 
+ 	fc_rport_state_enter(rdata, RPORT_ST_DELETE);
+ 
+-	kref_get(&rdata->kref);
+-	if (rdata->event == RPORT_EV_NONE &&
+-	    !queue_work(rport_event_queue, &rdata->event_work))
+-		kref_put(&rdata->kref, fc_rport_destroy);
++	if (rdata->event == RPORT_EV_NONE) {
++		kref_get(&rdata->kref);
++		if (!queue_work(rport_event_queue, &rdata->event_work))
++			kref_put(&rdata->kref, fc_rport_destroy);
++	}
+ 
+ 	rdata->event = event;
+ }
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 4576d3ae9937..2436a17f5cd9 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -5944,7 +5944,7 @@ qla2x00_find_all_fabric_devs(scsi_qla_host_t *vha)
+ 			break;
+ 		}
+ 
+-		if (NVME_TARGET(vha->hw, fcport)) {
++		if (found && NVME_TARGET(vha->hw, fcport)) {
+ 			if (fcport->disc_state == DSC_DELETE_PEND) {
+ 				qla2x00_set_fcport_disc_state(fcport, DSC_GNL);
+ 				vha->fcport_count--;
