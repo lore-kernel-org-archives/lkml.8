@@ -2,394 +2,108 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3B4C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7847A2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656FE2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 13:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NIstxciP"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="XUnXnqDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgGEN05 (ORCPT
+        id S1727067AbgGEN3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 09:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbgGEN04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 09:26:56 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4E8C08C5DF
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 06:26:56 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so27105967qtg.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 06:26:56 -0700 (PDT)
+        Sun, 5 Jul 2020 09:29:45 -0400
+Received: from mail-eopbgr20122.outbound.protection.outlook.com ([40.107.2.122]:55870
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726833AbgGEN3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 09:29:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D01iENKbbEZ2j1JJizZM56VEKEM1dWbKId134ywovhuiONEHzc15Hsw4bV1Bsr8NJCI+EGC8BGQMeI6POfr6Iw4pSFXeo/8q8lr/I8Pxg4YStuKKfXaKAYBwML+QeT8Gm/WfMT8DGF6BJz5iwZ3XfC28LSA1cbtCRpoKihScG8r84FAjJb8hAJ5JvyHLWMNO66EHaCZnMQFeGzfRW5BZDNpQ8zYzqJU63I9fnk31Zav5UJZVKXRyxFZCbn5/abbmmjO8DcxCtHAr+Hf03509xKO/6AxMxKH0pGmnj9ok551QarPODOygQYXpA6/gtbheOTpan7vZcBv19k2/fXIP9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xmcZWVA4vKI3RgOGRMcmBS+u6QnmdRGdWmo2zJJm8Io=;
+ b=as4Io0rDTXe9TMrIuNC12GpmM/O/RgTyPqA3TQymwPpQI11eicsIVfUH90kGDHeyDw/1bgaN5Q/jf/cm6tySWWw/UqzUWO8LB5QIGBVRvv/ZIyXuYj4wVFPyeSoYu2YrO3a05qQ5/+t/RvelCfN7X492mPeq9gWkOltbdLWr4eHaNv2NpzJJnajvo/1PI3fb7d6tpU5TcfLtzm7oSoAoy1PcpNAaBHiBl149ZT6qqdrSx0tPgswEjGH+mXfp4ODIdwySKAMp7c45d0q2/oIBwxA61uip40hav3XCwimc95/VqLExHtEU8us+vEsxIB0W/olL5oc5vVko6LE+IcSFoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+/dsvnNt08VIJBxKiyqUdzu/JPBvhKhMw8sctck7xu4=;
-        b=NIstxciP8/M6Z6IdhFbknhiC95u0KtzUWeOnaVKVVlwWHoaHQlQUOsSzcXiqUhVKc9
-         LZsTe3yxkUowRC+YvoTD19IRrVEU7WswF6yGM4s6ONcVte9yuMuegAM0a7ajVWP0UWOg
-         9SSOcpz454ZC7VIKiSmo+45iR4BsTPyhb8CCeU+Q3GWb4hi3nxz/OxgrqqCfSGtXALWO
-         FC0tJrLrTMrVy89+jJYt7BFRRqmSNNuIcFDOiJ0a4ijmiQeugyu5raNK3V+6+L8jgYpr
-         E1Hclvf3TamIbvAQqwgP+Nkj0+jC2zrZITNATI86kNUmKeX1N03Vsp5ktdzEO4hJGaN2
-         iqEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+/dsvnNt08VIJBxKiyqUdzu/JPBvhKhMw8sctck7xu4=;
-        b=nHy/Wxe5GvUPenqcO5ywtjrDZiZ6mjLkD018JBnY190EviWEV2/ApH16RzqUxPedPp
-         D6+bBBUWQyHd32ikOU2O8LM5XEXj3J79Mg49UP2J1JnkkivwzOLBPGonrYMjOQztZeTu
-         Jm+GHB71VB76wa1LZy1CstyJtVSpJKwCDggkdmTYj8G1Mivfi1Np95etrUYX/ZXb6ckr
-         8pNz+jdkKQl9RG3LyWY1R7D5JQCwenLa43+uujnHZ4LvEQ8gGsehJQAN3NZTx8L5Fzpo
-         UjeuSstbj/EOwnDSmvm/9/GB1Ryc80XLmso76aC4nyOJbGXBenm67Xw+xZptUpZxxSAY
-         grYQ==
-X-Gm-Message-State: AOAM531bVfvBPr3Q1uxoKmg5oRaI+Obbdfg3GDR+d5MGsXX6zRucNmbG
-        uEeoxLJc3PzAECb0Uax+sxrxl29hW8v/Y+LyRy4q3Q==
-X-Google-Smtp-Source: ABdhPJwB/Lxj77s7XpW+aBTCM67Mk7gY/sUl+xwcLd4kaAnEzMJYuAv69OVo8gFXWTGVv/IhlavOVS9W/tWIh1Days4=
-X-Received: by 2002:ac8:189c:: with SMTP id s28mr42490366qtj.97.1593955615055;
- Sun, 05 Jul 2020 06:26:55 -0700 (PDT)
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xmcZWVA4vKI3RgOGRMcmBS+u6QnmdRGdWmo2zJJm8Io=;
+ b=XUnXnqDJ7ljjdhfqvMPVcwy24YApjk4tzcLRPnQGtcKMprlTGb6PZbdEZPwBQYUosXQd+4CUpEjTUoLpg7KTv0+OT7/4uxChh5llTZON+83ODo/9bVKt4b3wIi5Wryx9mx4Ny6jj2GAjCV8ikEhktfUZ4n4+w9PHChs/tzU1kPQ=
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
+ by DB8PR02MB5578.eurprd02.prod.outlook.com (2603:10a6:10:38::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Sun, 5 Jul
+ 2020 13:29:40 +0000
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3153.029; Sun, 5 Jul 2020
+ 13:29:40 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SW_Drivers <SW_Drivers@habana.ai>
+Subject: RE: [PATCH 2/9] habanalabs: rephrase error messages
+Thread-Topic: [PATCH 2/9] habanalabs: rephrase error messages
+Thread-Index: AQHWUs36dSSEUvVBu0WpqqdzdX6hdKj4+mWQ
+Date:   Sun, 5 Jul 2020 13:29:40 +0000
+Message-ID: <DB8PR02MB54685B3C381C9740DA7AB593D2680@DB8PR02MB5468.eurprd02.prod.outlook.com>
+References: <20200705131245.9368-1-oded.gabbay@gmail.com>
+ <20200705131245.9368-2-oded.gabbay@gmail.com>
+In-Reply-To: <20200705131245.9368-2-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+x-originating-ip: [93.172.67.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 43a8edbb-573b-4196-e174-08d820e7789f
+x-ms-traffictypediagnostic: DB8PR02MB5578:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR02MB5578A7BF43133AAEEDCCF38ED2680@DB8PR02MB5578.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 045584D28C
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mFr2S0gcXL+qIiVLWVQCxkFI38hVnpw/9c1UvE4rozaQgSlVu24f3RJfmbhzpVw8arQfjnKSnEAoGGxSb/DjSTUPYq3WEiyYXkSs3yHKBQXCrq+GC4V/kPUawwdD5CNvp4HzHawQlmOHJADhXeWUn3Y3Sy5mbxf450g7Y/ESibYjoP5XjOYsmXYrMlmyIQYNlmxwAJpYiQusY3WaoXU1giu83vBxLZciJohMdlvYEqjhrfMcFaCx7b6vZfQBSHK6HSocLsymFH6PtHmo7wkswBsvoZ56NBX3NX35BFWnEzmxlBUxyX564oM1u+2G6D4p
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(366004)(136003)(346002)(39850400004)(71200400001)(83380400001)(6636002)(316002)(76116006)(64756008)(66446008)(66556008)(66476007)(110136005)(66946007)(9686003)(478600001)(55016002)(8676002)(7696005)(33656002)(5660300002)(4744005)(2906002)(15650500001)(52536014)(186003)(8936002)(53546011)(6506007)(86362001)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: kX1/DKnJdIKnF8iaH98hYlRMcBsIUmZ0+u+VTqj/1x5rOBurCHKKSuhzppRSQiat88C+HyhyDtlLizutBhHaHGv4/IjjCtzv18354XDPku1dck5XnG9h2kFi0NRK7FWXGIOtULWfH4+5Z1ILxTobHvu848d5iKLE5CZF7q63x/IVsx5zdAQkGTCHJ8gIr2SBvJLUAV9HDzNyDVfEK1fA4RBn2TjonTL9EV5dY6UdLI6RnVxwQO/TGnCw7ClxxIxG02eKmYTMN/kg/Hej5y/Bc9M+DKRmI1gjQsyQGQDvCqYvGOKlqt1JiSciCDK5G2sHmFVyKvjhpYecC5JbDexos+vHeDUsa6gg8O9whAm4WMFsNTXvTjLxy7kihgn03dAzeiT3FEwezKCrks2ib4vszpgV3LYUfMhVK8NwOLZSW2NqZdITnVhktwgwlf4wi3rjMghld6s3RFTpP6SfVp7JssV7+jpqJshNNshqLY899u4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org> <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org>
-In-Reply-To: <12db6d22c12369b6d64f410aa2434b03@kernel.org>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Sun, 5 Jul 2020 15:26:43 +0200
-Message-ID: <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43a8edbb-573b-4196-e174-08d820e7789f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2020 13:29:40.3974
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F/w+PdeE1DcBu2OwVwKqQqBIuqLkfpkSNqPcisLY7LS5H91jMb7JrtrzimmVK05kpvUV5VVnZtHMoKaLgpiYZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5578
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
-> > On Thu, 2 Jul 2020 at 19:24, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> >> > From: Suman Anna <s-anna@ti.com>
-> >> >
-> >> > The Programmable Real-Time Unit Subsystem (PRUSS) contains a local
-> >> > interrupt controller (INTC) that can handle various system input events
-> >> > and post interrupts back to the device-level initiators. The INTC can
-> >> > support upto 64 input events with individual control configuration and
-> >> > hardware prioritization. These events are mapped onto 10 output
-> >> > interrupt
-> >> > lines through two levels of many-to-one mapping support. Different
-> >> > interrupt lines are routed to the individual PRU cores or to the host
-> >> > CPU, or to other devices on the SoC. Some of these events are sourced
-> >> > from peripherals or other sub-modules within that PRUSS, while a few
-> >> > others are sourced from SoC-level peripherals/devices.
-> >> >
-> >> > The PRUSS INTC platform driver manages this PRUSS interrupt controller
-> >> > and implements an irqchip driver to provide a Linux standard way for
-> >> > the PRU client users to enable/disable/ack/re-trigger a PRUSS system
-> >> > event. The system events to interrupt channels and output interrupts
-> >> > relies on the mapping configuration provided either through the PRU
-> >> > firmware blob or via the PRU application's device tree node. The
-> >> > mappings will be programmed during the boot/shutdown of a PRU core.
-> >> >
-> >> > The PRUSS INTC module is reference counted during the interrupt
-> >> > setup phase through the irqchip's irq_request_resources() and
-> >> > irq_release_resources() ops. This restricts the module from being
-> >> > removed as long as there are active interrupt users.
-> >> >
-> >> > The driver currently supports and can be built for OMAP architecture
-> >> > based AM335x, AM437x and AM57xx SoCs; Keystone2 architecture based
-> >> > 66AK2G SoCs and Davinci architecture based OMAP-L13x/AM18x/DA850 SoCs.
-> >> > All of these SoCs support 64 system events, 10 interrupt channels and
-> >> > 10 output interrupt lines per PRUSS INTC with a few SoC integration
-> >> > differences.
-> >> >
-> >> > NOTE:
-> >> > Each PRU-ICSS's INTC on AM57xx SoCs is preceded by a Crossbar that
-> >> > enables multiple external events to be routed to a specific number
-> >> > of input interrupt events. Any non-default external interrupt event
-> >> > directed towards PRUSS needs this crossbar to be setup properly.
-> >> >
-> >> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> > Signed-off-by: Andrew F. Davis <afd@ti.com>
-> >> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> >> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
-> >> > ---
-> >> > v2->v3:
-> >> > - use single irqchip description instead of separately allocating it
-> >> > for
-> >> >   each pruss_intc
-> >> > - get rid of unused mutex
-> >> > - improve error handling
-> >> > v1->v2:
-> >> > - https://patchwork.kernel.org/patch/11069771/
-> > <snip>
-> >> > +static void pruss_intc_init(struct pruss_intc *intc)
-> >> > +{
-> >> > +     int i;
-> >> > +
-> >> > +     /* configure polarity to active high for all system interrupts */
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR0, 0xffffffff);
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR1, 0xffffffff);
-> >> > +
-> >> > +     /* configure type to pulse interrupt for all system interrupts */
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR0, 0);
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR1, 0);
-> >>
-> >> So the default is to configure everything as edge...
-> >
-> > Sorry, the description is wrong - '0' indicates level and '1' edge. So
-> > the default configuration is level - I will fix the comment.
-> >
-> >>
-> >> > +
-> >> > +     /* clear all 16 interrupt channel map registers */
-> >> > +     for (i = 0; i < 16; i++)
-> >> > +             pruss_intc_write_reg(intc, PRU_INTC_CMR(i), 0);
-> >> > +
-> >> > +     /* clear all 3 host interrupt map registers */
-> >> > +     for (i = 0; i < 3; i++)
-> >> > +             pruss_intc_write_reg(intc, PRU_INTC_HMR(i), 0);
-> >> > +}
-> >> > +
-> >> > +static void pruss_intc_irq_ack(struct irq_data *data)
-> >> > +{
-> >> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> >> > +     unsigned int hwirq = data->hwirq;
-> >> > +
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
-> >> > +}
-> >> > +
-> >> > +static void pruss_intc_irq_mask(struct irq_data *data)
-> >> > +{
-> >> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> >> > +     unsigned int hwirq = data->hwirq;
-> >> > +
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_EICR, hwirq);
-> >> > +}
-> >> > +
-> >> > +static void pruss_intc_irq_unmask(struct irq_data *data)
-> >> > +{
-> >> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> >> > +     unsigned int hwirq = data->hwirq;
-> >> > +
-> >> > +     pruss_intc_write_reg(intc, PRU_INTC_EISR, hwirq);
-> >> > +}
-> >> > +
-> >> > +static int pruss_intc_irq_reqres(struct irq_data *data)
-> >> > +{
-> >> > +     if (!try_module_get(THIS_MODULE))
-> >> > +             return -ENODEV;
-> >> > +
-> >> > +     return 0;
-> >> > +}
-> >> > +
-> >> > +static void pruss_intc_irq_relres(struct irq_data *data)
-> >> > +{
-> >> > +     module_put(THIS_MODULE);
-> >> > +}
-> >> > +
-> >> > +static struct irq_chip pruss_irqchip = {
-> >> > +     .name = "pruss-intc",
-> >> > +     .irq_ack = pruss_intc_irq_ack,
-> >> > +     .irq_mask = pruss_intc_irq_mask,
-> >> > +     .irq_unmask = pruss_intc_irq_unmask,
-> >> > +     .irq_request_resources = pruss_intc_irq_reqres,
-> >> > +     .irq_release_resources = pruss_intc_irq_relres,
-> >> > +};
-> >> > +
-> >> > +static int pruss_intc_irq_domain_map(struct irq_domain *d, unsigned
-> >> > int virq,
-> >> > +                                  irq_hw_number_t hw)
-> >> > +{
-> >> > +     struct pruss_intc *intc = d->host_data;
-> >> > +
-> >> > +     irq_set_chip_data(virq, intc);
-> >> > +     irq_set_chip_and_handler(virq, &pruss_irqchip, handle_level_irq);
-> >>
-> >> ... and despite this edge-triggered default, you handle things as
-> >> level.
-> >> This doesn't seem quite right.
-> >
-> > As above it is level. I will fix the comment
->
-> It still begs the question: if the HW can support both edge and level
-> triggered interrupts, why isn't the driver supporting this diversity?
-> I appreciate that your HW may only have level interrupts so far, but
-> what guarantees that this will forever be true? It would imply a change
-> in the DT binding, which isn't desirable.
+On Sun, Jul 5, 2020 at 16:13 Oded Gabbay <oded.gabbay@gmail.com> wrote:
+> rephrase some error/warning/notice messages to make them more
+> accessible to
+> ordinary users.
+>=20
+> There is no need to print context ASID as the driver currently doesn't
+> support multiple contexts.
+>=20
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 
-Ok, I've got your point. I will try to come up with something later
-on. Probably extending interrupt-cells by one and passing interrupt
-type will be enough for now. Extending this driver to actually support
-it can be handled later if needed. Hope it works for you.
-
->
-> >
-> >>
-> >> > +
-> >> > +     return 0;
-> >> > +}
-> >> > +
-> >> > +static void pruss_intc_irq_domain_unmap(struct irq_domain *d,
-> >> > unsigned int virq)
-> >> > +{
-> >> > +     irq_set_chip_and_handler(virq, NULL, NULL);
-> >> > +     irq_set_chip_data(virq, NULL);
-> >> > +}
-> >> > +
-> >> > +static const struct irq_domain_ops pruss_intc_irq_domain_ops = {
-> >> > +     .xlate  = irq_domain_xlate_onecell,
-> >> > +     .map    = pruss_intc_irq_domain_map,
-> >> > +     .unmap  = pruss_intc_irq_domain_unmap,
-> >> > +};
-> >> > +
-> >> > +static void pruss_intc_irq_handler(struct irq_desc *desc)
-> >> > +{
-> >> > +     unsigned int irq = irq_desc_get_irq(desc);
-> >> > +     struct irq_chip *chip = irq_desc_get_chip(desc);
-> >> > +     struct pruss_intc *intc = irq_get_handler_data(irq);
-> >> > +     u32 hipir;
-> >> > +     unsigned int virq;
-> >> > +     int i, hwirq;
-> >> > +
-> >> > +     chained_irq_enter(chip, desc);
-> >> > +
-> >> > +     /* find our host irq number */
-> >> > +     for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
-> >> > +             if (intc->irqs[i] == irq)
-> >> > +                     break;
-> >>
-> >> This loop is pretty ugly. The way to do it would normally to
-> >> associate the right data structure to the chained interrupt,
-> >> and only that one, directly associating the input signal
-> >> with the correct mux. Using the Linux irq as a discriminant is
-> >> at best clumsy.
-> >>
-> >> But it feels to me that the base data structure is not
-> >> exactly the right one here, see below.
-> >>
-> >
-> > Ok, you are right. I will introduce a new structure for host_irq data
-> > which will be associated with chained interrupt and get rid of this
-> > loop.
-> >
-> >> > +     if (i == MAX_NUM_HOST_IRQS)
-> >> > +             goto err;
-> >> > +
-> >> > +     i += MIN_PRU_HOST_INT;
-> >> > +
-> >> > +     /* get highest priority pending PRUSS system event */
-> >> > +     hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(i));
-> >> > +     while (!(hipir & INTC_HIPIR_NONE_HINT)) {
-> >>
-> >> Please write this as a do { } while() loop, with a single instance
-> >> of the HW register read inside the loop (instead of one outside
-> >> and one inside.
-> >
-> > Ok, I will get rid of the outside HW register read, but I think it is
-> > better to use bellow instead of do {} while () loop:
-> > while (1) {
-> >   /* get highest priority pending PRUSS system event */
-> >   hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(host_irq));
-> >   if (hipir & INTC_HIPIR_NONE_HINT)
-> >     break;
-> > ...
-> >
-> > Hope it works for you.
->
-> Up to you. I don't understand your allergy to do {} while(), but
-> as long as there is only a single read of the register to deal
-> with, I'm fine with it.
-
-Ok.
-
->
-> >
-> >>
-> >> > +             hwirq = hipir & GENMASK(9, 0);
-> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
-> >>
-> >> And this is where I worry. You seems to have a single irqdomain
-> >> for all the muxes. Are you guaranteed that you will have no
-> >> overlap between muxes? And please use irq_find_mapping(), as
-> >> I have top-secret plans to kill irq_linear_revmap().
-> >
-> > Regarding irq_find_mapping - sure.
-> >
-> > Regarding irqdomains:
-> > It is a single irqdomain since the hwirq (system event) can be mapped
-> > to different irq_host (muxes). Patch #6
-> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
-> > events can be mapped to some output host interrupts through 2 levels
-> > of many-to-one mapping i.e. events to channel mapping and channels to
-> > host interrupts. Mentioned implementation ensures that specific system
-> > event (hwirq) can be mapped through PRUSS specific channel into a
-> > single host interrupt.
->
-> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
-> Also, this driver seems to totally ignore the 2-level routing. Where
-> is it set up? map/unmap in this driver do exactly *nothing*, so
-> something somewhere must set it up.
-
-The map/unmap is updated in patch #6 and it deals with those 2-level
-routing setup. Map is responsible for programming the Channel Map
-Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
-provided configuration from the one parsed in the xlate function.
-Unmap undo whatever was done on the map. More details can be found in
-patch #6.
-
-Maybe it would be better to squash patch #6 with this one so it would
-be less confusing. What is your advice?
-
->
-> >>
-> >> > +
-> >> > +             /*
-> >> > +              * NOTE: manually ACK any system events that do not have a
-> >> > +              * handler mapped yet
-> >> > +              */
-> >> > +             if (WARN_ON(!virq))
-> >> > +                     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
-> >>
-> >> How can this happen? If you really need it, you probable want to
-> >> warn once only.
-> >
-> > Ideally it shouldn't happen but I prefer to keep it to catch any
-> > misuse. It is because the PRUSS INTC unit can be also accessed by PRU
-> > cores which use the same registers to ack the internal events. The
-> > current design is limited to only acking and triggering the interrupts
-> > from PRU firmwares while the entire mapping is done by Linux (patch #6
-> > https://lkml.org/lkml/2020/7/2/612).
->
-> So patch #6 deals with routing of interrupts that are not aimed at Linux
-> (humf...), but nothing deals with the routing of interrupts that Linux
-> must handle. Why?
-
-Actually patch #6 deals with the entire routing of all PRUSS related
-interrupts: the ones that *are* aimed at Linux and ones that are not.
-
-The PRU core is responsible only for acking interrupts that are routed
-to the PRU core and triggering interrupts from PRU core (e.g. from PRU
-to main CPU). All other actions related to PRUSS INTC, including the
-entire 2-level routing setup (patch #6), are handled by this Linux
-driver.
-
-Best regards,
-Grzegorz
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
