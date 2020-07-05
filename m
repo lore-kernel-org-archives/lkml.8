@@ -2,102 +2,110 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C16C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3EF206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1449206B7
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="lqOkXpJe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MHY4kKyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgGEQ75 (ORCPT
+        id S1727839AbgGERQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 12:59:57 -0400
-Received: from mail.cock.li ([37.120.193.124]:40164 "EHLO mail.cock.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbgGEQ75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 12:59:57 -0400
+        Sun, 5 Jul 2020 13:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgGERQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 13:16:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95B3C061794;
+        Sun,  5 Jul 2020 10:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=L1auyt688+bbEX1l1nLyPpGgpWer7N9IYMfrLy9J6Eo=; b=MHY4kKyjb2OHPtA22Bpdqx2OmK
+        5iykedNwaCDASGPU+NcaFguZTihnIoxbmvNT54CkW5NqAX7fpumDigULYe5pX55132gzgaL6HXLXJ
+        M5MWGeDQ9SySjLGlVid37prIZNHFn/6ln5sBZYBEKN1au9ZNQPLyXeEzzmshrBdGDcKulSxjSFiw9
+        SUWnms9dqA2zQeGdx2bjy6VwhWqNsWlIjSxq1MoAPmBauSBkhJvxUBo85ua61GfE3cEFabGeqSbZq
+        SxC4jGJkY3GlrByxLSKxfLa/VO0Lv4uRpg/5sAejp88JSkGsfbTXNVZReFk6CUaaYSapHVd5MuHuI
+        Zdk95I4g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1js8Fl-00015L-CF; Sun, 05 Jul 2020 17:16:33 +0000
+Date:   Sun, 5 Jul 2020 18:16:33 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     yang che <chey84736@gmail.com>
+Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] hung_task:add detecting task in D state milliseconds
+ timeout
+Message-ID: <20200705171633.GU25523@casper.infradead.org>
+References: <1593953332-29404-1-git-send-email-chey84736@gmail.com>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
-        t=1593968394; bh=0Z+2driqVJi6cAeWesKAUnXKCFa2gru9OFGNz60n+DA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lqOkXpJeNnWh8GGoUNhEgyQPAUHBaLw5YaDQXtBq0lGA6ezbOqh5RYmnJbWaivGfx
-         Xze+kGIkHyy1KejZaZNgqlrj+lk3kCZrBQEPrNIxE0U/SuAK/gY3U3HI/7uhPetBiY
-         03brgZJC92r58cFQX5iJ8/6UKhm+LHxIDn+pn/b7nnqmp8Rr1txV3k4E4ZSfjbHi7s
-         c7nAftuZL4YhvIZf1ds6q4GkB4smy2658lpNINAZPCeOoMB10nQeRbu5DmLUIbh7N7
-         Et4SbXu28vL0/vkWDaR7+NqL3kVxStbbqAT/LNbmHjCAafsIz45VNaRKMF2+thNMeS
-         JtRD8ObyY3t+w==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 05 Jul 2020 16:59:54 +0000
-From:   nipponmail@firemail.cc
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@osdl.org, esr@thyrsus.com, rms@gnu.org, bugs@gnu.support,
-        rms@gnu.org, dag@gnui.org, alex@vapaa.xyz
-Subject: Re: [PATCH] CodingStyle: Inclusive Terminology -- Black and white
- does not refer to race.
-Message-ID: <7b9afa3cfaa96223719e9d17dd5eefc7@firemail.cc>
-X-Sender: nipponmail@firemail.cc
-User-Agent: Roundcube Webmail/1.3.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593953332-29404-1-git-send-email-chey84736@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You have it all wrong. The black in blacklist refers to women,
-as in the yin and the yang. The white refers to men: a constructive
-force. (While the women are destructive in society: always pitting
-the whitelist (men) against each-other, because said list didn't
-obey the blacklist (where women belong).
+On Sun, Jul 05, 2020 at 08:48:52PM +0800, yang che wrote:
+> @@ -16,8 +16,9 @@ extern unsigned int sysctl_hung_task_all_cpu_backtrace;
+>  
+>  extern int	     sysctl_hung_task_check_count;
+>  extern unsigned int  sysctl_hung_task_panic;
+> +extern unsigned long  sysctl_hung_task_timeout_millisecs;
 
-You also have failed on the master/slave terminology:
-Slave refers to cute little girls: which were traditionally
-the slaves to men.
+I would suggest an '_msec' suffix to go along with ...
 
-Of-course you white idiots don't understand this:
-You don't like girls: you'd rather dominate other men.
+> @@ -37,6 +37,7 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+>   * the RCU grace period. So it needs to be upper-bound.
+>   */
+>  #define HUNG_TASK_LOCK_BREAK (HZ / 10)
+> +#define SECONDS 1000
 
-In the past, before the perfidy of the western man infected the entirety
-of the world, men were the ba'al (master) of you cute young girls.
-Men married little girls, and more than one of them.
-Men were happy. Then the "white" man happened and corrupted even
-the colours themselves.
+We have #define MSEC_PER_SEC      1000L
 
-(Un)Naturally you wouldn't notice any of this because none of you
-actually like girls: you want to dominate other men; so
-that's what's on your mind: Dominating Black Men.
+> @@ -44,9 +45,14 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+>  unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
+>  
+>  /*
+> + * Zero means only use sysctl_hung_task_timeout_secs
+> + */
+> +unsigned long  __read_mostly sysctl_hung_task_timeout_millisecs;
 
-Except linus. He caved to all of this due to the influence of
-his daughters, and why is that? Because his daughters are the only
-young girls he's ever been around; thus being denied child brides;
-like our next President Biden, he fell under the influence of his
-own young female relatives.
+Why not:
 
-And why is that? Because you idiot white men bar him and all from
-marrying a harem of cute young girls. You'd give your life to stop
-that.
+unsigned long  __read_mostly sysctl_hung_task_timeout_msec = \
+		CONFIG_DEFAULT_HUNG_TASK_TIMEOUT * MSEC_PER_SEC;
 
-----
+> @@ -108,7 +114,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>  		t->last_switch_time = jiffies;
+>  		return;
+>  	}
+> -	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
+> +
+> +	if (time_is_after_jiffies(t->last_switch_time + (timeout * HZ) / SECONDS))
+>  		return;
 
-YHWH explicitly allows child brides.
-> The Torah explicitly allows men to marry female children, including in
-> cases of the rape (tahphas) of the girl child: Devarim chapter 22,
-> verse 28. Key words: Na'ar (child (hebrew masoretic text)), Padia
-> (child: padia+philos = paedophillia (greek septuagint)) Puella (young
-> girl (latin vulgate))
-> Nachmanides points out that a child may be called na'ar from the moment
-> he is born
+We have msecs_to_jiffies() which handles the rounding properly for you.
 
-Rebecca was a child, not an adult.
-Na'ar means child in ancient hebrew, not adult, and the original hebrew
-in these passages is na'ar, not na'arah. All you have to do is read the
-actual hebrew glyphs, not whatever your interlinear renders them as. You
-/pol/s are illiterate.
+> -		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
+> -		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
+> +
+> +		pr_err("INFO: task %s:%d blocked for more than %ld seconds %ld milliseconds.\n",
 
-discover-the-truth.com/2016/11/17/what-was-rebeccas-age-when-given-away-in-marriage-naar/
+I'd use "%ld.%0.3ld seconds" ... or whatever the right format string is.
+I have to work it out every time.
+
+> +			t->comm, t->pid, (jiffies - t->last_switch_time) / HZ,
+> +			(jiffies - t->last_switch_time) % HZ * (SECONDS / HZ));
+
+... and again, use jiffies_to_msec() to get the rounding right.
 
