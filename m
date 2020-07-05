@@ -2,109 +2,159 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E770C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C18120708
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HR+x47TM"
+	by mail.kernel.org (Postfix) with ESMTP id E1C5B2074F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgGEVKC (ORCPT
+        id S1728537AbgGEVLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 17:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
+        Sun, 5 Jul 2020 17:11:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgGEVJ7 (ORCPT
+        with ESMTP id S1727785AbgGEVLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 17:09:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1B7C061794;
-        Sun,  5 Jul 2020 14:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=inEU3oQ+fuWuXfgS+GP0UuqV3tTNV60gtBVc6wGf3Ok=; b=HR+x47TMeyPHIiGV39gQ2Eb4O7
-        4xn/to8UIqb9ftEyDpin0981+exRR3sVrjFtyGGT7pRo7fKAlq8c31K24Bs6evBOzctgktXIlX7Tf
-        ygQACE7/o+8v6j+WNbkgVoWNhSiNDK++kNo27iUr0EDlXEQVS4azhIX9d7YS/+MTW4LmxUdP0T+Vr
-        jWXpzu09rr3rYiZbfDGEXDeyM3fZTMRz4/mLClbEd2Hq5+5Qw+8YcBXu9f/7ZXFzojqizagexJR6Y
-        2WMHQJPP8HbqkU2bU03r7rkLOAxN/jFoOD6JazojpBBiGedzP4a00iYzFvxZPPzgfT/z+xpe5/Whm
-        w19qQPyA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsBtT-0000IB-CY; Sun, 05 Jul 2020 21:09:47 +0000
-Date:   Sun, 5 Jul 2020 22:09:47 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Message-ID: <20200705210947.GW25523@casper.infradead.org>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+        Sun, 5 Jul 2020 17:11:46 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD20C061794;
+        Sun,  5 Jul 2020 14:11:46 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 7643F2A2D58
+Subject: Re: [PATCH v1] arm64: dts: actions: Fix smp Bringing up secondary
+ CPUs
+To:     Matheus Castello <matheus@castello.eng.br>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        lkcamp@lists.libreplanetbr.org
+References: <20200705191944.404933-1-matheus@castello.eng.br>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <6e42b5fe-8e30-42e9-3cf9-160eb5e0af6f@collabora.com>
+Date:   Sun, 5 Jul 2020 18:11:36 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+In-Reply-To: <20200705191944.404933-1-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
-> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
-> > From: Selvakumar S <selvakuma.s1@samsung.com>
-> > 
-> > For zone-append, block-layer will return zone-relative offset via ret2
-> > of ki_complete interface. Make changes to collect it, and send to
-> > user-space using cqe->flags.
-> > 
-> > Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
-> > Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> > Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> > Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
-> > ---
-> >  fs/io_uring.c | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/io_uring.c b/fs/io_uring.c
-> > index 155f3d8..cbde4df 100644
-> > --- a/fs/io_uring.c
-> > +++ b/fs/io_uring.c
-> > @@ -402,6 +402,8 @@ struct io_rw {
-> >  	struct kiocb			kiocb;
-> >  	u64				addr;
-> >  	u64				len;
-> > +	/* zone-relative offset for append, in sectors */
-> > +	u32			append_offset;
-> >  };
+Hi Matheus,
+
+On 7/5/20 4:19 PM, Matheus Castello wrote:
+> Change the enable-method to fix the failed to boot errors:
 > 
-> I don't like this very much at all. As it stands, the first cacheline
-> of io_kiocb is set aside for request-private data. io_rw is already
-> exactly 64 bytes, which means that you're now growing io_rw beyond
-> a cacheline and increasing the size of io_kiocb as a whole.
+> [    0.040330] smp: Bringing up secondary CPUs ...
+> [    0.040683] psci: failed to boot CPU1 (-22)
+> [    0.040691] CPU1: failed to boot: -22
+> [    0.041062] psci: failed to boot CPU2 (-22)
+> [    0.041071] CPU2: failed to boot: -22
+> [    0.041408] psci: failed to boot CPU3 (-22)
+> [    0.041417] CPU3: failed to boot: -22
+> [    0.041443] smp: Brought up 1 node, 1 CPU
+> [    0.041451] SMP: Total of 1 processors activated.
 > 
-> Maybe you can reuse io_rw->len for this, as that is only used on the
-> submission side of things.
+> Tested on Caninos Labrador v3 based on Actions Semi S700.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 
-I'm surprised you aren't more upset by the abuse of cqe->flags for the
-address.
+I tested on the Caninos Labrador v3, and I don't get this errors anymore with this patch,
+and I have all 4 CPUs:
 
-What do you think to my idea of interpreting the user_data as being a
-pointer to somewhere to store the address?  Obviously other things
-can be stored after the address in the user_data.
+[    0.076961] smp: Brought up 1 node, 4 CPUs
+[    0.574290] SMP: Total of 4 processors activated.
 
-Or we could have a separate flag to indicate that is how to interpret
-the user_data.
+Full boot log without your patch: http://ix.io/2qYU
+Full boot log with your patch: http://ix.io/2qYV
+
+Tested-by: Helen Koike <helen.koike@collabora.com>
+
+Thanks
+Helen
+
+> ---
+>  arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 10 deletions(-)
+> 
+> --
+> 2.27.0
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+> index 2006ad5424fa..b28dbbcad27b 100644
+> --- a/arch/arm64/boot/dts/actions/s700.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
+> @@ -14,37 +14,50 @@ / {
+>  	#size-cells = <2>;
+> 
+>  	cpus {
+> -		#address-cells = <2>;
+> +		#address-cells = <1>;
+>  		#size-cells = <0>;
+> -
+> +
+>  		cpu0: cpu@0 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53";
+> -			reg = <0x0 0x0>;
+> -			enable-method = "psci";
+> +			reg = <0x0>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0 0x1f000020>;
+> +			next-level-cache = <&L2>;
+>  		};
+> 
+>  		cpu1: cpu@1 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53";
+> -			reg = <0x0 0x1>;
+> -			enable-method = "psci";
+> +			reg = <0x1>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0 0x1f000020>;
+> +			next-level-cache = <&L2>;
+>  		};
+> 
+>  		cpu2: cpu@2 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53";
+> -			reg = <0x0 0x2>;
+> -			enable-method = "psci";
+> +			reg = <0x2>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0 0x1f000020>;
+> +			next-level-cache = <&L2>;
+>  		};
+> 
+>  		cpu3: cpu@3 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53";
+> -			reg = <0x0 0x3>;
+> -			enable-method = "psci";
+> +			reg = <0x3>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0 0x1f000020>;
+> +			next-level-cache = <&L2>;
+>  		};
+>  	};
+> +
+> +	L2: l2-cache {
+> +		compatible = "cache";
+> +		cache-level = <2>;
+> +	};
+> 
+>  	reserved-memory {
+>  		#address-cells = <2>;
+> 
