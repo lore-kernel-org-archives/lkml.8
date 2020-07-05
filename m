@@ -2,64 +2,102 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C24C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C775C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCE820771
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497B9207CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 10:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593944942;
+	bh=ywDYyYP83zj9ux21PYQE5OrCn1bZz2ia8i+WucARUgQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sGZKnu9AHOaUcHMwafN31TSmCjhBcbX03EI6Bo5VAOmwMU62FxAtXRTR25fPQHSdy
+	 pyzzkaOMselJJs7hDFQpHtHhuXJV/2+j5LTXeinvQ2mhni12eLwENVdyEh4ayG2HXN
+	 I3M7RNSuNATheBN2E7pDFYO6BfMWW9u5kamZ3ilU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgGEKTH (ORCPT
+        id S1726815AbgGEK27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 06:19:07 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50514 "EHLO gloria.sntech.de"
+        Sun, 5 Jul 2020 06:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgGEKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 06:19:06 -0400
-Received: from p57b773cb.dip0.t-ipconnect.de ([87.183.115.203] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id S1726355AbgGEK27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 06:28:59 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C7320786;
+        Sun,  5 Jul 2020 10:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593944938;
+        bh=ywDYyYP83zj9ux21PYQE5OrCn1bZz2ia8i+WucARUgQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I5ugYCRcCIJ50y0MU+Z52rDKvhA5WMAhemEVnI4a1zRjeJkTWZ8WWI83NNCF0tVqg
+         yZpQSUpFsTR16EKSAFVK2prnFxnoms/90vCmG3JEA5h+PvYzgn8V4GUC6t0rr6yi1p
+         Ec+o8vL7a9Eb1lh8YklF6VIOGDSeqa9Ss+QELlZM=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1js1jb-0001qi-Ap; Sun, 05 Jul 2020 12:18:55 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     ezequiel@collabora.com, mturquette@baylibre.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-clk@vger.kernel.org, jagan@amarulasolutions.com,
-        mylene.josserand@collabora.com, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org
-Subject: Re: [PATCH v2] clk: rockchip: use separate compatibles for rk3288w-cru
-Date:   Sun,  5 Jul 2020 12:18:54 +0200
-Message-Id: <159394432444.305208.6716969954746405813.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200703154948.260369-1-heiko@sntech.de>
-References: <20200703154948.260369-1-heiko@sntech.de>
+        (envelope-from <maz@kernel.org>)
+        id 1js1tI-0099z3-TV; Sun, 05 Jul 2020 11:28:57 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 05 Jul 2020 11:28:56 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] tty: serial: meson_uart: Init port lock early
+In-Reply-To: <CAHp75VfFNO=oqHX9EeNdVgcQUfu7RBr6SDTWi3XF4gSQNjqzUw@mail.gmail.com>
+References: <20200705092736.1030598-1-maz@kernel.org>
+ <CAHp75VfFNO=oqHX9EeNdVgcQUfu7RBr6SDTWi3XF4gSQNjqzUw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <66dcb907f3b9c5413cebe14e0bec00a4@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, khilman@baylibre.com, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com, andriy.shevchenko@linux.intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jul 2020 17:49:48 +0200, Heiko Stuebner wrote:
-> Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
-> added the check for rk3288w-specific clock-tree changes but in turn would
-> require a double-compatible due to re-using the main rockchip,rk3288-cru
-> compatible as entry point.
+On 2020-07-05 11:07, Andy Shevchenko wrote:
+> On Sun, Jul 5, 2020 at 12:32 PM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> The meson UART driver triggers a lockdep splat at boot time, due
+>> to the new expectation that the driver has to initialize the
+>> per-port spinlock itself.
+>> 
+>> It remains unclear why a double initialization of the port
+>> spinlock is a desirable outcome, but in the meantime let's
+>> fix the splat.
+>> 
 > 
-> The binding change actually describes the compatibles as one or the other
-> so adapt the code accordingly and add a real second entry-point for the
-> clock controller.
+> Thanks!
+> 
+> Can you test patch from [1] if it helps and doesn't break anything in 
+> your case?
+> 
+> [1]:
+> https://lore.kernel.org/linux-serial/20200217114016.49856-1-andriy.shevchenko@linux.intel.com/T/#m9255e2a7474b160e66c7060fca5323ca3df49cfd
 
-Applied, thanks!
+On its own, this patch doesn't seem to cure the issue (and it
+adds a compile-time warning due to unused flags).
 
-[1/1] clk: rockchip: use separate compatibles for rk3288w-cru
-      commit: 0a7f99aad259d223ce69c03e792c7e2bfcf8c2c6
+Or did you mean to test it in complement of my patch?
 
-Best regards,
+         M.
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Jazz is not dead. It just smells funny...
