@@ -2,131 +2,90 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4028EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4F120739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F82D20723
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593949495;
-	bh=A49BrhVeW4i0gMdACaS6R6Bgo64PtoM0qL8tcoWxIAw=;
+	s=default; t=1593949540;
+	bh=1vDyPYB8P+w9epdFK6knYfZZJXgI1oimuZxcouCLZnI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DqmhDrPkk86wGvoV1VpuyGhY/OH1DF+FabnIw5e8Uc1zeQ+69ebrj6Y3eMuyhWw+A
-	 lTKpghC+jUUdr3oUy3b9jEWwZYc3UAcg6c28QmeWOKJj8FQA7mT4KJHGSwdXcv3RSv
-	 XjIEAnnfQsVM6Cg90LitJnpuKcJe7IHAn3GgfuC0=
+	b=o4SMjHfwadaH3CVBlfCIGxizA3Bg6CyncGH8MpjdTfb8U5lW8KSTme5QNdLZWz8wT
+	 zMDqSCXFfvgle6z6GJq1D7PQJ5UUz8c2FwF/+3jAmpqjhQWbQ0PyF6wCIBHfDdwUq2
+	 L9A4NHeoKDmmhLgpIllu/f20x4/aBkmEgMSdLO+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgGELoy (ORCPT
+        id S1726881AbgGELpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 07:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:44:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726454AbgGELpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:45:38 -0400
+Received: from kernel.org (unknown [87.71.40.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4064720723;
-        Sun,  5 Jul 2020 11:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52362206B6;
+        Sun,  5 Jul 2020 11:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593949493;
-        bh=A49BrhVeW4i0gMdACaS6R6Bgo64PtoM0qL8tcoWxIAw=;
+        s=default; t=1593949538;
+        bh=1vDyPYB8P+w9epdFK6knYfZZJXgI1oimuZxcouCLZnI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JTW6kU/mEPS4lUzNYBF2hVwi/8EhViX1SAwXw4Z/RD0VF2iMd9YFDO1t4U2t0Y1es
-         zUgKZxfagndBWCUbksdrlEon3iyEB4CbnvEMVeycpjNnmxl6LqKPMWAT7PK9hjrm4E
-         1o2+vwokkrc5EynLt8FLENYxMsnAD7cm5x5kGOZE=
-Date:   Sun, 5 Jul 2020 13:44:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vito Caputo <vcaputo@pengaru.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
-        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
- faster
-Message-ID: <20200705114454.GB1224775@kroah.com>
-References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
- <20200705021631.GR25523@casper.infradead.org>
- <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
- <20200705031208.GS25523@casper.infradead.org>
- <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
- <20200705032732.GT25523@casper.infradead.org>
- <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
+        b=UgEEh28GtfHOApvp+2oPFQuqFen4lGbGwNelUp54OSjCgqF/afgYLpDnHQoUcR8BG
+         b5sXaiFnFI9blHvXHvcgXCNoDUYwFQT+CSqpvzHAc/totY5KOJzjX34SgVTIIQ6+jC
+         HSb7NP5vB0bsLkNI4tAgkgv84Kx2cp0UuZ1vObnI=
+Date:   Sun, 5 Jul 2020 14:45:29 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH 0/3] Documentation: arm64: eliminate duplicated words
+Message-ID: <20200705114529.GE2999148@kernel.org>
+References: <20200703205110.29873-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705080714.76m64pwwpvlzji2v@shells.gnugeneration.com>
+In-Reply-To: <20200703205110.29873-1-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 01:07:14AM -0700, Vito Caputo wrote:
-> On Sun, Jul 05, 2020 at 04:27:32AM +0100, Matthew Wilcox wrote:
-> > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
-> > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > You should probably take a look at io_uring.  That has the level of
-> > > > complexity of this proposal and supports open/read/close along with many
-> > > > other opcodes.
-> > > 
-> > > Then glibc can implement readfile using io_uring and there is no need
-> > > for a new single-file readfile syscall.
-> > 
-> > It could, sure.  But there's also a value in having a simple interface
-> > to accomplish a simple task.  Your proposed API added a very complex
-> > interface to satisfy needs that clearly aren't part of the problem space
-> > that Greg is looking to address.
+On Fri, Jul 03, 2020 at 01:51:07PM -0700, Randy Dunlap wrote:
+> Drop doubled words in Documentation/arm64/.
 > 
-> I disagree re: "aren't part of the problem space".
 > 
-> Reading small files from procfs was specifically called out in the
-> rationale for the syscall.
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Dave Martin <Dave.Martin@arm.com>
+
+
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+
 > 
-> In my experience you're rarely monitoring a single proc file in any
-> situation where you care about the syscall overhead.  You're
-> monitoring many of them, and any serious effort to do this efficiently
-> in a repeatedly sampled situation has cached the open fds and already
-> uses pread() to simply restart from 0 on every sample and not
-> repeatedly pay for the name lookup.
+>  Documentation/arm64/acpi_object_usage.rst |    2 +-
+>  Documentation/arm64/arm-acpi.rst          |    2 +-
+>  Documentation/arm64/sve.rst               |    2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-That's your use case, but many other use cases are just "read a bunch of
-sysfs files in one shot".  Examples of that are tools that monitor
-uevents and lots of hardware-information gathering tools.
-
-Also not all tools sem to be as smart as you think they are, look at
-util-linux for loads of the "open/read/close" lots of files pattern.  I
-had a half-baked patch to convert it to use readfile which I need to
-polish off and post with the next series to show how this can be used to
-both make userspace simpler as well as use less cpu time.
-
-> Basically anything optimally using the existing interfaces for
-> sampling proc files needs a way to read multiple open file descriptors
-> in a single syscall to move the needle.
-
-Is psutils using this type of interface, or do they constantly open
-different files?
-
-What about fun tools like bashtop:
-	https://github.com/aristocratos/bashtop.git
-which thankfully now relies on python's psutil package to parse proc in
-semi-sane ways, but that package does loads of constant open/read/close
-of proc files all the time from what I can tell.
-
-And lots of people rely on python's psutil, right?
-
-> This syscall doesn't provide that.  It doesn't really give any
-> advantage over what we can achieve already.  It seems basically
-> pointless to me, from a monitoring proc files perspective.
-
-What "good" monitoring programs do you suggest follow the pattern you
-recommend?
-
-thanks,
-
-greg k-h
+-- 
+Sincerely yours,
+Mike.
