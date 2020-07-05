@@ -2,136 +2,120 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E12C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1982820724
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1792C20739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="VhN89pSL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U0xvOvuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgGEUSs (ORCPT
+        id S1728274AbgGEUTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:18:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
+        Sun, 5 Jul 2020 16:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbgGEUSr (ORCPT
+        with ESMTP id S1728272AbgGEUTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:18:47 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDEEC061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 13:18:47 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id e22so32908556edq.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:18:46 -0700 (PDT)
+        Sun, 5 Jul 2020 16:19:30 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CC3C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 13:19:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e8so17436326pgc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:19:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uRhTWDkA5o7/NySYW2wL1hIHkuOz93fuM88SRvT6oPE=;
-        b=VhN89pSLxTo5PCNoa5b0ZAYAN3W1VGnbgQFtp1/0Qub7yTB/xDgxOX4EHwgSu4DEjR
-         3oDNyOo+7FQtZ2sNWL0hYu89xk0VX6MrTNhdx3pETU0uat88BijXNfrm/ZEzRlTfdG3+
-         0TL23lZlx2ivaGM67hvR8wLnkK8pNxQaiHDvo=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+eZV+j8eeFdPL7ONsmuokgRfsTEj+RVF3Zfsba4wHfM=;
+        b=U0xvOvuXhudjDoBG+0i7o4XZqsk9kQ1pmOzKAJi8NTpaqdwkOAJCFbBTmvNmLU1mx2
+         cov3g0kKS/RbI1mPqNukvoRPoGAQgMe265ZEkjknljF5Y4PwvMEsDYhQ8wDcwKjievyJ
+         f5sL5Eyl+6oZIKIqIV/1y30e3zOLE7wWjd9TQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uRhTWDkA5o7/NySYW2wL1hIHkuOz93fuM88SRvT6oPE=;
-        b=VkxPPtUDe1EED4lLOkDJuqCN0xSZCzlKSTjdOmOyVTavB0OxF5vxno0VDwsD0YQQor
-         yNGsv0WFs+/hJCUpQ4H8tH0TQUScCFu8Dz1OkyXlXNMawOKhqQJUG1yFFJmUoo5eTvhR
-         uY58RP+fUE3ZZgYdNZs2zzP63dsaCoSI5Fh+E67CBwCLQ7k8ye5aIKqCraPVE7j077V/
-         tE4popyXwOHHJUjaIAVA7BMO24N+q04rX4Ltj7/4Jlqe3iu9bPU1FTYVkFPzs1WiT4y4
-         z56TwR87ghOjsQ4GINAu502sD5pz5rr2MH/14QstsRJksZTc55bA247bAxDHzFKhXf25
-         3w9Q==
-X-Gm-Message-State: AOAM533AnOybTY/36+js0LswuV4qG8yiASxqZnhjqQ2H6LWzh5BlIvMP
-        HRLMWyM56lGjybV55gE648VUZDVKLrItew==
-X-Google-Smtp-Source: ABdhPJy8DgylOl1exybBBxo2XdzG9lLnPmUNUH/UsdVCQ0knh9qf825HM839DJdLtEChAsa0TIImzw==
-X-Received: by 2002:a50:f418:: with SMTP id r24mr46470686edm.382.1593980325425;
-        Sun, 05 Jul 2020 13:18:45 -0700 (PDT)
-Received: from [192.168.0.112] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.googlemail.com with ESMTPSA id s14sm20764103edq.36.2020.07.05.13.18.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jul 2020 13:18:44 -0700 (PDT)
-Subject: Re: [PATCH net] bridge: mcast: Fix MLD2 Report IPv6 payload length
- check
-To:     =?UTF-8?Q?Linus_L=c3=bcssing?= <linus.luessing@c0d3.blue>
-Cc:     netdev@vger.kernel.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Martin Weinelt <martin@linuxlounge.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        bridge@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200705182234.10257-1-linus.luessing@c0d3.blue>
- <093beb97-87e8-e112-78ad-b3e4fe230cdb@cumulusnetworks.com>
- <20200705190851.GC2648@otheros>
- <4728ef5e-0036-7de6-8b6f-f29885d76473@cumulusnetworks.com>
- <20200705194915.GD2648@otheros>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <15375380-b7ad-985c-6ad3-c86ece996cd0@cumulusnetworks.com>
-Date:   Sun, 5 Jul 2020 23:18:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+eZV+j8eeFdPL7ONsmuokgRfsTEj+RVF3Zfsba4wHfM=;
+        b=DwPSC9A+laVOnie4YsOEWLwxXFfCV33Difqn8VuvOiQVsD9wMiOAJ2wg+iw3XbYdHH
+         8CdE21lQCuqNQHdDbYrDu3ZH56aGgQaZ2egncjWTiVN5wGnWoITHe/L9iGByc4X9zVMz
+         MOTbrsESXJqHjBPfU+bhquzv2zyTa1zL7AgPF56p4+UOjc5Ev+yeznerEEOwSDzgQ2Ds
+         eXqIV3Xu5v2sKsGSLy3zUUUW01VqPTQDglMNR9NyXBSb5ZUIKbi/USy5WefYy41Fu0Oa
+         Hl/uwUa9ee/CyUVSZxuGAbZMLy8fCAOJzyN4FOpRVJ4x8fVVROYrZGUsLyiMsoktZP/r
+         VqSA==
+X-Gm-Message-State: AOAM530aFYCk/jGB8tMBIgueGVyGVsrs8SoK+MxKk0xaLizg8PrQd34T
+        FlN+O38Zsq17F2lsAiDYNAKyyA==
+X-Google-Smtp-Source: ABdhPJwUhUfKUYtmlsWvQMFnUPyfezn5Vv/jyidaFG9Inycnc/k4yYuK1QdR1r4fgYhzZSuXNwkQyw==
+X-Received: by 2002:a63:525a:: with SMTP id s26mr36603596pgl.155.1593980369927;
+        Sun, 05 Jul 2020 13:19:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n62sm6691891pjb.28.2020.07.05.13.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 13:19:28 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 13:19:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        stable <stable@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] kprobes: Do not expose probe addresses to
+ non-CAP_SYSLOG
+Message-ID: <202007051318.CA51091A@keescook>
+References: <20200702232638.2946421-1-keescook@chromium.org>
+ <20200702232638.2946421-5-keescook@chromium.org>
+ <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
+ <202007030848.265EA58@keescook>
+ <CAHk-=wgEkTsNRvEM9W_JiVN6t70SnPuP=-1=LyhLS_BJ25Q4sQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200705194915.GD2648@otheros>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgEkTsNRvEM9W_JiVN6t70SnPuP=-1=LyhLS_BJ25Q4sQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 10:49 PM, Linus Lüssing wrote:
-> On Sun, Jul 05, 2020 at 10:11:39PM +0300, Nikolay Aleksandrov wrote:
->> On 7/5/20 10:08 PM, Linus Lüssing wrote:
->>> On Sun, Jul 05, 2020 at 09:33:13PM +0300, Nikolay Aleksandrov wrote:
->>>> On 05/07/2020 21:22, Linus Lüssing wrote:
->>>>> Commit e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in
->>>>> igmp3/mld2 report handling") introduced a small bug which would potentially
->>>>> lead to accepting an MLD2 Report with a broken IPv6 header payload length
->>>>> field.
->>>>>
->>>>> The check needs to take into account the 2 bytes for the "Number of
->>>>> Sources" field in the "Multicast Address Record" before reading it.
->>>>> And not the size of a pointer to this field.
->>>>>
->>>>> Fixes: e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling")
->>>>> Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
->>>>> ---
->>>>>    net/bridge/br_multicast.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>
->>>> I'd rather be more concerned with it rejecting a valid report due to wrong size. The ptr
->>>> size would always be bigger. :)
->>>>
->>>> Thanks!
->>>> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
->>>
->>> Aiy, you're right, it's the other way round. I'll update the
->>> commit message and send a v2 in a minute, with your Acked-by
->>> included.
->>>
->>
->> By the way, I can't verify at the moment, but I think we can drop that whole
->> hunk altogether since skb_header_pointer() is used and it will simply return
->> an error if there isn't enough data for nsrcs.
->>
+On Sun, Jul 05, 2020 at 01:10:54PM -0700, Linus Torvalds wrote:
+> On Fri, Jul 3, 2020 at 8:50 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > With 67 kthreads on a booted system, this patch does not immediately
+> > blow up...
 > 
-> Hm, while unlikely, the IPv6 packet / header payload length might be
-> shorter than the frame / skb size.
-> 
-> And even though it wouldn't crash reading over the IPv6 packet
-> length, especially as skb_header_pointer() is used, I think we should
-> still avoid reading over the size indicated by the IPv6 header payload
-> length field, to stay protocol compliant.
-> 
-> Does that make sense?
-> 
+> Did you try making read/write inc/dec that thing too? Or does that
+> just blow up with tons of warnings?
 
-Sure, I just thought the ipv6_mc_may_pull() call after that includes those 2 bytes as well, so
-we're covered. That is, it seems to be doing the same check with the full grec size included.
+I hadn't gotten to that yet. I need to catch up on other stuff first,
+and I thought I'd give people time to scream if they tested this
+themselves. :)
 
+-- 
+Kees Cook
