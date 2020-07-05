@@ -2,101 +2,129 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E422073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFVRSjoV"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1CE2075D
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593963346;
+	bh=yuJ83TAx2kBYVCOqY8A/Yuic2DP3AIi4WtemVta2NEc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mcsd5qcRAUmZz1EmVuY3gNYd3feD70583ZzjabhAqqffaRNVzZpmDhIE5pSUlfzGw
+	 IOMgrBL4zaQdGvOIBm41YP1lb2aqe2z0aDBmYNGnc4GV7AWl977Sx6lFJN2f8XUxxD
+	 dtsBY19XA9gxeav6M+tm2ESXRgEoiuzgg8UdznZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgGEPfa (ORCPT
+        id S1727842AbgGEPfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgGEPf3 (ORCPT
+        Sun, 5 Jul 2020 11:35:44 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:18038 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgGEPfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:35:29 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB78C061794;
-        Sun,  5 Jul 2020 08:35:29 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id e13so32744380qkg.5;
-        Sun, 05 Jul 2020 08:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SH28tdiDJsXYXRFHInVuUZ9QDGxO5tD7WG8jpUhte4E=;
-        b=FFVRSjoV3hlBBM259Ok+E3rMQceCGcET+Wj2uhalza1ZH93n/A553bBnFqzmGL0z+N
-         eecaKCm3jqqWp22tJ/ctaeg+hLUAAYJRi7wtzy7Q+2v+Ad0kVJBQM9/PJAucrgeHbj7x
-         DC9LZBW6u83mQj0J9uOi0BqsgNql4XHBz7tnqiOd5g9puQ+o/h27Kghc26Tk1kN7nlkh
-         xLKRTaG25Xs/LWeNXsl+5OiEEMB31YUId4z5uffhm9WFAOn2yVJSyajvE+pc2tbU6CmR
-         IFDtKvwBjPPMQ5ukwUnbCBFsTm3U4+MsudLLnB7eS/i8D2bAanpPTbnh7N6Z2nEXqKLi
-         uaPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SH28tdiDJsXYXRFHInVuUZ9QDGxO5tD7WG8jpUhte4E=;
-        b=cHfQ6RxAyEjD1lJTIq/Ij0Uv6jXb59xqPNCjv0sjMZE3jv+kUcsdtYrguz1GNBIydZ
-         9moczFHWpynB8VFmR9G+wuPamILU9rT/2TpXytviiCUSZLadmcAEd66tQcR+7ko64Nvy
-         iEv+Y7geUILJXsLcAlFJ7qdZR8DyHLxoQGc9/Xc2jYvlpSjdl/Z31Z8axRb2EyfRz3+i
-         G+8fAGKScSq/4or2UI5sQBIb3zW25nt/59lHjSw6LYiGIQhMgnZB2Cc9rCuAavXfOhV4
-         1GsNv90eNiN7EwlivVF/ac4kRDUbGB3xIupxUEoBa6uYt7SjqRbvFIM75XAdh2o8bswJ
-         AOPw==
-X-Gm-Message-State: AOAM533C7g4FxA9OzCibdcDr/NVuKQjJEGRowCxnfRv5Mdk0nb65Adhc
-        XnE7zlak+M+cytnMO/KEWqRWp1FQ
-X-Google-Smtp-Source: ABdhPJybbAiZ3xkFTj9Py3ia20S8s+H1I2Iv59f/U7esrkNZc/5Vz5ksRkIFeL7XxzOVH5a0ekyBmA==
-X-Received: by 2002:a37:6609:: with SMTP id a9mr43224012qkc.337.1593963328908;
-        Sun, 05 Jul 2020 08:35:28 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:f517:b957:b896:7107? ([2601:282:803:7700:f517:b957:b896:7107])
-        by smtp.googlemail.com with ESMTPSA id y67sm13141609qka.101.2020.07.05.08.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jul 2020 08:35:28 -0700 (PDT)
-Subject: Re: [v2,iproute2-next 1/2] action police: change the print message
- quotes style
-To:     Po Liu <po.liu@nxp.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     stephen@networkplumber.org, davem@davemloft.net, jhs@mojatatu.com,
-        vlad@buslov.dev, claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com
-References: <20200628014602.13002-1-po.liu@nxp.com>
- <20200629020420.30412-1-po.liu@nxp.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <e2ca479b-7b94-eef8-f226-8d9153066134@gmail.com>
-Date:   Sun, 5 Jul 2020 09:35:26 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Sun, 5 Jul 2020 11:35:44 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 065FZT1p000837
+        for <linux-kernel@vger.kernel.org>; Mon, 6 Jul 2020 00:35:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 065FZT1p000837
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593963330;
+        bh=cXx2QzW32XcBEbFXoqRu+IpnOfIaV0Q73hhkKTlNd+Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gAekWdUCiGJCPzvaY9EWP3LqcAMn5TxOZjMDKk6H1v46eAXyGxmxgk462uZuw/OXv
+         3sSw6SXKczfbvodI3XAKkf+nhQaj5/Sx+FHcr6cZP6IaSC5ghDB7rgcw101Dw/bYK2
+         prkPrIOJNIbCR83BlD+XqWkTu1/HHTcsoQ6l4q8yzV5OW8WHqmvKQwACJxb/tjqqG3
+         9ONKWN6EwKOFuBVf9ytlX5kkK4tpakksV/qbkd4EID4qRNnBtTNIVbGyPkbQyLE4Wi
+         Tyh0ONeAFPr5k3Z3wdDZt2zQM+hYWH/s4iAEYbBS2vVu1FqGQdelO1GZjJCX5984Nn
+         Am2qt8VbCf75g==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id u6so8589773uau.8
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 08:35:30 -0700 (PDT)
+X-Gm-Message-State: AOAM5318UHM5Qq441HVkIiGnl5jxl54BbzyfjdbmlTAwLfUAA33ofjcZ
+        QRp8QTByHoZUCWohSDwTNTNpFWKYpzvXFmz6Ww8=
+X-Google-Smtp-Source: ABdhPJySZM2RSvi3BXOy/AaF+QGFR5tz7dSQPdNj9q/HhGTTN+CWZQ/F1MU7kyGvE4tDMlU5eusXpcXwSiBF/lFDQBA=
+X-Received: by 2002:ab0:5b91:: with SMTP id y17mr33118642uae.95.1593963329071;
+ Sun, 05 Jul 2020 08:35:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200629020420.30412-1-po.liu@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200702111200.39997-1-pmenzel@molgen.mpg.de> <CAK7LNAR7=NCsJ5irVUCStkfCLt0d=R5AX6cEwc9z=b_-V=-0Ng@mail.gmail.com>
+ <59a4efc5-f6cb-f00a-fa83-bc7658ca1463@molgen.mpg.de>
+In-Reply-To: <59a4efc5-f6cb-f00a-fa83-bc7658ca1463@molgen.mpg.de>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Jul 2020 00:34:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS8pTFfhHb_Z+Hh5LWZ2DCCzfGtTq4oizykOYb_QRqgMw@mail.gmail.com>
+Message-ID: <CAK7LNAS8pTFfhHb_Z+Hh5LWZ2DCCzfGtTq4oizykOYb_QRqgMw@mail.gmail.com>
+Subject: Re: [PATCH v2] .gitignore: Do not track `defconfig` from `make savedefconfig`
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/20 8:04 PM, Po Liu wrote:
-> Change the double quotes to single quotes in fprintf message to make it
-> more readable.
-> 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
-> ---
-> v1->v2 changes:
-> - Patch new added
-> 
->  tc/m_police.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
+On Sun, Jul 5, 2020 at 4:19 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+> Dear Masahiro,
+>
+>
+> Am 05.07.20 um 09:14 schrieb Masahiro Yamada:
+> > On Thu, Jul 2, 2020 at 8:12 PM Paul Menzel <pmenzel@molgen.mpg.de> wrot=
+e:
+> >>
+> >> Running `make savedefconfig` creates by default `defconfig`, which is,
+> >> currently, on git=E2=80=99s radar, for example, `git status` lists thi=
+s file as
+> >> untracked.
+> >>
+> >> So, add the file to `.gitignore`, so it=E2=80=99s ignored by git.
+> >>
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> >> ---
+> >>   .gitignore | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/.gitignore b/.gitignore
+> >> index 87b9dd8a163b..f07500889fba 100644
+> >> --- a/.gitignore
+> >> +++ b/.gitignore
+> >> @@ -143,6 +143,9 @@ x509.genkey
+> >>   /allrandom.config
+> >>   /allyes.config
+> >>
+> >> +# Kconfig presets, default savedefconfg output
+> >
+> >
+> > I just noticed this comment is wrong
+> > since 'defconfig' is not a preset.
+> >
+> > I will change it to 'Kconfig savedefconfig output'.
+>
+> Thank you for finding my error and correcting it.
+>
+> I couldn=E2=80=99t find out more about *presets*.
+>
+>      $ git grep -i preset scripts/kconfig/
+>      $
+>
+> Where can I look, so I won=E2=80=99t repeat the same mistake next time?
 
-applied both to iproute2-next. Thanks
+
+You can find 'preset' in
+Documentation/kbuild/kconfig.rst
+but it does appear in the source files.
 
 
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
