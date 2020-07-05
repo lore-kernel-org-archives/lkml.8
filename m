@@ -2,128 +2,108 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 03:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 04:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8ACE207CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 03:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FF120826
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 04:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz2iUEPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgGEDsF (ORCPT
+        id S1726134AbgGEEJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jul 2020 23:48:05 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:59254 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728168AbgGEDsE (ORCPT
+        Sun, 5 Jul 2020 00:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgGEEJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jul 2020 23:48:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 35F8B201825A;
-        Sun,  5 Jul 2020 11:48:02 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id p70TdeLwdLCH; Sun,  5 Jul 2020 11:48:02 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 1C92C20160D4;
-        Sun,  5 Jul 2020 11:48:02 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 19758C01F9E;
-        Sun,  5 Jul 2020 11:48:02 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 0EB592002E9; Sun,  5 Jul 2020 11:48:02 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Date:   Sun,  5 Jul 2020 11:47:26 +0800
-Message-Id: <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
-References: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
+        Sun, 5 Jul 2020 00:09:39 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8ECC061794;
+        Sat,  4 Jul 2020 21:09:39 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id d4so29328937otk.2;
+        Sat, 04 Jul 2020 21:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PishxRT+7tY2csv4uXKXLuwh6FfnrTZUj/NxIbo0apM=;
+        b=hz2iUEPTzGHGBeHhCYB7h0tGja5uhbiMrESl4CAVOld+fdLsEo29MkzGg5cFb4lGBT
+         yLfKvrNUGxkJp7asGi2zFLznqJRRvut8KVccZ81pGI5YvbLLTHqT8kHuVKdMmxniBr/g
+         gDsmDvnqhdeGjdZSjakEW2l16A0r7kTi0UfmvZBfw2VCWzsoGGd14qRtQCKaLyZXUFON
+         jbytcK1r0IwAcKFplGzCjeVRebLADKlA68XRNk1QPXHzkVQciXGOyEnY/+v4/TPAj/MJ
+         BzhVvDaXBC+rlL+zw68h267PdbDbnPosXZWWgrUeNNc5tPKvko9sV5jkjMmPwFOaNsck
+         T5GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PishxRT+7tY2csv4uXKXLuwh6FfnrTZUj/NxIbo0apM=;
+        b=WzlWaZzmDY/Pd3VpHTN/Tcp++eg0D/TDOZWEtCrZAt/V65mbKph+Hl6YhOWTiVgqG1
+         vMdAsE0mspQVN98Kg/GelvGQQVYSCFHCfGoZheq3hsFotHplNfbwxnkhSkNj2g8NuWDw
+         6elysgA9XkDufpo/jguO/mQGrWlsAg8uD8n/Xyz4rj3rLiTSiZBD7QOK6X320Avf/JMf
+         11Nzl6TqV3BDyzeY45aFbo0mVingNgJ+uXVgbmdX127WH0rAPjbFee1rUA8vPFDbR9gY
+         1QIphxZVpe7BWATwy765efELc1VWIx98xQbQUbSdVpxyuCrB/5pr+/f4Qo/dWYnVIZh4
+         akbQ==
+X-Gm-Message-State: AOAM532BcMJGT03VAzWpY9m5gfPVqN8W2rk/oEoAVHsZG7uQhttrlUZM
+        39XHpIBsjQvBsIEs3eMbNXKKkR4j0ldPEgUuEbE=
+X-Google-Smtp-Source: ABdhPJzzEMj0BZ11L8P9HCnxRbPvaK4IDQ6LttX0KznjOVmxkXf+JX+NyjJ/jpfX6fVCTTqmpXDJkYm5/uVuYcVsJuU=
+X-Received: by 2002:a9d:66ca:: with SMTP id t10mr20300471otm.358.1593922179004;
+ Sat, 04 Jul 2020 21:09:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org> <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org> <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
+In-Reply-To: <20200705032732.GT25523@casper.infradead.org>
+From:   Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Date:   Sun, 5 Jul 2020 06:09:03 +0200
+Message-ID: <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     gregkh@linuxfoundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the newly added DTS support in the shtc1 driver.
-To align with the drivers logic to have high precision by default
-a boolean sensirion,low_precision is used to switch to low precision.
+On Sun, Jul 5, 2020 at 5:27 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
+> > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > You should probably take a look at io_uring.  That has the level of
+> > > complexity of this proposal and supports open/read/close along with many
+> > > other opcodes.
+> >
+> > Then glibc can implement readfile using io_uring and there is no need
+> > for a new single-file readfile syscall.
+>
+> It could, sure.  But there's also a value in having a simple interface
+> to accomplish a simple task.  Your proposed API added a very complex
+> interface to satisfy needs that clearly aren't part of the problem space
+> that Greg is looking to address.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+I believe that we should look at the single-file readfile syscall from
+a performance viewpoint. If an application is expecting to read a
+couple of small/medium-size files per second, then neither readfile
+nor readfiles makes sense in terms of improving performance. The
+benefits start to show up only in case an application is expecting to
+read at least a hundred of files per second. The "per second" part is
+important, it cannot be left out. Because readfile only improves
+performance for many-file reads, the syscall that applications
+performing many-file reads actually want is the multi-file version,
+not the single-file version.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-new file mode 100644
-index 000000000000..bcccdcadd86b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sensirion SHTC1 Humidity and Temperature Sensor IC
-+
-+maintainers:
-+  - jdelvare@suse.com
-+
-+description: |
-+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-+  designed especially for battery-driven high-volume consumer electronics
-+  applications.
-+  For further information refere to Documentation/hwmon/shtc1.rst
-+
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,shtc1
-+      - sensirion,shtw1
-+      - sensirion,shtc3
-+
-+  reg: I2C address 0x70
-+
-+Optional properties:
-+  sensirion,blocking_io: |
-+    bool, if set the i2c bus hold until measure finished
-+  sensirion,low_precision: |
-+    bool, if set aquire data with low precision (not recommend)
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+Example:
-+  &i2c1 {
-+    status = "okay";
-+    clock-frequency = <400000>;
-+
-+    shtc3@70 {
-+      compatible = "sensirion,shtc3";
-+      reg = <0x70>
-+      sensirion,blocking_io;
-+      status = "okay";
-+    };
-+  };
--- 
-2.20.1
-
+I am not sure I understand why you think that a pointer to an array of
+readfile_t structures is very complex. If it was very complex then it
+would be a deep tree or a large graph.
