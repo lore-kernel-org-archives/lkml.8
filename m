@@ -2,102 +2,108 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6683EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A92D2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593971479;
-	bh=xYUBWSZ5y348JHgNGMQGL3gkp+BO4/wWySnOgsqBJ4g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwYJtfMBw8vpTLIfdIhS+r646IzZgAWjoureoUotiwhmiQ9wqO4B/n8WfP69CfKu7
-	 sPUrhrsc93OLYzroG3QOBCKjYWWruRMYQMI6fKj01WoKbUbuFkw4SjhOuAB7ROVQBD
-	 onzxXrk/Wb8EKYpRR0J8kQMUHgV5OQo0xLzgGn7s=
+	by mail.kernel.org (Postfix) with ESMTP id A32E520708
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 17:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGERvN (ORCPT
+        id S1727892AbgGERwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 13:51:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49226 "EHLO mail.kernel.org"
+        Sun, 5 Jul 2020 13:52:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62714 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgGERvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 13:51:12 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B499E2074F;
-        Sun,  5 Jul 2020 17:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593971471;
-        bh=xYUBWSZ5y348JHgNGMQGL3gkp+BO4/wWySnOgsqBJ4g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZYZ/AFe60/hNBAlQ3D1tfwJhceMeV8o7bltMDkta1sUiNSeALM6tbe2aIP+tH+o7l
-         PTpqLOBdmEpKiQGHVIIUG4hCpCyVhpAfaX2etRyipysCR1I8KmvPfwr6Z67uM2khL8
-         EonZIwx+qqfmE6Xsw4c5UDQDXmRQA2KOcK1IiNeY=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1js8nG-009DUh-8a; Sun, 05 Jul 2020 18:51:10 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        David Brazdil <dbrazdil@google.com>,
-        James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        android-kvm@google.com
-Subject: Re: [PATCH 0/5] KVM: arm64: Remove the target table
-Date:   Sun,  5 Jul 2020 18:51:02 +0100
-Message-Id: <159397135631.253877.2545914791017021362.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622113317.20477-1-james.morse@arm.com>
-References: <20200622113317.20477-1-james.morse@arm.com>
+        id S1727781AbgGERwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 13:52:53 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4B0GWL1WR1z9tyPL;
+        Sun,  5 Jul 2020 19:52:46 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id V_KhQkkJwpw0; Sun,  5 Jul 2020 19:52:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4B0GWL0fMFz9tyPK;
+        Sun,  5 Jul 2020 19:52:46 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF0F88B780;
+        Sun,  5 Jul 2020 19:52:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id lsEM1ItNQNVD; Sun,  5 Jul 2020 19:52:50 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 997028B75B;
+        Sun,  5 Jul 2020 19:52:50 +0200 (CEST)
+Subject: Re: [PATCH 3/5] selftests/powerpc: Update the stack expansion test
+To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org
+Cc:     linux-arch@vger.kernel.org, hughd@google.com,
+        linux-kernel@vger.kernel.org
+References: <20200703141327.1732550-1-mpe@ellerman.id.au>
+ <20200703141327.1732550-3-mpe@ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <8f6c5175-32ce-34a2-873d-b5fb3a5d7c4c@csgroup.eu>
+Date:   Sun, 5 Jul 2020 19:52:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200703141327.1732550-3-mpe@ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: suzuki.poulose@arm.com, will@kernel.org, julien.thierry.kdev@gmail.com, dbrazdil@google.com, james.morse@arm.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kernel-team@android.com, linux-kernel@vger.kernel.org, android-kvm@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 11:33:12 +0000, James Morse wrote:
-> KVM's target_table indirection is a relic from 32bit where different
-> CPUs had different reset values for ACTLR. All 64bit CPUs have the
-> same behaviour here, but we support different targets, that all map
-> to the same behaviour.
+
+
+Le 03/07/2020 à 16:13, Michael Ellerman a écrit :
+> Update the stack expansion load/store test to take into account the
+> new allowance of 4096 bytes below the stack pointer.
+
+[I didn't receive patch 2, don't know why, hence commenting patch 2 here.]
+
+Shouldn't patch 2 carry a fixes tag and be Cced to stable for 
+application to previous kernel releases ?
+
+Christophe
+
 > 
-> This series removes the indirection and the fiddly handling of two
-> tables.
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+>   .../selftests/powerpc/mm/stack_expansion_ldst.c        | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> [...]
-
-Applied to kvm-arm64/next-5.9, thanks!
-
-[1/5] KVM: arm64: Drop the target_table[] indirection
-      commit: 6b33e0d64f8501b51d32069e08d3ed68c58c25b4
-[2/5] KVM: arm64: Tolerate an empty target_table list
-      commit: 04343ae312ef0d80d601ea1b784b6b039ae9c82a
-[3/5] KVM: arm64: Move ACTLR_EL1 emulation to the sys_reg_descs array
-      commit: af4738290d9dfe3787f60e40f709a4f78a115943
-[4/5] KVM: arm64: Remove target_table from exit handlers
-      commit: dcaffa7bf911578a6d69165d712501996c587fbe
-[5/5] KVM: arm64: Remove the target table
-      commit: 750ed56693803e992ed09ac9c46e07226dd4d350
-
-Cheers,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
-
+> diff --git a/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c b/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
+> index 0587e11437f5..95c3f3de16a1 100644
+> --- a/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
+> +++ b/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
+> @@ -186,17 +186,17 @@ static void test_one_type(enum access_type type, unsigned long page_size, unsign
+>   	// But if we go past the rlimit it should fail
+>   	assert(test_one(DEFAULT_SIZE, rlim_cur + 1, type) != 0);
+>   
+> -	// Above 1MB powerpc only allows accesses within 2048 bytes of
+> +	// Above 1MB powerpc only allows accesses within 4096 bytes of
+>   	// r1 for accesses that aren't stdu
+> -	assert(test_one(1 * _MB + page_size - 128, -2048, type) == 0);
+> +	assert(test_one(1 * _MB + page_size - 128, -4096, type) == 0);
+>   #ifdef __powerpc__
+> -	assert(test_one(1 * _MB + page_size - 128, -2049, type) != 0);
+> +	assert(test_one(1 * _MB + page_size - 128, -4097, type) != 0);
+>   #else
+> -	assert(test_one(1 * _MB + page_size - 128, -2049, type) == 0);
+> +	assert(test_one(1 * _MB + page_size - 128, -4097, type) == 0);
+>   #endif
+>   
+>   	// By consuming 2MB of stack we test the stdu case
+> -	assert(test_one(2 * _MB + page_size - 128, -2048, type) == 0);
+> +	assert(test_one(2 * _MB + page_size - 128, -4096, type) == 0);
+>   }
+>   
+>   static int test(void)
+> 
