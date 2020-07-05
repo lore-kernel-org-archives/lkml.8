@@ -2,165 +2,127 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD72C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFD721531
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 20:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593982557;
-	bh=Er1cSupQus9TnIpV2t16NGTYwoMgLeV2WAfF/89/hpw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uq7NeY/vE+XkX7qWZs1GCFCRFXtHn2aQYD/WZN31H8EQyzTMZ0Rbs524n/x0Pe/R5
-	 iJmJyiuCyDVw6ber0pzWpSVyvzFSyVn3e7FgzQfVx9iUcrtEuhBS/KF4QSL4JRfhRo
-	 3MKOuFYb2neo8fzxSpXYE9oQ0TQiFjJLtZJlYyzQ=
+	by mail.kernel.org (Postfix) with ESMTP id A709D21D92
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 21:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="N3kJT8gT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgGEUz4 (ORCPT
+        id S1728413AbgGEVAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 16:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728038AbgGEUzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 16:55:55 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D984821919
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 20:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593982555;
-        bh=Er1cSupQus9TnIpV2t16NGTYwoMgLeV2WAfF/89/hpw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mXjOt4fK68MU3jlvN3QsElD7RRwGxT7ogtTD+y3gmOyHQFztDUn3l7EVlSAM3c52j
-         Npt+YkGIyndAVBE1xBjf4BQUOOXjXgZ+hV3Zob2ML66OTRH7nfFplsWphGjLOGOOpN
-         4uF5bmejh4qSEf+0lmfzpEf0IBMG7wyAWo0ST/58=
-Received: by mail-wm1-f54.google.com with SMTP id o8so37082718wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 13:55:54 -0700 (PDT)
-X-Gm-Message-State: AOAM531ouUavOcT1xaysp0iitWfOOkl/oXFFCUW72/7DQYZOjOs4b80y
-        l9PQli7mnPLObsUVsmiUuTfkmifh+uHcu5ChNp8Llg==
-X-Google-Smtp-Source: ABdhPJwEhRKGcZrOM6YtAyEC4U3024d9j6rfeBXjMlWVMgaTuFbzng9N4g1JFrUcvOTgj4XIctOZQg6SDR2w1cjYssI=
-X-Received: by 2002:a1c:1b90:: with SMTP id b138mr45880509wmb.21.1593982553413;
- Sun, 05 Jul 2020 13:55:53 -0700 (PDT)
+        Sun, 5 Jul 2020 17:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbgGEVAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 17:00:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABBFC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 14:00:51 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so17461186pgc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 14:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bufUwvRb4yy/35PtxLSIA3L2e6YgBS0471hx6c+GstA=;
+        b=N3kJT8gTEH1WY2Ds60BxW/W7rgnScY269vLCmYtCXPVCXVbjq6XFoBe8sMdTH9k+l9
+         ampNfLOofuJqXQVlSJHOiWKHMCJpgSfG+I2FNNWsWWyGmDI83WahiQ8M3oL8Ksc3nWzc
+         O4j6QyqhUNEwVG59tV7VG0NPl+lrf32quMVRAOXsVGPdLAKBm3jKXZtkm+hNG+HtfdD+
+         H4x829WDxvIySn3f6KijERoSMb2p87c957/ieo32VqE2rXCu+D/L/CF9e4XS6/su7q5H
+         6sgcb0rbVUw+SsbYIP0W4LLfQFk/ug0npggIGlppH+rmFldP6fsoxiJmbG1cBi79TJ19
+         5GPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bufUwvRb4yy/35PtxLSIA3L2e6YgBS0471hx6c+GstA=;
+        b=QhKVUf40o4uin/XraIfZxHCVV7kTxEwRzS2O+x6FPWACkDl+0rD7X9fGBfRgA/4cVm
+         C6IabIkKDEXIVryqRMCLZEJFpnjQANVTgXrNjy5c1uv2KZB9mGIOk+6G5yVTKVZigWzQ
+         7p2lz0yg/NPWwZGlFLlKJMVYVytk7o1RqMkAnrr2FrEPbu5LJwzG0uo00cu2zv6UIv3M
+         6HqVaL2GZtpCxHRU4WnlhkOQfUvqEw4lTTIMqYJNX4oW9sfJMsyckW8CLzFc3iXuHPl6
+         fW55ZHw1arEBJXbEChdCHsWoPfog8504PGV/bimS169JTphKEt+4zSJPQVzrrAPs6x5v
+         kPgA==
+X-Gm-Message-State: AOAM532IL5xAtBGmMxoGgdfxgiBHvNm0KrQfapouT6cjJfBrJ3VQ4z8R
+        iOKaoIjLx9hUfDZDD8uqCz1GYQ==
+X-Google-Smtp-Source: ABdhPJyq9iZmf3H+Kg7Ji/N1gR7wlq1WD/uqrTdqauN5Nd3hoKPFzzFPzw3hOKK62GyXINbio4wMwQ==
+X-Received: by 2002:a63:7a56:: with SMTP id j22mr37715625pgn.293.1593982849816;
+        Sun, 05 Jul 2020 14:00:49 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id g7sm15959583pfh.210.2020.07.05.14.00.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jul 2020 14:00:49 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org
+Cc:     hch@infradead.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+Date:   Sun, 5 Jul 2020 15:00:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200629214956.GA12962@linux.intel.com> <20200704203809.76391-1-dpreed@deepplum.com>
- <20200704203809.76391-3-dpreed@deepplum.com> <CALCETrVZx4VA9rg-Hn7KdER866ZOtZtmTkR0MSacnj5jGO-Pag@mail.gmail.com>
- <1593978728.059424180@apps.rackspace.com>
-In-Reply-To: <1593978728.059424180@apps.rackspace.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 5 Jul 2020 13:55:42 -0700
-X-Gmail-Original-Message-ID: <CALCETrVCEP6bLrwTYg7h_Rx-XHEsOXT4QZ=BnwpReM-n8eco6g@mail.gmail.com>
-Message-ID: <CALCETrVCEP6bLrwTYg7h_Rx-XHEsOXT4QZ=BnwpReM-n8eco6g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu
- on crash or panic
-To:     "David P. Reed" <dpreed@deepplum.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 12:52 PM David P. Reed <dpreed@deepplum.com> wrote:
->
-> Thanks, will handle these. 2 questions below.
->
-> On Sunday, July 5, 2020 2:22pm, "Andy Lutomirski" <luto@kernel.org> said:
->
-> > On Sat, Jul 4, 2020 at 1:38 PM David P. Reed <dpreed@deepplum.com> wrote:
-> >>
-> >> Fix: Mask undefined operation fault during emergency VMXOFF that must be
-> >> attempted to force cpu exit from VMX root operation.
-> >> Explanation: When a cpu may be in VMX root operation (only possible when
-> >> CR4.VMXE is set), crash or panic reboot tries to exit VMX root operation
-> >> using VMXOFF. This is necessary, because any INIT will be masked while cpu
-> >> is in VMX root operation, but that state cannot be reliably
-> >> discerned by the state of the cpu.
-> >> VMXOFF faults if the cpu is not actually in VMX root operation, signalling
-> >> undefined operation.
-> >> Discovered while debugging an out-of-tree x-visor with a race. Can happen
-> >> due to certain kinds of bugs in KVM.
-> >
-> > Can you re-wrap lines to 68 characters?  Also, the Fix: and
->
-> I used 'scripts/checkpatch.pl' and it had me wrap to 75 chars:
-> "WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)"
->
-> Should I submit a fix to checkpatch.pl to say 68?
+On 7/5/20 12:47 PM, Kanchan Joshi wrote:
+> From: Selvakumar S <selvakuma.s1@samsung.com>
+> 
+> For zone-append, block-layer will return zone-relative offset via ret2
+> of ki_complete interface. Make changes to collect it, and send to
+> user-space using cqe->flags.
+> 
+> Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+> ---
+>  fs/io_uring.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 155f3d8..cbde4df 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -402,6 +402,8 @@ struct io_rw {
+>  	struct kiocb			kiocb;
+>  	u64				addr;
+>  	u64				len;
+> +	/* zone-relative offset for append, in sectors */
+> +	u32			append_offset;
+>  };
 
-75 is probably fine too, but something is odd about your wrapping.
-You have long lines mostly alternating with short lines.  It's as if
-you wrote 120-ish character lines and then wrapped to 75 without
-reflowing.
+I don't like this very much at all. As it stands, the first cacheline
+of io_kiocb is set aside for request-private data. io_rw is already
+exactly 64 bytes, which means that you're now growing io_rw beyond
+a cacheline and increasing the size of io_kiocb as a whole.
 
->
-> > Explanation: is probably unnecessary.  You could say:
-> >
-> > Ignore a potential #UD failut during emergency VMXOFF ...
-> >
-> > When a cpu may be in VMX ...
-> >
-> >>
-> >> Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
-> >> Reported-by: David P. Reed <dpreed@deepplum.com>
-> >
-> > It's not really necessary to say that you, the author, reported the
-> > problem, but I guess it's harmless.
-> >
-> >> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> >> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> >> Signed-off-by: David P. Reed <dpreed@deepplum.com>
-> >> ---
-> >>  arch/x86/include/asm/virtext.h | 20 ++++++++++++++------
-> >>  1 file changed, 14 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-> >> index 0ede8d04535a..0e0900eacb9c 100644
-> >> --- a/arch/x86/include/asm/virtext.h
-> >> +++ b/arch/x86/include/asm/virtext.h
-> >> @@ -30,11 +30,11 @@ static inline int cpu_has_vmx(void)
-> >>  }
-> >>
-> >>
-> >> -/* Disable VMX on the current CPU
-> >> +/* Exit VMX root mode and isable VMX on the current CPU.
-> >
-> > s/isable/disable/
-> >
-> >
-> >>  /* Disable VMX if it is supported and enabled on the current CPU
-> >> --
-> >> 2.26.2
-> >>
-> >
-> > Other than that:
-> >
-> > Reviewed-by: Andy Lutomirski <luto@kernel.org>
->
-> As a newbie, I have a process question - should I resend the patch with the 'Reviewed-by' line, as well as correcting the other wording? Thanks!
+Maybe you can reuse io_rw->len for this, as that is only used on the
+submission side of things.
 
-Probably.  Sometimes a maintainer will apply the patch and make these
-types of cosmetic changes, but it's easier if you resubmit.  That
-being said, for non-urgent patches, it's usually considered polite to
-wait a day or two to give other people a chance to comment.
+-- 
+Jens Axboe
 
---Andy
