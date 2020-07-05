@@ -2,119 +2,263 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D829C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6243C20715
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BB72073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 18:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593972592;
-	bh=c2a55McBd7AMkKjyMUYwDFgVECADqGqhXoBBFONf7hY=;
+	s=default; t=1593972800;
+	bh=hQI5jt5potQGZvkVXLJko2b/PWnaghIx/zuVrGhkPaQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uWydjHqdTCAo9eT1s7AmQCXrphonBRZIyiVlesyBWz7aXK+gGwXs8PHrAhXyjMnBR
-	 uSXrzhc47WgrgADn3MvcBUALUqaJ3uH4aijEsfwkdeVEc4gO990mfA8UQlpPCgUHec
-	 8f0dpPuPT1ceOSLflMy/bLM4UAPxHbn0iUqMvd/w=
+	b=Xf9LsEeEVRrQY0ZaKxqCA6Auy3eaIF5TYx63KTyr7xsrfz4HCinuRaUGDsQ58zkO7
+	 yWN8wvTStTKrEQ0ZBUCwZgNKqr+QDd+D1l0xZKl7ephUGrE7L6o7hP4bA/9TXrcKSe
+	 7Q4dXAJgZlOssOEdU4bPyoKA4RFq8vsxOfqQoPdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGESJv (ORCPT
+        id S1727898AbgGESNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 14:09:51 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53642 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgGESJu (ORCPT
+        Sun, 5 Jul 2020 14:13:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37127 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgGESNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 14:09:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j18so36795630wmi.3;
-        Sun, 05 Jul 2020 11:09:48 -0700 (PDT)
+        Sun, 5 Jul 2020 14:13:18 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a6so38399601wrm.4;
+        Sun, 05 Jul 2020 11:13:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WFXUuYLx9z7kdQD8cxQDN+qE9M0mmvVhR4YuFlGCggU=;
-        b=NoUtpVLssoof5gl60JAvsz4GNZ29f6UcAsXBMBlrZEvz20f8GcF3M5OuwnXgNQB9/j
-         grCfzFalzoad3IJ6e7B5YCyOsDueGnC6IwO5ED9OMG2VXaddy09098WdJ2Ugr7qBVErS
-         3zh7k7aGv7XK8Ki3ZZjmukofZh1CsHgB3SfhBRdu0Lul+8uQGu+wQQWtou658MABtXam
-         wM0td0+/si7vt8/hc8LjFumptI/UIcVhnpd5n/Bi2PdsHYFWwaioxZN7CON/aC7m6+HQ
-         je3fq0J+PlTyDXBNN/c1S+6p65xtE2wRWRvCUum33AgoplKtHZDTiSed6FiYDGtsSnpz
-         iipw==
-X-Gm-Message-State: AOAM532RksK9adTQ4Zq8n8xDTYHSOpRTBUF8tASsf1HQr0aKXQkou8i1
-        dCZVwnvd4Ej+monX9NRn6NA=
-X-Google-Smtp-Source: ABdhPJxjI4yFt1EotH4VAiKnZjhxmDAOFtIsBKxuNGU1hyL2uOKUIKD6daN9NG2yCKPfXkNal/526Q==
-X-Received: by 2002:a1c:cc0c:: with SMTP id h12mr3373057wmb.140.1593972588223;
-        Sun, 05 Jul 2020 11:09:48 -0700 (PDT)
+        bh=weHUVg6eDRuIYzJUSwT20hFFOTaLh3Ab2q7bi5NEwVg=;
+        b=e4fRkhgUkg0LUaU+j98/Kki1sIUihrkvjVeOYuH4RpJ2tUvZz8RSar5PoqHHPeDZfT
+         7WlP55WPVsIo2QdSGbJ2MGZNhmlXhHHMPQRDN++jXuJmnjCoLvncH46pU0hMXOm4wKuj
+         JWJyeVs34NC/B/54pyY+s3EQygWSI6x5nAGx7+rxFXm5jfEQIyrVt6zSQyz3br9aN6ue
+         zgbBy39wguQCzt7Gp6j42NRRuYH+oqsAiQrrEx46ENwTaeKOqvrdx/gLW7wa4wMLWXru
+         5z/ovrbU81HNIHWLwx3rQAZtdPpdi9q9b+5vI2Re4bemvpybDI4Tu9IPabOEtzojxMvA
+         Vaow==
+X-Gm-Message-State: AOAM532SGz+sn50mWaAj0Wztmt+PddiH3GoGAgsmgcsdNSc5mECIdANu
+        ioHzMOHRTLJ+IwwyCi3TvPI=
+X-Google-Smtp-Source: ABdhPJwzAAZIoa0Oy6M6sME9NpyTTqSGnpPGmpWLf/ydf9WThHEur1M9tx3hbKGIiOMrU1aaoqGUYQ==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr45022015wrs.365.1593972795430;
+        Sun, 05 Jul 2020 11:13:15 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id 138sm15606042wmb.1.2020.07.05.11.09.46
+        by smtp.googlemail.com with ESMTPSA id l132sm21031246wmf.6.2020.07.05.11.13.12
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Jul 2020 11:09:46 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 20:09:44 +0200
-From:   'Krzysztof Kozlowski' <krzk@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH] arm64: dts: exynos: Add minimal bootargs
-Message-ID: <20200705180944.GB2765@kozik-lap>
-References: <CGME20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba@epcas5p4.samsung.com>
- <20200703182536.9190-1-alim.akhtar@samsung.com>
- <000801d6516a$b6efcb40$24cf61c0$@samsung.com>
- <20200704102246.GA5975@kozik-lap>
- <004c01d6526d$18c365e0$4a4a31a0$@samsung.com>
+        Sun, 05 Jul 2020 11:13:14 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 20:13:11 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 5/8] ARM: dts: exynos: Remove DMA controller bus node
+ name to fix dtschema warnings
+Message-ID: <20200705181311.GA3611@kozik-lap>
+References: <20200702155149.12854-1-krzk@kernel.org>
+ <CGME20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157@eucas1p2.samsung.com>
+ <20200702155149.12854-5-krzk@kernel.org>
+ <11b9adcf-251f-81ad-2559-9d96c0a3ad78@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <004c01d6526d$18c365e0$4a4a31a0$@samsung.com>
+In-Reply-To: <11b9adcf-251f-81ad-2559-9d96c0a3ad78@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 07:09:14AM +0530, Alim Akhtar wrote:
-> Hi Krzysztof,
-> > Also, why did you use different serial for console?
-> > 
-> Once UART driver gets probed then console changes to ttySAC0. In case I am using stdout-path only,
-> after bootconsole is disabled, kernel logs re-start printing from beginning (which might be expected behaviour?)
+On Thu, Jul 02, 2020 at 10:34:14PM +0200, Marek Szyprowski wrote:
+> On 02.07.2020 17:51, Krzysztof Kozlowski wrote:
+> > There is no need to keep DMA controller nodes under AMBA bus node.
+> > Remove the "amba" node to fix dtschema warnings like:
+> >
+> >      amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v1:
+> > 1. Remove the bus, as suggested by Marek
+> > ---
+> >   arch/arm/boot/dts/exynos3250.dtsi             |  47 +++----
+> >   arch/arm/boot/dts/exynos4.dtsi                |  70 +++++-----
+> >   .../boot/dts/exynos4210-universal_c210.dts    |   2 +-
+> >   arch/arm/boot/dts/exynos5250.dtsi             |  92 ++++++-------
+> >   arch/arm/boot/dts/exynos5410.dtsi             |  46 +++----
+> >   arch/arm/boot/dts/exynos5420.dtsi             | 130 ++++++++----------
+> >   6 files changed, 174 insertions(+), 213 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> > index 044e5da64a76..d3fb45a56527 100644
+> > --- a/arch/arm/boot/dts/exynos3250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> > @@ -418,33 +418,26 @@
+> >   			status = "disabled";
+> >   		};
+> >   
+> > -		amba {
+> > -			compatible = "simple-bus";
+> > -			#address-cells = <1>;
+> > -			#size-cells = <1>;
+> > -			ranges;
+> > -
+> > -			pdma0: pdma@12680000 {
+> > -				compatible = "arm,pl330", "arm,primecell";
+> > -				reg = <0x12680000 0x1000>;
+> > -				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> > -				clocks = <&cmu CLK_PDMA0>;
+> > -				clock-names = "apb_pclk";
+> > -				#dma-cells = <1>;
+> > -				#dma-channels = <8>;
+> > -				#dma-requests = <32>;
+> > -			};
+> > -
+> > -			pdma1: pdma@12690000 {
+> > -				compatible = "arm,pl330", "arm,primecell";
+> > -				reg = <0x12690000 0x1000>;
+> > -				interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> > -				clocks = <&cmu CLK_PDMA1>;
+> > -				clock-names = "apb_pclk";
+> > -				#dma-cells = <1>;
+> > -				#dma-channels = <8>;
+> > -				#dma-requests = <32>;
+> > -			};
+> > +		pdma0: pdma@12680000 {
+> > +			compatible = "arm,pl330", "arm,primecell";
+> > +			reg = <0x12680000 0x1000>;
+> > +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cmu CLK_PDMA0>;
+> > +			clock-names = "apb_pclk";
+> > +			#dma-cells = <1>;
+> > +			#dma-channels = <8>;
+> > +			#dma-requests = <32>;
+> > +		};
+> > +
+> > +		pdma1: pdma@12690000 {
+> > +			compatible = "arm,pl330", "arm,primecell";
+> > +			reg = <0x12690000 0x1000>;
+> > +			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cmu CLK_PDMA1>;
+> > +			clock-names = "apb_pclk";
+> > +			#dma-cells = <1>;
+> > +			#dma-channels = <8>;
+> > +			#dma-requests = <32>;
+> >   		};
+> >   
+> >   		adc: adc@126c0000 {
+> > diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> > index d2779a790ce3..a1e54449f33f 100644
+> > --- a/arch/arm/boot/dts/exynos4.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4.dtsi
+> > @@ -669,45 +669,37 @@
+> >   			status = "disabled";
+> >   		};
+> >   
+> > -		amba: amba {
+> > -			#address-cells = <1>;
+> > -			#size-cells = <1>;
+> > -			compatible = "simple-bus";
+> > -			interrupt-parent = <&gic>;
+> > -			ranges;
+> > -
+> > -			pdma0: pdma@12680000 {
+> > -				compatible = "arm,pl330", "arm,primecell";
+> > -				reg = <0x12680000 0x1000>;
+> > -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> > -				clocks = <&clock CLK_PDMA0>;
+> > -				clock-names = "apb_pclk";
+> > -				#dma-cells = <1>;
+> > -				#dma-channels = <8>;
+> > -				#dma-requests = <32>;
+> > -			};
+> > -
+> > -			pdma1: pdma@12690000 {
+> > -				compatible = "arm,pl330", "arm,primecell";
+> > -				reg = <0x12690000 0x1000>;
+> > -				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> > -				clocks = <&clock CLK_PDMA1>;
+> > -				clock-names = "apb_pclk";
+> > -				#dma-cells = <1>;
+> > -				#dma-channels = <8>;
+> > -				#dma-requests = <32>;
+> > -			};
+> > -
+> > -			mdma1: mdma@12850000 {
+> > -				compatible = "arm,pl330", "arm,primecell";
+> > -				reg = <0x12850000 0x1000>;
+> > -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > -				clocks = <&clock CLK_MDMA>;
+> > -				clock-names = "apb_pclk";
+> > -				#dma-cells = <1>;
+> > -				#dma-channels = <8>;
+> > -				#dma-requests = <1>;
+> > -			};
+> > +		pdma0: pdma@12680000 {
+> > +			compatible = "arm,pl330", "arm,primecell";
+> > +			reg = <0x12680000 0x1000>;
+> > +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&clock CLK_PDMA0>;
+> > +			clock-names = "apb_pclk";
+> > +			#dma-cells = <1>;
+> > +			#dma-channels = <8>;
+> > +			#dma-requests = <32>;
+> > +		};
+> > +
+> > +		pdma1: pdma@12690000 {
+> > +			compatible = "arm,pl330", "arm,primecell";
+> > +			reg = <0x12690000 0x1000>;
+> > +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&clock CLK_PDMA1>;
+> > +			clock-names = "apb_pclk";
+> > +			#dma-cells = <1>;
+> > +			#dma-channels = <8>;
+> > +			#dma-requests = <32>;
+> > +		};
+> > +
+> > +		mdma1: mdma@12850000 {
+> > +			compatible = "arm,pl330", "arm,primecell";
+> > +			reg = <0x12850000 0x1000>;
+> > +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&clock CLK_MDMA>;
+> > +			clock-names = "apb_pclk";
+> > +			#dma-cells = <1>;
+> > +			#dma-channels = <8>;
+> > +			#dma-requests = <1>;
+> >   		};
+> >   
+> >   		fimd: fimd@11c00000 {
+> > diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > index 02fde1a75ebd..e07aa3aa93bd 100644
+> > --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > @@ -181,7 +181,7 @@
+> >   	};
+> >   };
+> >   
+> > -&amba {
+> > +&soc {
 > 
-> [    0.012416] printk: console [tty0] enabled
-> [    0.016491] printk: bootconsole [exynos4210] disabled
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd032]
-> [    0.000000] Linux version 5.8.0-rc3-next-20200703-00008-g4af626444f4a-dirty (alim@alim) (aarch64-linux-gnu-gcc (Linaro GCC 7.4-2019.02) 7.4.1 20181213 [l0
-> [    0.000000] Machine model: Samsung Exynos7 Espresso board based on Exynos7
 > 
+> What about the alphabetical order of the labels here?
 
-No, this is not desired. The fix for it should not be redefining the
-console to wrong argument.
-
-For example on Odroid MC1 this problem does not exist:
-
-[    0.000000] earlycon: exynos4210 at MMIO 0x12c20000 (options '115200n8')
-[    0.000000] printk: bootconsole [exynos4210] enabled
-[    3.111883] printk: console [ttySAC2] enabled
-[    3.111883] printk: console [ttySAC2] enabled
-[    3.120102] printk: bootconsole [exynos4210] disabled
-[    3.120102] printk: bootconsole [exynos4210] disabled
-
-
-but your console for some reason is tty0... why? Is your console
-ttySAC2? Maybe it is the effect of alias:
-serial0 = &serial_2;
-
-> > However the question is, are you sure you want earlycon on every, including
-> > successful boot? On most of the boards we do not enable by default. If
-> > developer needs, he can choose it for example via U-Boot "setenv opts
-> > earlycon".
-> > 
-> Using U-Boot is not the case always, any bootload can be used to boot the Linux, currently I am Coreboot.
-> And 'earlycon' is not setup by default.
-> As Espresson board is development board, IMO it is ok to keep it enable all the time, this helps in quickly knowing what going on incase boot fails early.
-> Let me know if it is ok to keep " console=ttySAC0,115200n8" or shell I just re-spin with only 'earlycon'? or any other suggestion?
-
-It should be just earlycon.
+Yes, I'll keep them ordered. Thanks.
 
 Best regards,
 Krzysztof
-
