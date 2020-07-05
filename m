@@ -2,113 +2,137 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59CD20874
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3423A2088E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 05:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/FIIOuI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RfXmPGTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgGEFYZ (ORCPT
+        id S1726303AbgGEFq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 01:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
+        Sun, 5 Jul 2020 01:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGEFYY (ORCPT
+        with ESMTP id S1725941AbgGEFq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 01:24:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03E3C061794
-        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:24:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id k27so817461pgm.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 22:24:24 -0700 (PDT)
+        Sun, 5 Jul 2020 01:46:28 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25545C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat,  4 Jul 2020 22:46:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so5371645pfh.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jul 2020 22:46:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/d0fVnkkMj8AqjSj3lBRC3Gn3NS10oGmVycuIL3B8SU=;
-        b=H/FIIOuI+LgP/oYZqzk1uF4CUjbh3SidudmmGTAMb6jZEcFjT3AC5y24LPBZaBd6eD
-         RU1e9Srm+BcANmkr3q0wEfdS3zQziFNWSHCCVRQ81AN+79KmhEaqQpmziG/SZnwYotgu
-         NbsEvpzAaBiU28WDhjxO6xj5x1CgjR3wlPstnF5FMQQ2jxlnyvz2O6+wHEA6mN2kGSij
-         NykuilDWYnpf5IMAdX35MaXODOIrw4+xGwIlqpB6DARCq5XWwyM1k2TCLXvzQ91O0ciS
-         KH/gi2k3CXQwQk11K/y2C09ZMRs/SccrehXKRwyHnj4HdHR10ABJKItdJnSFH+l6Eyi0
-         l80Q==
+         :content-disposition:in-reply-to;
+        bh=I2a5PLdldX+tMxKx3O4LIv9xtAhMAmYRl6zJFR/hXiA=;
+        b=RfXmPGTto0Gz+MbvGo1QMO6md2BCUQfRW1QqjLWmCbGgpWhv+ZjlhVMZhByyZ81nCy
+         yJEuOCfrQd1bVCiwemfHjqROV85NLuWzERnY/7MDfjpl9aHezsWWv0QcqSlKhSSlBftW
+         6ywG3JjDEuoLx9YNUQFFYdIEENn7bAlblo42A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/d0fVnkkMj8AqjSj3lBRC3Gn3NS10oGmVycuIL3B8SU=;
-        b=c0XrSlexQgE9N3vcjAT4SNxB595LIbbxXPgUAkPY/F8lzJMJriMUUYA7f4w98R1+oF
-         olwydzR3fB3VYb9MpukcNQozE2ldFwJ0V0Cm4TkeZfT5ZrORz5yh/sT++UqZiFbko6Nz
-         it/t+QMBOpx+3jhcsOnHQwsXmP0v0qFP45U4WIjNxonItyOfTmlzAds48p1HnEPFkPN1
-         lk+pHsRDkTQw6MRKElQJkCid7Y2pCjiutN0zvNtt0kciTsoLlU1ijY+ovNPVUUyHHeCv
-         x8gxMVOo3eZkC7c9CWnF1x8yyskNoMR8TpUYhAb0PKNGT8MVx2KIrB8f70pUvBRe2oQ+
-         pKmg==
-X-Gm-Message-State: AOAM532s3oWWJpWbT4Qf/9bZLl/u9qphPAuHkHX70XapX2HJ/vZPDGfE
-        j5k1TCJF214WHAPgfGviJpe8Tw==
-X-Google-Smtp-Source: ABdhPJwQVWd+xcc5oTk71j+2DNUJ61EGqtXZ8Fc7mnfUkHaXRItOp8NtIwrsMlobGAPypEQkyWzU8A==
-X-Received: by 2002:a62:8688:: with SMTP id x130mr39800756pfd.280.1593926664017;
-        Sat, 04 Jul 2020 22:24:24 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id y27sm15883257pgc.56.2020.07.04.22.24.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jul 2020 22:24:23 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 13:24:14 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     "liwei (GF)" <liwei391@huawei.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 2/2] perf tools: Fix record failure when mixed with ARM
- SPE event
-Message-ID: <20200705052414.GC14142@leoy-ThinkPad-X240s>
-References: <20200623123141.27747-1-liwei391@huawei.com>
- <20200623123141.27747-3-liwei391@huawei.com>
- <20200702230322.GB471976@xps15>
- <5d872f6f-3665-5abd-7251-13926a70f793@huawei.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=I2a5PLdldX+tMxKx3O4LIv9xtAhMAmYRl6zJFR/hXiA=;
+        b=qOpCe0g/Gnu5ZVJp37JEWrh1vT0GH9QN5de8/wzemSPT7reC5HHxZaMNThvDRlGsQm
+         foc67sUDUnazMAcCzuYVTIuKE5DNLeBmXe/U+NoaglxVj/z3OJ9hLch/2S6JhfJt9zxX
+         gQxOOjKn6N90mLyitU5qvQfFKxM35reUwmVwVn7NJ9i41AFwtILhb7QJbLT+J2IAGE3r
+         rojm6wfB2rii7wH+7bgfCHdhzfcq3c/lGR+0huS/kdN1+mnoWUrCjBr+ss/9u1HgDENt
+         7AJJmYX+gN+WTgcxupEnXzWqO13KKo0icWF6AvWmWi49gfVpPzLZrIa1wxYB7Lwy5U3R
+         P27w==
+X-Gm-Message-State: AOAM532pb63sJs9XDQiLx3dHuDSulTR8RQF66WiA/oW746/ked4SZRy7
+        8BMO8l/INuNcyoBL2nORENaXJw==
+X-Google-Smtp-Source: ABdhPJxLxBTBtwYIHio0yADOjvtvwnRBa62ORSVaTpJlmeQsJN600nicdVw6a1IlkKRlRiQpgmTtGA==
+X-Received: by 2002:aa7:9d9a:: with SMTP id f26mr7487491pfq.26.1593927987520;
+        Sat, 04 Jul 2020 22:46:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j3sm4663264pfe.102.2020.07.04.22.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 22:46:26 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 22:46:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        David Gow <davidgow@google.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Bird, Tim" <Tim.Bird@sony.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] selftests/harness: Switch to TAP output
+Message-ID: <202007042245.BCC693126@keescook>
+References: <20200622181651.2795217-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5d872f6f-3665-5abd-7251-13926a70f793@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200622181651.2795217-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 12:06:15PM +0800, liwei (GF) wrote:
+On Mon, Jun 22, 2020 at 11:16:43AM -0700, Kees Cook wrote:
+> Hi,
+> 
+> v2:
+> - switch harness from XFAIL to SKIP
+> - pass skip reason from test into TAP output
+> - add acks/reviews
+> v1: https://lore.kernel.org/lkml/20200611224028.3275174-1-keescook@chromium.org/
+> 
+> 
+> I finally got around to converting the kselftest_harness.h API to actually
+> use the kselftest.h API so all the tools using it can actually report
+> TAP correctly. As part of this, there are a bunch of related cleanups,
+> API updates, and additions.
 
-[...]
+Friendly ping -- I'd love to get this landed for -next, it makes doing
+seccomp testing much nicer. :)
 
-Thanks for Mathieu's looping and agreed with his comments.
+Thanks!
 
-> > Last but not least do you know where the memory allocated for array arm_spe_pmus
-> > is released?  If you can't find it either then we have a memory leak and it
-> > would be nice to have that fixed.
->
-> Yes, we have a memory leak here indeed, i forgot to free it in this function.
-> As 'arm_spe_pmus' is defined as static, i think the author meant to assign it only at the first call,
-> but this function is only called once when we executing 'record', should i go on fixing it
-> or just drop the patch 1?
+-Kees
 
-I personally think patch 1 is reasonable.  So for fixing memory leak,
-I did a quick check, it's good to release the array "arm_spe_pmus" in
-the function auxtrace_record__init(), since the array is only used in
-this function.
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> Kees Cook (8):
+>   selftests/clone3: Reorder reporting output
+>   selftests: Remove unneeded selftest API headers
+>   selftests/binderfs: Fix harness API usage
+>   selftests: Add header documentation and helpers
+>   selftests/harness: Switch to TAP output
+>   selftests/harness: Refactor XFAIL into SKIP
+>   selftests/harness: Display signed values correctly
+>   selftests/harness: Report skip reason
+> 
+>  tools/testing/selftests/clone3/clone3.c       |   2 +-
+>  .../selftests/clone3/clone3_clear_sighand.c   |   3 +-
+>  .../testing/selftests/clone3/clone3_set_tid.c |   2 +-
+>  .../filesystems/binderfs/binderfs_test.c      | 284 +++++++++---------
+>  tools/testing/selftests/kselftest.h           |  78 ++++-
+>  tools/testing/selftests/kselftest_harness.h   | 169 ++++++++---
+>  .../pid_namespace/regression_enomem.c         |   1 -
+>  .../selftests/pidfd/pidfd_getfd_test.c        |   1 -
+>  .../selftests/pidfd/pidfd_setns_test.c        |   1 -
+>  tools/testing/selftests/seccomp/seccomp_bpf.c |   8 +-
+>  .../selftests/uevent/uevent_filtering.c       |   1 -
+>  11 files changed, 356 insertions(+), 194 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
 
-Thanks,
-Leo
+-- 
+Kees Cook
