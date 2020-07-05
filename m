@@ -2,129 +2,124 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93245C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F18C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6225D2084C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CA220737
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 15:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o+tw60Zj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MCD0MNCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgGEPwk (ORCPT
+        id S1727904AbgGEP5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 11:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgGEPwk (ORCPT
+        Sun, 5 Jul 2020 11:57:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49011 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727843AbgGEP5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 11:52:40 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13DF6C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 08:52:40 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w27so4220933qtb.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 08:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TgpAD18UbHNoiwEgaJKuKvKVqh48LFxBCoez9AKzX9A=;
-        b=o+tw60Zjl0m06kgAYW3V0nL3dUIgC7FQERNmT/2lvYJXj32GXnARzXuIHbeqaCDtdr
-         DZkSFmpPkdVCCajPE8J3H5oWRju5Mumt03tGmHz5DgiIsh7cny53ai3aHTojZnN4OQ5t
-         c+1ArRxiiphkDVbk3XLQqYp1ghkuDHiAyO85s6E7GgrebH+8s7GW90HIkUfmijmlir5O
-         8wTZ4KE9oaLvb35UvC4Af28/Y9Re2Qqguu0/fIjaZEVtXDLH13x8QqZUOXQkYhOjCup0
-         amdNPSuakV0KxbYDGRCtqG9Z8v55LhEUS22NbqKhdMxfDsN8xvWZRpym5889RFCyWx/J
-         h7Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TgpAD18UbHNoiwEgaJKuKvKVqh48LFxBCoez9AKzX9A=;
-        b=CbSZIA56wWWaTXOjcfzgJ9T0ztHRZC1rsrf1fuqAetV8pe+sz0UddEDcddNcG4/8pK
-         1lcFgKcjWKq4BptVg3m1lo3b7YqdEyPH9/rN3+qvhGRDdUAUJBmvACQw/tU7lZRxHryN
-         qmy9hNjOOUSmmmt2LBPVtR6KrBn50keVAOiXgAI/LBy7kDkywmXBia5TOX55jD0UtTgs
-         eYMoWxD92UcMrLIXiBBPp0E23vcDqKEtPiXuWGGD84kFPRpZ7VP4Gg0+Cngmwym39FHc
-         1cCju7o9kqlf4lSW193Vf303Z2ripWoH4pnBwA4aHzCZ7Lo5lI2UxEy+Az4xQxwhv1DT
-         r9+A==
-X-Gm-Message-State: AOAM533wZ9j/Afiasf/W5xFZeoMdglJ6IEgEb2pegGlNyIDm9T6pKJni
-        +Fc8foZO6e6R94g1WwHqFs2gjQ==
-X-Google-Smtp-Source: ABdhPJxCLVt7C51JiCX3AUjZYrW97O2OrQzyS3GUCDAkbCDVY1maGgowf05vqlzV0Agu2cwVR1C1PA==
-X-Received: by 2002:aed:239b:: with SMTP id j27mr46404352qtc.183.1593964359245;
-        Sun, 05 Jul 2020 08:52:39 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x4sm14390623qkl.130.2020.07.05.08.52.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 08:52:38 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 11:52:32 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Message-ID: <20200705155232.GA608@lca.pw>
-References: <20200705044454.GA90533@shbuild999.sh.intel.com>
- <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
- <20200705125854.GA66252@shbuild999.sh.intel.com>
+        Sun, 5 Jul 2020 11:57:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593964627;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/GJsuCT73gLGt03xxtSABG0dllJoj9gjPgi6ZNtIWaw=;
+        b=MCD0MNCQB6C8hD7A3Y+NMtqLp6v2BM6VmS3LT4xGgJcKJgYrLnELMMnzWFOSTvj+WXnvUA
+        ZKY5GvdH8iD1iZDVO64esmcSAp16VtGOmsAZWc6Pbtm+NngjS3bpguTlCih5+8Zy/a0KYJ
+        TkPX9ShEMBQquLc+/opIUihQm44lQP4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-XTFwP_eyMtGf0BAc5FQEdw-1; Sun, 05 Jul 2020 11:57:03 -0400
+X-MC-Unique: XTFwP_eyMtGf0BAc5FQEdw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9145918FE860;
+        Sun,  5 Jul 2020 15:57:00 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-238.rdu2.redhat.com [10.10.112.238])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 752B87BED0;
+        Sun,  5 Jul 2020 15:56:57 +0000 (UTC)
+Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <dianders@google.com>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+References: <20200702221237.2517080-1-abhishekbh@google.com>
+ <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
+ <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+ <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
+ <20200703114037.GD2999146@linux.ibm.com>
+ <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
+ <20200705152304.GE2999146@linux.ibm.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
+Date:   Sun, 5 Jul 2020 11:56:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200705125854.GA66252@shbuild999.sh.intel.com>
+In-Reply-To: <20200705152304.GE2999146@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 08:58:54PM +0800, Feng Tang wrote:
-> On Sun, Jul 05, 2020 at 08:15:03AM -0400, Qian Cai wrote:
-> > 
-> > 
-> > > On Jul 5, 2020, at 12:45 AM, Feng Tang <feng.tang@intel.com> wrote:
-> > > 
-> > > I did reproduce the problem, and from the debugging, this should
-> > > be the same root cause as lore.kernel.org/lkml/20200526181459.GD991@lca.pw/
-> > > that loosing the batch cause some accuracy problem, and the solution of
-> > > adding some sync is still needed, which is dicussed in
-> > 
-> > Well, before taking any of those patches now to fix the regression,
-> > we will need some performance data first. If it turned out the
-> > original performance gain is no longer relevant anymore due to this
-> > regression fix on top, it is best to drop this patchset and restore
-> > that VM_WARN_ONCE, so you can retry later once you found a better
-> > way to optimize.
-> 
-> The fix of adding sync only happens when the memory policy is being
-> changed to OVERCOMMIT_NEVER, which is not a frequent operation in
-> normal cases.
-> 
-> For the performance improvment data both in commit log and 0day report
-> https://lore.kernel.org/lkml/20200622132548.GS5535@shao2-debian/
-> it is for the will-it-scale's mmap testcase, which will not runtime
-> change memory overcommit policy, so the data should be still valid
-> with this fix.
+On 7/5/20 11:23 AM, Mike Rapoport wrote:
+>> Nothing prevents people from continuing to use the command line
+>> options if they want, right?  This just allows a different default.
+>> So if a distro is security focused and decided that it wanted a slower
+>> / more secure default then it could ship that way but individual users
+>> could still override, right?
+> Well, nothing prevents you from continuing to use the command line as
+> well;-)
+>
+> I can see why whould you want an ability to select compile time default
+> for an option, but I'm really not thrilled by the added ifdefery.
+>   
 
-Well, I would expect people are perfectly reasonable to use
-OVERCOMMIT_NEVER for some workloads making it more frequent operations.
-The question is now if any of those regression fixes would now regress
-performance of OVERCOMMIT_NEVER workloads or just in-par with the data
-before the patchset?
+It turns out that CONFIG_KVM_VMENTRY_L1D_FLUSH values match the enum 
+vmx_l1d_flush_state values. So one way to reduce the ifdefery is to do, 
+for example,
 
-Given now this patchset has had so much churn recently, I would think
-"should be still valid" is not really the answer we are looking for.
++#ifdef CONFIG_KVM_VMENTRY_L1D_FLUSH
++#define VMENTER_L1D_FLUSH_DEFAULT CONFIG_KVM_VMENTRY_L1D_FLUSH
++#else
++#define VMENTER_L1D_FLUSH_DEFAULT      VMENTER_L1D_FLUSH_AUTO
+#endif
+-enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
++enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_DEFAULT;
 
-> 
-> Thanks,
-> Feng
-> 
-> 
+Of course, we may need to add a comment on enum vmx_l1d_flush_state 
+definition to highlight the dependency of CONFIG_KVM_VMENTRY_L1D_FLUSH 
+on it to avoid future mismatch.
+
+Cheers,
+Longman
+
