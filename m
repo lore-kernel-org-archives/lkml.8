@@ -2,120 +2,169 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B08C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56282073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A652075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 19:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yhKH9OTM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d5ATdZkr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="Ku1PsicO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgGEToI (ORCPT
+        id S1728146AbgGEToS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:44:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47004 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbgGEToI (ORCPT
+        Sun, 5 Jul 2020 15:44:18 -0400
+Received: from gateway20.websitewelcome.com ([192.185.59.4]:43863 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727942AbgGEToS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 15:44:08 -0400
-Date:   Sun, 05 Jul 2020 19:44:04 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593978245;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=kJjqNi98jZ2gWU0Juh5kKC1w6QkusqiMwIY+neDalHo=;
-        b=yhKH9OTMlmK9YL5b4llaQDuWUmt4ctnOrCo/9MjQXIH1yjSciFJh8WfavirpU2BjD9ak4D
-        JBTpQFtY74vj9BADO+6/Kx7IEUtIIvSaUai+I2g0dZZihbBsNTJQsUXq510mBYKbVLU/nW
-        izjniF5UFz75ddqDHi/FSYTKTfWrvsu5FQ/6XfqnPycvSmJB/iQ5Vs2xKLmplN7IsjKBKd
-        7f39Rpank/n9GKmkbyxR/mNzou+6UPrFUlOT6lb84qDXuA/1sIgNK+t1zaYfXtfHHmlhXP
-        VEEN19eiGgHaV0q9GqbFTjJhblBOJeJG5n0aBoea0MMq4sLc3/wF7iE3uOkldw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593978245;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=kJjqNi98jZ2gWU0Juh5kKC1w6QkusqiMwIY+neDalHo=;
-        b=d5ATdZkrosSwyZ5dvTeP7VMw0hRmSamY+6VmVU2iz5OkZwdAfE66wjOYLeAJcrPADzM5Mm
-        Z0YWa0EDjiUCLqAQ==
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/entry/32: Fix XEN_PV build dependency
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>
+        Sun, 5 Jul 2020 15:44:18 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 494E0400CECE4
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 12:58:50 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id sAB5juxxGQyTQsAB5jwR1Z; Sun, 05 Jul 2020 14:19:52 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GfLOfM3WHzU0BIyRJD4iTtlteWnSzQZLlEmD9Xo7d20=; b=Ku1PsicOgEi8DGG1AT5hHZFSw9
+        QC4omYSyirQB4EK2wh3yntLwCqWpXgnLtWqhWcp8CTyFbhy1rYWtUMbbAlVDkG/lmSSMhYP7MEMUQ
+        +HtJTSazIFQl9ZhBUMSwNhmZqu+ShGoP5JDjEexdingJiiYhc644el6LR2vcV9jxUS4NIrjX9GUdR
+        XXse7TN2lDIMN8ad5LaHyl7BYjaz2bmR35udA8JRXZdMptJTDanX3n6qYIVmAVN5qmUUFXpauYHGC
+        f1ZTaBNTY8GC97KaTNgzovFFoBfGlDCzFCFj05oCWKWuxi4WVyjB60kXPxFb4wn3WLpQxeAeMdHyJ
+        qk/hKFZg==;
+Received: from [189.59.31.158] (port=33088 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jsAB5-004Abs-6n; Sun, 05 Jul 2020 16:19:51 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v1] arm64: dts: actions: Fix smp Bringing up secondary CPUs
+Date:   Sun,  5 Jul 2020 16:19:44 -0300
+Message-Id: <20200705191944.404933-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Message-ID: <159397824429.4006.6604251447325788449.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 189.59.31.158
+X-Source-L: No
+X-Exim-ID: 1jsAB5-004Abs-6n
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [189.59.31.158]:33088
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 2
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Change the enable-method to fix the failed to boot errors:
 
-Commit-ID:     a4c0e91d1d65bc58f928b80ed824e10e165da22c
-Gitweb:        https://git.kernel.org/tip/a4c0e91d1d65bc58f928b80ed824e10e165da22c
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Sun, 05 Jul 2020 21:33:11 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 05 Jul 2020 21:39:23 +02:00
+[    0.040330] smp: Bringing up secondary CPUs ...
+[    0.040683] psci: failed to boot CPU1 (-22)
+[    0.040691] CPU1: failed to boot: -22
+[    0.041062] psci: failed to boot CPU2 (-22)
+[    0.041071] CPU2: failed to boot: -22
+[    0.041408] psci: failed to boot CPU3 (-22)
+[    0.041417] CPU3: failed to boot: -22
+[    0.041443] smp: Brought up 1 node, 1 CPU
+[    0.041451] SMP: Total of 1 processors activated.
 
-x86/entry/32: Fix XEN_PV build dependency
+Tested on Caninos Labrador v3 based on Actions Semi S700.
 
-xenpv_exc_nmi() and xenpv_exc_debug() are only defined on 64-bit kernels,
-but they snuck into the 32-bit build via <asm/identry.h>, causing the link
-to fail:
-
-  ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_nmi':
-  (.entry.text+0x817): undefined reference to `xenpv_exc_nmi'
-
-  ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_debug':
-  (.entry.text+0x827): undefined reference to `xenpv_exc_debug'
-
-Only use them on 64-bit kernels.
-
-Fixes: f41f0824224e: ("x86/entry/xen: Route #DB correctly on Xen PV")
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
- arch/x86/include/asm/idtentry.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index eeac6dc..f3d7083 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -553,7 +553,7 @@ DECLARE_IDTENTRY_RAW(X86_TRAP_MC,	exc_machine_check);
- 
- /* NMI */
- DECLARE_IDTENTRY_NMI(X86_TRAP_NMI,	exc_nmi);
--#ifdef CONFIG_XEN_PV
-+#if defined(CONFIG_XEN_PV) && defined(CONFIG_X86_64)
- DECLARE_IDTENTRY_RAW(X86_TRAP_NMI,	xenpv_exc_nmi);
- #endif
- 
-@@ -563,7 +563,7 @@ DECLARE_IDTENTRY_DEBUG(X86_TRAP_DB,	exc_debug);
- #else
- DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	exc_debug);
- #endif
--#ifdef CONFIG_XEN_PV
-+#if defined(CONFIG_XEN_PV) && defined(CONFIG_X86_64)
- DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	xenpv_exc_debug);
- #endif
- 
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2006ad5424fa..b28dbbcad27b 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -14,37 +14,50 @@ / {
+ 	#size-cells = <2>;
+
+ 	cpus {
+-		#address-cells = <2>;
++		#address-cells = <1>;
+ 		#size-cells = <0>;
+-
++
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			reg = <0x0 0x0>;
+-			enable-method = "psci";
++			reg = <0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x1f000020>;
++			next-level-cache = <&L2>;
+ 		};
+
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			reg = <0x0 0x1>;
+-			enable-method = "psci";
++			reg = <0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x1f000020>;
++			next-level-cache = <&L2>;
+ 		};
+
+ 		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			reg = <0x0 0x2>;
+-			enable-method = "psci";
++			reg = <0x2>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x1f000020>;
++			next-level-cache = <&L2>;
+ 		};
+
+ 		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			reg = <0x0 0x3>;
+-			enable-method = "psci";
++			reg = <0x3>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x1f000020>;
++			next-level-cache = <&L2>;
+ 		};
+ 	};
++
++	L2: l2-cache {
++		compatible = "cache";
++		cache-level = <2>;
++	};
+
+ 	reserved-memory {
+ 		#address-cells = <2>;
+--
+2.27.0
+
