@@ -2,138 +2,103 @@ Return-Path: <SRS0=6raZ=AQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA766C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D587E2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F3820874
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jul 2020 11:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgGELWY (ORCPT
+        id S1726851AbgGELYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 07:22:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5810 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgGELWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 07:22:24 -0400
-IronPort-SDR: Fr9/Hh/f27CA0FiQphjXSHSi9ij4ELykWDuPannUyNZVjcilOKbD3okeBFpJEvH0x1Qi2mKjw/
- 983XSuSkUjzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9672"; a="126903218"
-X-IronPort-AV: E=Sophos;i="5.75,314,1589266800"; 
-   d="scan'208";a="126903218"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 04:22:23 -0700
-IronPort-SDR: T+eWFcBHP4OcUpfVbhbMXRb2QAq2qO5CtAgSKyoebURqx0EUJ5ecbJ/n4rMlT0LE01cYz0ZGzN
- YZ1kq+E43NLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,314,1589266800"; 
-   d="scan'208";a="456381298"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2020 04:22:21 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1js2j0-0007gG-M7; Sun, 05 Jul 2020 14:22:22 +0300
-Date:   Sun, 5 Jul 2020 14:22:22 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH] tty: serial: meson_uart: Init port lock early
-Message-ID: <20200705112222.GO3703480@smile.fi.intel.com>
-References: <20200705092736.1030598-1-maz@kernel.org>
- <CAHp75VfFNO=oqHX9EeNdVgcQUfu7RBr6SDTWi3XF4gSQNjqzUw@mail.gmail.com>
- <66dcb907f3b9c5413cebe14e0bec00a4@kernel.org>
+        Sun, 5 Jul 2020 07:24:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36334 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbgGELYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:24:20 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 72so29692648otc.3;
+        Sun, 05 Jul 2020 04:24:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HxueHSFVe1aY1SfjGzwH+5B9lPYaHFHBKRhJv4KWryk=;
+        b=nCWku/S1kkUEpt6XI/Vm3rAtbrZw+4HlOldVW6VCujhqHnbBLmpH3U77+YCRkbH278
+         hCZ4MjxAEKlFbrBrOnaaQ5oXD9ZNM7C6534DOdvRP/jNl3EqozlXI16+pOfQGuHZugVN
+         SIKe+ZNfrJ+zII4aGBcu6plOEPj2BWIKxCKRrmoDKRmqMxwmCUTjoqjdiLKTtRIgFnbw
+         yUWseV2Dr2QtoQHuOTi4Y9ahC8t5M1Y/niPPwFFRLzQmLYMzZ1syuPnFFspmz39exobB
+         58nedWlJIBgTfs77UQATqydRDWtw4X+H54k3hDNq4ce86DiCfONvURO3IXtnJQSiT/t4
+         z5jA==
+X-Gm-Message-State: AOAM530acvyzhicDfyPktu6HuKAVRB+MBQtSEwv9VN5PpmJbqjNq6TvF
+        a31I9U9pBnOpQSJcrH7ZjUUHbIFJ2yX6EvjNdBI=
+X-Google-Smtp-Source: ABdhPJy/L7XGfZyHJsgsdBjJrruteRX+ylOfRwuY53cd1zwMZL1gYan2bpX+i/exMvPsL3QjXVT37Dd41cZNOTtRE/o=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr25172162otp.250.1593948259060;
+ Sun, 05 Jul 2020 04:24:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66dcb907f3b9c5413cebe14e0bec00a4@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200704140250.423345-1-gregkh@linuxfoundation.org>
+ <20200704140250.423345-4-gregkh@linuxfoundation.org> <CAMuHMdXck1u+Djv1xOvRA7riMN4m3qp8o4zmXVvqrC1S+0fifA@mail.gmail.com>
+ <20200705065514.GA34145@kroah.com>
+In-Reply-To: <20200705065514.GA34145@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 5 Jul 2020 13:24:07 +0200
+Message-ID: <CAMuHMdVWebaq24=cC_LYkxuLMVrSRW3FDohE2CiueUWC15Tm7A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] selftests: add readfile(2) selftests
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-man@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 11:28:56AM +0100, Marc Zyngier wrote:
-> On 2020-07-05 11:07, Andy Shevchenko wrote:
-> > On Sun, Jul 5, 2020 at 12:32 PM Marc Zyngier <maz@kernel.org> wrote:
-> > > 
-> > > The meson UART driver triggers a lockdep splat at boot time, due
-> > > to the new expectation that the driver has to initialize the
-> > > per-port spinlock itself.
-> > > 
-> > > It remains unclear why a double initialization of the port
-> > > spinlock is a desirable outcome, but in the meantime let's
-> > > fix the splat.
-> > > 
-> > 
-> > Thanks!
-> > 
-> > Can you test patch from [1] if it helps and doesn't break anything in
-> > your case?
-> > 
-> > [1]:
-> > https://lore.kernel.org/linux-serial/20200217114016.49856-1-andriy.shevchenko@linux.intel.com/T/#m9255e2a7474b160e66c7060fca5323ca3df49cfd
-> 
-> On its own, this patch doesn't seem to cure the issue (and it
-> adds a compile-time warning due to unused flags).
+Hi Greg,
 
-Ah, sorry, I didn't compile it.
-And after second though I think we simple need to initialise spin lock there.
-Can you try below (compile-tested only):
+On Sun, Jul 5, 2020 at 8:55 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Sat, Jul 04, 2020 at 08:38:26PM +0200, Geert Uytterhoeven wrote:
+> > On Sat, Jul 4, 2020 at 4:05 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > Test the functionality of readfile(2) in various ways.
+> > >
+> > > Also provide a simple speed test program to benchmark using readfile()
+> > > instead of using open()/read()/close().
+> > >
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-From ed4c882e7dc3fdfcea706ada0678c060c36163b3 Mon Sep 17 00:00:00 2001
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date: Sat, 4 Jul 2020 19:30:39 +0300
-Subject: [PATCH 1/1] serial: core: Initialise spin lock before use in
- uart_configure_port()
+> > > --- /dev/null
+> > > +++ b/tools/testing/selftests/readfile/readfile.c
+> >
+> > > +static void readfile(const char *filename)
+> > > +{
+> > > +//     int root_fd;
+> >
+> > ???
+>
+> Ugh, sorry about that, I obviously didn't clean up my last tests from
+> this file, thanks for catching that.
 
-In case of the port to be used as a console we must initialise
-a spin lock before use.
+Reading about seq_file behavior, did the commented-out test for
+"/sys/kernel/debug/usb/devices" work?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/serial_core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 3cc183acf7ba..a81b4900eb60 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2371,6 +2371,13 @@ uart_configure_port(struct uart_driver *drv, struct uart_state *state,
- 		/* Power up port for set_mctrl() */
- 		uart_change_pm(state, UART_PM_STATE_ON);
- 
-+		/*
-+		 * If this driver supports console, and it hasn't been
-+		 * successfully registered yet, initialise spin lock for it.
-+		 */
-+		if (port->cons && !(port->cons->flags & CON_ENABLED))
-+			spin_lock_init(&port->lock);
-+
- 		/*
- 		 * Ensure that the modem control lines are de-activated.
- 		 * keep the DTR setting that is set in uart_set_options()
--- 
-2.27.0
-
-
-
-> Or did you mean to test it in complement of my patch?
-
-No, the idea to avoid "fixing" driver as you rightfully noticed a double init issue.
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
