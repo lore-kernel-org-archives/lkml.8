@@ -2,202 +2,139 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1250BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103202070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFBD2070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3xoiq+q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NhmRIhcs";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CI1xBdO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgGFODP (ORCPT
+        id S1729349AbgGFODZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgGFODO (ORCPT
+        Mon, 6 Jul 2020 10:03:25 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:25794 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729140AbgGFODY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:03:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090B1C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:03:14 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so41086457wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:03:13 -0700 (PDT)
+        Mon, 6 Jul 2020 10:03:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594044203; x=1625580203;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
+  b=NhmRIhcsrZKQuoFc4000QozYqxO1pGHIkkPUFTadhKTe1l/HHJJy6JWQ
+   YfgyxZ5CfEFkHSJhEIAMO9rLsvxhiSndD0vT8Vf+GcI7VdFT5QbhpXS47
+   oyQ5IU5HWIfLWhpDl3DjDlOEcVDGPAXZb6rPic6lpm84zD7OKIwktiwJx
+   uSXhuXVfSq/zw7/By3UmBzX2wHeKteUqCgKEwTW3sh5Gblu4L9nvqZ0OE
+   qnJKkPqRG5ZbfNq7gDm0hylZB+ubYiCtBAcYttLSLEqSbS632mKn+hOUd
+   kCNHXu4u6L5wKQD0b7x3bJDI/YybowFLJKVwrm9dYOuScppM0NgGs/F3V
+   A==;
+IronPort-SDR: FMP4oi3EJnmEit2egD2iS6SB3flIoi8mt/6PY8pmsR5mum1s7Q+JjHOiX2Sw4/DwFpKmFEMvKG
+ C4wL64+GWBexL+SDi/KdZkDSbmzt0EXx9UkxqH3XfICh3kv0pEijvP3m07Be3axox8ISWAofcw
+ e1QDMGkZm0HmIXK+2VpQCy+vdnNXCcd7c1i3n0HEq4SMK134p2XNcEg46GgAIg8MnaKc6FGXwr
+ fEW0qer/mkVG1tM4uAd0VvdmIe9EUz6771QIHru6jEjJEE/FbXjHznTYy9MKCtjuw4OEqU3pMw
+ +Gk=
+X-IronPort-AV: E=Sophos;i="5.75,320,1589212800"; 
+   d="scan'208";a="141737316"
+Received: from mail-bn8nam12lp2171.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.171])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Jul 2020 22:03:21 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yq6IiijucBXvIAzYxjz6W9WluJ2YPN6Xfgsp4mFxxXk7l3lnmM1RPpKi17MQ9a+UZmA2+6An8RW0PbH+s56FIQ/+90BeCkTcF0EnszQHWKZryZCPqfPc3IM+3TUK0MBYyic1hs0VdwJ4i7dxMVctQizGLAwv/pkjuljiWcYr8iOKzAqxAZ2Nn6XLiWpeSjAcGSE8n41h7HYPn7b87wYtv6O8GotsGkCUyTDoI08GY71eKfrF5+e9I2eUYyRtqRI2LnccwmH9KdXXGgGxluBSHxr6TBrEaN3X1rU0znkgaNWeKp1HaLk6i9rSQCJ79YqjHuEsXt5j94MAdOM+SEENcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
+ b=odQUvLb4zJa2yDfZ3bzRTguYg58C2cl4KRI6UA9PZ4FIUZPt1BpF4tfu3QZcdH4s5BIjYVGPEQED9VnjSxgsX/Fp6peiHpL4fgmvhmr8WHnaChIvncPOxusw5T4i0IMNMoK3/38NOuLaivQfvGQhA3QvUjrGh3jwICq3fSxKd84TpbpPLegPXEVGvwBy3GvUFSqZMrSLcYASajS71jcvNUl18Gl/qd7+Ex/TeNdxWlioNbzotJiNPe9DiQKS76gKvEGyiER4AYizvHbPO2lzy2QfuJtvzYUkwiaOXXkTH5DhkBb9QMpGZ4t4k1nKEBB1ZUozqs/DD6KRhdRRi1dVXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nad+VY/j5iEXkAxdg9jcDqAzwL0ivX/3S/z7mI1R1lg=;
-        b=H3xoiq+qdM5WwR4qGVP6WE1YYCIu6JZgA8mjK9Cfx0jpjkP1BCj9S2TATHmYF2qBJC
-         YejQbg93rkIj8F1Hkj7tvcUTUytiKAsMLLNd8wNX529mZh4WFqtmtE/ScbjsmQuKZZ0t
-         ckJlpK+EYMgLQwV36Ui4oYPDBz0kDY2dzKNJwLVP3c4TFArM+xulZl8H6FXAmSv1eYPb
-         P8acfr5PJXY5xNvh0gaElMk0mbZxXbnDg64JMFu+eoihKmL5B6giUtH0jagvGjY6EvDX
-         NNAVVkFBSEItS0lkFIOwpXz8mWC/4IR85oq0XUFEbe7jWcvvmgl0czy9iHmSLlNQImeU
-         HyZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Nad+VY/j5iEXkAxdg9jcDqAzwL0ivX/3S/z7mI1R1lg=;
-        b=PPD085wa3rRGluk5zrCVd4CzFXuqHy2W3et/bGlEi1FA8kOjdh34ohz0pitHSNqWFZ
-         c43fmRdmFuVsG5Aid9BzcxQb4zbNjonWtT+TqXZf/9W8mwJotnG1YCoFArUASnZV8r1+
-         owUt3zP783rLqZUeFmXBn5XomfKLO6dWdkjFF64dMsVV9cBz/xS16h2MQyNX13fUKUxJ
-         6A4wQPKR4X6tQiyUGvrourfD1mx3HyrZ8gH2Y0oy946E1TNGkPY09nwW+8la6koJbMGB
-         MRO0LqnTT52G4YzLGztwUsURnDIadW25UohyFOxB/Jhpzg4uUXesOgyM4gUll5BtkGSw
-         eF2w==
-X-Gm-Message-State: AOAM532GNGpjhSJmZnXn4mjTH5Fz8I5IrVjCV3ykm1hYnEX6u2uwq7/2
-        /GAV+xyJbelLf2ADbwUpgbgmTMMjfjY=
-X-Google-Smtp-Source: ABdhPJzv1KW6maN8Wt66i97bM4RTlsO/DlOMIKawin2Tu3oz3aljlhIEsVY49AvBOoeCwdGmJkgIEQ==
-X-Received: by 2002:a5d:5341:: with SMTP id t1mr51958234wrv.207.1594044192742;
-        Mon, 06 Jul 2020 07:03:12 -0700 (PDT)
-Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id f12sm24951619wrw.53.2020.07.06.07.03.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 07:03:12 -0700 (PDT)
-Subject: Re: [PATCH v2 1/8] soc: mediatek: cmdq: add address shift in jump
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, HS Liao <hs.liao@mediatek.com>
-References: <1593931715-32761-1-git-send-email-dennis-yc.hsieh@mediatek.com>
- <1593931715-32761-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <31a41c40-10f5-260d-cebd-7cc2a432095d@gmail.com>
-Date:   Mon, 6 Jul 2020 16:03:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1593931715-32761-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
+ b=CI1xBdO+ntNnI7bFmCGDHTlwd8EMRJypYtr80XVKmI2iP8IKEYFTC9xkt0Z+4GnCBPahxcQ3Gk/48vhyNA8OHFd77ZyJkU/ZcJkVJT5PhcoUYI+57N8h1ue+4lyWvUC5K1WZed6FKEsH7747gLU1OEac3VVBmFRamdIQZVXS3Kk=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4269.namprd04.prod.outlook.com (2603:10b6:805:2d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Mon, 6 Jul
+ 2020 14:03:19 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 14:03:19 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: ufs: change upiu_flags to be u8
+Thread-Topic: [PATCH] scsi: ufs: change upiu_flags to be u8
+Thread-Index: AQHWU5KOk90XS+bzbEu6wOOwVZOt26j6lPUQ
+Date:   Mon, 6 Jul 2020 14:03:18 +0000
+Message-ID: <SN6PR04MB4640DDD8167D2F817DD4D4B8FC690@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200706123936.24799-1-huobean@gmail.com>
+In-Reply-To: <20200706123936.24799-1-huobean@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2f1152ee-a0b4-4bcc-d20a-08d821b5561e
+x-ms-traffictypediagnostic: SN6PR04MB4269:
+x-microsoft-antispam-prvs: <SN6PR04MB42690D09E26D1F479132A007FC690@SN6PR04MB4269.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 04569283F9
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zEahlyy9NoVkBVQaLRsvi9XwxejFHS541R4aXAGbMKgjKwiJFvb1p6BX7Iobvm9ouSB4OoTqlGw/V3FFZM8B9qK6Vbc/VczhkJHt1R2PJKIG7FmnhneIyfpUqWGQcYC64g3o4Smj6Tc0/n6P+eBdTbyPFWguZf8rw/uYlrtz+NLLx5qvrVnHv9kDk3k+1w9Jjky+oO0vHj7e5PiwGkOPwGIehfXN552NIQnEoEGuu4+WN5hHHGar6jywL8EVeS99BAO7LvxtBYQ3d4NOQVf72+F408f3tExwXzrXGMB8WvnMnEh/GbXLyGGgLBbDsU5aW1YZwTrWo4FzMZPeLJiDVa/l9sINlbYfgcGl18TIKPLg35GDGC/vTAmdFuDqsa/V
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(54906003)(7696005)(8936002)(33656002)(186003)(5660300002)(478600001)(76116006)(66946007)(64756008)(6506007)(26005)(9686003)(55016002)(66446008)(52536014)(66476007)(66556008)(8676002)(2906002)(4326008)(316002)(7416002)(86362001)(110136005)(558084003)(71200400001)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: se7X20Quv6C0eW1L9KQ9HBdfHzDkKedIAESu5ulCVmeLvcH7Aq9nx86AUrzW4ClWSEHhUgiTIC1LrQfDUm1yQq7sGvW5Gczd182qZt6GQnwIHfy5jiRhK2utWARKv/FbKEZGF07V82w1DWZFDyoF2EO7o9vsRSj6O5nyeKgGr8Ri1yzRojgKNP5V3Z9APAPGGmzLNvIcfVlTonvcme8QEVmutkAgYWG35tXxoQRLjkDyQQSmNXt6l3Di90cyFQO+2Zo3p5nAk2oX0VdzKu+8YJVcGA3ltgikhSd4ZMPFw+NcZqxUdw1mB6+ftI0Oy3DW+M73Qr0iXxpebDm0p+wRxnopoZgTsJXgkzD+5jLQtdBvCe52rmcXK8DmQotVLMwNXRn+610jZTTLNmRO/M3VgoxwREx1rwVfYQr4tLriF7PlUTBvEQLosBJiwS/t1LfKwZCOG7AXEYyhYMxHl9AWP9qj5I7/m5wIbYFTGCwOOYU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f1152ee-a0b4-4bcc-d20a-08d821b5561e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 14:03:18.9433
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rZwrObM/Iot2xRu+BTWYIWIHK3GnivkOkG4Snq8mdx18+vPgHgmwxFbiAGon7TA6LwU7Tfv3QRk3FczEfsMwtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4269
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/07/2020 08:48, Dennis YC Hsieh wrote:
-> Add address shift when compose jump instruction
-> to compatible with 35bit format.
-> 
-> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-
-You are missing Bibby's Reviewed-by. Please honour the effort reviewers do by
-adding the appropriate tags.
-
-Please double check the series and resend with all tags added.
-
-Also, it would be good if you could provide a change log. That makes it easier
-for the maintainer to see which statements you addressed.
-
-Thanks,
-Matthias
-
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index dc644cfb6419..9faf78fbed3a 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -329,7 +329,8 @@ int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  
->  	/* JUMP to end */
->  	inst.op = CMDQ_CODE_JUMP;
-> -	inst.value = CMDQ_JUMP_PASS;
-> +	inst.value = CMDQ_JUMP_PASS >>
-> +		cmdq_get_shift_pa(((struct cmdq_client *)pkt->cl)->chan);
->  	err = cmdq_pkt_append_command(pkt, inst);
->  
->  	return err;
-> 
+>=20
+>=20
+> From: Bean Huo <beanhuo@micron.com>
+>=20
+> According to the UFS Spec, the Flags in the UPIU is one-byte length, not
+> 4 bytes. change it to be u8.
+>=20
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
