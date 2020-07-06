@@ -2,140 +2,98 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD12C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE4220739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594023358;
-	bh=6YmTM1KwwDkiZJp3aHQpt/yeMmff1B/qvXle8AM26Dg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aLg7/ue8EAUpQ+aCNiB8DoyzUulL3O43od1fvJ3rghcN5ew0vhTkK6tJ49FMaQA3t
-	 cU0yQtWFW5cdwWJKle0LgHLV2nK3F+aYQghevonz8pk7lzQjKHACeQ8KYHIyOTtBdn
-	 c0M4r59/IMHhv+I4X7XUuAsuepKWUl59GX/NU08c=
+	by mail.kernel.org (Postfix) with ESMTP id A8B3320724
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:22:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amobd3Uu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGFIP5 (ORCPT
+        id S1728300AbgGFIWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgGFIP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:15:56 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB7EC20739;
-        Mon,  6 Jul 2020 08:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594023355;
-        bh=6YmTM1KwwDkiZJp3aHQpt/yeMmff1B/qvXle8AM26Dg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iWAHvxfF8nbyMfjcdC2lpaaAjlF1hXSXt6DDyrRcFoG7auqNjMWo34j5rj6GU/Zoq
-         mwt7c8TF0D6jU2ZdeicAVi4zrlk8MzdOzD84X5ERAFOZ0IBj6YkhzBrJ8G2iBLRRvO
-         EXsv1eX2V3Yk3U/BbAp4tjkhZcVbur3yd2gy0qb4=
-Date:   Mon, 6 Jul 2020 09:15:51 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: ptrace: seccomp: Return value when the call was already invalid
-Message-ID: <20200706081550.GA23032@willie-the-truck>
-References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
- <20200703083914.GA18516@willie-the-truck>
- <202007030815.744AAB35D@keescook>
- <20200703154426.GA19406@willie-the-truck>
- <202007030851.D11F1EFA@keescook>
- <20200704123355.GA21185@willie-the-truck>
- <202007042132.DAFA2C2@keescook>
+        Mon, 6 Jul 2020 04:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgGFIWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 04:22:52 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB44C061794;
+        Mon,  6 Jul 2020 01:22:52 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id v1so20130831vsb.10;
+        Mon, 06 Jul 2020 01:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TcfPy5BeGetjZcZtg49AHnHlYlMY923EHh58Yx8xPwY=;
+        b=amobd3UufJOQ2LwSgoh8z8cDtk2XkOXjE3WqYKXlXU36cNs4cSbMFborVOQpGRVwAx
+         UstxxLR0+FD6IcJZ8l6ARjrlVJKXc5AHqiYulfJW1p6MSM5cx0J6NoiWcKst22Ta5ANR
+         MZY9wDpT10XbkRmiAJ+QcOPhuc/E7AtjN2+4znh8+84CkJMxlscFmTR5AUBIP/2YGCRG
+         c9FfHfgVEwlI6mvrctkbwD///f2K0JDmzXdg5HAhjwy18Z47ROl3D3U5EIij5TQwBI62
+         l1B+NzZd3fdW9JsJB3L0QG6jkjeMZV7Ea55FCnBgMzHpZviXx93P3VvAqSooUI3b10jG
+         BPPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TcfPy5BeGetjZcZtg49AHnHlYlMY923EHh58Yx8xPwY=;
+        b=nMBgMP0vV71ajyszCOnj9p/G2CdulgYIIpDebqF7lyfJ0qwmilmn5RVVWpRBQxlNka
+         +jEZLymdOgPidQiELy1tkuSgW3HxS26B7cCZ2AiAF92GIUlrGqiSxRe78xNY+vpHQRNy
+         SOdimXhncGkKACtDsxgcixLWJ71/U9S4+ya4dXyzz5VBYS9wHgHjwuktrQkdV0cNs3sZ
+         m2qtXuGBt27lj1rC0K38q+5ev3Bqq6o/7aNO1s0Kv/MUTh02HvX35fhQapJTs8GTe+OG
+         wFn9SE9MzfB588V3HxGJKWos81E8TAUyfhDoJrgR3S9+UfZU+fmeU1chbqqSq7T3EiKc
+         soaw==
+X-Gm-Message-State: AOAM533IoVZ3c1gL86A7DGPCj5WmoZcTGDhTzpwYr6ov4StzlGKdYnEl
+        VSYyuIDGPbGY7hZ53xQPCJabZxX/IClKL2V/p6Q=
+X-Google-Smtp-Source: ABdhPJwgvZ4oHoUCtn9VtIbwa5Hbr8RpwTI0uj+TB7B0R+ZfDc8KZgjpgNFeatpMagMcoQIWxeV5YUSEo9iZoI6aqhU=
+X-Received: by 2002:a67:cb03:: with SMTP id b3mr35827339vsl.214.1594023771334;
+ Mon, 06 Jul 2020 01:22:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007042132.DAFA2C2@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20200627125605epcas1p175ba4ecfbdea3426cc7b0a8fc1750cd0@epcas1p1.samsung.com>
+ <20200627125509.142393-1-qkrwngud825@gmail.com> <003801d6502f$f40101c0$dc030540$@samsung.com>
+In-Reply-To: <003801d6502f$f40101c0$dc030540$@samsung.com>
+From:   Ju Hyung Park <qkrwngud825@gmail.com>
+Date:   Mon, 6 Jul 2020 17:22:40 +0900
+Message-ID: <CAD14+f0QUgXbDY8vK4HHKcWAh90Jp8DCMb-SRoFmmGrZ3cBhdw@mail.gmail.com>
+Subject: Re: [PATCH] exfat: implement "quiet" option for setattr
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     Sungjong Seo <sj1557.seo@samsung.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 09:56:50PM -0700, Kees Cook wrote:
-> On Sat, Jul 04, 2020 at 01:33:56PM +0100, Will Deacon wrote:
-> > On Fri, Jul 03, 2020 at 08:52:05AM -0700, Kees Cook wrote:
-> > > On Fri, Jul 03, 2020 at 04:44:27PM +0100, Will Deacon wrote:
-> > > > On Fri, Jul 03, 2020 at 08:17:19AM -0700, Kees Cook wrote:
-> > > > > On Fri, Jul 03, 2020 at 09:39:14AM +0100, Will Deacon wrote:
-> > > > > > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> > > > > > index 5f5b868292f5..a13661f44818 100644
-> > > > > > --- a/arch/arm64/kernel/syscall.c
-> > > > > > +++ b/arch/arm64/kernel/syscall.c
-> > > > > > @@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
-> > > > > >  	user_exit();
-> > > > > >  
-> > > > > >  	if (has_syscall_work(flags)) {
-> > > > > > -		/* set default errno for user-issued syscall(-1) */
-> > > > > > -		if (scno == NO_SYSCALL)
-> > > > > > -			regs->regs[0] = -ENOSYS;
-> > > > > > -		scno = syscall_trace_enter(regs);
-> > > > > > -		if (scno == NO_SYSCALL)
-> > > > > > +		if (syscall_trace_enter(regs))
-> > > > > >  			goto trace_exit;
-> > > > > > +
-> > > > > > +		scno = regs->syscallno;
-> > > > > >  	}
-> > > > > >  
-> > > > > >  	invoke_syscall(regs, scno, sc_nr, syscall_table);
-> > > > > 
-> > > > > What effect do either of these patches have on the existing seccomp
-> > > > > selftests: tools/testing/selftests/seccomp/seccomp_bpf ?
-> > > > 
-> > > > Tests! Thanks, I'll have a look.
-> > > 
-> > > Thanks!
-> > > 
-> > > (And either way, that this behavioral difference went unnoticed means we
-> > > need to add a test to the selftests for this patch.)
-> > 
-> > Unsurprisingly, I don't think the tests go near this. I get 75/77 passes
-> > on arm64 defconfig with or without these changes.
-> 
-> (What doesn't pass for you? I tried to go find kernelci.org test output,
-> but it doesn't appear to actually run selftests yet?)
-> 
-> Anyway, good that the test output doesn't change, bad that seccomp has
-> missed a corner of this architecture interface. (i.e. the entire
-> TRACE_syscall fixture is dedicated to exercising the changing/skipping
-> interface, but I see now that it doesn't at all exercise any area of
-> ENOSYS results.)
-> 
-> > We could add a test, but then we'd have to agree on what it's supposed to
-> > be doing ;)
-> 
-> Well, if you look at change_syscall() in seccomp_bpf.c (once you stop
-> screaming) you'll likely share my desire to have more things that are
-> common across architectures. ;) So, to that end, yes, please, let's
-> define what we'd like to see, and then build out the (likely wildly
-> different per-architecture expectations). If I read this thread
-> correctly, we need to test:
-> 
-> 	syscall(-1), direct,  returns ENOSYS
-> 	syscall(-10), direct, returns ENOSYS
-> 	syscall(-1), SECCOMP_RET_TRACE+PTRACE_CONT, returns ENOSYS
-> 	syscall(-10), SECCOMP_RET_TRACE+PTRACE_CONT, returns ENOSYS
-> 	syscall(-1), ptrace+PTRACE_SYSCALL, returns ENOSYS
-> 	syscall(-10), ptrace+PTRACE_SYSCALL, returns ENOSYS
-> 
-> do we need to double-check that registers before/after are otherwise
-> unchanged too? (I *think* just looking at syscall return should be
-> sufficient to catch the visible results.)
+Hi Namjae.
 
-There's also the case where the tracer sets the system call to -1 to skip
-it.
+Looks like I ported this incorrectly from the previous sdFAT base.
 
-Will
+I'll fix, test again and send v2.
+
+Thanks.
+
+On Thu, Jul 2, 2020 at 2:16 PM Namjae Jeon <namjae.jeon@samsung.com> wrote:
+>
+> >
+> >       if (((attr->ia_valid & ATTR_UID) &&
+> >            !uid_eq(attr->ia_uid, sbi->options.fs_uid)) || @@ -322,6 +325,12 @@ int
+> > exfat_setattr(struct dentry *dentry, struct iattr *attr)
+> >               goto out;
+> You should remove goto statement and curly braces here to reach if error condition.
+> >       }
+> >
+> > +     if (error) {
+> > +             if (sbi->options.quiet)
+> > +                     error = 0;
+> > +             goto out;
+> > +     }
+>
