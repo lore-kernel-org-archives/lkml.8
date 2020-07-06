@@ -2,187 +2,91 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741F920702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNOnGohp"
+	by mail.kernel.org (Postfix) with ESMTP id 24E6120720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgGFQ5Q (ORCPT
+        id S1729659AbgGFQ5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgGFQ5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:57:14 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CA7C061755;
-        Mon,  6 Jul 2020 09:57:14 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so41382083wmf.0;
-        Mon, 06 Jul 2020 09:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition;
-        bh=R/YjKM4rOkF0piUgbg1Z0k3ov8aHdcptlyDHTu9pr18=;
-        b=JNOnGohp5rk/Iys3k3bb2ZsZnXn6s/eIdIduV7h3TwG+vH+MomPUI2HAc2MrRfGM+2
-         hQRLCDZj2xZIoh+BggLnKky0pu43rZO3qVp7BbQovs61n/EMPRGEr6KbnrmjJ+Nni7Ha
-         EEUKEN1UBQzDSoVM23S5b2TV9Ed3ZZorMbhB2B3YS41luFIhtkyPj8TvW4Lq/bxhwNic
-         tO1NsjbskbfU3LePP2U3iGxtor9XdI8WYnL00dUti3Ed0VSoqvq1RPgloVzKnHqNOowp
-         3EtgyGgV1gS3qxPfg1C7mi5QH2o6M5L+AJP+lRV9DdfHUu1WALLQiEswc3M6SaCUtp+M
-         CV6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition;
-        bh=R/YjKM4rOkF0piUgbg1Z0k3ov8aHdcptlyDHTu9pr18=;
-        b=oYF/kGCTJEpampG+0IWnkO54Ey4eLkWXtEUhtM5DNX5z5wrGN0ONJtAUsAsLfJEM3I
-         vM86/c1UuuyP8Tx0TMeH77rA6E3NdmWlGJHE8EML8b03IkuPue6OzYWYZSewocp0R2Ty
-         wgcGn69heRytlX9aBopvfW6D6qVO2kkEYu+TFmptjDcMG+DyNnMHzo6UHJJ2zpQ76ZVM
-         aBB9Cwh+WxxD/KY5MvcAgfM0TMaC3vbcGKXUuUCkr5vystusPxGTrNd5Ug5j9eCnCABz
-         mOtC9r2edvl2BK1LmmSQ/epp9Vb/hpPCAMih/XadfRiHphWY7u6XSWCfMkzMEETUW5Nl
-         /9xA==
-X-Gm-Message-State: AOAM533qNz1FBV/eMPXG3EXaUaB7/h20dKo31uAp6WP17ZK2C6zbm9QM
-        oyNo05FoCI8/wtup+qm8WBicUsZVTvRdVA==
-X-Google-Smtp-Source: ABdhPJwCAOnRf+CcFCx6YEfpYFYNa2AuSlPzTN/p/Y4w/uqIVp5wIHDENeMU9hop8O2zcT/S7VHPww==
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr112960wmh.166.1594054632753;
-        Mon, 06 Jul 2020 09:57:12 -0700 (PDT)
-Received: from localhost ([95.236.72.230])
-        by smtp.gmail.com with ESMTPSA id v6sm12360079wrr.85.2020.07.06.09.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 09:57:11 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 18:57:10 +0200
-From:   Lorenzo Fontana <fontanalorenz@gmail.com>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: [PATCH] bpf: lsm: Disable or enable BPF LSM at boot time
-Message-ID: <20200706165710.GA208695@gallifrey>
-Mail-Followup-To: Lorenzo Fontana <fontanalorenz@gmail.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
+        Mon, 6 Jul 2020 12:57:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:56196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729651AbgGFQ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:57:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D43B1FB;
+        Mon,  6 Jul 2020 09:57:18 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.13.106])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D41DA3F68F;
+        Mon,  6 Jul 2020 09:57:15 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 17:57:12 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] arm64: arch_timer: Disable the compat vdso for
+ cores affected by ARM64_WORKAROUND_1418040
+Message-ID: <20200706165712.GB61340@C02TD0UTHF1T.local>
+References: <20200706163802.1836732-1-maz@kernel.org>
+ <20200706163802.1836732-4-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200706163802.1836732-4-maz@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option adds a kernel parameter 'bpf_lsm',
-which allows the BPF LSM to be disabled at boot.
-The purpose of this option is to allow a single kernel
-image to be distributed with the BPF LSM built in,
-but not necessarily enabled.
+On Mon, Jul 06, 2020 at 05:38:01PM +0100, Marc Zyngier wrote:
+> ARM64_WORKAROUND_1418040 requires that AArch32 EL0 accesses to
+> the virtual counter register are trapped and emulated by the kernel.
+> This makes the vdso pretty pointless, and in some cases livelock
+> prone.
+> 
+> Provide a workaround entry that limits the vdso to 64bit tasks.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Signed-off-by: Lorenzo Fontana <fontanalorenz@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  8 ++++++++
- init/Kconfig                                    | 12 ++++++++++++
- security/bpf/hooks.c                            | 16 ++++++++++++++++
- 3 files changed, 36 insertions(+)
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..c0d5955279d7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4575,6 +4575,14 @@
- 			1 -- enable.
- 			Default value is set via kernel config option.
- 
-+	bpf_lsm=	[BPF_LSM] Disable or enable LSM Instrumentation
-+			with BPF at boot time.
-+			Format: { "0" | "1" }
-+			See init/Kconfig help text.
-+			0 -- disable.
-+			1 -- enable.
-+			Default value is 1.
-+
- 	serialnumber	[BUGS=X86-32]
- 
- 	shapers=	[NET]
-diff --git a/init/Kconfig b/init/Kconfig
-index a46aa8f3174d..410547e4342e 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1659,6 +1659,18 @@ config BPF_LSM
- 
- 	  If you are unsure how to answer this question, answer N.
- 
-+config BPF_LSM_BOOTPARAM
-+	bool "LSM Instrumentation with BPF boot parameter"
-+	depends on BPF_LSM
-+	help
-+	  This option adds a kernel parameter 'bpf_lsm', which allows LSM
-+	  instrumentation with BPF to be disabled at boot.
-+	  If this option is selected, the BPF LSM
-+	  functionality can be disabled with bpf_lsm=0 on the kernel
-+	  command line.  The purpose of this option is to allow a single
-+	  kernel image to be distributed with the BPF LSM built in, but not
-+	  necessarily enabled.
-+
- config BPF_SYSCALL
- 	bool "Enable bpf() system call"
- 	select BPF
-diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-index 32d32d485451..6a4b4f63976c 100644
---- a/security/bpf/hooks.c
-+++ b/security/bpf/hooks.c
-@@ -3,9 +3,24 @@
- /*
-  * Copyright (C) 2020 Google LLC.
-  */
-+
-+#include <linux/init.h>
- #include <linux/lsm_hooks.h>
- #include <linux/bpf_lsm.h>
- 
-+int bpf_lsm_enabled_boot __initdata = 1;
-+#ifdef CONFIG_BPF_LSM_BOOTPARAM
-+static int __init bpf_lsm_enabled_setup(char *str)
-+{
-+	unsigned long enabled;
-+
-+	if (!kstrtoul(str, 0, &enabled))
-+		bpf_lsm_enabled_boot = enabled ? 1 : 0;
-+	return 1;
-+}
-+__setup("bpf_lsm=", bpf_lsm_enabled_setup);
-+#endif
-+
- static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {
- 	#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
- 	LSM_HOOK_INIT(NAME, bpf_lsm_##NAME),
-@@ -23,4 +38,5 @@ static int __init bpf_lsm_init(void)
- DEFINE_LSM(bpf) = {
- 	.name = "bpf",
- 	.init = bpf_lsm_init,
-+	.enabled = &bpf_lsm_enabled_boot,
- };
--- 
-2.27.0
+Mark.
 
+> ---
+>  drivers/clocksource/arm_arch_timer.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index a8e4fb429f52..6c3e84180146 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -480,6 +480,14 @@ static const struct arch_timer_erratum_workaround ool_workarounds[] = {
+>  		.set_next_event_virt = erratum_set_next_event_tval_virt,
+>  	},
+>  #endif
+> +#ifdef CONFIG_ARM64_ERRATUM_1418040
+> +	{
+> +		.match_type = ate_match_local_cap_id,
+> +		.id = (void *)ARM64_WORKAROUND_1418040,
+> +		.desc = "ARM erratum 1418040",
+> +		.disable_compat_vdso = true,
+> +	},
+> +#endif
+>  };
+>  
+>  typedef bool (*ate_match_fn_t)(const struct arch_timer_erratum_workaround *,
+> -- 
+> 2.27.0
+> 
