@@ -2,155 +2,92 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB2BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4505B20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="H42dMuI5"
+	by mail.kernel.org (Postfix) with ESMTP id 9E191206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGFUto (ORCPT
+        id S1726839AbgGFUtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:49:44 -0400
-Received: from mail.efficios.com ([167.114.26.124]:56976 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFUto (ORCPT
+        Mon, 6 Jul 2020 16:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgGFUtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:49:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D62442DC9D7;
-        Mon,  6 Jul 2020 16:49:42 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id N1qno2Dkpjte; Mon,  6 Jul 2020 16:49:42 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 683412DCE21;
-        Mon,  6 Jul 2020 16:49:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 683412DCE21
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594068582;
-        bh=60oamRalyK4rKdeEnnnf7iJkqPhAmdQusJlFI420q5k=;
-        h=From:To:Date:Message-Id;
-        b=H42dMuI5Nu/42J0bhGwrdNKkl/BwhzMsRr7OMCof2YOn/ozdaaEj8d8zub60PFxxy
-         rejoJYMu3dy+5MUMT7l9AqtpLdv/36KYGIR5RSUnV0FIJCu1GXbq/H9iSWw5Khigpk
-         sfCbjmRYMyuaI845IwKEXcTbhWevMkj0i26TcDhTLgr4HTe4g41cxcqVgRFGh1jXL2
-         9ka6ugCXOgLXblzQ0rsar4RxAKkKjqJU7Frchk2t1e6HCJtx66sDg4zEMOyQZpS1Zs
-         BWVe6FUw22uqU/PHV9Jn8NjePdFQGljsuN8Bg6iYjm8Uo9eWwov7g4rnzq4M7A6J9s
-         VePDhtDoIDrpg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id EBR4AzEQUwCz; Mon,  6 Jul 2020 16:49:42 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 1C5D52DCDA4;
-        Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>, stable@vger.kernel.org
-Subject: [RFC PATCH for 5.8 1/4] sched: Fix unreliable rseq cpu_id for new tasks
-Date:   Mon,  6 Jul 2020 16:49:10 -0400
-Message-Id: <20200706204913.20347-2-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+        Mon, 6 Jul 2020 16:49:43 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED988C08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:49:42 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B2F76BC140;
+        Mon,  6 Jul 2020 20:49:39 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: IPv*
+To:     David Miller <davem@davemloft.net>
+References: <20200706173850.19304-1-grandmaster@al2klimov.de>
+ <20200706.132319.1942886313658107601.davem@davemloft.net>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <33dfc84d-89ef-c449-2534-a4ba96638ad3@al2klimov.de>
+Date:   Mon, 6 Jul 2020 22:49:39 +0200
+MIME-Version: 1.0
+In-Reply-To: <20200706.132319.1942886313658107601.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While integrating rseq into glibc and replacing glibc's sched_getcpu
-implementation with rseq, glibc's tests discovered an issue with
-incorrect __rseq_abi.cpu_id field value right after the first time
-a newly created process issues sched_setaffinity.
 
-For the records, it triggers after building glibc and running tests, and
-then issuing:
 
-  for x in {1..2000} ; do posix/tst-affinity-static  & done
+Am 06.07.20 um 22:23 schrieb David Miller:
+> From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+> Date: Mon,  6 Jul 2020 19:38:50 +0200
+> 
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If both the HTTP and HTTPS versions
+>>            return 200 OK and serve the same content:
+>>              Replace HTTP with HTTPS.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> 
+> Applied to net-next, thank you very much for doing this. >
+Hi,
 
-and shows up as:
+apropos "doing this": I've stumbled over ...
 
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
+https://lkml.org/lkml/2005/7/11/336
 
-This is caused by the scheduler invoking __set_task_cpu() directly from
-sched_fork() and wake_up_new_task(), thus bypassing rseq_migrate() which
-is done by set_task_cpu().
+... and am wondering:
 
-Add the missing rseq_migrate() to both functions. The only other direct
-use of __set_task_cpu() is done by init_idle(), which does not involve a
-user-space task.
+*What exact timespan do you mean with "at once"?*
 
-Based on my testing with the glibc test-case, just adding rseq_migrate()
-to wake_up_new_task() is sufficient to fix the observed issue. Also add
-it to sched_fork() to keep things consistent.
+Srsly, I mean... just look at the last few patches of mine at the (main) 
+mailing list. I'm going to submit (at least) about 120 (!) more[1] of 
+them. How long shall I wait after each one not to kill your 
+infrastructure and not to be locked out?
 
-The reason why this never triggered so far with the rseq/basic_test
-selftest is unclear.
+Best,
+AK
 
-The current use of sched_getcpu(3) does not typically require it to be
-always accurate. However, use of the __rseq_abi.cpu_id field within rseq
-critical sections requires it to be accurate. If it is not accurate, it
-can cause corruption in the per-cpu data targeted by rseq critical
-sections in user-space.
 
-Link: https://sourceware.org/pipermail/libc-alpha/2020-July/115816.html
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Florian Weimer <fw@deneb.enyo.de>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Neel Natu <neelnatu@google.com>
-Cc: linux-api@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.18+
----
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ca5db40392d4..86a855bd4d90 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2962,6 +2962,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	 * Silence PROVE_RCU.
- 	 */
- 	raw_spin_lock_irqsave(&p->pi_lock, flags);
-+	rseq_migrate(p);
- 	/*
- 	 * We're setting the CPU for the first time, we don't migrate,
- 	 * so use __set_task_cpu().
-@@ -3026,6 +3027,7 @@ void wake_up_new_task(struct task_struct *p)
- 	 * as we're not fully set-up yet.
- 	 */
- 	p->recent_used_cpu = task_cpu(p);
-+	rseq_migrate(p);
- 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
- #endif
- 	rq = __task_rq_lock(p, &rf);
--- 
-2.17.1
-
+[1] Amount of maintainers of only one subsystem which is affected by a 
+such patch of mine. (Easier for me to split by subsystem.)
