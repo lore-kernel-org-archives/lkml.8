@@ -2,168 +2,103 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9491EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2A62070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359822070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Z7mlhbDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgGFNUv (ORCPT
+        id S1729248AbgGFNVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:20:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:39756 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbgGFNUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:20:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E7D21FB;
-        Mon,  6 Jul 2020 06:20:50 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BD713F71E;
-        Mon,  6 Jul 2020 06:20:49 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 14:20:39 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kbuild-all@lists.01.org, sudeep.holla@arm.com
-Subject: Re: [PATCH] firmware: arm_scmi: fix notifications macros argument
- reuse
-Message-ID: <20200706132015.GA12498@e119603-lin.cambridge.arm.com>
-References: <20200630162547.40824-1-cristian.marussi@arm.com>
- <202007040619.62IIIoeR%lkp@intel.com>
+        Mon, 6 Jul 2020 09:21:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39178 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729115AbgGFNVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:21:25 -0400
+X-UUID: b13fd27570944096b1cf0dedc847be4b-20200706
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=JEKKXzqAAcN0UvZo8mMJzoVz8sWVLl6w/CEmyd3ob10=;
+        b=Z7mlhbDj7PETj/GJWWRzSgi0r12CgWLpcAsE1nDMfqydOA/CezKOq+YsV2A6SMjjcrfu5ob/vGcHgwn1JVG7qjCOVSfbO27EnB1fzNSP/r0E12ZzbDMlwHt3ZjqII9CZB0yMA3AKH7kk31CKUXEGvCwxsf39fHYiWJrJ5RQTmks=;
+X-UUID: b13fd27570944096b1cf0dedc847be4b-20200706
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1590028650; Mon, 06 Jul 2020 21:21:22 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 6 Jul 2020 21:21:16 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 21:21:10 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v3] scsi: ufs: Cleanup completed request without interrupt notification
+Date:   Mon, 6 Jul 2020 21:21:13 +0800
+Message-ID: <20200706132113.21096-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007040619.62IIIoeR%lkp@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: ACCDC8000567A9642C17428D46DC7631AE2F5179EBF4FB271AB3B227D089DFBA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+SWYgc29tZWhvdyBubyBpbnRlcnJ1cHQgbm90aWZpY2F0aW9uIGlzIHJhaXNlZCBmb3IgYSBjb21w
+bGV0ZWQgcmVxdWVzdA0KYW5kIGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJlZCBieSBob3N0LCBV
+RlMgZHJpdmVyIG5lZWRzIHRvIGNsZWFudXANCml0cyBvdXRzdGFuZGluZyBiaXQgaW4gdWZzaGNk
+X2Fib3J0KCkuDQoNCk90aGVyd2lzZSwgc3lzdGVtIG1heSBjcmFzaCBieSBiZWxvdyBhYm5vcm1h
+bCBmbG93Og0KDQpBZnRlciB0aGlzIHJlcXVlc3QgaXMgcmVxdWV1ZWQgYnkgU0NTSSBsYXllciB3
+aXRoIGl0cw0Kb3V0c3RhbmRpbmcgYml0IHNldCwgdGhlIG5leHQgY29tcGxldGVkIHJlcXVlc3Qg
+d2lsbCB0cmlnZ2VyDQp1ZnNoY2RfdHJhbnNmZXJfcmVxX2NvbXBsKCkgdG8gaGFuZGxlIGFsbCAi
+Y29tcGxldGVkIG91dHN0YW5kaW5nDQpiaXRzIi4gSW4gdGhpcyB0aW1lLCB0aGUgImFibm9ybWFs
+IG91dHN0YW5kaW5nIGJpdCIgd2lsbCBiZSBkZXRlY3RlZA0KYW5kIHRoZSAicmVxdWV1ZWQgcmVx
+dWVzdCIgd2lsbCBiZSBjaG9zZW4gdG8gZXhlY3V0ZSByZXF1ZXN0DQpwb3N0LXByb2Nlc3Npbmcg
+Zmxvdy4gVGhpcyBpcyB3cm9uZyBhbmQgYmxrX2ZpbmlzaF9yZXF1ZXN0KCkgd2lsbA0KQlVHX09O
+IGJlY2F1c2UgdGhpcyByZXF1ZXN0IGlzIHN0aWxsICJhbGl2ZSIuDQoNCkl0IGlzIHdvcnRoIG1l
+bnRpb25pbmcgdGhhdCBiZWZvcmUgdWZzaGNkX2Fib3J0KCkgY2xlYW5zIHRoZSB0aW1lZC1vdXQN
+CnJlcXVlc3QsIGRyaXZlciBuZWVkIHRvIGNoZWNrIGFnYWluIGlmIHRoaXMgcmVxdWVzdCBpcyBy
+ZWFsbHkgbm90DQpoYW5kbGVkIGJ5IF9fdWZzaGNkX3RyYW5zZmVyX3JlcV9jb21wbCgpIHlldCBi
+ZWNhdXNlIGl0IG1heSBiZQ0KcG9zc2libGUgdGhhdCB0aGUgaW50ZXJydXB0IGNvbWVzIHZlcnkg
+bGF0ZWx5IGJlZm9yZSB0aGUgY2xlYW5pbmcuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1
+IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hj
+ZC5jIHwgOSArKysrKysrLS0NCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2Ry
+aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCmluZGV4IDg2MDNiMDcwNDVhNi4uZjIzZmIxNGRmOWY2
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuYw0KQEAgLTY0NjIsNyArNjQ2Miw3IEBAIHN0YXRpYyBpbnQgdWZzaGNk
+X2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkNCiAJCQkvKiBjb21tYW5kIGNvbXBsZXRlZCBh
+bHJlYWR5ICovDQogCQkJZGV2X2VycihoYmEtPmRldiwgIiVzOiBjbWQgYXQgdGFnICVkIHN1Y2Nl
+c3NmdWxseSBjbGVhcmVkIGZyb20gREIuXG4iLA0KIAkJCQlfX2Z1bmNfXywgdGFnKTsNCi0JCQln
+b3RvIG91dDsNCisJCQlnb3RvIGNsZWFudXA7DQogCQl9IGVsc2Ugew0KIAkJCWRldl9lcnIoaGJh
+LT5kZXYsDQogCQkJCSIlczogbm8gcmVzcG9uc2UgZnJvbSBkZXZpY2UuIHRhZyA9ICVkLCBlcnIg
+JWRcbiIsDQpAQCAtNjQ5Niw5ICs2NDk2LDE0IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fib3J0KHN0
+cnVjdCBzY3NpX2NtbmQgKmNtZCkNCiAJCWdvdG8gb3V0Ow0KIAl9DQogDQorY2xlYW51cDoNCisJ
+c3Bpbl9sb2NrX2lycXNhdmUoaG9zdC0+aG9zdF9sb2NrLCBmbGFncyk7DQorCWlmICghdGVzdF9i
+aXQodGFnLCAmaGJhLT5vdXRzdGFuZGluZ19yZXFzKSkgew0KKwkJc3Bpbl91bmxvY2tfaXJxcmVz
+dG9yZShob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCisJCWdvdG8gb3V0Ow0KKwl9DQogCXNjc2lf
+ZG1hX3VubWFwKGNtZCk7DQogDQotCXNwaW5fbG9ja19pcnFzYXZlKGhvc3QtPmhvc3RfbG9jaywg
+ZmxhZ3MpOw0KIAl1ZnNoY2Rfb3V0c3RhbmRpbmdfcmVxX2NsZWFyKGhiYSwgdGFnKTsNCiAJaGJh
+LT5scmJbdGFnXS5jbWQgPSBOVUxMOw0KIAlzcGluX3VubG9ja19pcnFyZXN0b3JlKGhvc3QtPmhv
+c3RfbG9jaywgZmxhZ3MpOw0KLS0gDQoyLjE4LjANCg==
 
-On Sat, Jul 04, 2020 at 07:01:21AM +0800, kernel test robot wrote:
-> Hi Cristian,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on next-20200630]
-> [cannot apply to linux/master soc/for-next linus/master v5.8-rc3 v5.8-rc2 v5.8-rc1 v5.8-rc3]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Cristian-Marussi/firmware-arm_scmi-fix-notifications-macros-argument-reuse/20200701-002818
-> base:    f2b92b14533e646e434523abdbafddb727c23898
-> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-
-This patch was afterwards squashed into the SCMI Notifications series V11:
-
-https://lore.kernel.org/linux-arm-kernel/20200701155348.52864-1-cristian.marussi@arm.com/
-
-and requeued on next, and, as I can see all of the surrounding/offending code
-referenced in this report has been modified in V11 so I don' expect the reported
-issues to be anymore valid...but let's wait to see the next CI run results on
-next- to be sure about that :D (a local SMATCH/sparse run returned me no issues on V11)
-
-Thanks
-
-Cristian
-
-
-> cppcheck warnings: (new ones prefixed by >>)
-> 
->    drivers/firmware/arm_scmi/notify.c:660:9: warning: Identical condition 'ret', second condition is always false [identicalConditionAfterEarlyExit]
->     return ret;
->            ^
->    drivers/firmware/arm_scmi/notify.c:654:6: note: first condition
->     if (ret)
->         ^
->    drivers/firmware/arm_scmi/notify.c:660:9: note: second condition
->     return ret;
->            ^
-> >> drivers/firmware/arm_scmi/notify.c:1125:9: warning: Variable 'r' is reassigned a value before the old one has been used. [redundantAssignment]
->        r = REVT_NOTIFY_ENABLE(r_evt,
->            ^
->    drivers/firmware/arm_scmi/notify.c:1125:7: note: Variable 'r' is reassigned a value before the old one has been used.
->        r = REVT_NOTIFY_ENABLE(r_evt,
->          ^
->    drivers/firmware/arm_scmi/notify.c:1125:9: note: Variable 'r' is reassigned a value before the old one has been used.
->        r = REVT_NOTIFY_ENABLE(r_evt,
->            ^
-> 
-> vim +/r +1125 drivers/firmware/arm_scmi/notify.c
-> 
-> 7a57069e9daf95a Cristian Marussi 2020-06-19  1090  
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1091  /**
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1092   * __scmi_enable_evt()  - Enable/disable events generation
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1093   * @r_evt: The registered event to act upon
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1094   * @src_id: The src_id to act upon
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1095   * @enable: The action to perform: true->Enable, false->Disable
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1096   *
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1097   * Takes care of proper refcounting while performing enable/disable: handles
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1098   * the special case of ALL sources requests by itself.
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1099   *
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1100   * Return: True when the required action has been successfully executed
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1101   */
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1102  static inline bool __scmi_enable_evt(struct scmi_registered_event *r_evt,
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1103  				     u32 src_id, bool enable)
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1104  {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1105  	int ret = 0;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1106  	u32 num_sources;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1107  	refcount_t *sid;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1108  
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1109  	if (src_id == SRC_ID_MASK) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1110  		src_id = 0;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1111  		num_sources = r_evt->num_sources;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1112  	} else if (src_id < r_evt->num_sources) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1113  		num_sources = 1;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1114  	} else {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1115  		return ret;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1116  	}
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1117  
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1118  	mutex_lock(&r_evt->sources_mtx);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1119  	if (enable) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1120  		for (; num_sources; src_id++, num_sources--) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1121  			bool r;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1122  
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1123  			sid = &r_evt->sources[src_id];
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1124  			if (refcount_read(sid) == 0) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19 @1125  				r = REVT_NOTIFY_ENABLE(r_evt,
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1126  						       r_evt->evt->id, src_id);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1127  				if (r)
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1128  					refcount_set(sid, 1);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1129  			} else {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1130  				refcount_inc(sid);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1131  				r = true;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1132  			}
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1133  			ret += r;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1134  		}
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1135  	} else {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1136  		for (; num_sources; src_id++, num_sources--) {
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1137  			sid = &r_evt->sources[src_id];
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1138  			if (refcount_dec_and_test(sid))
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1139  				REVT_NOTIFY_DISABLE(r_evt,
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1140  						    r_evt->evt->id, src_id);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1141  		}
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1142  		ret = 1;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1143  	}
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1144  	mutex_unlock(&r_evt->sources_mtx);
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1145  
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1146  	return ret;
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1147  }
-> 5b352c5379300ec Cristian Marussi 2020-06-19  1148  
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
