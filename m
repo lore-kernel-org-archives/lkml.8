@@ -2,51 +2,51 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE23C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24F82074D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186A52074D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgGFKrT (ORCPT
+        id S1728910AbgGFKrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 6 Jul 2020 06:47:19 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:44202 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728849AbgGFKrQ (ORCPT
+Received: from mail-io1-f70.google.com ([209.85.166.70]:54813 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728844AbgGFKrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 06:47:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id x2so18948348ila.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:47:16 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id q207so700355iod.21
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:47:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8uzDPbjz7PB3i0ByH+Lgh/Al6pGSPusuqFlL3uWyGdg=;
-        b=o3fGWW6LqzGbm5NCy+DeavKF6BsEpDesPCes9TN/nfQ7vNPIpBx8IQqcF4kxVNTxJO
-         AJro2xdHUO2qnm2153RE/FL7lHcmiYi/Js2yOYavD9ldw+cXhQyUP62Bavh3yIeyWqeJ
-         dyGzlclS4GMQWz4C6eR0VYqa1ZDpAT9ectKYkPZJJCPP61nO2usrNLBv1y7WcoM1cux4
-         1rw31DU65m43/HckwuC7jjBnNnGf42U04u0pOAevA0NPmTbbmhq4veRAkSRFUXdrBpBt
-         ym2B8xUroOsU/Ys8x0th9vu6HId6FajFZWrdGmInrk7H8Esn1pyXG531wYELexHEnTfC
-         1tOw==
-X-Gm-Message-State: AOAM531xPwvd8YThEJHAV5vVC+BjW9SO8eyO7fPJjqbGf++5TkprfN9u
-        RhtA5Z/SMAbGAmIfbELkLQrcKl+ruTfC5R+tj+GjPPKzHegW
-X-Google-Smtp-Source: ABdhPJyl3onVDQ0C7BeIb8U1xZo/jKD2MFRf+sOYl1iY+iZePYTbR0rKcR4Gn6J3dE51knP05RmqMiDZ9pOLhJ4XvkuGJH3AFk1V
+        bh=bV1o04mIYzfoK13kKj71WduMIZc/Fisa+x2TYp0LHDo=;
+        b=O1NSYCvZUj/jn5oYFfZCN/WU79M47TLMjB4Ph8FPBuuwOFtCNkWKcgja/eIZ0S0img
+         YusvtUZCT0e6vXbGHq+fBiaKCz7lYFzM0L+SdpMhSHSqkZvWQqeJXIFy4b3Mqe45ZeKC
+         maCCCx6fJVrVi5yG+8MOBvBpGbuxInpU3sOR7+GHxsU42P9c9gu7c94668FTK0cez6Hf
+         hWgaoNeMufpS54Kdp+Tokg35y+4xp33T7g9Rl4KCYyhRzxNwyay3gaCZA6nhfsD4iZoW
+         qi82+wiAQE+tV/m+wxMIMB6eMYv3/eb5vgv1sB6A9Aszt7nzSGPaDaJUETIptYmWKJV2
+         dcYA==
+X-Gm-Message-State: AOAM5325QSkT3IOWP6QzlD3YvLHQFZYrk07qb/DTLu0uDOKjaQXLrBhc
+        eqezGrlZzsFKX502heDuyk/E5XKcJfCBz+hcfRB6CMK6PhV0
+X-Google-Smtp-Source: ABdhPJxGHDXWd93bm5fuKZthng2Z6tzSk1u1TborWWVLClMTLZ309wxlsSsEAZCXltyNJEXWQEs6++aXJsQTmt9K+wyFEVA4j1UH
 MIME-Version: 1.0
-X-Received: by 2002:a6b:1ce:: with SMTP id 197mr25305094iob.76.1594032435830;
+X-Received: by 2002:a5e:8d15:: with SMTP id m21mr25229706ioj.60.1594032435591;
  Mon, 06 Jul 2020 03:47:15 -0700 (PDT)
 Date:   Mon, 06 Jul 2020 03:47:15 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001926b505a9c39918@google.com>
-Subject: WARNING in update_curr
-From:   syzbot <syzbot+64ee4429b2be89db53db@syzkaller.appspotmail.com>
-To:     bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <000000000000157f8105a9c399b9@google.com>
+Subject: WARNING in trace_hardirqs_off_thunk
+From:   syzbot <syzbot+d135d81280f93e6e9d4b@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,72 +57,54 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    719fdd32 afs: Fix storage of cell names
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e0f8a3100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ce0957b53c175ac4
-dashboard link: https://syzkaller.appspot.com/bug?extid=64ee4429b2be89db53db
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+console output: https://syzkaller.appspot.com/x/log.txt?x=14180d35100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=d135d81280f93e6e9d4b
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+64ee4429b2be89db53db@syzkaller.appspotmail.com
+Reported-by: syzbot+d135d81280f93e6e9d4b@syzkaller.appspotmail.com
 
 ------------[ cut here ]------------
-WARNING: CPU: 1 PID: 59 at kernel/sched/sched.h:1132 rq_clock_task kernel/sched/sched.h:1132 [inline]
-WARNING: CPU: 1 PID: 59 at kernel/sched/sched.h:1132 update_curr+0x295/0x8a0 kernel/sched/fair.c:847
+DEBUG_LOCKS_WARN_ON(!irqs_disabled())
+WARNING: CPU: 0 PID: 7117 at kernel/locking/lockdep.c:3745 lockdep_hardirqs_off+0x1ac/0x2f0 kernel/locking/lockdep.c:3745
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 59 Comm: kworker/1:1 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Workqueue: events close_work
+CPU: 0 PID: 7117 Comm: syz-executor.3 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
- <IRQ>
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x2f/0x3a kernel/panic.c:600
- report_bug+0x271/0x2f0 lib/bug.c:198
- exc_invalid_op+0x1b9/0x370 arch/x86/kernel/traps.c:235
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
-RIP: 0010:rq_clock_task kernel/sched/sched.h:1132 [inline]
-RIP: 0010:update_curr+0x295/0x8a0 kernel/sched/fair.c:847
-Code: 80 3c 02 00 0f 85 5c 05 00 00 4c 01 65 20 e9 af fe ff ff 49 8d 7c 24 18 be ff ff ff ff e8 b3 38 8d 06 85 c0 0f 85 04 fe ff ff <0f> 0b e9 fd fd ff ff 4c 8d 73 80 0f 1f 44 00 00 65 44 8b 2d 63 ba
-RSP: 0018:ffffc900004e8d88 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffff88802d035e18 RDI: 0000000000000086
-RBP: ffff8880280afc00 R08: 0000000000000000 R09: fffffbfff137464b
-R10: ffffffff89ba3257 R11: 0000000000000000 R12: ffff88802d035e00
-R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888060f98180
- enqueue_entity+0x1eb/0x1830 kernel/sched/fair.c:4190
- enqueue_task_fair+0x1a0/0x1a30 kernel/sched/fair.c:5485
- enqueue_task kernel/sched/core.c:1295 [inline]
- activate_task+0x10d/0x3f0 kernel/sched/core.c:1317
- ttwu_do_activate+0xca/0x130 kernel/sched/core.c:2247
- sched_ttwu_pending+0x16f/0x200 kernel/sched/core.c:2297
- flush_smp_call_function_queue+0x409/0x6e0 kernel/smp.c:314
- __sysvec_call_function_single+0x98/0x490 arch/x86/kernel/smp.c:248
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- sysvec_call_function_single+0x1bf/0x210 arch/x86/kernel/smp.c:243
- asm_sysvec_call_function_single+0x12/0x20 arch/x86/include/asm/idtentry.h:604
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:765 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x8c/0xe0 kernel/locking/spinlock.c:191
-Code: 48 c7 c0 80 b4 b4 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 37 48 83 3d 4b d7 d1 01 00 74 22 48 89 df 57 9d <0f> 1f 44 00 00 bf 01 00 00 00 e8 35 3f 6c f9 65 8b 05 6e 21 1f 78
-RSP: 0018:ffffc900006c7d10 EFLAGS: 00000286
-RAX: 1ffffffff1369690 RBX: 0000000000000286 RCX: 1ffffffff155c832
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000286
-RBP: ffff88802809e998 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffffff8c58db0f R11: fffffbfff18b1b61 R12: 0000000000000080
-R13: ffff88802809e958 R14: ffff88802bdc0f00 R15: ffff88802cf35600
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1ac/0x2d0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:lockdep_hardirqs_off+0x1ac/0x2f0 kernel/locking/lockdep.c:3745
+Code: 42 8a 04 20 84 c0 0f 85 2a 01 00 00 83 3d 0f 9f 56 01 00 75 cd 48 c7 c7 c6 44 e6 88 48 c7 c6 6b d4 e7 88 31 c0 e8 e4 8a 30 f9 <0f> 0b eb b4 48 c7 c1 70 7d 6c 89 80 e1 07 80 c1 03 38 c1 0f 8c 71
+RSP: 0018:ffffc90005587ed0 EFLAGS: 00010246
+RAX: f9f4096c7a9c0100 RBX: ffff8880676c6b4c RCX: ffff8880676c6280
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000286
+RBP: ffffc90005587f48 R08: ffffffff817a4660 R09: fffffbfff125cd89
+R10: fffffbfff125cd89 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffffffff81006f10 R15: ffff8880676c6280
+ trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
+ entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+RIP: 0033:0x45f89a
+Code: 25 18 00 00 00 00 74 01 f0 48 0f b1 3d cf a5 84 00 48 39 c2 75 da f3 c3 0f 1f 84 00 00 00 00 00 48 63 ff b8 e4 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 06 f3 c3 0f 1f 40 00 48 c7 c2 d4 ff ff ff f7
+RSP: 002b:00007fff40af3258 EFLAGS: 00000246 ORIG_RAX: 00000000000000e4
+RAX: ffffffffffffffda RBX: 000000000009eeef RCX: 000000000045f89a
+RDX: 0000000000000000 RSI: 00007fff40af3260 RDI: 0000000000000001
+RBP: 00000000000008bc R08: 0000000000000001 R09: 00000000015d8940
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000a
+R13: 00007fff40af32c0 R14: 000000000009ee34 R15: 00007fff40af32d0
 Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
