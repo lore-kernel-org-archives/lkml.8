@@ -2,194 +2,133 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD9C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:42:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="k/hskU/r"
+	by mail.kernel.org (Postfix) with ESMTP id D4C27206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594064562;
+	bh=gq8OONsZv2DL9Wl2RlB9KVkvm70QuCx2mh8QqqjtMbI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=h7WrGSLdia49UzWHq6ZwAoqvVSZBBmdzjyZaOg0NbCBrFriB0CVo2TP/BIVWbt0Zy
+	 YyayVAMq8V+9GFfYGIVH7J1WdxnxsDJi+gp6UUqrkFN+RoAy1zS5x7qSKnSmbenoSo
+	 9WpfHAoaKM/yDdojFIixSrKmnPzXbKsc04eWpO08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgGFTmi (ORCPT
+        id S1726900AbgGFTml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgGFTmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:42:35 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA802C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 12:42:34 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id k18so35979419qke.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 12:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZmuO55kwkgZc0hY5jQ8BMDzA5Y+HA//IRHqjrSjg2/w=;
-        b=k/hskU/rVY0C4Hp5PfldJI0muMX5Egojm7NIUV0B80Hea5t2F6KMhVmw2dd0l1fEcx
-         oHHYTmt2Jyw0WGnrPLgmyaiCisSrw66aYOwNgz2mnTl4o5sT7CHj6l9Ve364PSmozHUk
-         v+BkuRkeGMIjnAqM6QHdIQnnLaxbuXSq0p9PU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZmuO55kwkgZc0hY5jQ8BMDzA5Y+HA//IRHqjrSjg2/w=;
-        b=Y9En4WLn7/LuW0Jr5vHsbmt3b837baiFrzZOTsZbMx6XP6f0sMyvCYicWecjAvLy3q
-         fVCa4nm+odoMLHnUE/1LwIr7QZE499qjFMLyUC5eX0Gyzv3sX6+rnhrsBrsLVEQUumsz
-         fzTIaJgciVqibRDYP9XwG+i7wAKSDZLuaARLDI7xowmJwvUSrgsU+eskVPR1eDuKARhO
-         6Fc6VmWJM2g2wk9f+psWsc3t6ZmpcGdPDM8KNtRCq1T49SUWjspbqIh06yf+xBsePewu
-         Y8B+4hNdkSUl5V1hBTBzDmWSKYUq+/FDFwZ0lbGFoJQhjUTCIv5EnvaPY9jYwXdPFI57
-         4uWQ==
-X-Gm-Message-State: AOAM5307wdCAz0oKqPT5/43n5FMTEGCpVnu6RXB2GRgikgR8BjBmLeMk
-        DaIeWDi/bWW7tz5MzKDeNx+oAw==
-X-Google-Smtp-Source: ABdhPJxhweKx41M36beeymAe5lh5mNJBKqCsdX/ON/MUBzPiDv2UE5tgdF1Vv/ib5rD3PrVQnUG23w==
-X-Received: by 2002:a37:51c6:: with SMTP id f189mr49108019qkb.339.1594064553894;
-        Mon, 06 Jul 2020 12:42:33 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id n28sm24379069qtf.8.2020.07.06.12.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 12:42:33 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 15:42:32 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200706194232.GA233429@google.com>
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
- <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
- <20200702194506.GA31478@pc636>
+        Mon, 6 Jul 2020 15:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgGFTmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 15:42:37 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E08120675;
+        Mon,  6 Jul 2020 19:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594064557;
+        bh=gq8OONsZv2DL9Wl2RlB9KVkvm70QuCx2mh8QqqjtMbI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=lh3vxVKBCu2a1xT47mTYziII5iB0/8GAkDAt71DAfoKVDSx6FVqCJSq59QVsEGSnP
+         Q60Pvq90qvfChKmNKQJkCuTpUGESomfnWfhOoPesvmXeSdfBqBsiWX1GemxQCisw41
+         x0SD+lBBhKrCWfQ4CGoMu0RtilR1klMo8qmHvImM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 181CE3522637; Mon,  6 Jul 2020 12:42:37 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:42:37 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
+ CLANG_LTO=y
+Message-ID: <20200706194237.GF9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200630173734.14057-1-will@kernel.org>
+ <20200630173734.14057-19-will@kernel.org>
+ <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
+ <20200702072301.GA15963@willie-the-truck>
+ <20200706160023.GB10992@arm.com>
+ <20200706183542.GB23766@willie-the-truck>
+ <CANpmjNP9pb4_2S8sf+Ty2ZqtMxWSrBEosDx2wuL2OQnA9YFt9A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702194506.GA31478@pc636>
+In-Reply-To: <CANpmjNP9pb4_2S8sf+Ty2ZqtMxWSrBEosDx2wuL2OQnA9YFt9A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 09:45:06PM +0200, Uladzislau Rezki wrote:
-> On Thu, Jul 02, 2020 at 04:12:16PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
-> > > > This is not going to work together with the "wait context validator"
-> > > > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> > > > printk() which is why it is still disabled by default.
-> > > 
-> > > Fixing that should be "interesting".  In particular, RCU CPU stall
-> > > warnings rely on the raw spin lock to reduce false positives due
-> > > to race conditions.  Some thought will be required here.
-> > 
-> > I don't get this part. Can you explain/give me an example where to look
-> > at?
-> > 
-> > > > So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> > > > complain that you have a raw_spinlock_t acquired (the one from patch
-> > > > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-> > > 
-> > > Given that the slab allocator doesn't acquire any locks until it gets
-> > > a fair way in, wouldn't it make sense to allow a "shallow" allocation
-> > > while a raw spinlock is held?  This would require yet another GFP_ flag,
-> > > but that won't make all that much of a difference in the total.  ;-)
-> > 
-> > That would be one way of dealing with. But we could go back to
-> > spinlock_t and keep the memory allocation even for RT as is. I don't see
-> > a downside of this. And we would worry about kfree_rcu() from real
-> > IRQ-off region once we get to it.
-> > 
-
-Sorry for my late reply as the day job and family demanded a lot last week...
-
-> Another way of fixing it is just dropping the lock letting the page
-> allocator to do an allocation without our "upper/local" lock. I did a
-> proposal like that once upon a time, so maybe it is a time to highlight
-> it again:
-> <snip>
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 21c2fa5bd8c3..249f10a89bb9 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3278,9 +3278,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
->  }
+On Mon, Jul 06, 2020 at 09:23:26PM +0200, Marco Elver wrote:
+> On Mon, 6 Jul 2020 at 20:35, Will Deacon <will@kernel.org> wrote:
+> > On Mon, Jul 06, 2020 at 05:00:23PM +0100, Dave Martin wrote:
+> > > On Thu, Jul 02, 2020 at 08:23:02AM +0100, Will Deacon wrote:
+> > > > On Wed, Jul 01, 2020 at 06:07:25PM +0100, Dave P Martin wrote:
+> > > > > Also, can you illustrate code that can only be unsafe with Clang LTO?
+> > > >
+> > > > I don't have a concrete example, but it's an ongoing concern over on the LTO
+> > > > thread [1], so I cooked this to show one way we could deal with it. The main
+> > > > concern is that the whole-program optimisations enabled by LTO may allow the
+> > > > compiler to enumerate possible values for a pointer at link time and replace
+> > > > an address dependency between two loads with a control dependency instead,
+> > > > defeating the dependency ordering within the CPU.
+> > >
+> > > Why can't that happen without LTO?
+> >
+> > It could, but I'd argue that it's considerably less likely because there
+> > is less information available to the compiler to perform these sorts of
+> > optimisations. It also doesn't appear to be happening in practice.
+> >
+> > The current state of affairs is that, if/when we catch the compiler
+> > performing harmful optimistations, we look for a way to disable them.
+> > However, there are good reasons to enable LTO, so this is one way to
+> > do that without having to worry about the potential impact on dependency
+> > ordering.
 > 
->  static inline bool
-> -kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> +kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
-> +       void *ptr, unsigned long *flags)
->  {
->         struct kvfree_rcu_bulk_data *bnode;
-> +       struct kfree_rcu_cpu *tmp;
->         int idx;
+> If it's of any help, I'll see if we can implement that warning in LLVM
+> if data dependencies somehow disappear (although I don't have any
+> cycles to pursue right now myself). Until then, short of manual
+> inspection or encountering a bug in the wild, there is no proof any of
+> this happens or doesn't happen.
 > 
->         if (unlikely(!krcp->initialized))
-> @@ -3306,6 +3308,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
->                         if (IS_ENABLED(CONFIG_PREEMPT_RT))
->                                 return false;
-> 
-> +                       migrate_disable();
-> +                       krc_this_cpu_unlock(krcp, *flags);
+> Also, as some anecdotal evidence it's extremely unlikely, even with
+> LTO: looking at the passes that LLVM runs, there are a number of
+> passes that seem to want to eliminate basic blocks, thereby getting
+> rid of branches. Intuitively, it makes sense, because branches are
+> expensive on most architectures (for GPU targets, I think it tries
+> even harder to get rid of branches). If we extend our reasoning and
+> assumptions of LTO's aggressiveness in that direction, we might
+> actually end up with fewer branches. That might be beneficial for the
+> data dependencies we worry about (but not so much for control
+> dependencies we want to keep). Still, no point in speculating (no pun
+> intended) until we have hard data what actually happens. :-)
 
-If I remember, the issue here is that migrate_disable is not implemented on a
-non-RT kernel due to issues with starvation.
+Anything along these lines would be very welcome!!!
 
-What about using the mempools. If we can allocate from that without entry
-into the page allocator, then that would be one way. Not sure if there are
-other issues such as the mempool allocation itself acquiring regular spinlocks.
-
-We could also just do what Sebastian is suggesting, which is revert to
-regular spinlocks and allow this code to sleep while worrying about
-atomic callers later. For RT, could such atomic callers perhaps do their
-allocations differently such as allocating in advance or later on in process
-context?
-
-thanks,
-
- - Joel
-
-
-> +
->                         /*
->                          * NOTE: For one argument of kvfree_rcu() we can
->                          * drop the lock and get the page in sleepable
-> @@ -3315,6 +3320,12 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
->                          */
->                         bnode = (struct kvfree_rcu_bulk_data *)
->                                 __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> +
-> +                       tmp = krc_this_cpu_lock(flags);
-> +                       migrate_enable();
-> +
-> +                       /* Sanity check, just in case. */
-> +                       WARN_ON(tmp != krcp);
->                 }
->  
->                 /* Switch to emergency path. */
-> @@ -3386,7 +3397,7 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->          * Under high memory pressure GFP_NOWAIT can fail,
->          * in that case the emergency path is maintained.
->          */
-> -       success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr);
-> +       success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr, &flags);
->         if (!success) {
->                 if (head == NULL)
->                         // Inline if kvfree_rcu(one_arg) call.
-> <snip>
-> 
-> --
-> Vlad Rezki
+							Thanx, Paul
