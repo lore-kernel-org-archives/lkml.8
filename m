@@ -2,86 +2,106 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E59CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34125C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18FD721582
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1332A20702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594055476;
+	bh=OKEXFBUa61CwzJctOxdoT1f/iwqy9U/WDdZTk4ak8Dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NUpRd1KsM9iqgK5Cx4dlUn5kIkf3PLjMn9MHr7437CgHHptfP5euHQQWYRkcVr5/I
+	 J2dCGpriwfM1LQSrAFIhmAIFc6IlljVhEZoug/M1ykbZB1YIApYDOzr+PbiVj+KTHt
+	 QAGcYPCKntO8lpcuQbNTkE2NpKcTyH8/5RznkITI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgGFRJv (ORCPT
+        id S1729629AbgGFRLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:09:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:57132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgGFRJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:09:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A05D1FB;
-        Mon,  6 Jul 2020 10:09:50 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 301E33F68F;
-        Mon,  6 Jul 2020 10:09:49 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 18:09:47 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-acpi@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] Documentation: arm64/sve: drop duplicate words
-Message-ID: <20200706170946.GF10992@arm.com>
-References: <20200703205110.29873-1-rdunlap@infradead.org>
- <20200703205110.29873-4-rdunlap@infradead.org>
+        Mon, 6 Jul 2020 13:11:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39965 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729593AbgGFRLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:11:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f139so42930579wmf.5;
+        Mon, 06 Jul 2020 10:11:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FxwGWQMcLORFbX3FtYwfpy+gCcGxaQVQcEFoLrnat08=;
+        b=YA1glZ2VIxWv/SwHXrJEvLrNZ1etDoX1wM2leoWlhTB5Ti0Jgo1OZgXa6KHw6lw1wt
+         lNrybA6D9INi7MI+pEe+WZ2GBe/W7bcVCqKhLxs9BTgFPHvbDPxoxWOkWQcrWUNGiVeD
+         66canYWlproHFY8enabVylGWqDhODRweHDc+GO+vhlcLHXpetkHZ5mfgV4R7FbHKBsn5
+         v8b+n82sRFZM+e3XN2FEcETYaEuse145HHz+ZucCz1aeK1cYLunpDMXwH/HOvYpy45U9
+         tUeAfhLI6m4H9yUj203F4FPJ9SyzMKAM9hK1S8WVZzQcXGg+eYirRlQP2bCu8GLIecda
+         /YWw==
+X-Gm-Message-State: AOAM532hbs1/hqjXdl1lCn4ifdCGWFeNM7wDwlsrd3G8iUlDOxfZ7Lk8
+        6aypf/y+Mm/rQMJtl4eDDZk=
+X-Google-Smtp-Source: ABdhPJzXKrdFon+80124TCMwCgNgQMLvdFNCTaVoP4PeQYBGjOmaliZ/ifCvEf2mbU4ivsbJal6eag==
+X-Received: by 2002:a05:600c:4114:: with SMTP id j20mr173369wmi.74.1594055472137;
+        Mon, 06 Jul 2020 10:11:12 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u1sm18079994wrb.78.2020.07.06.10.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 10:11:11 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 17:11:10 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     t-mabelt@microsoft.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        parri.andrea@gmail.com, Andres Beltran <lkmlabelt@gmail.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 0/3] Drivers: hv: vmbus: vmbus_requestor data
+ structure for VMBus hardening
+Message-ID: <20200706171110.ti5cfhmaoufi3zt6@liuwe-devbox-debian-v2>
+References: <20200701001221.2540-1-lkmlabelt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703205110.29873-4-rdunlap@infradead.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200701001221.2540-1-lkmlabelt@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 01:51:10PM -0700, Randy Dunlap wrote:
-> Drop the doubled word "for".
+On Tue, Jun 30, 2020 at 08:12:18PM -0400, Andres Beltran wrote:
+> Currently, VMbus drivers use pointers into guest memory as request IDs
+> for interactions with Hyper-V. To be more robust in the face of errors
+> or malicious behavior from a compromised Hyper-V, avoid exposing
+> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> bad request ID that is then treated as the address of a guest data
+> structure with no validation. Instead, encapsulate these memory
+> addresses and provide small integers as request IDs.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Dave Martin <Dave.Martin@arm.com>
-
-Thanks!
-
-Acked-by: Dave Martin <Dave.Martin@arm.com>
-
-> ---
->  Documentation/arm64/sve.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The first patch creates the definitions for the data structure, provides
+> helper methods to generate new IDs and retrieve data, and
+> allocates/frees the memory needed for vmbus_requestor.
 > 
-> --- linux-next-20200701.orig/Documentation/arm64/sve.rst
-> +++ linux-next-20200701/Documentation/arm64/sve.rst
-> @@ -494,7 +494,7 @@ Appendix B.  ARMv8-A FP/SIMD programmer'
->  Note: This section is for information only and not intended to be complete or
->  to replace any architectural specification.
->  
-> -Refer to [4] for for more information.
-> +Refer to [4] for more information.
->  
->  ARMv8-A defines the following floating-point / SIMD register state:
->  
+> The second and third patches make use of vmbus_requestor to send request
+> IDs to Hyper-V in storvsc and netvsc respectively.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Thanks.
+> Andres Beltran
+> 
+> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> 
+> Andres Beltran (3):
+>   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+>     hardening
+>   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
+>     VMBus hardening
+>   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
+>     hardening
+
+Series applied to hyperv-next. Thanks.
