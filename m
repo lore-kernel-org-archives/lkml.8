@@ -2,126 +2,140 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80E920720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594052795;
-	bh=ELC0Qf8GBOcW7d74k7xE/syM0cqkEfG1ZwnEhNH0Xwc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gBIykI8ljH+7RWfMu4TjNmQdHQMPfMus6pWt8obrbAtInqxLzwGvVLIDU0nOldwQ+
-	 skz2D6PiThhzE1VbjKTDrvfcddE6KpbtbJKBgyC54pPSLJaxWpwMXbkf9FGq+Y/3NS
-	 T1iS8iCccsY0iSKzEXz/orR/SdmQUrXhQX9opuk8=
+	by mail.kernel.org (Postfix) with ESMTP id 9A4A620702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NsyxaqVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgGFQ0e (ORCPT
+        id S1729525AbgGFQ2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgGFQ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:26:34 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C63D220702;
-        Mon,  6 Jul 2020 16:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594052793;
-        bh=ELC0Qf8GBOcW7d74k7xE/syM0cqkEfG1ZwnEhNH0Xwc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=NWnqF8yNh1kmeojBtU/hvJnKQi+pZfEw8tRN6xyWsQTMlbnwqrlnw5lTOXvjlFbT7
-         B5rw2d8haDBAV5oFbA0B0HdNl5tN/Er570PuYfYx1NWaxj3XhsCuq3jsWx3nC14oRK
-         3IoGxJUeXAP3v3i6Usrl18oSx/B8BE0q7l0vU15Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B23463521502; Mon,  6 Jul 2020 09:26:33 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 09:26:33 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200706162633.GA13288@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703144228.GF9247@paulmck-ThinkPad-P72>
+        Mon, 6 Jul 2020 12:28:17 -0400
+Received: from mail-dm6nam11on2097.outbound.protection.outlook.com ([40.107.223.97]:25091
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729293AbgGFQ2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:28:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XEc5CEEvWM1ZLsGJWywseh+qF99ZL1+/M8BBA0yhQFVCZLBzS3DzsCKAPxkH1qzASQcQlcO4ve8QiEmLcC5g4h58PMlNaY/zGKGtrq7gIgdAz2HaSVD2oBdc5pXSA1IzWz7LwUClEmHH3v40MELeXM+U23BtW9TkiuCf3vXOFfLDlmIvG4Qzmj3rPbtUHCpegmzqXo04Yq0M2zpCJzk0i5SV99QAKcNfLRxe51gdJ3IdyFV801OMlmAjNAniRQQmVVN7NhWRiQo6rI6OigIDEj5xbMjUb7ij5m6PnO010lGA/tFRjtCn1B3A1NtKggll1OB4Ldvwr/QUgfZqn3cS3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C9kqaP34drul+tHSdUh5sCmkdNNn3Wtu3z4pEWWFKHU=;
+ b=HkoQQva/T9ZCbEc5JYa7teEjtEgueeDi7cu/904aqbw+t8pxhmZT2nN6pduxDbDpOaru6S/7ws5TmixUV63aEjUZjDKzw+fplyvtR1siH2fIkGsCda/w4mDfSSLUxAJcciv3/ACeYDJSd6x2LWFJn63rG/td7kzw9io/pgVx42/ds6tof/vw/JvWv1+ZFn2AXBE1bxwxBYgnFC0IQYywvh887RFgsdKEtI9njFiDwShF0pFf26ooIrYU5haG7jt6WaQuLfsBXL+r9l2LzbaDJJYfA1wfjP93r9ZiBudA6bGdjq9k64EfJZTeErP/kLUb6jPMFPZJvL4wnyRX42+uEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C9kqaP34drul+tHSdUh5sCmkdNNn3Wtu3z4pEWWFKHU=;
+ b=NsyxaqVWhOA0erI/4J/WUm2zDPEUdN+taK5AaB/SUij4SiiGbYYWDlesqni4Ky0APdVGGdHvLYqanztXhHtaQc9gnBUe/fPvQZQMlK50OWc9xi1ENJ+69v7QBnqG9/gpRiCjfrH/0Ae0I+3yYj2J5iU2B/yBTKACtf4CR+a03/U=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1804.namprd21.prod.outlook.com (2603:10b6:302:6::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.4; Mon, 6 Jul
+ 2020 16:28:14 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3174.001; Mon, 6 Jul 2020
+ 16:28:14 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
+Subject: RE: [PATCH v4 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Topic: [PATCH v4 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Index: AQHWTzxTbKgvOtdBrUyvbpBu93/Jcqj6xi6w
+Date:   Mon, 6 Jul 2020 16:28:13 +0000
+Message-ID: <MW2PR2101MB105242B7566BDBB86D58D825D7690@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+ <20200701001221.2540-2-lkmlabelt@gmail.com>
+In-Reply-To: <20200701001221.2540-2-lkmlabelt@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-06T16:28:12Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=91ff5ab1-675d-4a61-bce5-d2951a08a675;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 222776d5-5d4e-449f-623f-08d821c994b8
+x-ms-traffictypediagnostic: MW2PR2101MB1804:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB180431C069B0EFF1635DD9A6D7690@MW2PR2101MB1804.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7RZGei7BRucB5UzOWlafTNkyOxxBa8fNGyMRUCR2vN+rhFsRLumiEcdsqiobEe89S/WfnocgwGeWJdsdxa+PjP29oeYdrEg+2EFY5Lk7h0bIapT7KRZhLqV0sMuzzMOn9zK88blPj2sF2ZMfRP1hwl4U7FaWTlwUbUvD+oUO53qsYFcrHn3HFzzePeIGuwFyAtyRPZTvyJi3Qo3IOQNVw/F2q5JJpzFCeV+IUWG9wUYjIUYcuRMUy0kSvJRKD91WTaBYVdCuKP2fLsKHLATjvMb1yXE2XZtdIMqmczujcPoOQ88kN8stjXjbcyMZwNE0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(33656002)(26005)(6506007)(82950400001)(52536014)(110136005)(316002)(82960400001)(54906003)(478600001)(2906002)(4326008)(10290500003)(9686003)(55016002)(186003)(71200400001)(66476007)(66946007)(64756008)(76116006)(66446008)(66556008)(5660300002)(7696005)(8990500004)(86362001)(8676002)(83380400001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: H/GWpOx5PqA2/8+sy9jPpnNZS5z6BdTLn0fWLFGsNsWlcQFhbe6uREEx736f2+R8MXrw43UAkrtLliEJY9PYd6BXcSefSN2MtRJaQ2VMPI8yu99wIoT3eBOMTMB86Ro+Drf68xVfpJY2RtWpN70d2mbmahmrAA74tTYCVHXwqZUly0MLioHwoXj2srqcaqzE7BHKeh5fLaQj3xRaZZ6pU9DY4uT0e43odNi9Un7UIcLUdTHMYFP2IN4jlL3u4ks+pmidYcV5AVKgUP+Ahlmu8zD3JFM4NOcsGecysWlcsJKROyJ3RiB2HJE4zW+U5PJp8D5KbYRbV7vEL/QsR6N6EXFD7kNAaTAqT69se+qq4eB4GXhd72KwO6J5prgKDPbD2N6s0xXL76qPx8jZuuN5R/pA0BumsAO7dUm3GbBSEbx/uxnRfVPeihkGzRXFVHvaYeVmVPAF31Wndr9vR5emq5Z9KKdtBqUkegmNnGSL8FAfnJD84sSl2aDLqd0n/Zuk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703144228.GF9247@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 222776d5-5d4e-449f-623f-08d821c994b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 16:28:13.8940
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nz8fR4ImI2et3HcdZvMuftUc3k7e3uANjw1EfQjlOQUt0N1qG58W/bJee+zg/kPwbPiiVj9OR4J0SaAiFV6COHsxaLuHthnuLY7c6RI6sqM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 07:42:28AM -0700, Paul E. McKenney wrote:
-> On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
-> > On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
-> > > On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
+From: Andres Beltran <lkmlabelt@gmail.com> Sent: Tuesday, June 30, 2020 5:1=
+2 PM
+>=20
+> Currently, VMbus drivers use pointers into guest memory as request IDs
+> for interactions with Hyper-V. To be more robust in the face of errors
+> or malicious behavior from a compromised Hyper-V, avoid exposing
+> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> bad request ID that is then treated as the address of a guest data
+> structure with no validation. Instead, encapsulate these memory
+> addresses and provide small integers as request IDs.
+>=20
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> ---
+> Changes in v4:
+> 	- Use channel->rqstor_size to check if rqstor has been
+> 	  initialized.
+> Changes in v3:
+>         - Check that requestor has been initialized in
+>           vmbus_next_request_id() and vmbus_request_addr().
+> Changes in v2:
+>         - Get rid of "rqstor" variable in __vmbus_open().
+>=20
+>  drivers/hv/channel.c   | 158 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/hyperv.h |  21 ++++++
+>  2 files changed, 179 insertions(+)
 
-[ . . . ]
-
-> > Also, if C goes and specifies load dependencies, in any form, is then
-> > not the corrolary that they need to specify control dependencies? How
-> > else can they exclude the transformation.
-> 
-> By requiring that any temporaries generated from variables that are
-> marked _Dependent_ptr also be marked _Dependent_ptr.  This is of course
-> one divergence of _Dependent_ptr from the volatile keyword.
-> 
-> > And of course, once we're there, can we get explicit support for control
-> > dependencies too? :-) :-)
-> 
-> Keep talking like this and I am going to make sure that you attend a
-> standards committee meeting.  If need be, by arranging for you to be
-> physically dragged there.  ;-)
-> 
-> More seriously, for control dependencies, the variable that would need
-> to be marked would be the program counter, which might require some
-> additional syntax.
-
-And perhaps more constructively, we do need to prioritize address and data
-dependencies over control dependencies.  For one thing, there are a lot
-more address/data dependencies in existing code than there are control
-dependencies, and (sadly, perhaps more importantly) there are a lot more
-people who are convinced that address/data dependencies are important.
-
-For another (admittedly more theoretical) thing, the OOTA scenarios
-stemming from control dependencies are a lot less annoying than those
-from address/data dependencies.
-
-And address/data dependencies are as far as I know vulnerable to things
-like conditional-move instructions that can cause problems for control
-dependencies.
-
-Nevertheless, yes, control dependencies also need attention.
-
-							Thanx, Paul
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
