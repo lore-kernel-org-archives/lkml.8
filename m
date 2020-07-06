@@ -6,114 +6,111 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47AE921531
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8815D20771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgGFB0x (ORCPT
+        id S1728637AbgGFB0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:26:53 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48960 "EHLO loongson.cn"
+        Sun, 5 Jul 2020 21:26:55 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48962 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728509AbgGFB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728494AbgGFB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 Jul 2020 21:26:52 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S16;
-        Mon, 06 Jul 2020 09:19:32 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S9;
+        Mon, 06 Jul 2020 09:19:30 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v5 14/14] irqchip/xilinx-intc: Fix potential resource leak
-Date:   Mon,  6 Jul 2020 09:19:25 +0800
-Message-Id: <1593998365-25910-15-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v5 07/14] irqchip/dw-apb-ictl: Fix potential resource leaks
+Date:   Mon,  6 Jul 2020 09:19:18 +0800
+Message-Id: <1593998365-25910-8-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S16
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1ruFy7XF17WrW5tF1UKFg_yoW8CFy3pF
-        4Uu3yqgr4fGrWUurs3Cr10vas0yw1xKF9Fk3yxCasaqFn0yrZ8ZF1Iya4kWF15uayrZa1x
-        ZFs5Xa4UG3WUAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFW8Jr1fWrWrJrW7WryfJFb_yoW8AF4kpF
+        4rW39akryfJF17XFn5CrWUX3say3W8tay7C3yIkan3Zr9xC34DCr1rtFyjyF15AFWxGa1a
+        9F4vyFy8Ca1DJa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
         0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
         8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
-        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
-        8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2
-        z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-        xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8
-        JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6w4l42xK82
-        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-        IF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI
-        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
-        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU53l1JUUUUU==
+        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI
+        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2
+        jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+        AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
+        Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVWkMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+        xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
+        IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+        6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+        CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80tC5UUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function xilinx_intc_of_init(), system resource "irqc->root_domain"
-was not released in an error case. Thus add a jump target to call the
-function "irq_domain_remove" for the completion of the desired exception
-handling.
+In the function dw_apb_ictl_init(), system resources "irq" and "domain"
+were not released in a few error cases. Thus add jump targets for the
+completion of the desired exception handling.
 
-Fixes: 9689c99e4950 ("irqchip/xilinx: Add support for parent intc")
+Fixes: 350d71b94fc9 ("irqchip: add DesignWare APB ICTL interrupt controller")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-xilinx-intc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-dw-apb-ictl.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index 1d3d273..41d9412 100644
---- a/drivers/irqchip/irq-xilinx-intc.c
-+++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -192,7 +192,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &irqc->nr_irq);
- 	if (ret < 0) {
- 		pr_err("irq-xilinx: unable to read xlnx,num-intr-inputs\n");
--		goto error;
-+		goto err_iounmap;
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+index e4550e9..bc9b750 100644
+--- a/drivers/irqchip/irq-dw-apb-ictl.c
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -86,12 +86,13 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	ret = of_address_to_resource(np, 0, &r);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to get resource\n", np);
+-		return ret;
++		goto err_irq_dispose;
  	}
  
- 	ret = of_property_read_u32(intc, "xlnx,kind-of-intr", &irqc->intr_mask);
-@@ -229,7 +229,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 	if (!irqc->root_domain) {
- 		pr_err("irq-xilinx: Unable to create IRQ domain\n");
- 		ret = -EINVAL;
--		goto error;
-+		goto err_iounmap;
+ 	if (!request_mem_region(r.start, resource_size(&r), np->full_name)) {
+ 		pr_err("%pOF: unable to request mem region\n", np);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_irq_dispose;
  	}
  
- 	if (parent) {
-@@ -241,7 +241,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		} else {
- 			pr_err("irq-xilinx: interrupts property not in DT\n");
- 			ret = -EINVAL;
--			goto error;
-+			goto err_domain_remove;
- 		}
- 	} else {
- 		primary_intc = irqc;
-@@ -250,11 +250,12 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 	iobase = ioremap(r.start, resource_size(&r));
+@@ -133,7 +134,7 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 					     IRQ_GC_INIT_MASK_CACHE);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to alloc irq domain gc\n", np);
+-		goto err_unmap;
++		goto err_domain_remove;
+ 	}
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(nrirqs, 32); i++) {
+@@ -150,10 +151,14 @@ static int __init dw_apb_ictl_init(struct device_node *np,
  
  	return 0;
  
--error:
 +err_domain_remove:
-+	irq_domain_remove(irqc->root_domain);
-+err_iounmap:
- 	iounmap(irqc->base);
- 	kfree(irqc);
++	irq_domain_remove(domain);
+ err_unmap:
+ 	iounmap(iobase);
+ err_release:
+ 	release_mem_region(r.start, resource_size(&r));
++err_irq_dispose:
++	irq_dispose_mapping(irq);
  	return ret;
--
  }
- 
- IRQCHIP_DECLARE(xilinx_intc_xps, "xlnx,xps-intc-1.00.a", xilinx_intc_of_init);
+ IRQCHIP_DECLARE(dw_apb_ictl,
 -- 
 2.1.0
 
