@@ -2,299 +2,113 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8039C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866DA206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A22D206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="opSlrEPh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tz4jIaQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgGFNqQ (ORCPT
+        id S1729280AbgGFNqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        Mon, 6 Jul 2020 09:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgGFNqP (ORCPT
+        with ESMTP id S1728961AbgGFNqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:46:15 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E57CC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:46:15 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g75so39420588wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:46:15 -0700 (PDT)
+        Mon, 6 Jul 2020 09:46:38 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10B0C061755;
+        Mon,  6 Jul 2020 06:46:37 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id t25so40835051lji.12;
+        Mon, 06 Jul 2020 06:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MZyQPOMczNHbaYO2QB7Fnl+OekFYCcPdnajxmT+RLok=;
-        b=opSlrEPhbvi4sPAqVPrrDHLerBDcNt6yKujCF4KMl4YV7AeL/8Z/NUqNty5YpTaE9o
-         yo1Ln8ToTwcaKIOjfW45FA/1A7vLZbVPKcFqPf2KC1J/EjQgp3b7xFB0xm26umge7SQS
-         KoTJbqfvApa7q2hoCZ86GOru89CXbJByJ6Dz+xGDKi1+ApVvwP2w77hcEXem3X+NVJRL
-         AQWxVQmw7mAFRDdy8yyY/zvkOErTOXOpFICiH3NTja0fqEbaHOwPBCUOOSwTFYMRJ/qy
-         NOjyIk6YHEtNTghkHX0Era1ssJnc/Ix0SpWOVhNnGC7A41QDqcp+3M8Ryd8lVWjMmJhg
-         PAnw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ujWmFeI6Flmp+c/ywUJ1ekXf+PPGZevFkwBhKsOKkZ4=;
+        b=tz4jIaQhaEshDqBeV8lgZXacy8neCsIUEtB8PrcSndWYQM09hRLZxtkWLy1+VlciKC
+         vpOyb/4xTb/CZM++lUZzllbuM4pr8d8oykqgW20mN3Eww+N7nx7QTzmCs+ZaiTqZNRdl
+         Tbr1pMhMm4Ha0iEbtNc5hN2oVAqDhiZPt8mXcKMMBgNIh5VzmT5n9M4YzCNr0j7tMoKE
+         uf1+rtAdxiVt9IzqxMC5TyE2UuPVrBdVzbW6+6lT4xRTI/6bX42U/UZZ/gxq08ugrWj2
+         Cpb4nVTUQ9mHs+o8mKQDbiXw3hUwHk5c7EkXbbpgB5XtlVXgGct4Ha8CjT9+o90JHFrl
+         aACQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MZyQPOMczNHbaYO2QB7Fnl+OekFYCcPdnajxmT+RLok=;
-        b=idZT/6T+PFaV5d/IhIsmWXqy/W1Sob1XfQyT77NqWzz17+E2l+6EppiQR3ipLC7Rx9
-         3MFtACjLsUqF6qmJ6d0wsXtnXk7h5nQBZE6eTJQ2ol8mSGupQ+YXGhUBL1lGddFvaVey
-         I1hHFdl+DauauHv+T6mHaNbDYW1VmOxLWK+2GCccLqCbxtlQoyvg8XtOUdqYHik3QnEF
-         4DVdtPRtzNPUZP3Ppd1ME7hgczlK8/5x92XoyPewOnjVYHfDQKVlzYZ8597ZQO/gPCC9
-         OtEciHtPPN+N5Olwkyth+/2WgUqo7rIdFm0k/UStt7XU+ruX+O1GNKmI0S1WzAx7ziOx
-         wAKA==
-X-Gm-Message-State: AOAM5301BIzu7Tz+cSMS+gKnXhoWQRvowCjGGJi6NEKTi8hfW9J/Bxpr
-        rFd+vyapZES4IAZLHY2b6YHUIiWUD4U=
-X-Google-Smtp-Source: ABdhPJzjmydMrQ+1z0sFSMCKPT5a3jlwVLV3GcU7fdKAOd91lZSsQXjWhG4ckUU/PlbYpJHGdQjqGw==
-X-Received: by 2002:a1c:9d07:: with SMTP id g7mr49509502wme.160.1594043173784;
-        Mon, 06 Jul 2020 06:46:13 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865? ([2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865])
-        by smtp.googlemail.com with ESMTPSA id 65sm26163278wre.6.2020.07.06.06.46.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 06:46:13 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
- <20200706105538.2159-4-daniel.lezcano@linaro.org>
- <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
- <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
-Date:   Mon, 6 Jul 2020 15:46:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ujWmFeI6Flmp+c/ywUJ1ekXf+PPGZevFkwBhKsOKkZ4=;
+        b=ZgTI8XUxZqO5Aw2IStdTIaK1B3TOaAkFBVel9LcF+6MfoDa+wNqphQNzkl+nVfcslR
+         NT+WdJKOgfU5d6vSDlGfiq26Dek031+CJXUxUnK4Jy08e7VqZ7vjbx2C+OVzR+NPjEe5
+         aKg2HGd/XN67dz/bH+2E+ljBz0tpWHN0G88qYLRcSzSkE7HI4Xh8tZDXT92DawdAna3j
+         f3sioJhscdRZWibl772HPYymWyF12+RVYLUxQLKVlRNfcfS4lhcdzKCwmgvnMQnR0brT
+         BZ6crNWbixYyEjkje9ehK/kljDWeUAsKIesTkGiQgVxpnTl0yNTu2gt3yBVTfpAhwRRA
+         uZYw==
+X-Gm-Message-State: AOAM532YjId119q0uEKyQaYLRHQRIj1y/jQ4MYQZ5fSdhZF/RlA0WRUo
+        z0fem8SelTpujEezkcGfpgsGrI7pj3YWjI3KTFo=
+X-Google-Smtp-Source: ABdhPJxz5qKFA+dIJPADY0uxRaQOwVIv39lIoqD9qN87qufLAZPHvz+99eupHYq3qWL41O33rJVFQF5KF1C6m+TF8L0=
+X-Received: by 2002:a2e:808d:: with SMTP id i13mr24444142ljg.452.1594043196179;
+ Mon, 06 Jul 2020 06:46:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com> <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 6 Jul 2020 10:46:24 -0300
+Message-ID: <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/07/2020 15:17, Marek Szyprowski wrote:
-> Hi Daniel,
-> 
-> On 06.07.2020 12:55, Daniel Lezcano wrote:
->> The generic netlink protocol is implemented but the different
->> notification functions are not yet connected to the core code.
->>
->> These changes add the notification calls in the different
->> corresponding places.
->>
->> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> 
-> This patch landed in today's linux-next 20200706 as commit 5df786e46560 
-> ("thermal: core: Add notifications call in the framework"). Sadly it 
-> breaks booting various Samsung Exynos based boards. Here is an example 
-> log from Odroid U3 board:
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 00000010
-> pgd = (ptrval)
-> [00000010] *pgd=00000000
-> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560 
-> #1146
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> PC is at kmem_cache_alloc+0x13c/0x418
-> LR is at kmem_cache_alloc+0x48/0x418
-> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
-> ...
-> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
-> Control: 10c5387d  Table: 4000404a  DAC: 00000051
-> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> Stack: (0xee8f1cf8 to 0xee8f2000)
-> ...
-> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] (__alloc_skb+0x5c/0x170)
-> [<c08cd170>] (__alloc_skb) from [<c07ec19c>] 
-> (thermal_genl_send_event+0x24/0x174)
-> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>] 
-> (thermal_notify_tz_create+0x58/0x74)
-> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>] 
-> (thermal_zone_device_register+0x358/0x650)
-> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>] 
-> (of_parse_thermal_zones+0x304/0x7a4)
-> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>] 
-> (thermal_init+0xdc/0x154)
-> [<c1028964>] (thermal_init) from [<c0102378>] (do_one_initcall+0x8c/0x424)
-> [<c0102378>] (do_one_initcall) from [<c1001158>] 
-> (kernel_init_freeable+0x190/0x204)
-> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>] 
-> (kernel_init+0x8/0x118)
-> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
-> 
-> Reverting it on top of linux-next fixes the boot issue. I will 
-> investigate it further soon.
+On Mon, Jul 6, 2020 at 2:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
+>
+> From: Sven Van Asbroeck <thesven73@gmail.com> Sent: Sunday, July 5, 2020 11:34 PM
+> >
+> >   ext phy---------| \
+> >                   |  |
+> >   enet_ref-o------|M |----pad------| \
+> >            |      |_/              |  |
+> >            |                       |M |----mac_gtx
+> >            |                       |  |
+> >            o-----------------------|_/
+> >
+> >
+> > How do we tell the clock framework that clk_pad has a mux that can be
+> > connected to _any_ external clock? and also enet_ref?
+>
+> The clock depends on board design, HW refer guide can describe the clk
+> usage in detail and customer select one clk path as their board design.
+>
+> To make thing simple, we can just control the second "M" that is controlled
+> by gpr bit.
 
-Thanks for reporting this.
-
-Can you send the addr2line result and code it points to ?
-
-
->> ---
->>    v4:
->>       - Fixed missing static declaration, reported by kbuild-bot
->>       - Removed max state notification
->> ---
->>   drivers/thermal/thermal_core.c    | 21 +++++++++++++++++++++
->>   drivers/thermal/thermal_helpers.c | 13 +++++++++++--
->>   drivers/thermal/thermal_sysfs.c   | 15 ++++++++++++++-
->>   3 files changed, 46 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
->> index 5fae1621fb01..25ef29123f72 100644
->> --- a/drivers/thermal/thermal_core.c
->> +++ b/drivers/thermal/thermal_core.c
->> @@ -215,6 +215,8 @@ int thermal_zone_device_set_policy(struct thermal_zone_device *tz,
->>   	mutex_unlock(&tz->lock);
->>   	mutex_unlock(&thermal_governor_lock);
->>   
->> +	thermal_notify_tz_gov_change(tz->id, policy);
->> +
->>   	return ret;
->>   }
->>   
->> @@ -406,12 +408,25 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
->>   static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
->>   {
->>   	enum thermal_trip_type type;
->> +	int trip_temp, hyst = 0;
->>   
->>   	/* Ignore disabled trip points */
->>   	if (test_bit(trip, &tz->trips_disabled))
->>   		return;
->>   
->> +	tz->ops->get_trip_temp(tz, trip, &trip_temp);
->>   	tz->ops->get_trip_type(tz, trip, &type);
->> +	if (tz->ops->get_trip_hyst)
->> +		tz->ops->get_trip_hyst(tz, trip, &hyst);
->> +
->> +	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
->> +		if (tz->last_temperature < trip_temp &&
->> +		    tz->temperature >= trip_temp)
->> +			thermal_notify_tz_trip_up(tz->id, trip);
->> +		if (tz->last_temperature >= trip_temp &&
->> +		    tz->temperature < (trip_temp - hyst))
->> +			thermal_notify_tz_trip_down(tz->id, trip);
->> +	}
->>   
->>   	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
->>   		handle_critical_trips(tz, trip, type);
->> @@ -443,6 +458,8 @@ static void update_temperature(struct thermal_zone_device *tz)
->>   	mutex_unlock(&tz->lock);
->>   
->>   	trace_thermal_temperature(tz);
->> +
->> +	thermal_genl_sampling_temp(tz->id, temp);
->>   }
->>   
->>   static void thermal_zone_device_init(struct thermal_zone_device *tz)
->> @@ -1405,6 +1422,8 @@ thermal_zone_device_register(const char *type, int trips, int mask,
->>   	if (atomic_cmpxchg(&tz->need_update, 1, 0))
->>   		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
->>   
->> +	thermal_notify_tz_create(tz->id, tz->type);
->> +
->>   	return tz;
->>   
->>   unregister:
->> @@ -1476,6 +1495,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
->>   	ida_destroy(&tz->ida);
->>   	mutex_destroy(&tz->lock);
->>   	device_unregister(&tz->device);
->> +
->> +	thermal_notify_tz_delete(tz->id);
->>   }
->>   EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
->>   
->> diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
->> index 87b1256fa2f2..c94bc824e5d3 100644
->> --- a/drivers/thermal/thermal_helpers.c
->> +++ b/drivers/thermal/thermal_helpers.c
->> @@ -175,6 +175,16 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
->>   	mutex_unlock(&tz->lock);
->>   }
->>   
->> +static void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev,
->> +				       int target)
->> +{
->> +	if (cdev->ops->set_cur_state(cdev, target))
->> +		return;
->> +
->> +	thermal_notify_cdev_state_update(cdev->id, target);
->> +	thermal_cooling_device_stats_update(cdev, target);
->> +}
->> +
->>   void thermal_cdev_update(struct thermal_cooling_device *cdev)
->>   {
->>   	struct thermal_instance *instance;
->> @@ -197,8 +207,7 @@ void thermal_cdev_update(struct thermal_cooling_device *cdev)
->>   			target = instance->target;
->>   	}
->>   
->> -	if (!cdev->ops->set_cur_state(cdev, target))
->> -		thermal_cooling_device_stats_update(cdev, target);
->> +	thermal_cdev_set_cur_state(cdev, target);
->>   
->>   	cdev->updated = true;
->>   	mutex_unlock(&cdev->lock);
->> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
->> index aa99edb4dff7..ff449943f757 100644
->> --- a/drivers/thermal/thermal_sysfs.c
->> +++ b/drivers/thermal/thermal_sysfs.c
->> @@ -124,7 +124,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
->>   {
->>   	struct thermal_zone_device *tz = to_thermal_zone(dev);
->>   	int trip, ret;
->> -	int temperature;
->> +	int temperature, hyst = 0;
->> +	enum thermal_trip_type type;
->>   
->>   	if (!tz->ops->set_trip_temp)
->>   		return -EPERM;
->> @@ -139,6 +140,18 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
->>   	if (ret)
->>   		return ret;
->>   
->> +	if (tz->ops->get_trip_hyst) {
->> +		ret = tz->ops->get_trip_hyst(tz, trip, &hyst);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	ret = tz->ops->get_trip_type(tz, trip, &type);
->> +	if (ret)
->> +		return ret;
->> +
->> +	thermal_notify_tz_trip_change(tz->id, trip, type, temperature, hyst);
->> +
->>   	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
->>   
->>   	return count;
-> 
-> Best regards
-> 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Would it make sense to use compatible = "mmio-mux"; like we do on
+imx7s, imx6qdl.dtsi and imx8mq.dtsi?
