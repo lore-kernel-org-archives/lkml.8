@@ -2,124 +2,129 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F47AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613A0206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:11:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1/ZKuIh"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEEA206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594066326;
+	bh=fYeWno6eIJhW7WG2EftixMnePhTjX5NPHja5EE5eoa4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=B6SjB9euJgo2vRU/JPXwUld0hmEV4gdjj/Ump9xxFQ/ThvY2VuHokqOl4Gk7DNqJT
+	 sunTiaE9UPC2REl0KNVm0/h7qYvuztl8AaVOyjLyXiWcEvv0iz5TDQBknG+10WqB+C
+	 DolEPc3gjjoKtVs77hwJTmVpo2k5CNoHwRjMsYrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGFULx (ORCPT
+        id S1726939AbgGFUMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
+        Mon, 6 Jul 2020 16:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFULw (ORCPT
+        with ESMTP id S1726867AbgGFUME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:11:52 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CB5C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:11:52 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id d4so32643056otk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 13:11:52 -0700 (PDT)
+        Mon, 6 Jul 2020 16:12:04 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF02C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:12:04 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id x2so551206oog.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 13:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NH51QzKoo8vcvgmX1earnUW3W8VarBLxn3wxnDS2NOk=;
-        b=y1/ZKuIhjHhOsxpSw+1xMcKmg2e5dWBH3F1+AO7aZkt4nuahkvlotHPyJkqTmzHRcU
-         dayynd91m96Pxs75SBm30PdnqAQSw9PL8yc4R6iUdxaAF1DhMjqCqX5AiCR1neYMayFs
-         YcV2BKubqr6RmiXZqJp8NyNrKmK28zR8AhFYLntpBZX43yc4BitVunCWcr/iQBkUgeor
-         rhyMSBQvEvS+98Wzh3MLqUIDMsOKDiXerdn7gA2pjwesgHWpial6dAPS2MAqVfiQBxqR
-         MGIVvMl/Md/p013QyXWb4A0uMaG16Xbv1m23EGeoS82CBXGGKDuB5gOktniOknC0nkwX
-         B2WQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aPoqTBTd4Fvr1FatyV2n4cKiG3l+p0twEU6wlQSoIMo=;
+        b=S1LAlmWR81o6w2df99eOJ7JGN5ZLNQQlgmBr0AovHqGoTEhDP1dJIQzYrKsv5JhbJK
+         kGiV7RWOXcm94Dc6W4uVphRdSgEobOxM3wWPL7Ej4QGDrUu1evxGdCrrXul7Ij69P17N
+         sCLrJuu5UMKl/7Igd4SfcBs9k/TeXK5zn2WNw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NH51QzKoo8vcvgmX1earnUW3W8VarBLxn3wxnDS2NOk=;
-        b=Ow9YwVwFerpXKgrqIK4fa/Hux4RRSmaMRQGMIhOq7zJ75de/DWx/1zbtjB19F5R9JZ
-         io98UmABqhVPLHOJVfLNachMiKNzDTZBDWz00bbiEmQlKpAEwA6wVu8GvP4lOejPz1wN
-         3KcMpgHmcyc1YY9fW2LTzcjEea6MIeUx8zCaHmRL4fVrFHJvRnItNK0bqBxe/Muf/Bau
-         e5a7XMxUbdQE73kgMhXU7q5ACsPhS1I81gjiLfRwSgsAhEwAwkSmdOLLJepGA2VzO7T1
-         cCt8TRct82gNvbrNMzSNCHW0ec37sBLamGNCTPWX+C9GeMY7XTPy2tR9Yv8hyrpP+Cmc
-         JS/g==
-X-Gm-Message-State: AOAM533tZuYywPpRsILbKTTzhAgxaLpM2ZIyLGnSKQl4DPf1Cq34Mx83
-        rEymWcDYC4wmjXeItNyfxIXqwHwa8EISM6Y7x+Hx6Q==
-X-Google-Smtp-Source: ABdhPJxWWUEOZiTzl4XMzBiep/6hLNneDCfCqQ3s06apjoLTB29tsG8ceo9LV97cMRx0HUQs4qjZVEIL4axcOjO71UI=
-X-Received: by 2002:a05:6830:1e13:: with SMTP id s19mr45133059otr.102.1594066311761;
- Mon, 06 Jul 2020 13:11:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aPoqTBTd4Fvr1FatyV2n4cKiG3l+p0twEU6wlQSoIMo=;
+        b=BySA4dpSlDvOdp+OOWDr22Y6jK5kVIy+ndwnVvjX6ikIvGKC2JbO5gbWJyjZ/Ib7Ux
+         5PrpCr7+cbO9DrXxs71pQiea1PhttEtSmen/72ARbh63389PHY23LlZFWrvIqTYqJnNm
+         r4lrDQ70QAIFLfF6kwoGbH2VSYF9RNNDZTOrY3qEGfo31IVIMnzcIf2mpJP1pD7n373G
+         jaQJ5Eki+yDEENSV0iICG9hseyrRRz96Fl8vd4sL5wcOVIyGoa03yqWg/el0xe4Zi/CT
+         ZYexomQ4+fwiRgN1lTZYg/4wSU5ol6LiUZ9bnI/dFoZZNwYqD/0InvprAjRpSVd77luq
+         ox2w==
+X-Gm-Message-State: AOAM531JT9PLhZnEOq87MqEIoxJLRw3uRyCnXBYcEzIAT14Ktzz0EmAS
+        fA1GdtIeHReiMyuzQ21yOllDKQ==
+X-Google-Smtp-Source: ABdhPJyRxhPxu99g6AO6b/F2qYBGVuPKy8moAvlb1q+8+tNXPXZ0ncJvdUpKWVJ8hmvLy0Ra1yusvQ==
+X-Received: by 2002:a4a:2459:: with SMTP id v25mr43655306oov.75.1594066323687;
+        Mon, 06 Jul 2020 13:12:03 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id d26sm5359898otl.49.2020.07.06.13.12.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 13:12:02 -0700 (PDT)
+Subject: Re: [PATCH v4] selftests: tpm: upgrade TPM2 tests from Python 2 to
+ Python 3
+To:     Pengfei Xu <pengfei.xu@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Heng Su <heng.su@intel.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai Svahn <kai.svahn@intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200626034052.25263-1-pengfei.xu@intel.com>
+ <20200702194435.GA28988@linux.intel.com>
+ <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
+ <20200703012005.GA23276@xpf-desktop.sh.intel.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <02c7dda4-3a05-b118-1edf-ec020eb08193@linuxfoundation.org>
+Date:   Mon, 6 Jul 2020 14:12:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
- <20200620212616.93894-1-zenczykowski@gmail.com> <CALAqxLVeg=EE06Eh5yMBoXtb2KTHLKKnBLXwGu-yGV4aGgoVMA@mail.gmail.com>
- <CAADnVQJOpsQhT0oY5GZikf00MT1=pR3vpCZkn+Z4hp2_duUFSQ@mail.gmail.com>
-In-Reply-To: <CAADnVQJOpsQhT0oY5GZikf00MT1=pR3vpCZkn+Z4hp2_duUFSQ@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 6 Jul 2020 13:11:42 -0700
-Message-ID: <CALAqxLVfxSj961C5muL5iAYjB5p_JTx7T6E7zQ7nsfQGC-exFA@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] restore behaviour of CAP_SYS_ADMIN allowing the
- loading of networking bpf programs
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>,
-        =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linux Network Development Mailing List 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200703012005.GA23276@xpf-desktop.sh.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 5:54 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> On Mon, Jun 22, 2020 at 12:44 PM John Stultz <john.stultz@linaro.org> wro=
-te:
-> > On Sat, Jun 20, 2020 at 2:26 PM Maciej =C5=BBenczykowski
-> > <zenczykowski@gmail.com> wrote:
-> > > From: Maciej =C5=BBenczykowski <maze@google.com>
-> > >
-> > > This is a fix for a regression introduced in 5.8-rc1 by:
-> > >   commit 2c78ee898d8f10ae6fb2fa23a3fbaec96b1b7366
-> > >   'bpf: Implement CAP_BPF'
-> > >
-> > > Before the above commit it was possible to load network bpf programs
-> > > with just the CAP_SYS_ADMIN privilege.
-> > >
-> > > The Android bpfloader happens to run in such a configuration (it has
-> > > SYS_ADMIN but not NET_ADMIN) and creates maps and loads bpf programs
-> > > for later use by Android's netd (which has NET_ADMIN but not SYS_ADMI=
-N).
-> > >
-> > > Cc: Alexei Starovoitov <ast@kernel.org>
-> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > > Reported-by: John Stultz <john.stultz@linaro.org>
-> > > Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
-> > > Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
-> >
-> > Thanks so much for helping narrow this regression down and submitting t=
-his fix!
-> > It's much appreciated!
-> >
-> > Tested-by: John Stultz <john.stultz@linaro.org>
->
-> Applied to bpf tree. Thanks
+On 7/2/20 7:20 PM, Pengfei Xu wrote:
+> Thanks a lot Jarkko and Shuah!
+> 
+> BR.
+> Thanks!
+> 
+> On 2020-07-02 at 15:32:49 -0600, Shuah Khan wrote:
+>> On 7/2/20 1:44 PM, Jarkko Sakkinen wrote:
+>>> On Fri, Jun 26, 2020 at 11:40:52AM +0800, Pengfei Xu wrote:
+>>>> Python 2 is no longer supported by the Python upstream project, so
+>>>> upgrade TPM2 tests to Python 3.
+>>>>
+>>>> Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
+>>>
+>>> I think that it's perfect now. Thank you.
+>>>
+>>> Also
+>>>
+>>> 1. I checked that scripts/checkpatch.pl did not report any errors.
+>>> 2. sudo python3 -m unittest -v tpm2_tests.SmokeTest
+>>> 3. sudo python3 -m unittest -v tpm2_tests.SpaceTest
+>>>
+>>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>
+>>> Shuah, I could pick this up after your PR (with my earlier fixes) lands
+>>> to mainline, and sort out possible merge conflicts if they uprise. Is
+>>> this fine by you?
+>>>
+>>
 
-Hey all,
-  Just wanted to follow up on this as I've not seen the regression fix
-land in 5.8-rc4 yet? Is it still pending, or did it fall through a
-gap?
+I started applying this and then passed.
 
-thanks
--john
+Doesn't this test fail if python3 isn't installed? Do you have to
+support both versions?
+
+thanks,
+-- Shuah
