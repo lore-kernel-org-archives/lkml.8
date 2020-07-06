@@ -2,96 +2,118 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0CB20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DD7206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q7louwU7"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="brssue4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgGFOKN (ORCPT
+        id S1729197AbgGFOPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgGFOKN (ORCPT
+        Mon, 6 Jul 2020 10:15:42 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:9538 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgGFOPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:10:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47BF9C061755;
-        Mon,  6 Jul 2020 07:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jr5pej1wSJwvDermowQo12UoHtgzyC4iW6ylZEO386k=; b=Q7louwU7AJBdH4Ne2fjJUP4uJO
-        Gp34JEslK4c8hczFMpZByibgLIInVpBTt5Ng3f+MnJ5OmanRP6hil92vM8VT1pFNB10CdyGNtfeRy
-        fBSY1nh4ok1c1gq4A2OXkz4CGNte1TCLB+M2G6moP7j12OPiCWwFHYM6ULoYLAH6fnraGwF5WB6bs
-        cClfugBzi22sYLcItDMJ5oG804iPek4AxSRt4ArnyI9oOacegAY99AcWkZ4ZnDi8C+/barbkcPCkE
-        TwsnDkeIRp60jXXom3TfHeNwKAfv81W/nSWwQ6T2Ptyu4VNdjnIcyiSz4scwe4XrmT4sEKbS/aYx/
-        HHiqqJYg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsRoo-0003s1-56; Mon, 06 Jul 2020 14:10:02 +0000
-Date:   Mon, 6 Jul 2020 15:10:02 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Message-ID: <20200706141002.GZ25523@casper.infradead.org>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+        Mon, 6 Jul 2020 10:15:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594044942; x=1625580942;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=d4PtA/PnsPkuQy2jWbwgjkialcWBF3QdJN51/memhrA=;
+  b=brssue4stFDk2QMIh8oi45r0tsjAQXJ7+HHUa4+rqRSNjILlapMTL2Zz
+   JTAOR1Gith/9Gmpdses0yEt2c3OCWFgLFc4nIcX6wHDuTv91WM5TGL4Rn
+   nt9Whnb8q8y8ETlgCkq3PVYQCptt7sScSzsgEH+2TbH6w+Xj+wHOsDTQ7
+   o=;
+IronPort-SDR: kIexPVF4X3xMERMadp+fNVHSJjVaOeB9LwiKWOaOoGF0e48oS7ANsVXeUy4v1TAsnEhVezNfGl
+ X83FWLEuQ93w==
+X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
+   d="scan'208";a="40236267"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 14:15:38 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 2C045A05EB;
+        Mon,  6 Jul 2020 14:15:36 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 14:15:35 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 14:15:27 +0000
+Subject: Re: [PATCH v4 13/18] nitro_enclaves: Add logic for enclave
+ termination
+To:     Alexander Graf <graf@amazon.com>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-14-andraprs@amazon.com>
+ <34a0bee8-aaf4-d221-cd6e-41b5f3d8f335@amazon.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <61c164f7-3849-9c46-b65b-7cd8d4788793@amazon.com>
+Date:   Mon, 6 Jul 2020 17:15:22 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+In-Reply-To: <34a0bee8-aaf4-d221-cd6e-41b5f3d8f335@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D27UWA003.ant.amazon.com (10.43.160.56) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
-> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
-> > On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
-> >> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
-> >>> From: Selvakumar S <selvakuma.s1@samsung.com>
-> >>>
-> >>> For zone-append, block-layer will return zone-relative offset via ret2
-> >>> of ki_complete interface. Make changes to collect it, and send to
-> >>> user-space using cqe->flags.
 
-> > I'm surprised you aren't more upset by the abuse of cqe->flags for the
-> > address.
-> 
-> Yeah, it's not great either, but we have less leeway there in terms of
-> how much space is available to pass back extra data.
-> 
-> > What do you think to my idea of interpreting the user_data as being a
-> > pointer to somewhere to store the address?  Obviously other things
-> > can be stored after the address in the user_data.
-> 
-> I don't like that at all, as all other commands just pass user_data
-> through. This means the application would have to treat this very
-> differently, and potentially not have a way to store any data for
-> locating the original command on the user side.
 
-I think you misunderstood me.  You seem to have thought I meant
-"use the user_data field to return the address" when I actually meant
-"interpret the user_data field as a pointer to where userspace
-wants the address stored".
+On 06/07/2020 14:26, Alexander Graf wrote:
+>
+>
+> On 22.06.20 22:03, Andra Paraschiv wrote:
+>> An enclave is associated with an fd that is returned after the enclave
+>> creation logic is completed. This enclave fd is further used to setup
+>> enclave resources. Once the enclave needs to be terminated, the enclave
+>> fd is closed.
+>>
+>> Add logic for enclave termination, that is mapped to the enclave fd
+>> release callback. Free the internal enclave info used for bookkeeping.
+>>
+>> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
+
+Added. Thanks for review.
+
+Andra
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
