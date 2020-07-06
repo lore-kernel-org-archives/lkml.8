@@ -2,179 +2,134 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED09C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC95C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1E452075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3760420772
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgGFGWQ (ORCPT
+        id S1728665AbgGFG1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:22:16 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45218 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgGFGWP (ORCPT
+        Mon, 6 Jul 2020 02:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgGFG1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:22:15 -0400
-Received: by mail-io1-f72.google.com with SMTP id d64so22871225iof.12
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:22:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=65VFK3CeGOY6XsF4+JQsV3Lwx5hkLbk2n9tjz+Qw9Jo=;
-        b=f2mmBoi88CHxYsqn8hfKEjbyBJMNILLVeUIzA3NFBgSYSVHJRf47PfEDk2MIi5jr0X
-         +jNeEKmdhnbc4IN7UsRmpM88U7BYCpSOL7T+4AfjPaDCOCMcS91PLo34Y1j3m6SLxyno
-         hMocNLWgS8ogqIjXr4/r60JWic7PxzCPVj4nfGr6VhYBDe0EqQuV5IwPaEYE4ySlK8UL
-         jxkVlbK1h7IVeVhZgdYB4cfto6dtPozenqdT/1OBqfuR+fRkz6kLj6qnP3UBXp/C8C4U
-         tEhN4Yi5lNmSms8BQIsdILvbrspK9nufen+rPn7iFc3kIgahuCVCc37uohiRlDM8/KyG
-         TJNg==
-X-Gm-Message-State: AOAM530tOTC7BVbbwl3I+ic3WXmKeDN6A7IbmDTx331Ppm634FUZzmSc
-        4mEdH0olLzLCEs19EPs/CcFIraqJ+xIPgOD0JDkRDy8V5xZz
-X-Google-Smtp-Source: ABdhPJzxJfprkEfzW1CDLFjw0CpuAk9bdct5cThB4k/Pgp3XcKi4EsWkOqKoaALvUQgTFtVbA7bcf/rlB1rqsD1zoXgBN1gbx34K
+        Mon, 6 Jul 2020 02:27:38 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE01C061794;
+        Sun,  5 Jul 2020 23:27:38 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id C8627BC07E;
+        Mon,  6 Jul 2020 06:27:33 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: RTC
+Date:   Mon,  6 Jul 2020 08:27:27 +0200
+Message-Id: <20200706062727.18481-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b749:: with SMTP id c9mr30062467ilm.289.1594016534226;
- Sun, 05 Jul 2020 23:22:14 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 23:22:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000049f07f05a9bfe509@google.com>
-Subject: KASAN: use-after-free Read in wg_get_device_start
-From:   syzbot <syzbot+e869cfbeeae05d706b9c@syzkaller.appspotmail.com>
-To:     Jason@zx2c4.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-syzbot found the following crash on:
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=123532a7100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
-dashboard link: https://syzkaller.appspot.com/bug?extid=e869cfbeeae05d706b9c
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e869cfbeeae05d706b9c@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in nla_get_u32 include/net/netlink.h:1541 [inline]
-BUG: KASAN: use-after-free in lookup_interface drivers/net/wireguard/netlink.c:61 [inline]
-BUG: KASAN: use-after-free in wg_get_device_start+0x2bc/0x2d0 drivers/net/wireguard/netlink.c:203
-Read of size 4 at addr ffff88803b9c3818 by task syz-executor.3/15521
-
-CPU: 1 PID: 15521 Comm: syz-executor.3 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- nla_get_u32 include/net/netlink.h:1541 [inline]
- lookup_interface drivers/net/wireguard/netlink.c:61 [inline]
- wg_get_device_start+0x2bc/0x2d0 drivers/net/wireguard/netlink.c:203
- genl_start+0x390/0x570 net/netlink/genetlink.c:556
- __netlink_dump_start+0x3d2/0x700 net/netlink/af_netlink.c:2343
- genl_family_rcv_msg_dumpit net/netlink/genetlink.c:638 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0xb03/0xe00 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f1bd1266c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000502320 RCX: 000000000045cb29
-RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a32 R14: 00000000004cd184 R15: 00007f1bd12676d4
-
-Allocated by task 15525:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xde/0x4f0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x7b2/0xd70 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 15525:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb+0x56/0x1c0 net/core/skbuff.c:678
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x78e/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88803b9c3800
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 24 bytes inside of
- 1024-byte region [ffff88803b9c3800, ffff88803b9c3c00)
-The buggy address belongs to the page:
-page:ffffea0000ee70c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0001859248 ffffea0000e02ec8 ffff8880aa400c40
-raw: 0000000000000000 ffff88803b9c3000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88803b9c3700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88803b9c3780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88803b9c3800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff88803b9c3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88803b9c3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ Continuing my work started at 93431e0607e5.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
+
+ drivers/rtc/rtc-ab-b5ze-s3.c | 2 +-
+ drivers/rtc/rtc-bq32k.c      | 2 +-
+ drivers/rtc/rtc-mcp795.c     | 2 +-
+ drivers/rtc/rtc-pcf85063.c   | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/rtc/rtc-ab-b5ze-s3.c b/drivers/rtc/rtc-ab-b5ze-s3.c
+index 811fe2005488..2370ac0cdb5f 100644
+--- a/drivers/rtc/rtc-ab-b5ze-s3.c
++++ b/drivers/rtc/rtc-ab-b5ze-s3.c
+@@ -7,7 +7,7 @@
+  *
+  * Detailed datasheet of the chip is available here:
+  *
+- *  http://www.abracon.com/realtimeclock/AB-RTCMC-32.768kHz-B5ZE-S3-Application-Manual.pdf
++ *  https://www.abracon.com/realtimeclock/AB-RTCMC-32.768kHz-B5ZE-S3-Application-Manual.pdf
+  *
+  * This work is based on ISL12057 driver (drivers/rtc/rtc-isl12057.c).
+  *
+diff --git a/drivers/rtc/rtc-bq32k.c b/drivers/rtc/rtc-bq32k.c
+index 4a63f0cd2321..933e4237237d 100644
+--- a/drivers/rtc/rtc-bq32k.c
++++ b/drivers/rtc/rtc-bq32k.c
+@@ -6,7 +6,7 @@
+  * Copyright (C) 2014 Pavel Machek <pavel@denx.de>
+  *
+  * You can get hardware description at
+- * http://www.ti.com/lit/ds/symlink/bq32000.pdf
++ * https://www.ti.com/lit/ds/symlink/bq32000.pdf
+  */
+ 
+ #include <linux/module.h>
+diff --git a/drivers/rtc/rtc-mcp795.c b/drivers/rtc/rtc-mcp795.c
+index 1660d5e79582..21cbf7f892e8 100644
+--- a/drivers/rtc/rtc-mcp795.c
++++ b/drivers/rtc/rtc-mcp795.c
+@@ -7,7 +7,7 @@
+  * based on other Linux RTC drivers
+  *
+  * Device datasheet:
+- * http://ww1.microchip.com/downloads/en/DeviceDoc/22280A.pdf
++ * https://ww1.microchip.com/downloads/en/DeviceDoc/22280A.pdf
+  */
+ 
+ #include <linux/module.h>
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index 7a87f461bec8..ca55ba975aeb 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -21,8 +21,8 @@
+ /*
+  * Information for this driver was pulled from the following datasheets.
+  *
+- *  http://www.nxp.com/documents/data_sheet/PCF85063A.pdf
+- *  http://www.nxp.com/documents/data_sheet/PCF85063TP.pdf
++ *  https://www.nxp.com/documents/data_sheet/PCF85063A.pdf
++ *  https://www.nxp.com/documents/data_sheet/PCF85063TP.pdf
+  *
+  *  PCF85063A -- Rev. 6 — 18 November 2015
+  *  PCF85063TP -- Rev. 4 — 6 May 2015
+-- 
+2.27.0
+
