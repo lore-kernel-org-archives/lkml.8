@@ -2,103 +2,143 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52614C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC5C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF2A20773
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlaataya"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzQyI7Ze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgGFMAY (ORCPT
+        id S1729155AbgGFMAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        Mon, 6 Jul 2020 08:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgGFMAX (ORCPT
+        with ESMTP id S1729005AbgGFMAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:00:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30D7C061794;
-        Mon,  6 Jul 2020 05:00:22 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so18298686pgq.1;
-        Mon, 06 Jul 2020 05:00:22 -0700 (PDT)
+        Mon, 6 Jul 2020 08:00:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4DBC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 05:00:29 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so40517059wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 05:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k2wZVBCbFmyS4f19I96bMfACN0zJyTtZkt6TGll4q3k=;
-        b=hlaatayaR5fM1opYuZxRQLjh4ia6UrS5+Yv1bc51QztaZUkLdZqiiFOlARsV/10S+g
-         wAS+W4QYhOVXxXbgq5TQkVkrSJ85UafIRr4amXG5cPrHTh08pZAcj7sZFZt889Dy33WE
-         AKD13FxipQxWJi3e17SAXeR8Pl6RlECF49No27zMOnymNDFN0vgkswwL32JsKk5dNAsQ
-         tdA/1QXmjwSK3FbslaFy1djWK9pS2DLpD1be8JBZyiLMkWFhhdY+UFF3H4JhUbakzU2s
-         +UehpbLn1c9La4/0z6Nn6GUnu98WfQuOpf2tCH4/s2KxHPlSoPp71BQBpPSjdpzwfjbB
-         wF/A==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=cuGTDi2NhkVw3mmqGaWPQRxsrhDmvfo7KxDL1eoQp+c=;
+        b=ZzQyI7ZeERp6bZfVxZejJdkriojsnlM1v3Oio0hBntvgLEldwhqjSiS+A0AFGAzhml
+         62iCXhdLeOagB8vjvNoG28lO8kcxKU3RW7g0ZJjPbzXr+/6wgaaNVsx53pAMSnl4lBti
+         A1OwpjGRmzr3XSdJDbTKVq/4GbRE+/6NDBPuxfmCIAutev++aEDpyr+IeMVBklEhrRgc
+         RLDbbQRZvdCYp5k9DH8PcaZvlqSD2E9pAcpBqJgNs34VrNV4CHfLBpOi6UPB5VbeQUp4
+         FOHHtYqCOXyUYGkjBjRYfHHzLvW4c37guXoilXbPtvRI63zLHPagc21i+Ek7KYESCs+D
+         Srpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k2wZVBCbFmyS4f19I96bMfACN0zJyTtZkt6TGll4q3k=;
-        b=eamASyljo05LcW22bQGuXBivnD9apjAsjCXYJQvOE53Ztuit6G94xls0Cx2Hd08rfM
-         x7RFb9O/irml1GBrhjvhwxjuEYVAPjQTOoiN0PFARTA7L2D+724adqW7cg8+ChJJd2P3
-         +Ia2ZJI/yBzf1MLCAh4Uo0mheT9Pod+jzNRkg6l7UHwJRUfFttvct9K9zJCDVpw+FECQ
-         xPcxKERjMVMMbDRfHVNx31bv24k2laI8YDxz+OIH/wZt+4ZRvSVxmHyanBi2Yv/mxJtA
-         agSTaXZL5YJfxL2C3RTlEsJO4k1VxpkvL9V+wGpoGtfMXM4DYdhgfowTg5GfEngiXMAY
-         2QLw==
-X-Gm-Message-State: AOAM532b8Rzbe15M9mk7+LcKr/CqrRrC9q7/8eGzS69H86T2fE/6sLeU
-        q3Akdv4Ki4pBvX3h9iQM3MGBWQhRyGFAf2+n584wax1S
-X-Google-Smtp-Source: ABdhPJyZUDdsT0fW5oP+iefGIEpVQz6jAxKgMmdAQvjFqCUC77UY7uGD7cjaa+Huw//BrBpqY2aJROFgCll8Wr/laqo=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr16751991pgi.203.1594036822196;
- Mon, 06 Jul 2020 05:00:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cuGTDi2NhkVw3mmqGaWPQRxsrhDmvfo7KxDL1eoQp+c=;
+        b=iUDcyPcGQy7A+guTp99VgW8ZcLvyWfU5VWBB61Os3UMWAMzyTMrgN/57eZ0AwbIPS5
+         OP/aFeLqqK/aDGv5luESThbDS8dXWWE+XCXtauZTf0NVZBsUc1/h4liVsaVfmA9+f8ug
+         1EW53DgRen3rYH2obRh2XMDcSdLBJgtxAwMpwuJ7LxtrvDUzeX10fo4TkOZ4AfwpD1TB
+         BmibZKhhIPhXmvoq1g0I37rggSITtEcOVkVA3A4O6fkOx+Sw8RTQg1U5LdKrJkwF2HUo
+         KwvBvgCLqERDM7UhH1Du2LURMQUMS0OY2zuf7oDqHWtzHwv9WejKByjkl9DBCOb6ZAkx
+         VcIw==
+X-Gm-Message-State: AOAM530yK7PHwgtJ8lmb6W1MUPqV+3ZuxS+yipg+jtyX7VqAV5ApeFO5
+        O5ZYT3XDPR3icA8WchaUR8DdYOXnL71gNw==
+X-Google-Smtp-Source: ABdhPJye5mNmYc/Xk87Zjv6Iz6E1298+yQTS+rVt9MMEVFNGMU19UsqCm5hBWp2ldw0bh4OKXfm/9A==
+X-Received: by 2002:adf:82e1:: with SMTP id 88mr28227012wrc.376.1594036828116;
+        Mon, 06 Jul 2020 05:00:28 -0700 (PDT)
+Received: from [192.168.1.20] ([195.245.18.232])
+        by smtp.gmail.com with ESMTPSA id f197sm6943695wme.33.2020.07.06.05.00.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 05:00:27 -0700 (PDT)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: EP93XX
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        hsweeten@visionengravers.com, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200706062749.18552-1-grandmaster@al2klimov.de>
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Message-ID: <854a28f6-29f3-6087-0e19-b1be21a67ef5@gmail.com>
+Date:   Mon, 6 Jul 2020 13:57:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20200705133038.161547-1-mans0n@gorani.run> <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
-In-Reply-To: <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 Jul 2020 15:00:05 +0300
-Message-ID: <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Sungbo Eo <mans0n@gorani.run>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200706062749.18552-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 2:21 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:>
-> On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
-> >
-> > NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
-> > Its ports are controlled only by a data byte without register address.
-> >
+Hello Alexander,
 
-> > Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
-> >
+On 06/07/2020 08:27, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-No blank line here.
+Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 
-> > Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-
-> This driver looks nice now but why did you remove the mutex in v3? I
-> think when Andy commented on that, he meant not understanding why the
-> error check is protected, not the i2c operations.
-
-Right.
-
-> Are you sure you don't need this lock?
-
-It's a good point!
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  Continuing my work started at 93431e0607e5.
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  arch/arm/mach-ep93xx/clock.c | 2 +-
+>  arch/arm/mach-ep93xx/soc.h   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-ep93xx/clock.c b/arch/arm/mach-ep93xx/clock.c
+> index 2810eb5b2aca..48efefbb54f8 100644
+> --- a/arch/arm/mach-ep93xx/clock.c
+> +++ b/arch/arm/mach-ep93xx/clock.c
+> @@ -571,7 +571,7 @@ static int __init ep93xx_clock_init(void)
+>  	/*
+>  	 * EP93xx SSP clock rate was doubled in version E2. For more information
+>  	 * see:
+> -	 *     http://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
+> +	 *     https://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
+>  	 */
+>  	if (ep93xx_chip_revision() < EP93XX_CHIP_REV_E2)
+>  		clk_spi.rate /= 2;
+> diff --git a/arch/arm/mach-ep93xx/soc.h b/arch/arm/mach-ep93xx/soc.h
+> index f2dace1c9154..9e4a3b245434 100644
+> --- a/arch/arm/mach-ep93xx/soc.h
+> +++ b/arch/arm/mach-ep93xx/soc.h
+> @@ -28,7 +28,7 @@
+>   * Configurations.  Please refer to "AN273: EP93xx Silicon Rev E Design
+>   * Guidelines" for more information.  This document can be found at:
+>   *
+> - *	http://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
+> + *	https://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
+>   */
+>  
+>  #define EP93XX_CS0_PHYS_BASE_ASYNC	0x00000000	/* ASDO Pin = 0 */
