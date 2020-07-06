@@ -2,99 +2,135 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58727C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA2A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B8E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUXAlh0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgGFP1A (ORCPT
+        id S1729391AbgGFP10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:27:00 -0400
-Received: from mga07.intel.com ([134.134.136.100]:39112 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgGFP07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:26:59 -0400
-IronPort-SDR: NI636LsW9wqT4bnbA+cm06WsrU/lh64oVsOh90a4yOPKJU3o5w/vycIhEp5qjHxSp9IPU6cahi
- pwLj+zOY1BwQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="212414623"
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="212414623"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:26:58 -0700
-IronPort-SDR: /MBlYwj7/KgsJ9GrR/HehGosJoIuy94JitZkdzzLkYSofAon+UUD7x6feL/RPc2NlLvf6isrKu
- +DBHskJ4Ozag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="313993583"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.168.148]) ([10.212.168.148])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 08:26:57 -0700
-Subject: Re: [qemu] boot failed: Unable to handle kernel NULL pointer
- dereference at virtual address 0000000000000000
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-serial@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ldewangan@nvidia.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
-        lkft-triage@lists.linaro.org
-References: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
- <CAK8P3a1Lda8HhsDvDREf-cOgb4RkCgEKK5Q-Zj+UhK8tsAaBLw@mail.gmail.com>
- <51d6e5bb-3de1-36dc-15a4-c341b23ca8cd@intel.com>
- <CAK8P3a2LmUVj-yhwxXeCpqdxqJpp0m-q9q9SKQpfh3tFgMXPQA@mail.gmail.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <ea69a0f8-af48-45a3-7969-c38e0f785599@intel.com>
-Date:   Mon, 6 Jul 2020 08:26:56 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 6 Jul 2020 11:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgGFP1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:27:25 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5474DC061755;
+        Mon,  6 Jul 2020 08:27:25 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id h28so35358232edz.0;
+        Mon, 06 Jul 2020 08:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K2hYlLbTaZ/9O2oP7Scy79Kvu25UFPIsfaQ2aicAONA=;
+        b=HUXAlh0eGk8q3sLHEStCVWgz1qwKv4QoU75L/UBCZ96vczx2WpKmk6/1rBXoVXTvEF
+         VQ1dZTT9hdIFSHwpJ5fli08eBmUn0uWaQvu4hm76AttX4ZerWXSp1rWlWqDmKW+f23yB
+         n3CWzgtw0LqXirLgp7sqMqJnIpR/MDDSwBy9ZYNdlY9t1bu03Gb+m+2T1+EtaqGi+6w5
+         GPX7I7ff3wMG5b3Tjr7IV2PWHN6v8EMzlw8Cm2Uh9Ms4f8lE6i6uLxZSRsFsv1d+cwvl
+         QCdqJxIidVJ1fCES/whT6atooSWGE4o+nWwHMWs6RQGkcTSqYUcYb2m2BzHZIMEzJKcN
+         2JXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K2hYlLbTaZ/9O2oP7Scy79Kvu25UFPIsfaQ2aicAONA=;
+        b=ZRj5//udmzuj8o/f6vc1EF4CjecqFzIxnlmVZvAkDaSxzPm8lwsXk4yiexDS9juZI2
+         C2LogbwB0GYTnhAhmZuHZQODRNraRQ/ayoCPluzR/HFyWgCNpP+M8rCsDHujyX8ibXYv
+         mQyf87ihUoDI0PcOjX6EPKMkGlSw7wlGuo7fnL5M3Gv/1mqBnGwdof+Pq52MyIUPNB/M
+         eZxOK3iE7euXM77pKxTTFcE05jIoYV/lS4KjjFRNPeN9PwKqm7RbAxUeBM7cxY9TLVu0
+         8ay2IMjhAAc7wSKmXoxVlxzUuo3KPJnKHzxFgUbsNdQFu7a/C1OOZK2jGs1WGSddoVxI
+         liQg==
+X-Gm-Message-State: AOAM532ljXKnL1BQvcTm+ObSzAQMd3NBQwalC/gfHkpmdIkQQub96Rmq
+        gbeckwu5teptRKub2jZcFOk=
+X-Google-Smtp-Source: ABdhPJy3kPHK1hQzraPmK6B+fiV9rra8xghS6OR5j8Lg9Xi21oTxSVUZOkV/t09J0eNCP7p9mxn1nQ==
+X-Received: by 2002:a05:6402:706:: with SMTP id w6mr55027066edx.326.1594049244075;
+        Mon, 06 Jul 2020 08:27:24 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id y22sm16408319ejj.67.2020.07.06.08.27.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 08:27:23 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 18:27:21 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>, richardcochran@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+Message-ID: <20200706152721.3j54m73bm673zlnj@skbuf>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-4-sorganov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2LmUVj-yhwxXeCpqdxqJpp0m-q9q9SKQpfh3tFgMXPQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706142616.25192-4-sorganov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sergey,
 
-
-On 7/6/2020 8:24 AM, Arnd Bergmann wrote:
-> On Mon, Jul 6, 2020 at 5:01 PM Dave Jiang <dave.jiang@intel.com> wrote:
->> On 7/6/2020 5:53 AM, Arnd Bergmann wrote:
->>> On Mon, Jul 6, 2020 at 1:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>
->> Arnd,
->> I'm looking at the pl001_dma_probe(), I think we could make it more robust if it
->> uses IS_ERR_OR_NULL(chan) instead of IS_ERR(). Should I send a patch for it? I
->> suppose looking at the comment header for dma_request_chan() it does say return
->> chan ptr or error ptr. Sorry I missed that.
+On Mon, Jul 06, 2020 at 05:26:14PM +0300, Sergey Organov wrote:
+> Initializing with 0 makes it much easier to identify time stamps from
+> otherwise uninitialized clock.
 > 
-> No. IS_ERR_OR_NULL() is almost always a mistake. A function should either
-> return NULL on error, or it should return an error code, but should not be
-> able to return either.
-
-Fair enough.
-
+> Initialization of PTP clock with current kernel time makes little sense as
+> PTP time scale differs from UTC time scale that kernel time represents.
+> It only leads to confusion when no actual PTP initialization happens, as
+> these time scales differ in a small integer number of seconds (37 at the
+> time of writing.)
 > 
-> Have you checked all the other 'return NULL' statements in your patch to
-> ensure that they never return error pointers?
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+> ---
 
-Yeah I looked over the rest of them. The ones that are returning NULL as far as 
-I can tell are expected to return NULL.
+Reading your patch, I got reminded of my own attempt of making an
+identical change to the ptp_qoriq driver:
 
+https://www.spinics.net/lists/netdev/msg601625.html
+
+Could we have some sort of kernel-wide convention, I wonder (even though
+it might be too late for that)? After your patch, I can see equal
+amounts of confusion of users expecting some boot-time output of
+$(phc_ctl /dev/ptp0 get) as it used to be, and now getting something
+else.
+
+There's no correct answer, I'm afraid. Whatever the default value of the
+clock may be, it's bound to be confusing for some reason, _if_ the
+reason why you're investigating it in the first place is a driver bug.
+Also, I don't really see how your change to use Jan 1st 1970 makes it
+any less confusing.
+
+>  drivers/net/ethernet/freescale/fec_ptp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->         Arnd
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
+> index 4a12086..e455343 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -264,7 +264,7 @@ void fec_ptp_start_cyclecounter(struct net_device *ndev)
+>  	fep->cc.mult = FEC_CC_MULT;
+>  
+>  	/* reset the ns time counter */
+> -	timecounter_init(&fep->tc, &fep->cc, ktime_to_ns(ktime_get_real()));
+> +	timecounter_init(&fep->tc, &fep->cc, 0);
+>  
+>  	spin_unlock_irqrestore(&fep->tmreg_lock, flags);
+>  }
+> -- 
+> 2.10.0.1.g57b01a3
 > 
+
+Thanks,
+-Vladimir
