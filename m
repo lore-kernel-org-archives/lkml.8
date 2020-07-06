@@ -2,144 +2,159 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B285AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A32C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917B72074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A1C2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lzkYPfA2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d+MXpCRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgGFGDA (ORCPT
+        id S1728874AbgGFGDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:03:00 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40476 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgGFGDA (ORCPT
+        Mon, 6 Jul 2020 02:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbgGFGDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:03:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06662lNM055242;
-        Mon, 6 Jul 2020 01:02:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594015367;
-        bh=KjZlw1a/nmq4Ty3eASb8JP7sn5EXruzwzsBkpSaPwlA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lzkYPfA2BlXCMLdKkajDaZaQOHaW1L4TEMzcjeFuh5jLE+LVVJAKtfRRzx5JBobFJ
-         hQDznclQillFZwhtKJQt8F6UW1/890lKHLRCgPjc//GVKs5UX0vvu7MUzG+plS8HAK
-         g363haOP5I08lS4FEaxB7Yxx1WWaqI8pLmSjmpXw=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06662lV9094314
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jul 2020 01:02:47 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 6 Jul
- 2020 01:02:47 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 6 Jul 2020 01:02:47 -0500
-Received: from [10.250.217.39] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06662i1W034768;
-        Mon, 6 Jul 2020 01:02:45 -0500
-Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
-To:     Sam Ravnborg <sam@ravnborg.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-CC:     Adam Ford <aford173@gmail.com>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <stable@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20200630182636.439015-1-aford173@gmail.com>
- <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
- <20200703193648.GA373653@ravnborg.org>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <bda1606f-b12c-3356-15ce-489fc2441737@ti.com>
-Date:   Mon, 6 Jul 2020 09:02:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 02:03:13 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323C0C061794;
+        Sun,  5 Jul 2020 23:03:13 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0Zk73HQjz9sSd;
+        Mon,  6 Jul 2020 16:03:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594015391;
+        bh=0dVbgKA28kBMMBn0W8j637PFOw6QisU9Bne1J5W6tps=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d+MXpCRUAhoHu5HNI1G0Mga9ezKCdIyXG12yoM7HpjftlIGsQBLkCcTKWpVJKC4XJ
+         qDN8AXORH2RBrgh6xvfMrswwhfp0tBBqQ9Sm2R5DfIwp4AsYMU3z8w7WXWINu9Y9Cu
+         ucQi+qnXUOsQQMoTVrpSC+lpPQOz2+6/WI0smLrLq31ouzEXQxr6gqemvrGpIEb5ZZ
+         +DqXNJhtZ3a6bsbdneJ4Aewl6LpqfVOMO/c6S8OL6kfA5phafAIKi42q2nks9XGNac
+         RPB9BHyaE8HK38mB7fshakwGP4qSSKpkQJgjKD/7lcazCGm2F69epBvH5lSGFNFsR5
+         9pIP2FWpB2rEw==
+Date:   Mon, 6 Jul 2020 16:03:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the dmaengine tree with the
+ dmaengine-fixes tree
+Message-ID: <20200706160309.5f03bb2e@canb.auug.org.au>
+In-Reply-To: <20200706044146.GA633187@vkoul-mobl>
+References: <20200706135621.0113ebf9@canb.auug.org.au>
+        <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
+        <20200706044146.GA633187@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <20200703193648.GA373653@ravnborg.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/XjV3lD+3dMo0pP=hZje_G/N";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/XjV3lD+3dMo0pP=hZje_G/N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 03/07/2020 22:36, Sam Ravnborg wrote:
-> Hi Tomi.
-> 
-> On Fri, Jul 03, 2020 at 10:17:29AM +0300, Tomi Valkeinen wrote:
->> On 30/06/2020 21:26, Adam Ford wrote:
->>> The drm/omap driver was fixed to correct an issue where using a
->>> divider of 32 breaks the DSS despite the TRM stating 32 is a valid
->>> number.  Through experimentation, it appears that 31 works, and
->>> it is consistent with the value used by the drm/omap driver.
->>>
->>> This patch fixes the divider for fbdev driver instead of the drm.
->>>
->>> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
->>>
->>> Cc: <stable@vger.kernel.org> #4.9+
->>> Signed-off-by: Adam Ford <aford173@gmail.com>
->>> ---
->>> Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
->>>
->>> The DRM version of this same fix is:
->>> e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
->>>
->>>
->>> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
->>> index 7252d22dd117..bfc5c4c5a26a 100644
->>> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
->>> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
->>> @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
->>>    };
->>>    static const struct dss_features omap3630_dss_feats = {
->>> -	.fck_div_max		=	32,
->>> +	.fck_div_max		=	31,
->>>    	.dss_fck_multiplier	=	1,
->>>    	.parent_clk_name	=	"dpll4_ck",
->>>    	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
->>>
->>
->> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Will you apply to drm-misc?
+Hi all,
 
-This is for fbdev, so I presume Bartlomiej will pick this one.
+On Mon, 6 Jul 2020 10:11:46 +0530 Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 05-07-20, 21:23, Dave Jiang wrote:
+> >=20
+> > On 7/5/2020 8:56 PM, Stephen Rothwell wrote: =20
+> > >=20
+> > > Today's linux-next merge of the dmaengine tree got a conflict in:
+> > >=20
+> > >    drivers/dma/idxd/sysfs.c
+> > >=20
+> > > between commit:
+> > >=20
+> > >    da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after dis=
+abling")
+> > >=20
+> > > from the dmaengine-fixes tree and commit:
+> > >=20
+> > >    f50b150e315e ("dmaengine: idxd: add work queue drain support")
+> > >=20
+> > > from the dmaengine tree.
+> > >=20
+> > > I fixed it up (see below) and can carry the fix as necessary. This
+> > > is now fixed as far as linux-next is concerned, but any non trivial
+> > > conflicts should be mentioned to your upstream maintainer when your t=
+ree
+> > > is submitted for merging.  You may also want to consider cooperating
+> > > with the maintainer of the conflicting tree to minimise any particula=
+rly
+> > > complex conflicts.
+> > >  =20
+> >=20
+> > Hi Stephen. Thanks for the fixup. I think there are two more bits that =
+are
+> > needed from f50b150e315e if you don't mind adding: =20
+>=20
+> I will merge the fixes into next so it should be resolved for tomorrow,
 
-> Note  following output from "dim fixes":
-> $ dim fixes f76ee892a99e
-> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Dave Airlie <airlied@gmail.com>
-> Cc: Rob Clark <robdclark@gmail.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Jason Yan <yanaijie@huawei.com>
-> Cc: "Andrew F. Davis" <afd@ti.com>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Cc: <stable@vger.kernel.org> # v4.5+
-> 
-> Here it says the fix is valid from v4.5 onwards.
+Thanks,
 
-Hmm... Adam, you marked the fix to apply to v4.9+, and then you said 
-v4.4 needs a new patch (that's before the big copy/rename). Did you 
-check the versions between 4.4 and 4.9? I would guess this one applies 
-to v4.5+.
+> >=20
+> > diff --cc drivers/dma/idxd/sysfs.c
+> > index 2e2c5082f322,6f0711a822a1..000000000000
+> > --- a/drivers/dma/idxd/sysfs.c
+> > +++ b/drivers/dma/idxd/sysfs.c
+> > @@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
+> >   		}
+> >=20
+> >   		idxd_unregister_dma_device(idxd);
+> > - 		spin_lock_irqsave(&idxd->dev_lock, flags);
+> >   		rc =3D idxd_device_disable(idxd);
+> >  +		for (i =3D 0; i < idxd->max_wqs; i++) {
+> >  +			struct idxd_wq *wq =3D &idxd->wqs[i];
+> >  +
+> >  =20
+> > >			mutex_lock(&wq->wq_lock); =20
+> >=20
+> >  +			idxd_wq_disable_cleanup(wq);
+> >  =20
+> > >			mutex_unlock(&wq->wq_lock); =20
+> >=20
+> >  +		}
+> > - 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
+> >   		module_put(THIS_MODULE);
+> >   		if (rc < 0)
+> >   			dev_warn(dev, "Device disable failed\n"); =20
+>=20
 
-  Tomi
+I added that fix up by hand today just in case it matters for testing.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XjV3lD+3dMo0pP=hZje_G/N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Cvp0ACgkQAVBC80lX
+0Gwj8wf/ejKWL6zYT0covN4Jt2g7CUOaT1qaCRVWCxFhtNbLLzQ66fPBzftpXepu
+nchyqfs2n+P9SNjCyFPrBEpr3PrHxEwNWc20Hc6sZZ+3EQKmibifZ8m0XiATTaXk
+d3mRhgjZeB6CtH5ioiK/5kXNtfmKPYi7Rve2+xVAywbv999t2Raddpdbiq9d2f3I
+B/mpq6/pFS+vb2c/XNLgb45iEhu7iQog6zQR2mwW6VdBW0ib08w82Jkp9yh6350v
+aDUcX4JVn41hDPHExDfb/fEvagdOeCyoVF4l26OUObXLX32cZGD90UhUOug7uGSb
+AGS4JZfRYsm4ugNotH6hhb0+Ut8ojQ==
+=RUvX
+-----END PGP SIGNATURE-----
+
+--Sig_/XjV3lD+3dMo0pP=hZje_G/N--
