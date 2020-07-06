@@ -2,203 +2,97 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB94C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58896C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A287420715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8CReBT+"
+	by mail.kernel.org (Postfix) with ESMTP id 4049320720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgGFPXD (ORCPT
+        id S1729362AbgGFPYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbgGFPXD (ORCPT
+        Mon, 6 Jul 2020 11:24:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:59795 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729301AbgGFPYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:23:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B846BC061755;
-        Mon,  6 Jul 2020 08:23:02 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so41431091wrm.4;
-        Mon, 06 Jul 2020 08:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dAJu+62mabBIMXiEr5XrQ+JflLjgU2YNzNlqYsdRIdw=;
-        b=K8CReBT+hyRzi4AsJJm6IxI7oN9PlZrJh6k8iEhCwql04KOGd4J2tgcpLyh5BTFsGW
-         bho7i32ynNEfPaL0crkUZCX4DQmFTyKJP+kYISPzqF4b1I+n+EZrDAt1edbXy0EY3yF9
-         fFyg1iQ//e1zIWTLI4wxPo1wHhyzri29DvFgrM5aNgCu916TbMXNHSZhsoYzuDhVFQJX
-         HOsKc2Owgldz7gqIAJ2/o+LILhwcOcowXLaJCs7D0KK+gmzt/qcK824IGbMXLuZn4ou3
-         F0eN8omc7ftHuHT8Y8K1cbVeZ1bzksNbj3NUHBuIwAbHJQALPS93Mv6iDhwJja2h+qI9
-         eONw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dAJu+62mabBIMXiEr5XrQ+JflLjgU2YNzNlqYsdRIdw=;
-        b=Di/kdE8GhGWbEdt3IQhNX05KtFMXrcceMYwDcaQ32ynrCetscq5ZixNVj+Eued8RzK
-         eOSTqKylrcdgPTPfUy5k7rLC4IH+uRjS5GShJxC1csP5NLYEGkmgo6fEeD5iD5PadT7H
-         et/Q6Y/DFOAxctTXHREhYhy8G+y14Jmzx4sj7ctb8slJRr9lXA39IycaCrzic+wcy0GC
-         xxAS/0jQQJ2WdZ9+l77UIUhmbLGEk+am/xJWnnzN7t/E7goj+bekocuDr83dP+wX6kHB
-         1HI4spLy5wuXkQb6Gm0cQqEyCAPEt9VO82BpFIE7fPxPEuelgd49kmGB9Zkf76owCJof
-         p+yw==
-X-Gm-Message-State: AOAM533dP4KVUAWggMuA0MbIxkxWoMYo5F/yb4eUAq+QvOZNB5sTRLsw
-        ulOtBCVRdO7o1Svw8fJ8tfPW9EnxXcQ=
-X-Google-Smtp-Source: ABdhPJyzc/vfsGEPu9lm4bfH2I099ZfJD0Tr/1/wWc2+CcLPAElvGmIqHi6ER7htDlkPCnAwkOPtjA==
-X-Received: by 2002:adf:f452:: with SMTP id f18mr48964355wrp.78.1594048981485;
-        Mon, 06 Jul 2020 08:23:01 -0700 (PDT)
-Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id g82sm22104920wma.37.2020.07.06.08.23.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 08:23:00 -0700 (PDT)
-Subject: Re: [PATCH v6 09/10] iommu/mediatek: Modify MMU_CTRL register setting
-To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        FY Yang <fy.yang@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
-        TH Yang <th.yang@mediatek.com>
-References: <20200703044127.27438-1-chao.hao@mediatek.com>
- <20200703044127.27438-10-chao.hao@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <17fe4a7b-8732-7bad-6aaa-1a20a4921c7b@gmail.com>
-Date:   Mon, 6 Jul 2020 17:22:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 6 Jul 2020 11:24:41 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1YxX-1jtqhB3Oup-0036rS; Mon, 06 Jul 2020 17:24:39 +0200
+Received: by mail-qk1-f178.google.com with SMTP id b4so35074517qkn.11;
+        Mon, 06 Jul 2020 08:24:38 -0700 (PDT)
+X-Gm-Message-State: AOAM5330UEpXtYtNDoXI3w+P6w9NnINufJZHYeIfIUFdJYchByr0+Rpw
+        Og6mHqodTGwheTWKUtOUBPvp6pOGi/7V+ppiD58=
+X-Google-Smtp-Source: ABdhPJx/kQ8tGLZ80uMQBf/V4GcRLK5qTEQ5SfwL2lBdncwT+o1fz7jO0ykG/E9TJYvaujgh9Qc4ADjh9rnT+ZYCKEs=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr40649731qko.138.1594049077399;
+ Mon, 06 Jul 2020 08:24:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703044127.27438-10-chao.hao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
+ <CAK8P3a1Lda8HhsDvDREf-cOgb4RkCgEKK5Q-Zj+UhK8tsAaBLw@mail.gmail.com> <51d6e5bb-3de1-36dc-15a4-c341b23ca8cd@intel.com>
+In-Reply-To: <51d6e5bb-3de1-36dc-15a4-c341b23ca8cd@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Jul 2020 17:24:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2LmUVj-yhwxXeCpqdxqJpp0m-q9q9SKQpfh3tFgMXPQA@mail.gmail.com>
+Message-ID: <CAK8P3a2LmUVj-yhwxXeCpqdxqJpp0m-q9q9SKQpfh3tFgMXPQA@mail.gmail.com>
+Subject: Re: [qemu] boot failed: Unable to handle kernel NULL pointer
+ dereference at virtual address 0000000000000000
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-serial@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        ldewangan@nvidia.com, Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:l2TiyyKexT2QsitKsQrJvF7YNB4SJ+BqAFAp52Us8tv4D7mFq0q
+ aLaiiXYwBBDj3UjVOSjR9rw4TzguFVlHg9gPsbBJcaCxMIcOEq2olwC/cwcJUr2EWamxrEO
+ nTuh/tFvS8yeqEP7MfmwHHhTFmg/6d0sjR1rlRCghQnCSdhSVmnMTwqv8l4qcnLA72qv7lN
+ Y+6vKUODqFDTRmTsv/v6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QDdRKvb6+k4=:NRqLc2O3zBJWrtUw/LZgPS
+ 4lasJqUco858TjH4BesQcKk1/85A3/ny2nUH6U9hGyDylaYEPjtMLg5sq6Gsho2DiILL1uzGl
+ yujyqVal5vEnztENqINXKjg8m7pWdQA82aIm3YJmIc+iuCgwQEU/xe+6hmOs7iAlogLh7BuS5
+ g55F5jFjhghqJcc6rKXO54uHM548nTTk3u1gpBTVy8R9lrSOWkgwoePUZyqOzKuG978AnhCFs
+ kPMRvFLvGUXMdZtYhokRkzyzt3ChIrIHiyBID6WNmXlv427snLomCBUFB42i6RseFKImI4d1X
+ 6UOzMmvIclUplVSVAJZ8nvJfTzZnsVV7V0vafcy/yFSgOrahRzyMWNUFIwhwvlh1UwogYEK8m
+ 7z7HnRUwVwpZtAW9r6CHWKOZPG+UCyOYxstnamM8g/kHCSx3HS5BcEr5Y7rbU90JeSR5vMNcA
+ C/55XbqDvM1nKKxLBCQRGnfxsGBgUye/7h0+2RjQHumoLfqjqQtTt7bDsGwzS/m3M/r+Ey6j2
+ ceuJr3pkn016Lblt7cP1V8NFOamQBLd4Adys/yooyDXFqc6gPo/8aBJok1O9cBKZVFAMDfdKL
+ 3GNXPMpBWh59XHICQ5nSVi3qMmZ1CwgcGxI4THBiHynyA+ALYtzXtzb2A7E6vMYo+Bi2Uix5i
+ s78aSdqMTu0RXW8U/J4c/zlyEkIhW9og8KkSWmbsJtoUMkJSYMm5HP6ncIbZAVq7+y2taP3WD
+ +S9uWG8Xop//gNeJzSBkVhe39jtn3I1gjbZ8ofThZB8Xzol68a7oCBc6kT/pBZu5+oURjWUWZ
+ AJ0C8cvvu/gQXvlxZIKsJWCiyvw4scMhWOR1cI02iON3HKqcilDH9c6LoHLXSlDGbtk3T7kmb
+ SkQBhw5lli5EK9x8AfMynpP0VyOB1Ep2dhIvJ1r23TBDaHh84wO5Cud5fTKbowYlpcW1mBsBw
+ DiPQQhv/bEgBHMi1JcsiYNgLA3DQV2H/Rsz798+3OLt1hmL9b9eap
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 6, 2020 at 5:01 PM Dave Jiang <dave.jiang@intel.com> wrote:
+> On 7/6/2020 5:53 AM, Arnd Bergmann wrote:
+> > On Mon, Jul 6, 2020 at 1:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> Arnd,
+> I'm looking at the pl001_dma_probe(), I think we could make it more robust if it
+> uses IS_ERR_OR_NULL(chan) instead of IS_ERR(). Should I send a patch for it? I
+> suppose looking at the comment header for dma_request_chan() it does say return
+> chan ptr or error ptr. Sorry I missed that.
 
+No. IS_ERR_OR_NULL() is almost always a mistake. A function should either
+return NULL on error, or it should return an error code, but should not be
+able to return either.
 
-On 03/07/2020 06:41, Chao Hao wrote:
-> The MMU_CTRL register of MT8173 is different from other SoCs.
-> The in_order_wr_en is bit[9] which is zero by default.
-> Other SoCs have the vitcim_tlb_en feature mapped to bit[12].
-> This bit is set to one by default. We need to preserve the bit
-> when setting F_MMU_TF_PROT_TO_PROGRAM_ADDR as otherwise the
-> bit will be cleared and IOMMU performance will drop.
-> 
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Yong Wu <yong.wu@mediatek.com>
-> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+Have you checked all the other 'return NULL' statements in your patch to
+ensure that they never return error pointers?
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  drivers/iommu/mtk_iommu.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index e71003037ffa..a816030d00f1 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -555,11 +555,13 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->  		return ret;
->  	}
->  
-> -	if (data->plat_data->m4u_plat == M4U_MT8173)
-> +	if (data->plat_data->m4u_plat == M4U_MT8173) {
->  		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
->  			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
-> -	else
-> -		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
-> +	} else {
-> +		regval = readl_relaxed(data->base + REG_MMU_CTRL_REG);
-> +		regval |= F_MMU_TF_PROT_TO_PROGRAM_ADDR;
-> +	}
->  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
->  
->  	regval = F_L2_MULIT_HIT_EN |
-> 
+       Arnd
