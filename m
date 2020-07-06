@@ -2,118 +2,218 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4954C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2175720720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDE420720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbgGFPtb (ORCPT
+        id S1729585AbgGFPtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:49:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:51122 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgGFPta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:49:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F09DCC0A;
-        Mon,  6 Jul 2020 08:49:29 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872893F68F;
-        Mon,  6 Jul 2020 08:49:27 -0700 (PDT)
-References: <20200706142839.26629-1-qais.yousef@arm.com> <20200706142839.26629-2-qais.yousef@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
-In-reply-to: <20200706142839.26629-2-qais.yousef@arm.com>
-Date:   Mon, 06 Jul 2020 16:49:19 +0100
-Message-ID: <jhj8sfw8wzk.mognet@arm.com>
+        Mon, 6 Jul 2020 11:49:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60991 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbgGFPtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:49:24 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jsTMw-0005O9-9S; Mon, 06 Jul 2020 15:49:22 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrei Vagin <avagin@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Serge Hallyn <serge@hallyn.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 4/4] tests: add CLONE_NEWTIME setns tests
+Date:   Mon,  6 Jul 2020 17:49:12 +0200
+Message-Id: <20200706154912.3248030-5-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200706154912.3248030-1-christian.brauner@ubuntu.com>
+References: <https://lore.kernel.org/lkml/20200625090618.GC151695@gmail.com>
+ <20200706154912.3248030-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now that pidfds support CLONE_NEWTIME as well enable testing them in the
+setns() testuite.
 
-On 06/07/20 15:28, Qais Yousef wrote:
-> CC: linux-fsdevel@vger.kernel.org
-> ---
->
-> Peter
->
-> I didn't do the
->
->       read_lock(&taslist_lock);
->       smp_mb__after_spinlock();
->       read_unlock(&tasklist_lock);
->
-> dance you suggested on IRC as it didn't seem necessary. But maybe I missed
-> something.
->
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Dmitry Safonov <dima@arista.com>
+Cc: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ tools/testing/selftests/pidfd/pidfd.h         |  4 +
+ .../selftests/pidfd/pidfd_setns_test.c        | 76 +++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-So the annoying bit with just uclamp_fork() is that it happens *before* the
-task is appended to the tasklist. This means without too much care we
-would have (if we'd do a sync at uclamp_fork()):
+diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
+index 8d728eda783d..a2c80914e3dc 100644
+--- a/tools/testing/selftests/pidfd/pidfd.h
++++ b/tools/testing/selftests/pidfd/pidfd.h
+@@ -22,6 +22,10 @@
+ #define P_PIDFD 3
+ #endif
+ 
++#ifndef CLONE_NEWTIME
++#define CLONE_NEWTIME 0x00000080
++#endif
++
+ #ifndef CLONE_PIDFD
+ #define CLONE_PIDFD 0x00001000
+ #endif
+diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/testing/selftests/pidfd/pidfd_setns_test.c
+index 9418108eae13..7a27dbe07e23 100644
+--- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
+@@ -32,6 +32,7 @@ enum {
+ 	PIDFD_NS_NET,
+ 	PIDFD_NS_CGROUP,
+ 	PIDFD_NS_PIDCLD,
++	PIDFD_NS_TIME,
+ 	PIDFD_NS_MAX
+ };
+ 
+@@ -47,6 +48,7 @@ const struct ns_info {
+ 	[PIDFD_NS_NET]    = { "net",              CLONE_NEWNET,    },
+ 	[PIDFD_NS_CGROUP] = { "cgroup",           CLONE_NEWCGROUP, },
+ 	[PIDFD_NS_PIDCLD] = { "pid_for_children", 0,               },
++	[PIDFD_NS_TIME]	  = { "time",             CLONE_NEWTIME,   },
+ };
+ 
+ FIXTURE(current_nsset)
+@@ -83,9 +85,49 @@ pid_t create_child(int *pidfd, unsigned flags)
+ 	return sys_clone3(&args, sizeof(struct clone_args));
+ }
+ 
++static bool switch_timens(void)
++{
++	int fd, ret;
++
++	if (unshare(CLONE_NEWTIME))
++		return false;
++
++	fd = open("/proc/self/ns/time_for_children", O_RDONLY | O_CLOEXEC);
++	if (fd < 0)
++		return false;
++
++	ret = setns(fd, CLONE_NEWTIME);
++	close(fd);
++	return ret == 0;
++}
++
++static ssize_t read_nointr(int fd, void *buf, size_t count)
++{
++	ssize_t ret;
++
++	do {
++		ret = read(fd, buf, count);
++	} while (ret < 0 && errno == EINTR);
++
++	return ret;
++}
++
++static ssize_t write_nointr(int fd, const void *buf, size_t count)
++{
++	ssize_t ret;
++
++	do {
++		ret = write(fd, buf, count);
++	} while (ret < 0 && errno == EINTR);
++
++	return ret;
++}
++
+ FIXTURE_SETUP(current_nsset)
+ {
+ 	int i, proc_fd, ret;
++	int ipc_sockets[2];
++	char c;
+ 
+ 	for (i = 0; i < PIDFD_NS_MAX; i++) {
+ 		self->nsfds[i]		= -EBADF;
+@@ -130,6 +172,9 @@ FIXTURE_SETUP(current_nsset)
+ 		TH_LOG("%m - Failed to open pidfd for process %d", self->pid);
+ 	}
+ 
++	ret = socketpair(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, ipc_sockets);
++	EXPECT_EQ(ret, 0);
++
+ 	/* Create tasks that will be stopped. */
+ 	self->child_pid1 = create_child(&self->child_pidfd1,
+ 					CLONE_NEWUSER | CLONE_NEWNS |
+@@ -139,10 +184,27 @@ FIXTURE_SETUP(current_nsset)
+ 	EXPECT_GE(self->child_pid1, 0);
+ 
+ 	if (self->child_pid1 == 0) {
++		close(ipc_sockets[0]);
++
++		if (!switch_timens())
++			_exit(EXIT_FAILURE);
++
++		if (write_nointr(ipc_sockets[1], "1", 1) < 0)
++			_exit(EXIT_FAILURE);
++
++		close(ipc_sockets[1]);
++
+ 		pause();
+ 		_exit(EXIT_SUCCESS);
+ 	}
+ 
++	close(ipc_sockets[1]);
++	ASSERT_EQ(read_nointr(ipc_sockets[0], &c, 1), 1);
++	close(ipc_sockets[0]);
++
++	ret = socketpair(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, ipc_sockets);
++	EXPECT_EQ(ret, 0);
++
+ 	self->child_pid2 = create_child(&self->child_pidfd2,
+ 					CLONE_NEWUSER | CLONE_NEWNS |
+ 					CLONE_NEWCGROUP | CLONE_NEWIPC |
+@@ -151,10 +213,24 @@ FIXTURE_SETUP(current_nsset)
+ 	EXPECT_GE(self->child_pid2, 0);
+ 
+ 	if (self->child_pid2 == 0) {
++		close(ipc_sockets[0]);
++
++		if (!switch_timens())
++			_exit(EXIT_FAILURE);
++
++		if (write_nointr(ipc_sockets[1], "1", 1) < 0)
++			_exit(EXIT_FAILURE);
++
++		close(ipc_sockets[1]);
++
+ 		pause();
+ 		_exit(EXIT_SUCCESS);
+ 	}
+ 
++	close(ipc_sockets[1]);
++	ASSERT_EQ(read_nointr(ipc_sockets[0], &c, 1), 1);
++	close(ipc_sockets[0]);
++
+ 	for (i = 0; i < PIDFD_NS_MAX; i++) {
+ 		char p[100];
+ 
+-- 
+2.27.0
 
-  CPU0 (sysctl write)                                CPU1 (concurrent forker)
-
-                                                       copy_process()
-                                                         uclamp_fork()
-                                                           p.uclamp_min = state
-    state = foo
-
-    for_each_process_thread(p, t)
-      update_state(t);
-                                                         list_add(p)
-
-i.e. that newly forked process would entirely sidestep the update. Now,
-with Peter's suggested approach we can be in a much better situation. If we
-have this in the sysctl update:
-
-  state = foo;
-
-  read_lock(&taslist_lock);
-  smp_mb__after_spinlock();
-  read_unlock(&tasklist_lock);
-
-  for_each_process_thread(p, t)
-    update_state(t);
-
-While having this in the fork:
-
-  write_lock(&tasklist_lock);
-  list_add(p);
-  write_unlock(&tasklist_lock);
-
-  sched_post_fork(p); // state re-read here; probably wants an mb first
-
-Then we can no longer miss an update. If the forked p doesn't see the new
-value, it *must* have been added to the tasklist before the updater loops
-over it, so the loop will catch it. If it sees the new value, we're done.
-
-AIUI, the above strategy doesn't require any use of RCU. The update_state()
-and sched_post_fork() can race, but as per the above they should both be
-writing the same value.
