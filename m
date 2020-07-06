@@ -2,137 +2,171 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A883C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D448C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251892070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E632070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1y7v38N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uxoutIAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgGFOtz (ORCPT
+        id S1729487AbgGFOt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
+        Mon, 6 Jul 2020 10:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729467AbgGFOtw (ORCPT
+        with ESMTP id S1729477AbgGFOtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:49:52 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC5FC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:49:52 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id x13so15990245vsx.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:49:52 -0700 (PDT)
+        Mon, 6 Jul 2020 10:49:55 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3DFC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:49:55 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id u6so9396501uau.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=InByvEjJPlQ7gTBk+VqXmPI+tHOV3mOPt/I3k/Qwrbw=;
-        b=o1y7v38NkkoYxogRzwqgVzvL9W57wSuo9qqOEgxk/wXAT0aJcGb7V2kwmKgSjRXbCQ
-         8YDhUi1ZRA3DxqqGX5oKE+UPROSVKnLTtkFs0up6GgDSaajq9qruFaag7xXX69XYBx8t
-         KeR/kdKwiVRghrGaV6CKTZkVoaDm19lkYkKXWeFqEajTUKsGGVOrT0QX5xNAdIoR6fWe
-         tkwwIt+LSPvw8a+oJh9qM1s25LgtOjoClipA3DDj1d7oX9Lne7O8GJcH3p4/EeYkLt2q
-         HM060lgIsDiMlyGNYFiJWaUNlPSO43KMRfYQlLE5+gRocuB+GGoZJOTJ25QOUGT6efMQ
-         irmA==
+         :cc:content-transfer-encoding;
+        bh=SAUTZCKNrEvpQK8X43iPxicP+R3S1kWBry2NpIY1/dQ=;
+        b=uxoutIAL0NtSt92mYsh794ORpUzNdUsYmApSv4txaGPcQv6KRB+4sVITsf6nq9FXOA
+         SMfhiISK4XrJ0VABXVXUR1TCPvQ6cTUnzIrR3T4MlbiMadFBrCn5zv13duPlqPbr6OkB
+         qjPJ2PnqeuNe5me+YC513P9zephNVgaarMIXcV69qxcBm31ZjpYfeS1DHgqMPuA4YOib
+         EPYFm38JMv4f0j+5yGTEUn+4aOUoVUcwC1neqZxWx+wGpRH3mMcPM9R2+Vf+YZXhEH0r
+         tLhBbg3hl6KInWva+x5JB+jE+KuVmgdjRLBls16epNVBORd31dlK/hK62DAH7ZYYESy3
+         +Elg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=InByvEjJPlQ7gTBk+VqXmPI+tHOV3mOPt/I3k/Qwrbw=;
-        b=aff6wW/jRLf5tFkhXEl/igx3yld5eSYlBKqIwuHAyNDB7UWcHPuOAJz2kIaxpIqefp
-         /Ts6IPjKp8a515NpZ/RSccQRA/O8+4CAlDnpTEEjOZDqRejwCkH67w3tewb3OkQhVxzs
-         n+Hl2PTOFVYoxbI1NfYod6Qn9oe++ZD9tI/DT6hGOym4C7z+Noao6/QNfVY9uD0gb8T6
-         eUjzhldRjExTvlLIHczhZgJq32p4nG8VF23DWTztds8TLa0QpOqG8m/C4zkWlFatcH+H
-         EUe7vd64S7tUzhKiWqj5aRZZSIT5CksFjSTcolTaDsOW1itLdoV9r99dgchRRUQD3IJg
-         j5qw==
-X-Gm-Message-State: AOAM533FEgu/UeegqBNUNo1P/rl38OnFtIEueP1cw+nHxKpvifjdm5Jm
-        qdBkbzH5X/eO6orGbPUNtAh4viFv029CAoSsv22efQ==
-X-Google-Smtp-Source: ABdhPJwHbcQaTYD4fA5nzc1T5GJQgwoDZYjR82xJf+ip+IRJpiePRBEm6QefPXd0QWsTQnUoffZcXdPTOSvhjqUTpJQ=
-X-Received: by 2002:a67:d01a:: with SMTP id r26mr17252391vsi.200.1594046991485;
- Mon, 06 Jul 2020 07:49:51 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SAUTZCKNrEvpQK8X43iPxicP+R3S1kWBry2NpIY1/dQ=;
+        b=UWog8hLsfFRqQwh1Udh5PVUnqCIuVhMEnOhc/XwdS8XaHuWxl+MtaCv17CNTGulQ9k
+         lgXkuWfZxk3fdwtCz6v6Tx2XHz5RR5+CvNKgWS1LWdoCsSpCitzfIWymo69/O/pI9Kox
+         nBFGTmv7DIPWZIWMDsUDXNxpHnz/XdX9s1S4T9G7ZnuETbOVpEWy26Ew+Ptwi4K491gS
+         tN19LYaXACXcIf0nqpjLGDjucM018tcw+seKV2Uz3osAIetWCgYLyjhWvXeI2jj6a13b
+         A4IfiH8xqm1nvrRgumwmm2GOFtk/cFS7lrI6ima6Y67EkXGdyM/hhnkmYhdQhnUe0jPa
+         OuuA==
+X-Gm-Message-State: AOAM533FGgNR+NlufZNe0K1RKOAfS4R2L4uG/S/GYOVRujvtM900GNoM
+        2v39Jt5oBOUDP+60oVbroa5tlDYpC3DYMkyO5G1aDnLMEDM=
+X-Google-Smtp-Source: ABdhPJxgj9RMBRxUAfldh72xeG7C36VY7RNbaVfCXry+dxCiSq7RJ3pHvb56O9+k8W7z/55b0tNU1kBAdhneXVf03TI=
+X-Received: by 2002:a9f:22e1:: with SMTP id 88mr34504520uan.19.1594046994591;
+ Mon, 06 Jul 2020 07:49:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org> <1592919288-1020-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1592919288-1020-1-git-send-email-vbadigan@codeaurora.org>
+References: <20200629072144.24351-1-pali@kernel.org>
+In-Reply-To: <20200629072144.24351-1-pali@kernel.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 6 Jul 2020 16:49:14 +0200
-Message-ID: <CAPDyKFqG5iVda4A2swYx9-3nE__R+sSYKtJJyKAMwsQJ9z96gA@mail.gmail.com>
-Subject: Re: [PATCH V5 0/3] Internal voltage control for qcom SDHC
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Date:   Mon, 6 Jul 2020 16:49:17 +0200
+Message-ID: <CAPDyKFp-meAG4XNgL3ixacYKpFByV-Pynz6-GRDtfT95hC-Jmw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdio: Move SDIO IDs from rsi_sdio driver to common
+ include file
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 15:35, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
+On Mon, 29 Jun 2020 at 09:22, Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >
-> On qcom SD host controllers voltage switching be done after the HW
-> is ready for it. The HW informs its readiness through power irq.
-> The voltage switching should happen only then.
+> Define appropriate macro names for consistency with other macros.
 >
-> So added support to register voltage regulators from the msm driver
-> and use them.
->
-> This patchset was posted long back but not actively pursued
-> https://lore.kernel.org/linux-arm-msm/1539004739-32060-1-git-send-email-vbadigan@codeaurora.org/
-> So posting it as fresh patchset.
->
-> Changes since V4:
->         - Added clear comments on condtion which allows either to
->           tunf off/on Vqmmc or to set load.
->         - Added mmc_card_removable() to the condtion whcih checks
->           if the card is eMMC or other card.
->         - Rerturning error for unsupported voltagtes in
->           sdhci_msm_start_signal_voltage_switch()
->         - Moved setting ios.power_mode to mmc_alloc_host().
->
-> Changes since V3:
->         - Dropped reading of regulator load values from device tree.
->         - Dropped documentaiton chagne.
->         - Since only Vqmmc supply of eMMC would be kept On during suspend,
->           setting load only for this regulator so that it can go to LPM.
->           And since this Load reamins same, load value is hard-coded in the driver.
->
-> Changes since V2:
->         - Removed redundant log from sdhci_msm_set_vmmc.
->         - Added the condition for skiping disabling of vqmmc for eMMC.
->         - Updated logic such that, setting load for vqmmc only if
->           it is kept ON.
->         - Retained ack by Adrian for second patch.
->         - Updated dt properties names as per Robs comments.
->
-> Changes since V1:
->         - Removed setting load for Vmmc regulator while turning it on/off.
->           Instead setting the active load once during probe.
->         - Simplified handlng of supplies for BUS_ON/OFF cases in shci_msm_handle_pwr_irq().
->         - Moved common code out of switch case in sdhci_msm_start_signal_voltage_switch().
->         - Updated variable name to sdhci_core_to_disable_vqmmc.
->         - Updated pr_err logs to dev_err logs.
-> Veerabhadrarao Badiganti (2):
->   mmc: core: Set default power mode in mmc_alloc_host
->   mmc: sdhci-msm: Use internal voltage control
->
-> Vijay Viswanath (1):
->   mmc: sdhci: Allow platform controlled voltage switching
->
->  drivers/mmc/core/host.c      |   1 +
->  drivers/mmc/host/sdhci-msm.c | 206 +++++++++++++++++++++++++++++++++++++++++--
->  drivers/mmc/host/sdhci.c     |  32 ++++---
->  drivers/mmc/host/sdhci.h     |   1 +
->  4 files changed, 218 insertions(+), 22 deletions(-)
->
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
 
-V5 applied for next (did some minor amendment to patch 2), thanks!
+Applied for next, thanks!
+
+If it turns out that it's a better idea to funnel this via Kale's
+wireless tree, then I can drop it - and you may consider this as an
+ack instead.
 
 Kind regards
 Uffe
+
+
+
+> ---
+> Hello Ulf! I forgot to include change for rsi driver into patch series:
+> "mmc: sdio: Move SDIO IDs from drivers to common include file"
+> https://lore.kernel.org/linux-mmc/20200522144412.19712-1-pali@kernel.org/
+> As patch series was already merged, I'm sending this patch separately.
+> ---
+>  drivers/net/wireless/rsi/rsi_91x_sdio.c | 8 ++++----
+>  drivers/net/wireless/rsi/rsi_sdio.h     | 4 ----
+>  include/linux/mmc/sdio_ids.h            | 4 ++++
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wirele=
+ss/rsi/rsi_91x_sdio.c
+> index 5d6143a55187..a04ff75c409f 100644
+> --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> @@ -1038,10 +1038,10 @@ static int rsi_probe(struct sdio_func *pfunction,
+>                 goto fail_free_adapter;
+>         }
+>
+> -       if (pfunction->device =3D=3D RSI_SDIO_PID_9113) {
+> +       if (pfunction->device =3D=3D SDIO_DEVICE_ID_RSI_9113) {
+>                 rsi_dbg(ERR_ZONE, "%s: 9113 module detected\n", __func__)=
+;
+>                 adapter->device_model =3D RSI_DEV_9113;
+> -       } else  if (pfunction->device =3D=3D RSI_SDIO_PID_9116) {
+> +       } else  if (pfunction->device =3D=3D SDIO_DEVICE_ID_RSI_9116) {
+>                 rsi_dbg(ERR_ZONE, "%s: 9116 module detected\n", __func__)=
+;
+>                 adapter->device_model =3D RSI_DEV_9116;
+>         } else {
+> @@ -1526,8 +1526,8 @@ static const struct dev_pm_ops rsi_pm_ops =3D {
+>  #endif
+>
+>  static const struct sdio_device_id rsi_dev_table[] =3D  {
+> -       { SDIO_DEVICE(RSI_SDIO_VENDOR_ID, RSI_SDIO_PID_9113) },
+> -       { SDIO_DEVICE(RSI_SDIO_VENDOR_ID, RSI_SDIO_PID_9116) },
+> +       { SDIO_DEVICE(SDIO_VENDOR_ID_RSI, SDIO_DEVICE_ID_RSI_9113) },
+> +       { SDIO_DEVICE(SDIO_VENDOR_ID_RSI, SDIO_DEVICE_ID_RSI_9116) },
+>         { /* Blank */},
+>  };
+>
+> diff --git a/drivers/net/wireless/rsi/rsi_sdio.h b/drivers/net/wireless/r=
+si/rsi_sdio.h
+> index c5cfb6238f73..9afc1d0d2684 100644
+> --- a/drivers/net/wireless/rsi/rsi_sdio.h
+> +++ b/drivers/net/wireless/rsi/rsi_sdio.h
+> @@ -28,10 +28,6 @@
+>  #include <linux/mmc/sdio_ids.h>
+>  #include "rsi_main.h"
+>
+> -#define RSI_SDIO_VENDOR_ID   0x041B
+> -#define RSI_SDIO_PID_9113    0x9330
+> -#define RSI_SDIO_PID_9116    0x9116
+> -
+>  enum sdio_interrupt_type {
+>         BUFFER_FULL         =3D 0x0,
+>         BUFFER_AVAILABLE    =3D 0x2,
+> diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
+> index 15ed8ce9d394..ab41801c5f51 100644
+> --- a/include/linux/mmc/sdio_ids.h
+> +++ b/include/linux/mmc/sdio_ids.h
+> @@ -118,6 +118,10 @@
+>  #define SDIO_DEVICE_ID_SIANO_NOVA_A0           0x1100
+>  #define SDIO_DEVICE_ID_SIANO_STELLAR           0x5347
+>
+> +#define SDIO_VENDOR_ID_RSI                     0x041b
+> +#define SDIO_DEVICE_ID_RSI_9113                        0x9330
+> +#define SDIO_DEVICE_ID_RSI_9116                        0x9116
+> +
+>  #define SDIO_VENDOR_ID_TI_WL1251               0x104c
+>  #define SDIO_DEVICE_ID_TI_WL1251               0x9066
+>
+> --
+> 2.20.1
+>
