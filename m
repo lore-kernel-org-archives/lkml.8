@@ -2,765 +2,181 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F64C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C2E20720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6387720723
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qxDMYEta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgGFPoi (ORCPT
+        id S1729435AbgGFPrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:44:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56802 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729321AbgGFPoi (ORCPT
+        Mon, 6 Jul 2020 11:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729321AbgGFPrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:44:38 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066FXoqM152552;
-        Mon, 6 Jul 2020 11:44:36 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 322ndve37g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 11:44:35 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066FFsFu010625;
-        Mon, 6 Jul 2020 15:44:22 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 322hd7tf9m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 15:44:22 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066FiJGX43974814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jul 2020 15:44:19 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97E51AE056;
-        Mon,  6 Jul 2020 15:44:19 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C9DFAE055;
-        Mon,  6 Jul 2020 15:44:19 +0000 (GMT)
-Received: from osiris (unknown [9.171.26.45])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  6 Jul 2020 15:44:19 +0000 (GMT)
-Date:   Mon, 6 Jul 2020 17:44:17 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.8-rc5
-Message-ID: <20200706154417.GH4707@osiris>
+        Mon, 6 Jul 2020 11:47:32 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D76C061755;
+        Mon,  6 Jul 2020 08:47:32 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a1so43068775ejg.12;
+        Mon, 06 Jul 2020 08:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GgEH+thtSKg/or9HUMra9bnT61TmLhwCmU7Zb8ZLTGY=;
+        b=qxDMYEtajR3ujNHhFHo3vjLOrgRHHTEldmv9gu8mn26xgHWx2zNJDjANX+N/ixlwNs
+         P2siORRQ3w5lJnN2U7p0h2LUnJHgPsQi0dpEx57aKedj1ZWnh6iQHpxMmdhbrnveUabq
+         //QmwG1QqC3Kk9DorpFWivKMsDAsXf70MjVod+QU9nsnq+1LUXSEizL3a3ticr9WYNeB
+         27Dc39tXbuGm9lvh2cSjvdhpls7Uy0s3siQRp9o/utxt2B2OD87Luaspsk1WzmvzD1a9
+         v/6KEHcwmNxO+ApZsetgr5LrqOnrpHN7H+YHUuxXSKzAj2EOrBxr3JzhHmN5UWPD2Oky
+         H9fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GgEH+thtSKg/or9HUMra9bnT61TmLhwCmU7Zb8ZLTGY=;
+        b=QzRyeWZEkBhIB8rnFBxL6DpKQNd0aUW+iXsG89jmnFjUahFI+tO1G0k8zAWzGBw+gN
+         C3cbYbmO99Zl8LoZo742tvIIcEiSn56hEvcGNg2TF59huRCVBks39NbPE4ymF1gV9vqo
+         jrhw3OfgCrfznKwpn2WpMWSD0WRFwvjrafz7T/Gwco5Y+KkF3wVrPdcbQA2bQq0rdVaN
+         0V6tqZKNYiM2j3NHPJFHpl/DbN7TF9RMXwFxcCwrMOiDGDYnT3HCAFjWxBZXmcaKOVPp
+         FCEy9ogDJUdxnyWB3UX0RnD+r3mK7mv++pEfhvQ10/YqCp4wxQyfPCMFKrZb8CWL2bCh
+         tR6A==
+X-Gm-Message-State: AOAM530l86uosfNDg6Mb0rvc3nfJuH63HAyGRqx5BXqDeeraCt7FE36F
+        x9NUNbSpQlcBIz3I1fOBn40=
+X-Google-Smtp-Source: ABdhPJzBSrCrbMVxgvim0NIed6j+Pj+XoRe75JSR/2ZA2aXEC1y61HJ/sz2KqI4Y2rhAFcsjth48xQ==
+X-Received: by 2002:a17:907:2058:: with SMTP id pg24mr46160600ejb.79.1594050450849;
+        Mon, 06 Jul 2020 08:47:30 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id n9sm20924913edr.46.2020.07.06.08.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 08:47:30 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 18:47:28 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, andrew@lunn.ch
+Subject: Re: [PATCH  1/5] net: fec: properly support external PTP PHY for
+ hardware time stamping
+Message-ID: <20200706154728.lfywhchrtaeeda4g@skbuf>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-2-sorganov@gmail.com>
+ <20200706150814.kba7dh2dsz4mpiuc@skbuf>
+ <87zh8cu0rs.fsf@osv.gnss.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_12:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- clxscore=1015 cotscore=-2147483648 mlxlogscore=999 impostorscore=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007060118
+In-Reply-To: <87zh8cu0rs.fsf@osv.gnss.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Jul 06, 2020 at 06:21:59PM +0300, Sergey Organov wrote:
+> Vladimir Oltean <olteanv@gmail.com> writes:
+> 
+> > Hi Sergey,
+> >
+> > On Mon, Jul 06, 2020 at 05:26:12PM +0300, Sergey Organov wrote:
+> >> When external PTP-aware PHY is in use, it's that PHY that is to time
+> >> stamp network packets, and it's that PHY where configuration requests
+> >> of time stamping features are to be routed.
+> >> 
+> >> To achieve these goals:
+> >> 
+> >> 1. Make sure we don't time stamp packets when external PTP PHY is in use
+> >> 
+> >> 2. Make sure we redirect ioctl() related to time stamping of Ethernet
+> >>    packets to connected PTP PHY rather than handle them ourselves
+> 
+> [...]
+> 
+> >> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> >> index 2d0d313..995ea2e 100644
+> >> --- a/drivers/net/ethernet/freescale/fec_main.c
+> >> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> >> @@ -1298,7 +1298,11 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
+> >>  			ndev->stats.tx_bytes += skb->len;
+> >>  		}
+> >>  
+> >> +		/* It could be external PHY that had set SKBTX_IN_PROGRESS, so
+> >> +		 * we still need to check it's we who are to time stamp
+> >> +		 */
+> >>  		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+> >> +		    unlikely(fep->hwts_tx_en) &&
+> >
+> > I think this could qualify as a pretty significant fix in its own right,
+> > that should go to stable trees. Right now, this patch appears pretty
+> > easy to overlook.
+> >
+> > Is this the same situation as what is being described here for the
+> > gianfar driver?
+> >
+> > https://patchwork.ozlabs.org/project/netdev/patch/20191227004435.21692-2-olteanv@gmail.com/
+> 
+> Yes, it sounds exactly like that!
+> 
 
-please pull s390 updates for 5.8-rc5.
+Cool. Join the club! You were lucky though, in your case it was pretty
+evident where the problem might be, so you were already on your way even
+though you didn't know exactly what was going on.
 
-Thanks,
-Heiko
+Towards the point that you brought up in that thread:
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+> Could somebody please help me implement (or point me to) proper fix to
+> reliably use external PHY to timestamp network packets?
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+We do it like this:
+- DSA: If there is a timestamping switch stacked on top of a
+  timestamping Ethernet MAC, the switch hijacks the .ndo_do_ioctl of the
+  host port, and you are supposed to use the PTP clock of the switch,
+  through the .ndo_do_ioctl of its own (virtual) net devices. This
+  approach works without changing any code in each individual Ethernet
+  MAC driver.
+- PHY: The Ethernet MAC driver needs to be kind enough to check whether
+  the PHY supports hw timestamping, and pass this ioctl to that PHY
+  while making sure it doesn't do anything stupid in the meanwhile, like
+  also acting upon that timestamping request itself.
 
-are available in the Git repository at:
+Both are finicky in their own ways. There is no real way for the user to
+select which PHC they want to use. The assumption is that you'd always
+want to use the outermost one, and that things in the kernel side always
+collaborate towards that end.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-4
+> However, I'd insist that the second part of the patch is as important.
+> Please refer to my original post for the description of nasty confusion
+> the second part of the patch fixes:
+> 
+> https://lore.kernel.org/netdev/87r1uqtybr.fsf@osv.gnss.ru/
+> 
+> Basically, you get PHY response when you ask for capabilities, but then
+> MAC executes ioctl() request for corresponding configuration!
+> 
+> [...]
+> 
 
-for you to fetch changes up to 075ebfe19fa3fa8838d2afdde5e87c86b7953b1e:
+Yup, sure, _but_ my point is: PHY timestamping is not supposed to work
+unless you do that phy_has_hwtstamp dance in .ndo_do_ioctl and pass it
+to the PHY driver. Whereas, timestamping on a DSA switch is supposed to
+just work. So, the double-TX-timestamp fix is common for both DSA and
+PHY timestamping, and it should be a separate patch that goes to David's
+"net" tree and has an according Fixes: tag for the stable people to pick
+it up. Then, the PHY timestamping patch is technically a new feature,
+because the driver wasn't looking at the PHY's ability to perform PTP
+timestamping, and now it does. So that part is a patch for "net-next".
 
-  Merge tag 'vfio-ccw-20200703' of https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw into fixes (2020-07-03 18:02:09 +0200)
+> Thanks,
+> -- Sergey
 
-----------------------------------------------------------------
-- Initialize jump labels before early command line parsing in order to make
-  init_on_alloc and init_on_free options work.
-
-- Fix vfio-ccw build error due to missing include.
-
-- Prevent callchain data collection with hardware sampling, since the
-  callchains simply do not exist.
-
-- Prevent multiple registrations of the same zPCI function.
-
-- Update defconfigs.
-
-----------------------------------------------------------------
-Heiko Carstens (2):
-      s390: update defconfigs
-      Merge tag 'vfio-ccw-20200703' of https://git.kernel.org/.../kvms390/vfio-ccw into fixes
-
-Niklas Schnelle (1):
-      s390/pci: fix enabling a reserved PCI function
-
-Sean Christopherson (1):
-      vfio-ccw: Fix a build error due to missing include of linux/slab.h
-
-Thomas Richter (1):
-      s390/cpum_sf: prohibit callchain data collection
-
-Vasily Gorbik (2):
-      s390/maccess: add no DAT mode to kernel_write
-      s390/setup: init jump labels before command line parsing
-
- arch/s390/configs/debug_defconfig    | 44 ++++++++++++++++++++++++++++--------
- arch/s390/configs/defconfig          | 43 +++++++++++++++++++++++++++--------
- arch/s390/configs/zfcpdump_defconfig |  5 ++++
- arch/s390/kernel/perf_cpum_sf.c      | 11 ++++++++-
- arch/s390/kernel/setup.c             |  1 +
- arch/s390/mm/maccess.c               | 14 ++++++++----
- arch/s390/pci/pci_event.c            | 13 ++++++++++-
- drivers/s390/cio/vfio_ccw_chp.c      |  1 +
- 8 files changed, 106 insertions(+), 26 deletions(-)
-
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index 46038bc58c9e..0cf9a82326a8 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -1,5 +1,6 @@
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_WATCH_QUEUE=y
- CONFIG_AUDIT=y
- CONFIG_NO_HZ_IDLE=y
- CONFIG_HIGH_RES_TIMERS=y
-@@ -14,7 +15,6 @@ CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_NUMA_BALANCING=y
- CONFIG_MEMCG=y
--CONFIG_MEMCG_SWAP=y
- CONFIG_BLK_CGROUP=y
- CONFIG_CFS_BANDWIDTH=y
- CONFIG_RT_GROUP_SCHED=y
-@@ -31,9 +31,9 @@ CONFIG_NAMESPACES=y
- CONFIG_USER_NS=y
- CONFIG_CHECKPOINT_RESTORE=y
- CONFIG_SCHED_AUTOGROUP=y
--CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
- # CONFIG_SYSFS_SYSCALL is not set
-+CONFIG_BPF_LSM=y
- CONFIG_BPF_SYSCALL=y
- CONFIG_USERFAULTFD=y
- # CONFIG_COMPAT_BRK is not set
-@@ -51,14 +51,11 @@ CONFIG_CHSC_SCH=y
- CONFIG_VFIO_CCW=m
- CONFIG_VFIO_AP=m
- CONFIG_CRASH_DUMP=y
--CONFIG_HIBERNATION=y
--CONFIG_PM_DEBUG=y
- CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
- CONFIG_CMM=m
- CONFIG_APPLDATA_BASE=y
- CONFIG_KVM=m
--CONFIG_VHOST_NET=m
--CONFIG_VHOST_VSOCK=m
-+CONFIG_S390_UNWIND_SELFTEST=y
- CONFIG_OPROFILE=m
- CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
-@@ -77,6 +74,8 @@ CONFIG_BLK_DEV_THROTTLING=y
- CONFIG_BLK_WBT=y
- CONFIG_BLK_CGROUP_IOLATENCY=y
- CONFIG_BLK_CGROUP_IOCOST=y
-+CONFIG_BLK_INLINE_ENCRYPTION=y
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK=y
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_IBM_PARTITION=y
- CONFIG_BSD_DISKLABEL=y
-@@ -96,7 +95,6 @@ CONFIG_CMA_DEBUG=y
- CONFIG_CMA_DEBUGFS=y
- CONFIG_MEM_SOFT_DIRTY=y
- CONFIG_ZSWAP=y
--CONFIG_ZBUD=m
- CONFIG_ZSMALLOC=m
- CONFIG_ZSMALLOC_STAT=y
- CONFIG_DEFERRED_STRUCT_PAGE_INIT=y
-@@ -130,6 +128,7 @@ CONFIG_SYN_COOKIES=y
- CONFIG_NET_IPVTI=m
- CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
-+CONFIG_INET_ESPINTCP=y
- CONFIG_INET_IPCOMP=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
-@@ -144,6 +143,7 @@ CONFIG_TCP_CONG_ILLINOIS=m
- CONFIG_IPV6_ROUTER_PREF=y
- CONFIG_INET6_AH=m
- CONFIG_INET6_ESP=m
-+CONFIG_INET6_ESPINTCP=y
- CONFIG_INET6_IPCOMP=m
- CONFIG_IPV6_MIP6=m
- CONFIG_IPV6_VTI=m
-@@ -151,7 +151,10 @@ CONFIG_IPV6_SIT=m
- CONFIG_IPV6_GRE=m
- CONFIG_IPV6_MULTIPLE_TABLES=y
- CONFIG_IPV6_SUBTREES=y
-+CONFIG_IPV6_RPL_LWTUNNEL=y
-+CONFIG_MPTCP=y
- CONFIG_NETFILTER=y
-+CONFIG_BRIDGE_NETFILTER=m
- CONFIG_NF_CONNTRACK=m
- CONFIG_NF_CONNTRACK_SECMARK=y
- CONFIG_NF_CONNTRACK_EVENTS=y
-@@ -317,6 +320,7 @@ CONFIG_L2TP_V3=y
- CONFIG_L2TP_IP=m
- CONFIG_L2TP_ETH=m
- CONFIG_BRIDGE=m
-+CONFIG_BRIDGE_MRP=y
- CONFIG_VLAN_8021Q=m
- CONFIG_VLAN_8021Q_GVRP=y
- CONFIG_NET_SCHED=y
-@@ -341,6 +345,7 @@ CONFIG_NET_SCH_CODEL=m
- CONFIG_NET_SCH_FQ_CODEL=m
- CONFIG_NET_SCH_INGRESS=m
- CONFIG_NET_SCH_PLUG=m
-+CONFIG_NET_SCH_ETS=m
- CONFIG_NET_CLS_BASIC=m
- CONFIG_NET_CLS_TCINDEX=m
- CONFIG_NET_CLS_ROUTE4=m
-@@ -364,6 +369,7 @@ CONFIG_NET_ACT_PEDIT=m
- CONFIG_NET_ACT_SIMP=m
- CONFIG_NET_ACT_SKBEDIT=m
- CONFIG_NET_ACT_CSUM=m
-+CONFIG_NET_ACT_GATE=m
- CONFIG_DNS_RESOLVER=y
- CONFIG_OPENVSWITCH=m
- CONFIG_VSOCKETS=m
-@@ -374,6 +380,7 @@ CONFIG_BPF_JIT=y
- CONFIG_NET_PKTGEN=m
- # CONFIG_NET_DROP_MONITOR is not set
- CONFIG_PCI=y
-+# CONFIG_PCIEASPM is not set
- CONFIG_PCI_DEBUG=y
- CONFIG_HOTPLUG_PCI=y
- CONFIG_HOTPLUG_PCI_S390=y
-@@ -435,6 +442,7 @@ CONFIG_DM_ZERO=m
- CONFIG_DM_MULTIPATH=m
- CONFIG_DM_MULTIPATH_QL=m
- CONFIG_DM_MULTIPATH_ST=m
-+CONFIG_DM_MULTIPATH_HST=m
- CONFIG_DM_DELAY=m
- CONFIG_DM_UEVENT=y
- CONFIG_DM_FLAKEY=m
-@@ -448,6 +456,8 @@ CONFIG_EQUALIZER=m
- CONFIG_IFB=m
- CONFIG_MACVLAN=m
- CONFIG_MACVTAP=m
-+CONFIG_VXLAN=m
-+CONFIG_BAREUDP=m
- CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_VIRTIO_NET=m
-@@ -481,7 +491,6 @@ CONFIG_NLMON=m
- CONFIG_MLX4_EN=m
- CONFIG_MLX5_CORE=m
- CONFIG_MLX5_CORE_EN=y
--# CONFIG_MLXFW is not set
- # CONFIG_NET_VENDOR_MICREL is not set
- # CONFIG_NET_VENDOR_MICROCHIP is not set
- # CONFIG_NET_VENDOR_MICROSEMI is not set
-@@ -514,6 +523,7 @@ CONFIG_MLX5_CORE_EN=y
- # CONFIG_NET_VENDOR_TI is not set
- # CONFIG_NET_VENDOR_VIA is not set
- # CONFIG_NET_VENDOR_WIZNET is not set
-+# CONFIG_NET_VENDOR_XILINX is not set
- CONFIG_PPP=m
- CONFIG_PPP_BSDCOMP=m
- CONFIG_PPP_DEFLATE=m
-@@ -561,6 +571,8 @@ CONFIG_VFIO_MDEV_DEVICE=m
- CONFIG_VIRTIO_PCI=m
- CONFIG_VIRTIO_BALLOON=m
- CONFIG_VIRTIO_INPUT=y
-+CONFIG_VHOST_NET=m
-+CONFIG_VHOST_VSOCK=m
- CONFIG_S390_CCW_IOMMU=y
- CONFIG_S390_AP_IOMMU=y
- CONFIG_EXT4_FS=y
-@@ -608,6 +620,7 @@ CONFIG_ZISOFS=y
- CONFIG_UDF_FS=m
- CONFIG_MSDOS_FS=m
- CONFIG_VFAT_FS=m
-+CONFIG_EXFAT_FS=m
- CONFIG_NTFS_FS=m
- CONFIG_NTFS_RW=y
- CONFIG_PROC_KCORE=y
-@@ -650,8 +663,8 @@ CONFIG_NLS_UTF8=m
- CONFIG_DLM=m
- CONFIG_UNICODE=y
- CONFIG_PERSISTENT_KEYRINGS=y
--CONFIG_BIG_KEYS=y
- CONFIG_ENCRYPTED_KEYS=m
-+CONFIG_KEY_NOTIFICATIONS=y
- CONFIG_SECURITY=y
- CONFIG_SECURITY_NETWORK=y
- CONFIG_FORTIFY_SOURCE=y
-@@ -675,8 +688,11 @@ CONFIG_CRYPTO_TEST=m
- CONFIG_CRYPTO_DH=m
- CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
-+CONFIG_CRYPTO_CURVE25519=m
-+CONFIG_CRYPTO_GCM=y
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
-+CONFIG_CRYPTO_SEQIV=y
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_PCBC=m
-@@ -685,6 +701,7 @@ CONFIG_CRYPTO_ADIANTUM=m
- CONFIG_CRYPTO_XCBC=m
- CONFIG_CRYPTO_VMAC=m
- CONFIG_CRYPTO_CRC32=m
-+CONFIG_CRYPTO_BLAKE2S=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD128=m
- CONFIG_CRYPTO_RMD160=m
-@@ -701,6 +718,7 @@ CONFIG_CRYPTO_BLOWFISH=m
- CONFIG_CRYPTO_CAMELLIA=m
- CONFIG_CRYPTO_CAST5=m
- CONFIG_CRYPTO_CAST6=m
-+CONFIG_CRYPTO_DES=m
- CONFIG_CRYPTO_FCRYPT=m
- CONFIG_CRYPTO_KHAZAD=m
- CONFIG_CRYPTO_SALSA20=m
-@@ -719,6 +737,9 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- CONFIG_CRYPTO_STATS=y
-+CONFIG_CRYPTO_LIB_BLAKE2S=m
-+CONFIG_CRYPTO_LIB_CURVE25519=m
-+CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
- CONFIG_ZCRYPT=m
- CONFIG_PKEY=m
- CONFIG_CRYPTO_PAES_S390=m
-@@ -774,6 +795,7 @@ CONFIG_DEBUG_SHIRQ=y
- CONFIG_PANIC_ON_OOPS=y
- CONFIG_DETECT_HUNG_TASK=y
- CONFIG_WQ_WATCHDOG=y
-+CONFIG_TEST_LOCKUP=m
- CONFIG_DEBUG_TIMEKEEPING=y
- CONFIG_PROVE_LOCKING=y
- CONFIG_LOCK_STAT=y
-@@ -786,7 +808,9 @@ CONFIG_BUG_ON_DATA_CORRUPTION=y
- CONFIG_DEBUG_CREDENTIALS=y
- CONFIG_RCU_TORTURE_TEST=m
- CONFIG_RCU_CPU_STALL_TIMEOUT=300
-+# CONFIG_RCU_TRACE is not set
- CONFIG_LATENCYTOP=y
-+CONFIG_BOOTTIME_TRACING=y
- CONFIG_FUNCTION_PROFILER=y
- CONFIG_STACK_TRACER=y
- CONFIG_IRQSOFF_TRACER=y
-@@ -808,10 +832,12 @@ CONFIG_FAULT_INJECTION_DEBUG_FS=y
- CONFIG_FAULT_INJECTION_STACKTRACE_FILTER=y
- CONFIG_LKDTM=m
- CONFIG_TEST_LIST_SORT=y
-+CONFIG_TEST_MIN_HEAP=y
- CONFIG_TEST_SORT=y
- CONFIG_KPROBES_SANITY_TEST=y
- CONFIG_RBTREE_TEST=y
- CONFIG_INTERVAL_TREE_TEST=m
- CONFIG_PERCPU_TEST=m
- CONFIG_ATOMIC64_SELFTEST=y
-+CONFIG_TEST_BITOPS=m
- CONFIG_TEST_BPF=m
-diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-index 7cd0648c1f4e..5df9759e8ff6 100644
---- a/arch/s390/configs/defconfig
-+++ b/arch/s390/configs/defconfig
-@@ -1,5 +1,6 @@
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_WATCH_QUEUE=y
- CONFIG_AUDIT=y
- CONFIG_NO_HZ_IDLE=y
- CONFIG_HIGH_RES_TIMERS=y
-@@ -13,7 +14,6 @@ CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_NUMA_BALANCING=y
- CONFIG_MEMCG=y
--CONFIG_MEMCG_SWAP=y
- CONFIG_BLK_CGROUP=y
- CONFIG_CFS_BANDWIDTH=y
- CONFIG_RT_GROUP_SCHED=y
-@@ -30,9 +30,9 @@ CONFIG_NAMESPACES=y
- CONFIG_USER_NS=y
- CONFIG_CHECKPOINT_RESTORE=y
- CONFIG_SCHED_AUTOGROUP=y
--CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
- # CONFIG_SYSFS_SYSCALL is not set
-+CONFIG_BPF_LSM=y
- CONFIG_BPF_SYSCALL=y
- CONFIG_USERFAULTFD=y
- # CONFIG_COMPAT_BRK is not set
-@@ -41,7 +41,6 @@ CONFIG_LIVEPATCH=y
- CONFIG_TUNE_ZEC12=y
- CONFIG_NR_CPUS=512
- CONFIG_NUMA=y
--# CONFIG_NUMA_EMU is not set
- CONFIG_HZ_100=y
- CONFIG_KEXEC_FILE=y
- CONFIG_KEXEC_SIG=y
-@@ -51,14 +50,11 @@ CONFIG_CHSC_SCH=y
- CONFIG_VFIO_CCW=m
- CONFIG_VFIO_AP=m
- CONFIG_CRASH_DUMP=y
--CONFIG_HIBERNATION=y
--CONFIG_PM_DEBUG=y
- CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
- CONFIG_CMM=m
- CONFIG_APPLDATA_BASE=y
- CONFIG_KVM=m
--CONFIG_VHOST_NET=m
--CONFIG_VHOST_VSOCK=m
-+CONFIG_S390_UNWIND_SELFTEST=m
- CONFIG_OPROFILE=m
- CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
-@@ -74,6 +70,8 @@ CONFIG_BLK_DEV_THROTTLING=y
- CONFIG_BLK_WBT=y
- CONFIG_BLK_CGROUP_IOLATENCY=y
- CONFIG_BLK_CGROUP_IOCOST=y
-+CONFIG_BLK_INLINE_ENCRYPTION=y
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK=y
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_IBM_PARTITION=y
- CONFIG_BSD_DISKLABEL=y
-@@ -91,7 +89,6 @@ CONFIG_CLEANCACHE=y
- CONFIG_FRONTSWAP=y
- CONFIG_MEM_SOFT_DIRTY=y
- CONFIG_ZSWAP=y
--CONFIG_ZBUD=m
- CONFIG_ZSMALLOC=m
- CONFIG_ZSMALLOC_STAT=y
- CONFIG_DEFERRED_STRUCT_PAGE_INIT=y
-@@ -125,6 +122,7 @@ CONFIG_SYN_COOKIES=y
- CONFIG_NET_IPVTI=m
- CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
-+CONFIG_INET_ESPINTCP=y
- CONFIG_INET_IPCOMP=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
-@@ -139,6 +137,7 @@ CONFIG_TCP_CONG_ILLINOIS=m
- CONFIG_IPV6_ROUTER_PREF=y
- CONFIG_INET6_AH=m
- CONFIG_INET6_ESP=m
-+CONFIG_INET6_ESPINTCP=y
- CONFIG_INET6_IPCOMP=m
- CONFIG_IPV6_MIP6=m
- CONFIG_IPV6_VTI=m
-@@ -146,7 +145,10 @@ CONFIG_IPV6_SIT=m
- CONFIG_IPV6_GRE=m
- CONFIG_IPV6_MULTIPLE_TABLES=y
- CONFIG_IPV6_SUBTREES=y
-+CONFIG_IPV6_RPL_LWTUNNEL=y
-+CONFIG_MPTCP=y
- CONFIG_NETFILTER=y
-+CONFIG_BRIDGE_NETFILTER=m
- CONFIG_NF_CONNTRACK=m
- CONFIG_NF_CONNTRACK_SECMARK=y
- CONFIG_NF_CONNTRACK_EVENTS=y
-@@ -311,6 +313,7 @@ CONFIG_L2TP_V3=y
- CONFIG_L2TP_IP=m
- CONFIG_L2TP_ETH=m
- CONFIG_BRIDGE=m
-+CONFIG_BRIDGE_MRP=y
- CONFIG_VLAN_8021Q=m
- CONFIG_VLAN_8021Q_GVRP=y
- CONFIG_NET_SCHED=y
-@@ -335,6 +338,7 @@ CONFIG_NET_SCH_CODEL=m
- CONFIG_NET_SCH_FQ_CODEL=m
- CONFIG_NET_SCH_INGRESS=m
- CONFIG_NET_SCH_PLUG=m
-+CONFIG_NET_SCH_ETS=m
- CONFIG_NET_CLS_BASIC=m
- CONFIG_NET_CLS_TCINDEX=m
- CONFIG_NET_CLS_ROUTE4=m
-@@ -358,6 +362,7 @@ CONFIG_NET_ACT_PEDIT=m
- CONFIG_NET_ACT_SIMP=m
- CONFIG_NET_ACT_SKBEDIT=m
- CONFIG_NET_ACT_CSUM=m
-+CONFIG_NET_ACT_GATE=m
- CONFIG_DNS_RESOLVER=y
- CONFIG_OPENVSWITCH=m
- CONFIG_VSOCKETS=m
-@@ -368,6 +373,7 @@ CONFIG_BPF_JIT=y
- CONFIG_NET_PKTGEN=m
- # CONFIG_NET_DROP_MONITOR is not set
- CONFIG_PCI=y
-+# CONFIG_PCIEASPM is not set
- CONFIG_HOTPLUG_PCI=y
- CONFIG_HOTPLUG_PCI_S390=y
- CONFIG_UEVENT_HELPER=y
-@@ -430,6 +436,7 @@ CONFIG_DM_ZERO=m
- CONFIG_DM_MULTIPATH=m
- CONFIG_DM_MULTIPATH_QL=m
- CONFIG_DM_MULTIPATH_ST=m
-+CONFIG_DM_MULTIPATH_HST=m
- CONFIG_DM_DELAY=m
- CONFIG_DM_UEVENT=y
- CONFIG_DM_FLAKEY=m
-@@ -444,6 +451,8 @@ CONFIG_EQUALIZER=m
- CONFIG_IFB=m
- CONFIG_MACVLAN=m
- CONFIG_MACVTAP=m
-+CONFIG_VXLAN=m
-+CONFIG_BAREUDP=m
- CONFIG_TUN=m
- CONFIG_VETH=m
- CONFIG_VIRTIO_NET=m
-@@ -477,7 +486,6 @@ CONFIG_NLMON=m
- CONFIG_MLX4_EN=m
- CONFIG_MLX5_CORE=m
- CONFIG_MLX5_CORE_EN=y
--# CONFIG_MLXFW is not set
- # CONFIG_NET_VENDOR_MICREL is not set
- # CONFIG_NET_VENDOR_MICROCHIP is not set
- # CONFIG_NET_VENDOR_MICROSEMI is not set
-@@ -510,6 +518,7 @@ CONFIG_MLX5_CORE_EN=y
- # CONFIG_NET_VENDOR_TI is not set
- # CONFIG_NET_VENDOR_VIA is not set
- # CONFIG_NET_VENDOR_WIZNET is not set
-+# CONFIG_NET_VENDOR_XILINX is not set
- CONFIG_PPP=m
- CONFIG_PPP_BSDCOMP=m
- CONFIG_PPP_DEFLATE=m
-@@ -557,6 +566,8 @@ CONFIG_VFIO_MDEV_DEVICE=m
- CONFIG_VIRTIO_PCI=m
- CONFIG_VIRTIO_BALLOON=m
- CONFIG_VIRTIO_INPUT=y
-+CONFIG_VHOST_NET=m
-+CONFIG_VHOST_VSOCK=m
- CONFIG_S390_CCW_IOMMU=y
- CONFIG_S390_AP_IOMMU=y
- CONFIG_EXT4_FS=y
-@@ -600,6 +611,7 @@ CONFIG_ZISOFS=y
- CONFIG_UDF_FS=m
- CONFIG_MSDOS_FS=m
- CONFIG_VFAT_FS=m
-+CONFIG_EXFAT_FS=m
- CONFIG_NTFS_FS=m
- CONFIG_NTFS_RW=y
- CONFIG_PROC_KCORE=y
-@@ -642,8 +654,8 @@ CONFIG_NLS_UTF8=m
- CONFIG_DLM=m
- CONFIG_UNICODE=y
- CONFIG_PERSISTENT_KEYRINGS=y
--CONFIG_BIG_KEYS=y
- CONFIG_ENCRYPTED_KEYS=m
-+CONFIG_KEY_NOTIFICATIONS=y
- CONFIG_SECURITY=y
- CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
-@@ -667,8 +679,11 @@ CONFIG_CRYPTO_TEST=m
- CONFIG_CRYPTO_DH=m
- CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
-+CONFIG_CRYPTO_CURVE25519=m
-+CONFIG_CRYPTO_GCM=y
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
-+CONFIG_CRYPTO_SEQIV=y
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_LRW=m
- CONFIG_CRYPTO_OFB=m
-@@ -678,6 +693,7 @@ CONFIG_CRYPTO_ADIANTUM=m
- CONFIG_CRYPTO_XCBC=m
- CONFIG_CRYPTO_VMAC=m
- CONFIG_CRYPTO_CRC32=m
-+CONFIG_CRYPTO_BLAKE2S=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD128=m
- CONFIG_CRYPTO_RMD160=m
-@@ -694,6 +710,7 @@ CONFIG_CRYPTO_BLOWFISH=m
- CONFIG_CRYPTO_CAMELLIA=m
- CONFIG_CRYPTO_CAST5=m
- CONFIG_CRYPTO_CAST6=m
-+CONFIG_CRYPTO_DES=m
- CONFIG_CRYPTO_FCRYPT=m
- CONFIG_CRYPTO_KHAZAD=m
- CONFIG_CRYPTO_SALSA20=m
-@@ -712,6 +729,9 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=m
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_USER_API_AEAD=m
- CONFIG_CRYPTO_STATS=y
-+CONFIG_CRYPTO_LIB_BLAKE2S=m
-+CONFIG_CRYPTO_LIB_CURVE25519=m
-+CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
- CONFIG_ZCRYPT=m
- CONFIG_PKEY=m
- CONFIG_CRYPTO_PAES_S390=m
-@@ -725,6 +745,7 @@ CONFIG_CRYPTO_AES_S390=m
- CONFIG_CRYPTO_GHASH_S390=m
- CONFIG_CRYPTO_CRC32_S390=y
- CONFIG_CORDIC=m
-+CONFIG_PRIME_NUMBERS=m
- CONFIG_CRC4=m
- CONFIG_CRC7=m
- CONFIG_CRC8=m
-@@ -739,10 +760,12 @@ CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_MEMORY_INIT=y
- CONFIG_PANIC_ON_OOPS=y
-+CONFIG_TEST_LOCKUP=m
- CONFIG_BUG_ON_DATA_CORRUPTION=y
- CONFIG_RCU_TORTURE_TEST=m
- CONFIG_RCU_CPU_STALL_TIMEOUT=60
- CONFIG_LATENCYTOP=y
-+CONFIG_BOOTTIME_TRACING=y
- CONFIG_FUNCTION_PROFILER=y
- CONFIG_STACK_TRACER=y
- CONFIG_SCHED_TRACER=y
-diff --git a/arch/s390/configs/zfcpdump_defconfig b/arch/s390/configs/zfcpdump_defconfig
-index 20c51e5d9353..4091c50449cd 100644
---- a/arch/s390/configs/zfcpdump_defconfig
-+++ b/arch/s390/configs/zfcpdump_defconfig
-@@ -30,6 +30,7 @@ CONFIG_IBM_PARTITION=y
- # CONFIG_BOUNCE is not set
- CONFIG_NET=y
- # CONFIG_IUCV is not set
-+# CONFIG_ETHTOOL_NETLINK is not set
- CONFIG_DEVTMPFS=y
- CONFIG_BLK_DEV_RAM=y
- # CONFIG_BLK_DEV_XPRAM is not set
-@@ -55,6 +56,8 @@ CONFIG_RAW_DRIVER=y
- # CONFIG_MONWRITER is not set
- # CONFIG_S390_VMUR is not set
- # CONFIG_HID is not set
-+# CONFIG_VIRTIO_MENU is not set
-+# CONFIG_VHOST_MENU is not set
- # CONFIG_IOMMU_SUPPORT is not set
- # CONFIG_DNOTIFY is not set
- # CONFIG_INOTIFY_USER is not set
-@@ -62,7 +65,9 @@ CONFIG_CONFIGFS_FS=y
- # CONFIG_MISC_FILESYSTEMS is not set
- # CONFIG_NETWORK_FILESYSTEMS is not set
- CONFIG_LSM="yama,loadpin,safesetid,integrity"
-+# CONFIG_ZLIB_DFLTCC is not set
- CONFIG_PRINTK_TIME=y
-+# CONFIG_SYMBOLIC_ERRNAME is not set
- CONFIG_DEBUG_INFO=y
- CONFIG_DEBUG_FS=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 85a711d783eb..4f9e4626df55 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -881,12 +881,21 @@ static int __hw_perf_event_init(struct perf_event *event)
- 	return err;
- }
- 
-+static bool is_callchain_event(struct perf_event *event)
-+{
-+	u64 sample_type = event->attr.sample_type;
-+
-+	return sample_type & (PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_REGS_USER |
-+			      PERF_SAMPLE_STACK_USER);
-+}
-+
- static int cpumsf_pmu_event_init(struct perf_event *event)
- {
- 	int err;
- 
- 	/* No support for taken branch sampling */
--	if (has_branch_stack(event))
-+	/* No support for callchain, stacks and registers */
-+	if (has_branch_stack(event) || is_callchain_event(event))
- 		return -EOPNOTSUPP;
- 
- 	switch (event->attr.type) {
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 5853c9872dfe..07aa15ba43b3 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -1100,6 +1100,7 @@ void __init setup_arch(char **cmdline_p)
- 	if (IS_ENABLED(CONFIG_EXPOLINE_AUTO))
- 		nospec_auto_detect();
- 
-+	jump_label_init();
- 	parse_early_param();
- #ifdef CONFIG_CRASH_DUMP
- 	/* Deactivate elfcorehdr= kernel parameter */
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index 22a0be655f27..1d17413b319a 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -62,11 +62,15 @@ notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
- 	long copied;
- 
- 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
--	while (size) {
--		copied = s390_kernel_write_odd(tmp, src, size);
--		tmp += copied;
--		src += copied;
--		size -= copied;
-+	if (!(flags & PSW_MASK_DAT)) {
-+		memcpy(dst, src, size);
-+	} else {
-+		while (size) {
-+			copied = s390_kernel_write_odd(tmp, src, size);
-+			tmp += copied;
-+			src += copied;
-+			size -= copied;
-+		}
- 	}
- 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
- 
-diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
-index 08e1d619398e..fdebd286f402 100644
---- a/arch/s390/pci/pci_event.c
-+++ b/arch/s390/pci/pci_event.c
-@@ -94,7 +94,18 @@ static void __zpci_event_availability(struct zpci_ccdf_avail *ccdf)
- 		}
- 		zdev->fh = ccdf->fh;
- 		zdev->state = ZPCI_FN_STATE_CONFIGURED;
--		zpci_create_device(zdev);
-+		ret = zpci_enable_device(zdev);
-+		if (ret)
-+			break;
-+
-+		pdev = pci_scan_single_device(zdev->zbus->bus, zdev->devfn);
-+		if (!pdev)
-+			break;
-+
-+		pci_bus_add_device(pdev);
-+		pci_lock_rescan_remove();
-+		pci_bus_add_devices(zdev->zbus->bus);
-+		pci_unlock_rescan_remove();
- 		break;
- 	case 0x0302: /* Reserved -> Standby */
- 		if (!zdev) {
-diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_chp.c
-index a646fc81c872..13b26a1c7988 100644
---- a/drivers/s390/cio/vfio_ccw_chp.c
-+++ b/drivers/s390/cio/vfio_ccw_chp.c
-@@ -8,6 +8,7 @@
-  *            Eric Farman <farman@linux.ibm.com>
-  */
- 
-+#include <linux/slab.h>
- #include <linux/vfio.h>
- #include "vfio_ccw_private.h"
- 
+Thank you,
+-Vladimir
