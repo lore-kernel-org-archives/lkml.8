@@ -2,122 +2,161 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB17C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2CA217D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFB7217A0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594055211;
-	bh=8EZi7GgGgPPffu74raLQxqgFlZz10X6qFN6WvUpuQPo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QZ6teheLN6LyLxZ9iOfgrqy4btcwxbQe5Qge2dd5v2U4246EHL+A2I87+9Xe8v+AJ
-	 2jXkVDeDa77i4Pk3rJ7R0oMIpJjWRAvrmtRhxaLPsJ2+adCHSaByhMzZ+P5LXe9Qv4
-	 QciQcT4jLpa/Z/dFJE2yQi3Nh6IOqIuvjfEqQn0U=
+	s=default; t=1594055260;
+	bh=cgNaJHVbncoKaqoIbXTBer9BB2nT8TXGZr+shQ3g/Xs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=YDN6wygpOaIXfE8PbEJtWfpfZZdwyJn6oYN2KPNZPhdpTjNLgswCKKlYcXMex2nqK
+	 qU4bNHUUR7nP9C+Qua0vT+Hp5dj2DlseBQmpIJdw8aYW+0qNdgMGZaGOWUsNYtRnVH
+	 feZdcc0hlb/wEveNOBue1jkVksmPiiTYe/6ek8AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgGFRGu (ORCPT
+        id S1729636AbgGFRHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 13:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729568AbgGFRGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:06:50 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        id S1729478AbgGFRHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:07:39 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A698F217D8;
-        Mon,  6 Jul 2020 17:06:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B60621582;
+        Mon,  6 Jul 2020 17:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594055209;
-        bh=8EZi7GgGgPPffu74raLQxqgFlZz10X6qFN6WvUpuQPo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=AtdJrePdNXqZISymueTLPI0FO1PLWT/VBuWVdmUxxusAWhC6ZPqF4QHRI6VP2PG48
-         rJ4LF9WmeDTDmgrwN6mR2DLd1cMEPkBRZNtxUq8VJB00o/J5Z1Az+92xKN8gI92g8G
-         YZivT1vHl8uf+lMtCBD1JR7llIeplXAx0bHbnzoQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8E5A63521502; Mon,  6 Jul 2020 10:06:49 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 10:06:49 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH tick-sched] Clarify "NOHZ: local_softirq_pending" warning
-Message-ID: <20200706170649.GW9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200626210506.GA27189@paulmck-ThinkPad-P72>
- <20200706164816.GA1299@lca.pw>
+        s=default; t=1594055258;
+        bh=cgNaJHVbncoKaqoIbXTBer9BB2nT8TXGZr+shQ3g/Xs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bTn70ba/xuVwnxBCjc4lESFrm5pgWMuOMTIBxZY74YZ8UuoFBHzJvM0rbGpRChWZP
+         /If90R9yPSWmBDE8XSdiC23JSZBjzIoDHXMltHgbv1FswHQbry2CAC1qVeO8AiYWog
+         PhOIsaTPF8/VDgpwRsVq2HtQZIguzla6VUrLfzwg=
+Date:   Mon, 6 Jul 2020 12:07:36 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 3/7] PCI/ACS: Enable PCI_ACS_TB for
+ untrusted/external-facing devices
+Message-ID: <20200706170736.GA125844@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706164816.GA1299@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200630044943.3425049-4-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 12:48:16PM -0400, Qian Cai wrote:
-> On Fri, Jun 26, 2020 at 02:05:06PM -0700, Paul E. McKenney wrote:
-> > Currently, can_stop_idle_tick() prints "NOHZ: local_softirq_pending HH"
-> > (where "HH" is the hexadecimal softirq vector number) when one or more
-> > non-RCU softirq handlers are still enablded when checking to stop the
-> > scheduler-tick interrupt.  This message is not as enlightening as one
-> > might hope, so this commit changes it to "NOHZ tick-stop error: Non-RCU
-> > local softirq work is pending, handler #HH.
-> > 
-> > Reported-by: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Mon, Jun 29, 2020 at 09:49:39PM -0700, Rajat Jain wrote:
+> When enabling ACS, enable translation blocking for external facing ports
+> and untrusted devices.
 > 
-> CPU hotplug will sometimes trigger this warning on linux-next from NUMA
-> bare-metal which the commit makes it feel more like errors.
-
-One point of the change was to make it clear that this is an error.
-So success!  ;-)
-
-> [  267.734981] smpboot: CPU 42 is now offline
-> [  267.991940] smpboot: Booting Node 2 Processor 42 APIC 0x29
-> [  267.998370] numa_add_cpu cpu 42 node 2: mask now 8-11,40-43
-> [  268.092380] ACPI: \_SB_.SCK0.C015: Found 2 idle states
-> [  268.181917] NOHZ tick-stop error: Non-RCU local softirq work is pending, handler #282
-> [  268.190585] numa_remove_cpu cpu 1 node 0: mask now 0,2-3,32-35
-> [  268.194075] smpboot: CPU 1 is now offline
-> [  268.415320] x86: Booting SMP configuration:
-> [  268.420245] smpboot: Booting Node 0 Processor 1 APIC 0x2
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v2: Commit log change 
 > 
-> # git clone https://github.com/cailca/linux-mm
-> # cd linux-mm; make
-> # ./random 4 (it just soft offline and online each CPU)
+>  drivers/pci/pci.c    |  4 ++++
+>  drivers/pci/quirks.c | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
 > 
-> The x86.config is also included there. This is only reproducible on x86
-> so far.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d2ff987585855..79853b52658a2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+>  	/* Upstream Forwarding */
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	if (dev->external_facing || dev->untrusted)
+> +		/* Translation Blocking */
+> +		ctrl |= (cap & PCI_ACS_TB);
+> +
+>  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+>  }
+>  
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b341628e47527..6294adeac4049 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +/*
+> + * Currently this quirk does the equivalent of
+> + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
 
-I must defer to Frederic and Andy on this one.  But now that you mention
-it, I do see this on some of my runs, which are x86, but not bare metal.
-I clearly need to upgrade my console-log parsing.
+Nit: Reorder these as in c8de8ed2dcaa ("PCI: Make ACS quirk
+implementations more uniform") so they match other similar lists in
+the code.
 
-							Thanx, Paul
+But more to the point: we have a bunch of other quirks for devices
+that do not have an ACS capability but *do* provide some ACS-like
+features.  Most of them support
 
-> > ---
-> > 
-> >  tick-sched.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> > index f0199a4..349a25a 100644
-> > --- a/kernel/time/tick-sched.c
-> > +++ b/kernel/time/tick-sched.c
-> > @@ -927,7 +927,7 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
-> >  
-> >  		if (ratelimit < 10 &&
-> >  		    (local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK)) {
-> > -			pr_warn("NOHZ: local_softirq_pending %02x\n",
-> > +			pr_warn("NOHZ tick-stop error: Non-RCU local softirq work is pending, handler #%02x\n",
-> >  				(unsigned int) local_softirq_pending());
-> >  			ratelimit++;
-> >  		}
+  PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
+
+because that's what we usually want.  But I bet some of them also
+actually provide the equivalent of PCI_ACS_TB.
+
+REQ_ACS_FLAGS doesn't include PCI_ACS_TB.  Is there anything we need
+to do on the pci_acs_enabled() side to check for PCI_ACS_TB, and
+consequently, to update any of the quirks for devices that provide it?
+
+> + *
+> + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
+> + * if dev->external_facing || dev->untrusted
+> + */
+>  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
+>  {
+>  	if (!pci_quirk_intel_pch_acs_match(dev))
+> @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+>  	ctrl |= (cap & PCI_ACS_CR);
+>  	ctrl |= (cap & PCI_ACS_UF);
+>  
+> +	if (dev->external_facing || dev->untrusted)
+> +		/* Translation Blocking */
+> +		ctrl |= (cap & PCI_ACS_TB);
+> +
+>  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
+>  
+>  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
