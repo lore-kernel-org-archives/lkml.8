@@ -2,168 +2,165 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31873C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC492074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06CD20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4eUU+y0"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0fwsDDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgGFE2P (ORCPT
+        id S1727055AbgGFEfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGFE2K (ORCPT
+        Mon, 6 Jul 2020 00:35:22 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9151 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgGFEfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:28:10 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D145C061794;
-        Sun,  5 Jul 2020 21:28:10 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ch3so1288961pjb.5;
-        Sun, 05 Jul 2020 21:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4MlAhZczNRoqPKGUQQKqbIHChSjJilXrVIKMIUGfFJo=;
-        b=e4eUU+y0yRdFRQmTArc78FB+m1IGUgO9ipMZdeLBHqozpK9t1b3BuqvtqAHHybftm0
-         NoiZxF4uLvGfgN2vkH8doiaPEmuHRVNKnWE7mRP9pZ7oIsUjjLrk2akmo3fCBWnO1vbZ
-         8Mil7aOhkpG53zf76/ZQv7v+w27Q1xwUg0oxV6VnNY0l+tdLXW6+QMmqpilJWojE9rW6
-         gtkCgHNRiE3FzSp2/xmGq7GVRYM8gygpeF+aM2/HaN2XzuX6ENNJ2qAU765oL/2huYHC
-         /ya6mBBdw4I+cG16SQk2ntzKe2paZAmWcc0ujEfoX2RFjxQe29s3O3Suji4G2qMDBxou
-         BIPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4MlAhZczNRoqPKGUQQKqbIHChSjJilXrVIKMIUGfFJo=;
-        b=dag5/zob24O6qy147sOnB0u0qyu5T+YlUIOxGNwRItdg3au+y0VPfD6w+kmI7uaxUt
-         mMUlRcKbSycw9H0olw4e6towfyRd1pExZOelu0qBBIdCCwPDciMxY2HJAzK0VDDrsfNm
-         G2dZDodv/Hkb1DeRopJksbsqYHGriL4gjiWmEW3o8bKoB1Q1/apkvVKW4w0Z09ulGdzo
-         5Hg2jTo5s6o6DG1SZOYIP5Hdxeum+dZw2pPJGZBburfYTJ7U0DRrnZ8DNNHsA0Aq4vcx
-         4mzwiNhNQmcAt2QxheXGKAje+zPgt8JcLIz9JKDgV+ZW2+Q01qqI2vAvqSsScgD9W/hh
-         dB4g==
-X-Gm-Message-State: AOAM530XZN02v0JySim0VRSipd29Jl4ivGJVQ8wyiVKYXLWB19raIwFn
-        u7YS2LiBNSwL9IWYsP7/RG3D7+Ui
-X-Google-Smtp-Source: ABdhPJyNr0MmeEJTS1nk6sRDU2qdjE1022dVc4M/5jzXLV3q+1CNErL+jn0UTVhVcw2t2ktyhFpVcQ==
-X-Received: by 2002:a17:902:c206:: with SMTP id 6mr17438764pll.30.1594009688279;
-        Sun, 05 Jul 2020 21:28:08 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id ia13sm16558680pjb.42.2020.07.05.21.28.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 21:28:07 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v2 3/3] net: ethtool: Remove PHYLIB direct dependency
-Date:   Sun,  5 Jul 2020 21:27:58 -0700
-Message-Id: <20200706042758.168819-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200706042758.168819-1-f.fainelli@gmail.com>
-References: <20200706042758.168819-1-f.fainelli@gmail.com>
+        Mon, 6 Jul 2020 00:35:22 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f02a9fc0000>; Sun, 05 Jul 2020 21:35:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 05 Jul 2020 21:35:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 05 Jul 2020 21:35:21 -0700
+Received: from [10.25.73.54] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 04:35:09 +0000
+Subject: Re: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        <alan.mikhak@sifive.com>, <kishon@ti.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20200602100940.10575-1-vidyas@nvidia.com>
+ <DM5PR12MB127675E8C053755CB82A54BCDA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <389018aa-79c8-4a1e-5379-8b8e42939859@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <dd32f413-aa1c-b2e6-d76f-9d2897a8cfad@nvidia.com>
+Date:   Mon, 6 Jul 2020 10:05:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <389018aa-79c8-4a1e-5379-8b8e42939859@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594010109; bh=ilcKIOkMCzYWF/8cfZbAzhF6F1vsrgC37NSf5Q/f3Ow=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=X0fwsDDiyBlCd5cOCk4yJqKY6mVt4qKPhYBoe+RqvgC58lv0iUjqDUoki0cARrI5o
+         KS/DfZIQ68LfFVCeQHAXWLnRCuXMauBgK5WEubT6mCpA++uAQYjC82pzLdKbSqEZfH
+         ChUFhEKmnt0P3d+5GHD175KxZY6kySVHZsKNPvkAE7UiAXMTluZDp81ktz2qFmHVSF
+         zF9RsxsCOL5SEDgpW2eZ9XUkcVo2wLzDhf6ipC0Sf6cpCb8I+4RONuP2MtWMqbctTP
+         Ho31JfyTQ1ukQVAAKL5O0bOmOlGqqd87BV+9jW6/ctRaUv2teHx5qfG1Ywq7JBfCmV
+         FMmH6qxif939Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have introduced ethtool_phy_ops and the PHY library
-dynamically registers its operations with that function pointer, we can
-remove the direct PHYLIB dependency in favor of using dynamic
-operations.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- net/Kconfig             |  1 -
- net/ethtool/cabletest.c | 18 ++++++++++++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/net/Kconfig b/net/Kconfig
-index d1672280d6a4..3831206977a1 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -455,7 +455,6 @@ config FAILOVER
- config ETHTOOL_NETLINK
- 	bool "Netlink interface for ethtool"
- 	default y
--	depends on PHYLIB=y || PHYLIB=n
- 	help
- 	  An alternative userspace interface for ethtool based on generic
- 	  netlink. It provides better extensibility and some new features,
-diff --git a/net/ethtool/cabletest.c b/net/ethtool/cabletest.c
-index 7194956aa09e..4f9fbdf7610c 100644
---- a/net/ethtool/cabletest.c
-+++ b/net/ethtool/cabletest.c
-@@ -58,6 +58,7 @@ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *tb[ETHTOOL_A_CABLE_TEST_MAX + 1];
- 	struct ethnl_req_info req_info = {};
-+	const struct ethtool_phy_ops *ops;
- 	struct net_device *dev;
- 	int ret;
- 
-@@ -81,11 +82,17 @@ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	rtnl_lock();
-+	ops = ethtool_phy_ops;
-+	if (!ops || !ops->start_cable_test) {
-+		ret = -EOPNOTSUPP;
-+		goto out_rtnl;
-+	}
-+
- 	ret = ethnl_ops_begin(dev);
- 	if (ret < 0)
- 		goto out_rtnl;
- 
--	ret = phy_start_cable_test(dev->phydev, info->extack);
-+	ret = ops->start_cable_test(dev->phydev, info->extack);
- 
- 	ethnl_ops_complete(dev);
- 
-@@ -308,6 +315,7 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *tb[ETHTOOL_A_CABLE_TEST_TDR_MAX + 1];
- 	struct ethnl_req_info req_info = {};
-+	const struct ethtool_phy_ops *ops;
- 	struct phy_tdr_config cfg;
- 	struct net_device *dev;
- 	int ret;
-@@ -337,11 +345,17 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info)
- 		goto out_dev_put;
- 
- 	rtnl_lock();
-+	ops = ethtool_phy_ops;
-+	if (!ops || !ops->start_cable_test_tdr) {
-+		ret = -EOPNOTSUPP;
-+		goto out_rtnl;
-+	}
-+
- 	ret = ethnl_ops_begin(dev);
- 	if (ret < 0)
- 		goto out_rtnl;
- 
--	ret = phy_start_cable_test_tdr(dev->phydev, info->extack, &cfg);
-+	ret = ops->start_cable_test_tdr(dev->phydev, info->extack, &cfg);
- 
- 	ethnl_ops_complete(dev);
- 
--- 
-2.25.1
+On 18-Jun-20 12:26 AM, Vidya Sagar wrote:
+>=20
+>=20
+> On 02-Jun-20 10:37 PM, Gustavo Pimentel wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Tue, Jun 2, 2020 at 11:9:38, Vidya Sagar <vidyas@nvidia.com> wrote:
+>>
+>>> In this patch series,
+>>> Patch-1
+>>> adds required infrastructure to deal with prefetchable memory region
+>>> information coming from 'ranges' property of the respective=20
+>>> device-tree node
+>>> separately from non-prefetchable memory region information.
+>>> Patch-2
+>>> Adds support to use ATU region-3 for establishing the mapping between=20
+>>> CPU
+>>> addresses and PCIe bus addresses.
+>>> It also changes the logic to determine whether mapping is required or=20
+>>> not by
+>>> checking both CPU address and PCIe bus address for both prefetchable an=
+d
+>>> non-prefetchable regions. If the addresses are same, then, it is=20
+>>> understood
+>>> that 1:1 mapping is in place and there is no need to setup ATU mapping
+>>> whereas if the addresses are not the same, then, there is a need to=20
+>>> setup ATU
+>>> mapping. This is certainly true for Tegra194 and what I heard from=20
+>>> our HW
+>>> engineers is that it should generally be true for any DWC based=20
+>>> implementation
+>>> also.
+>>> Hence, I request Synopsys folks (Jingoo Han & Gustavo Pimentel ??) to=20
+>>> confirm
+>>> the same so that this particular patch won't cause any regressions=20
+>>> for other
+>>> DWC based platforms.
+>>
+>> Hi Vidya,
+>>
+>> Unfortunately due to the COVID-19 lockdown, I can't access my developmen=
+t
+>> prototype setup to test your patch.
+>> It might take some while until I get the possibility to get access to it
+>> again.
+> Hi Gustavo,
+> Did you find time to check this?
+> Adding Kishon and Alan as well to take a look at this and verify on=20
+> their platforms if possible.
+Hi Kishon and Alan, did you find time to verify this on your respective=20
+platforms?
 
+Thanks,
+Vidya Sagar
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+>>
+>> -Gustavo
+>>
+>>>
+>>> Vidya Sagar (2):
+>>> =C2=A0=C2=A0 PCI: dwc: Add support to handle prefetchable memory separa=
+tely
+>>> =C2=A0=C2=A0 PCI: dwc: Use ATU region to map prefetchable memory region
+>>>
+>>> =C2=A0 .../pci/controller/dwc/pcie-designware-host.c | 46 +++++++++++++=
++-----
+>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.c=C2=A0 |=C2=A0 6 ++-
+>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0 |=C2=A0 8 +++=
+-
+>>> =C2=A0 3 files changed, 45 insertions(+), 15 deletions(-)
+>>>
+>>> --=20
+>>> 2.17.1
+>>
+>>
