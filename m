@@ -2,146 +2,95 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A718FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28328C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83CC02073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UUT7vs3O"
+	by mail.kernel.org (Postfix) with ESMTP id 071112070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgGFNSs (ORCPT
+        id S1729159AbgGFNT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:18:48 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:37354 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbgGFNSs (ORCPT
+        Mon, 6 Jul 2020 09:19:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:49595 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbgGFNT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:18:48 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6913520B717A;
-        Mon,  6 Jul 2020 06:18:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6913520B717A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594041528;
-        bh=f6pqwPgURJsUukw0OzBzkWGxCYgCy9yL+9G336sxsg0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UUT7vs3OB1AfZN8zireRKfp/s6vIG1eklB2XXox3Un1iQ/71CST+p4YPnh/noPO4s
-         qqjf581qVhqHRsmxe/fwt2L4cVrlo16dwpSWSHGaFXHs5qAcpaszsntJYJRQjVL1/w
-         6dTp9HX986whh3++TYJQTJFAi5oE0c+jZIUsiCu4=
-Date:   Mon, 6 Jul 2020 08:18:45 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
- conditional into ima_validate_rule()
-Message-ID: <20200706131845.GI4694@sequoia>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
- <20200626223900.253615-10-tyhicks@linux.microsoft.com>
- <1593558449.5057.12.camel@linux.ibm.com>
- <20200702221656.GH4694@sequoia>
- <1593785732.23056.16.camel@linux.ibm.com>
+        Mon, 6 Jul 2020 09:19:59 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N1x2P-1ku8Wq2089-012JoS for <linux-kernel@vger.kernel.org>; Mon, 06 Jul
+ 2020 15:19:57 +0200
+Received: by mail-qk1-f179.google.com with SMTP id e11so34706523qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:19:57 -0700 (PDT)
+X-Gm-Message-State: AOAM531qOk1cLZ0gUOgdDwusUSTRQ3opv0jbeYwSTaiQ5TbVP6kvpjLr
+        q23fOKos047bZjmkuYuYr8UpRnEwQQ26CqjLlq0=
+X-Google-Smtp-Source: ABdhPJww6niUigVuQJHkqYYmYfiOxZdER76y7qfgzTAcKKYifjABS1zq7DTZUu6v4QCjtiQWoqcEGT3GV0UUjF5yVFA=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr46772841qke.286.1594041596392;
+ Mon, 06 Jul 2020 06:19:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1593785732.23056.16.camel@linux.ibm.com>
+References: <202007061834.Xh4DF8QN%lkp@intel.com> <CAK8P3a2dLDf-gOezrzmp0J1ZtnnZgq5KstUO4RZ0Wnfs9J2H_A@mail.gmail.com>
+In-Reply-To: <CAK8P3a2dLDf-gOezrzmp0J1ZtnnZgq5KstUO4RZ0Wnfs9J2H_A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Jul 2020 15:19:40 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2BnecaxYpMzuEHrBqCbA_z0D4Fr=UU_MaFiddZ7OLm=g@mail.gmail.com>
+Message-ID: <CAK8P3a2BnecaxYpMzuEHrBqCbA_z0D4Fr=UU_MaFiddZ7OLm=g@mail.gmail.com>
+Subject: Re: file.c:undefined reference to `.dump_emit'
+To:     kernel test robot <lkp@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jeremy Kerr <jk@ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RyufBug6mJ3WvsoUtVFcOTPPiNDCmSOp2oQPPq2Mc/fU3pGE25e
+ 8F0EtU5EDaKtWNQQtCGNawlgHfp4M80btzrngiSTkH5C+vgvSbsKtZAM7okDaKrTJnPC3Ep
+ BT/5CBXV1HQqmgNN9Kfskch9BBEZTXfbyaBVQ6Ffker4g+VsO+XaBdN7w15gbweBpaN0AaI
+ wmB5UXHzhbiaz7hf1pvvg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aWcE2NkkIQU=:CZB6POWrFo/z4k2iPs5srM
+ g4opwP6fsPevHW4givcMlfE17SeIMmlwzjIefPVizQHiEvep1euNOJ09uFKH7BAjpA8NNrTU5
+ H0yJvvS02C8KdygR6bU3FNtK+VdLVS9C2j2f1XwfLBagzQH4LQROEJbLqzhtdAi1D+MqJIMTe
+ y/hRKGmmbGlP1VitIgcIjlKmpW/6ZdFrDK31iJsBGoTGj477XRBoJJN601u2yscYqQkWJ7jEV
+ 1tLuZS1aGaIYuyWnI1JLMs6BO69rK9wenADF9RnlEYLROYbehQ/J3W0CttnUMufr65ZfZkg3W
+ H1rXKvc5ilipPDcBACeUM5me533DTpgmfSlLJyt9V1QKG5Y8OwTP7QctCRL7IBvOxMrI21Cb4
+ UBjQ3+tB0SQa6OfRV5FExP4ZLevcUZdJquoFmMnfdoBCjK6FccExjGhfmBYhWkzu5BUjvDehs
+ UnwGH6OOLCN7RuxhDg5IE5ZTa5nZV68HGq8IPoNwSjQlSBE7ufKHzit7aCoOIzM/mEoW4bV9r
+ G0gPFULFe4xrVZqPHSVeW6IqWR6fvDzSKvVGm6i9SN/sEnuGQQfvFHKkgntJqGI1D3JH+WiXx
+ Yuq+vSg0ccPmso9h0b6OnZWBqV6N9LgWvzuLEKblh1UXZ7M83Anc1i1hbusptMegrxnLlfOFw
+ 4u0EG8rZYpd9maJIHPZIyfJYdpsa8RI7mJLqQMBN8KBefDraTyGI72McDoLeidqxf8zabb9CG
+ iwl4lqESG2IOshwnReQtyrC75I7sRmechVjxanRY6kRIhvSm/LF5uSqowKmeAbWGblcYdiLw4
+ jM/XfCIAKRnWDxddUxtcihhxwt48nw2CFoC/yCFe18Vi/qXYsOJ5CfOmYE2UXBTRwPkLIwAk9
+ lECup4g6daIc6+PkS6D0Q0n6UBopJMbR54eOhWykRUKNAJCJ28AcHcgIsnVyxQhKSy6SeElIT
+ 6vgyKa88nll/sF6wpe76oK6UzMaYtJQTqHk0MQ70/0gELkyyFh/Cs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-03 10:15:32, Mimi Zohar wrote:
-> On Thu, 2020-07-02 at 17:16 -0500, Tyler Hicks wrote:
-> > On 2020-06-30 19:07:29, Mimi Zohar wrote:
-> > > On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
-> > > > Use ima_validate_rule() to ensure that the combination of a hook
-> > > > function and the keyrings conditional is valid and that the keyrings
-> > > > conditional is not specified without an explicit KEY_CHECK func
-> > > > conditional. This is a code cleanup and has no user-facing change.
-> > > > 
-> > > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > > > ---
-> > > > 
-> > > > * v2
-> > > >   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
-> > > >     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
-> > > >     present in the rule entry flags for non-buffer hook functions.
-> > > > 
-> > > >  security/integrity/ima/ima_policy.c | 13 +++++++++++--
-> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > > > index 8cdca2399d59..43d49ad958fb 100644
-> > > > --- a/security/integrity/ima/ima_policy.c
-> > > > +++ b/security/integrity/ima/ima_policy.c
-> > > > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> > > >  		case KEXEC_KERNEL_CHECK:
-> > > >  		case KEXEC_INITRAMFS_CHECK:
-> > > >  		case POLICY_CHECK:
-> > > > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
-> > > > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
-> > > > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
-> > > > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
-> > > > +					     IMA_PERMIT_DIRECTIO |
-> > > > +					     IMA_MODSIG_ALLOWED |
-> > > > +					     IMA_CHECK_BLACKLIST))
-> > > 
-> > > Other than KEYRINGS, this patch should continue to behave the same.
-> > >  However, this list gives the impressions that all of these flags are
-> > > permitted on all of the above flags, which isn't true.
-> > > 
-> > > For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
-> > > to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
-> > 
-> > Just to clarify, are both IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST
-> > limited to KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK, and MODULE_CHECK?
-> > That's what ima_hook_supports_modsig() suggests.
-> 
-> Theoretically that is true, but I have no idea how you would append a
-> signature to the kexec boot command line.  The only users of appended
-> signatures are currently kernel modules and the kexec'ed kernel image.
+On Mon, Jul 6, 2020 at 3:04 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Jul 6, 2020 at 12:17 PM kernel test robot <lkp@intel.com> wrote:
+> >
+> In the interest of keeping things simple, I'd suggest doing this one instead:
+>
+> --- a/arch/powerpc/platforms/cell/Kconfig
+> +++ b/arch/powerpc/platforms/cell/Kconfig
+> @@ -44,6 +44,7 @@ config SPU_FS
+>         tristate "SPU file system"
+>         default m
+>         depends on PPC_CELL
+> +       depends on COREDUMP
+>         select SPU_BASE
+>         help
+>           The SPU file system is used to access Synergistic Processing
+>
+> I'll send a proper patch if there are no objections.
+>
 
-The discrepancy was with KEXEC_INITRAMFS_CHECK, not KEXEC_CMDLINE. I now
-see that there's no support for initramfs signature verification in the
-kexec code so I'll assume that ima_hook_supports_modsig() is wrong and
-limit IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST to the
-KEXEC_KERNEL_CHECK and MODULE_CHECK actions, as you originally
-suggested.
+I see now that it's not even a regression, the report was just about
+part of the output now coming from a different file.
 
-Tyler
+I'll send the fix anyway, there is no need for this to be broken.
 
-> 
-> > 
-> > >  Both should only be allowed on APPRAISE action rules.
-> > 
-> > For completeness, it looks like DONT_APPRAISE should not be allowed.
-> 
-> Good point.  
-> 
-> > 
-> > > IMA_PCR should be limited to MEASURE action rules.
-> > 
-> > It looks like DONT_MEASURE should not be allowed.
-> 
-> The TPM PCR isn't a file attribute.
-> 
-> > 
-> > > IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
-> > 
-> > It looks like DONT_APPRAISE should not be allowed.
-> 
-> Right, in all of these cases the DONT_XXXX isn't applicable.
-> 
-> Mimi
+        Arnd
