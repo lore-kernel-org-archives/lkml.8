@@ -2,138 +2,157 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95518C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A67C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 768CE2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594034334;
-	bh=zmLR8ixp5sAk1S+ev5fAN5kR8hjaY/WGUGOCG/81gPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pdHDIdZqB/u6wNUMQR6b6uI1kCe13xCxP6D2B6s9cepxCFCE/bb1Co1Ouo3E9PLCl
-	 VznAt0F+W+uIsgaib8rComX24zL9H3rUzRzrmvJNLa6y0C8p3XebPTzsCFpYe4myJS
-	 6pWvWrQqGZw64NeLzeLYMeTZTpyvxSARvYeePWFE=
+	by mail.kernel.org (Postfix) with ESMTP id 210BB20724
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="or4M9vcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgGFLSx (ORCPT
+        id S1728960AbgGFLTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbgGFLSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:18:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7E020724;
-        Mon,  6 Jul 2020 11:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594034332;
-        bh=zmLR8ixp5sAk1S+ev5fAN5kR8hjaY/WGUGOCG/81gPc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=swRHZ9dvM6Cdv2zekhNMV5k8dNEu5dGipKH3rVjPbGLGCwuhLwkDdl1GwEcPdDnbu
-         rcN1I4YSJ4naOdnXogcVK4SJxbTijKBeQUXqVVcIGAqeTJwAcOVJxLCp9Nj4Uhnw4W
-         Ol1iWX3rSZsd442n+Ko+ekIdbXr6fZBXRtoJI5vI=
-Date:   Mon, 6 Jul 2020 13:18:49 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
-        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
- faster
-Message-ID: <20200706111849.GA84659@kroah.com>
-References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
- <20200705021631.GR25523@casper.infradead.org>
- <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
- <20200705031208.GS25523@casper.infradead.org>
- <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
- <20200705032732.GT25523@casper.infradead.org>
- <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
- <20200705115851.GB1227929@kroah.com>
- <CAODFU0ovM-i=4fNKSzp9SgO_FjPcAOZ0R8S4iRXyGm+QL53C1A@mail.gmail.com>
+        Mon, 6 Jul 2020 07:19:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbgGFLTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:19:03 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E269EC061794;
+        Mon,  6 Jul 2020 04:19:02 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i25so39005232iog.0;
+        Mon, 06 Jul 2020 04:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XBDJ3ik72+EzeQWMf1/QKd8Y/Fn6LaIHmILJwiRh6+E=;
+        b=or4M9vcmro+UyndI3XdO3lSEq6xru9qniC1Z1GWXS7Q+0Ked8iZluQF/uSdBfOCqtp
+         A1oZrC/ihcc7MNhryl5ByVACqnqf30yr/+xJRaxztj/q+qZjDFtmPqcjdPU04fiZUWV6
+         dtTqVPHvwtKZ4YtCp8zEPxTqBFmP45cWAE80Chhox6At9U2eM3UV3RfBM545XkBpULoz
+         89lWPX9BB9sK2/dimVvi4M298Z4S74DPdEKjNtVJNb28i6sNqnPFKFn7EHMk3lphpyFu
+         D1JRHoFzWoBZ/R4QAPmIYlsjGpQ55pKbFQgYOJMOXaMENzzGMdnWSJTNR26NgFxCe2I5
+         fAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XBDJ3ik72+EzeQWMf1/QKd8Y/Fn6LaIHmILJwiRh6+E=;
+        b=VdbEIL8FsbnRvZj2me6rKplvr1KnmWukKZHXo3Lyx5AViMYRb+B+Dm2St3nBXqJyJe
+         7jw87/cnVsawp/2jHybUdx22lNOofdlFvyCkb6UmnWHB0lcqvJMLC5VPI2u30EkdLJwa
+         +fka6DU7Yo3s+vZZ6ukURYg40yugQQPlSnxK7iq/eZBS7vH9p6iEZOcO7ABVcqIdDYih
+         G5BUpznEU2t6KTdcvh7PrZxph7ZTZI8JGMFbVQ7d4CV0oEER219UYgSokaJkd+L8ppIY
+         sgWZ3V9CtBuUBmuvUMfOMyCL3lBOL5vCCC7IDfPb54hF8c9mKvHyUCSB3kT6NJ01yqPS
+         pIbA==
+X-Gm-Message-State: AOAM531D5XQIJaqC+XBbr+cKDgF/NUTzaALJ/BVIoaGaCI1Me1B9ZTEM
+        16xMT0UwkHL+eLMM1PiZi+jrIoxiaPG8SGSg3pk=
+X-Google-Smtp-Source: ABdhPJyZMPISBjocSxAG9s4s40K4agAeJVqFKWBW1Ffd6KJnfjpCmMiFDvX1rSUqnu8cpiS/Kfad/9DfFzd5lPO+fQ0=
+X-Received: by 2002:a6b:9242:: with SMTP id u63mr1166991iod.92.1594034342051;
+ Mon, 06 Jul 2020 04:19:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAODFU0ovM-i=4fNKSzp9SgO_FjPcAOZ0R8S4iRXyGm+QL53C1A@mail.gmail.com>
+References: <20200630182636.439015-1-aford173@gmail.com> <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
+ <20200703193648.GA373653@ravnborg.org> <bda1606f-b12c-3356-15ce-489fc2441737@ti.com>
+In-Reply-To: <bda1606f-b12c-3356-15ce-489fc2441737@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 6 Jul 2020 06:18:53 -0500
+Message-ID: <CAHCN7xJdg8uUDaghFftze2K6t2pnyZg_JYpdmA=UU-shmk0Xgw@mail.gmail.com>
+Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        stable <stable@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:07:46AM +0200, Jan Ziak wrote:
-> On Sun, Jul 5, 2020 at 1:58 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Mon, Jul 6, 2020 at 1:02 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>
+> Hi,
+>
+> On 03/07/2020 22:36, Sam Ravnborg wrote:
+> > Hi Tomi.
 > >
-> > On Sun, Jul 05, 2020 at 06:09:03AM +0200, Jan Ziak wrote:
-> > > On Sun, Jul 5, 2020 at 5:27 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
-> > > > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > > >
-> > > > > > You should probably take a look at io_uring.  That has the level of
-> > > > > > complexity of this proposal and supports open/read/close along with many
-> > > > > > other opcodes.
-> > > > >
-> > > > > Then glibc can implement readfile using io_uring and there is no need
-> > > > > for a new single-file readfile syscall.
-> > > >
-> > > > It could, sure.  But there's also a value in having a simple interface
-> > > > to accomplish a simple task.  Your proposed API added a very complex
-> > > > interface to satisfy needs that clearly aren't part of the problem space
-> > > > that Greg is looking to address.
-> > >
-> > > I believe that we should look at the single-file readfile syscall from
-> > > a performance viewpoint. If an application is expecting to read a
-> > > couple of small/medium-size files per second, then neither readfile
-> > > nor readfiles makes sense in terms of improving performance. The
-> > > benefits start to show up only in case an application is expecting to
-> > > read at least a hundred of files per second. The "per second" part is
-> > > important, it cannot be left out. Because readfile only improves
-> > > performance for many-file reads, the syscall that applications
-> > > performing many-file reads actually want is the multi-file version,
-> > > not the single-file version.
+> > On Fri, Jul 03, 2020 at 10:17:29AM +0300, Tomi Valkeinen wrote:
+> >> On 30/06/2020 21:26, Adam Ford wrote:
+> >>> The drm/omap driver was fixed to correct an issue where using a
+> >>> divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+> >>> number.  Through experimentation, it appears that 31 works, and
+> >>> it is consistent with the value used by the drm/omap driver.
+> >>>
+> >>> This patch fixes the divider for fbdev driver instead of the drm.
+> >>>
+> >>> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> >>>
+> >>> Cc: <stable@vger.kernel.org> #4.9+
+> >>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>> ---
+> >>> Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
+> >>>
+> >>> The DRM version of this same fix is:
+> >>> e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
+> >>>
+> >>>
+> >>> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> >>> index 7252d22dd117..bfc5c4c5a26a 100644
+> >>> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> >>> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> >>> @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
+> >>>    };
+> >>>    static const struct dss_features omap3630_dss_feats = {
+> >>> -   .fck_div_max            =       32,
+> >>> +   .fck_div_max            =       31,
+> >>>     .dss_fck_multiplier     =       1,
+> >>>     .parent_clk_name        =       "dpll4_ck",
+> >>>     .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
+> >>>
+> >>
+> >> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Will you apply to drm-misc?
+>
+> This is for fbdev, so I presume Bartlomiej will pick this one.
+>
+> > Note  following output from "dim fixes":
+> > $ dim fixes f76ee892a99e
+> > Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: Dave Airlie <airlied@gmail.com>
+> > Cc: Rob Clark <robdclark@gmail.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: Jason Yan <yanaijie@huawei.com>
+> > Cc: "Andrew F. Davis" <afd@ti.com>
+> > Cc: YueHaibing <yuehaibing@huawei.com>
+> > Cc: <stable@vger.kernel.org> # v4.5+
 > >
-> > It also is a measurable increase over reading just a single file.
-> > Here's my really really fast AMD system doing just one call to readfile
-> > vs. one call sequence to open/read/close:
-> >
-> >         $ ./readfile_speed -l 1
-> >         Running readfile test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
-> >         Took 3410 ns
-> >         Running open/read/close test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
-> >         Took 3780 ns
-> >
-> > 370ns isn't all that much, yes, but it is 370ns that could have been
-> > used for something else :)
-> 
-> I am curious as to how you amortized or accounted for the fact that
-> readfile() first needs to open the dirfd and then close it later.
+> > Here it says the fix is valid from v4.5 onwards.
+>
+> Hmm... Adam, you marked the fix to apply to v4.9+, and then you said
+> v4.4 needs a new patch (that's before the big copy/rename). Did you
+> check the versions between 4.4 and 4.9? I would guess this one applies
+> to v4.5+.
 
-I do not open a dirfd, look at the benchmark code in the patch, it's all
-right there.
+I only tried 4.9 because it's listed as an LTS kernel.  The stuff
+between 4.4 and 4.9 were EOL, so I didn't go back further.    The 4.5+
+is probably more accurate.  I would like to do the same thing for the
+4.4 kernel, but I am not sure the proper way to do that.
 
-I can make it simpler, will do that for the next round as I want to make
-it really obvious for people to test on their hardware.
-
-> >From performance viewpoint, only codes where readfile() is called
-> multiple times from within a loop make sense:
-> 
-> dirfd = open();
-> for(...) {
->   readfile(dirfd, ...);
-> }
-> close(dirfd);
-
-No need to open dirfd at all, my benchmarks did not do that, just pass
-in an absolute path if you don't want to.  But if you want to, because
-you want to read a bunch of files, you can, faster than you could if you
-wanted to read a number of individual files without it :)
-
-thanks,
-
-greg k-h
+adam
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
