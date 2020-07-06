@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D398C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58CF620720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C7D20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ctv2LBHp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZVWqJqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgGFEgO (ORCPT
+        id S1728819AbgGFEgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
+        Mon, 6 Jul 2020 00:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbgGFEgM (ORCPT
+        with ESMTP id S1728466AbgGFEgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:36:12 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EB5C061794;
-        Sun,  5 Jul 2020 21:36:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w3so27973283wmi.4;
-        Sun, 05 Jul 2020 21:36:11 -0700 (PDT)
+        Mon, 6 Jul 2020 00:36:23 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2448C061794;
+        Sun,  5 Jul 2020 21:36:22 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so14801122wmc.1;
+        Sun, 05 Jul 2020 21:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xjWMms9hqssB2L3Uqzup8R5/c6eD/F4/doDU2/0geL4=;
-        b=Ctv2LBHpi05DYQhd625nEbMh7jHkAJJPHQG/NiH0dPj/+FZr5hafC4kMCAB+6OFSuW
-         Fdvvukv7P4rH6xrLn4B+YMNSYzHYNKPYOB5Y1gAyLSwA8CTNZ1FpXcVUC4IXKVLDiQK1
-         22UK6CDHKOdLAZ3EY5MTzGTid0MW4KokIZ5pvPUJOjOZkZQChKF1PjjYoN8sHdariJNS
-         d5nKczqrRuFLxCU1gI+EGiXcCL93qDnqhprKW1KQsesaHNzkolsvz0f/671dbdh7k3LQ
-         8K7FjTTCe6e+uYA/JOHNsJYg40fxzpIxFm4Wh+2aJpmeiptF1gpQOv0joBkZtfboK8//
-         ceFA==
+        bh=eFtOhPa6UPKbbzo3u5/AEsgh8vOwpk1J+kW2CjfhlPc=;
+        b=GZVWqJqDnvPt0m/ywH4ec2mSr4AXEvnGlkCVGnG20TxuxQwdpvE31up4OGSkls1qOo
+         IgtnVwOwJutJvf2GXZkxhpEakr8p+lbnKX/OhqN4/MFx7YxGxBfHzz0SjvYqo3ob1WCa
+         nYd6LBHhfUKz2SqDrVLe+9beX6dXmigINLPitUlNSnOPbSsm2Gk7uZ1AY/2J3OFpoOdU
+         a7/WFOUGawfnF3GMH3e3Ggj56N0Aq8MyTb15rK9OsVX6cYgR/TLJpi9RKYN/MPNukom6
+         7Yy5/FI+3E3oTHE2VkYAdM9O7fRZjySbLmG4loRlVi2QLUTfiNM5t7bfvkTxPoqY9O5S
+         aOnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xjWMms9hqssB2L3Uqzup8R5/c6eD/F4/doDU2/0geL4=;
-        b=oWJUVOoBYSBfAK7pE8xG1cSVyFQZYW3Vu5U8E5uhSmPvjGZ4tzFseiQlmqn0Ug4qpU
-         6MZsM5+FmiuVvVXOWD/kGF0uFQyaNfZiLFrTXTJQXU7zdhnE61xwu4hv0tML6IHML9hu
-         y6CSLT8ZWsviIcDw6NFK5IinepSVFSs10/io7NceOCsdBVWOVTLM7qHkB3ukaHkuHclr
-         uZDYyvhPhYzkFpHDLqRpyjzr9x2YTIuXmQv+oRRRXyr/8Rrv5XPOmIeH8227J9KXxYN9
-         e+XQTTEUgZVs8e7lnJvH/pWyJWfJZxBwKx4vctaRqB/9cECWNVh8Bfl87xEPrr0c2B1I
-         /Khw==
-X-Gm-Message-State: AOAM532UUl2NptRw9W4oYzy14MP3RWW7PUBPP727Tw65/DGYWRo1rGww
-        9muu+vm9weXevT5UnYGf1SQ=
-X-Google-Smtp-Source: ABdhPJzcIttoqOn7cqOAD1IMiPA4RpCdM1pvA18rmM0HvLHHJbruKYlLyRnrO9atUQzWu+juzXDkhw==
-X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr46989940wmk.39.1594010170256;
-        Sun, 05 Jul 2020 21:36:10 -0700 (PDT)
+        bh=eFtOhPa6UPKbbzo3u5/AEsgh8vOwpk1J+kW2CjfhlPc=;
+        b=fh3XCd6hjs9/JmqsUjeHLFWBQS3V1LWJ+ode3NBUySvsnkz3s/IO3SP9I9zy9dNc+A
+         sjp4468sV4L0rE2D9b1SISmdgkjP2di2mUED8UwCMWEnZvvduVbx2VrxWuoN948OvGhT
+         2xFBfKmwjg3XhoGvZEk8zArdckji2bh8uWnhSJWVVV2KEJYAC8BWNR3K7OFjSa6ZvJwQ
+         RIK1xomT3G9TQ6H1Z8ijUYJXxkQ92UfQx8vRSbn1WrR25byv3LRzZk6oFKqjGFlPXClN
+         /6icoPKx3u9bizSgseQ2fEhRQ2uxIzSaRZJTCSWGt9ghBcjUEmH6cOsCynwMbjXG0ogQ
+         a79g==
+X-Gm-Message-State: AOAM532cq6V3Z/Mw9C/H5n8dVNq2kloqDNgszy3hCKbtWn9fIG/W0rpN
+        m2ofAk5y6lJDPj70AFS+QU8=
+X-Google-Smtp-Source: ABdhPJxeZ0m8MAEwenuHNIIMBNLfG2x8/jkCtcATFVbQAnJEi6JvrVWN82YAkx52xf9gORD1ssU3aw==
+X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr40259343wme.177.1594010181430;
+        Sun, 05 Jul 2020 21:36:21 -0700 (PDT)
 Received: from bobo.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id r10sm22202309wrm.17.2020.07.05.21.36.04
+        by smtp.gmail.com with ESMTPSA id r10sm22202309wrm.17.2020.07.05.21.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 21:36:09 -0700 (PDT)
+        Sun, 05 Jul 2020 21:36:21 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
@@ -71,9 +71,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
         linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
         linux-arch@vger.kernel.org
-Subject: [PATCH v3 3/6] powerpc: move spinlock implementation to simple_spinlock
-Date:   Mon,  6 Jul 2020 14:35:37 +1000
-Message-Id: <20200706043540.1563616-4-npiggin@gmail.com>
+Subject: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for SPLPAR
+Date:   Mon,  6 Jul 2020 14:35:39 +1000
+Message-Id: <20200706043540.1563616-6-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200706043540.1563616-1-npiggin@gmail.com>
 References: <20200706043540.1563616-1-npiggin@gmail.com>
@@ -84,662 +84,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prepare for queued spinlocks. This is a simple rename except to update
-preprocessor guard name and a file reference.
-
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/include/asm/simple_spinlock.h    | 292 ++++++++++++++++++
- .../include/asm/simple_spinlock_types.h       |  21 ++
- arch/powerpc/include/asm/spinlock.h           | 285 +----------------
- arch/powerpc/include/asm/spinlock_types.h     |  12 +-
- 4 files changed, 315 insertions(+), 295 deletions(-)
- create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
- create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
+ arch/powerpc/include/asm/paravirt.h           | 28 ++++++++
+ arch/powerpc/include/asm/qspinlock.h          | 66 +++++++++++++++++++
+ arch/powerpc/include/asm/qspinlock_paravirt.h |  7 ++
+ arch/powerpc/platforms/pseries/Kconfig        |  5 ++
+ arch/powerpc/platforms/pseries/setup.c        |  6 +-
+ include/asm-generic/qspinlock.h               |  2 +
+ 6 files changed, 113 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
 
-diff --git a/arch/powerpc/include/asm/simple_spinlock.h b/arch/powerpc/include/asm/simple_spinlock.h
-new file mode 100644
-index 000000000000..e048c041c4a9
---- /dev/null
-+++ b/arch/powerpc/include/asm/simple_spinlock.h
-@@ -0,0 +1,292 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef __ASM_SIMPLE_SPINLOCK_H
-+#define __ASM_SIMPLE_SPINLOCK_H
-+#ifdef __KERNEL__
+diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
+index 7a8546660a63..f2d51f929cf5 100644
+--- a/arch/powerpc/include/asm/paravirt.h
++++ b/arch/powerpc/include/asm/paravirt.h
+@@ -29,6 +29,16 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
+ {
+ 	plpar_hcall_norets(H_CONFER, get_hard_smp_processor_id(cpu), yield_count);
+ }
 +
-+/*
-+ * Simple spin lock operations.  
-+ *
-+ * Copyright (C) 2001-2004 Paul Mackerras <paulus@au.ibm.com>, IBM
-+ * Copyright (C) 2001 Anton Blanchard <anton@au.ibm.com>, IBM
-+ * Copyright (C) 2002 Dave Engebretsen <engebret@us.ibm.com>, IBM
-+ *	Rework to support virtual processors
-+ *
-+ * Type of int is used as a full 64b word is not necessary.
-+ *
-+ * (the type definitions are in asm/simple_spinlock_types.h)
-+ */
-+#include <linux/irqflags.h>
-+#include <asm/paravirt.h>
-+#ifdef CONFIG_PPC64
-+#include <asm/paca.h>
-+#endif
-+#include <asm/synch.h>
-+#include <asm/ppc-opcode.h>
-+
-+#ifdef CONFIG_PPC64
-+/* use 0x800000yy when locked, where yy == CPU number */
-+#ifdef __BIG_ENDIAN__
-+#define LOCK_TOKEN	(*(u32 *)(&get_paca()->lock_token))
-+#else
-+#define LOCK_TOKEN	(*(u32 *)(&get_paca()->paca_index))
-+#endif
-+#else
-+#define LOCK_TOKEN	1
-+#endif
-+
-+static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
++static inline void prod_cpu(int cpu)
 +{
-+	return lock.slock == 0;
++	plpar_hcall_norets(H_PROD, get_hard_smp_processor_id(cpu));
 +}
 +
-+static inline int arch_spin_is_locked(arch_spinlock_t *lock)
++static inline void yield_to_any(void)
 +{
-+	smp_mb();
-+	return !arch_spin_value_unlocked(*lock);
++	plpar_hcall_norets(H_CONFER, -1, 0);
++}
+ #else
+ static inline bool is_shared_processor(void)
+ {
+@@ -45,6 +55,19 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
+ {
+ 	___bad_yield_to_preempted(); /* This would be a bug */
+ }
++
++extern void ___bad_yield_to_any(void);
++static inline void yield_to_any(void)
++{
++	___bad_yield_to_any(); /* This would be a bug */
 +}
 +
-+/*
-+ * This returns the old value in the lock, so we succeeded
-+ * in getting the lock if the return value is 0.
-+ */
-+static inline unsigned long __arch_spin_trylock(arch_spinlock_t *lock)
++extern void ___bad_prod_cpu(void);
++static inline void prod_cpu(int cpu)
 +{
-+	unsigned long tmp, token;
-+
-+	token = LOCK_TOKEN;
-+	__asm__ __volatile__(
-+"1:	" PPC_LWARX(%0,0,%2,1) "\n\
-+	cmpwi		0,%0,0\n\
-+	bne-		2f\n\
-+	stwcx.		%1,0,%2\n\
-+	bne-		1b\n"
-+	PPC_ACQUIRE_BARRIER
-+"2:"
-+	: "=&r" (tmp)
-+	: "r" (token), "r" (&lock->slock)
-+	: "cr0", "memory");
-+
-+	return tmp;
++	___bad_prod_cpu(); /* This would be a bug */
 +}
 +
-+static inline int arch_spin_trylock(arch_spinlock_t *lock)
-+{
-+	return __arch_spin_trylock(lock) == 0;
-+}
-+
-+/*
-+ * On a system with shared processors (that is, where a physical
-+ * processor is multiplexed between several virtual processors),
-+ * there is no point spinning on a lock if the holder of the lock
-+ * isn't currently scheduled on a physical processor.  Instead
-+ * we detect this situation and ask the hypervisor to give the
-+ * rest of our timeslice to the lock holder.
-+ *
-+ * So that we can tell which virtual processor is holding a lock,
-+ * we put 0x80000000 | smp_processor_id() in the lock when it is
-+ * held.  Conveniently, we have a word in the paca that holds this
-+ * value.
-+ */
-+
-+#if defined(CONFIG_PPC_SPLPAR)
-+/* We only yield to the hypervisor if we are in shared processor mode */
-+void splpar_spin_yield(arch_spinlock_t *lock);
-+void splpar_rw_yield(arch_rwlock_t *lock);
-+#else /* SPLPAR */
-+static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
-+static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
-+#endif
-+
-+static inline void spin_yield(arch_spinlock_t *lock)
-+{
-+	if (is_shared_processor())
-+		splpar_spin_yield(lock);
-+	else
-+		barrier();
-+}
-+
-+static inline void rw_yield(arch_rwlock_t *lock)
-+{
-+	if (is_shared_processor())
-+		splpar_rw_yield(lock);
-+	else
-+		barrier();
-+}
-+
-+static inline void arch_spin_lock(arch_spinlock_t *lock)
-+{
-+	while (1) {
-+		if (likely(__arch_spin_trylock(lock) == 0))
-+			break;
-+		do {
-+			HMT_low();
-+			if (is_shared_processor())
-+				splpar_spin_yield(lock);
-+		} while (unlikely(lock->slock != 0));
-+		HMT_medium();
-+	}
-+}
-+
-+static inline
-+void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
-+{
-+	unsigned long flags_dis;
-+
-+	while (1) {
-+		if (likely(__arch_spin_trylock(lock) == 0))
-+			break;
-+		local_save_flags(flags_dis);
-+		local_irq_restore(flags);
-+		do {
-+			HMT_low();
-+			if (is_shared_processor())
-+				splpar_spin_yield(lock);
-+		} while (unlikely(lock->slock != 0));
-+		HMT_medium();
-+		local_irq_restore(flags_dis);
-+	}
-+}
-+#define arch_spin_lock_flags arch_spin_lock_flags
-+
-+static inline void arch_spin_unlock(arch_spinlock_t *lock)
-+{
-+	__asm__ __volatile__("# arch_spin_unlock\n\t"
-+				PPC_RELEASE_BARRIER: : :"memory");
-+	lock->slock = 0;
-+}
-+
-+/*
-+ * Read-write spinlocks, allowing multiple readers
-+ * but only one writer.
-+ *
-+ * NOTE! it is quite common to have readers in interrupts
-+ * but no interrupt writers. For those circumstances we
-+ * can "mix" irq-safe locks - any writer needs to get a
-+ * irq-safe write-lock, but readers can get non-irqsafe
-+ * read-locks.
-+ */
-+
-+#ifdef CONFIG_PPC64
-+#define __DO_SIGN_EXTEND	"extsw	%0,%0\n"
-+#define WRLOCK_TOKEN		LOCK_TOKEN	/* it's negative */
-+#else
-+#define __DO_SIGN_EXTEND
-+#define WRLOCK_TOKEN		(-1)
-+#endif
-+
-+/*
-+ * This returns the old value in the lock + 1,
-+ * so we got a read lock if the return value is > 0.
-+ */
-+static inline long __arch_read_trylock(arch_rwlock_t *rw)
-+{
-+	long tmp;
-+
-+	__asm__ __volatile__(
-+"1:	" PPC_LWARX(%0,0,%1,1) "\n"
-+	__DO_SIGN_EXTEND
-+"	addic.		%0,%0,1\n\
-+	ble-		2f\n"
-+"	stwcx.		%0,0,%1\n\
-+	bne-		1b\n"
-+	PPC_ACQUIRE_BARRIER
-+"2:"	: "=&r" (tmp)
-+	: "r" (&rw->lock)
-+	: "cr0", "xer", "memory");
-+
-+	return tmp;
-+}
-+
-+/*
-+ * This returns the old value in the lock,
-+ * so we got the write lock if the return value is 0.
-+ */
-+static inline long __arch_write_trylock(arch_rwlock_t *rw)
-+{
-+	long tmp, token;
-+
-+	token = WRLOCK_TOKEN;
-+	__asm__ __volatile__(
-+"1:	" PPC_LWARX(%0,0,%2,1) "\n\
-+	cmpwi		0,%0,0\n\
-+	bne-		2f\n"
-+"	stwcx.		%1,0,%2\n\
-+	bne-		1b\n"
-+	PPC_ACQUIRE_BARRIER
-+"2:"	: "=&r" (tmp)
-+	: "r" (token), "r" (&rw->lock)
-+	: "cr0", "memory");
-+
-+	return tmp;
-+}
-+
-+static inline void arch_read_lock(arch_rwlock_t *rw)
-+{
-+	while (1) {
-+		if (likely(__arch_read_trylock(rw) > 0))
-+			break;
-+		do {
-+			HMT_low();
-+			if (is_shared_processor())
-+				splpar_rw_yield(rw);
-+		} while (unlikely(rw->lock < 0));
-+		HMT_medium();
-+	}
-+}
-+
-+static inline void arch_write_lock(arch_rwlock_t *rw)
-+{
-+	while (1) {
-+		if (likely(__arch_write_trylock(rw) == 0))
-+			break;
-+		do {
-+			HMT_low();
-+			if (is_shared_processor())
-+				splpar_rw_yield(rw);
-+		} while (unlikely(rw->lock != 0));
-+		HMT_medium();
-+	}
-+}
-+
-+static inline int arch_read_trylock(arch_rwlock_t *rw)
-+{
-+	return __arch_read_trylock(rw) > 0;
-+}
-+
-+static inline int arch_write_trylock(arch_rwlock_t *rw)
-+{
-+	return __arch_write_trylock(rw) == 0;
-+}
-+
-+static inline void arch_read_unlock(arch_rwlock_t *rw)
-+{
-+	long tmp;
-+
-+	__asm__ __volatile__(
-+	"# read_unlock\n\t"
-+	PPC_RELEASE_BARRIER
-+"1:	lwarx		%0,0,%1\n\
-+	addic		%0,%0,-1\n"
-+"	stwcx.		%0,0,%1\n\
-+	bne-		1b"
-+	: "=&r"(tmp)
-+	: "r"(&rw->lock)
-+	: "cr0", "xer", "memory");
-+}
-+
-+static inline void arch_write_unlock(arch_rwlock_t *rw)
-+{
-+	__asm__ __volatile__("# write_unlock\n\t"
-+				PPC_RELEASE_BARRIER: : :"memory");
-+	rw->lock = 0;
-+}
-+
-+#define arch_spin_relax(lock)	spin_yield(lock)
-+#define arch_read_relax(lock)	rw_yield(lock)
-+#define arch_write_relax(lock)	rw_yield(lock)
-+
-+/* See include/linux/spinlock.h */
-+#define smp_mb__after_spinlock()   smp_mb()
-+
-+#endif /* __KERNEL__ */
-+#endif /* __ASM_SIMPLE_SPINLOCK_H */
-diff --git a/arch/powerpc/include/asm/simple_spinlock_types.h b/arch/powerpc/include/asm/simple_spinlock_types.h
-new file mode 100644
-index 000000000000..7c2b48ce62dc
---- /dev/null
-+++ b/arch/powerpc/include/asm/simple_spinlock_types.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_POWERPC_SIMPLE_SPINLOCK_TYPES_H
-+#define _ASM_POWERPC_SIMPLE_SPINLOCK_TYPES_H
-+
-+#ifndef __LINUX_SPINLOCK_TYPES_H
-+# error "please don't include this file directly"
-+#endif
-+
-+typedef struct {
-+	volatile unsigned int slock;
-+} arch_spinlock_t;
-+
-+#define __ARCH_SPIN_LOCK_UNLOCKED	{ 0 }
-+
-+typedef struct {
-+	volatile signed int lock;
-+} arch_rwlock_t;
-+
-+#define __ARCH_RW_LOCK_UNLOCKED		{ 0 }
-+
-+#endif
-diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-index 79be9bb10bbb..21357fe05fe0 100644
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -3,290 +3,7 @@
- #define __ASM_SPINLOCK_H
- #ifdef __KERNEL__
+ #endif
  
--/*
-- * Simple spin lock operations.  
-- *
-- * Copyright (C) 2001-2004 Paul Mackerras <paulus@au.ibm.com>, IBM
-- * Copyright (C) 2001 Anton Blanchard <anton@au.ibm.com>, IBM
-- * Copyright (C) 2002 Dave Engebretsen <engebret@us.ibm.com>, IBM
-- *	Rework to support virtual processors
-- *
-- * Type of int is used as a full 64b word is not necessary.
-- *
-- * (the type definitions are in asm/spinlock_types.h)
-- */
--#include <linux/irqflags.h>
--#include <asm/paravirt.h>
--#ifdef CONFIG_PPC64
--#include <asm/paca.h>
--#endif
--#include <asm/synch.h>
--#include <asm/ppc-opcode.h>
--
--#ifdef CONFIG_PPC64
--/* use 0x800000yy when locked, where yy == CPU number */
--#ifdef __BIG_ENDIAN__
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->lock_token))
--#else
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->paca_index))
--#endif
--#else
--#define LOCK_TOKEN	1
--#endif
--
--static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
--{
--	return lock.slock == 0;
--}
--
--static inline int arch_spin_is_locked(arch_spinlock_t *lock)
--{
--	smp_mb();
--	return !arch_spin_value_unlocked(*lock);
--}
--
--/*
-- * This returns the old value in the lock, so we succeeded
-- * in getting the lock if the return value is 0.
-- */
--static inline unsigned long __arch_spin_trylock(arch_spinlock_t *lock)
--{
--	unsigned long tmp, token;
--
--	token = LOCK_TOKEN;
--	__asm__ __volatile__(
--"1:	" PPC_LWARX(%0,0,%2,1) "\n\
--	cmpwi		0,%0,0\n\
--	bne-		2f\n\
--	stwcx.		%1,0,%2\n\
--	bne-		1b\n"
--	PPC_ACQUIRE_BARRIER
--"2:"
--	: "=&r" (tmp)
--	: "r" (token), "r" (&lock->slock)
--	: "cr0", "memory");
--
--	return tmp;
--}
--
--static inline int arch_spin_trylock(arch_spinlock_t *lock)
--{
--	return __arch_spin_trylock(lock) == 0;
--}
--
--/*
-- * On a system with shared processors (that is, where a physical
-- * processor is multiplexed between several virtual processors),
-- * there is no point spinning on a lock if the holder of the lock
-- * isn't currently scheduled on a physical processor.  Instead
-- * we detect this situation and ask the hypervisor to give the
-- * rest of our timeslice to the lock holder.
-- *
-- * So that we can tell which virtual processor is holding a lock,
-- * we put 0x80000000 | smp_processor_id() in the lock when it is
-- * held.  Conveniently, we have a word in the paca that holds this
-- * value.
-- */
--
--#if defined(CONFIG_PPC_SPLPAR)
--/* We only yield to the hypervisor if we are in shared processor mode */
--void splpar_spin_yield(arch_spinlock_t *lock);
--void splpar_rw_yield(arch_rwlock_t *lock);
--#else /* SPLPAR */
--static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
--static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
--#endif
--
--static inline void spin_yield(arch_spinlock_t *lock)
--{
--	if (is_shared_processor())
--		splpar_spin_yield(lock);
--	else
--		barrier();
--}
--
--static inline void rw_yield(arch_rwlock_t *lock)
--{
--	if (is_shared_processor())
--		splpar_rw_yield(lock);
--	else
--		barrier();
--}
--
--static inline void arch_spin_lock(arch_spinlock_t *lock)
--{
--	while (1) {
--		if (likely(__arch_spin_trylock(lock) == 0))
--			break;
--		do {
--			HMT_low();
--			if (is_shared_processor())
--				splpar_spin_yield(lock);
--		} while (unlikely(lock->slock != 0));
--		HMT_medium();
--	}
--}
--
--static inline
--void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
--{
--	unsigned long flags_dis;
--
--	while (1) {
--		if (likely(__arch_spin_trylock(lock) == 0))
--			break;
--		local_save_flags(flags_dis);
--		local_irq_restore(flags);
--		do {
--			HMT_low();
--			if (is_shared_processor())
--				splpar_spin_yield(lock);
--		} while (unlikely(lock->slock != 0));
--		HMT_medium();
--		local_irq_restore(flags_dis);
--	}
--}
--#define arch_spin_lock_flags arch_spin_lock_flags
--
--static inline void arch_spin_unlock(arch_spinlock_t *lock)
--{
--	__asm__ __volatile__("# arch_spin_unlock\n\t"
--				PPC_RELEASE_BARRIER: : :"memory");
--	lock->slock = 0;
--}
--
--/*
-- * Read-write spinlocks, allowing multiple readers
-- * but only one writer.
-- *
-- * NOTE! it is quite common to have readers in interrupts
-- * but no interrupt writers. For those circumstances we
-- * can "mix" irq-safe locks - any writer needs to get a
-- * irq-safe write-lock, but readers can get non-irqsafe
-- * read-locks.
-- */
--
--#ifdef CONFIG_PPC64
--#define __DO_SIGN_EXTEND	"extsw	%0,%0\n"
--#define WRLOCK_TOKEN		LOCK_TOKEN	/* it's negative */
--#else
--#define __DO_SIGN_EXTEND
--#define WRLOCK_TOKEN		(-1)
--#endif
--
--/*
-- * This returns the old value in the lock + 1,
-- * so we got a read lock if the return value is > 0.
-- */
--static inline long __arch_read_trylock(arch_rwlock_t *rw)
--{
--	long tmp;
--
--	__asm__ __volatile__(
--"1:	" PPC_LWARX(%0,0,%1,1) "\n"
--	__DO_SIGN_EXTEND
--"	addic.		%0,%0,1\n\
--	ble-		2f\n"
--"	stwcx.		%0,0,%1\n\
--	bne-		1b\n"
--	PPC_ACQUIRE_BARRIER
--"2:"	: "=&r" (tmp)
--	: "r" (&rw->lock)
--	: "cr0", "xer", "memory");
--
--	return tmp;
--}
--
--/*
-- * This returns the old value in the lock,
-- * so we got the write lock if the return value is 0.
-- */
--static inline long __arch_write_trylock(arch_rwlock_t *rw)
--{
--	long tmp, token;
--
--	token = WRLOCK_TOKEN;
--	__asm__ __volatile__(
--"1:	" PPC_LWARX(%0,0,%2,1) "\n\
--	cmpwi		0,%0,0\n\
--	bne-		2f\n"
--"	stwcx.		%1,0,%2\n\
--	bne-		1b\n"
--	PPC_ACQUIRE_BARRIER
--"2:"	: "=&r" (tmp)
--	: "r" (token), "r" (&rw->lock)
--	: "cr0", "memory");
--
--	return tmp;
--}
--
--static inline void arch_read_lock(arch_rwlock_t *rw)
--{
--	while (1) {
--		if (likely(__arch_read_trylock(rw) > 0))
--			break;
--		do {
--			HMT_low();
--			if (is_shared_processor())
--				splpar_rw_yield(rw);
--		} while (unlikely(rw->lock < 0));
--		HMT_medium();
--	}
--}
--
--static inline void arch_write_lock(arch_rwlock_t *rw)
--{
--	while (1) {
--		if (likely(__arch_write_trylock(rw) == 0))
--			break;
--		do {
--			HMT_low();
--			if (is_shared_processor())
--				splpar_rw_yield(rw);
--		} while (unlikely(rw->lock != 0));
--		HMT_medium();
--	}
--}
--
--static inline int arch_read_trylock(arch_rwlock_t *rw)
--{
--	return __arch_read_trylock(rw) > 0;
--}
--
--static inline int arch_write_trylock(arch_rwlock_t *rw)
--{
--	return __arch_write_trylock(rw) == 0;
--}
--
--static inline void arch_read_unlock(arch_rwlock_t *rw)
--{
--	long tmp;
--
--	__asm__ __volatile__(
--	"# read_unlock\n\t"
--	PPC_RELEASE_BARRIER
--"1:	lwarx		%0,0,%1\n\
--	addic		%0,%0,-1\n"
--"	stwcx.		%0,0,%1\n\
--	bne-		1b"
--	: "=&r"(tmp)
--	: "r"(&rw->lock)
--	: "cr0", "xer", "memory");
--}
--
--static inline void arch_write_unlock(arch_rwlock_t *rw)
--{
--	__asm__ __volatile__("# write_unlock\n\t"
--				PPC_RELEASE_BARRIER: : :"memory");
--	rw->lock = 0;
--}
--
--#define arch_spin_relax(lock)	spin_yield(lock)
--#define arch_read_relax(lock)	rw_yield(lock)
--#define arch_write_relax(lock)	rw_yield(lock)
--
--/* See include/linux/spinlock.h */
--#define smp_mb__after_spinlock()   smp_mb()
-+#include <asm/simple_spinlock.h>
+ #define vcpu_is_preempted vcpu_is_preempted
+@@ -57,5 +80,10 @@ static inline bool vcpu_is_preempted(int cpu)
+ 	return false;
+ }
  
++static inline bool pv_is_native_spin_unlock(void)
++{
++     return !is_shared_processor();
++}
++
  #endif /* __KERNEL__ */
- #endif /* __ASM_SPINLOCK_H */
-diff --git a/arch/powerpc/include/asm/spinlock_types.h b/arch/powerpc/include/asm/spinlock_types.h
-index 87adaf13b7e8..3906f52dae65 100644
---- a/arch/powerpc/include/asm/spinlock_types.h
-+++ b/arch/powerpc/include/asm/spinlock_types.h
-@@ -6,16 +6,6 @@
- # error "please don't include this file directly"
- #endif
+ #endif /* __ASM_PARAVIRT_H */
+diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
+index c49e33e24edd..f5066f00a08c 100644
+--- a/arch/powerpc/include/asm/qspinlock.h
++++ b/arch/powerpc/include/asm/qspinlock.h
+@@ -3,9 +3,47 @@
+ #define _ASM_POWERPC_QSPINLOCK_H
  
--typedef struct {
--	volatile unsigned int slock;
--} arch_spinlock_t;
--
--#define __ARCH_SPIN_LOCK_UNLOCKED	{ 0 }
--
--typedef struct {
--	volatile signed int lock;
--} arch_rwlock_t;
--
--#define __ARCH_RW_LOCK_UNLOCKED		{ 0 }
-+#include <asm/simple_spinlock_types.h>
+ #include <asm-generic/qspinlock_types.h>
++#include <asm/paravirt.h>
  
- #endif
+ #define _Q_PENDING_LOOPS	(1 << 9) /* not tuned */
+ 
++#ifdef CONFIG_PARAVIRT_SPINLOCKS
++extern void native_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++extern void __pv_queued_spin_unlock(struct qspinlock *lock);
++
++static __always_inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
++{
++	if (!is_shared_processor())
++		native_queued_spin_lock_slowpath(lock, val);
++	else
++		__pv_queued_spin_lock_slowpath(lock, val);
++}
++
++#define queued_spin_unlock queued_spin_unlock
++static inline void queued_spin_unlock(struct qspinlock *lock)
++{
++	if (!is_shared_processor())
++		smp_store_release(&lock->locked, 0);
++	else
++		__pv_queued_spin_unlock(lock);
++}
++
++#else
++extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++#endif
++
++static __always_inline void queued_spin_lock(struct qspinlock *lock)
++{
++	u32 val = 0;
++
++	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL)))
++		return;
++
++	queued_spin_lock_slowpath(lock, val);
++}
++#define queued_spin_lock queued_spin_lock
++
+ #define smp_mb__after_spinlock()   smp_mb()
+ 
+ static __always_inline int queued_spin_is_locked(struct qspinlock *lock)
+@@ -20,6 +58,34 @@ static __always_inline int queued_spin_is_locked(struct qspinlock *lock)
+ }
+ #define queued_spin_is_locked queued_spin_is_locked
+ 
++#ifdef CONFIG_PARAVIRT_SPINLOCKS
++#define SPIN_THRESHOLD (1<<15) /* not tuned */
++
++static __always_inline void pv_wait(u8 *ptr, u8 val)
++{
++	if (*ptr != val)
++		return;
++	yield_to_any();
++	/*
++	 * We could pass in a CPU here if waiting in the queue and yield to
++	 * the previous CPU in the queue.
++	 */
++}
++
++static __always_inline void pv_kick(int cpu)
++{
++	prod_cpu(cpu);
++}
++
++extern void __pv_init_lock_hash(void);
++
++static inline void pv_spinlocks_init(void)
++{
++	__pv_init_lock_hash();
++}
++
++#endif
++
+ #include <asm-generic/qspinlock.h>
+ 
+ #endif /* _ASM_POWERPC_QSPINLOCK_H */
+diff --git a/arch/powerpc/include/asm/qspinlock_paravirt.h b/arch/powerpc/include/asm/qspinlock_paravirt.h
+new file mode 100644
+index 000000000000..750d1b5e0202
+--- /dev/null
++++ b/arch/powerpc/include/asm/qspinlock_paravirt.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef __ASM_QSPINLOCK_PARAVIRT_H
++#define __ASM_QSPINLOCK_PARAVIRT_H
++
++EXPORT_SYMBOL(__pv_queued_spin_unlock);
++
++#endif /* __ASM_QSPINLOCK_PARAVIRT_H */
+diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
+index 24c18362e5ea..756e727b383f 100644
+--- a/arch/powerpc/platforms/pseries/Kconfig
++++ b/arch/powerpc/platforms/pseries/Kconfig
+@@ -25,9 +25,14 @@ config PPC_PSERIES
+ 	select SWIOTLB
+ 	default y
+ 
++config PARAVIRT_SPINLOCKS
++	bool
++	default n
++
+ config PPC_SPLPAR
+ 	depends on PPC_PSERIES
+ 	bool "Support for shared-processor logical partitions"
++	select PARAVIRT_SPINLOCKS if PPC_QUEUED_SPINLOCKS
+ 	help
+ 	  Enabling this option will make the kernel run more efficiently
+ 	  on logically-partitioned pSeries systems which use shared
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 2db8469e475f..747a203d9453 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -771,8 +771,12 @@ static void __init pSeries_setup_arch(void)
+ 	if (firmware_has_feature(FW_FEATURE_LPAR)) {
+ 		vpa_init(boot_cpuid);
+ 
+-		if (lppaca_shared_proc(get_lppaca()))
++		if (lppaca_shared_proc(get_lppaca())) {
+ 			static_branch_enable(&shared_processor);
++#ifdef CONFIG_PARAVIRT_SPINLOCKS
++			pv_spinlocks_init();
++#endif
++		}
+ 
+ 		ppc_md.power_save = pseries_lpar_idle;
+ 		ppc_md.enable_pmcs = pseries_lpar_enable_pmcs;
+diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
+index fb0a814d4395..38ca14e79a86 100644
+--- a/include/asm-generic/qspinlock.h
++++ b/include/asm-generic/qspinlock.h
+@@ -69,6 +69,7 @@ static __always_inline int queued_spin_trylock(struct qspinlock *lock)
+ 
+ extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+ 
++#ifndef queued_spin_lock
+ /**
+  * queued_spin_lock - acquire a queued spinlock
+  * @lock: Pointer to queued spinlock structure
+@@ -82,6 +83,7 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
+ 
+ 	queued_spin_lock_slowpath(lock, val);
+ }
++#endif
+ 
+ #ifndef queued_spin_unlock
+ /**
 -- 
 2.23.0
 
