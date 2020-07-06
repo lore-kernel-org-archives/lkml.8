@@ -2,163 +2,148 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93682C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 597AD20723
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B7120720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHipr7V0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KUh+nyqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgGFWSi (ORCPT
+        id S1727819AbgGFWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:18:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
+        Mon, 6 Jul 2020 18:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgGFWSh (ORCPT
+        with ESMTP id S1726869AbgGFWTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:18:37 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A481C061755;
-        Mon,  6 Jul 2020 15:18:37 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ch3so2423012pjb.5;
-        Mon, 06 Jul 2020 15:18:37 -0700 (PDT)
+        Mon, 6 Jul 2020 18:19:02 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CB4C08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:19:01 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so47523404ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Mj6LNbVzEANcDaUcsWYm+6YG9z1rqSQm+YiQdijgNI8=;
-        b=sHipr7V0ULdCvgge4ccZZ7FsuO2p17fvaIVwFoI0+3yFkL4o2G/Ygz1NSbGKazwjKJ
-         23UvQkCJToAAH48nWs2btPJEATLGsMldmFv/paj4mZPnCkE/1ZE2cr0lOqZWgrj+NxLs
-         bVFZQG5/uQKTJZyvlbPbpggYSIgls4QE9gs/lUCkiDu3iQXcjcGKVg4/6sXAAMtCRo52
-         nzsOi9YyutaIwWUJNODa00TMm6VI/YMdtHNbci2t5IGeiyGSg0pR4Q3/8KX/x+H6VrKS
-         itRhsw2PRdCfKuMkMw+qSP7l2ZSqVZLYstaVSt4Hfs5NhA+/5Z4zNVJy56s1JCgwM1tn
-         XH0Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+g8b8UDutwpjfN6lizjtfC7IoMCTSDjsjPJug8YnTgg=;
+        b=KUh+nyqnQkj9RcybDE5PeCJrAdjLCL6MfvAIePJyXHNRX0F8FKTnKIeG1/vPX6JbR0
+         ZkH2vounWJTv0AHW++nq9HTK5t0tj2w7jkJDno0f/aPPilRdMq6kUjJLsLllyc6nZzA9
+         gFUpa3s60zoHwqlYS1ibCaFMDpBcrs4toKYyR9eGRtgpjbgUrfwu2ZQtV4h54mS9Dk8Q
+         lg38TgKrJ4Lvli78idB1ExZ9K7zVg+JISjzyd/fRrzPpJ9bQnYZblkHcGZJkJsuDKxMs
+         /oeUvTOZc6v1rGutbgXAGNSFIyPxvgBklnWYlKvi0d+6iWbY9jFw/OyGoH076u85nh1D
+         9QPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Mj6LNbVzEANcDaUcsWYm+6YG9z1rqSQm+YiQdijgNI8=;
-        b=p14IjQo6PANjdaTdRI0/gMJUkujuHp8HCh7/6D0cfWf72pj6mrpeFfABFF4Hn4Zunw
-         n0ekX4cUMP1b6C3zHglyqQNPxXNVjVcB4/ZWKPHS03HaZux0cOPtKTJfvDrQTEpL9Joi
-         48lQxcvF1F7kouPDCrWL6iignR2ogbdqRUPkskdKMcX0ombGWMjw2bn+2gxZ0ymZyG3E
-         LhZLbx90bZ1fZBHOmSxHXPlK/h/uhXQE52hjTxfhiUrDpUfXcWbW7NwcMf1B66sgxu/r
-         sU+esm95OQGQhscgv7N4PuEfE711mJss+TFrTONWQPtIeA7eBqtDEnrpYTDvVB1BpIed
-         ltCg==
-X-Gm-Message-State: AOAM530ohXOwNl1n+21K0/F+aoUEpp6zmn+r/xno37vNQihH2U1+6Ihy
-        LsuCwaYrSRyMQiNYpkyRXPoCW+ySMg8=
-X-Google-Smtp-Source: ABdhPJxNWBvglOyFTNPSQfNqvtmX1xcMkZyh/l/y5jnQW9Z7hPXelCSq0svZx7PqgmVE7u6wsTLDPQ==
-X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr12960001plb.250.1594073917224;
-        Mon, 06 Jul 2020 15:18:37 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q10sm21551710pfk.86.2020.07.06.15.18.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 15:18:36 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] watchdog: Add common nowayout parameter to
- booke_wdt driver
-To:     Timothy Myers <timothy.myers@adtran.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Boike <david.boike@adtran.com>
-References: <CH2PR19MB359059AA5C8917D8D24633FF9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <ed8ba33f-b3d4-8070-e0ca-fdaf4668cf91@roeck-us.net>
-Date:   Mon, 6 Jul 2020 15:18:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+g8b8UDutwpjfN6lizjtfC7IoMCTSDjsjPJug8YnTgg=;
+        b=cyyo6NP2OugMBytrXpGrgLcmn1tlYmFgs4GNc1u2O5VIfDO8r4YjClAxlZ8rbzrcXL
+         LVW9eyEAjHPIypSa70IXfdTqeE0x5bEPZZjW9UW7D28w5o5IFdO42iAk7oSBfI5qL4vx
+         9JwO4wBNwbd6imJTw/y2xou6A0oyAFsnjFQ13+iR7ojk9+afknEGaTVjQoV2HHcWk4jF
+         V6HWCGSS+kZFBOgN+osw25q/lQIYGcG4zjSpuF5hHGTrgQpmnoGYidxpvEd0+/8JhfuY
+         SPzTmJ3PFgXvfIXTQab6E+VQuIBSoO71js/Wu4jgT/hTYbp1nbYq8WOyfwr5ZQCOx60x
+         LX+Q==
+X-Gm-Message-State: AOAM530IEbLJ8Ot5ZxrMu7uspP8m4re8sygjz08EXLoebN1JD307V01D
+        SIlpJ1G8EVpae56Bnwhpca/GquGxKu2sVNpj7TeaCw==
+X-Google-Smtp-Source: ABdhPJyJihOFDUusDuGurRmf+ynZe/E6+YCOUFBYwFoV/94U5zmmw6gWFYJpZfrD7hx040m64pq6G+pFjE5iBr5QmJw=
+X-Received: by 2002:a2e:b5a8:: with SMTP id f8mr27313685ljn.247.1594073940036;
+ Mon, 06 Jul 2020 15:19:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CH2PR19MB359059AA5C8917D8D24633FF9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200630044943.3425049-1-rajatja@google.com> <20200704114452.GA15530@amd>
+In-Reply-To: <20200704114452.GA15530@amd>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 6 Jul 2020 15:18:23 -0700
+Message-ID: <CACK8Z6HP00o=rextd0-X-u2aH72PNU3t6zEczC2GGO_QfGhUcA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Tighten PCI security, expose dev location in sysfs
+To:     Pavel Machek <pavel@denx.de>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 9:33 AM, Timothy Myers wrote:
-> Add the common "nowayout" parameter to booke_wdt to make this behavior
-> selectable at runtime and to make the implementation more consistent with
-> many other watchdog drivers.
-> 
-> Signed-off-by: Timothy Myers <timothy.myers@adtran.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Changes in:
-> 	v2:
-> 		Added Guenter Roeck's reviewed-by tag at his request
-> 	v3:
-> 		Fix whitespace formatting in message.
-> ---
+On Sat, Jul 4, 2020 at 4:44 AM Pavel Machek <pavel@denx.de> wrote:
+>
+> Hi!
+>
+> > * The first 3 patches tighten the PCI security using ACS, and take care
+> >   of a border case.
+> > * The 4th patch takes care of PCI bug.
+> > * 5th and 6th patches expose a device's location into the sysfs to allow
+> >   admin to make decision based on that.
+>
+> I see no patch for Documentation -- new sysfs interfaces should be
+> documented for 5/6.
 
-Change log goes here.
-
-I applied your patch to watchdog-next, but there is still something
-in it which prevents it from showing up at
-https://patchwork.kernel.org/project/linux-watchdog/list/, even though
-I do see it at https://lore.kernel.org/linux-watchdog/.
-
-Looking into the e-mail source, I think the problem may be due
-to some Outlook specific formatting in the raw message:
-
-Add the common "nowayout" parameter to booke_wdt to make this behavior=0A=
-selectable at runtime and to make the implementation more consistent with=
-=0A=
-many other watchdog drivers.=0A=
-=0A=
-
-and so on. If that is persistent, it may make sense to fix it, or
-you might wonder why some of your patches are being ignored.
+Yes, sorry. The patches 5/6 have run into discussion and it looks are
+not acceptable at the moment.
 
 Thanks,
-Guenter
+
+Rajat
+
+>
+>                                                                         Pavel
+>
+> >  drivers/base/core.c         | 35 +++++++++++++++++++++++++++++++
+> >  drivers/iommu/intel/iommu.c | 31 ++++++++++++++++++---------
+> >  drivers/pci/ats.c           |  2 +-
+> >  drivers/pci/bus.c           | 13 ++++++------
+> >  drivers/pci/of.c            |  2 +-
+> >  drivers/pci/p2pdma.c        |  2 +-
+> >  drivers/pci/pci-acpi.c      | 13 ++++++------
+> >  drivers/pci/pci-driver.c    |  1 +
+> >  drivers/pci/pci.c           | 34 ++++++++++++++++++++++++++----
+> >  drivers/pci/pci.h           |  3 ++-
+> >  drivers/pci/probe.c         | 20 +++++++++++-------
+> >  drivers/pci/quirks.c        | 19 +++++++++++++----
+> >  include/linux/device.h      | 42 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/device/bus.h  |  8 +++++++
+> >  include/linux/pci.h         | 13 ++++++------
+> >  15 files changed, 191 insertions(+), 47 deletions(-)
+> >
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
