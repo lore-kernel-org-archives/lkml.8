@@ -2,116 +2,115 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11839C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE81BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCAA2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uyc7LAqj"
+	by mail.kernel.org (Postfix) with ESMTP id A786420724
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgGFLPo (ORCPT
+        id S1728901AbgGFLRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728578AbgGFLPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:15:43 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81948C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:15:43 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w16so41909820ejj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OyfaboQiLD7e60Rt0fpF2g5A7vePJGkRXKorLr5zFEw=;
-        b=Uyc7LAqj/fGeUowhfHf3Zh7ykH1nK9ZzLsVFlmMsOwTy/b7WhE2yLMKtIg+UsXdWmw
-         Lk5Y/x9fp9gIUmQDoy083MUEGZv0+84b2V44Qe654U9g7apPddmh5xaB+NkiZ6CMD3lw
-         RhRZl1KzDxC/vALP2lMU6+JEC/550g02B0HlfZ/yaDkYWn5itmd3KPlZ32oTQuOthgsg
-         nDBoKlhR1ek526WlxY6Z+UgUnxD4PVTTJUEwmonngmXV0eeUWWU9HEVs6qKkts3Se8FG
-         2I4mUQP93DlWLwoMIHjaZjXObLaCR4cgMdN9zTh/QTM/zXS/e/7QDDQu35b0T4sDJNK6
-         yEGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OyfaboQiLD7e60Rt0fpF2g5A7vePJGkRXKorLr5zFEw=;
-        b=C6mAlWasKtbureJJpBVSh42bzGCsB2jit7HLRTwGjD6vDvmnCVIwlZBERTjCNkqDW3
-         rNYvuwBOLtwFHFiK1RRDeivjlI9ni4s+Az3vNkFGIrcqVmmYLfUcNhhwvGVSQYt9cpBC
-         4vJdZQT7rhVvxRxbqkvVZOUbO2Yo1ijHhNKWkDTbJGvTQF64RwsGGzM9+lUuHewrrkO/
-         NhbVWX9wEOvAjuzmitiA0c5TuNzQC177mW8gmZ+Ri27unAoJaTbrTxVvScayuKaWWtDn
-         EuE2G/y8cgjHKKl6/59Vsih+JdSoJqHpBP6uIyZVPa8wHtAXe9yjr1fIw1PcHvlMyXq+
-         j3rQ==
-X-Gm-Message-State: AOAM532ZKIFut1kpRVexMeT+hWVorjiv7ezZZwx6pEnLSjDk9GaLoPO7
-        R896B6voeeg17mkKHICpIVY=
-X-Google-Smtp-Source: ABdhPJw94tFJtTSl2W6ES4QpwV4udsVsb5UYSoR/ZLQz/kL9wfqqXK1RfjTuif6Y6mo+rSyLBe2w8A==
-X-Received: by 2002:a17:906:958f:: with SMTP id r15mr31228363ejx.77.1594034142283;
-        Mon, 06 Jul 2020 04:15:42 -0700 (PDT)
-Received: from ?IPv6:2001:a61:3adb:8201:9649:88f:51f8:6a21? ([2001:a61:3adb:8201:9649:88f:51f8:6a21])
-        by smtp.gmail.com with ESMTPSA id s1sm23168755edy.1.2020.07.06.04.15.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 04:15:41 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>, expensivestephen@hotmail.com
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
- Inclusive Terminology
-To:     Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy6545@gmail.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <920e6dc0-628b-9bad-926a-d1238a373cda@infradead.org>
- <CAPM=9ty0tiL_qM_UFv0S0VtARKz_f-Anngc+amDM5LjGAHazhA@mail.gmail.com>
- <CAFhKne9MA_G-UsvBFfX-gZRcu9Gb7Xt7UxQ14MTppdU3X1VYdQ@mail.gmail.com>
- <202007041804.B5E229E2B6@keescook>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <8c0c1050-3beb-86f6-f184-4687acffd61d@gmail.com>
-Date:   Mon, 6 Jul 2020 13:15:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 07:17:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:58752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728578AbgGFLRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:17:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30A40C0A;
+        Mon,  6 Jul 2020 04:17:12 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31A3F3F68F;
+        Mon,  6 Jul 2020 04:17:11 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:17:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Sriram Dash <sriram.dash@samsung.com>
+Cc:     'Kishon Vijay Abraham I' <kishon@ti.com>,
+        'Shradha Todi' <shradha.t@samsung.com>, bhelgaas@google.com,
+        pankaj.dubey@samsung.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+Message-ID: <20200706111708.GF26377@e121166-lin.cambridge.arm.com>
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+ <20200311102852.5207-1-shradha.t@samsung.com>
+ <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+ <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
+ <000001d608fb$7ab39010$701ab030$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <202007041804.B5E229E2B6@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000001d608fb$7ab39010$701ab030$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/20 3:10 AM, Kees Cook wrote:
-> On Sat, Jul 04, 2020 at 08:10:33PM -0400, Matthew Wilcox wrote:
->> Left-right tree makes no sense. It doesn't distinguish the rbtree from its
->> predecessor the avl tree.  I don't think it's helpful to rename a standard
->> piece of computing terminology unless it's actually hurting us to have it.
->> Obviously if it were called a "master-slave" tree, I would be in favour of
->> renaming it.
+On Thu, Apr 02, 2020 at 08:01:59PM +0530, Sriram Dash wrote:
+
+[...]
+
+> > So the patch itself is correct though the commit log has to be fixed. You should
+> > also check if all the endpoint controller drivers existing currently provides
+> > epc_features.
 > 
-> (No one has suggested renaming red/black trees, so I think the
-> slippery-slope argument can be set aside here.)
+> At the moment, there is no issue for existing controller drivers as I
+> can see almost all drivers are providing epc_features. But, this is
+> not a mandatory feature and some controller drivers may not have
+> epc_features implemented, may be in the near future.  But because we
+> are dealing with the configfs, the application need not bother about
+> the driver details underneath.
 > 
-> As for the actual proposal on white/black-list, I've always been annoyed
-> by the poor description it provides (and I get to see it A LOT being
-> the seccomp maintainer). I welcome allow/deny-list (though the change is
-> not new for seccomp -- the man pages were updated last year (thanks
-> mkerrisk). :)
+> IMO, the code should be fixed regardless and should not cause panic in
+> any case.
 
-Actually, the manual pages are ahead of the game only thanks to
-a nice presentation last year @OSS from Stephen Kenigbolo :-).
+What's this patch status please ?
 
+Thanks,
+Lorenzo
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> > Thanks
+> > Kishon
+> > >
+> > >
+> > >>  drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
+> > >>  1 file changed, 9 insertions(+), 6 deletions(-)
+> > >>
+> > >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > >> b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > >> index c9121b1b9fa9..af4537a487bf 100644
+> > >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > >> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >>  		return -EINVAL;
+> > >>
+> > >>  	epc_features = pci_epc_get_features(epc, epf->func_no);
+> > >> -	if (epc_features) {
+> > >> -		linkup_notifier = epc_features->linkup_notifier;
+> > >> -		msix_capable = epc_features->msix_capable;
+> > >> -		msi_capable = epc_features->msi_capable;
+> > >> -		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+> > >> -		pci_epf_configure_bar(epf, epc_features);
+> > >> +	if (!epc_features) {
+> > >> +		dev_err(dev, "epc_features not implemented\n");
+> > >> +		return -ENOTSUPP;
+> > >>  	}
+> > >>
+> > >> +	linkup_notifier = epc_features->linkup_notifier;
+> > >> +	msix_capable = epc_features->msix_capable;
+> > >> +	msi_capable = epc_features->msi_capable;
+> > >> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+> > >> +	pci_epf_configure_bar(epf, epc_features);
+> > >> +
+> > >>  	epf_test->test_reg_bar = test_reg_bar;
+> > >>  	epf_test->epc_features = epc_features;
+> > >>
+> > >> --
+> > >> 2.17.1
+> > >
+> > >
+> 
