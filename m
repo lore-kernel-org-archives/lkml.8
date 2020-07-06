@@ -2,170 +2,127 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445B820715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3C62067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="wxw3C083"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kd2w6hJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgGFAfi (ORCPT
+        id S1728297AbgGFAp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 20:35:38 -0400
-Received: from gateway20.websitewelcome.com ([192.185.59.4]:18270 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728280AbgGFAfh (ORCPT
+        Sun, 5 Jul 2020 20:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbgGFAp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 20:35:37 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 8E5FF400C644F
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 17:49:05 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id sEhzj7hFlBb5dsEhzjD00g; Sun, 05 Jul 2020 19:10:07 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tFT+lYrClbv1RBpt99UCi3E8tbXznUEvjiYn8KUfP58=; b=wxw3C083q8ACLRXCqboryrRsGc
-        AEGoxOm5j7bBK1LOgz3g56ksyQp7sUzNBgA+moz51VRVKNOW1Tr6TzSxV9ZfFt9OE1GMnlmgpoEoE
-        vP0zbdh8UzJeImr3SNlAO5ETGYq7gAHDF+v+gvA4aKVcfy+DFSOqoVe9nbLJH1i0T7Ws21hqPg6Je
-        PLnIcEfwSjys2eu70fl9WD+LQ1JkrzF1IxueldUAYfhkGb/n06RAqJQSzJIRx/i+gNlIOudD5ma9g
-        EU8tsbhyf5gGsZ6F+rvzNPwt43jdlLSdauDZqMqkLRaNazW/WY1MLCpfFVI6YlVs1wTAXjjJ0zMbM
-        76c+luPg==;
-Received: from [189.59.31.158] (port=43104 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jsEhz-000qqT-Dd; Sun, 05 Jul 2020 21:10:07 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v1] power: supply: max17040: Add POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN
-Date:   Sun,  5 Jul 2020 21:10:03 -0300
-Message-Id: <20200706001003.663763-1-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.27.0
+        Sun, 5 Jul 2020 20:45:28 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F35C061794;
+        Sun,  5 Jul 2020 17:45:28 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id t11so11408601pfq.11;
+        Sun, 05 Jul 2020 17:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4OaY8bZwpJuqmoIiivxLlaUVMaXxlk23RnTZnLFJFaY=;
+        b=kd2w6hJIZW9PFP0lMor0Df7aUbziEFd/nGD0zMJOBuuWd21lAfqEipSBJb29CnzV6O
+         0IrRM13BFz+vsC6/9Zykj4l47i8zCsw6O9fnI24mxY9GAQKldLqnA/sqOBX9zfVTTLoX
+         +1s//whclybYcTOEZL22qwzGJNLYXnxCXcO7MSRysvfNpZj8/sMQRnMVXynCW99vpeo4
+         rid4eAngZ438yS4XzZlqtwOg24OmCqeVkg4rbOuqt8LUpDUEEetfvGlzCocBqDBGzkVH
+         kqSW5OdhEIKTLzddRU25moBgkZwDhh0PSHDyKHRAI9ih5RnuJbWyc2bQ0IC9nQk197dW
+         zqIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4OaY8bZwpJuqmoIiivxLlaUVMaXxlk23RnTZnLFJFaY=;
+        b=O30eYB1WvWYEsAQWTfm3c22ZrThtvLNN0FYg22tDc/jWkrJDz+BYk2bdUn7vIPlUPU
+         Mzxed0xj/YsM00ZeEmP87z+H6y2HSAKllGbHaIZCqI6ioQea9GYH8vu6usMkVQoiL+0d
+         BzxX92HkNRLo41TOWdKNxq9vArGyDGbDqNcR33Lfx5ElojRNI5U3nu8khW1+b9vsLDrd
+         KGicnx4V70fX3J4bwdWqWKBhuEdaBvrLewq5SkKlqUQZuepODRIfwOxh4F1JIfsZ7KQZ
+         DJbmp4Lts7gLd4zfjmhIQhyCL4JRRUorj3NCjHk6/uZZkaSY97NTB1MhTjKfUz3tk39h
+         zUNg==
+X-Gm-Message-State: AOAM530te4NHKJtmDB7ezckAnTvIuutIJaoSiSk4lxWTZ7pHeWepUKhZ
+        rrd09PPE1rtFdS9IYgT8q80=
+X-Google-Smtp-Source: ABdhPJwC2Hju+ZSHzN/fJl4gpu4jFAAKkvYojCNR+ygw0BPcIN7IJo5ZQ3B3US/pm4hPJWClOzW6CQ==
+X-Received: by 2002:aa7:8513:: with SMTP id v19mr34056031pfn.74.1593996327546;
+        Sun, 05 Jul 2020 17:45:27 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:70cf:a866:7e6:bda8])
+        by smtp.gmail.com with ESMTPSA id u26sm17547457pfn.54.2020.07.05.17.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 17:45:27 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        Xie He <xie.he.0141@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: [PATCH v2] drivers/net/wan/lapbether: Fixed the value of hard_header_len
+Date:   Sun,  5 Jul 2020 17:45:21 -0700
+Message-Id: <20200706004521.78091-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 189.59.31.158
-X-Source-L: No
-X-Exim-ID: 1jsEhz-000qqT-Dd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [189.59.31.158]:43104
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 2
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the property POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN to export the
-chip->low_soc_alert and add the property as writeable, implementing
-max17040_prop_writeable and max17040_set_property, so with that the
-user space can readjust the alerts.
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes,
+  then this driver will prepend a length field of 2 bytes,
+  then the underlying Ethernet device will prepend its own header.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+So, the header length required should be:
+  -1 + 3 + 2 + "the header length needed by the underlying device".
+
+This patch fixes kernel panic when this driver is used with AF_PACKET
+SOCK_DGRAM sockets.
+
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
 ---
- drivers/power/supply/max17040_battery.c | 51 ++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 5 deletions(-)
+Change in v2: added a comment in the code
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 48aa44665e2f..6cb31b9a958d 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -69,6 +69,9 @@ static int max17040_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_CAPACITY:
- 		val->intval = chip->soc;
- 		break;
-+	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-+		val->intval = chip->low_soc_alert;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -256,19 +259,57 @@ static int max17040_enable_alert_irq(struct max17040_chip *chip)
- 	return ret;
+ drivers/net/wan/lapbether.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index e30d91a38cfb..284832314f31 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -303,7 +303,6 @@ static void lapbeth_setup(struct net_device *dev)
+ 	dev->netdev_ops	     = &lapbeth_netdev_ops;
+ 	dev->needs_free_netdev = true;
+ 	dev->type            = ARPHRD_X25;
+-	dev->hard_header_len = 3;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
  }
-
-+static int max17040_prop_writeable(struct power_supply *psy,
-+				   enum power_supply_property psp)
-+{
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-+		return 1;
-+	default:
-+		return 0;
-+	}
-+}
+@@ -324,6 +323,14 @@ static int lapbeth_new_device(struct net_device *dev)
+ 	if (!ndev)
+ 		goto out;
+ 
++	/* When transmitting data:
++	 * first this driver removes a pseudo header of 1 byte,
++	 * then the lapb module prepends an LAPB header of at most 3 bytes,
++	 * then this driver prepends a length field of 2 bytes,
++	 * then the underlying Ethernet device prepends its own header.
++	 */
++	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
 +
-+static int max17040_set_property(struct power_supply *psy,
-+			    enum power_supply_property psp,
-+			    const union power_supply_propval *val)
-+{
-+	struct max17040_chip *chip = power_supply_get_drvdata(psy);
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-+		/* alert threshold can be programmed from 1% up to 32% */
-+		if ((val->intval < 1) || (val->intval > 32)) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+		ret = max17040_set_low_soc_alert(chip->client, val->intval);
-+		chip->low_soc_alert = val->intval;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static enum power_supply_property max17040_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN,
- };
-
- static const struct power_supply_desc max17040_battery_desc = {
--	.name		= "battery",
--	.type		= POWER_SUPPLY_TYPE_BATTERY,
--	.get_property	= max17040_get_property,
--	.properties	= max17040_battery_props,
--	.num_properties	= ARRAY_SIZE(max17040_battery_props),
-+	.name			= "battery",
-+	.type			= POWER_SUPPLY_TYPE_BATTERY,
-+	.get_property		= max17040_get_property,
-+	.set_property		= max17040_set_property,
-+	.property_is_writeable  = max17040_prop_writeable,
-+	.properties		= max17040_battery_props,
-+	.num_properties		= ARRAY_SIZE(max17040_battery_props),
- };
-
- static int max17040_probe(struct i2c_client *client,
---
-2.27.0
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
+ 
+-- 
+2.25.1
 
