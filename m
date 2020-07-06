@@ -2,123 +2,82 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89451C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA68C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560152070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9472074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgGFJ5X (ORCPT
+        id S1728657AbgGFJ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:57:23 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:58812 "EHLO mail5.wrs.com"
+        Mon, 6 Jul 2020 05:58:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:53228 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgGFJ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:57:22 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0669tDiw002399
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 6 Jul 2020 02:55:34 -0700
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 6 Jul 2020 02:55:12 -0700
-From:   <zhe.he@windriver.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <zhe.he@windriver.com>
-Subject: [PATCH] freezer: Add unsafe versions of freezable_schedule_timeout_interruptible for NFS
-Date:   Mon, 6 Jul 2020 17:52:24 +0800
-Message-ID: <20200706095224.2285480-1-zhe.he@windriver.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727973AbgGFJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 05:58:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E796030E;
+        Mon,  6 Jul 2020 02:58:24 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98DE73F68F;
+        Mon,  6 Jul 2020 02:58:23 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 10:58:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: fix runtime pm imbalance on error
+Message-ID: <20200706095821.GB26377@e121166-lin.cambridge.arm.com>
+References: <20200520085837.1399-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520085837.1399-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+On Wed, May 20, 2020 at 04:58:37PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 138e1a2d21cc..35686930df1d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1340,8 +1340,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	pm_runtime_enable(dev);
+>  	ret = pm_runtime_get_sync(dev);
+>  	if (ret < 0) {
+> -		pm_runtime_disable(dev);
+> -		return ret;
+> +		goto err_pm_runtime_put;
 
-commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed operations")
-introduces nfs4_delay_interruptible which also needs an _unsafe version to
-avoid the following call trace for the same reason explained in
-commit 416ad3c9c006 ("freezer: add unsafe versions of freezable helpers for NFS")
+I think you need to remove the brackets - this become a single line
+if statement.
 
-CPU: 4 PID: 3968 Comm: rm Tainted: G W 5.8.0-rc4 #1
-Hardware name: Marvell OcteonTX CN96XX board (DT)
-Call trace:
-dump_backtrace+0x0/0x1dc
-show_stack+0x20/0x30
-dump_stack+0xdc/0x150
-debug_check_no_locks_held+0x98/0xa0
-nfs4_delay_interruptible+0xd8/0x120
-nfs4_handle_exception+0x130/0x170
-nfs4_proc_rmdir+0x8c/0x220
-nfs_rmdir+0xa4/0x360
-vfs_rmdir.part.0+0x6c/0x1b0
-do_rmdir+0x18c/0x210
-__arm64_sys_unlinkat+0x64/0x7c
-el0_svc_common.constprop.0+0x7c/0x110
-do_el0_svc+0x24/0xa0
-el0_sync_handler+0x13c/0x1b8
-el0_sync+0x158/0x180
+Lorenzo
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
- fs/nfs/nfs4proc.c       |  2 +-
- include/linux/freezer.h | 14 ++++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e32717fd1169..15ecfa474e37 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -414,7 +414,7 @@ static int nfs4_delay_interruptible(long *timeout)
- {
- 	might_sleep();
- 
--	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
-+	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
- 	if (!signal_pending(current))
- 		return 0;
- 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
-diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-index 21f5aa0b217f..27828145ca09 100644
---- a/include/linux/freezer.h
-+++ b/include/linux/freezer.h
-@@ -207,6 +207,17 @@ static inline long freezable_schedule_timeout_interruptible(long timeout)
- 	return __retval;
- }
- 
-+/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
-+static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
-+{
-+	long __retval;
-+
-+	freezer_do_not_count();
-+	__retval = schedule_timeout_interruptible(timeout);
-+	freezer_count_unsafe();
-+	return __retval;
-+}
-+
- /* Like schedule_timeout_killable(), but should not block the freezer. */
- static inline long freezable_schedule_timeout_killable(long timeout)
- {
-@@ -285,6 +296,9 @@ static inline void set_freezable(void) {}
- #define freezable_schedule_timeout_interruptible(timeout)		\
- 	schedule_timeout_interruptible(timeout)
- 
-+#define freezable_schedule_timeout_interruptible_unsafe(timeout)	\
-+	schedule_timeout_interruptible(timeout)
-+
- #define freezable_schedule_timeout_killable(timeout)			\
- 	schedule_timeout_killable(timeout)
- 
--- 
-2.17.1
-
+>  	}
+>  
+>  	pci->dev = dev;
+> -- 
+> 2.17.1
+> 
