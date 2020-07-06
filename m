@@ -2,195 +2,104 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD92C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B41C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B34F20702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2D720715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fgGjNz47"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1JoL1Da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbgGFNgW (ORCPT
+        id S1729595AbgGFNgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:36:22 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:47682 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgGFNgU (ORCPT
+        Mon, 6 Jul 2020 09:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgGFNdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:36:20 -0400
+        Mon, 6 Jul 2020 09:33:51 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB56EC08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:33:50 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so40879510wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594042580; x=1625578580;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=2i10p3zHZtcsjkGHAB08tLjw+aVWWu3Y8lozHTN4nT4=;
-  b=fgGjNz476DaX64NiLwtNO4Bg6y6hbcF/PUW8H76UhiDE0Au2RWLrNNGd
-   XtRT02LZ9aepgdlv7hTZlhYFtYPRjg5jkT1GKdySZ5/4tRh9az7MdM2UK
-   /t8jnwqQdeQo5aZ/+P6qTLhmsF7QH4MceubEpbaxN7cG1C5T7fV81PYTV
-   o=;
-IronPort-SDR: csDJiQyAkPskSeMUpPzF9fAUTAf4fh+mx6xOBL18dP1Zb4OYcfjJ1z+U4xy36E64H9kombM0A3
- pZiFB/GlFtmg==
-X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
-   d="scan'208";a="41679877"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 06 Jul 2020 13:35:50 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 89A01A15CA;
-        Mon,  6 Jul 2020 13:35:47 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 13:35:46 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.26) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 13:35:37 +0000
-Subject: Re: [PATCH v4 10/18] nitro_enclaves: Add logic for enclave image load
- info
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-11-andraprs@amazon.com>
- <817700cd-1db2-558b-ae62-fdb279bca6ed@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <e72d3477-50f0-2a92-ac1d-0ad66dd35170@amazon.com>
-Date:   Mon, 6 Jul 2020 16:35:27 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2vBJeRBU9C8xa/2tDAV3EYv6FtdJQoWad8hFtUeL0Ic=;
+        b=G1JoL1Daorj+JI1ZRbOm0BsITxlYPCPhqAXR8booNKNusooKx24v80Dl9rC+dERNjZ
+         1wDaFAseXrhBUGr/nbWDDAg/16r5MFQ9cICHpdVqoKiFiyiwWy/N6B6OmFsQ5NXGyjc9
+         YYrEKmJpZh64Xww7sSEG5VmFi3dtB3DobR83PDYZV5cTCGpwS6PSwpL/XGycHcTpzTWc
+         KSpxBlGnI3+pIfmjl4b1LGJvFxbn3iOWQV/oCNEbTR+EPdh+h7R8qux7lxvt8n7chmMt
+         6dbFgzTJ0owILMLo/els7olUo+4e0lOaKULvAdId+iS9nhTGGBE4kGFBKvyANowDHPnf
+         XWng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2vBJeRBU9C8xa/2tDAV3EYv6FtdJQoWad8hFtUeL0Ic=;
+        b=LrsRCbOGVQKGBGkSQQzpwDUHoR6logyD/Pr+iUAzvDTBJ3xdbBfUsX2P1mc+dQxW0Z
+         gJNJnP2iHuvc4IO5Pjy4tVc5Uh/Grom8c0nAqSApB8JUESPv+UWqKS8hVZuTVG6L5H2t
+         tE5PFD1kB/GP+nuT8/YfVSazIcXtjayPqc/ruCUTieUT+fCF4WYYLnlG4ckvC59dZgrR
+         zkpB4E5M9SvvHUtSJmhgCyNjFVZWrf1cIbSpSRgInoY+ww6bK4NW8GJAOPAc2BwUyNsU
+         hSAa2JMXxv29aPL0nMquc17Z8ac3BxZ0vZpQi9KtZaKJrpwid9KamfYqtNRUx8av9BoJ
+         MFmQ==
+X-Gm-Message-State: AOAM5305rlpKk6o3GkDFpZ1UF9qGzdqKlp2nngFuVZbt2mW+IVxHJXmH
+        QP9WwCktd/WvyP2D80MnCrI1HQ==
+X-Google-Smtp-Source: ABdhPJxwyl8nugjLp5ZVCs5jjXRLq7y1skE4cNELfOaMcl4PfNxE/98yrBxip9g69YujC40tpLTZeg==
+X-Received: by 2002:a5d:5706:: with SMTP id a6mr13465102wrv.328.1594042429481;
+        Mon, 06 Jul 2020 06:33:49 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id v18sm25416082wrv.49.2020.07.06.06.33.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 06:33:48 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 04/32] usb: gadget: udc: amd5536udc_pci: Remove unused variable 'mod_desc'
+Date:   Mon,  6 Jul 2020 14:33:13 +0100
+Message-Id: <20200706133341.476881-5-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200706133341.476881-1-lee.jones@linaro.org>
+References: <20200706133341.476881-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <817700cd-1db2-558b-ae62-fdb279bca6ed@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D16UWB002.ant.amazon.com (10.43.161.234) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes the following W=1 kernel build warning(s):
 
+ drivers/usb/gadget/udc/amd5536udc_pci.c:52:19: warning: ‘mod_desc’ defined but not used [-Wunused-const-variable=]
 
-On 06/07/2020 13:16, Alexander Graf wrote:
->
->
-> On 22.06.20 22:03, Andra Paraschiv wrote:
->> Before setting the memory regions for the enclave, the enclave image
->> needs to be placed in memory. After the memory regions are set, this
->> memory cannot be used anymore by the VM, being carved out.
->>
->> Add ioctl command logic to get the offset in enclave memory where to
->> place the enclave image. Then the user space tooling copies the enclave
->> image in the memory using the given memory offset.
->>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->> ---
->> Changelog
->>
->> v3 -> v4
->>
->> * Use dev_err instead of custom NE log pattern.
->> * Set enclave image load offset based on flags.
->> * Update the naming for the ioctl command from metadata to info.
->>
->> v2 -> v3
->>
->> * No changes.
->>
->> v1 -> v2
->>
->> * New in v2.
->> ---
->> =A0 drivers/virt/nitro_enclaves/ne_misc_dev.c | 25 +++++++++++++++++++++=
-++
->> =A0 1 file changed, 25 insertions(+)
->>
->> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c =
+Cc: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/usb/gadget/udc/amd5536udc_pci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->> b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> index d6777008f685..cfdefa52ed2a 100644
->> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> @@ -536,6 +536,31 @@ static long ne_enclave_ioctl(struct file *file, =
-
->> unsigned int cmd,
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return rc;
->> =A0=A0=A0=A0=A0 }
->> =A0 +=A0=A0=A0 case NE_GET_IMAGE_LOAD_INFO: {
->> +=A0=A0=A0=A0=A0=A0=A0 struct ne_image_load_info image_load_info =3D {};
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (copy_from_user(&image_load_info, (void *)arg,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(image_loa=
-d_info))) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Error in copy from user\n");
->
-> The -EFAULT tells you all you need. Just remove this print.
-
-Removed the log from here and the other occurrences in the patch series.
-
-Thanks,
-Andra
-
->
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EFAULT;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (image_load_info.flags =3D=3D NE_EIF_IMAGE)
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 image_load_info.memory_offset =3D NE_=
-EIF_LOAD_OFFSET;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (copy_to_user((void *)arg, &image_load_info,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(image_load_info=
-))) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Error in copy to user\n");
->
-> Same here.
->
->
-> Alex
->
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EFAULT;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return 0;
->> +=A0=A0=A0 }
->> +
->> =A0=A0=A0=A0=A0 default:
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return -ENOTTY;
->> =A0=A0=A0=A0=A0 }
->>
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+diff --git a/drivers/usb/gadget/udc/amd5536udc_pci.c b/drivers/usb/gadget/udc/amd5536udc_pci.c
+index 80685e4306f31..56258d076abc4 100644
+--- a/drivers/usb/gadget/udc/amd5536udc_pci.c
++++ b/drivers/usb/gadget/udc/amd5536udc_pci.c
+@@ -49,7 +49,6 @@
+ static struct udc *udc;
+ 
+ /* description */
+-static const char mod_desc[] = UDC_MOD_DESCRIPTION;
+ static const char name[] = "amd5536udc-pci";
+ 
+ /* Reset all pci context */
+-- 
+2.25.1
 
