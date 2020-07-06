@@ -2,54 +2,55 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C70C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7722063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F349206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="QxTdQHzD"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="IuBWYz4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgGFWaO (ORCPT
+        id S1727858AbgGFWaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:30:14 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:63950 "EHLO
+        Mon, 6 Jul 2020 18:30:17 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:38145 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGFWaO (ORCPT
+        with ESMTP id S1726763AbgGFWaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 18:30:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
         h=from:subject:in-reply-to:references:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=63/HKH6wNc/07OqiA1yctULaLMPjNtHCXH6IBFgPuW0=;
-        b=QxTdQHzDUhU1mmOdoXN3SZ6tjhuIK0j3xUl4JQQyHx3wTuwO6jUmEM3bYmWpB2o7qXTk
-        p6VOMLRKVq9QfdM5i2XCy+xVHPRqgph7VVQi4R6psUIvOOvhPoMmAV3HjmXZfiAJNFMENP
-        oBHEssnNPJe0/36h115eYkAdXYGKjcqV8=
-Received: by filterdrecv-p3las1-7754f7d4cc-fqrzr with SMTP id filterdrecv-p3las1-7754f7d4cc-fqrzr-19-5F03A5F4-36
-        2020-07-06 22:30:12.61868238 +0000 UTC m=+965799.783674456
+        s=001; bh=8zoq0DYVx9vqhvpeKK6/7NCFlcaglQusuoVRVNQbDtk=;
+        b=IuBWYz4gGgR0oCRvm3PEh4ap1AD7t2Mj8hLSUyJq+tyKRoRftUi2gBGo/PmmfaShOxPk
+        d9JGBgQ7aDjtrJ9pcBW/x2pmsqJwbUaHgpgJ8lmpuPzPz/P7eeMsDM04AmTyKK/8By6kSv
+        LdXE+YWj6Ca0tnH+OHrxMVwTKZhb9JziY=
+Received: by filterdrecv-p3las1-7754f7d4cc-tg96p with SMTP id filterdrecv-p3las1-7754f7d4cc-tg96p-18-5F03A5F4-DF
+        2020-07-06 22:30:13.151346145 +0000 UTC m=+965803.859338331
 Received: from bionic.localdomain (unknown)
         by ismtpd0004p1lon1.sendgrid.net (SG) with ESMTP
-        id LcDdvt6lT9C7M20Z4UoZJQ
-        Mon, 06 Jul 2020 22:30:12.191 +0000 (UTC)
+        id o4H48WiuR4KsFhfoFquR6Q
+        Mon, 06 Jul 2020 22:30:12.839 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 0/2] drm: rockchip: add NV15, NV20 and NV30 support
-Date:   Mon, 06 Jul 2020 22:30:12 +0000 (UTC)
-Message-Id: <20200706223009.1200-1-jonas@kwiboo.se>
+Subject: [PATCH v2 1/2] drm: drm_fourcc: add NV20 and NV30 YUV formats
+Date:   Mon, 06 Jul 2020 22:30:13 +0000 (UTC)
+Message-Id: <20200706223009.1200-2-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200607202521.18438-1-jonas@kwiboo.se>
+In-Reply-To: <20200706223009.1200-1-jonas@kwiboo.se>
 References: <20200607202521.18438-1-jonas@kwiboo.se>
+ <20200706223009.1200-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h2jx6rNUbibDfvcQb?=
- =?us-ascii?Q?HBJWIsxybDLeUWaOeuvzlwhpdnYWD4ydpio0RQT?=
- =?us-ascii?Q?RXe3+j4AsBZnn6ATSe4+TwWf+C0hx0JW=2F2XIwq2?=
- =?us-ascii?Q?IhMK2BTB2hwhXYnk=2FHfZrMkVgvGQpTp2LgNFHWv?=
- =?us-ascii?Q?W6N+mYXYZo5gln9Al5bmnYSQ3WzOe=2F0LwJXCNot?=
- =?us-ascii?Q?X9Mrxq3OmvZuhO9AWfg7w=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h9QJlmiMp+biMH=2FPO?=
+ =?us-ascii?Q?hJbDV6e+kgjT4EIiOhnpNYLn8zpDs7S1zc9a83g?=
+ =?us-ascii?Q?1WXA5M0mu+OKXRpSPB712PWCmMhXxxo8ypTPfN+?=
+ =?us-ascii?Q?Pu+IlruvWYUzfnGUf0eN=2FnzgU6qHBHWsBj54yzM?=
+ =?us-ascii?Q?ZhE9gkE0Mc2vqpZR3Bjm9c5Y49MzaA6thOy4Fwf?=
+ =?us-ascii?Q?8oA9LLhHVOeraDMe6sv7g=3D=3D?=
 To:     Sandy Huang <hjc@rock-chips.com>,
         Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
 Cc:     Jonas Karlman <jonas@kwiboo.se>, Ben Davis <ben.davis@arm.com>,
@@ -67,41 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+DRM_FORMAT_NV20 and DRM_FORMAT_NV30 formats is the 2x1 and non-subsampled
+variant of NV15, a 10-bit 2-plane YUV format that has no padding between
+components. Instead, luminance and chrominance samples are grouped into 4s
+so that each group is packed into an integer number of bytes:
 
-This series adds support for displaying 10-bit 4:2:0 and 4:2:2 formats produced
-by the Rockchip Video Decoder on RK322X, RK3288, RK3328, RK3368 and RK3399.
-Also include 10-bit 4:4:4 support since VOP can support that also.
+YYYY = UVUV = 4 * 10 bits = 40 bits = 5 bytes
 
-First patch adds new fourcc 10-bit YUV formats with 4:2:2/4:4:4 sub-sampling.
-Second patch adds support for displaying the the new fourcc formats.
+The '20' and '30' suffix refers to the optimum effective bits per pixel
+which is achieved when the total number of luminance samples is a multiple
+of 4.
 
-Changes in v2:
-- Add NV30 format
-- R-B tags was not collected due to NV30 changes
+V2: Added NV30 format
 
-This series has been tested on RK3399 using a Rockchip Video Decoder series
-at [1] together with ffmpeg at [2] and kodi-gbm or mpv. [3] contains all
-patches needed on top of linux-media master for easy testing.
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/gpu/drm/drm_fourcc.c  | 8 ++++++++
+ include/uapi/drm/drm_fourcc.h | 2 ++
+ 2 files changed, 10 insertions(+)
 
-[1] https://patchwork.linuxtv.org/project/linux-media/list/?series=2859
-[2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3-rkvdec-high-10
-[3] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-high-10-v2
-
-Regards,
-Jonas
-
-Jonas Karlman (2):
-  drm: drm_fourcc: add NV20 and NV30 YUV formats
-  drm: rockchip: add NV15, NV20 and NV30 support
-
- drivers/gpu/drm/drm_fourcc.c                |  8 ++++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 29 +++++++++++++++++--
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h |  1 +
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 32 +++++++++++++++++----
- include/uapi/drm/drm_fourcc.h               |  2 ++
- 5 files changed, 64 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+index 722c7ebe4e88..2daf8a304b53 100644
+--- a/drivers/gpu/drm/drm_fourcc.c
++++ b/drivers/gpu/drm/drm_fourcc.c
+@@ -278,6 +278,14 @@ const struct drm_format_info *__drm_format_info(u32 format)
+ 		  .num_planes = 2, .char_per_block = { 5, 5, 0 },
+ 		  .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 2,
+ 		  .vsub = 2, .is_yuv = true },
++		{ .format = DRM_FORMAT_NV20,		.depth = 0,
++		  .num_planes = 2, .char_per_block = { 5, 5, 0 },
++		  .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 2,
++		  .vsub = 1, .is_yuv = true },
++		{ .format = DRM_FORMAT_NV30,		.depth = 0,
++		  .num_planes = 2, .char_per_block = { 5, 5, 0 },
++		  .block_w = { 4, 2, 0 }, .block_h = { 1, 1, 0 }, .hsub = 1,
++		  .vsub = 1, .is_yuv = true },
+ 		{ .format = DRM_FORMAT_Q410,		.depth = 0,
+ 		  .num_planes = 3, .char_per_block = { 2, 2, 2 },
+ 		  .block_w = { 1, 1, 1 }, .block_h = { 1, 1, 1 }, .hsub = 0,
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index cbf92fdf2712..c8695673295c 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -242,6 +242,8 @@ extern "C" {
+  * index 1 = Cr:Cb plane, [39:0] Cr1:Cb1:Cr0:Cb0 little endian
+  */
+ #define DRM_FORMAT_NV15		fourcc_code('N', 'V', '1', '5') /* 2x2 subsampled Cr:Cb plane */
++#define DRM_FORMAT_NV20		fourcc_code('N', 'V', '2', '0') /* 2x1 subsampled Cr:Cb plane */
++#define DRM_FORMAT_NV30		fourcc_code('N', 'V', '3', '0') /* non-subsampled Cr:Cb plane */
+ 
+ /*
+  * 2 plane YCbCr MSB aligned
 -- 
 2.17.1
 
