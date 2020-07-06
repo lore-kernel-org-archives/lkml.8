@@ -6,99 +6,89 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31B820715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5B620715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgGFBTo (ORCPT
+        id S1728657AbgGFBTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:19:44 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:46958 "EHLO loongson.cn"
+        Sun, 5 Jul 2020 21:19:52 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:46956 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728417AbgGFBTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:19:39 -0400
+        id S1728421AbgGFBTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 21:19:38 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S4;
-        Mon, 06 Jul 2020 09:19:28 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S10;
+        Mon, 06 Jul 2020 09:19:30 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v5 02/14] irqchip/csky-apb-intc: Fix potential resource leaks
-Date:   Mon,  6 Jul 2020 09:19:13 +0800
-Message-Id: <1593998365-25910-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v5 08/14] irqchip/ls1x: Fix potential resource leaks
+Date:   Mon,  6 Jul 2020 09:19:19 +0800
+Message-Id: <1593998365-25910-9-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFy7Kr47Kw45KF48Xw1UZFb_yoW8XryUpF
-        4UG39Igrs7Jw18Wrn7CF1kXr98u348KrZFk3yfCas2vrn8Wrn8CryFyF1DAF15G3yxG3WY
-        9Fs3Ja4rCa15AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBjb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF
-        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcV
-        CY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY
-        1x0267AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-        8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCF
-        s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_KwCF04k20xvY0x0EwI
-        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jn73kUUUUU=
+X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S10
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xAF4kWryfKw4DArWUurg_yoWkZrXE9r
+        1fWr93JayIkr1fJry29w13ZFW7trZYgFs2qFWvyF13ta4Igw1rur4kZrnrJF48uF4j9F93
+        CrWjvr1rC34xZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+        IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
+        c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2
+        IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280
+        aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
+        kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm
+        72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6w4l42xK82IYc2
+        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+        vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7D73UUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function ck_intc_init_comm(), system resources "reg_base" and
-"root_domain" were not released in two error cases. Thus add jump
-targets for the completion of the desired exception handling.
+In the function ls1x_intc_of_init(), system resource "parent_irq"
+was not released in two error cases. Thus add a jump target for
+the completion of the desired exception handling.
 
-Fixes: edff1b4835b7 ("irqchip: add C-SKY APB bus interrupt controller")
+Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-csky-apb-intc.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-ls1x.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-apb-intc.c
-index 5a2ec43..66aeb84 100644
---- a/drivers/irqchip/irq-csky-apb-intc.c
-+++ b/drivers/irqchip/irq-csky-apb-intc.c
-@@ -118,7 +118,8 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
- 					    &irq_generic_chip_ops, NULL);
- 	if (!root_domain) {
- 		pr_err("C-SKY Intc irq_domain_add failed.\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_iounmap;
+diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+index 353111a..409001b 100644
+--- a/drivers/irqchip/irq-ls1x.c
++++ b/drivers/irqchip/irq-ls1x.c
+@@ -131,7 +131,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 	if (!priv->domain) {
+ 		pr_err("ls1x-irq: cannot add IRQ domain\n");
+ 		err = -ENOMEM;
+-		goto out_iounmap;
++		goto out_dispose_irq;
  	}
  
- 	ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
-@@ -126,10 +127,16 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
- 			IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
- 	if (ret) {
- 		pr_err("C-SKY Intc irq_alloc_gc failed.\n");
--		return -ENOMEM;
-+		goto err_domain_remove;
- 	}
+ 	err = irq_alloc_domain_generic_chips(priv->domain, 32, 2,
+@@ -182,6 +182,8 @@ static int __init ls1x_intc_of_init(struct device_node *node,
  
- 	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(root_domain);
-+err_iounmap:
-+	iounmap(reg_base);
-+	return ret;
- }
- 
- static inline bool handle_irq_perbit(struct pt_regs *regs, u32 hwirq,
+ out_free_domain:
+ 	irq_domain_remove(priv->domain);
++out_dispose_irq:
++	irq_dispose_mapping(parent_irq);
+ out_iounmap:
+ 	iounmap(priv->intc_base);
+ out_free_priv:
 -- 
 2.1.0
 
