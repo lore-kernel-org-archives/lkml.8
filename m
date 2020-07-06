@@ -2,130 +2,148 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 045EF20723
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CC420723
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QU9rTNAe"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qSy7OzOH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qshJlZ0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgGFSLn (ORCPT
+        id S1729728AbgGFSNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:11:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45947 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729622AbgGFSLm (ORCPT
+        Mon, 6 Jul 2020 14:13:38 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53335 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729622AbgGFSNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:11:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594059100;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=od9kR8piiAvx4jR5kzxwXvNi7bWoe6/TcUiqSxKR2s4=;
-        b=QU9rTNAeRC+Uvs4w1psMnUcaXTa4yuhxjTirzbrEvThIW+3rjgnRIoZDIHNOwwQMOZzr0W
-        ACnoiO42L1JurR8c+v1yNmJzDd3oSQfnhrV/0fOiMNWJTGBkpHdxrEunHIHTGFzQQPnyLK
-        gxMCitCWXOpKH3X+gbGSqGy2d0syEvI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-PmdPXVQlP5qp4MZ3G1noig-1; Mon, 06 Jul 2020 14:11:39 -0400
-X-MC-Unique: PmdPXVQlP5qp4MZ3G1noig-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01D50A0BD8;
-        Mon,  6 Jul 2020 18:11:37 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-118.ams2.redhat.com [10.36.112.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74C1C10021B3;
-        Mon,  6 Jul 2020 18:11:31 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Turner <pjt@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 2/3] Linux: Use rseq in sched_getcpu if available (v9)
-References: <20200629190036.26982-1-mathieu.desnoyers@efficios.com>
-        <20200629190036.26982-3-mathieu.desnoyers@efficios.com>
-        <877dvg4ud4.fsf@oldenburg2.str.redhat.com>
-        <942999672.22574.1594046978937.JavaMail.zimbra@efficios.com>
-        <1679448037.22891.1594056826859.JavaMail.zimbra@efficios.com>
-        <87k0zg3535.fsf@oldenburg2.str.redhat.com>
-        <1449254526.22910.1594058539512.JavaMail.zimbra@efficios.com>
-Date:   Mon, 06 Jul 2020 20:11:29 +0200
-In-Reply-To: <1449254526.22910.1594058539512.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Mon, 6 Jul 2020 14:02:19 -0400
-        (EDT)")
-Message-ID: <87blks344u.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 6 Jul 2020 14:13:38 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id ED5E958023D;
+        Mon,  6 Jul 2020 14:13:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 06 Jul 2020 14:13:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:mime-version:content-type; s=
+        fm3; bh=+v/Te64vKu4e35ENQ/jK6ubbrXotygKRxSoJgsFaBMY=; b=qSy7OzOH
+        skFlHeU9mi26Sma2rX0D/lgIfCCmui9NIvzQgMWug9tdsg6RIO1cZLqpjdwlhmzB
+        5KivDkYhKbmi+Wo0kEIvgJ7/u4ISd/JPSAz14cB63lEUXYhlQFEPJ1xuNSKnF/Y2
+        qpByMVOwDmJgXVa7CRM5SEf+GkyGBnslNoUoCqpSCMc9Qw8+1YLGN98sEL4jJ/VG
+        uN7qMhfDu5+cDGOFlzqbTmXua69/vwUHB5cyE9ue9LlFDnYEWmL2G+ocDPAvFR8A
+        gwbi8wMuLm5W/vQHq4alBcdWVKZuOBsNxCPrhPFIhTaA68X2q/0l6Uwcf5+GDJqy
+        tbZw/+6MOKeI1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm3; bh=+v/Te64vKu4e35ENQ/jK6ubbrXoty
+        gKRxSoJgsFaBMY=; b=qshJlZ0E5dHQkkrkVBROwDSY5Sgo3A2aErHKsBk4Qzhcr
+        YwuFLcpq3tbOAjJDSQBmHDR6xZI/1CNCEffKHJUxCkzmx53vJLWlG1WdmkEXmPOD
+        JfwLoYmaXaTcuR45TtB1ww+APCPkk8b6YtmvmF+w/VdCDOm1675nQNe0gWlxAK2m
+        /Gd9KvUT4QKgNYiizc7yFmAfC52rbIbQVOKdX/S6Vor8Znp6GHXGU5Sq4jwTre1P
+        FxtBFwbHScWLP1IFcoDIctKVuofwpIsDZ9BAn3TnMGziXoFlqCJ3z+uhNz3jMYsi
+        DJ6Acx5FPad+2ZtZrUmjIPEXfcNXCVc/IRbnxdkEg==
+X-ME-Sender: <xms:zWkDX3clahDmVS2Za88QRKWTl2jFfKPA9aUrGPYViYhe8ADoYyiMwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgdduvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfggtggusehgtderredttddvnecuhfhrohhmpeforgigihhmvgcu
+    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
+    hrnhepkeeffefgffeijeffveehkeffleejgeefvefhkedtteegvdefjeduveehhfetveej
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkph
+    epledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:zWkDX9P5hF41A50xUPlgDeEOjXopXgSe8d_p3QdXha1TPnoEHGoE4Q>
+    <xmx:zWkDXwhJ9vZX-1uH9isgRIGWZiQ4ejO47HRiIVneW_F2a0GCskxJqA>
+    <xmx:zWkDX4-0vfTjH14CXWJMFhZ9q1I0n4BBtnRsNZ836qajUeJpYmg2IQ>
+    <xmx:0GkDX5CDafBdVS4Q821QRHeAgSjerkAW00qSoNCP7YeICPRsL-z5Gg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7C6193280064;
+        Mon,  6 Jul 2020 14:13:33 -0400 (EDT)
+Date:   Mon, 6 Jul 2020 20:13:31 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
+Subject: PHY reset handling during DT parsing
+Message-ID: <20200706181331.x2tn5cl5jn5kqmhx@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2ftaacwvvl7mumne"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
 
-> ----- On Jul 6, 2020, at 1:50 PM, Florian Weimer fweimer@redhat.com wrote:
->
->> * Mathieu Desnoyers:
->> 
->>> Now we need to discuss how we introduce that fix in a way that will
->>> allow user-space to trust the __rseq_abi.cpu_id field's content.
->> 
->> I don't think that's necessary.  We can mention it in the glibc
->> distribution notes on the wiki.
->> 
->>> The usual approach to kernel bug fixing is typically to push the fix,
->>> mark it for stable kernels, and expect everyone to pick up the
->>> fixes. I wonder how comfortable glibc would be to replace its
->>> sched_getcpu implementation with a broken-until-fixed kernel rseq
->>> implementation without any mechanism in place to know whether it can
->>> trust the value of the cpu_id field. I am extremely reluctant to do
->>> so.
->> 
->> We have already had similar regressions in sched_getcpu, and we didn't
->> put anything into glibc to deal with those.
->
-> Was that acceptable because having a wrong cpu number would never trigger
-> corruption, only slowdowns ?
+--2ftaacwvvl7mumne
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-First of all, it's a kernel bug.  It's rare that we put workarounds for
-kernel bugs into glibc.
+Hi,
 
-And yes, in pretty much all cases it's just a performance issue for
-sched_getcpu.  When you know the CPU ID of a thread due to pinning to a
-single CPU, why would you call sched_getcpu?  (That's the case where you
-could get corruption in theory.)
+I came across an issue today on an Allwinner board, but I believe it's a
+core issue.
 
-> In the case of rseq, having the wrong cpu_id value is a real issue
-> which will lead to corruption and crashes. So I maintain my reluctance
-> to introduce the fix without any way for userspace to know whether the
-> cpu_id field value is reliable.
+That board is using the stmac driver together with a phy that happens to
+have a reset GPIO, except that that GPIO will never be claimed, and the
+PHY will thus never work.
 
-Yes, for rseq itself, the scenario is somewhat different.  Still, it's
-just another kernel bug.  There will be others. 8-/
+You can find an example of such a board here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun6i-a31-hummingbird.dts#n195
 
-From a schedule point of view, it looks tough to get the magic flag into
-the mainline kernel in time for the upcoming glibc 2.32 release.  If you
-insist on registering rseq only if the bug is not present, we'll
-probably have to back out some or all of the rseq changes.
+It looks like when of_mdiobus_register() will parse the DT, it will then
+call of_mdiobus_register_phy() for each PHY it encounters [1].
+of_mdiobus_register_phy() will then if the phy doesn't have an
+ethernet-phy-id* compatible call get_phy_device() [2], and will later on
+call phy_register_device [3].
 
-Thanks,
-Florian
+get_phy_device() will then call get_phy_id() [4], that will try to
+access the PHY through the MDIO bus [5].
 
+The code that deals with the PHY reset line / GPIO is however only done
+in mdiobus_device_register, called through phy_device_register. Since
+this is happening way after the call to get_phy_device, our PHY might
+still very well be in reset if the bootloader hasn't put it out of reset
+and left it there.
+
+I'm not entirely sure how to fix that though. I tried to fix it by
+splitting away the gpio / reset code away from mdiobus_device_register
+into a new function, and calling it before the first call to get_phy_id
+so that we can put our phy out of reset, but it looks like the device
+registration makes it more complicated than that. Any ideas?
+
+Thanks!
+Maxime
+
+1: https://elixir.bootlin.com/linux/latest/source/drivers/of/of_mdio.c#L274
+2: https://elixir.bootlin.com/linux/latest/source/drivers/of/of_mdio.c#L82
+3: https://elixir.bootlin.com/linux/latest/source/drivers/of/of_mdio.c#L119
+4: https://elixir.bootlin.com/linux/latest/source/drivers/net/phy/phy_device.c#L830
+5: https://elixir.bootlin.com/linux/latest/source/drivers/net/phy/phy_device.c#L791
+
+--2ftaacwvvl7mumne
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXwNpywAKCRDj7w1vZxhR
+xU1lAQCR+4X7EF6qEnFyxVCuaNV/g3Bjlk5krQv8tSUb3DmQ+AEA2WAuzE9iBzzg
+Awm1dmo/sBptpDkj+d3oPz4YqsFQvQw=
+=Gsc3
+-----END PGP SIGNATURE-----
+
+--2ftaacwvvl7mumne--
