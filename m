@@ -2,113 +2,105 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA71DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C1C20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E66520715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+zNyhLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgGFEXr (ORCPT
+        id S1727989AbgGFE2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:23:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14327 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgGFEXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:23:47 -0400
-IronPort-SDR: M3husfosArJSR74Dpewz4iv2pwsK16SqKkxbC5loZzUVkzO+UC31RTauqHxe1mVKNtkM72+0ry
- IoovO5I7hxbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="148857222"
-X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
-   d="scan'208";a="148857222"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 21:23:46 -0700
-IronPort-SDR: o3Ovk4M9ZsxPZotyGoamY580+UDgz97geWpfFlgeJARMB+rU7zaUe2orhkFljBq7nhq/NZWHCz
- QqwkIdOvr8hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
-   d="scan'208";a="426965058"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.117.178]) ([10.209.117.178])
-  by orsmga004.jf.intel.com with ESMTP; 05 Jul 2020 21:23:46 -0700
-Subject: Re: linux-next: manual merge of the dmaengine tree with the
- dmaengine-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200706135621.0113ebf9@canb.auug.org.au>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
-Date:   Sun, 5 Jul 2020 21:23:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 6 Jul 2020 00:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgGFE2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 00:28:04 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB381C061794;
+        Sun,  5 Jul 2020 21:28:04 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so11586717pfq.11;
+        Sun, 05 Jul 2020 21:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c0/ZnaHlwR0HIQUxoQtTXVqcJB0m2bht+2IMFyQlFwE=;
+        b=L+zNyhLgXoLTLnSy9wtpK//KjcLMBvbzVUmzxN1L5xtScgLPGZXQ7x3CGgzEVQ7Qny
+         slKxBaboWJeVh9pB3Yr2DjwzURtQhZcxE/0GRix0a1rijKpOV8UEc0ECRNb1/Vmp1ssc
+         uyNduXjT0sZgicKMBQM+KR8InLHeOAB5Xz1liCaIlm4Hjf6o5FLPZI9n3t4XliDDbEbt
+         yO6xrR4DvyZA/O/vx3H13JS4V6Y2Cvn8VqGID4nyVsTLfxwXkOKOA1iER8ojDxOYJX5s
+         B5hgMCskLwwq2UUx8/gJW3+kkUm//e0QvkaXgyrfOj3lLQE2LitZHxNDa0BV7qa+0IoN
+         C6qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c0/ZnaHlwR0HIQUxoQtTXVqcJB0m2bht+2IMFyQlFwE=;
+        b=dSLczE8rBYmC+EdBle1b3UO+RkUtHenJECuuABR1/QTQcFVW5eJfOiR3wN0/A7//5Y
+         5iTdvJIloDvlgPJ+wyVX1pGTxR4tz4ocCPIQqJxdBJhtsEzj4Xryt7YBA36U3UtJTk3M
+         KwA7y4e9CX5X+NfN78t1swfqgOvug4qWN09Cn7v7cHLU5kpWuVTfmLC7BgzFAkIKGi8P
+         k+2Q7L/NKml6jHsbelYVal6IDW9u8vFQKR3WV+PyNkWvAXxibO4tnfJrtd4WgkjBtdWd
+         m4UsEvGDFgNkK1j9TYjwV4U7klcJXOY9baMODK1J18sJBNC9Kro2x3kBO1F8qEfORsVW
+         S7yQ==
+X-Gm-Message-State: AOAM531ETGjriA4Ng3sAhSTv/OjSC46bxr6NhGRBaJNNSz++PHaU4b/0
+        r/oYu9dFzs31XjHX60L6ncgrcDBz
+X-Google-Smtp-Source: ABdhPJx/3odWdSz9MMj8+RDHBuZysYmRiGNViGogz/1LUUwvthBso3wywjnUS6wOzOOlf3xAH0fwoQ==
+X-Received: by 2002:a05:6a00:1589:: with SMTP id u9mr44431242pfk.201.1594009683833;
+        Sun, 05 Jul 2020 21:28:03 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id ia13sm16558680pjb.42.2020.07.05.21.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 21:28:03 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2 0/3]  net: ethtool: Untangle PHYLIB dependency
+Date:   Sun,  5 Jul 2020 21:27:55 -0700
+Message-Id: <20200706042758.168819-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200706135621.0113ebf9@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
+This patch series untangles the ethtool netlink dependency with PHYLIB
+which exists because the cable test feature calls directly into PHY
+library functions. The approach taken here is to introduce
+ethtool_phy_ops function pointers which can be dynamically registered
+when PHYLIB loads.
 
-On 7/5/2020 8:56 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the dmaengine tree got a conflict in:
-> 
->    drivers/dma/idxd/sysfs.c
-> 
-> between commit:
-> 
->    da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
-> 
-> from the dmaengine-fixes tree and commit:
-> 
->    f50b150e315e ("dmaengine: idxd: add work queue drain support")
-> 
-> from the dmaengine tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
+Florian Fainelli (3):
+  net: ethtool: Introduce ethtool_phy_ops
+  net: phy: Register ethtool PHY operations
+  net: ethtool: Remove PHYLIB direct dependency
 
-Hi Stephen. Thanks for the fixup. I think there are two more bits that are 
-needed from f50b150e315e if you don't mind adding:
+ drivers/net/phy/phy_device.c |  7 +++++++
+ include/linux/ethtool.h      | 25 +++++++++++++++++++++++++
+ net/Kconfig                  |  1 -
+ net/ethtool/cabletest.c      | 18 ++++++++++++++++--
+ net/ethtool/common.c         | 11 +++++++++++
+ net/ethtool/common.h         |  2 ++
+ 6 files changed, 61 insertions(+), 3 deletions(-)
 
-diff --cc drivers/dma/idxd/sysfs.c
-index 2e2c5082f322,6f0711a822a1..000000000000
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
-   		}
+-- 
+2.25.1
 
-   		idxd_unregister_dma_device(idxd);
-- 		spin_lock_irqsave(&idxd->dev_lock, flags);
-   		rc = idxd_device_disable(idxd);
-  +		for (i = 0; i < idxd->max_wqs; i++) {
-  +			struct idxd_wq *wq = &idxd->wqs[i];
-  +
-
- >			mutex_lock(&wq->wq_lock);
-
-  +			idxd_wq_disable_cleanup(wq);
-
- >			mutex_unlock(&wq->wq_lock);
-
-  +		}
-- 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
-   		module_put(THIS_MODULE);
-   		if (rc < 0)
-   			dev_warn(dev, "Device disable failed\n");
