@@ -2,99 +2,85 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1F720760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:08:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="vB/nvAwt"
+	by mail.kernel.org (Postfix) with ESMTP id 789FD20739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgGFKIV (ORCPT
+        id S1728750AbgGFKIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgGFKIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:08:21 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB36C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:08:20 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so44519991ljv.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kGb++Oj9rl3Cq6rtcCZ3Q51WnJpX5i2BfarNm4RLaXQ=;
-        b=vB/nvAwt42ueZDWAJ17ouUoS6PUXx9gV9fQr0d213CkbXYjCbXcyPuXXir6YlKSj+6
-         mtlaD9hmfMaCdwkeH8PIQb5H7dUWTfkCPBEoBISCHhvPQkUWItV/t2tE9XpGsNf67IRN
-         5J/qUUiJIwD0o3Peq5xFHUaI/xqSHoxKdCCdERWkuyM+cn7SZgip7nLJpBUPtfMVS0jp
-         kjqY8oWs79Pcli1FKp1UqAG/yb0MXhUILIEBWw3y39Ux7zv4OxKmZe4Fhfo8Q7Gdoeyh
-         o3L8h6XSo7dipq+GodOdsvgQp/nd8RLir9rL/ybenanpxw3/nR33Yb6Hs5GLOm4VxRIM
-         xOXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kGb++Oj9rl3Cq6rtcCZ3Q51WnJpX5i2BfarNm4RLaXQ=;
-        b=hyWEutMyW27bITbrwDzh7xbcTcmXw/ZJxiznrUsKgXpPkkEyABDMlaT0+/X8RAndHK
-         SLRf9kL33Cs0vjvbQ8x3rykGjwACXCyE3+Rpl4CkkGlLcxaSUGplzgYAgX63j5CS7W10
-         mIHUgAgAPDg7zNrqFFjqQhqG6owzQ+k/oADBSVrJ7agWGtn3+naqUb4mda68DfJZATG8
-         GUY15rZd9dwCDuEYEmzU1QW1OWVlaHPMZ6xuNDuTlPInAIAhzS8V2I+yeQdpJ+/qeE6A
-         uszKfmwnbMnZ4PAB6ePMcbozGLoAzD+a7dO96Se8+1YDaDYVa10Zj1kQ6lfeLZ/pXHR/
-         wxkg==
-X-Gm-Message-State: AOAM530t3+iD9orNcjguqjKcrZvDBKVWlLHDyh8OZbbFqiMAkQkQEpus
-        e3xuDCG7a8GNaWzzGOlwTMkpNA==
-X-Google-Smtp-Source: ABdhPJyLhQdDzhBS4eUh9v56575OycEkKyAgGdWCb0ZinjOPHLYjK5/5dNC8R7jurOvD6vvMoUA5Nw==
-X-Received: by 2002:a05:651c:1105:: with SMTP id d5mr15181275ljo.62.1594030099343;
-        Mon, 06 Jul 2020 03:08:19 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id l4sm3962327ljc.83.2020.07.06.03.08.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 03:08:18 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 489EA10220C; Mon,  6 Jul 2020 13:08:19 +0300 (+03)
-Date:   Mon, 6 Jul 2020 13:08:19 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, vbabka@suse.cz, willy@infradead.org,
-        thomas_os@shipmail.org, thellstrom@vmware.com,
-        anshuman.khandual@arm.com, sean.j.christopherson@intel.com,
-        aneesh.kumar@linux.ibm.com, peterx@redhat.com, walken@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, digetx@gmail.com
-Subject: Re: [RESEND Patch v2 0/4] mm/mremap: cleanup move_page_tables() a
- little
-Message-ID: <20200706100819.flwgozlstn3zl66u@box>
-References: <20200626135216.24314-1-richard.weiyang@linux.alibaba.com>
+        Mon, 6 Jul 2020 06:08:36 -0400
+Received: from spam01.hygon.cn ([110.188.70.11]:21741 "EHLO spam2.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728264AbgGFKIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:08:35 -0400
+X-Greylist: delayed 1032 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jul 2020 06:08:34 EDT
+Received: from spam2.hygon.cn (localhost [127.0.0.2] (may be forged))
+        by spam2.hygon.cn with ESMTP id 0669pKU2045670
+        for <linux-kernel@vger.kernel.org>; Mon, 6 Jul 2020 17:51:20 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id 0669j6Yg045208;
+        Mon, 6 Jul 2020 17:45:06 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id 0669ixvp083741;
+        Mon, 6 Jul 2020 17:44:59 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from ubuntu1604-2.higon.com (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 6 Jul 2020
+ 17:44:42 +0800
+From:   Pu Wen <puwen@hygon.cn>
+To:     <peterz@infradead.org>, <mingo@kernel.org>, <jolsa@redhat.com>,
+        <bp@alien8.de>, <eranian@google.com>
+CC:     <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
+Subject: [RFC PATCH] perf/x86/rapl: Add Hygon Fam18h RAPL support
+Date:   Mon, 6 Jul 2020 17:43:35 +0800
+Message-ID: <20200706094335.12843-1-puwen@hygon.cn>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626135216.24314-1-richard.weiyang@linux.alibaba.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn 0669j6Yg045208
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 09:52:12PM +0800, Wei Yang wrote:
-> move_page_tables() tries to move page table by PMD or PTE.
-> 
-> The root reason is if it tries to move PMD, both old and new range should be
-> PMD aligned. But current code calculate old range and new range separately.
-> This leads to some redundant check and calculation.
-> 
-> This cleanup tries to consolidate the range check in one place to reduce some
-> extra range handling.
+Hygon Family 18h(Dhyana) support RAPL in bit 14 of CPUID 0x80000007 EDX,
+and has MSRs RAPL_PWR_UNIT/CORE_ENERGY_STAT/PKG_ENERGY_STAT. So add Hygon
+Dhyana Family 18h support for RAPL.
 
-The patchet looks good to me. I have few nits, but nothing substantial.
+The output is available via the energy-pkg pseudo event:
+  $ perf stat -a -I 1000 --per-socket -e power/energy-pkg/
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Pu Wen <puwen@hygon.cn>
+---
+ arch/x86/events/rapl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 0f2bf59f4354..18c69d84b031 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -788,6 +788,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
+ 	X86_MATCH_VENDOR_FAM(AMD, 0x17, &model_amd_fam17h),
++	X86_MATCH_VENDOR_FAM(HYGON, 0x18, &model_amd_fam17h),
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
 -- 
- Kirill A. Shutemov
+2.23.0
+
