@@ -2,87 +2,98 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4270C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05277C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894FB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8223206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M9RmIbNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgGFQxI (ORCPT
+        id S1729609AbgGFQxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:53:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53408 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgGFQxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:53:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0C9EBABF4;
-        Mon,  6 Jul 2020 16:53:06 +0000 (UTC)
-Message-ID: <6da99a10debca368985e69d61f917785da8061a3.camel@suse.de>
-Subject: Re: [PATCH v4 3/3] ARM: dts: bcm2711: Add HDMI DVP
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 06 Jul 2020 18:53:04 +0200
-In-Reply-To: <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech>
-References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
-         <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-3gU7U7fv64+BGKtfJm+D"
-User-Agent: Evolution 3.36.3 
+        Mon, 6 Jul 2020 12:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgGFQxU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:53:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF51C061755;
+        Mon,  6 Jul 2020 09:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Oo71Ly+xuAZimh7lavMoiBxeE/3yERplO91ByCP9Y+8=; b=M9RmIbNRApzmeng0YWqK0FUbR/
+        tzKkdk71m142i5pbP1X8Q92Et9fSd4MpzaGolinGSNbceMeTgQ1yYPgMF+DfsWGE1zqUx491sXBip
+        fTeiw0Qt7EIXOQBjaKpX6CMLCyr3XLDjQZ0/sY6jWPWolFfe2Cp44yIy6hMsqY3anZ6GESieMGspE
+        2IQH7QQoNLG2C19FbFO9z8QeyMbTQlKchH6nI1M8N5y5Q8CT3MshtoH8XmlAax+UevjceOqqYTU9l
+        GcFtQkrU9BMDc8BDQx/ZW91SWtrgR1Ze6QJhuCJZ8I15sC8roKhrAQvUcOrK1/d37zmYuWz6l/tFI
+        VHjx8KwQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsUMm-00037m-CT; Mon, 06 Jul 2020 16:53:16 +0000
+Subject: Re: linux-next: Tree for Jul 6 (thermal/thermal_netlink.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+References: <20200706174001.2d316826@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b0348556-065d-f8fa-fc1d-0f084147deb5@infradead.org>
+Date:   Mon, 6 Jul 2020 09:53:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200706174001.2d316826@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/6/20 12:40 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20200703:
+> 
 
---=-3gU7U7fv64+BGKtfJm+D
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+on i386 or x86_64:
 
-On Thu, 2020-06-11 at 11:23 +0200, Maxime Ripard wrote:
-> Now that we have a driver for the DVP, let's add its DT node.
->=20
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+when CONFIG_NET is not set/enabled:
 
-Applied for-next,
+thermal_netlink.c:(.text+0x34): undefined reference to `nla_put'
+thermal_netlink.c:(.text+0x76): undefined reference to `nla_put'
+thermal_netlink.c:(.text+0x87f): undefined reference to `init_net'
+ld: thermal_netlink.c:(.text+0x89d): undefined reference to `netlink_broadcast'
+thermal_netlink.c:(.text+0xa19): undefined reference to `__alloc_skb'
+ld: thermal_netlink.c:(.text+0xa59): undefined reference to `genlmsg_put'
+ld: thermal_netlink.c:(.text+0xad9): undefined reference to `init_net'
+ld: thermal_netlink.c:(.text+0xade): undefined reference to `netlink_unicast'
+ld: thermal_netlink.c:(.text+0xb02): undefined reference to `kfree_skb'
+thermal_netlink.c:(.text+0xb7d): undefined reference to `genlmsg_put'
+thermal_netlink.c:(.text+0xc29): undefined reference to `__alloc_skb'
+ld: thermal_netlink.c:(.text+0xc66): undefined reference to `genlmsg_put'
+ld: thermal_netlink.c:(.text+0xce1): undefined reference to `kfree_skb'
+thermal_netlink.c:(.text+0xd0e): undefined reference to `__alloc_skb'
+ld: thermal_netlink.c:(.text+0xd47): undefined reference to `genlmsg_put'
+ld: thermal_netlink.c:(.text+0xde4): undefined reference to `kfree_skb'
+thermal_netlink.c:(.text+0x1d): undefined reference to `nla_put'
+thermal_netlink.c:(.text+0x494): undefined reference to `skb_trim'
+thermal_netlink.c:(.init.text+0xd): undefined reference to `genl_register_family'
 
-Thanks,
-Nicolas
 
 
---=-3gU7U7fv64+BGKtfJm+D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8DVvAACgkQlfZmHno8
-x/4Bdgf+K6eembVjOyppSnpyDFUnzdc2w7IjmENlzuXT0eUzG70ZpbImjgDfbAWF
-dzCmVd31hdwMh+dFQSAeeBNWeE54zH1YAkSLPFfc89mbyTOD5+Iyf1BeKRUGecNR
-spygrX8+nKB6ajaYYpql9PGpATjQ12yv+2j5vuUQAshjBI1uJ5bhFNfH8HBeTlg5
-oJcZ+0WIvFVhHmB/z3rdDTBsgW0I4Kj/F0s40zcV6kgnsFDohWNaCvyAlAn9r7dI
-2HLWX8inPtdyg/H3ZIN/5SyneLKqAqIN4eLDfKQhBhmn5/rBmn/Gr7lkbQD3IlIh
-/j+0Iu//rQg4uRAtAPYLokgAOnZ+Qg==
-=tz83
------END PGP SIGNATURE-----
-
---=-3gU7U7fv64+BGKtfJm+D--
-
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
