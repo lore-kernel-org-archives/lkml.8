@@ -2,121 +2,131 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA010C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92217C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B95EB2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7679A2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQxVWHcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgGFSUG (ORCPT
+        id S1729793AbgGFSVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:20:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729669AbgGFST6 (ORCPT
+        Mon, 6 Jul 2020 14:21:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729647AbgGFSVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:19:58 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066I3PsS017480;
-        Mon, 6 Jul 2020 14:19:57 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3247t22hxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 14:19:57 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066IErva003208;
-        Mon, 6 Jul 2020 18:19:55 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04wdc.us.ibm.com with ESMTP id 322hd8sg4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 18:19:55 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066IJtgC31064444
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jul 2020 18:19:55 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 417B1B205F;
-        Mon,  6 Jul 2020 18:19:55 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32EF6B2066;
-        Mon,  6 Jul 2020 18:19:55 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Jul 2020 18:19:55 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Stefan Berger <stefanb@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v9 1/2] acpi: Extend TPM2 ACPI table with missing log fields
-Date:   Mon,  6 Jul 2020 14:19:52 -0400
-Message-Id: <20200706181953.3592084-2-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
+        Mon, 6 Jul 2020 14:21:17 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3774DC061755;
+        Mon,  6 Jul 2020 11:21:17 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id x9so33782307ila.3;
+        Mon, 06 Jul 2020 11:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V0UyprzGOpJCrvSRMTeiKdKQODoWH/Ul9V8rM2fcjek=;
+        b=NQxVWHcjXotZUs9osvV8QUiCAoR4tgGZHVto/QVWnE0/gvvZ/6BbHfRgDABY5x7aRH
+         wEjq6u56xD5ttDRD+QN8gI96K4JYZ+1bTu6k3KxUAJLKV332WUUOmFkawijGXlCgzffl
+         dWChdPB+z/ZSX+AAVk7SALZYVvlJkdKBlaYOWZPzhcbIFrZ0W3d/mhZGvngoEgbDi5bO
+         1QbHKlFdAsfOeicqSqbieDFyV5R4mUNsaylwX0RbxLVQJa97thInsGJuUxMV8kCck8gb
+         d4vPb6QR+LqA+viO/qYinJH/bc/4tx8y1OMMuWMfbgO3EvKr+Ct5SuStM2TGUulxYHr9
+         3hNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V0UyprzGOpJCrvSRMTeiKdKQODoWH/Ul9V8rM2fcjek=;
+        b=RgYcoUPvXeIgXvaC7wEbtAtNVHeh6zzTiNzPRBxhFI59GGdhlqbHizis7parSl9evI
+         yI7znxlAke+tshstovj9rHBCXXYBqvWRYA3bbv2XnxlhQ38y0UEe3KvuDpjXIlrTrN+l
+         6rCc9nRUBpJHwrtlQ3wG1kxK38KZk/eYbf2iBe8XE2JlkagyyQPhvz3Wvg2WCIO0vfkN
+         Tri9aOpRNyTPowEL4ahGAGwRdCurIGHxparNoGYWwdjjf0vF3uHrqZ0YrQ3dywgtI6/R
+         pFDA4N6jLMD/p96GzgKwFHKGy5zAmTRaEWPandUbVrfh8x+bYQghIBnQE9fVWiIxUGdG
+         G/Eg==
+X-Gm-Message-State: AOAM532xq6cJVvKVa6xJ285Y1wOhBfTbq6AhNsjRJCFiCqP8RtWeU4Br
+        rZZM0x+7fO94T0g7DOoLqZ4B1ko2Do5WZeyeF64jDA==
+X-Google-Smtp-Source: ABdhPJyoUpqQP7ExvgQg6jlWGuD67jd+pPKzAlGa3XPHsroQPCFsp38zhEGfcVb52hJVx5RhRxmhKo1NuYqZ7YP9TJs=
+X-Received: by 2002:a05:6e02:1086:: with SMTP id r6mr29456065ilj.158.1594059676475;
+ Mon, 06 Jul 2020 11:21:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_16:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- phishscore=0 impostorscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- cotscore=-2147483648 mlxscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007060125
+References: <20200706180010.29032-1-puranjay12@gmail.com> <20200706121407.6c24f537@lwn.net>
+In-Reply-To: <20200706121407.6c24f537@lwn.net>
+From:   Puranjay Mohan <puranjay12@gmail.com>
+Date:   Mon, 6 Jul 2020 23:51:05 +0530
+Message-ID: <CANk7y0h0p+OjYvtFbGf-C7FeOdgf3HBtd=jVdDTHYP5eKv2uvQ@mail.gmail.com>
+Subject: Re: [PATCH] Security: Documentation: fix: `make htmldocs` warnings
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
-
-Recent extensions of the TPM2 ACPI table added 3 more fields
-including 12 bytes of start method specific parameters and Log Area
-Minimum Length (u32) and Log Area Start Address (u64). So, we define
-a new structure acpi_tpm2_phy that holds these optional new fields.
-The new fields allow non-UEFI systems to access the TPM2's log.
-
-The specification that has the new fields is the following:
-  TCG ACPI Specification
-  Family "1.2" and "2.0"
-  Version 1.2, Revision 8
-
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
-
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-acpi@vger.kernel.org
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- include/acpi/actbl3.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
-index b0b163b9efc6..bdcac69fa6bd 100644
---- a/include/acpi/actbl3.h
-+++ b/include/acpi/actbl3.h
-@@ -415,6 +415,13 @@ struct acpi_table_tpm2 {
- 	/* Platform-specific data follows */
- };
- 
-+/* Optional trailer for revision 4 holding platform-specific data */
-+struct acpi_tpm2_phy {
-+	u8  start_method_specific[12];
-+	u32 log_area_minimum_length;
-+	u64 log_area_start_address;
-+};
-+
- /* Values for start_method above */
- 
- #define ACPI_TPM2_NOT_ALLOWED                       0
--- 
-2.26.2
-
+On Mon, Jul 6, 2020 at 11:44 PM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> On Mon,  6 Jul 2020 23:30:10 +0530
+> Puranjay Mohan <puranjay12@gmail.com> wrote:
+>
+> > Remove extra ')' after function name to fix warnings.
+> > It solves following warning :
+> > WARNING: Unparseable C cross-reference: 'groups_sort)'
+> > Invalid C declaration: Expected end of definition. [error at 11]
+> >
+> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> > ---
+> >  Documentation/security/credentials.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
+> > index 282e79feee6a..d51e42b92395 100644
+> > --- a/Documentation/security/credentials.rst
+> > +++ b/Documentation/security/credentials.rst
+> > @@ -455,7 +455,7 @@ When replacing the group list, the new list must be sorted before it
+> >  is added to the credential, as a binary search is used to test for
+> >  membership.  In practice, this means :c:func:`groups_sort` should be
+> >  called before :c:func:`set_groups` or :c:func:`set_current_groups`.
+> > -:c:func:`groups_sort)` must not be called on a ``struct group_list`` which
+> > +:c:func:`groups_sort` must not be called on a ``struct group_list`` which
+> >  is shared as it may permute elements as part of the sorting process
+> >  even if the array is already sorted.
+>
+> So this is a great fix, thanks for sending it.  That said, there are a
+> couple of ways in which this fix can be made even better:
+>
+>  - The simpler of the two is to change the subject line of the patch.
+>    "Fix a warning" is almost never a good description of what you're
+>    doing; what you are actually doing is fixing a broken cross reference.
+>    So the subject line should say that.
+>
+>  - In this case, though, there is a much better thing to do.  We
+>    deprecated the use of :c:func: around a year ago; the docs build system
+>    can now do the right thing automatically.  So a fix that would both
+>    eliminate the warning and improve the document as a whole would be to
+>    replace every instance of:
+>
+>         :c:func:`function_name`
+>
+>    with:
+>
+>         function_name()
+>
+> Is there any chance I could get you to send a patch that does that?
+Yes! I have started working on it.
+>
+> Thanks,
+>
+> jon
+Thanks,
+Puranjay
