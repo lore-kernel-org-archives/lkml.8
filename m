@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D347C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 725D12158C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBDE20BED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PKolNnM9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CCHQ/GCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGFU0m (ORCPT
+        id S1727116AbgGFU0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 6 Jul 2020 16:26:42 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56840 "EHLO
+Received: from aserp2120.oracle.com ([141.146.126.78]:56838 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgGFU0l (ORCPT
+        with ESMTP id S1726591AbgGFU0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 16:26:41 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 066KN0kf068162;
-        Mon, 6 Jul 2020 20:26:26 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 066KMV1L067944;
+        Mon, 6 Jul 2020 20:26:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=b4THuCn4C9a7B6Y9bQgWFqgNH1327HQkfLZ8OO2NUd0=;
- b=PKolNnM9dnKExK2G++WTmtfCqcsQv02F10MGuzrbJfUAj72FCVZUNh7lMPyVHLw8rN7N
- A1SE4Y4iG2nQ2dob9AdeyH7a8yukEBnvZ5R9YSez6/suweKdsgadUx46RVdZnKJxxDTZ
- QVX3tlRj/hI09+Rd9ohHB62si3tTbvGp3PTt10FPFaTWBp8ukSou101/dOoQYI1JU94i
- iaPn1cDLP7HRxGgm9028pjbaTeyGr6iAYerLonIDZ0J3aZZcsdB32teQpodFQGjQ455M
- JpjT0O4XeqU4HZbrQVoNVzvnyOCEuaBv6b1E8JMWoN/uRPLR/HnCTEmb/mKVeoVaL6ew 0w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 322kv68gw0-1
+ bh=7JsQApN0BMGpz+aVHeK67BKjZn8HFGP3784iAYJAa+s=;
+ b=CCHQ/GCk3RbyK+kRfSJez25eXRWAixwDsWqZPd7anwhLc9S4NhWtAV2DWOHVrq/DKEJi
+ yjtJJwTeQt0dVPvSDXtzw4aci1eVKg1f9P2Z1X/nx8ttJZwD6blBkspDsbyn2WZmDVWI
+ LCNG6ByKRAhhKIu1er3int3mXm/YdbSXsGK55w9wiEK/A4NBnILg9yEIf/O7kCcPx8g/
+ w7DX5k6oXxRtG2M2pnbKMr5fjMfLWCyLrCCefHRrUQNJ5/MFx7uRU+lw84ZUNG9Ezwao
+ O3j3DzgmFk8coN8NTPJFnKK8gbjMFD2HeKypjVIyYeXWG5u9l1sxQ2mFTCUDdEyNu3pj lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 322kv68gvy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 06 Jul 2020 20:26:26 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 066KMv7n054443;
+        Mon, 06 Jul 2020 20:26:25 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 066KN5TV108646;
         Mon, 6 Jul 2020 20:26:25 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3243pddfwp-1
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3233p0sw4t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 06 Jul 2020 20:26:25 +0000
 Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 066KQNTd025732;
-        Mon, 6 Jul 2020 20:26:23 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 066KQLgj013157;
+        Mon, 6 Jul 2020 20:26:21 GMT
 Received: from monkey.oracle.com (/50.38.35.18)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Jul 2020 13:26:23 -0700
+        with ESMTP ; Mon, 06 Jul 2020 13:26:21 -0700
 From:   Mike Kravetz <mike.kravetz@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
@@ -65,9 +65,9 @@ Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Mike Kravetz <mike.kravetz@oracle.com>,
         kernel test robot <rong.a.chen@intel.com>
-Subject: [RFC PATCH 2/3] hugetlbfs: Only take i_mmap_rwsem when sharing is possible
-Date:   Mon,  6 Jul 2020 13:26:14 -0700
-Message-Id: <20200706202615.32111-3-mike.kravetz@oracle.com>
+Subject: [RFC PATCH 1/3] Revert: "hugetlbfs: Use i_mmap_rwsem to address page fault/truncate race"
+Date:   Mon,  6 Jul 2020 13:26:13 -0700
+Message-Id: <20200706202615.32111-2-mike.kravetz@oracle.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200706202615.32111-1-mike.kravetz@oracle.com>
 References: <20200622005551.GK5535@shao2-debian>
@@ -75,10 +75,10 @@ References: <20200622005551.GK5535@shao2-debian>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9674 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
- adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007060138
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007060138
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9674 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
  malwarescore=0 suspectscore=0 mlxlogscore=999 phishscore=0 spamscore=0
@@ -90,209 +90,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c0d0381ade79 added code to take i_mmap_rwsem in read mode during
-fault processing.  However, this was observed to increase fault processing
-time by aprox 33%.  Technically, i_mmap_rwsem only needs to be held when
-pmd sharing is possible.  pmd sharing depends on mapping flags, alignment
-and size.  The routine vma_shareable() already checks these conditions.
-Therefore, use vma_shareable to determine if sharing is possible and if
-taking i_mmap_rwsem is necessary.  This is done during fault processing
-and vma copying.  Code in memory-failure, page migration and userfaultfd
-continue to always take i_mmap_rwsem.  These are not as performance
-sensitive.
+This reverts 87bf91d39bb52b688fb411d668fbe7df278b29ae
+
+Commit 87bf91d39bb5 depends on i_mmap_rwsem being taken during hugetlb
+fault processing.  Commit c0d0381ade79 added code to take i_mmap_rwsem
+in read mode during fault processing.  However, this was observed to
+increase fault processing time by aprox 33%.  To address this, i_mmap_rwsem
+will only be taken during fault processing when necessary.  As a result,
+i_mmap_rwsem can not be used to synchronize fault and truncate.  In a
+subsequent commit, code will be added to detect the race and back out
+operations.
 
 Reported-by: kernel test robot <rong.a.chen@intel.com>
 Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 ---
- mm/hugetlb.c | 96 ++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 63 insertions(+), 33 deletions(-)
+ fs/hugetlbfs/inode.c | 28 ++++++++--------------------
+ mm/hugetlb.c         | 23 ++++++++++++-----------
+ 2 files changed, 20 insertions(+), 31 deletions(-)
 
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index ef5313f9c78f..b4bb82815dd4 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -444,9 +444,10 @@ hugetlb_vmdelete_list(struct rb_root_cached *root, pgoff_t start, pgoff_t end)
+  *	In this case, we first scan the range and release found pages.
+  *	After releasing pages, hugetlb_unreserve_pages cleans up region/reserv
+  *	maps and global counts.  Page faults can not race with truncation
+- *	in this routine.  hugetlb_no_page() holds i_mmap_rwsem and prevents
+- *	page faults in the truncated range by checking i_size.  i_size is
+- *	modified while holding i_mmap_rwsem.
++ *	in this routine.  hugetlb_no_page() prevents page faults in the
++ *	truncated range.  It checks i_size before allocation, and again after
++ *	with the page table lock for the page held.  The same lock must be
++ *	acquired to unmap a page.
+  * hole punch is indicated if end is not LLONG_MAX
+  *	In the hole punch case we scan the range and release found pages.
+  *	Only when releasing a page is the associated region/reserv map
+@@ -486,15 +487,7 @@ static void remove_inode_hugepages(struct inode *inode, loff_t lstart,
+ 
+ 			index = page->index;
+ 			hash = hugetlb_fault_mutex_hash(mapping, index);
+-			if (!truncate_op) {
+-				/*
+-				 * Only need to hold the fault mutex in the
+-				 * hole punch case.  This prevents races with
+-				 * page faults.  Races are not possible in the
+-				 * case of truncation.
+-				 */
+-				mutex_lock(&hugetlb_fault_mutex_table[hash]);
+-			}
++			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 			/*
+ 			 * If page is mapped, it was faulted in after being
+@@ -537,8 +530,7 @@ static void remove_inode_hugepages(struct inode *inode, loff_t lstart,
+ 			}
+ 
+ 			unlock_page(page);
+-			if (!truncate_op)
+-				mutex_unlock(&hugetlb_fault_mutex_table[hash]);
++			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+ 		}
+ 		huge_pagevec_release(&pvec);
+ 		cond_resched();
+@@ -576,8 +568,8 @@ static int hugetlb_vmtruncate(struct inode *inode, loff_t offset)
+ 	BUG_ON(offset & ~huge_page_mask(h));
+ 	pgoff = offset >> PAGE_SHIFT;
+ 
+-	i_mmap_lock_write(mapping);
+ 	i_size_write(inode, offset);
++	i_mmap_lock_write(mapping);
+ 	if (!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root))
+ 		hugetlb_vmdelete_list(&mapping->i_mmap, pgoff, 0);
+ 	i_mmap_unlock_write(mapping);
+@@ -699,11 +691,7 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
+ 		/* addr is the offset within the file (zero based) */
+ 		addr = index * hpage_size;
+ 
+-		/*
+-		 * fault mutex taken here, protects against fault path
+-		 * and hole punch.  inode_lock previously taken protects
+-		 * against truncation.
+-		 */
++		/* mutex taken here, fault path and hole punch */
+ 		hash = hugetlb_fault_mutex_hash(mapping, index);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 5349beda3658..6e9085464e78 100644
+index 57ece74e3aae..5349beda3658 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -3656,6 +3656,21 @@ static int hugetlb_acct_memory(struct hstate *h, long delta)
- 	return ret;
- }
- 
-+#ifdef CONFIG_ARCH_WANT_HUGE_PMD_SHARE
-+static bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
-+{
-+	unsigned long base = addr & PUD_MASK;
-+	unsigned long end = base + PUD_SIZE;
-+
-+	/*
-+	 * check on proper vm_flags and page table alignment
-+	 */
-+	if (vma->vm_flags & VM_MAYSHARE && range_in_vma(vma, base, end))
-+		return true;
-+	return false;
-+}
-+#endif
-+
- static void hugetlb_vm_op_open(struct vm_area_struct *vma)
- {
- 	struct resv_map *resv = vma_resv_map(vma);
-@@ -3807,6 +3822,7 @@ int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
- 	unsigned long sz = huge_page_size(h);
- 	struct address_space *mapping = vma->vm_file->f_mapping;
- 	struct mmu_notifier_range range;
-+	bool i_mmap_rwsem_held = false;
- 	int ret = 0;
- 
- 	cow = (vma->vm_flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
-@@ -3816,14 +3832,6 @@ int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
- 					vma->vm_start,
- 					vma->vm_end);
- 		mmu_notifier_invalidate_range_start(&range);
--	} else {
--		/*
--		 * For shared mappings i_mmap_rwsem must be held to call
--		 * huge_pte_alloc, otherwise the returned ptep could go
--		 * away if part of a shared pmd and another thread calls
--		 * huge_pmd_unshare.
--		 */
--		i_mmap_lock_read(mapping);
- 	}
- 
- 	for (addr = vma->vm_start; addr < vma->vm_end; addr += sz) {
-@@ -3831,6 +3839,28 @@ int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
- 		src_pte = huge_pte_offset(src, addr, sz);
- 		if (!src_pte)
- 			continue;
-+
-+		/*
-+		 * For shared mappings(non-cow) i_mmap_rwsem must be held to
-+		 * call huge_pte_alloc, otherwise the returned ptep could go
-+		 * away if part of a shared pmd and another thread calls
-+		 * huge_pmd_unshare.  This is only necessary if the specific
-+		 * pmd can be shared.  Acquire/drop semaphore as necessary.
-+		 */
-+		if (!cow) {
-+			if (!i_mmap_rwsem_held) {
-+				if (vma_shareable(vma, addr)) {
-+					i_mmap_lock_read(mapping);
-+					i_mmap_rwsem_held = true;
-+				}
-+			} else {
-+				if (!vma_shareable(vma, addr)) {
-+					i_mmap_unlock_read(mapping);
-+					i_mmap_rwsem_held = false;
-+				}
-+			}
-+		}
-+
- 		dst_pte = huge_pte_alloc(dst, addr, sz);
- 		if (!dst_pte) {
- 			ret = -ENOMEM;
-@@ -3901,7 +3931,7 @@ int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
- 
- 	if (cow)
- 		mmu_notifier_invalidate_range_end(&range);
--	else
-+	if (i_mmap_rwsem_held)
- 		i_mmap_unlock_read(mapping);
- 
- 	return ret;
-@@ -4357,9 +4387,11 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
- 			 */
- 			hash = hugetlb_fault_mutex_hash(mapping, idx);
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
--			i_mmap_unlock_read(mapping);
-+			if (vma_shareable(vma, haddr))
-+				i_mmap_unlock_read(mapping);
- 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
--			i_mmap_lock_read(mapping);
-+			if (vma_shareable(vma, haddr))
-+				i_mmap_lock_read(mapping);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 			goto out;
- 		}
-@@ -4543,19 +4575,22 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -4322,17 +4322,16 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
  	}
  
  	/*
--	 * Acquire i_mmap_rwsem before calling huge_pte_alloc and hold
--	 * until finished with ptep.  This prevents huge_pmd_unshare from
--	 * being called elsewhere and making the ptep no longer valid.
-+	 * If PMD sharing is possible, acquire i_mmap_rwsem before calling
-+	 * huge_pte_alloc and hold until finished with ptep.  This prevents
-+	 * huge_pmd_unshare from being called elsewhere and making the ptep
-+	 * no longer valid.
+-	 * We can not race with truncation due to holding i_mmap_rwsem.
+-	 * i_size is modified when holding i_mmap_rwsem, so check here
+-	 * once for faults beyond end of file.
++	 * Use page lock to guard against racing truncation
++	 * before we get page_table_lock.
+ 	 */
+-	size = i_size_read(mapping->host) >> huge_page_shift(h);
+-	if (idx >= size)
+-		goto out;
+-
+ retry:
+ 	page = find_lock_page(mapping, idx);
+ 	if (!page) {
++		size = i_size_read(mapping->host) >> huge_page_shift(h);
++		if (idx >= size)
++			goto out;
++
+ 		/*
+ 		 * Check for page in userfault range
+ 		 */
+@@ -4438,6 +4437,10 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	}
+ 
+ 	ptl = huge_pte_lock(h, mm, ptep);
++	size = i_size_read(mapping->host) >> huge_page_shift(h);
++	if (idx >= size)
++		goto backout;
++
+ 	ret = 0;
+ 	if (!huge_pte_none(huge_ptep_get(ptep)))
+ 		goto backout;
+@@ -4541,10 +4544,8 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+ 
+ 	/*
+ 	 * Acquire i_mmap_rwsem before calling huge_pte_alloc and hold
+-	 * until finished with ptep.  This serves two purposes:
+-	 * 1) It prevents huge_pmd_unshare from being called elsewhere
+-	 *    and making the ptep no longer valid.
+-	 * 2) It synchronizes us with i_size modifications during truncation.
++	 * until finished with ptep.  This prevents huge_pmd_unshare from
++	 * being called elsewhere and making the ptep no longer valid.
  	 *
  	 * ptep could have already be assigned via huge_pte_offset.  That
  	 * is OK, as huge_pte_alloc will return the same value unless
- 	 * something has changed.
- 	 */
- 	mapping = vma->vm_file->f_mapping;
--	i_mmap_lock_read(mapping);
-+	if (vma_shareable(vma, haddr))
-+		i_mmap_lock_read(mapping);
- 	ptep = huge_pte_alloc(mm, haddr, huge_page_size(h));
- 	if (!ptep) {
--		i_mmap_unlock_read(mapping);
-+		if (vma_shareable(vma, haddr))
-+			i_mmap_unlock_read(mapping);
- 		return VM_FAULT_OOM;
- 	}
- 
-@@ -4652,7 +4687,8 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 	}
- out_mutex:
- 	mutex_unlock(&hugetlb_fault_mutex_table[hash]);
--	i_mmap_unlock_read(mapping);
-+	if (vma_shareable(vma, haddr))
-+		i_mmap_unlock_read(mapping);
- 	/*
- 	 * Generally it's safe to hold refcount during waiting page lock. But
- 	 * here we just wait to defer the next page fault to avoid busy loop and
-@@ -5287,19 +5323,6 @@ static unsigned long page_table_shareable(struct vm_area_struct *svma,
- 	return saddr;
- }
- 
--static bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
--{
--	unsigned long base = addr & PUD_MASK;
--	unsigned long end = base + PUD_SIZE;
--
--	/*
--	 * check on proper vm_flags and page table alignment
--	 */
--	if (vma->vm_flags & VM_MAYSHARE && range_in_vma(vma, base, end))
--		return true;
--	return false;
--}
--
- /*
-  * Determine if start,end range within vma could be mapped by shared pmd.
-  * If yes, adjust start and end to cover range associated with possible
-@@ -5335,9 +5358,12 @@ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
-  * !shared pmd case because we can allocate the pmd later as well, it makes the
-  * code much cleaner.
-  *
-- * This routine must be called with i_mmap_rwsem held in at least read mode.
-- * For hugetlbfs, this prevents removal of any page table entries associated
-- * with the address space.  This is important as we are setting up sharing
-+ * FIXME - If sharing is possible, this routine must be called with
-+ * i_mmap_rwsem held in at least read mode.  Leaving it up to the caller
-+ * to determine if sharing is possible is asking for trouble.  Right now, all
-+ * calling code is correct.  But, this needs to be cleaner.  Holding
-+ * i_mmap_rwsem prevents removal of any page table entries associated with
-+ * the address space.  This is important as we are setting up sharing
-  * based on existing page table entries (mappings).
-  */
- pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
-@@ -5355,6 +5381,10 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
- 	if (!vma_shareable(vma, addr))
- 		return (pte_t *)pmd_alloc(mm, pud, addr);
- 
-+	/*
-+	 * If we get here, caller should have acquired i_mmap_rwsem in
-+	 * at least read mode.
-+	 */
- 	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
- 		if (svma == vma)
- 			continue;
 -- 
 2.25.4
 
