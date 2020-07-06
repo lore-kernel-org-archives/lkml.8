@@ -2,194 +2,226 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFD6206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kt+4EgUF"
+	by mail.kernel.org (Postfix) with ESMTP id A04B42075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgGFJHZ (ORCPT
+        id S1728590AbgGFJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:07:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56829 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728024AbgGFJHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594026442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SShJmXGA7atFqGfnITwSEtZ2LmnJMbZjAOdugmKURLE=;
-        b=Kt+4EgUFFzvqe8kIrjQSVzIf4d9vUyUarE26DGlBxUFWsYplHrz10vamLfCs7R4IyB3gT5
-        FZOeMhs625eT6JwmrsxYRARXLN79DsesMl3z6rkLCVgrZ7B5JMzdXaDmEO8NNRli+8UPqz
-        //88JZ68lu+oHJjwrXWkJ5JPK2PfQaM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-Zi_68QkjPGSL8uxCZHp9gw-1; Mon, 06 Jul 2020 05:07:20 -0400
-X-MC-Unique: Zi_68QkjPGSL8uxCZHp9gw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5970118A0724;
-        Mon,  6 Jul 2020 09:07:18 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-78.pek2.redhat.com [10.72.12.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A26BD60BF3;
-        Mon,  6 Jul 2020 09:07:10 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 17:07:07 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel test robot <lkp@intel.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v2 01/12] kexec_file: allow archs to handle special
- regions while locating memory hole
-Message-ID: <20200706090707.GA9048@dhcp-128-65.nay.redhat.com>
-References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
- <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
+        Mon, 6 Jul 2020 05:09:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36912 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728024AbgGFJJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 05:09:02 -0400
+IronPort-SDR: OEMkME77SOmWVbmrGmHxTkequ/bcvJZ36RFBjBwvx8kfHS9hG+5fQz8rZjZXOksSX+L3DJ2r4I
+ 9KFEebalLKdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127452251"
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="127452251"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 02:09:01 -0700
+IronPort-SDR: /9z4r49cQ2xT1ALtSeX/xGAFoxe+gADZeD2O7PrkfzgVsUAsSit5+AL9Cy/v5o8+AJPk6LrL4k
+ nJVXkr6ZKqFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="296939641"
+Received: from lkp-server01.sh.intel.com (HELO 82346ce9ac16) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jul 2020 02:08:59 -0700
+Received: from kbuild by 82346ce9ac16 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jsN7T-00009Y-25; Mon, 06 Jul 2020 09:08:59 +0000
+Date:   Mon, 06 Jul 2020 17:08:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 220dbf4aaa5b574f67ce23fa4d7b0104515bc60e
+Message-ID: <5f02e9fc.XQ750krCH2k8+06c%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/20 at 01:24am, Hari Bathini wrote:
-> Some architectures may have special memory regions, within the given
-> memory range, which can't be used for the buffer in a kexec segment.
-> Implement weak arch_kexec_locate_mem_hole() definition which arch code
-> may override, to take care of special regions, while trying to locate
-> a memory hole.
-> 
-> Also, add the missing declarations for arch overridable functions and
-> and drop the __weak descriptors in the declarations to avoid non-weak
-> definitions from becoming weak.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> [lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
-> 
-> Changes in v2:
-> * Introduced arch_kexec_locate_mem_hole() for override and dropped
->   weak arch_kexec_add_buffer().
-> * Dropped __weak identifier for arch overridable functions.
-> * Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
->   reported by lkp. lkp report for reference:
->     - https://lore.kernel.org/patchwork/patch/1264418/
-> 
-> 
->  include/linux/kexec.h |   29 ++++++++++++++++++-----------
->  kernel/kexec_file.c   |   16 ++++++++++++++--
->  2 files changed, 32 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index ea67910..9e93bef 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -183,17 +183,24 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
->  				   bool get_value);
->  void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
->  
-> -int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> -					 unsigned long buf_len);
-> -void * __weak arch_kexec_kernel_image_load(struct kimage *image);
-> -int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> -					    Elf_Shdr *section,
-> -					    const Elf_Shdr *relsec,
-> -					    const Elf_Shdr *symtab);
-> -int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
-> -					Elf_Shdr *section,
-> -					const Elf_Shdr *relsec,
-> -					const Elf_Shdr *symtab);
-> +/* Architectures may override the below functions */
-> +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> +				  unsigned long buf_len);
-> +void *arch_kexec_kernel_image_load(struct kimage *image);
-> +int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> +				     Elf_Shdr *section,
-> +				     const Elf_Shdr *relsec,
-> +				     const Elf_Shdr *symtab);
-> +int arch_kexec_apply_relocations(struct purgatory_info *pi,
-> +				 Elf_Shdr *section,
-> +				 const Elf_Shdr *relsec,
-> +				 const Elf_Shdr *symtab);
-> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
-> +#ifdef CONFIG_KEXEC_SIG
-> +int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> +				 unsigned long buf_len);
-> +#endif
-> +int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->  
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 09cc78d..e89912d 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -636,6 +636,19 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->  }
->  
->  /**
-> + * arch_kexec_locate_mem_hole - Find free memory to place the segments.
-> + * @kbuf:                       Parameters for the memory search.
-> + *
-> + * On success, kbuf->mem will have the start address of the memory region found.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> +{
-> +	return kexec_locate_mem_hole(kbuf);
-> +}
-> +
-> +/**
->   * kexec_add_buffer - place a buffer in a kexec segment
->   * @kbuf:	Buffer contents and memory parameters.
->   *
-> @@ -647,7 +660,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->   */
->  int kexec_add_buffer(struct kexec_buf *kbuf)
->  {
-> -
->  	struct kexec_segment *ksegment;
->  	int ret;
->  
-> @@ -675,7 +687,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> -	ret = kexec_locate_mem_hole(kbuf);
-> +	ret = arch_kexec_locate_mem_hole(kbuf);
->  	if (ret)
->  		return ret;
->  
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 220dbf4aaa5b574f67ce23fa4d7b0104515bc60e  Merge branch 'WIP.core/headers'
 
-Acked-by: Dave Young <dyoung@redhat.com>
+elapsed time: 804m
 
-Thanks
-Dave
+configs tested: 156
+configs skipped: 16
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sh                                  defconfig
+arm                      tct_hammer_defconfig
+powerpc64                           defconfig
+sh                        dreamcast_defconfig
+arm                         orion5x_defconfig
+mips                           ip22_defconfig
+riscv                            alldefconfig
+h8300                    h8300h-sim_defconfig
+arm                         s3c2410_defconfig
+mips                        vocore2_defconfig
+arm                         assabet_defconfig
+xtensa                              defconfig
+arm                      jornada720_defconfig
+xtensa                         virt_defconfig
+sh                          landisk_defconfig
+sh                          rsk7264_defconfig
+arm                          ep93xx_defconfig
+m68k                        stmark2_defconfig
+sh                           se7780_defconfig
+um                           x86_64_defconfig
+powerpc                          g5_defconfig
+powerpc                      pmac32_defconfig
+microblaze                          defconfig
+sh                          r7785rp_defconfig
+openrisc                         allyesconfig
+sparc                            alldefconfig
+mips                  mips_paravirt_defconfig
+sh                     sh7710voipgw_defconfig
+nios2                            alldefconfig
+m68k                            q40_defconfig
+mips                      malta_kvm_defconfig
+sh                        edosk7760_defconfig
+powerpc                       maple_defconfig
+arc                        vdk_hs38_defconfig
+mips                         bigsur_defconfig
+mips                          rb532_defconfig
+arm                           tegra_defconfig
+mips                          ath25_defconfig
+s390                          debug_defconfig
+c6x                        evmc6457_defconfig
+arm                          gemini_defconfig
+arm                         bcm2835_defconfig
+mips                          ath79_defconfig
+mips                 decstation_r4k_defconfig
+mips                         rt305x_defconfig
+sh                          rsk7269_defconfig
+sparc64                          alldefconfig
+powerpc                         wii_defconfig
+arm                  colibri_pxa300_defconfig
+arm                            mps2_defconfig
+arm                        oxnas_v6_defconfig
+arm                              zx_defconfig
+arc                          axs103_defconfig
+arm                           efm32_defconfig
+arc                                 defconfig
+arm                          prima2_defconfig
+powerpc                      ppc64e_defconfig
+h8300                            alldefconfig
+sh                             espt_defconfig
+um                             i386_defconfig
+sh                           se7721_defconfig
+arm                           corgi_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                            pleb_defconfig
+arm                          lpd270_defconfig
+arm                        neponset_defconfig
+sh                            migor_defconfig
+openrisc                    or1ksim_defconfig
+alpha                               defconfig
+sh                          polaris_defconfig
+sh                   sh7724_generic_defconfig
+ia64                              allnoconfig
+powerpc                 mpc8272_ads_defconfig
+arm                       versatile_defconfig
+um                            kunit_defconfig
+arm                              alldefconfig
+sh                           se7206_defconfig
+xtensa                generic_kc705_defconfig
+m68k                        mvme16x_defconfig
+m68k                           sun3_defconfig
+sh                           se7705_defconfig
+xtensa                          iss_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allyesconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
