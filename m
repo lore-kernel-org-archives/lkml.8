@@ -2,206 +2,139 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9820C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F1A206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tV1JMNZz"
+	by mail.kernel.org (Postfix) with ESMTP id C93DA206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgGFPKJ (ORCPT
+        id S1729322AbgGFPKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgGFPKJ (ORCPT
+        Mon, 6 Jul 2020 11:10:37 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37340 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729140AbgGFPKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:10:09 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6011C061755;
-        Mon,  6 Jul 2020 08:10:08 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so17154866pjc.4;
-        Mon, 06 Jul 2020 08:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eBwRBRvbZOXipdiY/rQrSNtoTZTEajJqSqQHdmUlhbM=;
-        b=tV1JMNZzXHdxfvShvh6uNoSuG/8TZP2PahLCFdqv6tZSovyHysS2B/+xdShCD0LNC4
-         OkkYRWzKsgb7+u82U811xXdRnHP0bv7TyYLrM1GBIo81uXGh/fVxSej52lzvV4YIXmwX
-         9brlx3Zaeu6RftVgBNXY/HoaPx+Isst0Lw23OujPqbgnz6jV0mQNmr/P5KmCmtA0Beqh
-         FOHcbJrL8+1hlwFLlwQ2bCAKP+vLolNUyuME4ppAd/DSuUs//QBZ/PocU8Uk5IxiKQBl
-         tIDWsjA3o5RY404Pgkght1Bfpy74xLXW6bV0NUA51RUUzrl7RqARQ/+W9wA6r/NpzY8i
-         mfZQ==
+        Mon, 6 Jul 2020 11:10:37 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 12so25755671oir.4;
+        Mon, 06 Jul 2020 08:10:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eBwRBRvbZOXipdiY/rQrSNtoTZTEajJqSqQHdmUlhbM=;
-        b=YSBnSVWzqItCnKvt2nnsiG9gKT/67YO7mgaxDwhX6o3Tx+II7yL7oidYyRejeF3tjx
-         7BGRcpKNALiVD5j9EoeKOWj9/dm0/tfzR1gYsEnLDp78Td3wx98F0t/MlL7CZtzlZ/Qv
-         KmRU9G8hZQZfzjjOhR4QDMgb8GakbvZwn4oghTrvRrEnmoY6VTLC0bFvg1SlxK0hCOa0
-         m8szrzgoCOMxKcMJp1zHItn5VA/IRGDQBat6io47b0I2In1MiHICwkrghxtTyQHHhzN9
-         ZiI50NuYr8s4V29MKaizychmYk9ma/i5L39xWqB48uqVum0hZ7xcYcuAyJl+70qI3kXq
-         tA8g==
-X-Gm-Message-State: AOAM532B01XLZyFZygZ3YeBVYqASvY8TJkDboAShD/FHS17J23ZqOOzw
-        XzrV3oQOkDdQV8h9oBsPGGM=
-X-Google-Smtp-Source: ABdhPJyYA10lGpxfw9PSuWB0ZRBpDQ5LBoHQWODc3UVIQKefv7hkzOH3ZbtiljU3ldRUABiWfkU5vQ==
-X-Received: by 2002:a17:902:7b89:: with SMTP id w9mr30340110pll.175.1594048208345;
-        Mon, 06 Jul 2020 08:10:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e195sm17321997pfh.218.2020.07.06.08.10.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 08:10:07 -0700 (PDT)
-Subject: Re: [PATCH 1/1] watchdog: Add common nowayout parameter to booke_wdt
- driver
-To:     Timothy Myers <timothy.myers@adtran.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Boike <david.boike@adtran.com>
-References: <CH2PR19MB3590AFAC86BA1697956EAD1C9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6b24e27b-c47a-8fd3-179b-761fb53f02b0@roeck-us.net>
-Date:   Mon, 6 Jul 2020 08:10:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tbVQnKX9cGHjz5cAqDI171HAdzuSj/vrkGLAeogFPdQ=;
+        b=mzOQaE6QuADLaN/1JCSS4SsZCDB5RlwOl1q2Pa+KPUGP3l1JjwMo60l8RY+JjmJK1g
+         aGhwNG2tqRbhp8tLvfIrZ9aA1vblkLxTwD3gNeUj6A+O8/OT4ZwRYMwqPih1YEE/yq/+
+         tqoRe703KXTK0S6w+4XgfB3EqbPBIdMmDzy32MbTOSZbefO5plRgtVNAwhKeMBTaz5l7
+         IXvdK3yZxyyInFUBKGU/RrsQQ+iAz2b6YA5d1LTorM6Yi78/8BJ5qel/UFUep/vCroRY
+         wEosdjbkJlUY9NjHjmozi+opsI+GdZeXvPZK0+Dn1VilrpM1vFgAhjuBp5T8Vqiy7sx5
+         1zcA==
+X-Gm-Message-State: AOAM530Uro99IF6zhq4ZBSnwii8M5KIjU3Utxbh8bTUCZxre1IW2A1+L
+        rq5JsFVod96ztkzZkgw5ThLnQjGCS1adBDL4k4jvk9xG
+X-Google-Smtp-Source: ABdhPJy3nPe01DMLHZsnb1XBpPIo+qosBy1RuitQMetKS4QMG/wf/U2JNl6ordfgRwOD6N6B6SRPadNF4BR4bh5oWkk=
+X-Received: by 2002:aca:ac10:: with SMTP id v16mr16991186oie.153.1594048236359;
+ Mon, 06 Jul 2020 08:10:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CH2PR19MB3590AFAC86BA1697956EAD1C9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <202007040833.xIqR5rAw%lkp@intel.com> <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+ <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
+In-Reply-To: <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jul 2020 17:10:25 +0200
+Message-ID: <CAMuHMdW_aTKtrUnGqf3DB=fr0ZxTsjoEjMmwSpPqhwjs-Tz7ig@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy chain driver.
+To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 7:13 AM, Timothy Myers wrote:
-> Add the common "nowayout" parameter to booke_wdt to make this behavior
-> selectable at runtime and to make the implementation more consistent with
-> many other watchdog drivers.
-> 
-> Signed-off-by: Timothy Myers <timothy.myers@adtran.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Hi Adrian,
 
-The added Reviewed-by: makes it v2.
+On Mon, Jul 6, 2020 at 11:23 AM Adrian Fiergolski
+<adrian.fiergolski@fastree3d.com> wrote:
+> Add documentation for SPI daisy chain driver.
+>
+> Signed-off-by: Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
 
-Anyway, your patch is whitespace corrupted.
+Thanks for your patch!
 
-ERROR: code indent should use tabs where possible
-#36: FILE: drivers/watchdog/booke_wdt.c:45:
-+               "Watchdog cannot be stopped once started (default="$
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
+> @@ -0,0 +1,56 @@
+> +spi-daisy_chain : The driver handling SPI daisy chains.
+> +-----------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible           : Should be "spi,daisy_chain"
+> +- reg                  : Chip select assigned to the chain
+> +
+> +  For the SPI devices on a common SPI chain - nodes of daisy_chain):
+> +- spi-daisy-chain-len  : Length (in bytes) of the SPI transfer,
+> +                        when the SPI device is part of a device chain.
+> +- spi-daisy-chain-noop : Byte string of no-operation command which should
+> +                        be send when device is not addressed during the
+> +                        given SPI transfer
 
-WARNING: please, no spaces at the start of a line
-#36: FILE: drivers/watchdog/booke_wdt.c:45:
-+               "Watchdog cannot be stopped once started (default="$
+The above two properties are device-specific, and the same for all
+devices of the same type, thus leading to duplication.
+Hence I think this should not be specified in DT, but instead handled
+by the driver.  I.e. for Linux, you would retrieve this from struct
+spi_device, as filled in by the slave driver.
 
-ERROR: code indent should use tabs where possible
-#37: FILE: drivers/watchdog/booke_wdt.c:46:
-+                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");$
+> +
+> +Optional properties:
+> +  (for the SPI devices on a common SPI chain (nodes of daisy_chain):
+> +- spi-daisy-chain-bits_per_word : no-operation transfers involve
+> +                                  one or more words; word sizes like
+> +                                 eight or 12 bits are common.
+> +                                 In-memory wordsizes are powers of two
+> +                                 bytes (e.g. 20 bit samples use 32 bits).
+> +                                 If not defined, it is assumed to be 8.
 
-WARNING: please, no spaces at the start of a line
-#37: FILE: drivers/watchdog/booke_wdt.c:46:
-+                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");$
+Same here.
 
-That explains a lot. I guess it is corrupted so badly that patchwork
-doesn't recognize it as patch. Sorry, won't be able to apply it.
-Please send a non-corrupted version.
+> +Example:
+> +
+> +       daisy_chain0: daisy_chain@0 {
+> +               compatible = "spi,daisy_chain";
+> +               spi-max-frequency = <10000000>;
+> +               reg = <0>;
+> +
+> +               dac0: ltc2632@0 {
+> +                     compatible = "lltc,ltc2634-l12";
+> +                     spi-daisy-chain-len = <4>;
+> +                     spi-daisy-chain-noop = [00 F0 00 00];
+> +               };
+> +               dac1: ltc2632@1 {
+> +                     compatible = "lltc,ltc2634-l12";
+> +                     spi-daisy-chain-len = <4>;
+> +                     spi-daisy-chain-noop = [00 F0 00 00];
+> +               };
+> +               dac2: ltc2632@2 {
+> +                     compatible = "lltc,ltc2634-l12";
+> +                     spi-daisy-chain-len = <4>;
+> +                     spi-daisy-chain-noop = [00 F0 00 00];
+> +               };
+> +       };
 
-Guenter
+Gr{oetje,eeting}s,
 
-> ---
->  drivers/watchdog/booke_wdt.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/booke_wdt.c b/drivers/watchdog/booke_wdt.c
-> index 9d09bbfdef20..7817fb976f9c 100644
-> --- a/drivers/watchdog/booke_wdt.c
-> +++ b/drivers/watchdog/booke_wdt.c
-> @@ -39,6 +39,11 @@ static bool booke_wdt_enabled;
->  module_param(booke_wdt_enabled, bool, 0);
->  static int  booke_wdt_period = CONFIG_BOOKE_WDT_DEFAULT_TIMEOUT;
->  module_param(booke_wdt_period, int, 0);
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +               "Watchdog cannot be stopped once started (default="
-> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> 
->  #ifdef CONFIG_PPC_FSL_BOOK3E
-> 
-> @@ -215,7 +220,6 @@ static void __exit booke_wdt_exit(void)
->  static int __init booke_wdt_init(void)
->  {
->         int ret = 0;
-> -       bool nowayout = WATCHDOG_NOWAYOUT;
-> 
->         pr_info("powerpc book-e watchdog driver loaded\n");
->         booke_wdt_info.firmware_version = cur_cpu_spec->pvr_value;
-> 
-> base-commit: dd0d718152e4c65b173070d48ea9dfc06894c3e5
-> --
-> 2.20.1
-> 
-> 
-> 
-> *Timothy Myers*
-> Software Design Engineer
-> 
-> Office: 256.963.8844
-> 
-> ADTRAN
-> 901 Explorer Boulevard 
-> Huntsville, AL 35806 - USA
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
