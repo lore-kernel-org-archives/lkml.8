@@ -2,156 +2,88 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA92C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC50206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212782065D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NbM6fBWm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UiQ5LvHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgGFWd1 (ORCPT
+        id S1727044AbgGFWpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:33:27 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5364 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgGFWdY (ORCPT
+        Mon, 6 Jul 2020 18:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgGFWpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:33:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f03a6a70000>; Mon, 06 Jul 2020 15:33:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Jul 2020 15:33:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Jul 2020 15:33:23 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
- 2020 22:33:14 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
- by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 6 Jul 2020 22:33:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RBiNpySy2ZnS39LrNCUJbTboCN7xGKdlyljScqUpZ9iAxHTUGsxvdwPrBsaV0NvCqm5Aywh+OGIEs/Eq09Ash27BLPMrCOJ3lwKo6FvhTTBf6yv+0FXPUvRtE/Bl9S5uPoAEFSQjo3povLzousZuc+rIMYhLOk0tDwJkjk33hEja9uPowk0K5MC2T7txIBTHWez6dR3Q/IUx17zB6ysfwafwe4Rvj3+fPoi01QwooxqiBL9lWQruL2exGgNCIhHRRqLUB0qXzw4n6iLn3RmaQCJV2m6kj2a598jQOwNe/2fMSKAP1LaeW1nKtof5mjsxjbObk/rOWbgnqGcJDO9VWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4XSYFsynAKK0JcqTFFaqTRZxUdut5rm9tEY0ltHWXEA=;
- b=TrDwptAM/qk9hO8IuFZgvgJ/Czsk9LLtTe7VlthEhQohmv7qMt8oXla6H5YN3dFxSSAxqTxxXtNIDk6fYMO0D4SPRlLY7ERnDI5o2HBAOv9uta/M/+0yvalsbYa50j17y+gZ4Uo5Nf4DwQEV+WIrwbGia8kIthkOTGAjkSydGaJgONaEPHUyjzANuSL7kWD/50hAnZaTVQzFDTKASZbCZ0o0KY0fikoVuSpRPkdEhRElftTAB4T83RVc5/x3amd49Xhqs89WMKE079OuosfPaRftcPnASEMF4elXTvuEgO2nXXmqok9PTvpkCKBZPusqKQnl71UT5nlhEyi4Ou9pjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Mon, 6 Jul
- 2020 22:33:13 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 22:33:13 +0000
-Date:   Mon, 6 Jul 2020 19:33:12 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: [PATCH rdma-next v2 0/3] Convert XRC to use xarray
-Message-ID: <20200706223312.GA1257718@nvidia.com>
-References: <20200706122716.647338-1-leon@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200706122716.647338-1-leon@kernel.org>
-X-ClientProxiedBy: YTXPR0101CA0046.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::23) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Mon, 6 Jul 2020 18:45:39 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8993C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:45:39 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id 12so26849488oir.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m+R4BaRxlZ5SIfaCiQACIiM2M6H+Vaa14qTpDrKg+A0=;
+        b=UiQ5LvHRtU8qleTuekrNQgZEdQe4j6dZHNkbO9CyTXc+SfIixtapTt1x9frWS33yYI
+         gPyUFSz1o4jkujB/CgGw61h3LyD34nPp9dY4HkK0KMVwU7aWbC963RMNjfk3bNjKqRdX
+         ku7jjF4u/r4EEcZNQ5bte+Xm3pEI/en/VjYhrGsRLSAPtS3fBbnuayzuKzqq3Qpht2S9
+         fsbxKto+ykYW4IfGn2NW0qvXy7TaVeI0GG4VbMj0YOXEc1i5vuW4uzwsKX+oS2cflRx5
+         9t2Zj4agoTp6zZPhSeTG07KTCMj0EnkJUN93At3hsPSFjNG1FsTokzYXVBb1YiAGQh8L
+         B9Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m+R4BaRxlZ5SIfaCiQACIiM2M6H+Vaa14qTpDrKg+A0=;
+        b=K9A5E6mLk1afWzywpmh6+9BfsvGzajiNbtXIgiZE3I8RLyHKe08cg0A4QxvRD3ZZtG
+         bSMGo9H0LLpmUA3J/c+YlAnP9fWu9IunbR8RGmt5XNeMrxSnJQHJByeay/ulUVeD7w2u
+         vgjYdECopVWWbM3+M8GVCToGuxT2zI6PmCaDwXcNR2RgqZY9GjXzHDFoLQaopITI9YSm
+         ylFhHYosZTVmo3K0iI+p6E2Y+zhfQhL1vOpMETIb27Nhqh3PSlb9kN8HAlTNySeGjiD3
+         OiG6SvYsQzJKYjEuZjIhKn7JHVWiM1iT+LFb2UIOt062Ji/QoqwEpntZE6d4Qmd9GxPi
+         GE7A==
+X-Gm-Message-State: AOAM5325e4ZjezSBu9Jhi2fJ9MboWF6aDMS9sCiWwjQPLkerIrBK2wm3
+        9JnbYoj0DTsqKyUQEE29nFY4IynG6j+8hnMfD92yMQ==
+X-Google-Smtp-Source: ABdhPJwlQiCm2Ys0Qnd7e140yhhsZn0THpYzHOijr2vjH4goeRH3Y1OcNMHeClMqRQtkwRUKuQm8SesnmuC8rrOBqd8=
+X-Received: by 2002:aca:a983:: with SMTP id s125mr1236726oie.30.1594075538731;
+ Mon, 06 Jul 2020 15:45:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (206.223.160.26) by YTXPR0101CA0046.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Mon, 6 Jul 2020 22:33:13 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jsZfk-005HCK-D8; Mon, 06 Jul 2020 19:33:12 -0300
-X-Originating-IP: [206.223.160.26]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 18055a57-5491-451c-c9f2-08d821fc91de
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1337:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB13372CACBC1E6D18C50A1D57C2690@DM5PR12MB1337.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-Forefront-PRVS: 04569283F9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UM+K0F2xL0arNJVYNkk3NhPWUfB0nWt86JQ8TOODyZIXJv4j2H4qf7hmOwPgVx0jeHUURXIKvwnN//1i5sEVIEmp6G1T6LUC2Oen9sBRW5fNssdT/juFNccvigm9ipHbhxsSm6EoQdweXwvKwm/HEI31TJXyvwATSUozzg38jcu98ON1qcBsuXOf+JBwG235ZAAHzR2dofNmploow2Fu4DNp//KMjT9XbTOgEsfaPhOFeXG01mSu9bNQQWYQH1QprOkuTFCWyEcryoYR4FGBRnAJyNlnykDyOrSOvFIuvohZQfSVvVBSd1cE+ifFr0f3N29qf8gkIanXURoob02QWB5toAtbAIrFT2kpgUt57O8xlkkePUztxNaSZEAKPzboEBhgq5u8TrjvV+RgOuj3AQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(478600001)(316002)(966005)(54906003)(86362001)(8676002)(33656002)(426003)(9786002)(6916009)(26005)(2616005)(5660300002)(9746002)(66476007)(4744005)(2906002)(66556008)(36756003)(66946007)(4326008)(186003)(8936002)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ahs5rJ6GyQYKjMTWNHZyP3cuCEn0ye2u3IG9dx6KTxkrV0FOxkneU8BAP3CUkEcE0jmwtTNyFkkURrtKWZ3wZMCRZSi0LD925/sMHsaLmdUFIqpMw2750lMX3ZhPbUqhlsituhUcTVvGcH1wUiYU1n/6iPpD8oaEwbQ4lk9J68eDW4ng/7YP1/MB4QFhn0wSjDfPqm2brSFpTPG3PlXI1EN9fNWAcvwgcAsposvuRZZTT+QlOIe8K/gS1tw+8/i+CbMKSCrX1BQnhQJqlDQ7g0r+23whaBQHW64X4gkDgVcek7JKpkPJzEdRmvqjpipK62ANsKewTelMxAQ6gf/uYrZ6pqMtKGFQ13shWFvItdPXCRpYRzfe18USwwEzcrS1cu6YNoXEUS0G7u5JxOFLLFmfZ5mNAwmQwhF27jMv92on5zgcQIWWXTNrzqvxvCyhnRUMHjxQgN6cfkqG5pHqZnOlwVfF9w95/1WRkv+b8YjTXS2cBWu1at+syfBdwCy+
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18055a57-5491-451c-c9f2-08d821fc91de
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2020 22:33:13.7616
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 75GN9LuYkB6LoG6S6x/EPGss5QbaJ3cTcsB67xaVodXv0FkDI/HuCBNEb82w2aT4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1337
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594074791; bh=4XSYFsynAKK0JcqTFFaqTRZxUdut5rm9tEY0ltHWXEA=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-Forefront-PRVS:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=NbM6fBWmQWmRo0eJHAyIgRPqZ/KWROoO9vWyDxtgdNhvKknMaByiF+32PEeEiSqdi
-         UHt6N3UtaPcEmMrFVK7hubztmHoiqJSaD95XdXaGj8DORAiw3pUJXWA+unymhqqH5f
-         O/J5AJM7t6dYhkXzh+0rDDrDs/qBPKoCZab8PNMt+IS1JE0aKp1S9xrSbJTrWEmFvR
-         54F2o6rFWxKqQ1Tsj1ocqIG3fD7odHa5C0fEdw6nSTs9EbY+L4w3CfbcyLXhPo2nOh
-         He5WxZIx3ZMq2oxV/EwpZDVuDdJMbHcefbKGTWdwGRJ7FFtVLJ6V7To0g6zYSo1EVW
-         KcKh26zIOqi6g==
+References: <20200521191800.136035-1-saravanak@google.com> <CAGETcx8UGps6bz1YhYcbjCAAXenBuR6XDT0qv5WED5zbyfzNFw@mail.gmail.com>
+ <20200529123025.GA1710508@kroah.com> <CAGETcx-QiAysfd7AVV2Y7_GWRd2sj4N=8KwQ_T4fUZ5gVaV8Jw@mail.gmail.com>
+In-Reply-To: <CAGETcx-QiAysfd7AVV2Y7_GWRd2sj4N=8KwQ_T4fUZ5gVaV8Jw@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 6 Jul 2020 15:45:02 -0700
+Message-ID: <CAGETcx94Os7o+xZPSs3vVOQAzGtESAGFXtUNdrEAK9iya05s1w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] driver core: Add device link related sysfs files
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 03:27:13PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Changelog:
-> v2: Rewrote mlx5 part to avoid ib_xrcd allocation.
-> v1: https://lore.kernel.org/lkml/20200623111531.1227013-1-leon@kernel.org
-> Changed ib_dealloc_xrcd_user() do not iterate over tgt list, because
-> it is expected to be empty.
-> v0: https://lore.kernel.org/lkml/20200621104110.53509-1-leon@kernel.org
-> Two small patches to simplify and improve XRC logic.
-> 
-> Thanks
-> 
-> Leon Romanovsky (1):
->   RDMA/mlx5: Get XRCD number directly for the internal use
-> 
-> Maor Gottlieb (2):
->   RDMA/core: Clean ib_alloc_xrcd() and reuse it to allocate XRC domain
->   RDMA/core: Optimize XRC target lookup
+On Tue, Jun 16, 2020 at 8:45 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Fri, May 29, 2020 at 5:30 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > Looks semi-sane, but it's too close to the merge window at the moment
+> > for me to take this.  If there's no objections by the time 5.8-rc1 is
+> > out, I'll queue it up in my tree for 5.9-rc1.
+>
+> Another friendly reminder :)
 
-Applied to for-next, thanks
+*nudge* *nudge*
 
-Jason
+-Saravana
