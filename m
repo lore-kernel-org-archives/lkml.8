@@ -2,113 +2,112 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A87C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83B3206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E504420702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:32:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="PoaKW+Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgGFNaF (ORCPT
+        id S1729163AbgGFNcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:30:05 -0400
-Received: from smtprelay0214.hostedemail.com ([216.40.44.214]:55124 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728961AbgGFNaE (ORCPT
+        Mon, 6 Jul 2020 09:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbgGFNcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:30:04 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id CF52A181D3039;
-        Mon,  6 Jul 2020 13:30:03 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pail57_0908a1c26eac
-X-Filterd-Recvd-Size: 3207
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  6 Jul 2020 13:30:02 +0000 (UTC)
-Message-ID: <10eeae911ab653036554f5599ba34406572acaa9.camel@perches.com>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-From:   Joe Perches <joe@perches.com>
-To:     Matthew Wilcox <willy6545@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chris Mason <clm@fb.clm>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 06 Jul 2020 06:30:01 -0700
-In-Reply-To: <CAFhKne_p_rKN4adhsuyUyBfrS0YwCtoNFNn-x4aFajPmnkR6iQ@mail.gmail.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
-         <87h7ul15le.fsf@notabene.neil.brown.name>
-         <20200706072221.GA1947246@kroah.com>
-         <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
-         <CAFhKne9vswg3Q4mTOz4WP6QWJ8tDH+SNx1Pu7LotLagoNURKgw@mail.gmail.com>
-         <d6f56f5f5e0790ee9c7579eb05c7d92e071ee15a.camel@perches.com>
-         <CAFhKne_p_rKN4adhsuyUyBfrS0YwCtoNFNn-x4aFajPmnkR6iQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 6 Jul 2020 09:32:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C9AC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:32:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f18so32874105wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ko2w1+ycEur/pfHrKptDPRv/FO4AoLBCTaMsUEWlZHA=;
+        b=PoaKW+Yz+CyO9ACCDiOplerrz2RgUUNWJ232tMWiok4Z7kOpmuuTIx/NfRflNAQmUv
+         mNzSDmrvEmiUnrD9dz78LDRo+SxPWFUA+n+hQTHsaqbpYgZNtBiS6IP6Mvm+kuS8RNaq
+         Cl3rs3xK94dUtlu9FPjnZru4TyqusrmB+5oxKEsIvlEl5WX4YzHuZQYj19Yv2vXVF5mm
+         KapHZS61RNuaZUz/LlDMVLOo+nY9UV/erIZygQ3fcKZfgSeIijFZedXYPqcdIyP/WVva
+         jT1Pngr0Yz0u+oWv/dg6k1qEXqwCKKdjwY5/0A3uXHwD1kaRCg2CBsBU4h+ZiSLdC4Th
+         1PWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ko2w1+ycEur/pfHrKptDPRv/FO4AoLBCTaMsUEWlZHA=;
+        b=jRG3h0WbU7WNc5bVZQrFvS28Kxs550JM/8sm8Rl0oJTMOCGC7Gpdjwp46O+gdIYJaO
+         cWKPtBaRbFhncyE3C5BB4ST9pvlIe51fK0tlagALRvAQ3F27uDNdkmlqhorZf6NGdywd
+         F3JBFgZeSoslGWIhUfdNaTk/oJBXcuMeRjZFf4w1gPs3pSmeocJUMXf1zyK7EakXiJ9K
+         Yu3T4ufu1H+eOWLpCVl9DDkQS0QEpASOxn53rjR1syeXu3pBrj8WmLzPvXtxsGxPsvj5
+         d6CzfEc2olBeX4jLW7DKZKq8x9wVHpdSaGfwbsg0B2j8A7f4PrWAxvzBoxArPbzM7yae
+         4YuA==
+X-Gm-Message-State: AOAM532ajn+tR6wEBCc3k0o2lr8RZvDu0IR/pkZUsk7Gfn7ClPbfiZ5J
+        pTGzq97MMsQCwz1UFABsJFfhxiYpD8KV6+1c8bJv2tDz
+X-Google-Smtp-Source: ABdhPJy+b4oK+stysikQj1MtAzUoVr5iiIUynI8OhGa5g7IJ/LIa2IUN1+VKuIkcaMKbKNOMSzo5MZNW5ArSDO0FpAQ=
+X-Received: by 2002:adf:fe0e:: with SMTP id n14mr47894756wrr.325.1594042342000;
+ Mon, 06 Jul 2020 06:32:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <mvmeepoddt1.fsf@suse.de>
+In-Reply-To: <mvmeepoddt1.fsf@suse.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 6 Jul 2020 19:02:10 +0530
+Message-ID: <CAAhSdy2c6t6TkwCCU+J9iV0jynNOyzm5fRcXz2CwqB=hhvJC6Q@mail.gmail.com>
+Subject: Re: [PATCH] riscv: use 16KB kernel stack on 64-bit
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-06 at 09:04 -0400, Matthew Wilcox wrote:
-> On Mon, Jul 6, 2020 at 8:59 AM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2020-07-06 at 08:51 -0400, Matthew Wilcox wrote:
-> > > In terms of number of lines of code using the word, it's only seventh
-> > > in drivers/:
-> > > 
-> > > $ for i in drivers/*; do c=$(find $i -type f |xargs grep slave |wc
-> > > -l); echo "$c $i"; done |sort -rn |head
-> > > 5218 drivers/net
-> > > 1341 drivers/dma
-> > > 988 drivers/i2c
-> > > 695 drivers/gpu
-> > > 666 drivers/soundwire
-> > > 665 drivers/spi
-> > > 559 drivers/w1
-> > > 461 drivers/infiniband
-> > > 389 drivers/media
-> > > 301 drivers/scsi
-> > 
-> > I get rather different and much lower numbers
-> > 
-> > $ git grep -i -w slave drivers | \
-> >   cut -f1,2 -d/ | uniq -c | sort -rn | head -20 | cat -n
-> 
-> That's because you're using grep -w which excludes, for example,
-> slave_configure in drivers/scsi.
+On Mon, Jul 6, 2020 at 6:02 PM Andreas Schwab <schwab@suse.de> wrote:
+>
+> With the current 8KB stack size there are frequent overflows in a 64-bit
+> configuration.
+>
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> ---
+>  arch/riscv/include/asm/thread_info.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+> index 1dd12a0cbb2b..464a2bbc97ea 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -12,7 +12,11 @@
+>  #include <linux/const.h>
+>
+>  /* thread information allocation */
+> +#ifdef CONFIG_64BIT
+> +#define THREAD_SIZE_ORDER      (2)
+> +#else
+>  #define THREAD_SIZE_ORDER      (1)
+> +#endif
+>  #define THREAD_SIZE            (PAGE_SIZE << THREAD_SIZE_ORDER)
+>
+>  #ifndef __ASSEMBLY__
+> --
+> 2.26.2
+>
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+> "And now for something completely different."
 
-upper/lower case uses too...  (anyway, there are a lot)
+Looks good to me.
 
-$ git grep -i -w -P '\w*slave\w*' drivers | \
-  cut -f1,2 -d/ | uniq -c | sort -rn | head -20 | cat -n
-     1	   5683 drivers/net
-     2	   2118 drivers/gpu
-     3	   1807 drivers/dma
-     4	   1389 drivers/i2c
-     5	    866 drivers/interconnect
-     6	    835 drivers/soundwire
-     7	    821 drivers/spi
-     8	    698 drivers/w1
-     9	    508 drivers/media
-    10	    481 drivers/infiniband
-    11	    440 drivers/ata
-    12	    317 drivers/scsi
-    13	    267 drivers/fsi
-    14	    240 drivers/tty
-    15	    225 drivers/vme
-    16	    223 drivers/staging
-    17	    157 drivers/mmc
-    18	    155 drivers/usb
-    19	    141 drivers/video
-    20	    140 drivers/char
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-
+Regards,
+Anup
