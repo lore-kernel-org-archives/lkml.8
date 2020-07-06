@@ -2,120 +2,162 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3947420760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3281F206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdsgjP2h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1AKPGoBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgGFJT0 (ORCPT
+        id S1728643AbgGFJUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728024AbgGFJTZ (ORCPT
+        Mon, 6 Jul 2020 05:20:42 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:16636 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728024AbgGFJUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:19:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E748C061794;
-        Mon,  6 Jul 2020 02:19:25 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id lx13so22954292ejb.4;
-        Mon, 06 Jul 2020 02:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lchUO1dlDfUYCYrUAqvNoMb8oBzYvbwPwcFLBL/UWM8=;
-        b=hdsgjP2hE8yxjHEjYbHidV9MmgUg2X8wLco4PI2MV4THSoaLVuAxVibtoJ/7MdT0le
-         kSLbc7Ke2zi0m40r4i+TMctLB1V8+WYs1hAOs3fgKcQcBJ2hOYYcG8l74YafFHkBjHIT
-         akYHK/Lz51XpPiZJmmsE3pkyPEtgCkqqNa14TXSc8rACURMT1c/vBY5TT6qaiuH9fnYl
-         xd64Tygyv7TLEqTwQodBVss80qPg4bMipzM16WVN4z3aHWZg+byY9t/7U4d9ek0X0hNr
-         DYVhM/6c5hyGgtapHebdwbGhsE+FWFQlUcNfZVJrFELFMi5vFzyJtUwJhtu5+wVsy77t
-         imcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=lchUO1dlDfUYCYrUAqvNoMb8oBzYvbwPwcFLBL/UWM8=;
-        b=oHP2xbtulwhAyDLS7ybVu+mFBEdkqMHLzC7QLEcjs4RX+zco2kynRF1Buj9coDdXaN
-         haYY+NABC7Hr+/FhVOqOwIGbEL39BndRtADeaHZVz57OoJW7Luqh6Ad0y4bkrSbfPhOW
-         1opAGmTXWERcxQfuh+FlFSr6r03OHe2GlavLlykXH9trR1+XGFNHL08HOWjSynlu3PoW
-         5iHwowaHubInPFRMy/wAEm3mCqaGwf06RYVcykgTWTb7IOICR4Nbau8iTgNwuGT1kZaP
-         JeHOcRxuBMnQeJwgt/4cOadvkwgsmo/qMdPyhscGqon4oc+3wKlhos03d1HrSVbiEQrL
-         eFQA==
-X-Gm-Message-State: AOAM533Sb43D/hMEC72ZjvygWBUUG9DWr0z4KTUsWX9MVf1k+pv1o8zg
-        R9301Cto7FnXIJkt5+VJv5k=
-X-Google-Smtp-Source: ABdhPJxpdvG7Y1T+/SfT/eLp8ctUJncfeDiIOqgWi6ZkRfuFvfNr2HxlP92Ub7FGcIabbNuCaewyJA==
-X-Received: by 2002:a17:906:b0d3:: with SMTP id bk19mr45172900ejb.167.1594027163884;
-        Mon, 06 Jul 2020 02:19:23 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.gmail.com with ESMTPSA id d23sm15975386eja.27.2020.07.06.02.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 02:19:23 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] scsi: ufs: change ufshcd_comp_devman_upiu() to ufshcd_compose_devman_upiu()
-Date:   Mon,  6 Jul 2020 11:19:05 +0200
-Message-Id: <20200706091905.12885-3-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706091905.12885-1-huobean@gmail.com>
-References: <20200706091905.12885-1-huobean@gmail.com>
+        Mon, 6 Jul 2020 05:20:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594027240; x=1625563240;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=geAAVdtwO9Bz84BCA+quZKFfwpYizDUN5bzgDqOE4NM=;
+  b=1AKPGoBlxBDES05s/4m52Msn700vKW+JNLzm3nIPpGIeNp+bBa/wpqlS
+   msdeI5rUgSRK37X9w7LpZ9NuQd70Ub/oKUhq7FZFbTotZXeofyRgp1G27
+   T6L8xZwdjXbKgdSAMDo2Z5boU5ohyEHRk2kUFppA7iz6R0FBjDtUGqY16
+   oxu4CRskNUgc43eGgvL7vB9gOY7EZgwgvr8yerzfncNIKH1YPe04ouU2P
+   26OL8j5HxZvskqh2M3iyonZJEsbxsnUHWDMgT+682ij78uoEPE/SJxIVz
+   i7HBhbdgHVubwo+GZ/G0MdQ9ARE1Ha5Qo7Kenk2F7opGqAG3MjqnrkVxO
+   g==;
+IronPort-SDR: a4wiyh8ZLodXlPZofkiDLjAxKkw4XNbH6tGjpYtQgZWkvtn6952TmkjZRVIBBqFoIuVIcZuVHg
+ CkOtL99zqsZ/0BnvjPHamwLaK8mzoGDNz6EDOdcDCvvS5+9v45JiGnDkVJQewMm2bNU2OhWwCS
+ xatBqm1DNK71T9MQ2DFNWkPYrPyVNSIvVH4TYiD8fF00Cfk3+hIRP1riDgLPGkBzV3LEIDYz3L
+ F/ASHhMyT4fWJha0VSo4+TLguYPrSdDnGdVUM3HYPs9Phw6xdctj1psdaLhU0FvbcI8kVFFlGU
+ bw0=
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="18108960"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jul 2020 02:20:39 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 6 Jul 2020 02:20:39 -0700
+Received: from soft-dev3.localdomain (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 6 Jul 2020 02:20:12 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 00/12] bridge: mrp: Add support for interconnect ring
+Date:   Mon, 6 Jul 2020 11:18:30 +0200
+Message-ID: <20200706091842.3324565-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+This patch series extends existing MRP to add support for interconnect ring.  An
+interconnect ring is a ring that connects 2 rings. In this way is possible to
+connect multiple rings. Each interconnect ring is form of 4 nodes, in which 3
+have the role MIC(Media Redundancy Interconnect Client) and one has the role
+MIM(Media Redundancy Interconnect Manager). All these nodes need to have the
+same ID and the ID needs to be unique between multiple interconnect rings. And 2
+nodes needs to be part of one ring and the other 2 nodes needs to be part of the
+other ring that is connected.
 
-ufshcd_comp_devman_upiu() alwasy make me confuse that it is a request
-completion calling function. Change it to ufshcd_compose_devman_upiu().
+                 +---------+
+                 |         |
+      +----------|   MRM   |---------------+
+      |          |         |               |
+      |          +---------+               |
+      |                                    |
+      |                                    |
+      |                                    |
++--------------+                  +-----------------+
+|              |                  |                 |
+|  MRC/MIC     |------------------|    MRC/MIM      |
+|              |                  |                 |
++--------------+                  +-----------------+
+      |                                     |
+      |Interconnect port                    |Interconnect port
+      |                                     |
+      |                                     |
++--------------+                  +-----------------+
+|              |                  |                 |
+|  MRC/MIC     |----------------- |   MRC/MIC       |
+|              |                  |                 |
++--------------+                  +-----------------+
+      |                                     |
+      |                                     |
+      |          +---------+                |
+      |          |         |                |
+      +----------|  MRM    |----------------+
+                 |         |
+                 +---------+
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Each node in a ring needs to have one of the following ring roles, MRM or MRC.
+And it can also have an interconnect role like MIM or MIC if it is part of an
+interconnect ring. In the figure above the MRM doesn't have any interconnect
+role but the MRC from the top ring have the interconnect roles MIC respectively
+MIM. Therefore it is not possible for a node to have only an interconnect role.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 173deee37e26..96d830bb900f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2368,12 +2368,13 @@ static inline void ufshcd_prepare_utp_nop_upiu(struct ufshcd_lrb *lrbp)
- }
- 
- /**
-- * ufshcd_comp_devman_upiu - UFS Protocol Information Unit(UPIU)
-+ * ufshcd_compose_devman_upiu - UFS Protocol Information Unit(UPIU)
-  *			     for Device Management Purposes
-  * @hba: per adapter instance
-  * @lrbp: pointer to local reference block
-  */
--static int ufshcd_comp_devman_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
-+static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
-+				      struct ufshcd_lrb *lrbp)
- {
- 	u32 upiu_flags;
- 	int ret = 0;
-@@ -2564,7 +2565,7 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
- 	lrbp->intr_cmd = true; /* No interrupt aggregation */
- 	hba->dev_cmd.type = cmd_type;
- 
--	return ufshcd_comp_devman_upiu(hba, lrbp);
-+	return ufshcd_compose_devman_upiu(hba, lrbp);
- }
- 
- static int
+There are 2 ways for interconnect ring to detect when is open or closed:
+1. To use CCM frames on the interconnect port to detect when the interconnect
+   link goes down/up. This mode is called LC-mode.
+2. To send InTest frames on all 3 ports(2 ring ports and 1 interconnect port)
+   and detect when these frames are received back. This mode is called RC-mode.
+
+This patch series adds support only for RC-mode. Where MIM sends InTest frames
+on all 3 ports and detects when it receives back the InTest. When it receives
+the InTest it means that the ring is closed so it would set the interconnect
+port in blocking state. If it stops receiving the InTest frames then it would
+set the port in forwarding state and it would send InTopo frames. These InTopo
+frames will be received by MRM nodes and process them. And then the MRM will
+send Topo frames in the rings so each client will clear its FDB.
+
+Horatiu Vultur (12):
+  switchdev: mrp: Extend switchdev API for MRP Interconnect
+  bridge: uapi: mrp: Extend MRP attributes for MRP interconnect
+  bridge: mrp: Extend bridge interface
+  bridge: mrp: Extend br_mrp for MRP interconnect
+  bridge: mrp: Rename br_mrp_port_open to br_mrp_ring_port_open
+  bridge: mrp: Add br_mrp_in_port_open function
+  bridge: switchdev: mrp: Extend MRP API for switchdev for MRP
+    Interconnect
+  bridge: mrp: Implement the MRP Interconnect API
+  bridge: mrp: Extend MRP netlink interface for configuring MRP
+    interconnect
+  bridge: uapi: mrp: Extend MRP_INFO attributes for interconnect status
+  bridge: mrp: Extend br_mrp_fill_info
+  net: bridge: Add port attribute IFLA_BRPORT_MRP_IN_OPEN
+
+ include/linux/if_bridge.h          |   1 +
+ include/net/switchdev.h            |  38 +++
+ include/uapi/linux/if_bridge.h     |  58 ++++
+ include/uapi/linux/if_link.h       |   1 +
+ include/uapi/linux/mrp_bridge.h    |  38 +++
+ net/bridge/br_mrp.c                | 531 +++++++++++++++++++++++++++--
+ net/bridge/br_mrp_netlink.c        | 182 +++++++++-
+ net/bridge/br_mrp_switchdev.c      |  62 ++++
+ net/bridge/br_netlink.c            |   3 +
+ net/bridge/br_private_mrp.h        |  27 +-
+ tools/include/uapi/linux/if_link.h |   1 +
+ 11 files changed, 906 insertions(+), 36 deletions(-)
+
 -- 
-2.17.1
+2.27.0
 
