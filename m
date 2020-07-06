@@ -2,95 +2,125 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05251C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3DA206CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pNYHdXo3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rhK/PrOr"
+	by mail.kernel.org (Postfix) with ESMTP id DF4E0206CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgGFOqg (ORCPT
+        id S1729302AbgGFOrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgGFOqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:46:36 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58E1C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:46:35 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594046794;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LraJN8c9SSrjQA7IMqbSzEalKGMV2AcQF0lddX0uZjw=;
-        b=pNYHdXo3uo06jVPYTs7f38ecXnHKAST/Jw10LKSmqNvuCrML0UwO0y/15jWeQnhradofZd
-        +Nl/qgtAwILnB8NoKFCKisXkLWR7BtpP4mHV2ya3lIgKubzSrz7Nl8IuBnTTW43mC3De5h
-        +mfn0kiSWX9QdJmpBvuTv2IXRX5UwFq9Fo8/FiakmA0lMaaDJZs0GZv3qrxznNXwUDqvz+
-        wWpRu4VbbDA8w14w2X6A/nX73TXoIWs/OfLMGBjzWJKw5AK5veuHSrd/BObPv/AE9gDGes
-        ax0bNOOZeDA78EEFKD5D8YRNG2L2FCKcd8ojCoHH8PpKzaXP07MyjIc9z0HaEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594046794;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LraJN8c9SSrjQA7IMqbSzEalKGMV2AcQF0lddX0uZjw=;
-        b=rhK/PrOrssg2qs4+fJwuPBKS2Jj0jnIlqtOcPI9cYaIDbhhyDfoo79VcXe6LobJDT3JFjY
-        E3Gy6fH4LFPHTIAw==
-To:     Mihai Carabas <mihai.carabas@oracle.com>,
+        Mon, 6 Jul 2020 10:47:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35175 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729250AbgGFOrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 10:47:52 -0400
+IronPort-SDR: 13WpvrGfTejv2N6p1adizMtoR7SBYme3eZHlhX+uKiZI3KXdyQ9GMKSm9rkz9JBOJA6yKPHLqU
+ af1C7nyhs8BA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="212408804"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="212408804"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 07:47:51 -0700
+IronPort-SDR: jFS7KGHVaRAaMznduEL5fQXp/b6JrXmLh7bBjVzc4f+0S77nN/JJ84Mu6X2OqlMKgmg2yQmoLZ
+ kIHjP3M6+oLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="283058734"
+Received: from jakubzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.237])
+  by orsmga006.jf.intel.com with ESMTP; 06 Jul 2020 07:47:46 -0700
+Date:   Mon, 6 Jul 2020 17:47:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Peter.Huewe@infineon.com
+Cc:     linux-integrity@vger.kernel.org, kjhall@us.ibm.com,
+        ferry.toth@elsinga.info, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, akpm@osdl.org,
         linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-        Mihai Carabas <mihai.carabas@oracle.com>
-Subject: Re: [PATCH RFC 3/7] x86: kernel: cpu: bugs.c: modify static_cpu_has to boot_cpu_has
-In-Reply-To: <1593703107-8852-4-git-send-email-mihai.carabas@oracle.com>
-References: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com> <1593703107-8852-4-git-send-email-mihai.carabas@oracle.com>
-Date:   Mon, 06 Jul 2020 16:46:33 +0200
-Message-ID: <87tuykr99y.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Message-ID: <20200706144744.GB6956@linux.intel.com>
+References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+ <e9caad58aba44bb3abeac8569a6bd8ed@infineon.com>
+ <20200706140051.GB3816@linux.intel.com>
+ <20200706144328.GA6956@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706144328.GA6956@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mihai Carabas <mihai.carabas@oracle.com> writes:
-
-> The usage of static_cpu_has in bugs.c file is counter-productive
-> since the code is executed once but there is extra effort to patch
-> it and keep alternatives in a special section --- so there is both
-> space and time cost.
->
-> Quote from _static_cpu_has definition:
+On Mon, Jul 06, 2020 at 05:43:35PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jul 06, 2020 at 05:00:51PM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Jul 06, 2020 at 11:46:46AM +0000, Peter.Huewe@infineon.com wrote:
+> > > Hi,
+> > > NACK
+> > > 
+> > > > % git --no-pager grep IFX0102 drivers/char/tpm
+> > > > drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+> > > > drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+> > > > Obviously IFX0102 was added to the HID table for the TCG TIS driver by mistake.
+> > > 
+> > > The HID IFX0102 was NOT added by mistake.
+> > > Let me explain the history a bit:
+> > > 
+> > > Old SLB 9635 / 9630 TPMs had two ways to interface them
+> > > - proprietary 'io' mapped protocol (tpm_infineon) - tis protocol  (tpm_tis)
+> > > 
+> > > Both match the same HID.
+> > > However with the emerging of the tis protocol, the io protocol eventually went away for newer products.
+> > > So all TPM1.2 by IFX match the HID0102 and the TCG generic ones PNP0C31
+> > > 
+> > > So basically you break TPM1.2 support for all (newer) Infineon chips if the platform vendor used the IFX0102 HID as they would speak via tpm_infineon driver.
+> > > The bug must be something different, especially as it only seems to happen after suspend resume.
+> > 
+> > Peter,
+> > 
+> > Looking at dmesg:
+> > 
+> > 1. tmp_infineon initializes cleanly
+> > 2. tpm_tis fails misserably with bunch error messages
+> > 
+> > I'm cool with reverting the patch though. Please send a revert patch and
+> > explain this in the commit message because right now what you are saying
+> > is completely undocumented.
+> > 
+> > Also, this tpm_infineon issue needs to be fixed properly after the
+> > revert.
+> > 
+> > The bugzilla bug is unrelated to this issue but it causes extra harm
+> > fixing any bugs and confusion among the users as the bug discussions
+> > proves.
+> > 
+> > How do we get the quirks for tpm_tis and tpm_infineon so that they can
+> > separate each other?
+> 
+> Also in the revert commit, please add a comment to tpm_tis.c
+> about the existing conflict, e.g.
+> 
 > /*
->  * Static testing of CPU features. Used the same as boot_cpu_has(). It
->  * statically patches the target code for additional performance. Use
->  * static_cpu_has() only in fast paths, where every cycle counts. Which
->  * means that the boot_cpu_has() variant is already fast enough for the
->  * majority of cases and you should stick to using it as it is generally
->  * only two instructions: a RIP-relative MOV and a TEST.
+>  * Legacy Infineon devices can emit illegit warnings as tpm_tis and
+>  * tpm_infineon have a conflicting device ID IFX0102.
 >  */
->
-> There are two other places where static_cpu_has is used and might be
-> considered critical paths: __speculation_ctrl_update() and vmx_l1d_flush().
->
-> Given these facts, changing static_cpu_has to boot_cpu_has is done in
-> order to bypass alternative instructions which cannot be updated at runtime
-> for now.
+> 
+> I'm cool reverting it as long as I get a patch with the required
+> premises to do so and proper documentation, because the issue is
+> still real.
 
-Not going to happen. We are not adding 4 conditionals to context switch
-just to support that late loading horrors. There are better ways to do
-that.
+We do have this kind of thing for MSFT0101 in tpm_tis.c: check_acpi_tpm2().
 
-Thanks,
+This is not the root cause for the bugzilla bug, but is a bug itself,
+and this kind of behaviour should not exist. It makes fixing real bugs
+factors harder when you have drivers putting arbirtrary warnings to
+klog.
 
-        tglx
+
+/Jarkko
