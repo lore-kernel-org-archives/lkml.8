@@ -2,316 +2,175 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2EBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69A8720772
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E577520739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kb5GyZA+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gz9H1zHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgGFGTr (ORCPT
+        id S1728901AbgGFGU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbgGFGTq (ORCPT
+        Mon, 6 Jul 2020 02:20:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24950 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728881AbgGFGU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:19:46 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA8FC061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 23:19:46 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l6so33839670qkc.6
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p8GSicWISxuLf8SI+byIF+xMxTNvfdYQixlttIglDVo=;
-        b=Kb5GyZA+RJu/iVN8HUtF7SZb/AesZh0MC1s2Up/L6gZO8CAX69QBX/18QLSEWJcaQm
-         bV7234iQyfobwViOUP11+RW17wTqDvAX9lQ/LE2y9YLRWlcKoAPKQW+h3hPzjnGF9F9L
-         VGT8cnzbQIlczAjUu/gpZE6GJbtQ1c9wnxnnXylraSfK67Kz3CRTdLE/6cWI1PJBO2m3
-         0dnqBtOtUuC0f6DT2TRVMuZKkS2IdppDH3Okra7WpEYhKJYB3HuNs0o4Y3Mftwob2M/D
-         T4pZRiMkxbGZ8tMKR9UxafTx4d/K3TR2NsxGH67l2E09lNBJ2FgKwvW0py2Uii2yttD7
-         Uxdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8GSicWISxuLf8SI+byIF+xMxTNvfdYQixlttIglDVo=;
-        b=qjmXrfMVXM5W243byH6INUkckoiiAxcVwy+MJBiWpjwdbXBneBiqWA5xKY0Jfsk6Pd
-         1+oRYHX2B0MMpkWvwEzWetNVss5shirHTnjG7heqI0GCWEOMOFvXNKUMpg+qB3XFnKBd
-         KVlfJs8aoEcz7SWgRIrnCZP9DmsTExhSBmr+6/0fbsXPTUfi8scORMVrwLV0rRSzQqOs
-         sfKzPMgzX+BBAF51h8bBhxe2wJs2c6UeKXcWFVu73oGHNQZvg78T5GBSf1xZvLuQ1PPV
-         syTTuxT8Y8P7F2TAAirjRJwGftw5TF59ZCvjFnQUFXXlcX5SroymQACZqvWFlMhX9Pla
-         owFg==
-X-Gm-Message-State: AOAM530Iq1SKsk2FCdI/6X2fnnDyS9bM2sll76QQdVGjUxsLgR+lPKFL
-        213yiUXUxCPPKr/j7OacBQxA1/zYhUPlxArks51yJw==
-X-Google-Smtp-Source: ABdhPJxlC97uRvdNje6Yxi/b5Fq8p0PnY4Y6DnkuEjMt/sh0vf2nWbgdvCADjv0hclufOA80J/fDvD6J6xJwxhe0Nqo=
-X-Received: by 2002:a37:67d4:: with SMTP id b203mr19900712qkc.407.1594016385214;
- Sun, 05 Jul 2020 23:19:45 -0700 (PDT)
+        Mon, 6 Jul 2020 02:20:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594016456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=92GZ3FW44LhK6ZPwgvJk40XZq6/hfhz1RbVOBgdDt9s=;
+        b=Gz9H1zHRSYmx12KOxzF8jPynQnKvG0qDX5XfHgVV2IsqhsbncKuQbkGSklyixSh02UgfdN
+        kgXSv9IkUiNHDd0A8LwSLozkliVmZjXeW9jFhr7B+rCrn9krV5ZfPMB93ZwX3UDyoXT7l6
+        q72ubUJno3MLc+dA2+nlSJ72rjXXNZ8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-rgku8C6SNBGrib4AcC-GFw-1; Mon, 06 Jul 2020 02:20:46 -0400
+X-MC-Unique: rgku8C6SNBGrib4AcC-GFw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2616107ACCD;
+        Mon,  6 Jul 2020 06:20:43 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F8972DE72;
+        Mon,  6 Jul 2020 06:20:33 +0000 (UTC)
+Date:   Mon, 6 Jul 2020 08:20:31 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     syzbot <syzbot+c3157bda041952444952@syzkaller.appspotmail.com>
+Cc:     brouer@redhat.com, andriin@fb.com, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
+        kpsingh@chromium.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: WARNING in bpf_xdp_adjust_tail
+Message-ID: <20200706082031.3e9f206e@carbon>
+In-Reply-To: <0000000000001936ab05a9ac97d1@google.com>
+References: <0000000000001936ab05a9ac97d1@google.com>
 MIME-Version: 1.0
-References: <20200706022150.20848-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200706022150.20848-1-walter-zh.wu@mediatek.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 6 Jul 2020 08:19:33 +0200
-Message-ID: <CACT4Y+akZ5iu2ohQhRqiUd8zkew-NmrUPrA=xYtS1xxHWZ60Og@mail.gmail.com>
-Subject: Re: [PATCH v2] kasan: fix KASAN unit tests for tag-based KASAN
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 4:21 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> We use tag-based KASAN, then KASAN unit tests don't detect out-of-bounds
-> memory access. They need to be fixed.
->
-> With tag-based KASAN, the state of each 16 aligned bytes of memory is
-> encoded in one shadow byte and the shadow value is tag of pointer, so
-> we need to read next shadow byte, the shadow value is not equal to tag
-> value of pointer, so that tag-based KASAN will detect out-of-bounds
-> memory access.
->
-> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Andrey Konovalov <andreyknvl@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
+On Sun, 05 Jul 2020 00:20:18 -0700
+syzbot <syzbot+c3157bda041952444952@syzkaller.appspotmail.com> wrote:
+
+> Hello,
+> 
+> syzbot found the following crash on:
+
+It is WARN that trigger this, due to panic_on_warn set.
+
+It's great to see that syzbot report these, as the WARN_ONCE is meant
+to catch drivers that forget to init xdp->frame_sz.  In this case it is
+XDP-generic that manage to get an oversized SKB run through this code
+path.
+
+
+> HEAD commit:    2ce578ca net: ipv4: Fix wrong type conversion from hint to..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1190cf23100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c3157bda041952444952
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c3157bda041952444952@syzkaller.appspotmail.com
+> 
+
+It would be practical to get the WARN message here (from console output):
+ [  511.164212][T22595] Too BIG xdp->frame_sz = 131072
+
+As call-stack indicate this is XDP-generic (do_xdp_generic).
+Thus the xdp->frame_sz calc comes from:
+
+	xdp->data_hard_start = skb->data - skb_headroom(skb);
+	/* SKB "head" area always have tailroom for skb_shared_info */
+	xdp->frame_sz  = (void *)skb_end_pointer(skb) - xdp->data_hard_start;
+	xdp->frame_sz += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+
+I'm surprised to see a 128KiB (128*1024) sized SKB here (in "head" area).
+How can this happen?
+
+
+> WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 ____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
+> WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 22595 Comm: syz-executor.4 Not tainted 5.8.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x45 kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+> RIP: 0010:____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
+> RIP: 0010:bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
+> Code: 37 fb 84 db 74 09 49 c7 c4 ea ff ff ff eb c7 e8 f8 f5 37 fb 44 89 e6 48 c7 c7 e0 fc fd 88 c6 05 dc f5 6d 04 01 e8 94 3b 09 fb <0f> 0b eb d8 e8 d9 48 77 fb e9 c5 fe ff ff e8 df 48 77 fb e9 92 fe
+> RSP: 0018:ffffc900018878e0 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000040000 RSI: ffffffff815ce8d7 RDI: fffff52000310f0e
+> RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880ae620fcb
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000020000
+> R13: ffff88804c20feef R14: ffff88804c20feef R15: 0000000000000000
+>  bpf_prog_4add87e5301a4105+0x20/0x818
+>  bpf_prog_run_xdp include/linux/filter.h:734 [inline]
+>  netif_receive_generic_xdp+0x70f/0x1760 net/core/dev.c:4647
+>  do_xdp_generic net/core/dev.c:4735 [inline]
+>  do_xdp_generic+0x96/0x1a0 net/core/dev.c:4728
+>  tun_get_user+0x22d2/0x35b0 drivers/net/tun.c:1905
+>  tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:1999
+>  call_write_iter include/linux/fs.h:1907 [inline]
+>  new_sync_write+0x422/0x650 fs/read_write.c:484
+>  __vfs_write+0xc9/0x100 fs/read_write.c:497
+>  vfs_write+0x268/0x5d0 fs/read_write.c:559
+>  ksys_write+0x12d/0x250 fs/read_write.c:612
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x416661
+> Code: Bad RIP value.
+> RSP: 002b:00007f8bc3971c60 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 00000000005095a0 RCX: 0000000000416661
+> RDX: 000000000000fdef RSI: 0000000020000080 RDI: 00000000000000f0
+> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00007f8bc39729d0 R11: 0000000000000293 R12: 00000000ffffffff
+> R13: 0000000000000bfd R14: 00000000004ce559 R15: 00007f8bc39726d4
+> Kernel Offset: disabled
+> 
+> 
 > ---
->
-> changes since v1:
-> - Reduce amount of non-compiled code.
-> - KUnit-KASAN Integration patchset are not merged yet. My patch should
->   have conflict with it, if needed, we can continue to wait it.
->
-> ---
->
->  lib/test_kasan.c | 81 ++++++++++++++++++++++++++++++++++++++----------
->  1 file changed, 64 insertions(+), 17 deletions(-)
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index e3087d90e00d..660664439d52 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -40,7 +40,11 @@ static noinline void __init kmalloc_oob_right(void)
->                 return;
->         }
->
-> -       ptr[size] = 'x';
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               ptr[size] = 'x';
-> +       else
-> +               ptr[size + 5] = 'x';
-> +
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-Hi Walter,
 
-Would if be possible to introduce something like:
 
-#define OOB_TAG_OFF (IS_ENABLED(CONFIG_KASAN_GENERIC) ? 0 : 8)
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-and then add it throughout as
-
-        ptr[size + OOB_TAG_OFF] = 'x';
-
-?
-The current version results in quite some amount of additional code
-that needs to be read, extended  and maintained in the future. So I am
-thinking if it's possible to minimize it somehow...
-
->         kfree(ptr);
->  }
->
-> @@ -92,7 +96,11 @@ static noinline void __init kmalloc_pagealloc_oob_right(void)
->                 return;
->         }
->
-> -       ptr[size] = 0;
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               ptr[size] = 0;
-> +       else
-> +               ptr[size + 6] = 0;
-> +
->         kfree(ptr);
->  }
->
-> @@ -162,7 +170,11 @@ static noinline void __init kmalloc_oob_krealloc_more(void)
->                 return;
->         }
->
-> -       ptr2[size2] = 'x';
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               ptr2[size2] = 'x';
-> +       else
-> +               ptr2[size2 + 13] = 'x';
-> +
->         kfree(ptr2);
->  }
->
-> @@ -180,7 +192,12 @@ static noinline void __init kmalloc_oob_krealloc_less(void)
->                 kfree(ptr1);
->                 return;
->         }
-> -       ptr2[size2] = 'x';
-> +
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               ptr2[size2] = 'x';
-> +       else
-> +               ptr2[size2 + 2] = 'x';
-> +
->         kfree(ptr2);
->  }
->
-> @@ -216,7 +233,11 @@ static noinline void __init kmalloc_oob_memset_2(void)
->                 return;
->         }
->
-> -       memset(ptr+7, 0, 2);
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               memset(ptr+7, 0, 2);
-> +       else
-> +               memset(ptr+15, 0, 2);
-> +
->         kfree(ptr);
->  }
->
-> @@ -232,7 +253,11 @@ static noinline void __init kmalloc_oob_memset_4(void)
->                 return;
->         }
->
-> -       memset(ptr+5, 0, 4);
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               memset(ptr+5, 0, 4);
-> +       else
-> +               memset(ptr+15, 0, 4);
-> +
->         kfree(ptr);
->  }
->
-> @@ -249,7 +274,11 @@ static noinline void __init kmalloc_oob_memset_8(void)
->                 return;
->         }
->
-> -       memset(ptr+1, 0, 8);
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               memset(ptr+1, 0, 8);
-> +       else
-> +               memset(ptr+15, 0, 8);
-> +
->         kfree(ptr);
->  }
->
-> @@ -265,7 +294,11 @@ static noinline void __init kmalloc_oob_memset_16(void)
->                 return;
->         }
->
-> -       memset(ptr+1, 0, 16);
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               memset(ptr+1, 0, 16);
-> +       else
-> +               memset(ptr+15, 0, 16);
-> +
->         kfree(ptr);
->  }
->
-> @@ -281,7 +314,11 @@ static noinline void __init kmalloc_oob_in_memset(void)
->                 return;
->         }
->
-> -       memset(ptr, 0, size+5);
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               memset(ptr, 0, size+5);
-> +       else
-> +               memset(ptr, 0, size+7);
-> +
->         kfree(ptr);
->  }
->
-> @@ -415,7 +452,11 @@ static noinline void __init kmem_cache_oob(void)
->                 return;
->         }
->
-> -       *p = p[size];
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               *p = p[size];
-> +       else
-> +               *p = p[size + 8];
-> +
->         kmem_cache_free(cache, p);
->         kmem_cache_destroy(cache);
->  }
-> @@ -497,6 +538,7 @@ static noinline void __init copy_user_test(void)
->         char __user *usermem;
->         size_t size = 10;
->         int unused;
-> +       size_t oob_size;
->
->         kmem = kmalloc(size, GFP_KERNEL);
->         if (!kmem)
-> @@ -511,26 +553,31 @@ static noinline void __init copy_user_test(void)
->                 return;
->         }
->
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
-> +               oob_size = 1;
-> +       else
-> +               oob_size = 7;
-> +
->         pr_info("out-of-bounds in copy_from_user()\n");
-> -       unused = copy_from_user(kmem, usermem, size + 1);
-> +       unused = copy_from_user(kmem, usermem, size + oob_size);
->
->         pr_info("out-of-bounds in copy_to_user()\n");
-> -       unused = copy_to_user(usermem, kmem, size + 1);
-> +       unused = copy_to_user(usermem, kmem, size + oob_size);
->
->         pr_info("out-of-bounds in __copy_from_user()\n");
-> -       unused = __copy_from_user(kmem, usermem, size + 1);
-> +       unused = __copy_from_user(kmem, usermem, size + oob_size);
->
->         pr_info("out-of-bounds in __copy_to_user()\n");
-> -       unused = __copy_to_user(usermem, kmem, size + 1);
-> +       unused = __copy_to_user(usermem, kmem, size + oob_size);
->
->         pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
-> -       unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
-> +       unused = __copy_from_user_inatomic(kmem, usermem, size + oob_size);
->
->         pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
-> -       unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-> +       unused = __copy_to_user_inatomic(usermem, kmem, size + oob_size);
->
->         pr_info("out-of-bounds in strncpy_from_user()\n");
-> -       unused = strncpy_from_user(kmem, usermem, size + 1);
-> +       unused = strncpy_from_user(kmem, usermem, size + oob_size);
->
->         vm_munmap((unsigned long)usermem, PAGE_SIZE);
->         kfree(kmem);
-> --
-> 2.18.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200706022150.20848-1-walter-zh.wu%40mediatek.com.
