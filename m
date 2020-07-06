@@ -2,51 +2,50 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C062420773
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE52820771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbgGFPMt (ORCPT
+        id S1729497AbgGFPMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:12:49 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49289 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729321AbgGFPMZ (ORCPT
+        Mon, 6 Jul 2020 11:12:54 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:36022 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729340AbgGFPMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:12:25 -0400
-Received: by mail-io1-f71.google.com with SMTP id d20so23746010iom.16
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:12:23 -0700 (PDT)
+        Mon, 6 Jul 2020 11:12:24 -0400
+Received: by mail-il1-f197.google.com with SMTP id l11so28081911ilc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:12:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t5YQZMq4RXwOnISwhUUAYFoOJYk5C4DlwBLzNYjbHzo=;
-        b=RgUL8r2oT2vqMZn3iLvSImh1AcMBVDCskMnygNQQikiK/8qTVN+yywcVVdEWbEYY5f
-         W+AzErYYQ4oe9NkAhl6J1qblWXmCQllHSeqB9LXJe6ZFbOfxPqyh6kxQv8B28US8pLwq
-         5buYptn8EJKDiIxditKAHGCp/utWeX4I6BlPFjTADp/4LW0VH2fTo4AK88oUtLOHDLG2
-         Ro3u4t4/NKSzM/aZ4FlCIUrD1OJ0H5KIBnv40HmjYLOhrKFFiPLDsnt1oPanuN/KMLcN
-         4Du60WRFSAtDwpryL2+8gZnBIa+2U+TWvfwo0H+ttMZQrmsvLVIlkVVKWA3yjPffGzU5
-         Ic6w==
-X-Gm-Message-State: AOAM532/Nmwi9W6QN2pLmUsp07VolpsnSZ9DInhi1ruxKtlGKByTUDXF
-        7OwWPrhcZYG/vkP5XKLRYWfRSRPNsrZNxXlv+jKqG0dZFZsN
-X-Google-Smtp-Source: ABdhPJw8q1DhEQ4oGid3p2FMGyLo9Ywk/s6zki4JdF8B2cXxXGGdEJzOtldDLdTC1tzZsF4Q/7jMtmlhm5M/TC7EtcK9LAtyy1Ns
+        bh=hyeaJTylkqD9hhiRD1x9Nh4wEJMt0NUu/uugBm1Y8f4=;
+        b=D1xxL3llaBHQ68PJIEeBi07tWhGG5s+JrnFxMMBsIEwD1xFYRpjGPBGCEgVU14yPHT
+         /qA28NKhFQ2FBcM6qRQn7wJwW6xgFon6Py8kIzwLc3ia13w8/xo66Q7jE6Ds63xhvQWy
+         hBn50r5JMNs33oFVy1rtSK9Gvcmn2K3Ho1wLKNqCdQKrrXgrYlsKefkT8Okkawq7p6lW
+         ZrcZkO2KY55WfR9wn4PKYz3cPoOClo5EK3q5y0PO13HZUfqg15UhjhihYhH7TF3UAb80
+         +93EQjh0nKfQUDwHerLAY0w/My6ht3P4XIPDKqq9Tc9z+p/NK2U0H0P1pnuld5SsO9zk
+         HACQ==
+X-Gm-Message-State: AOAM530ML+1sHWH/ckaNVxkfBsguT8TLTaxPsVJ7Kl5tGxI73UyruHsU
+        b20pyvWPe29TUqSnWeZVmn36ImFQqpazLO0u1W9s2/yTqChy
+X-Google-Smtp-Source: ABdhPJy9CerZaSSQ83MwUtuQx3LJg8IK3NlZ9OWlyyK94Zf3N09vXb2BlHrcuOdMhIiFJFAHovmo1xIn/4uuU2BZ/Lhk9HRrL9T2
 MIME-Version: 1.0
-X-Received: by 2002:a02:a909:: with SMTP id n9mr48554634jam.70.1594048343420;
+X-Received: by 2002:a5e:9309:: with SMTP id k9mr25400736iom.135.1594048343819;
  Mon, 06 Jul 2020 08:12:23 -0700 (PDT)
 Date:   Mon, 06 Jul 2020 08:12:23 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000043b51d05a9c74d88@google.com>
-Subject: INFO: task hung in __input_unregister_device (3)
-From:   syzbot <syzbot+b27403ccf54199409c6e@syzkaller.appspotmail.com>
-To:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rydberg@bitmath.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000049cb9905a9c74dfb@google.com>
+Subject: INFO: task hung in __sock_release
+From:   syzbot <syzbot+d12405ae80a8acdf5a9d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,200 +56,148 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    2089c6ed usb: core: kcov: collect coverage from usb comple..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=171ff671100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7479d3935864b1b
-dashboard link: https://syzkaller.appspot.com/bug?extid=b27403ccf54199409c6e
+HEAD commit:    423b8baf Merge branch 'akpm' (patches from Andrew)
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=109ad97e100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b3368ce0cc5f5ace
+dashboard link: https://syzkaller.appspot.com/bug?extid=d12405ae80a8acdf5a9d
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b27403ccf54199409c6e@syzkaller.appspotmail.com
+Reported-by: syzbot+d12405ae80a8acdf5a9d@syzkaller.appspotmail.com
 
-INFO: task kworker/0:1:12 blocked for more than 143 seconds.
+INFO: task syz-executor.1:4415 blocked for more than 143 seconds.
       Not tainted 5.7.0-rc6-syzkaller #0
 "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kworker/0:1     D24248    12      2 0x80004000
-Workqueue: usb_hub_wq hub_event
+syz-executor.1  D26032  4415   7163 0x80004006
 Call Trace:
  context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x892/0x1d80 kernel/sched/core.c:4083
- lock_downgrade+0x720/0x720 kernel/locking/lockdep.c:4599
+ __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
+ rwsem_down_write_slowpath+0x90a/0xf90 kernel/locking/rwsem.c:1216
  __sched_text_start+0x8/0x8
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x3c7/0x5d0 kernel/locking/lockdep.c:3702
- schedule+0xcd/0x2b0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xc/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x87c/0x1360 kernel/locking/mutex.c:1103
- input_disconnect_device drivers/input/input.c:733 [inline]
- __input_unregister_device+0x23/0x430 drivers/input/input.c:2086
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- mark_held_locks+0x9f/0xe0 kernel/locking/lockdep.c:3628
- __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
- _raw_spin_unlock_irq+0x1f/0x30 kernel/locking/spinlock.c:199
- __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
- _raw_spin_unlock_irq+0x1f/0x30 kernel/locking/spinlock.c:199
- __read_once_size include/linux/compiler.h:199 [inline]
- list_empty include/linux/list.h:282 [inline]
- usb_hcd_flush_endpoint+0x15c/0x410 drivers/usb/core/hcd.c:1787
- input_disconnect_device drivers/input/input.c:733 [inline]
- __input_unregister_device+0x23/0x430 drivers/input/input.c:2086
- input_disconnect_device drivers/input/input.c:733 [inline]
- __input_unregister_device+0x23/0x430 drivers/input/input.c:2086
- input_unregister_device+0xb4/0xf0 drivers/input/input.c:2273
- iforce_usb_disconnect+0x5e/0xf0 drivers/input/joystick/iforce/iforce-usb.c:261
- usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
- __pm_runtime_idle+0xd1/0x310 drivers/base/power/runtime.c:1021
- usb_autoresume_device+0x60/0x60 include/linux/pm_runtime.h:252
- __device_release_driver drivers/base/dd.c:1110 [inline]
- device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1141
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
- device_del+0x481/0xd30 drivers/base/core.c:2715
- device_create_with_groups+0x120/0x120 drivers/base/core.c:3308
- usb_remove_ep_devs+0x3e/0x80 drivers/usb/core/endpoint.c:215
- remove_intf_ep_devs+0x13f/0x1d0 drivers/usb/core/message.c:1121
- usb_disable_device+0x23d/0x790 drivers/usb/core/message.c:1245
- usb_disconnect+0x293/0x900 drivers/usb/core/hub.c:2217
- hub_port_connect drivers/usb/core/hub.c:5059 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x1abf/0x43c0 drivers/usb/core/hub.c:5576
- hub_port_debounce+0x350/0x350 drivers/usb/core/hub.c:4441
- __x64_sys_sysinfo+0x30/0x40 kernel/sys.c:2604
- lock_is_held include/linux/lockdep.h:406 [inline]
- rcu_read_lock_sched_held+0x9c/0xd0 kernel/rcu/update.c:121
- rcu_read_lock_bh_held+0xb0/0xb0 kernel/rcu/update.c:333
- __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
- _raw_spin_unlock_irq+0x1f/0x30 kernel/locking/spinlock.c:199
- process_one_work+0x965/0x1630 kernel/workqueue.c:2268
- lock_release+0x720/0x720 kernel/locking/lockdep.c:4689
- pwq_dec_nr_in_flight+0x310/0x310 kernel/workqueue.c:1198
- rwlock_bug.part.0+0x90/0x90 include/linux/sched.h:1332
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- process_one_work+0x1630/0x1630 kernel/workqueue.c:1029
- kthread+0x326/0x430 kernel/kthread.c:268
- kthread_create_on_node+0xf0/0xf0 kernel/kthread.c:405
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4158
+ rwsem_down_write_slowpath+0x706/0xf90 kernel/locking/rwsem.c:1235
+ rwsem_mark_wake+0x8d0/0x8d0 include/linux/compiler.h:199
+ lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+ unregister_netdevice_notifier+0x1e/0x170 net/core/dev.c:1776
+ lock_release+0x800/0x800 kernel/locking/lockdep.c:4689
+ __sock_release+0x280/0x280 net/socket.c:605
+ __down_write kernel/locking/rwsem.c:1389 [inline]
+ down_write+0x137/0x150 kernel/locking/rwsem.c:1532
+ atomic64_try_cmpxchg include/asm-generic/atomic-instrumented.h:1504 [inline]
+ atomic_long_try_cmpxchg_acquire include/asm-generic/atomic-long.h:442 [inline]
+ __down_write kernel/locking/rwsem.c:1387 [inline]
+ down_write+0xb2/0x150 kernel/locking/rwsem.c:1532
+ __down_write kernel/locking/rwsem.c:1389 [inline]
+ down_write+0x137/0x150 kernel/locking/rwsem.c:1532
+ __down_timeout+0x2d0/0x2d0
+ unregister_netdevice_notifier+0x1e/0x170 net/core/dev.c:1776
+ __sock_release+0x280/0x280 net/socket.c:605
+ raw_release+0x53/0x730 net/can/raw.c:354
+ fcntl_setlk+0xcc0/0xcc0 fs/locks.c:2542
+ __sock_release+0x280/0x280 net/socket.c:605
+ __sock_release+0xcd/0x280 net/socket.c:605
+ sock_close+0x18/0x20 net/socket.c:1283
+ __fput+0x33e/0x880 fs/file_table.c:280
+ task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xb34/0x2dd0 kernel/exit.c:796
+ find_held_lock+0x2d/0x110 kernel/locking/lockdep.c:4458
+ mm_update_next_owner+0x7a0/0x7a0 kernel/exit.c:375
+ lock_downgrade+0x840/0x840 kernel/locking/lockdep.c:4579
+ do_group_exit+0x125/0x340 kernel/exit.c:894
+ get_signal+0x47b/0x24e0 kernel/signal.c:2739
+ find_held_lock+0x2d/0x110 kernel/locking/lockdep.c:4458
+ do_signal+0x81/0x2240 arch/x86/kernel/signal.c:784
+ lock_downgrade+0x840/0x840 kernel/locking/lockdep.c:4579
+ rcu_read_lock_any_held.part.0+0x50/0x50 arch/x86/include/asm/paravirt.h:754
+ get_sigframe.isra.0+0x730/0x730 arch/x86/kernel/signal.c:268
+ rcu_read_unlock_sched include/linux/rcupdate.h:732 [inline]
+ __fd_install+0x1e6/0x600 fs/file.c:613
+ __sys_socket+0x16d/0x200 net/socket.c:438
+ move_addr_to_kernel+0x70/0x70 net/socket.c:195
+ exit_to_usermode_loop+0x26c/0x360 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
 Showing all locks held in the system:
-3 locks held by kworker/0:0/5:
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: process_one_work+0x844/0x1630 kernel/workqueue.c:2239
- #1: ffff8881da1d7dc0 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: process_one_work+0x878/0x1630 kernel/workqueue.c:2243
- #2: ffff8881d4a7e218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d4a7e218 (&dev->mutex){....}-{3:3}, at: hub_event+0x1be/0x43c0 drivers/usb/core/hub.c:5522
-6 locks held by kworker/0:1/12:
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8881d8d5d938 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: process_one_work+0x844/0x1630 kernel/workqueue.c:2239
- #1: ffff8881da21fdc0 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: process_one_work+0x878/0x1630 kernel/workqueue.c:2243
- #2: ffff8881d4aa6218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d4aa6218 (&dev->mutex){....}-{3:3}, at: hub_event+0x1be/0x43c0 drivers/usb/core/hub.c:5522
- #3: ffff8881d8b36218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #3: ffff8881d8b36218 (&dev->mutex){....}-{3:3}, at: usb_disconnect+0x91/0x900 drivers/usb/core/hub.c:2208
- #4: ffff8881cb8a11a8 (&dev->mutex){....}-{3:3}, at: device_release_driver_internal+0x23/0x500 drivers/base/dd.c:1138
- #5: ffff8881c54602c0 (&dev->mutex#2){+.+.}-{3:3}, at: input_disconnect_device drivers/input/input.c:733 [inline]
- #5: ffff8881c54602c0 (&dev->mutex#2){+.+.}-{3:3}, at: __input_unregister_device+0x23/0x430 drivers/input/input.c:2086
-1 lock held by khungtaskd/23:
- #0: ffffffff87111260 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x264 kernel/locking/lockdep.c:5754
-5 locks held by kworker/0:2/94:
-1 lock held by in:imklog/255:
- #0: ffff8881c92f14f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-2 locks held by agetty/268:
- #0: ffff8881d38d8098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
- #1: ffffc900009fa2e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x220/0x1b30 drivers/tty/n_tty.c:2156
-2 locks held by kworker/0:3/3081:
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x844/0x1630 kernel/workqueue.c:2239
- #1: ffff8881ab877dc0 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x878/0x1630 kernel/workqueue.c:2243
-3 locks held by kworker/0:5/3089:
-6 locks held by kworker/0:6/3227:
-6 locks held by kworker/1:8/3371:
-2 locks held by systemd-udevd/3514:
- #0: ffff8881abdd9160 (&evdev->mutex){+.+.}-{3:3}, at: evdev_close_device drivers/input/evdev.c:425 [inline]
- #0: ffff8881abdd9160 (&evdev->mutex){+.+.}-{3:3}, at: evdev_release+0xeb/0x1c0 drivers/input/evdev.c:466
- #1: ffff8881c54602c0 (&dev->mutex#2){+.+.}-{3:3}, at: input_close_device+0x42/0x1a0 drivers/input/input.c:674
+5 locks held by kworker/u4:4/211:
+1 lock held by khungtaskd/1143:
+ #0: ffffffff899bea80 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5754
+1 lock held by in:imklog/6724:
+ #0: ffff888092f98af0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
+3 locks held by kworker/u4:5/11846:
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+ #0: ffff8880a9771938 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
+ #1: ffffc900153dfdc0 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
+ #2: ffffffff8a57aaf0 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:565
+2 locks held by syz-executor.1/4415:
+ #0: ffff88803f15e750 (&sb->s_type->i_mutex_key#14){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:797 [inline]
+ #0: ffff88803f15e750 (&sb->s_type->i_mutex_key#14){+.+.}-{3:3}, at: __sock_release+0x86/0x280 net/socket.c:604
+ #1: ffffffff8a57aaf0 (pernet_ops_rwsem){++++}-{3:3}, at: unregister_netdevice_notifier+0x1e/0x170 net/core/dev.c:1776
 
 =============================================
 
 NMI backtrace for cpu 1
-CPU: 1 PID: 23 Comm: khungtaskd Not tainted 5.7.0-rc6-syzkaller #0
+CPU: 1 PID: 1143 Comm: khungtaskd Not tainted 5.7.0-rc6-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- irq_force_complete_move.cold+0x13/0x47 arch/x86/kernel/apic/vector.c:1023
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
  nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
  lapic_can_unplug_cpu.cold+0x3b/0x3b
- nmi_trigger_cpumask_backtrace+0x1db/0x207 lib/nmi_backtrace.c:62
+ nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0xa99/0xfd0 kernel/hung_task.c:289
+ watchdog+0xa8c/0x1010 kernel/hung_task.c:289
  reset_hung_task_detector+0x30/0x30 kernel/hung_task.c:243
- kthread+0x326/0x430 kernel/kthread.c:268
- kthread_create_on_node+0xf0/0xf0 kernel/kthread.c:405
+ kthread+0x388/0x470 kernel/kthread.c:268
+ kthread_mod_delayed_work+0x1a0/0x1a0 kernel/kthread.c:1090
  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
 Sending NMI from CPU 1 to CPUs 0:
 NMI backtrace for cpu 0
-CPU: 0 PID: 4323 Comm: syz-executor.0 Not tainted 5.7.0-rc6-syzkaller #0
+CPU: 0 PID: 17188 Comm: kworker/u4:6 Not tainted 5.7.0-rc6-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:slab_free_hook mm/slub.c:1448 [inline]
-RIP: 0010:slab_free_freelist_hook mm/slub.c:1488 [inline]
-RIP: 0010:slab_free mm/slub.c:3045 [inline]
-RIP: 0010:kmem_cache_free+0x190/0x360 mm/slub.c:3061
-Code: 65 48 0f c7 0f 0f 94 c0 84 c0 0f 85 29 ff ff ff eb b7 8b 75 1c 48 89 df e8 4d 66 83 00 e9 03 ff ff ff e8 f3 3b dc ff 41 56 9d <e9> ec fe ff ff 65 8b 05 54 53 98 7e 83 f8 07 0f 87 1e 01 00 00 89
-RSP: 0018:ffff8881d1dffd48 EFLAGS: 00000246
-RAX: 0000000000000007 RBX: ffff8881ac470000 RCX: 1ffffffff1271044
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8881c6976b7c
-RBP: ffff8881da11e000 R08: 0000000000000001 R09: fffffbfff126c8c9
-R10: ffffffff89364647 R11: fffffbfff126c8c8 R12: ffffea0006b11c00
-R13: ffffffff817142e1 R14: 0000000000000246 R15: 0000000000000000
-FS:  0000000001240940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:lock_release+0x2f/0x800 kernel/locking/lockdep.c:4942
+Code: 00 00 fc ff df 41 57 41 56 41 55 49 89 f5 41 54 49 89 fc 55 53 48 81 ec 98 00 00 00 48 c7 44 24 18 b3 8a b5 41 48 8d 5c 24 18 <48> c7 44 24 20 e8 c6 47 89 48 c1 eb 03 48 c7 44 24 28 40 7f 59 81
+RSP: 0018:ffffc9000727fc00 EFLAGS: 00000286
+RAX: ffff88809e2c4000 RBX: ffffc9000727fc18 RCX: ffffffff87b70337
+RDX: dffffc0000000000 RSI: ffffffff87b700a6 RDI: ffffffff899bea80
+RBP: ffff888051de4c00 R08: ffff88809e2c4000 R09: ffffed1015cc7104
+R10: ffff8880ae63881b R11: ffffed1015cc7103 R12: ffffffff899bea80
+R13: ffffffff87b700a6 R14: dffffc0000000000 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043e2a0 CR3: 00000001c6200000 CR4: 00000000001406f0
+CR2: 000000c0007bf6c0 CR3: 00000000a8637000 CR4: 00000000001406f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- putname+0xe1/0x120 fs/namei.c:259
- filename_create+0x236/0x4a0 fs/namei.c:3467
- filename_parentat.isra.0+0x400/0x400 fs/namei.c:2401
- strncpy_from_user+0x2ac/0x3e0 lib/strncpy_from_user.c:122
- audit_getname include/linux/audit.h:328 [inline]
- getname_flags fs/namei.c:202 [inline]
- getname_flags+0x275/0x5b0 fs/namei.c:128
- user_path_create fs/namei.c:3502 [inline]
- do_symlinkat+0xe2/0x230 fs/namei.c:3957
- handle_mm_fault+0x3e5/0x8d0 mm/memory.c:4392
- __ia32_sys_unlink+0x50/0x50 fs/namei.c:3918
- trace_hardirqs_off_caller+0x55/0x200 kernel/trace/trace_preemptirq.c:73
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c7f7
-Code: 0f 1f 00 b8 5c 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 6d b9 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 58 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 4d b9 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd559ffd28 EFLAGS: 00000206 ORIG_RAX: 0000000000000058
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045c7f7
-RDX: 00007ffd559ffdc3 RSI: 00000000004c25b8 RDI: 00007ffd559ffdb0
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000013
-R10: 0000000000000075 R11: 0000000000000206 R12: 0000000000000000
-R13: 00007ffd559ffd60 R14: 0000000000000000 R15: 00007ffd559ffd70
+ lock_release+0x800/0x800 kernel/locking/lockdep.c:4689
+ process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
+ lock_downgrade+0x840/0x840 kernel/locking/lockdep.c:4579
+ rcu_lock_release include/linux/rcupdate.h:213 [inline]
+ rcu_read_unlock include/linux/rcupdate.h:655 [inline]
+ batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
+ batadv_nc_worker+0x21c/0x760 net/batman-adv/network-coding.c:718
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ lock_release+0x800/0x800 kernel/locking/lockdep.c:4689
+ pwq_dec_nr_in_flight+0x310/0x310 kernel/workqueue.c:1198
+ rwlock_bug.part.0+0x90/0x90 include/linux/sched.h:1329
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ process_one_work+0x16a0/0x16a0 kernel/workqueue.c:2273
+ kthread+0x388/0x470 kernel/kthread.c:268
+ kthread_mod_delayed_work+0x1a0/0x1a0 kernel/kthread.c:1090
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
 
 
 ---
