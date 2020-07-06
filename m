@@ -2,113 +2,126 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6573FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA04C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4799520672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0289020672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VeiNdRNC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OK6kB8Q0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgGFR5p (ORCPT
+        id S1729759AbgGFR5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:57:45 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:44029 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729746AbgGFR5l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 13:57:41 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 575C223078;
-        Mon,  6 Jul 2020 19:57:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594058258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5LF50IP0lsdbsBcvX/jwWXNVBRMCu+k4mhHhigwj2o=;
-        b=VeiNdRNCumveFMkOVh5JNpW6CruwMpZaitMljx4kAz+pf8jWPy9hDyd06U3fiysDvRuGFV
-        BbUZB534Xnufy/LDDGmNDpaTVvD3VQLMYgWuWY9u6gVIaotXmrdlXo83e6zDnVQLCZFk0K
-        r6etfy1jd5BbY6oPWCRYpr4P4QkN468=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
-Date:   Mon,  6 Jul 2020 19:53:53 +0200
-Message-Id: <20200706175353.16404-14-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
-References: <20200706175353.16404-1-michael@walle.cc>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbgGFR5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:57:37 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1515C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 10:57:36 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z13so42121911wrw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=oTojjIFZzclanf7cLLuaYi/sgvjqGLuwhbXDv27Czb8=;
+        b=OK6kB8Q0qPe86xIOUaHuGwfdS2zOPVnI1nFVI5idSlyGCaQ0kwkLr5OQ3iqaCDrVgp
+         bSOqJkCjp0ec0QS590uLshH3kIWpHf1xbHU4eFZSHTSz2iazne518HLTBvJhqDK56dUJ
+         VfvvqQ499iFKyO7u5d9hnovYGKCEt81Di/gCvWZ/6DEke38vxLl9lqh8sFCeusLjL1Ml
+         2qR161f3NJOvDObqFI6szLGqFQi4ZzNG3O+MRRM8N5BRRw06NsO/2NWwp4otwehlAyaq
+         GjgvDbYRQdLgMd7gAaG1L8Juu1JYUeppORL67+udHl59TzHLYTVJB6lnzxfeszfPKiFn
+         3hag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=oTojjIFZzclanf7cLLuaYi/sgvjqGLuwhbXDv27Czb8=;
+        b=aJbAI+gJPsXjo4dM+rGojd4K0a4IRncSlrHIeu2B5azhZZCk2mKQSqL8VAI4rst3Sg
+         b+OVhPCFPjtd8GsNUOGtDAfImo0iRo8muKR43HSUQtOSxwOOpLO7hf+Sd6s7BUmsQBeI
+         /9hnptU47mNvWXYMEEJhpA6nMDJ2c49QYvi0Th47AyDcSKwp/3O84me8JSdMTiWdAC/W
+         kShkotdHS/0eBoUC2/cAwOpEJUgcZ/f8XBo2VyO29jrN/YSldV0eGYrs6LbxuqbBT1hT
+         ApPWvfPRjXGZXMehN7pGspRiBwUMKgPjQ8XOBVfZSaM4PHHfXrnIKn0R44+zaLtpv3YI
+         s/mw==
+X-Gm-Message-State: AOAM532xd1dXs/hZsyp0AY6HvLZySShh2ONYd2qyHSIfkkTj/ig3hj9H
+        ehbUFp14XC+sPGTbMJPQl8AjvQ==
+X-Google-Smtp-Source: ABdhPJxS0ATrWjLo9sj+XUyy8koys1QP+PJvoeoFNUvPJiTVFA4tFZil89Y+Fn6a3oT6x5JiwFKCRQ==
+X-Received: by 2002:adf:b198:: with SMTP id q24mr19941076wra.335.1594058255478;
+        Mon, 06 Jul 2020 10:57:35 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id r8sm24689046wrp.40.2020.07.06.10.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 10:57:34 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 18:57:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Yinghai Lu <yhlu.kernel@gmail.com>,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: [PATCH 25/32] usb: early: ehci-dbgp: Remove set but never
+ checked variable 'ret'
+Message-ID: <20200706175733.GB3500@dell>
+References: <20200706133341.476881-1-lee.jones@linaro.org>
+ <20200706133341.476881-26-lee.jones@linaro.org>
+ <87imf0mvk7.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+In-Reply-To: <87imf0mvk7.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a pwm-fan mapped to the PWM channel 0 which is connected to the
-fan connector of the carrier.
+On Mon, 06 Jul 2020, Eric W. Biederman wrote:
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-Changes since v4:
- - none
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > 'ret' hasn't  been checked since the driver's inception in 2009.
+> 
+> Minor quibble the inception was in 5c05917e7fe3 ("x86: usb debug port
+> early console, v4") in July of 2008.
 
-Changes since v3:
- - see cover letter
+I'm only going back as far as the inception of ehci-dbgp.c.
 
- .../dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-index 0973a6a45217..c45d7b40e374 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-@@ -15,6 +15,15 @@
- 	compatible = "kontron,sl28-var3-ads2", "kontron,sl28-var3",
- 		     "kontron,sl28", "fsl,ls1028a";
- 
-+	pwm-fan {
-+		compatible = "pwm-fan";
-+		cooling-min-state = <0>;
-+		cooling-max-state = <3>;
-+		#cooling-cells = <2>;
-+		pwms = <&sl28cpld_pwm0 0 4000000>;
-+		cooling-levels = <1 128 192 255>;
-+	};
-+
- 	sound {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+Great, thanks.
+
+> > Fixes the following W=1 kernel build warning(s):
+> >
+> >  drivers/usb/early/ehci-dbgp.c: In function ‘early_dbgp_write’:
+> >  drivers/usb/early/ehci-dbgp.c:915:13: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+> >  915 | int chunk, ret;
+> >  | ^~~
+> >
+> > Cc: Sumit Garg <sumit.garg@linaro.org>
+> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Cc: Petr Mladek <pmladek@suse.com>
+> > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> > Cc: Yinghai Lu <yhlu.kernel@gmail.com>
+> > Cc: Jason Wessel <jason.wessel@windriver.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/usb/early/ehci-dbgp.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
