@@ -2,82 +2,113 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C62CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA71DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729982067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C1C20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgGFEPi (ORCPT
+        id S1726969AbgGFEXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:15:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33316 "EHLO mx2.suse.de"
+        Mon, 6 Jul 2020 00:23:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14327 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgGFEPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:15:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2F9E7AD81;
-        Mon,  6 Jul 2020 04:15:36 +0000 (UTC)
-Subject: Re: [tip: x86/urgent] x86/entry/32: Fix XEN_PV build dependency
-To:     Andy Lutomirski <luto@amacapital.net>, linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
-References: <159397824429.4006.6604251447325788449.tip-bot2@tip-bot2>
- <5B8B5845-1145-43BC-B790-B1D1A7B42B28@amacapital.net>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <88031c06-ebef-8290-fa0b-695859c1a40e@suse.com>
-Date:   Mon, 6 Jul 2020 06:15:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1725892AbgGFEXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 00:23:47 -0400
+IronPort-SDR: M3husfosArJSR74Dpewz4iv2pwsK16SqKkxbC5loZzUVkzO+UC31RTauqHxe1mVKNtkM72+0ry
+ IoovO5I7hxbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="148857222"
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="148857222"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 21:23:46 -0700
+IronPort-SDR: o3Ovk4M9ZsxPZotyGoamY580+UDgz97geWpfFlgeJARMB+rU7zaUe2orhkFljBq7nhq/NZWHCz
+ QqwkIdOvr8hQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="426965058"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.117.178]) ([10.209.117.178])
+  by orsmga004.jf.intel.com with ESMTP; 05 Jul 2020 21:23:46 -0700
+Subject: Re: linux-next: manual merge of the dmaengine tree with the
+ dmaengine-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200706135621.0113ebf9@canb.auug.org.au>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
+Date:   Sun, 5 Jul 2020 21:23:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <5B8B5845-1145-43BC-B790-B1D1A7B42B28@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200706135621.0113ebf9@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.07.20 22:24, Andy Lutomirski wrote:
-> 
-> 
->> On Jul 5, 2020, at 12:44 PM, tip-bot2 for Ingo Molnar <tip-bot2@linutronix.de> wrote:
->>
->> ﻿The following commit has been merged into the x86/urgent branch of tip:
->>
->> Commit-ID:     a4c0e91d1d65bc58f928b80ed824e10e165da22c
->> Gitweb:        https://git.kernel.org/tip/a4c0e91d1d65bc58f928b80ed824e10e165da22c
->> Author:        Ingo Molnar <mingo@kernel.org>
->> AuthorDate:    Sun, 05 Jul 2020 21:33:11 +02:00
->> Committer:     Ingo Molnar <mingo@kernel.org>
->> CommitterDate: Sun, 05 Jul 2020 21:39:23 +02:00
->>
->> x86/entry/32: Fix XEN_PV build dependency
->>
->> xenpv_exc_nmi() and xenpv_exc_debug() are only defined on 64-bit kernels,
->> but they snuck into the 32-bit build via <asm/identry.h>, causing the link
->> to fail:
->>
->>   ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_nmi':
->>   (.entry.text+0x817): undefined reference to `xenpv_exc_nmi'
->>
->>   ld: arch/x86/entry/entry_32.o: in function `asm_xenpv_exc_debug':
->>   (.entry.text+0x827): undefined reference to `xenpv_exc_debug'
->>
->> Only use them on 64-bit kernels.
-> 
-> Jürgen, can you queue a revert for when PV32 goes away?
-
-Yes, will do.
 
 
-Juergen
+On 7/5/2020 8:56 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the dmaengine tree got a conflict in:
+> 
+>    drivers/dma/idxd/sysfs.c
+> 
+> between commit:
+> 
+>    da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
+> 
+> from the dmaengine-fixes tree and commit:
+> 
+>    f50b150e315e ("dmaengine: idxd: add work queue drain support")
+> 
+> from the dmaengine tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+
+Hi Stephen. Thanks for the fixup. I think there are two more bits that are 
+needed from f50b150e315e if you don't mind adding:
+
+diff --cc drivers/dma/idxd/sysfs.c
+index 2e2c5082f322,6f0711a822a1..000000000000
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
+   		}
+
+   		idxd_unregister_dma_device(idxd);
+- 		spin_lock_irqsave(&idxd->dev_lock, flags);
+   		rc = idxd_device_disable(idxd);
+  +		for (i = 0; i < idxd->max_wqs; i++) {
+  +			struct idxd_wq *wq = &idxd->wqs[i];
+  +
+
+ >			mutex_lock(&wq->wq_lock);
+
+  +			idxd_wq_disable_cleanup(wq);
+
+ >			mutex_unlock(&wq->wq_lock);
+
+  +		}
+- 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
+   		module_put(THIS_MODULE);
+   		if (rc < 0)
+   			dev_warn(dev, "Device disable failed\n");
