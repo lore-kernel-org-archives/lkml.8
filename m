@@ -2,110 +2,83 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E48C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233AB20724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594051100;
-	bh=ZQn1vCbZnPD1V6Qxc3hTuBsfI7f6CYU9OMt+sq266xs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=w8P1lP95KfuzSU7Zv0pEqRUgK2MMAUf45voWIO1hlIAkFwIMKj7i/sc1yJpTL7sr2
-	 FubuFZBVcsEBfmFjPWVkjcc/6bhbyOfjS2AZ5+g+3QlmQFVdzoI4w+dIvcnJaBR2lQ
-	 z5hNIoAYT3lrVNQVh6iKqDYWIhywlhXqqRSGFu4M=
+	by mail.kernel.org (Postfix) with ESMTP id 49A9720723
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PCh8WtzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgGFP6S (ORCPT
+        id S1729477AbgGFP6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbgGFP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:58:18 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF7CA20715;
-        Mon,  6 Jul 2020 15:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594051097;
-        bh=ZQn1vCbZnPD1V6Qxc3hTuBsfI7f6CYU9OMt+sq266xs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qLIW21h3rjqd2fHfnfQ0qUPPd8NKpa8sR75xE1w1XCw075Ghf/qQm+aWF38BXWraK
-         S0FdgLURulHGi/105HaUAEDo2gXySV+i7R4Cfa9ag2rMLTNHpO60E1xiEDlhFy9b4C
-         aPHjyEZrQ4KCy28dZ+gme5FyQ2OjSEcI9el4Qsho=
-Date:   Mon, 6 Jul 2020 10:58:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 1/7] PCI: Keep the ACS capability offset in device
-Message-ID: <20200706155815.GA119406@bjorn-Precision-5520>
+        Mon, 6 Jul 2020 11:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729358AbgGFP6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:58:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE43C08C5E0
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 08:58:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so2495054pgm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9RVtaJ0LNajH8tL25qGstAaY61Hw21/Gz13XlQLJwww=;
+        b=PCh8WtzLeJQMoqoq3/Tnrt0CuSDAQ+DIzFonqrKtoRZjJfr/tEk3HFHYPM3L5tm25y
+         weOqF5kOYlu+N1df0SXec2EjHElqO5xLSDH+fJUI63HbaqCYOq/vER3IGmw6JvwyglFR
+         tJbWSgFgLoQrJhXMDcvjoIO3XCGagDxbLerDs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9RVtaJ0LNajH8tL25qGstAaY61Hw21/Gz13XlQLJwww=;
+        b=I6BbkyKoKbf8uqqIhwWiSejBWmHKpnKxxb73mYv1MCOhhEDB7IpW11j7gr4ucl1eNJ
+         s7NTiVldzMCFbe9gcRtlNMIQI1VDU362oBeB1sOs+JBBNsPq2FS8hKfSvHNzPzlln+gI
+         NWKD+7UyqwnAhlcr+Wh/F5p8/iAadAdE6s48GPcLFsC82+fCSQxWkTUSm3BzyniCVCx+
+         Tge0HYHaVnz6rLAvR3AfEkHVh6FA0stZoZ6nyxwXKh13WU4Ktau0zuwrmlsCEGnrUwAH
+         OIEGResEuRJ3lVm1Pse7tkY38n2o9miyO7VYvsQtgmkai2YmkmGuup+Sus/9kjBWLo5T
+         tm9Q==
+X-Gm-Message-State: AOAM532Jl7UyGKHsE7flhObK/lrMrsT6dbXCn9XixPM7d26N2zcoNNsE
+        lLVvk0ha5sKiDykm7+0gr4KGFg==
+X-Google-Smtp-Source: ABdhPJwwxnF0fvOInGc/EtJiOlVFU1DmGn20sGPRjobjVNUcDMlD6m90eL/Rxz6px65Z3jOvRna5Ng==
+X-Received: by 2002:aa7:8090:: with SMTP id v16mr5665995pff.199.1594051098637;
+        Mon, 06 Jul 2020 08:58:18 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id cl17sm19008565pjb.50.2020.07.06.08.58.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 08:58:18 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 08:58:16 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org, broonie@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add qspi opps and power-domains
+Message-ID: <20200706155816.GF3191083@google.com>
+References: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
+ <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200630044943.3425049-2-rajatja@google.com>
+In-Reply-To: <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:49:37PM -0700, Rajat Jain wrote:
-> Currently this is being looked up at a number of places. Read and store it
-> once at bootup so that it can be used by all later.
+On Fri, Jul 03, 2020 at 03:11:33PM +0530, Rajendra Nayak wrote:
+> Add the power domain supporting performance state and the corresponding
+> OPP tables for the qspi device on sc7180
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-Write the commit log so it is complete even without the subject.
-Right now, you have to read the subject to know what "this" refers to.
-
-The subject is like the title; the log is like the body of an article.
-The title isn't *part* of the article, so the article has to make
-sense all by itself.
-
-> +static void pci_enable_acs(struct pci_dev *dev);
-
-I don't think we need this forward declaration, do we?
-
-> @@ -4653,7 +4653,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_dev *dev, u16 acs_flags)
->  	if (!pci_quirk_intel_spt_pch_acs_match(dev))
->  		return -ENOTTY;
->  
-> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-> +	pos = dev->acs_cap;
-
-I assume you verified that all these quirks are FINAL quirks, since
-pci_init_capabilities() is called after HEADER quirks.  I'll
-double-check before applying this.
-
-Bjorn
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
