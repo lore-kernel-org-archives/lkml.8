@@ -2,131 +2,118 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD044C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71B52070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C012070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgGFB04 (ORCPT
+        id S1728661AbgGFB07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 5 Jul 2020 21:26:59 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:56658 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1728616AbgGFB04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 Jul 2020 21:26:56 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48950 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728471AbgGFB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:26:52 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S15;
-        Mon, 06 Jul 2020 09:19:32 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v5 13/14] irqchip/s3c24xx: Fix potential resource leaks
-Date:   Mon,  6 Jul 2020 09:19:24 +0800
-Message-Id: <1593998365-25910-14-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S15
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr18KFW8Xw47CFWxWw4rXwb_yoW8ZFy5pF
-        W8G39Igr48Ja17Wr4rKr48Zr9Ika48KrWUK3y2kas29FnxWryvyFy8ZFyqvr1rCrWxGF1f
-        JF47ZF40kF1DC3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
-        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
-        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E
-        87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2
-        IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
-        McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_KwCF04k20x
-        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF
-        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
-        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7VyxDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 412992016B13;
+        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MbPrCEWsKdKw; Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 1CF5220160D4;
+        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.122])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id D5450C01B74;
+        Mon,  6 Jul 2020 09:26:50 +0800 (HKT)
+Subject: Re: [PATCH v2 1/2] hwmon: shtc1: add support for device tree bindings
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200705142515.GA1975@roeck-us.net>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <0e3cc05b-2ae4-186b-d3b4-fa3ac201b128@gtsys.com.hk>
+Date:   Mon, 6 Jul 2020 09:26:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200705142515.GA1975@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function s3c_init_intc_of(), system resource "reg_base", "domain"
-and "intc" were not released in a few error cases. Thus add jump targets
-for the completion of the desired exception handling.
+Hi
 
-Fixes: f0774d41da0e ("irqchip: s3c24xx: add devicetree support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-s3c24xx.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+On 5/7/2020 10:25 pm, Guenter Roeck wrote:
+> On Sun, Jul 05, 2020 at 11:47:25AM +0800, Chris Ruehl wrote:
+>> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
+>>
+>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+>> ---
+>>   drivers/hwmon/shtc1.c | 22 ++++++++++++++++++++--
+>>   1 file changed, 20 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+>> index a0078ccede03..61e9275eb666 100644
+>> --- a/drivers/hwmon/shtc1.c
+>> +++ b/drivers/hwmon/shtc1.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/platform_data/shtc1.h>
+>> +#include <linux/of.h>
+>>   
+>>   /* commands (high precision mode) */
+>>   static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+>> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
+>>   	enum shtcx_chips chip = id->driver_data;
+>>   	struct i2c_adapter *adap = client->adapter;
+>>   	struct device *dev = &client->dev;
+>> +	struct device_node *np = dev->of_node;
+>>   
+>>   	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>>   		dev_err(dev, "plain i2c transactions not supported\n");
+>> @@ -233,8 +235,13 @@ static int shtc1_probe(struct i2c_client *client,
+>>   	data->client = client;
+>>   	data->chip = chip;
+>>   
+>> -	if (client->dev.platform_data)
+>> +	if (np) {
+>> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking_io");
+>> +		data->setup.high_precision = of_property_read_bool(np, "sensicon,low_precision");
+>> +	}
+>> +	else if (client->dev.platform_data)
+>>   		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> 
+> CHECK: braces {} should be used on all arms of this statement
+> #46: FILE: drivers/hwmon/shtc1.c:238:
+> +	if (np) {
+> [...]
+> +	else if (client->dev.platform_data)
+> [...]
+> 
+> ERROR: else should follow close brace '}'
+> #50: FILE: drivers/hwmon/shtc1.c:242:
+> +	}
+> +	else if (client->dev.platform_data)
+> 
 
-diff --git a/drivers/irqchip/irq-s3c24xx.c b/drivers/irqchip/irq-s3c24xx.c
-index d2031fe..cf48e4b 100644
---- a/drivers/irqchip/irq-s3c24xx.c
-+++ b/drivers/irqchip/irq-s3c24xx.c
-@@ -1227,7 +1227,7 @@ static int __init s3c_init_intc_of(struct device_node *np,
- 	struct s3c24xx_irq_of_ctrl *ctrl;
- 	struct irq_domain *domain;
- 	void __iomem *reg_base;
--	int i;
-+	int i, ret;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -1239,7 +1239,8 @@ static int __init s3c_init_intc_of(struct device_node *np,
- 						     &s3c24xx_irq_ops_of, NULL);
- 	if (!domain) {
- 		pr_err("irq: could not create irq-domain\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_iounmap;
- 	}
- 
- 	for (i = 0; i < num_ctrl; i++) {
-@@ -1248,15 +1249,17 @@ static int __init s3c_init_intc_of(struct device_node *np,
- 		pr_debug("irq: found controller %s\n", ctrl->name);
- 
- 		intc = kzalloc(sizeof(struct s3c_irq_intc), GFP_KERNEL);
--		if (!intc)
--			return -ENOMEM;
-+		if (!intc) {
-+			ret = -ENOMEM;
-+			goto err_domain_remove;
-+		}
- 
- 		intc->domain = domain;
- 		intc->irqs = kcalloc(32, sizeof(struct s3c_irq_data),
- 				     GFP_KERNEL);
- 		if (!intc->irqs) {
--			kfree(intc);
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_free;
- 		}
- 
- 		if (ctrl->parent) {
-@@ -1285,6 +1288,14 @@ static int __init s3c_init_intc_of(struct device_node *np,
- 	set_handle_irq(s3c24xx_handle_irq);
- 
- 	return 0;
-+
-+err_free:
-+	kfree(intc);
-+err_domain_remove:
-+	irq_domain_remove(domain);
-+err_iounmap:
-+	iounmap(reg_base);
-+	return ret;
- }
- 
- static struct s3c24xx_irq_of_ctrl s3c2410_ctrl[] = {
--- 
-2.1.0
+it bites back not using the check-patch script! I _should_ know better! :-(
 
+v3 then.
+
+But i will wait a moment to see if someone else lift a finger.
+
+Chris
