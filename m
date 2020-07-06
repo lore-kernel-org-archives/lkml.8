@@ -2,167 +2,139 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6028CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF6E62073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6592073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="do98fXC1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e02smifr"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GTrS6hLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgGFLbR (ORCPT
+        id S1728938AbgGFLcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgGFLbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:31:17 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC39BC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:31:16 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594035075;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zIjr59zT/ebHtB1OersU4qLeRIoOyUYlrI9yu0DaPO0=;
-        b=do98fXC1FGkK0E7Fn2LbBXk/QTKlQVhmeQuF59Ki8hZOR3/Ci2hDkKEInuRYu5T4SfPnFo
-        J88n+fIcn00/3PpiBGZZbNrHPijv/rgTceVxJY/YAB1Jm8lf166G3JMmgWv455lYsu3gXe
-        WahJjVbkyC1xdBxf6GuWmhBqZ1TYHIB3pyNX/L4/u4MZi2psXMt3bsezSJKcrVwIrCirLT
-        hJcVivYW5KtOAcSKhDiuRBBp14wLE2FmQmmEJZRIzxSltROcVyR2ylGAweopVuJufdxxDV
-        wfVhxy3sSLsBXicEujJpVtJGsiJE1gLVn8LmfS7Xi/TRg95sJ9iIquRhauBPiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594035075;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zIjr59zT/ebHtB1OersU4qLeRIoOyUYlrI9yu0DaPO0=;
-        b=e02smifr93XZX3Wn5TwGUzMVRAp6tsngVXmHDmLZlWgIZTFIQmyRpjSfiB1rfv8E7Jr4CE
-        uSd53rEr/P2jc5BQ==
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Petr Mladek <pmladek@suse.com>,
-        Raul Rangel <rrangel@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "S\, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: UART/TTY console deadlock
-In-Reply-To: <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com>
-References: <CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com> <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com> <20200630035816.GA21591@jagdpanzerIV.localdomain> <20200630102141.GA11587@alley> <20200630105512.GA530@jagdpanzerIV.localdomain> <20200630122239.GD6173@alley> <20200630130534.GB145027@jagdpanzerIV.localdomain> <20200630180255.GD37466@atomide.com> <20200702051213.GB3450@jagdpanzerIV.localdomain> <20200702160514.GK37466@atomide.com> <20200703103241.GB182102@jagdpanzerIV.localdomain> <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com>
-Date:   Mon, 06 Jul 2020 13:31:01 +0200
-Message-ID: <877dvg6ft6.fsf@kurt>
+        Mon, 6 Jul 2020 07:32:48 -0400
+Received: from mout.web.de ([212.227.17.12]:47239 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728806AbgGFLcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:32:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1594035149;
+        bh=gRpai35169NN0LWLbN07VQzDnRwm2ItrPh+MTVyFv7Y=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=GTrS6hLLgZgRYAh+ONOfLqYIpNsTtiM1Y7BcTCac7M9Rqu2I4ig6KPiepxZoqN2B5
+         AB0JPcEwwARtLqYhlwRCyu5BcABLayhiFmb3JAdTlu4Nju7Qmk1kzmIk5WTKDXtU+P
+         IAj4UZuhWAFlGEM1XM5UgjyiCxANOhDE0EE3i9OA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.113.119]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MLPRu-1jrr832wsM-000dOw; Mon, 06
+ Jul 2020 13:32:29 +0200
+Subject: Re: [RFC PATCH] vfio: type1: fix kthread use case
+To:     Hillf Danton <hdanton@sina.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        iommu@lists.linux-foundation.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>
+References: <20200706104915.11460-1-hdanton@sina.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <83a37410-1740-1a50-9d2d-6ad7587b8532@web.de>
+Date:   Mon, 6 Jul 2020 13:32:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <20200706104915.11460-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:82wdwGxFVFkq9HL6vEh1uDc5gfmhrZSMuSqbKOkJjQAbChF8zAB
+ NpHAONVorfBhFLN22r3EziqV1MyAYAQp1UnFO4voh0FG0xMlw8UZiklpjBZQg+oA/U/J9Ub
+ lZhUu0uQvqOB/Pge5WyIFf64HQBCwBgfugSvijbJ6d7iomwvx4Wml2kIoCqdk/Gj7JlYDC7
+ dvrHLLNCkNOguGw3DJG2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ERWNugBg3AE=:/XqPtwfCrwddDWtUo+0Gjk
+ l8VnKvoPgnjUgRWON5Chcacd44vS5L0g2O89j/gNS3uOxPVA72Cx1C2bkKXHAFntjML3MltgR
+ zwMqDhPZ8KrrS33IPXgFCe9rMFhzDFhhHMsbg8+Nt4sO3INJksKcL5wEI79ZWuoFR7+zXY92z
+ Y8yYbDyaQHME9YFfC5Ab2RWdiO/VE4EYuNcofrI5kTs4dAAW43F0gFdsrFks+1kon+kzKSsbv
+ 5miVus9zVZqc32Uh70QbJ8hGCsrV9gzj5MiF9/CNv0KMrqK4vqwJ4NL5J8ev4Qr5ppgN/6VAo
+ oQgb2wIlyIg8s6p2sgLrzEpMjm+jsddvcc5WR5tsIDyEv/qPpCkpRcoOLhteMKfT+lUHDV9ef
+ CPAP6EIa5H89wBwPqbfrMF3ZpZnonOqVcaIl1+gf4ENCR6uIwGA4QtQIvE4ZuxD8r/t0it8fH
+ 3q27uhuiGvDMHrJBgzT/Is7siJFKlk4/pvmDIkca4d9EjSVanK9rJzLirjans6k81N62dRQS3
+ NCSMRgKzzgz6O6U2jYiQVhb3Bfm30u56dK1w9QjqdfXKkZeB2FULIqEi3ygG3nQ8fwafJ5uSb
+ yTeYDlJ9htk/TDkXLCezGTewEfShq0ZQiQOQt8iFB4TeNueFvDhoBRKTkfICnbFFDenTq4Qo7
+ cTA+lFBws15jvCzMSvoncWC51E4jc4hbqQgiSOlMoDOWHsHLrIjW75zTLLZyfOqHWPrqvIXNd
+ g/tPFpVqHqLyeWCBIXLnyOqFg6d6iX77HpRgGJ0BI/kuNigsUOw06whuIfllDKzsvcL8RDimq
+ 1AZNBPKSJieEPtkf+9iYAE4WWH2ngobllCaq1diouJX7f7nD1Y1vVGiZWW40F6GQoH0CfrAx/
+ UHMi/hsqDW4KQyRIMQy4nuBbfhlEZnrWdp6ODSB34Nxq5S1MejlUYlvzomMVsKGUBFypnSM6t
+ UsY/z/z3SuG53CAQm6424j6ch5Blcr31+Fm+YMV2KCEQbHeS+ICvujAzASWEnFxw8UmDY4zRI
+ qm2Wu/nDEiWTE7gBJLaE5+6Vc489XL85exiCwZd3Fbitrz3J6NhOTaKKZNmzUDZQA2Hi7qUA/
+ cjLyN2W7c6ko953K9xJRZdmkRiDKnduNySa+nmyM2evZykxrbGJwMsYau2wlXuTYVlXkSItWj
+ WHs6wShOpGTMMOLA8QVRCLH8oM8H+/hHtkhLYE516wuF/8jzQgwM9wdczsV94P6hZZz75c1C4
+ 4NHK04XhsmysXuIhs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+=E2=80=A6
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2798,7 +2798,8 @@ static int vfio_iommu_type1_dma_rw_chunk
+=E2=80=A6
+> -	bool kthread =3D current->mm =3D=3D NULL;
+> +	bool kthread =3D current->flags & PF_KTHREAD;
+> +	bool use_mm =3D current->mm =3D=3D NULL;
+=E2=80=A6
 
-Hi,
+Can it be helpful to convert initialisations for these variables
+into later assignments?
 
-On Sat Jul 04 2020, Andy Shevchenko wrote:
-> On Fri, Jul 3, 2020 at 1:32 PM Sergey Senozhatsky
-> <sergey.senozhatsky@gmail.com> wrote:
->>
->> On (20/07/02 09:05), Tony Lindgren wrote:
->> > * Sergey Senozhatsky <sergey.senozhatsky@gmail.com> [200702 05:13]:
->> > > On (20/06/30 11:02), Tony Lindgren wrote:
->> > > > This conditional disable for irq_shared does not look nice to me
->> > > > from the other device point of view :)
->> > > >
->> > > > Would it be possible to just set up te dummy interrupt handler
->> > > > for the startup, then change it back afterwards? See for example
->> > > > omap8250_no_handle_irq().
->> > >
->> > > I think we can do it. serial8250_do_startup() and irq handler take
->> > > port->lock, so they should be synchronized.
->> > >
->> > > Something like this then?
->> >
->> > Yeah thanks this should work better for shared irq.
->>
->> This is, basically, an equivalent of
->>
->> ---
->>  drivers/tty/serial/8250/8250_port.c | 5 +----
->>  1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
->> index d64ca77d9cfa..dba7747d2ddd 100644
->> --- a/drivers/tty/serial/8250/8250_port.c
->> +++ b/drivers/tty/serial/8250/8250_port.c
->> @@ -2275,6 +2275,7 @@ int serial8250_do_startup(struct uart_port *port)
->>
->>         if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
->>                 unsigned char iir1;
->> +
->>                 /*
->>                  * Test for UARTs that do not reassert THRE when the
->>                  * transmitter is idle and the interrupt has already
->> @@ -2284,8 +2285,6 @@ int serial8250_do_startup(struct uart_port *port)
->>                  * allow register changes to become visible.
->>                  */
->>                 spin_lock_irqsave(&port->lock, flags);
->> -               if (up->port.irqflags & IRQF_SHARED)
->> -                       disable_irq_nosync(port->irq);
->>
->>                 wait_for_xmitr(up, UART_LSR_THRE);
->>                 serial_port_out_sync(port, UART_IER, UART_IER_THRI);
->> @@ -2297,8 +2296,6 @@ int serial8250_do_startup(struct uart_port *port)
->>                 iir = serial_port_in(port, UART_IIR);
->>                 serial_port_out(port, UART_IER, 0);
->>
->> -               if (port->irqflags & IRQF_SHARED)
->> -                       enable_irq(port->irq);
->>                 spin_unlock_irqrestore(&port->lock, flags);
->>
->>                 /*
->
-> ...which effectively is a revert of
->
-> 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and
-> RT kernels")
-
-Please, don't revert that commit. I've faced the same issue as described
-in the commit log. There is hardware available with shared UART
-interrupt lines.
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8DC3UACgkQeSpbgcuY
-8KaatQ/+I3uMpcHFLxQZhMYRh5GqeaLa/qLoonGoPgq5vSZihPv1qQHC5CIPHs9u
-b1kud/9/p1yItg1tFM/xbUCBB5m8Ghp1kq3auEA39q1vz80PD39K9g+Jcw1Eh4xU
-v06gSdvac3rNNAFk27iMKf55wITenBJWEZvttrSDI44KH3Mr0Zftl9y2azHh3gg1
-iFpk7RsdoVziAHAwufC4SPghWatmB6NgZrbn2XZO+nqdg+E9457bjbLOHEUaDBqg
-l7jXGOnRH0J/y+H5Nj+K9MGpzov855RbARwOUvnc9F9WY3mMPaRGkj+hTeueyU3K
-ymwNPWotPsVQVEMTLzOgnR2lnxmUgahL+JO3MF+/wu1Vt1INZedHhawwGGXNMC9T
-rPXs3CeDsdInR9GhEsuOjehrYpW577ZH/NQnmNZr1dPTViCJI1vryDhgV3toClnl
-67XKp0m4XIUgbGPrRP7OAc/mePjSaHhPvfh3dlrNPyRCTq8ViLN3PgTLfZcyhexz
-wvhBQFxp2d0wbI96J2VzOoVNccPr4n0pepXXYGwrzEe1IehwMI6PjN7GfB2ugO8o
-lpklK0KHm2YrKsLKFg8ncCNEfq1NpDFISSaK3eLnMdhoGCuEPNvXMCgN9AaRVnKE
-jZXuk/iOekD5ua4K3H+zcck76ECCNbPlXV/5uqSaYzyug/kCHFM=
-=tqSP
------END PGP SIGNATURE-----
---=-=-=--
+Regards,
+Markus
