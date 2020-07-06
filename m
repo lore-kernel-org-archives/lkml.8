@@ -2,103 +2,130 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E740C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE9F20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FE820674
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ccX4QfgA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVLemXXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgGFWAE (ORCPT
+        id S1726497AbgGFWC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:00:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:53981 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgGFWAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:00:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0zyB11NHz9s1x;
-        Tue,  7 Jul 2020 08:00:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594072802;
-        bh=UXYG+NlDuPRRy5dtPsarnIzjPJrnE86KFdNzmLeK3k8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ccX4QfgAS48Mia2K3KxM9KbflbFvmHxuxGceEojNOMllclSfhSqHirENfQEXvenov
-         QmhafmdWnaNHhURfcCDkL8pQZMCvekVmd6tGfNIGh4J2Iaw3ettgGTTimvTt9mPAbo
-         oOEcRHLU1+r+QwuWkptA9DiD2BUKzx4LvL3xblX+noYUdMAV6/rijfilGup3OxxcMN
-         dfPU+xlF8Qem9x0YZBEtc/5hQDUHCl5d+DBlSHKN+miX5b7oLPavAfcVaV7RfsS1qU
-         JsOoNPJqURB7AmosEZ3CMq3nvP2eAOpD1I9FG5rR6WzzDuv56OpKieM0Cn7WD3U5rP
-         jp2er7WyPv3eA==
-Date:   Tue, 7 Jul 2020 08:00:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the spi tree
-Message-ID: <20200707080000.507aed2c@canb.auug.org.au>
+        Mon, 6 Jul 2020 18:02:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56913 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725860AbgGFWC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 18:02:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594072945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TkXhzKLqTF0E87EA7fDsRKyQKfMvqiBc3obNNpfDHJg=;
+        b=EVLemXXnd0HyjCfijBCRXcF3Soy4TowQobdY5I823PfrT7Z2zKO8vy1jdTYyt2178vPBnw
+        /dT5EHthp2/U61EP2D7SCSx6DFkYoq2ySXw2gM5GaL4IX7qNTxzsI3iYCGvFd3Tu38YpZ0
+        aDUByQXWsoLToWfJF1JEy04anbfIYHU=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-3zHTH_KSPu-eUdlFMXxhEA-1; Mon, 06 Jul 2020 18:02:17 -0400
+X-MC-Unique: 3zHTH_KSPu-eUdlFMXxhEA-1
+Received: by mail-qt1-f198.google.com with SMTP id c5so29274550qtv.20
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:02:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=TkXhzKLqTF0E87EA7fDsRKyQKfMvqiBc3obNNpfDHJg=;
+        b=XW9JONmHRCgkqqnphiDvn//1MKJ+UbuFLTj0v9pVcA2qHne6scP4aHzqv/lPehJgmh
+         +ReqQmg6ijv737fejb7RiCekAGVupI0qqYFxt8I1LOJI4g/H0wiglRtLsDHqzphrbNOs
+         5Vu/6pgx4DI7PcFB+b6NtQ8S8e10EqutSCWjtjuqEUHHMAiZSL2Qr7UKsKMWyi1c3yD+
+         /lfrXvOzPGIhzHkBYvEuUtqK0Ioi+GVME87UJPl7qJTFAQ/lyyauL3IfxPM+YS3aUteB
+         IkpSWE1dlTVYrDr/Q1kQK8kVKW08YTQyYgdzf4SGkZ/RimK+BG2Da624VXih6LstxK5o
+         n/Sw==
+X-Gm-Message-State: AOAM531BVsZWta4DWtl5s/reUBWZi76apcfspjpHUQmlgfdsLbPRyIYC
+        bmKn3qKBdjp5pswmZaGLZmcwFoWWI5HFH+knrhqe/O+OVnDoO5uNh54G/R+Ny+3dG2M8myVTR8R
+        FuUw4+peqyVOtbtHMagGfRga4
+X-Received: by 2002:ae9:f002:: with SMTP id l2mr39136110qkg.437.1594072936807;
+        Mon, 06 Jul 2020 15:02:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyRP3z9E0tdvX8t39vt7/9u4f1ETvgBsRpRz2CaH0flMAo/xsbjQX5JZ47vfESsqw8doha+rA==
+X-Received: by 2002:ae9:f002:: with SMTP id l2mr39136066qkg.437.1594072936430;
+        Mon, 06 Jul 2020 15:02:16 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id a3sm20911329qkf.131.2020.07.06.15.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 15:02:15 -0700 (PDT)
+References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com> <20200706181953.3592084-2-stefanb@linux.vnet.ibm.com>
+User-agent: mu4e 1.4.10; emacs 26.3
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v9 1/2] acpi: Extend TPM2 ACPI table with missing log fields
+In-reply-to: <20200706181953.3592084-2-stefanb@linux.vnet.ibm.com>
+Date:   Mon, 06 Jul 2020 15:02:14 -0700
+Message-ID: <87h7ukwbdl.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rox1eQqkVFA0OpS/Z5ogLwp";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rox1eQqkVFA0OpS/Z5ogLwp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Stefan Berger @ 2020-07-06 11:19 MST:
 
-Commits
+> From: Stefan Berger <stefanb@linux.ibm.com>
+>
+> Recent extensions of the TPM2 ACPI table added 3 more fields
+> including 12 bytes of start method specific parameters and Log Area
+> Minimum Length (u32) and Log Area Start Address (u64). So, we define
+> a new structure acpi_tpm2_phy that holds these optional new fields.
+> The new fields allow non-UEFI systems to access the TPM2's log.
+>
+> The specification that has the new fields is the following:
+>   TCG ACPI Specification
+>   Family "1.2" and "2.0"
+>   Version 1.2, Revision 8
+>
+> https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
+>
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Cc: linux-acpi@vger.kernel.org
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-  878d4d57a6e5 ("spi: spi-sun6i: sun6i_spi_transfer_one(): enable RF_RDY in=
-terrupt only if needed")
-  1e9ca016b623 ("spi: spi-sun6i: sun6i_spi_transfer_one(): collate write to=
- Interrupt Control Register")
-  15254b028dd6 ("spi: spi-sun6i: sun6i_spi_fill_fifo(): remove not needed l=
-ength argument")
-  60b1f09675f2 ("spi: spi-sun6i: sun6i_spi_drain_fifo(): remove not needed =
-length argument")
-  9bfc242a9379 ("spi: spi-sun6i: sun6i_spi_drain_fifo(): introduce sun6i_sp=
-i_get_rx_fifo_count() and make use of it")
-  e0430d904098 ("spi: spi-sun6i: sun6i_spi_get_tx_fifo_count: Convert manua=
-l shift+mask to FIELD_GET()")
-  05bf34283c8e ("spi: spi-sun6i: sun6i_spi_transfer_one(): remove not neede=
-d masking of transfer length")
-  642d75131c8c ("spi: spi-sun6i: sun6i_spi_transfer_one(): remove useless g=
-oto")
-  09a7139e9e17 ("spi: spi-sun6i: sun6i_spi_transfer_one(): report effectivl=
-y used speed_hz of transfer")
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-are missing a Signed-off-by from their committer.
+> ---
+>  include/acpi/actbl3.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
+> index b0b163b9efc6..bdcac69fa6bd 100644
+> --- a/include/acpi/actbl3.h
+> +++ b/include/acpi/actbl3.h
+> @@ -415,6 +415,13 @@ struct acpi_table_tpm2 {
+>  	/* Platform-specific data follows */
+>  };
+>  
+> +/* Optional trailer for revision 4 holding platform-specific data */
+> +struct acpi_tpm2_phy {
+> +	u8  start_method_specific[12];
+> +	u32 log_area_minimum_length;
+> +	u64 log_area_start_address;
+> +};
+> +
+>  /* Values for start_method above */
+>  
+>  #define ACPI_TPM2_NOT_ALLOWED                       0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rox1eQqkVFA0OpS/Z5ogLwp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8DnuEACgkQAVBC80lX
-0GzBuAf9EDuT/Wy/8OoXWI4xKtYTUPCWW0w6wST0fSalfaQI3C52kEFlAI/RI33q
-miduGX5odX9QJ4vrpEAfpkMD7GKlBtxT8PdzaQjSmSUBpvCr8OHrQonmJRqTHfe8
-nvA4hYiucm7ttIoK1Z+aOI1pjhT7/NDRyTxO5MFFbcOkDPTvB9fpNd5/Gev6z1x0
-Xp4AYQwza630Di/JLgsJ1nZZkzfYzb+q7MjestGT3uZKA1/1h+dC3+56TT9o+hvm
-L9s0lEWc4eIa+p0Jv88iL2t63uDK9Q6JKmirf8dHc2F8PG7/va5qc42gdZj+IfpD
-/yBhGqvnKsvLjTwzc+Qto6x4q1SdeA==
-=5qMH
------END PGP SIGNATURE-----
-
---Sig_/rox1eQqkVFA0OpS/Z5ogLwp--
