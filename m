@@ -2,75 +2,105 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B27C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3527EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B709C20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GzSZ+Nco"
+	by mail.kernel.org (Postfix) with ESMTP id 1C9C020656
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgGFXwm (ORCPT
+        id S1727094AbgGFXza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:52:42 -0400
-Received: from crapouillou.net ([89.234.176.41]:55458 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgGFXwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:52:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594079559; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=URFquOorttvpmiJ+lfEVDd1Ropa0DJF6BFwngAVN5HY=;
-        b=GzSZ+Ncoik/RV1tbn1NQ3agvUwXCTL9DJKl7RAqleMSt4WcQ1iQoEoIwKraltvtlXwdjT5
-        PkrD9b1xBa/M3zTUj7NfrnQxGdwdEu/cKr8jGdxhmWBfebYr6cGEbaZ8GZj4gN4AKQgyKR
-        bQlJTTRr6cSm5X73rU1bb+18AKVwuhk=
-Date:   Tue, 07 Jul 2020 01:52:29 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] i2c: jz4780: remove redundant assignment to variable i
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Colin King <colin.king@canonical.com>, linux-i2c@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <HNN2DQ.3HHBK0781A0A1@crapouillou.net>
-In-Reply-To: <20200704063217.GG1041@kunai>
-References: <20200610125901.1134204-1-colin.king@canonical.com>
-        <20200704063217.GG1041@kunai>
+        Mon, 6 Jul 2020 19:55:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10104 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726729AbgGFXz3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:55:29 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066NWgxB047932;
+        Mon, 6 Jul 2020 19:55:28 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3249rbxdfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 19:55:28 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066NsRnQ002711;
+        Mon, 6 Jul 2020 23:55:27 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01wdc.us.ibm.com with ESMTP id 322hd8bdmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 23:55:27 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066NtQCU38011226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jul 2020 23:55:26 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CACC2AC05E;
+        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9505CAC05F;
+        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
+Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
+ TPM2 ACPI table
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
+ <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
+ <20200706230914.GC20770@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
+Date:   Mon, 6 Jul 2020 19:55:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200706230914.GC20770@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_20:2020-07-06,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
+ cotscore=-2147483648 clxscore=1015 phishscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007060163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 7/6/20 7:09 PM, Jarkko Sakkinen wrote:
+> On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
+>> From: Stefan Berger <stefanb@linux.ibm.com>
+>>
+>> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+>> to get the event log from ACPI. If one is found, use it to get the
+>> start and length of the log area. This allows non-UEFI systems, such
+>> as SeaBIOS, to pass an event log when using a TPM2.
+>>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
+> way to test this?
 
-Le sam. 4 juil. 2020 =E0 8:32, Wolfram Sang <wsa@kernel.org> a =E9crit :
-> On Wed, Jun 10, 2020 at 01:59:01PM +0100, Colin King wrote:
->>  From: Colin Ian King <colin.king@canonical.com>
->>=20
->>  The variable i is being initialized with a value that is
->>  never read and it is being updated later with a new value. The
->>  initialization is redundant and can be removed.
->>=20
->>  Addresses-Coverity: ("Unused value")
->>  Signed-off-by: Colin Ian King <colin.king@canonical.com>
->=20
-> What about 'ret'? Doesn't the same reasoning apply for it?
->=20
 
-That's correct.
+Yes.
 
-Colin, could you respin the patch and do the same for the 'ret'=20
-variable?
 
-Thanks,
--Paul
+>
+> I'm anyway more worried about breaking existing TPM 1.2 functionality
+> and that requires only QEMU without extras.
+>
+> /Jarkko
 
 
