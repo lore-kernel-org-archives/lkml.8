@@ -2,204 +2,299 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8039C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116EB20720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866DA206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="HVxLVbvj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="opSlrEPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgGFNp5 (ORCPT
+        id S1729266AbgGFNqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:45:57 -0400
-Received: from mail-dm6nam10on2068.outbound.protection.outlook.com ([40.107.93.68]:49025
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729151AbgGFNp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:45:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MFdQTkWmdLRUTyO+/tNYqzB6PnZgS026c8pl1UsgM3jQtpfEv22J9QW71c0yaDLb1Y2LyKB94SKFTt5zey5z5gY4C6sprvscuVoUC7FAnkkb7LOUewdyK6VKyf9ZaXjBCmvYr+AZAQ0NwTlqbqBr3iEpjHDjipxIulPprnqJHiQSE4T6qmZAUr0FV4ED+nXDxyyI4mNcJcvNJlzuQDaQ3WvP762+fJRZH3efzpztHRQwIgByYlNxEjcePySSfZQJUqwiPHfwqrqnrsmi/fub+B5VQL9E3TBkRyAU2vR0O+TDlu7wWG9jeF+iw8bDabOa6pwwdnz/kMjDmk2kIz011Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lZKinwsGGQjVtapJPiUlpAjygSxy/aOc7HGxwuHW3DA=;
- b=Uea8UyWzxi74/VV5k1M3YlOV/tOxO/ueNqViAOh7m3DwIGk7CqCXIqkFTgiR+0JRz+g5yb61W3C8vtdz8ESwaWPA0n44pjbMoIdu5r9W3V8Aeg6LzM8SGv28mE+IdpzF62XaX2nZ8d6B6Qk2STEqPLmZXpDBj+6UeNByOpwc8p40BuF4HSeL19mAC2kZqok+SfNg0Ysi9ruD2Itm/Wo0H8UOgKh9P2u5+V04NMogzCqw1zLFhLvmADFZkKVqNw9AGn5SVDKxj/iGKHdUk4Kq3EqJzjZkVV4aDmXjYJDlqNbf7TX4uZ4GqOdD++yZQuP6014SLCFgWRKa/oPmvkD7Ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Mon, 6 Jul 2020 09:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgGFNqP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:46:15 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E57CC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:46:15 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so39420588wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lZKinwsGGQjVtapJPiUlpAjygSxy/aOc7HGxwuHW3DA=;
- b=HVxLVbvjnonUQ99sgPl4NgpKpkANyQP4FgQDEp69J57bs62FDT1joxn9jl7EbiXkveimLIItoB2UOf9Q1gtrn12zZsme/LJffq0460skKjqRLzLi48ZWZOhqN4alzxHTXLwAyVnZzfpnR2tFCMQa70fcYlrush9HI8HmaMIEAng=
-Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
- by BYAPR11MB3670.namprd11.prod.outlook.com (2603:10b6:a03:f8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Mon, 6 Jul
- 2020 13:45:53 +0000
-Received: from BYAPR11MB2632.namprd11.prod.outlook.com
- ([fe80::3d7d:dfc1:b35d:63d1]) by BYAPR11MB2632.namprd11.prod.outlook.com
- ([fe80::3d7d:dfc1:b35d:63d1%7]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 13:45:52 +0000
-From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-To:     Petr Mladek <pmladek@suse.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: =?gb2312?B?u9i4tDogW2t0aHJlYWRdIGE5MDQ3N2YwYzk6IFdBUk5JTkc6YXRfa2VybmVs?=
- =?gb2312?B?L2t0aHJlYWQuYzoja3RocmVhZF9xdWV1ZV93b3Jr?=
-Thread-Topic: [kthread] a90477f0c9:
- WARNING:at_kernel/kthread.c:#kthread_queue_work
-Thread-Index: AQHWU3lGAWNhfabfOE65Hog1VLiffaj6UcV0gAA7VGI=
-Date:   Mon, 6 Jul 2020 13:45:52 +0000
-Message-ID: <BYAPR11MB26325D9F68A75D1415C4DE9BFF690@BYAPR11MB2632.namprd11.prod.outlook.com>
-References: <20200706093822.GC3874@shao2-debian>,<BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.com; dkim=none (message not signed)
- header.d=none;suse.com; dmarc=none action=none header.from=windriver.com;
-x-originating-ip: [106.39.149.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf426578-821f-4110-384b-08d821b2e6a0
-x-ms-traffictypediagnostic: BYAPR11MB3670:
-x-microsoft-antispam-prvs: <BYAPR11MB36702F0EBB40DBDA675C474AFF690@BYAPR11MB3670.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 40dWH1kL5UQ/gSg8qaxR1bwmcW87VXTA2Io4w9CvUMdcGDwfFGX4eq2Q3BZxrP3If0X+zSsutZH5auMA0y6GoKVlulkK+jXEG/0fkqgbck0i5WkPEwQ3Y0igRbsEe2u3V1nwPOf+b87/FYF9WvHHjpyYn9mH3nE2cVo5JDpMf9bmBxSzxKM3scPWu37Np+D/wsy/xKjkrP+Q1cnC/5sm1iukMSkkFaPw1Tb8C0Vtq7p1KpbrM2brH+3dz3tLU300MxZ/SJDjP4ZYAjMsoeaeV9fP/oFyLW0S2Qqjceswyd1abm1odK1A31frhbdp/J+1KoADG5116++uGdSJ42WrEdN9ZfmlOQd8qG4SCBy8QhlOuEvZ8J98Ep+OjZe6rAPmUUAK4x6wQX3msh8jx5JDhw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(376002)(39850400004)(366004)(136003)(71200400001)(478600001)(966005)(4326008)(316002)(8936002)(7696005)(2940100002)(186003)(6916009)(6506007)(26005)(55016002)(9686003)(86362001)(33656002)(224303003)(66476007)(66556008)(64756008)(91956017)(76116006)(66946007)(66446008)(2906002)(54906003)(52536014)(45080400002)(83380400001)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: NyEyxcm7eA4w/0B2Semhx72YmQ+agnmSP/S0hWXk9vxl/Dy/hC2RS63RaLtOE9PgGFHddYT3pvo7ixrYA0dy6eSVU4R8SDVH3SBxbMieg4po78GNKz4St1r4PLcUHoOJbqYcrCJ0qp+zXleMHy5gGdhSCVvokBz9844FiN4GUdq7yhyaBccHJ9sReX9X27Rl8C0vlITyoweSF+0SIsxf9FywjGmHDeBkT3FA3SY3EiDjJtpCGDlyqaMarnjFfhrDck7mj4YQzmAwStSlBRpdxyC210/wIgKwTDSDVYPXMyEdZ1+yW1EspJpEX0d10DucUFqoV2xGMnGUa2JfbZzUuA+NuPb5BaMrHph7i+LkbPa4B1VjH9agK6rqfVceEen6/x2ZhHPzAsCzSwsZF9A/VUfkQFkYhsItcjGxcSeZKMPDttlNyeFGFXHqVitafV66v4Kp13L/S6D6iiVDEOtoTYxORnht1dbxuTgQI/Sx3ok=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MZyQPOMczNHbaYO2QB7Fnl+OekFYCcPdnajxmT+RLok=;
+        b=opSlrEPhbvi4sPAqVPrrDHLerBDcNt6yKujCF4KMl4YV7AeL/8Z/NUqNty5YpTaE9o
+         yo1Ln8ToTwcaKIOjfW45FA/1A7vLZbVPKcFqPf2KC1J/EjQgp3b7xFB0xm26umge7SQS
+         KoTJbqfvApa7q2hoCZ86GOru89CXbJByJ6Dz+xGDKi1+ApVvwP2w77hcEXem3X+NVJRL
+         AQWxVQmw7mAFRDdy8yyY/zvkOErTOXOpFICiH3NTja0fqEbaHOwPBCUOOSwTFYMRJ/qy
+         NOjyIk6YHEtNTghkHX0Era1ssJnc/Ix0SpWOVhNnGC7A41QDqcp+3M8Ryd8lVWjMmJhg
+         PAnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MZyQPOMczNHbaYO2QB7Fnl+OekFYCcPdnajxmT+RLok=;
+        b=idZT/6T+PFaV5d/IhIsmWXqy/W1Sob1XfQyT77NqWzz17+E2l+6EppiQR3ipLC7Rx9
+         3MFtACjLsUqF6qmJ6d0wsXtnXk7h5nQBZE6eTJQ2ol8mSGupQ+YXGhUBL1lGddFvaVey
+         I1hHFdl+DauauHv+T6mHaNbDYW1VmOxLWK+2GCccLqCbxtlQoyvg8XtOUdqYHik3QnEF
+         4DVdtPRtzNPUZP3Ppd1ME7hgczlK8/5x92XoyPewOnjVYHfDQKVlzYZ8597ZQO/gPCC9
+         OtEciHtPPN+N5Olwkyth+/2WgUqo7rIdFm0k/UStt7XU+ruX+O1GNKmI0S1WzAx7ziOx
+         wAKA==
+X-Gm-Message-State: AOAM5301BIzu7Tz+cSMS+gKnXhoWQRvowCjGGJi6NEKTi8hfW9J/Bxpr
+        rFd+vyapZES4IAZLHY2b6YHUIiWUD4U=
+X-Google-Smtp-Source: ABdhPJzjmydMrQ+1z0sFSMCKPT5a3jlwVLV3GcU7fdKAOd91lZSsQXjWhG4ckUU/PlbYpJHGdQjqGw==
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr49509502wme.160.1594043173784;
+        Mon, 06 Jul 2020 06:46:13 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865? ([2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865])
+        by smtp.googlemail.com with ESMTPSA id 65sm26163278wre.6.2020.07.06.06.46.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 06:46:13 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
+ framework
+To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
+ <20200706105538.2159-4-daniel.lezcano@linaro.org>
+ <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
+ <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
+Date:   Mon, 6 Jul 2020 15:46:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf426578-821f-4110-384b-08d821b2e6a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 13:45:52.8441
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eInGiqCU9bZ9uEqhwQwP1eQlmy1Fw2KzX6nmr9IiMnsd0r1BC0em7DMorwW82k3JBBr/g2X+V1bTOxx8icxuUU0QrUsPBkVesd/pBADTy1I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3670
+In-Reply-To: <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCreivP7IyzogWmhhbmcs
-IFFpYW5nIDxRaWFuZy5aaGFuZ0B3aW5kcml2ZXIuY29tPgq3osvNyrG85DogMjAyMMTqN9TCNsjV
-IDE4OjE3CsrVvP7IyzogUGV0ciBNbGFkZWsKs63LzTogQW5kcmV3IE1vcnRvbjsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZwrW98ziOiC72Li0OiBba3RocmVhZF0gYTkwNDc3ZjBjOTogV0FS
-TklORzphdF9rZXJuZWwva3RocmVhZC5jOiNrdGhyZWFkX3F1ZXVlX3dvcmsKCkhpICwgUGV0ciBN
-bGFkZWsKVGhlcmUgc29tZSBxdWVzdGlvbiBmb3IgIldvcmsgY291bGQgbm90IGJlIHF1ZXVlZCB3
-aGVuIHdvcmtlciBiZWluZyBkZXN0cm95ZWQiIHBhdGNoLAoKd2hlbiBpbiAic3BpX2luaXRfcXVl
-dWUiIGZ1bmMgOgoia3RocmVhZF9pbml0X3dvcmtlcigmY3Rsci0+a3dvcmtlcik7ICAgICAod29y
-a2VyLT50YXNrID0gTlVMTCkKIGN0bHItPmt3b3JrZXJfdGFzayA9IGt0aHJlYWRfcnVuKGt0aHJl
-YWRfd29ya2VyX2ZuLCAmY3Rsci0+a3dvcmtlciwKICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiJXMiLCBkZXZfbmFtZSgmY3Rsci0+ZGV2KSk7ICIKCiBpbiAic3BpX3N0
-YXJ0X3F1ZXVlIiBmdW5jOgogImt0aHJlYWRfcXVldWVfd29yaygmY3Rsci0+a3dvcmtlciwgJmN0
-bHItPnB1bXBfbWVzc2FnZXMpOyIKCiBCZWNhc3VlIHRoZSBrdGhyZWFkX3dvcmtlcl9mbiBpcyBu
-b3QgYmVnaW4gcnVubmluZywgIGlmIHF1ZXVlIHdvcmsgdG8gd29ya2VyLAogdGhlICIhd29ya2Vy
-LT50YXNrIiA9IHRydWUsIHRyaWdnZXIgV0FSTi4KCiBBcmUgTmVlZCB0byAgIiB0ZXN0X2JpdChL
-VEhSRUFEX1NIT1VMRF9TVE9QLCAgJnRvX2t0aHJlYWQoY3VycmVudCktPmZsYWdzKSAiIHJlcGxh
-Y2UgIldBUk5fT04oIXdvcmtlci0+dGFzaykiIGluIHF1ZXVpbmdfYmxvY2tlZCBmdW5jIAogb3Ig
-CiAia3RocmVhZF9jcmVhdGVfd29ya2VyIiByZXBsYWNlICJrdGhyZWFkX3J1bihrdGhyZWFkX3dv
-cmtlcl9mbi4uIiBpbiBzcGlfaW5pdF9xdWV1ZSBmdW5jCiAoYmVjYXVzZSBpbiBrdGhyZWFkX2Ny
-ZWF0ZV93b3JrZXIsICJ3b3JrZXItPnRhc2siIHdpbGwgYmUgYXNzaWduZWQgYSB2YWx1ZSkgPwoK
-IFpoYW5nIFFpYW5nCgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CreivP7Iyzoga2VybmVsIHRlc3Qgcm9ib3QgPHJvbmcuYS5jaGVuQGludGVsLmNvbT4Kt6LLzcqx
-vOQ6IDIwMjDE6jfUwjbI1SAxNzozOArK1bz+yMs6IFpoYW5nLCBRaWFuZwqzrcvNOiBsa3BAbGlz
-dHMuMDEub3JnCtb3zOI6IFtrdGhyZWFkXSBhOTA0NzdmMGM5OiBXQVJOSU5HOmF0X2tlcm5lbC9r
-dGhyZWFkLmM6I2t0aHJlYWRfcXVldWVfd29yawoKR3JlZXRpbmcsCgpGWUksIHdlIG5vdGljZWQg
-dGhlIGZvbGxvd2luZyBjb21taXQgKGJ1aWx0IHdpdGggZ2NjLTcpOgoKY29tbWl0OiBhOTA0Nzdm
-MGM5NTY2MjFlYjBkZDY5ZjBhYmZiNjA2NmFkOGZiZWY3ICgia3RocmVhZDogd29yayBjb3VsZCBu
-b3QgYmUgcXVldWVkIHdoZW4gd29ya2VyIGJlaW5nIGRlc3Ryb3llZCIpCmh0dHBzOi8vZ2l0aHVi
-LmNvbS9obmF6L2xpbnV4LW1tIG1hc3RlcgoKaW4gdGVzdGNhc2U6IHRyaW5pdHkKd2l0aCBmb2xs
-b3dpbmcgcGFyYW1ldGVyczoKCiAgICAgICAgcnVudGltZTogMzAwcwoKdGVzdC1kZXNjcmlwdGlv
-bjogVHJpbml0eSBpcyBhIGxpbnV4IHN5c3RlbSBjYWxsIGZ1enogdGVzdGVyLgp0ZXN0LXVybDog
-aHR0cDovL2NvZGVtb25rZXkub3JnLnVrL3Byb2plY3RzL3RyaW5pdHkvCgoKb24gdGVzdCBtYWNo
-aW5lOiBxZW11LXN5c3RlbS1pMzg2IC1lbmFibGUta3ZtIC1jcHUgU2FuZHlCcmlkZ2UgLXNtcCAy
-IC1tIDE2RwoKY2F1c2VkIGJlbG93IGNoYW5nZXMgKHBsZWFzZSByZWZlciB0byBhdHRhY2hlZCBk
-bWVzZy9rbXNnIGZvciBlbnRpcmUgbG9nL2JhY2t0cmFjZSk6CgoKKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
-LSsKfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDg1
-YzYxMjdlMDYgfCBhOTA0NzdmMGM5IHwKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSsKfCBib290X3N1Y2Nl
-c3NlcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYgICAgICAgICAgfCAwICAg
-ICAgICAgIHwKfCBib290X2ZhaWx1cmVzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8IDAgICAgICAgICAgfCAzMCAgICAgICAgIHwKfCBXQVJOSU5HOmF0X2tlcm5lbC9rdGhyZWFk
-LmM6I2t0aHJlYWRfcXVldWVfd29yayB8IDAgICAgICAgICAgfCAzMCAgICAgICAgIHwKfCBFSVA6
-a3RocmVhZF9xdWV1ZV93b3JrICAgICAgICAgICAgICAgICAgICAgICAgICB8IDAgICAgICAgICAg
-fCAzMCAgICAgICAgIHwKfCBCVUc6a2VybmVsX2hhbmdfaW5fdGVzdF9zdGFnZSAgICAgICAgICAg
-ICAgICAgICB8IDAgICAgICAgICAgfCAyICAgICAgICAgIHwKKy0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSsK
-CgpJZiB5b3UgZml4IHRoZSBpc3N1ZSwga2luZGx5IGFkZCBmb2xsb3dpbmcgdGFnClJlcG9ydGVk
-LWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8cm9uZy5hLmNoZW5AaW50ZWwuY29tPgoKClsgICAgNS41
-NTQyODJdIFdBUk5JTkc6IENQVTogMCBQSUQ6IDEgYXQga2VybmVsL2t0aHJlYWQuYzo4MTcga3Ro
-cmVhZF9xdWV1ZV93b3JrKzB4ZjgvMHgxMjAKWyAgICA1LjU1NjIwNF0gTW9kdWxlcyBsaW5rZWQg
-aW46ClsgICAgNS41NTYyMDRdIENQVTogMCBQSUQ6IDEgQ29tbTogc3dhcHBlciBUYWludGVkOiBH
-IFMgICAgICAgICAgICAgICAgNS44LjAtcmMzLTAwMDE0LWdhOTA0NzdmMGM5NTY2ICMxClsgICAg
-NS41NTYyMDRdIEhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgs
-IDE5OTYpLCBCSU9TIDEuMTIuMC0xIDA0LzAxLzIwMTQKWyAgICA1LjU1NjIwNF0gRUlQOiBrdGhy
-ZWFkX3F1ZXVlX3dvcmsrMHhmOC8weDEyMApbICAgIDUuNTU2MjA0XSBDb2RlOiAwMCA1OSBlOSA2
-NyBmZiBmZiBmZiA4ZCA3NiAwMCA4YiA0ZSAxMCA4NSBjOSA3NSBhNiA4ZCA0YiAyOCA4OSBmMiA4
-OSBkOCBiZiAwMSAwMCAwMCAwMCBlOCBmMCBmNSBmZiBmZiBlYiA5MyA4ZCBiNiAwMCAwMCAwMCAw
-MCA8MGY+IDBiIDZhIDAwIDMxIGM5IGJhIDAxIDAwIDAwIDAwIGI4IDA4IDZjIDY0IGMzIGU4IGYz
-IDA0IDBiIDAwIDViClsgICAgNS41NTYyMDRdIEVBWDogMDAwMDAwMDAgRUJYOiBlZWZmNTM4YyBF
-Q1g6IDAwMDAwMDAwIEVEWDogMDAwMDAwMDEKWyAgICA1LjU1NjIwNF0gRVNJOiBlZWZmNTNkMCBF
-REk6IDAwMDAwMDAwIEVCUDogZjVlZGRlNzAgRVNQOiBmNWVkZGU1YwpbICAgIDUuNTU2MjA0XSBE
-UzogMDA3YiBFUzogMDA3YiBGUzogMDAwMCBHUzogMDAwMCBTUzogMDA2OCBFRkxBR1M6IDAwMDEw
-MDQ2ClsgICAgNS41NTYyMDRdIENSMDogODAwNTAwMzMgQ1IyOiBiN2VkYTg0NCBDUjM6IDAzOGFl
-MDAwIENSNDogMDAwNDA2ZDAKWyAgICA1LjU1NjIwNF0gQ2FsbCBUcmFjZToKWyAgICA1LjU1NjIw
-NF0gIHNwaV9zdGFydF9xdWV1ZSsweDUwLzB4NzAKWyAgICA1LjU1NjIwNF0gIHNwaV9yZWdpc3Rl
-cl9jb250cm9sbGVyKzB4NjQyLzB4YTgwClsgICAgNS41NTYyMDRdICA/IGtvYmplY3RfZ2V0KzB4
-NTQvMHhmMApbICAgIDUuNTU2MjA0XSAgPyBwYXJwb3J0X3BjX3BsYXRmb3JtX3Byb2JlKzB4MTAv
-MHgxMApbICAgIDUuNTU2MjA0XSAgc3BpX2JpdGJhbmdfc3RhcnQrMHgyZi8weDcwClsgICAgNS41
-NTYyMDRdICA/IHBhcnBvcnRfcGNfcGxhdGZvcm1fcHJvYmUrMHgxMC8weDEwClsgICAgNS41NTYy
-MDRdICBidXR0ZXJmbHlfYXR0YWNoKzB4MTY0LzB4MmMwClsgICAgNS41NTYyMDRdICA/IGRyaXZl
-cl9kZXRhY2grMHgzMC8weDMwClsgICAgNS41NTYyMDRdICBwb3J0X2NoZWNrKzB4MWMvMHgzMApb
-ICAgIDUuNTU2MjA0XSAgYnVzX2Zvcl9lYWNoX2RldisweDVhLzB4OTAKWyAgICA1LjU1NjIwNF0g
-IF9fcGFycG9ydF9yZWdpc3Rlcl9kcml2ZXIrMHg3Ni8weGEwClsgICAgNS41NTYyMDRdICA/IGRy
-aXZlcl9kZXRhY2grMHgzMC8weDMwClsgICAgNS41NTYyMDRdICA/IHNwaV9lbmdpbmVfZHJpdmVy
-X2luaXQrMHgxNi8weDE2ClsgICAgNS41NTYyMDRdICBidXR0ZXJmbHlfaW5pdCsweDE5LzB4MWIK
-WyAgICA1LjU1NjIwNF0gIGRvX29uZV9pbml0Y2FsbCsweDc5LzB4MzEwClsgICAgNS41NTYyMDRd
-ICA/IHBhcnNlX2FyZ3MrMHg3MC8weDQyMApbICAgIDUuNTU2MjA0XSAgPyByY3VfcmVhZF9sb2Nr
-X3NjaGVkX2hlbGQrMHgyZi8weDUwClsgICAgNS41NTYyMDRdICA/IHRyYWNlX2luaXRjYWxsX2xl
-dmVsKzB4OTUvMHhjNwpbICAgIDUuNTU2MjA0XSAgPyBrZXJuZWxfaW5pdF9mcmVlYWJsZSsweDEy
-OS8weDE5ZgpbICAgIDUuNTU2MjA0XSAga2VybmVsX2luaXRfZnJlZWFibGUrMHgxNDgvMHgxOWYK
-WyAgICA1LjU1NjIwNF0gID8gcmVzdF9pbml0KzB4MTAwLzB4MTAwClsgICAgNS41NTYyMDRdICBr
-ZXJuZWxfaW5pdCsweGQvMHhmMApbICAgIDUuNTU2MjA0XSAgcmV0X2Zyb21fZm9yaysweDFjLzB4
-MjgKWyAgICA1LjU1NjIwNF0gaXJxIGV2ZW50IHN0YW1wOiA4NjIwNDEwClsgICAgNS41NTYyMDRd
-IGhhcmRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDg2MjA0MDkpOiBbPGMyNjc1ZGFhPl0gX3Jhd19z
-cGluX3VubG9ja19pcnFyZXN0b3JlKzB4MmEvMHg1MApbICAgIDUuNTU2MjA0XSBoYXJkaXJxcyBs
-YXN0IGRpc2FibGVkIGF0ICg4NjIwNDEwKTogWzxjMjY3NWJiND5dIF9yYXdfc3Bpbl9sb2NrX2ly
-cXNhdmUrMHgxNC8weDQwClsgICAgNS41NTYyMDRdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQg
-KDg2MjAyNjIpOiBbPGMyNjc3OTAwPl0gX19kb19zb2Z0aXJxKzB4MmUwLzB4NDgwClsgICAgNS41
-NTYyMDRdIHNvZnRpcnFzIGxhc3QgZGlzYWJsZWQgYXQgKDg2MjAyNDkpOiBbPGMxMDIzY2Y1Pl0g
-Y2FsbF9vbl9zdGFjaysweDQ1LzB4NTAKWyAgICA1LjU1NjIwNF0gLS0tWyBlbmQgdHJhY2UgMTg0
-MDYxYTQ0MmI1ZmQ2ZiBdLS0tCgoKVG8gcmVwcm9kdWNlOgoKICAgICAgICAjIGJ1aWxkIGtlcm5l
-bAogICAgICAgIGNkIGxpbnV4CiAgICAgICAgY3AgY29uZmlnLTUuOC4wLXJjMy0wMDAxNC1nYTkw
-NDc3ZjBjOTU2NiAuY29uZmlnCiAgICAgICAgbWFrZSBIT1NUQ0M9Z2NjLTcgQ0M9Z2NjLTcgQVJD
-SD1pMzg2IG9sZGRlZmNvbmZpZyBwcmVwYXJlIG1vZHVsZXNfcHJlcGFyZSBiekltYWdlCgogICAg
-ICAgIGdpdCBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvbGtwLXRlc3RzLmdpdAogICAg
-ICAgIGNkIGxrcC10ZXN0cwogICAgICAgIGJpbi9sa3AgcWVtdSAtayA8YnpJbWFnZT4gam9iLXNj
-cmlwdCAjIGpvYi1zY3JpcHQgaXMgYXR0YWNoZWQgaW4gdGhpcyBlbWFpbAoKCgpUaGFua3MsClJv
-bmcgQ2hlbgoK
+On 06/07/2020 15:17, Marek Szyprowski wrote:
+> Hi Daniel,
+> 
+> On 06.07.2020 12:55, Daniel Lezcano wrote:
+>> The generic netlink protocol is implemented but the different
+>> notification functions are not yet connected to the core code.
+>>
+>> These changes add the notification calls in the different
+>> corresponding places.
+>>
+>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> 
+> This patch landed in today's linux-next 20200706 as commit 5df786e46560 
+> ("thermal: core: Add notifications call in the framework"). Sadly it 
+> breaks booting various Samsung Exynos based boards. Here is an example 
+> log from Odroid U3 board:
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 00000010
+> pgd = (ptrval)
+> [00000010] *pgd=00000000
+> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560 
+> #1146
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> PC is at kmem_cache_alloc+0x13c/0x418
+> LR is at kmem_cache_alloc+0x48/0x418
+> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
+> ...
+> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
+> Control: 10c5387d  Table: 4000404a  DAC: 00000051
+> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+> Stack: (0xee8f1cf8 to 0xee8f2000)
+> ...
+> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] (__alloc_skb+0x5c/0x170)
+> [<c08cd170>] (__alloc_skb) from [<c07ec19c>] 
+> (thermal_genl_send_event+0x24/0x174)
+> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>] 
+> (thermal_notify_tz_create+0x58/0x74)
+> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>] 
+> (thermal_zone_device_register+0x358/0x650)
+> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>] 
+> (of_parse_thermal_zones+0x304/0x7a4)
+> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>] 
+> (thermal_init+0xdc/0x154)
+> [<c1028964>] (thermal_init) from [<c0102378>] (do_one_initcall+0x8c/0x424)
+> [<c0102378>] (do_one_initcall) from [<c1001158>] 
+> (kernel_init_freeable+0x190/0x204)
+> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>] 
+> (kernel_init+0x8/0x118)
+> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
+> 
+> Reverting it on top of linux-next fixes the boot issue. I will 
+> investigate it further soon.
+
+Thanks for reporting this.
+
+Can you send the addr2line result and code it points to ?
+
+
+>> ---
+>>    v4:
+>>       - Fixed missing static declaration, reported by kbuild-bot
+>>       - Removed max state notification
+>> ---
+>>   drivers/thermal/thermal_core.c    | 21 +++++++++++++++++++++
+>>   drivers/thermal/thermal_helpers.c | 13 +++++++++++--
+>>   drivers/thermal/thermal_sysfs.c   | 15 ++++++++++++++-
+>>   3 files changed, 46 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+>> index 5fae1621fb01..25ef29123f72 100644
+>> --- a/drivers/thermal/thermal_core.c
+>> +++ b/drivers/thermal/thermal_core.c
+>> @@ -215,6 +215,8 @@ int thermal_zone_device_set_policy(struct thermal_zone_device *tz,
+>>   	mutex_unlock(&tz->lock);
+>>   	mutex_unlock(&thermal_governor_lock);
+>>   
+>> +	thermal_notify_tz_gov_change(tz->id, policy);
+>> +
+>>   	return ret;
+>>   }
+>>   
+>> @@ -406,12 +408,25 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
+>>   static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
+>>   {
+>>   	enum thermal_trip_type type;
+>> +	int trip_temp, hyst = 0;
+>>   
+>>   	/* Ignore disabled trip points */
+>>   	if (test_bit(trip, &tz->trips_disabled))
+>>   		return;
+>>   
+>> +	tz->ops->get_trip_temp(tz, trip, &trip_temp);
+>>   	tz->ops->get_trip_type(tz, trip, &type);
+>> +	if (tz->ops->get_trip_hyst)
+>> +		tz->ops->get_trip_hyst(tz, trip, &hyst);
+>> +
+>> +	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
+>> +		if (tz->last_temperature < trip_temp &&
+>> +		    tz->temperature >= trip_temp)
+>> +			thermal_notify_tz_trip_up(tz->id, trip);
+>> +		if (tz->last_temperature >= trip_temp &&
+>> +		    tz->temperature < (trip_temp - hyst))
+>> +			thermal_notify_tz_trip_down(tz->id, trip);
+>> +	}
+>>   
+>>   	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
+>>   		handle_critical_trips(tz, trip, type);
+>> @@ -443,6 +458,8 @@ static void update_temperature(struct thermal_zone_device *tz)
+>>   	mutex_unlock(&tz->lock);
+>>   
+>>   	trace_thermal_temperature(tz);
+>> +
+>> +	thermal_genl_sampling_temp(tz->id, temp);
+>>   }
+>>   
+>>   static void thermal_zone_device_init(struct thermal_zone_device *tz)
+>> @@ -1405,6 +1422,8 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+>>   	if (atomic_cmpxchg(&tz->need_update, 1, 0))
+>>   		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+>>   
+>> +	thermal_notify_tz_create(tz->id, tz->type);
+>> +
+>>   	return tz;
+>>   
+>>   unregister:
+>> @@ -1476,6 +1495,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+>>   	ida_destroy(&tz->ida);
+>>   	mutex_destroy(&tz->lock);
+>>   	device_unregister(&tz->device);
+>> +
+>> +	thermal_notify_tz_delete(tz->id);
+>>   }
+>>   EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
+>>   
+>> diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
+>> index 87b1256fa2f2..c94bc824e5d3 100644
+>> --- a/drivers/thermal/thermal_helpers.c
+>> +++ b/drivers/thermal/thermal_helpers.c
+>> @@ -175,6 +175,16 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
+>>   	mutex_unlock(&tz->lock);
+>>   }
+>>   
+>> +static void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev,
+>> +				       int target)
+>> +{
+>> +	if (cdev->ops->set_cur_state(cdev, target))
+>> +		return;
+>> +
+>> +	thermal_notify_cdev_state_update(cdev->id, target);
+>> +	thermal_cooling_device_stats_update(cdev, target);
+>> +}
+>> +
+>>   void thermal_cdev_update(struct thermal_cooling_device *cdev)
+>>   {
+>>   	struct thermal_instance *instance;
+>> @@ -197,8 +207,7 @@ void thermal_cdev_update(struct thermal_cooling_device *cdev)
+>>   			target = instance->target;
+>>   	}
+>>   
+>> -	if (!cdev->ops->set_cur_state(cdev, target))
+>> -		thermal_cooling_device_stats_update(cdev, target);
+>> +	thermal_cdev_set_cur_state(cdev, target);
+>>   
+>>   	cdev->updated = true;
+>>   	mutex_unlock(&cdev->lock);
+>> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+>> index aa99edb4dff7..ff449943f757 100644
+>> --- a/drivers/thermal/thermal_sysfs.c
+>> +++ b/drivers/thermal/thermal_sysfs.c
+>> @@ -124,7 +124,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
+>>   {
+>>   	struct thermal_zone_device *tz = to_thermal_zone(dev);
+>>   	int trip, ret;
+>> -	int temperature;
+>> +	int temperature, hyst = 0;
+>> +	enum thermal_trip_type type;
+>>   
+>>   	if (!tz->ops->set_trip_temp)
+>>   		return -EPERM;
+>> @@ -139,6 +140,18 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> +	if (tz->ops->get_trip_hyst) {
+>> +		ret = tz->ops->get_trip_hyst(tz, trip, &hyst);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	ret = tz->ops->get_trip_type(tz, trip, &type);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	thermal_notify_tz_trip_change(tz->id, trip, type, temperature, hyst);
+>> +
+>>   	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+>>   
+>>   	return count;
+> 
+> Best regards
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
