@@ -2,1103 +2,799 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5729EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED80C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218C42075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594030337;
-	bh=BvUt24CnRR9w1cul8LL9Pe0e9cjok831rkCZizq1BjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q3K0YH3dR/tIToqxb64Hi2o6qqYceYqP05AC15qsOuQi29anh3rttxP4ixDhJFaZP
-	 ZGGc4QHV25piPyQ2Tmjo/50WN3H5ER5BmdChuG1ypgh47nNuQSh2MZFZlu2Eut6uyT
-	 e38VFXFlUQcaqY9Y64vIGJgAYFLtmWVaLzN3TcoY=
+	by mail.kernel.org (Postfix) with ESMTP id EDE242075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="RTXliFND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgGFKMF (ORCPT
+        id S1728765AbgGFKMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgGFKMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:12:05 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC9E320739;
-        Mon,  6 Jul 2020 10:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594030322;
-        bh=BvUt24CnRR9w1cul8LL9Pe0e9cjok831rkCZizq1BjQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DGnhhDU5HjArrf9pzHB1m7K0a1/IpvRXLS61BYjBbjMJiFucwi3fVjnnLq+AX8cbQ
-         YAotPDGdY32BDfwLebExT420ycNzJMIIEe53ZIIMZTQ/sd1EdlmasxM4fqrteJ2OxR
-         iKkRu3jNO/kKandrEpCaST3065T89ah9ebyAYEbo=
-Date:   Mon, 6 Jul 2020 19:11:56 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     guoren@kernel.org
-Cc:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
-        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
-        me@packi.ch, bjorn.topel@gmail.com, atish.patra@wdc.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH V1 4/5] riscv: Add kprobes supported
-Message-Id: <20200706191156.ef63ba62d5d3e33f665997b7@kernel.org>
-In-Reply-To: <1593833659-26224-5-git-send-email-guoren@kernel.org>
-References: <1593833659-26224-1-git-send-email-guoren@kernel.org>
-        <1593833659-26224-5-git-send-email-guoren@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 6 Jul 2020 06:12:49 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:14102 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728299AbgGFKMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:12:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1594030365; x=1625566365;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Cv7VO8jxzC5X+chjycuJAmTFm+/W878z6FB5k0MIIJI=;
+  b=RTXliFND7KoQ3SPk5h5+1a/Gt3PsYgJ1mjheCgnLwK6hnxuK4FfAz5Dv
+   JVvlxhf3t0TWrw+wGNTlIH6ZfQI4iYaBeQNrP3buHxxDLARl/zMBHU3Gr
+   dYXCiGhOiD60cizcAJXkCrSj0ht3Vc//PPljdDD88s17vIapyXMU4y8Yu
+   M=;
+IronPort-SDR: ZyIw+qsWHPGUK+RVK1h3O8vO9PQaE2B7uEy+69GGCLml2aR/A59lPGt+b+Qx4usL0FVawR4ppO
+ /PHFeoN3JTTw==
+X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
+   d="scan'208";a="40182012"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 10:12:43 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id DE119A1E0B;
+        Mon,  6 Jul 2020 10:12:42 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 10:12:42 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.156) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 10:12:34 +0000
+Subject: Re: [PATCH v4 09/18] nitro_enclaves: Add logic for enclave vcpu
+ creation
+To:     Andra Paraschiv <andraprs@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-10-andraprs@amazon.com>
+From:   Alexander Graf <graf@amazon.de>
+Message-ID: <52e916fc-8fe3-f9bc-009e-ca84ab7dd650@amazon.de>
+Date:   Mon, 6 Jul 2020 12:12:31 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200622200329.52996-10-andraprs@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.156]
+X-ClientProxiedBy: EX13D23UWC004.ant.amazon.com (10.43.162.219) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guo,
-
-On Sat,  4 Jul 2020 03:34:18 +0000
-guoren@kernel.org wrote:
-
-> From: Guo Ren <guoren@linux.alibaba.com>
-> 
-> This patch enables "kprobe & kretprobe" to work with ftrace
-> interface. It utilized software breakpoint as single-step
-> mechanism.
-> 
-> Some instructions which can't be single-step executed must be
-> simulated in kernel execution slot, such as: branch, jal, auipc,
-> la ...
-> 
-> Some instructions should be rejected for probing and we use a
-> blacklist to filter, such as: ecall, ebreak, ...
-> 
-> We use ebreak & c.ebreak to replace origin instruction and the
-> kprobe handler prepares an executable memory slot for out-of-line
-> execution with a copy of the original instruction being probed.
-> In execution slot we add ebreak behind original instruction to
-> simulate a single-setp mechanism.
-> 
-> The patch is based on packi's work [1] and csky's work [2].
->  - The kprobes_trampoline.S is all from packi's patch
->  - The single-step mechanism is new designed for riscv without hw
->    single-step trap
->  - The simulation codes are from csky
->  - Frankly, all codes refer to other archs' implementation
-> 
->  [1] https://lore.kernel.org/linux-riscv/20181113195804.22825-1-me@packi.ch/
->  [2] https://lore.kernel.org/linux-csky/20200403044150.20562-9-guoren@kernel.org/
-> 
-
-This looks good to me. Thanks for updating !
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
 
 
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Co-Developed-by: Patrick Stählin <me@packi.ch>
-> Cc: Patrick Stählin <me@packi.ch>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Palmer Dabbelt <palmerdabbelt@google.com>
-> Cc: Björn Töpel <bjorn.topel@gmail.com>
+On 22.06.20 22:03, Andra Paraschiv wrote:
+> An enclave, before being started, has its resources set. One of its
+> resources is CPU.
+> =
+
+> The NE CPU pool is set for choosing CPUs for enclaves from it. Offline
+> the CPUs from the NE CPU pool during the pool setup and online them back
+> during the NE CPU pool teardown.
+> =
+
+> The enclave CPUs need to be full cores and from the same NUMA node. CPU
+> 0 and its siblings have to remain available to the primary / parent VM.
+> =
+
+> Add ioctl command logic for enclave vCPU creation. Return as result a
+> file descriptor that is associated with the enclave vCPU.
+> =
+
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 > ---
->  arch/riscv/Kconfig                            |   2 +
->  arch/riscv/include/asm/kprobes.h              |  40 +++
->  arch/riscv/include/asm/probes.h               |  24 ++
->  arch/riscv/kernel/Makefile                    |   1 +
->  arch/riscv/kernel/probes/Makefile             |   4 +
->  arch/riscv/kernel/probes/decode-insn.c        |  48 +++
->  arch/riscv/kernel/probes/decode-insn.h        |  18 +
->  arch/riscv/kernel/probes/kprobes.c            | 471 ++++++++++++++++++++++++++
->  arch/riscv/kernel/probes/kprobes_trampoline.S |  93 +++++
->  arch/riscv/kernel/probes/simulate-insn.c      |  85 +++++
->  arch/riscv/kernel/probes/simulate-insn.h      |  47 +++
->  arch/riscv/kernel/traps.c                     |   9 +
->  arch/riscv/mm/fault.c                         |   4 +
->  13 files changed, 846 insertions(+)
->  create mode 100644 arch/riscv/include/asm/probes.h
->  create mode 100644 arch/riscv/kernel/probes/Makefile
->  create mode 100644 arch/riscv/kernel/probes/decode-insn.c
->  create mode 100644 arch/riscv/kernel/probes/decode-insn.h
->  create mode 100644 arch/riscv/kernel/probes/kprobes.c
->  create mode 100644 arch/riscv/kernel/probes/kprobes_trampoline.S
->  create mode 100644 arch/riscv/kernel/probes/simulate-insn.c
->  create mode 100644 arch/riscv/kernel/probes/simulate-insn.h
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 58d6f66..a295f0b 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -57,6 +57,8 @@ config RISCV
->  	select HAVE_EBPF_JIT if MMU
->  	select HAVE_FUTEX_CMPXCHG if FUTEX
->  	select HAVE_GENERIC_VDSO if MMU && 64BIT
-> +	select HAVE_KPROBES
-> +	select HAVE_KRETPROBES
->  	select HAVE_PCI
->  	select HAVE_PERF_EVENTS
->  	select HAVE_PERF_REGS
-> diff --git a/arch/riscv/include/asm/kprobes.h b/arch/riscv/include/asm/kprobes.h
-> index 56a98ea3..4647d38 100644
-> --- a/arch/riscv/include/asm/kprobes.h
-> +++ b/arch/riscv/include/asm/kprobes.h
-> @@ -11,4 +11,44 @@
->  
->  #include <asm-generic/kprobes.h>
->  
-> +#ifdef CONFIG_KPROBES
-> +#include <linux/types.h>
-> +#include <linux/ptrace.h>
-> +#include <linux/percpu.h>
+> Changelog
+> =
+
+> v3 -> v4
+> =
+
+> * Setup the NE CPU pool at runtime via a sysfs file for the kernel
+>    parameter.
+> * Check enclave CPUs to be from the same NUMA node.
+> * Use dev_err instead of custom NE log pattern.
+> * Update the NE ioctl call to match the decoupling from the KVM API.
+> =
+
+> v2 -> v3
+> =
+
+> * Remove the WARN_ON calls.
+> * Update static calls sanity checks.
+> * Update kzfree() calls to kfree().
+> * Remove file ops that do nothing for now - open, ioctl and release.
+> =
+
+> v1 -> v2
+> =
+
+> * Add log pattern for NE.
+> * Update goto labels to match their purpose.
+> * Remove the BUG_ON calls.
+> * Check if enclave state is init when setting enclave vcpu.
+> ---
+>   drivers/virt/nitro_enclaves/ne_misc_dev.c | 491 ++++++++++++++++++++++
+>   1 file changed, 491 insertions(+)
+> =
+
+> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
+ro_enclaves/ne_misc_dev.c
+> index f70496813033..d6777008f685 100644
+> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> @@ -39,7 +39,11 @@
+>    * TODO: Update logic to create new sysfs entries instead of using
+>    * a kernel parameter e.g. if multiple sysfs files needed.
+>    */
+> +static int ne_set_kernel_param(const char *val, const struct kernel_para=
+m *kp);
 > +
-> +#define __ARCH_WANT_KPROBES_INSN_SLOT
-> +#define MAX_INSN_SIZE			2
-> +
-> +#define flush_insn_slot(p)		do { } while (0)
-> +#define kretprobe_blacklist_size	0
-> +
-> +#include <asm/probes.h>
-> +
-> +struct prev_kprobe {
-> +	struct kprobe *kp;
-> +	unsigned int status;
+>   static const struct kernel_param_ops ne_cpu_pool_ops =3D {
+> +	.get =3D param_get_string,
+> +	.set =3D ne_set_kernel_param,
+>   };
+>   =
+
+>   static char ne_cpus[PAGE_SIZE];
+> @@ -60,6 +64,485 @@ struct ne_cpu_pool {
+>   =
+
+>   static struct ne_cpu_pool ne_cpu_pool;
+>   =
+
+> +static const struct file_operations ne_enclave_vcpu_fops =3D {
+> +	.owner		=3D THIS_MODULE,
+> +	.llseek		=3D noop_llseek,
 > +};
+
+Do we really need an fd for an object without operations? I think the =
+
+general flow to add CPUs from the pool to the VM is very sensible. But I =
+
+don't think we really need an fd as return value from that operation.
+
 > +
-> +/* Single step context for kprobe */
-> +struct kprobe_step_ctx {
-> +	unsigned long ss_pending;
-> +	unsigned long match_addr;
-> +};
-> +
-> +/* per-cpu kprobe control block */
-> +struct kprobe_ctlblk {
-> +	unsigned int kprobe_status;
-> +	unsigned long saved_status;
-> +	struct prev_kprobe prev_kprobe;
-> +	struct kprobe_step_ctx ss_ctx;
-> +};
-> +
-> +void arch_remove_kprobe(struct kprobe *p);
-> +int kprobe_fault_handler(struct pt_regs *regs, unsigned int trapnr);
-> +bool kprobe_breakpoint_handler(struct pt_regs *regs);
-> +bool kprobe_single_step_handler(struct pt_regs *regs);
-> +void kretprobe_trampoline(void);
-> +void __kprobes *trampoline_probe_handler(struct pt_regs *regs);
-> +
-> +#endif /* CONFIG_KPROBES */
->  #endif /* _ASM_RISCV_KPROBES_H */
-> diff --git a/arch/riscv/include/asm/probes.h b/arch/riscv/include/asm/probes.h
-> new file mode 100644
-> index 00000000..a787e6d
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/probes.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _ASM_RISCV_PROBES_H
-> +#define _ASM_RISCV_PROBES_H
-> +
-> +typedef u32 probe_opcode_t;
-> +typedef bool (probes_handler_t) (u32 opcode, unsigned long addr, struct pt_regs *);
-> +
-> +/* architecture specific copy of original instruction */
-> +struct arch_probe_insn {
-> +	probe_opcode_t *insn;
-> +	probes_handler_t *handler;
-> +	/* restore address after simulation */
-> +	unsigned long restore;
-> +};
-> +
-> +#ifdef CONFIG_KPROBES
-> +typedef u32 kprobe_opcode_t;
-> +struct arch_specific_insn {
-> +	struct arch_probe_insn api;
-> +};
-> +#endif
-> +
-> +#endif /* _ASM_RISCV_PROBES_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index b355cf4..c3fff3e 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -29,6 +29,7 @@ obj-y	+= riscv_ksyms.o
->  obj-y	+= stacktrace.o
->  obj-y	+= cacheinfo.o
->  obj-y	+= patch.o
-> +obj-y	+= probes/
->  obj-$(CONFIG_MMU) += vdso.o vdso/
->  
->  obj-$(CONFIG_RISCV_M_MODE)	+= clint.o traps_misaligned.o
-> diff --git a/arch/riscv/kernel/probes/Makefile b/arch/riscv/kernel/probes/Makefile
-> new file mode 100644
-> index 00000000..8a39507
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o simulate-insn.o
-> +obj-$(CONFIG_KPROBES)		+= kprobes_trampoline.o
-> +CFLAGS_REMOVE_simulate-insn.o = $(CC_FLAGS_FTRACE)
-> diff --git a/arch/riscv/kernel/probes/decode-insn.c b/arch/riscv/kernel/probes/decode-insn.c
-> new file mode 100644
-> index 00000000..0876c30
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/decode-insn.c
-> @@ -0,0 +1,48 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/kprobes.h>
-> +#include <linux/module.h>
-> +#include <linux/kallsyms.h>
-> +#include <asm/sections.h>
-> +
-> +#include "decode-insn.h"
-> +#include "simulate-insn.h"
-> +
-> +/* Return:
-> + *   INSN_REJECTED     If instruction is one not allowed to kprobe,
-> + *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use its slot.
+> +/**
+> + * ne_check_enclaves_created - Verify if at least one enclave has been c=
+reated.
+> + *
+> + * @pdev: PCI device used for enclave lifetime management.
+> + *
+> + * @returns: true if at least one enclave is created, false otherwise.
 > + */
-> +enum probe_insn __kprobes
-> +riscv_probe_decode_insn(probe_opcode_t *addr, struct arch_probe_insn *api)
+> +static bool ne_check_enclaves_created(struct pci_dev *pdev)
 > +{
-> +	probe_opcode_t insn = le32_to_cpu(*addr);
+> +	struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
 > +
-> +	/*
-> +	 * Reject instructions list:
-> +	 */
-> +	RISCV_INSN_REJECTED(system,		insn);
-> +	RISCV_INSN_REJECTED(fence,		insn);
+> +	if (!ne_pci_dev)
+> +		return false;
+
+Please pass in the ne_pci_dev into this function directly.
+
 > +
-> +	/*
-> +	 * Simulate instructions list:
-> +	 * TODO: the REJECTED ones below need to be implemented
-> +	 */
-> +#ifdef CONFIG_RISCV_ISA_C
-> +	RISCV_INSN_REJECTED(c_j,		insn);
-> +	RISCV_INSN_REJECTED(c_jr,		insn);
-> +	RISCV_INSN_REJECTED(c_jal,		insn);
-> +	RISCV_INSN_REJECTED(c_jalr,		insn);
-> +	RISCV_INSN_REJECTED(c_beqz,		insn);
-> +	RISCV_INSN_REJECTED(c_bnez,		insn);
-> +	RISCV_INSN_REJECTED(c_ebreak,		insn);
-> +#endif
+> +	mutex_lock(&ne_pci_dev->enclaves_list_mutex);
 > +
-> +	RISCV_INSN_REJECTED(auipc,		insn);
-> +	RISCV_INSN_REJECTED(branch,		insn);
+> +	if (list_empty(&ne_pci_dev->enclaves_list)) {
+> +		mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
 > +
-> +	RISCV_INSN_SET_SIMULATE(jal,		insn);
-> +	RISCV_INSN_SET_SIMULATE(jalr,		insn);
+> +		return false;
+
+If you make this a return variable, you save on the unlock duplication.
+
+> +	}
 > +
-> +	return INSN_GOOD;
-> +}
-> diff --git a/arch/riscv/kernel/probes/decode-insn.h b/arch/riscv/kernel/probes/decode-insn.h
-> new file mode 100644
-> index 00000000..42269a7
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/decode-insn.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
 > +
-> +#ifndef _RISCV_KERNEL_KPROBES_DECODE_INSN_H
-> +#define _RISCV_KERNEL_KPROBES_DECODE_INSN_H
-> +
-> +#include <asm/sections.h>
-> +#include <asm/kprobes.h>
-> +
-> +enum probe_insn {
-> +	INSN_REJECTED,
-> +	INSN_GOOD_NO_SLOT,
-> +	INSN_GOOD,
-> +};
-> +
-> +enum probe_insn __kprobes
-> +riscv_probe_decode_insn(probe_opcode_t *addr, struct arch_probe_insn *asi);
-> +
-> +#endif /* _RISCV_KERNEL_KPROBES_DECODE_INSN_H */
-> diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-> new file mode 100644
-> index 00000000..31b6196
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/kprobes.c
-> @@ -0,0 +1,471 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include <linux/kprobes.h>
-> +#include <linux/extable.h>
-> +#include <linux/slab.h>
-> +#include <linux/stop_machine.h>
-> +#include <asm/ptrace.h>
-> +#include <linux/uaccess.h>
-> +#include <asm/sections.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/bug.h>
-> +#include <asm/patch.h>
-> +
-> +#include "decode-insn.h"
-> +
-> +DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
-> +DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
-> +
-> +static void __kprobes
-> +post_kprobe_handler(struct kprobe_ctlblk *, struct pt_regs *);
-> +
-> +static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
-> +{
-> +	unsigned long offset = GET_INSN_LENGTH(p->opcode);
-> +
-> +	p->ainsn.api.restore = (unsigned long)p->addr + offset;
-> +
-> +	patch_text(p->ainsn.api.insn, p->opcode);
-> +	patch_text((void *)((unsigned long)(p->ainsn.api.insn) + offset),
-> +		   __BUG_INSN_32);
+> +	return true;
 > +}
 > +
-> +static void __kprobes arch_prepare_simulate(struct kprobe *p)
+> +/**
+> + * ne_setup_cpu_pool - Set the NE CPU pool after handling sanity checks =
+such as
+> + * not sharing CPU cores with the primary / parent VM or not using CPU 0=
+, which
+> + * should remain available for the primary / parent VM. Offline the CPUs=
+ from
+> + * the pool after the checks passed.
+> + *
+> + * @pdev: PCI device used for enclave lifetime management.
+> + * @ne_cpu_list: the CPU list used for setting NE CPU pool.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_setup_cpu_pool(struct pci_dev *pdev, const char *ne_cpu_li=
+st)
 > +{
-> +	p->ainsn.api.restore = 0;
-> +}
+> +	unsigned int cpu =3D 0;
+> +	unsigned int cpu_sibling =3D 0;
+> +	int numa_node =3D -1;
+> +	int rc =3D -EINVAL;
 > +
-> +static void __kprobes arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
-> +{
-> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> +	if (!capable(CAP_SYS_ADMIN)) {
+> +		dev_err(&pdev->dev, "No admin capability for CPU pool setup\n");
+
+No need to print anything here. It only gives non-admin users a chance =
+
+to spill the kernel log. If non-admin users can write at all? Can they?
+
+Also, isn't this at the wrong abstraction level? I would expect such a =
+
+check to happen on the file write function, not here.
+
 > +
-> +	if (p->ainsn.api.handler)
-> +		p->ainsn.api.handler((u32)p->opcode,
-> +					(unsigned long)p->addr, regs);
+> +		return -EPERM;
+> +	}
 > +
-> +	post_kprobe_handler(kcb, regs);
-> +}
+> +	if (!ne_cpu_list)
+> +		return 0;
 > +
-> +int __kprobes arch_prepare_kprobe(struct kprobe *p)
-> +{
-> +	unsigned long probe_addr = (unsigned long)p->addr;
-> +
-> +	if (probe_addr & 0x1) {
-> +		pr_warn("Address not aligned.\n");
+> +	if (ne_check_enclaves_created(pdev)) {
+> +		dev_err(&pdev->dev, "The CPU pool is used, enclaves created\n");
 > +
 > +		return -EINVAL;
 > +	}
 > +
-> +	/* copy instruction */
-> +	p->opcode = le32_to_cpu(*p->addr);
+> +	mutex_lock(&ne_cpu_pool.mutex);
 > +
-> +	/* decode instruction */
-> +	switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
-> +	case INSN_REJECTED:	/* insn not supported */
-> +		return -EINVAL;
+> +	rc =3D cpulist_parse(ne_cpu_list, ne_cpu_pool.avail);
+> +	if (rc < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Error in cpulist parse [rc=3D%d]\n", rc);
 > +
-> +	case INSN_GOOD_NO_SLOT:	/* insn need simulation */
-> +		p->ainsn.api.insn = NULL;
-> +		break;
-> +
-> +	case INSN_GOOD:	/* instruction uses slot */
-> +		p->ainsn.api.insn = get_insn_slot();
-> +		if (!p->ainsn.api.insn)
-> +			return -ENOMEM;
-> +		break;
+> +		goto unlock_mutex;
 > +	}
 > +
-> +	/* prepare the instruction */
-> +	if (p->ainsn.api.insn)
-> +		arch_prepare_ss_slot(p);
-> +	else
-> +		arch_prepare_simulate(p);
+> +	/*
+> +	 * Check if CPU 0 and its siblings are included in the provided CPU pool
+> +	 * They should remain available for the primary / parent VM.
+> +	 */
+> +	if (cpumask_test_cpu(0, ne_cpu_pool.avail)) {
+> +
+> +		dev_err(&pdev->dev,
+> +			"CPU 0 has to remain available for the primary VM\n");
+
+Shouldn't this also change the read value of the sysfs file?
+
+> +
+> +		rc =3D -EINVAL;
+> +
+> +		goto unlock_mutex;
+> +	}
+> +
+> +	for_each_cpu(cpu_sibling, topology_sibling_cpumask(0)) {
+> +		if (cpumask_test_cpu(cpu_sibling, ne_cpu_pool.avail)) {
+> +			dev_err(&pdev->dev,
+> +				"CPU sibling %d of CPU 0 is in the CPU pool\n",
+> +				cpu_sibling);
+
+Same here. I would expect the sysfs file to reflect either the previous =
+
+state or <empty> because failures mean no CPUs are donated anymore.
+
+Can we somehow implement the get function of the param as something that =
+
+gets generated dynamically?
+
+> +
+> +			rc =3D -EINVAL;
+> +
+> +			goto unlock_mutex;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Check if CPU siblings are included in the provided CPU pool. The
+> +	 * expectation is that CPU cores are made available in the CPU pool for
+> +	 * enclaves.
+> +	 */
+> +	for_each_cpu(cpu, ne_cpu_pool.avail) {
+> +		for_each_cpu(cpu_sibling, topology_sibling_cpumask(cpu)) {
+> +			if (!cpumask_test_cpu(cpu_sibling, ne_cpu_pool.avail)) {
+> +				dev_err(&pdev->dev,
+> +					"CPU %d is not in the CPU pool\n",
+> +					cpu_sibling);
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto unlock_mutex;
+> +			}
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Check if the CPUs from the NE CPU pool are from the same NUMA node.
+> +	 */
+> +	for_each_cpu(cpu, ne_cpu_pool.avail) {
+> +		if (numa_node < 0) {
+> +			numa_node =3D cpu_to_node(cpu);
+> +
+> +			if (numa_node < 0) {
+> +				dev_err(&pdev->dev,
+> +					"Invalid NUMA node %d\n", numa_node);
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto unlock_mutex;
+> +			}
+> +		} else {
+> +			if (numa_node !=3D cpu_to_node(cpu)) {
+> +				dev_err(&pdev->dev,
+> +					"CPUs are from different NUMA nodes\n");
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto unlock_mutex;
+> +			}
+> +		}
+> +	}
+> +
+
+There should be a comment here that describes the why:
+
+/*
+  * CPUs that are donated to enclaves should not be considered online
+  * by Linux anymore, as the hypervisor will degrade them to floating.
+  *
+  * We offline them here, to not degrade performance and expose correct
+  * topology to Linux and user space.
+  */
+
+> +	for_each_cpu(cpu, ne_cpu_pool.avail) {
+> +		rc =3D remove_cpu(cpu);
+> +		if (rc !=3D 0) {
+> +			dev_err(&pdev->dev,
+> +				"CPU %d is not offlined [rc=3D%d]\n", cpu, rc);
+> +
+> +			goto online_cpus;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&ne_cpu_pool.mutex);
 > +
 > +	return 0;
+> +
+> +online_cpus:
+> +	for_each_cpu(cpu, ne_cpu_pool.avail)
+> +		add_cpu(cpu);
+> +unlock_mutex:
+> +	mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +	return rc;
 > +}
 > +
-> +/* install breakpoint in text */
-> +void __kprobes arch_arm_kprobe(struct kprobe *p)
-> +{
-> +	if ((p->opcode & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
-> +		patch_text(p->addr, __BUG_INSN_32);
-> +	else
-> +		patch_text(p->addr, __BUG_INSN_16);
-> +}
-> +
-> +/* remove breakpoint from text */
-> +void __kprobes arch_disarm_kprobe(struct kprobe *p)
-> +{
-> +	patch_text(p->addr, p->opcode);
-> +}
-> +
-> +void __kprobes arch_remove_kprobe(struct kprobe *p)
-> +{
-> +}
-> +
-> +static void __kprobes save_previous_kprobe(struct kprobe_ctlblk *kcb)
-> +{
-> +	kcb->prev_kprobe.kp = kprobe_running();
-> +	kcb->prev_kprobe.status = kcb->kprobe_status;
-> +}
-> +
-> +static void __kprobes restore_previous_kprobe(struct kprobe_ctlblk *kcb)
-> +{
-> +	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
-> +	kcb->kprobe_status = kcb->prev_kprobe.status;
-> +}
-> +
-> +static void __kprobes set_current_kprobe(struct kprobe *p)
-> +{
-> +	__this_cpu_write(current_kprobe, p);
-> +}
-> +
-> +/*
-> + * Interrupts need to be disabled before single-step mode is set, and not
-> + * reenabled until after single-step mode ends.
-> + * Without disabling interrupt on local CPU, there is a chance of
-> + * interrupt occurrence in the period of exception return and  start of
-> + * out-of-line single-step, that result in wrongly single stepping
-> + * into the interrupt handler.
+> +/**
+> + * ne_teardown_cpu_pool - Online the CPUs from the NE CPU pool and clean=
+up the
+> + * CPU pool.
+> + *
+> + * @pdev: PCI device used for enclave lifetime management.
 > + */
-> +static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
-> +						struct pt_regs *regs)
+> +static void ne_teardown_cpu_pool(struct pci_dev *pdev)
 > +{
-> +	kcb->saved_status = regs->status;
-> +	regs->status &= ~SR_SPIE;
-> +}
+> +	unsigned int cpu =3D 0;
+> +	int rc =3D -EINVAL;
 > +
-> +static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
-> +						struct pt_regs *regs)
-> +{
-> +	regs->status = kcb->saved_status;
-> +}
+> +	if (!capable(CAP_SYS_ADMIN)) {
+> +		dev_err(&pdev->dev, "No admin capability for CPU pool setup\n");
 > +
-> +static void __kprobes
-> +set_ss_context(struct kprobe_ctlblk *kcb, unsigned long addr, struct kprobe *p)
-> +{
-> +	unsigned long offset = GET_INSN_LENGTH(p->opcode);
-> +
-> +	kcb->ss_ctx.ss_pending = true;
-> +	kcb->ss_ctx.match_addr = addr + offset;
-> +}
-> +
-> +static void __kprobes clear_ss_context(struct kprobe_ctlblk *kcb)
-> +{
-> +	kcb->ss_ctx.ss_pending = false;
-> +	kcb->ss_ctx.match_addr = 0;
-> +}
-> +
-> +static void __kprobes setup_singlestep(struct kprobe *p,
-> +				       struct pt_regs *regs,
-> +				       struct kprobe_ctlblk *kcb, int reenter)
-> +{
-> +	unsigned long slot;
-> +
-> +	if (reenter) {
-> +		save_previous_kprobe(kcb);
-> +		set_current_kprobe(p);
-> +		kcb->kprobe_status = KPROBE_REENTER;
-> +	} else {
-> +		kcb->kprobe_status = KPROBE_HIT_SS;
+> +		return;
 > +	}
 > +
-> +	if (p->ainsn.api.insn) {
-> +		/* prepare for single stepping */
-> +		slot = (unsigned long)p->ainsn.api.insn;
+> +	if (!ne_cpu_pool.avail)
+> +		return;
 > +
-> +		set_ss_context(kcb, slot, p);	/* mark pending ss */
+> +	if (ne_check_enclaves_created(pdev)) {
+> +		dev_err(&pdev->dev, "The CPU pool is used, enclaves created\n");
 > +
-> +		/* IRQs and single stepping do not mix well. */
-> +		kprobes_save_local_irqflag(kcb, regs);
-> +
-> +		instruction_pointer_set(regs, slot);
-> +	} else {
-> +		/* insn simulation */
-> +		arch_simulate_insn(p, regs);
+> +		return;
 > +	}
+> +
+> +	mutex_lock(&ne_cpu_pool.mutex);
+> +
+> +	for_each_cpu(cpu, ne_cpu_pool.avail) {
+> +		rc =3D add_cpu(cpu);
+> +		if (rc !=3D 0)
+> +			dev_err(&pdev->dev,
+> +				"CPU %d is not onlined [rc=3D%d]\n", cpu, rc);
+> +	}
+> +
+> +	cpumask_clear(ne_cpu_pool.avail);
+> +
+> +	mutex_unlock(&ne_cpu_pool.mutex);
 > +}
 > +
-> +static int __kprobes reenter_kprobe(struct kprobe *p,
-> +				    struct pt_regs *regs,
-> +				    struct kprobe_ctlblk *kcb)
+> +static int ne_set_kernel_param(const char *val, const struct kernel_para=
+m *kp)
 > +{
-> +	switch (kcb->kprobe_status) {
-> +	case KPROBE_HIT_SSDONE:
-> +	case KPROBE_HIT_ACTIVE:
-> +		kprobes_inc_nmissed_count(p);
-> +		setup_singlestep(p, regs, kcb, 1);
-> +		break;
-> +	case KPROBE_HIT_SS:
-> +	case KPROBE_REENTER:
-> +		pr_warn("Unrecoverable kprobe detected.\n");
-> +		dump_kprobe(p);
-> +		BUG();
-> +		break;
-> +	default:
-> +		WARN_ON(1);
+> +	const char *ne_cpu_list =3D val;
+> +	struct pci_dev *pdev =3D pci_get_device(PCI_VENDOR_ID_AMAZON,
+> +					      PCI_DEVICE_ID_NE, NULL);
+
+Isn't there a better way?
+
+> +	int rc =3D -EINVAL;
+> +
+> +	if (!pdev)
+> +		return -ENODEV;
+> +
+> +	ne_teardown_cpu_pool(pdev);
+> +
+> +	rc =3D ne_setup_cpu_pool(pdev, ne_cpu_list);
+> +	if (rc < 0) {
+> +		dev_err(&pdev->dev, "Error in setup CPU pool [rc=3D%d]\n", rc);
+> +
+> +		return rc;
+> +	}
+> +
+> +	return param_set_copystring(val, kp);
+> +}
+> +
+> +/**
+> + * ne_get_cpu_from_cpu_pool - Get a CPU from the CPU pool. If the vCPU i=
+d is 0,
+> + * the CPU is autogenerated and chosen from the NE CPU pool.
+> + *
+> + * This function gets called with the ne_enclave mutex held.
+> + *
+> + * @ne_enclave: private data associated with the current enclave.
+> + * @vcpu_id: id of the CPU to be associated with the given slot, apic id=
+ on x86.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_get_cpu_from_cpu_pool(struct ne_enclave *ne_enclave, u32 *=
+vcpu_id)
+
+That's a very awkward API. Can you instead just pass by-value and return =
+
+the resulting CPU ID?
+
+> +{
+> +	unsigned int cpu =3D 0;
+> +	unsigned int cpu_sibling =3D 0;
+> +
+> +	if (*vcpu_id !=3D 0) {
+> +		if (cpumask_test_cpu(*vcpu_id, ne_enclave->cpu_siblings)) {
+> +			cpumask_clear_cpu(*vcpu_id, ne_enclave->cpu_siblings);
+> +
+> +			return 0;
+> +		}
+> +
+> +		mutex_lock(&ne_cpu_pool.mutex);
+> +
+> +		if (!cpumask_test_cpu(*vcpu_id, ne_cpu_pool.avail)) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "CPU %d is not in NE CPU pool\n",
+> +					    *vcpu_id);
+> +
+> +			mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +			return -EINVAL;
+
+I think you're better off making the return value explicit for the =
+
+error, so that user space can print the error message rather than us.
+
+> +		}
+> +
+> +		cpumask_clear_cpu(*vcpu_id, ne_cpu_pool.avail);
+> +
+> +		/*
+> +		 * Make sure the CPU siblings are not marked as available
+> +		 * anymore.
+> +		 */
+> +		for_each_cpu(cpu_sibling, topology_sibling_cpumask(*vcpu_id)) {
+> +			if (cpu_sibling !=3D *vcpu_id) {
+> +				cpumask_clear_cpu(cpu_sibling,
+> +						  ne_cpu_pool.avail);
+> +
+> +				cpumask_set_cpu(cpu_sibling,
+> +						ne_enclave->cpu_siblings);
+> +			}
+> +		}
+> +
+> +		mutex_unlock(&ne_cpu_pool.mutex);
+> +
 > +		return 0;
 > +	}
 > +
-> +	return 1;
-> +}
+> +	/* There are CPU siblings available to choose from. */
+> +	cpu =3D cpumask_any(ne_enclave->cpu_siblings);
+> +	if (cpu < nr_cpu_ids) {
+> +		cpumask_clear_cpu(cpu, ne_enclave->cpu_siblings);
 > +
-> +static void __kprobes
-> +post_kprobe_handler(struct kprobe_ctlblk *kcb, struct pt_regs *regs)
-> +{
-> +	struct kprobe *cur = kprobe_running();
+> +		*vcpu_id =3D cpu;
 > +
-> +	if (!cur)
-> +		return;
-> +
-> +	/* return addr restore if non-branching insn */
-> +	if (cur->ainsn.api.restore != 0)
-> +		regs->epc = cur->ainsn.api.restore;
-> +
-> +	/* restore back original saved kprobe variables and continue */
-> +	if (kcb->kprobe_status == KPROBE_REENTER) {
-> +		restore_previous_kprobe(kcb);
-> +		return;
+> +		return 0;
 > +	}
 > +
-> +	/* call post handler */
-> +	kcb->kprobe_status = KPROBE_HIT_SSDONE;
-> +	if (cur->post_handler)	{
-> +		/* post_handler can hit breakpoint and single step
-> +		 * again, so we enable D-flag for recursive exception.
-> +		 */
-> +		cur->post_handler(cur, regs, 0);
+> +	mutex_lock(&ne_cpu_pool.mutex);
+> +
+> +	/* Choose any CPU from the available CPU pool. */
+> +	cpu =3D cpumask_any(ne_cpu_pool.avail);
+> +	if (cpu >=3D nr_cpu_ids) {
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "No CPUs available in CPU pool\n");
+> +
+> +		mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +		return -EINVAL;
+
+I think you're better off making the return value explicit for the =
+
+error, so that user space can print the error message rather than us.
+
 > +	}
 > +
-> +	reset_current_kprobe();
-> +}
+> +	cpumask_clear_cpu(cpu, ne_cpu_pool.avail);
 > +
-> +int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int trapnr)
-> +{
-> +	struct kprobe *cur = kprobe_running();
-> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> +	/* Make sure the CPU siblings are not marked as available anymore. */
+> +	for_each_cpu(cpu_sibling, topology_sibling_cpumask(cpu)) {
+> +		if (cpu_sibling !=3D cpu) {
+> +			cpumask_clear_cpu(cpu_sibling, ne_cpu_pool.avail);
 > +
-> +	switch (kcb->kprobe_status) {
-> +	case KPROBE_HIT_SS:
-> +	case KPROBE_REENTER:
-> +		/*
-> +		 * We are here because the instruction being single
-> +		 * stepped caused a page fault. We reset the current
-> +		 * kprobe and the ip points back to the probe address
-> +		 * and allow the page fault handler to continue as a
-> +		 * normal page fault.
-> +		 */
-> +		regs->epc = (unsigned long) cur->addr;
-> +		if (!instruction_pointer(regs))
-> +			BUG();
-> +
-> +		if (kcb->kprobe_status == KPROBE_REENTER)
-> +			restore_previous_kprobe(kcb);
-> +		else
-> +			reset_current_kprobe();
-> +
-> +		break;
-> +	case KPROBE_HIT_ACTIVE:
-> +	case KPROBE_HIT_SSDONE:
-> +		/*
-> +		 * We increment the nmissed count for accounting,
-> +		 * we can also use npre/npostfault count for accounting
-> +		 * these specific fault cases.
-> +		 */
-> +		kprobes_inc_nmissed_count(cur);
-> +
-> +		/*
-> +		 * We come here because instructions in the pre/post
-> +		 * handler caused the page_fault, this could happen
-> +		 * if handler tries to access user space by
-> +		 * copy_from_user(), get_user() etc. Let the
-> +		 * user-specified handler try to fix it first.
-> +		 */
-> +		if (cur->fault_handler && cur->fault_handler(cur, regs, trapnr))
-> +			return 1;
-> +
-> +		/*
-> +		 * In case the user-specified fault handler returned
-> +		 * zero, try to fix up.
-> +		 */
-> +		if (fixup_exception(regs))
-> +			return 1;
-> +	}
-> +	return 0;
-> +}
-> +
-> +bool __kprobes
-> +kprobe_breakpoint_handler(struct pt_regs *regs)
-> +{
-> +	struct kprobe *p, *cur_kprobe;
-> +	struct kprobe_ctlblk *kcb;
-> +	unsigned long addr = instruction_pointer(regs);
-> +
-> +	kcb = get_kprobe_ctlblk();
-> +	cur_kprobe = kprobe_running();
-> +
-> +	p = get_kprobe((kprobe_opcode_t *) addr);
-> +
-> +	if (p) {
-> +		if (cur_kprobe) {
-> +			if (reenter_kprobe(p, regs, kcb))
-> +				return true;
-> +		} else {
-> +			/* Probe hit */
-> +			set_current_kprobe(p);
-> +			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> +
-> +			/*
-> +			 * If we have no pre-handler or it returned 0, we
-> +			 * continue with normal processing.  If we have a
-> +			 * pre-handler and it returned non-zero, it will
-> +			 * modify the execution path and no need to single
-> +			 * stepping. Let's just reset current kprobe and exit.
-> +			 *
-> +			 * pre_handler can hit a breakpoint and can step thru
-> +			 * before return.
-> +			 */
-> +			if (!p->pre_handler || !p->pre_handler(p, regs))
-> +				setup_singlestep(p, regs, kcb, 0);
-> +			else
-> +				reset_current_kprobe();
+> +			cpumask_set_cpu(cpu_sibling, ne_enclave->cpu_siblings);
 > +		}
-> +		return true;
 > +	}
 > +
-> +	/*
-> +	 * The breakpoint instruction was removed right
-> +	 * after we hit it.  Another cpu has removed
-> +	 * either a probepoint or a debugger breakpoint
-> +	 * at this address.  In either case, no further
-> +	 * handling of this interrupt is appropriate.
-> +	 * Return back to original instruction, and continue.
-> +	 */
-> +	return false;
-> +}
-> +
-> +bool __kprobes
-> +kprobe_single_step_handler(struct pt_regs *regs)
-> +{
-> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-> +
-> +	if ((kcb->ss_ctx.ss_pending)
-> +	    && (kcb->ss_ctx.match_addr == instruction_pointer(regs))) {
-> +		clear_ss_context(kcb);	/* clear pending ss */
-> +
-> +		kprobes_restore_local_irqflag(kcb, regs);
-> +
-> +		post_kprobe_handler(kcb, regs);
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +/*
-> + * Provide a blacklist of symbols identifying ranges which cannot be kprobed.
-> + * This blacklist is exposed to userspace via debugfs (kprobes/blacklist).
-> + */
-> +int __init arch_populate_kprobe_blacklist(void)
-> +{
-> +	int ret;
-> +
-> +	ret = kprobe_add_area_blacklist((unsigned long)__irqentry_text_start,
-> +					(unsigned long)__irqentry_text_end);
-> +	return ret;
-> +}
-> +
-> +void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
-> +{
-> +	struct kretprobe_instance *ri = NULL;
-> +	struct hlist_head *head, empty_rp;
-> +	struct hlist_node *tmp;
-> +	unsigned long flags, orig_ret_address = 0;
-> +	unsigned long trampoline_address =
-> +		(unsigned long)&kretprobe_trampoline;
-> +	kprobe_opcode_t *correct_ret_addr = NULL;
-> +
-> +	INIT_HLIST_HEAD(&empty_rp);
-> +	kretprobe_hash_lock(current, &head, &flags);
-> +
-> +	/*
-> +	 * It is possible to have multiple instances associated with a given
-> +	 * task either because multiple functions in the call path have
-> +	 * return probes installed on them, and/or more than one
-> +	 * return probe was registered for a target function.
-> +	 *
-> +	 * We can handle this because:
-> +	 *     - instances are always pushed into the head of the list
-> +	 *     - when multiple return probes are registered for the same
-> +	 *	 function, the (chronologically) first instance's ret_addr
-> +	 *	 will be the real return address, and all the rest will
-> +	 *	 point to kretprobe_trampoline.
-> +	 */
-> +	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
-> +		if (ri->task != current)
-> +			/* another task is sharing our hash bucket */
-> +			continue;
-> +
-> +		orig_ret_address = (unsigned long)ri->ret_addr;
-> +
-> +		if (orig_ret_address != trampoline_address)
-> +			/*
-> +			 * This is the real return address. Any other
-> +			 * instances associated with this task are for
-> +			 * other calls deeper on the call stack
-> +			 */
-> +			break;
-> +	}
-> +
-> +	kretprobe_assert(ri, orig_ret_address, trampoline_address);
-> +
-> +	correct_ret_addr = ri->ret_addr;
-> +	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
-> +		if (ri->task != current)
-> +			/* another task is sharing our hash bucket */
-> +			continue;
-> +
-> +		orig_ret_address = (unsigned long)ri->ret_addr;
-> +		if (ri->rp && ri->rp->handler) {
-> +			__this_cpu_write(current_kprobe, &ri->rp->kp);
-> +			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
-> +			ri->ret_addr = correct_ret_addr;
-> +			ri->rp->handler(ri, regs);
-> +			__this_cpu_write(current_kprobe, NULL);
-> +		}
-> +
-> +		recycle_rp_inst(ri, &empty_rp);
-> +
-> +		if (orig_ret_address != trampoline_address)
-> +			/*
-> +			 * This is the real return address. Any other
-> +			 * instances associated with this task are for
-> +			 * other calls deeper on the call stack
-> +			 */
-> +			break;
-> +	}
-> +
-> +	kretprobe_hash_unlock(current, &flags);
-> +
-> +	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
-> +		hlist_del(&ri->hlist);
-> +		kfree(ri);
-> +	}
-> +	return (void *)orig_ret_address;
-> +}
-> +
-> +void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
-> +				      struct pt_regs *regs)
-> +{
-> +	ri->ret_addr = (kprobe_opcode_t *)regs->ra;
-> +	regs->ra = (unsigned long) &kretprobe_trampoline;
-> +}
-> +
-> +int __kprobes arch_trampoline_kprobe(struct kprobe *p)
-> +{
-> +	return 0;
-> +}
-> +
-> +int __init arch_init_kprobes(void)
-> +{
-> +	return 0;
-> +}
-> diff --git a/arch/riscv/kernel/probes/kprobes_trampoline.S b/arch/riscv/kernel/probes/kprobes_trampoline.S
-> new file mode 100644
-> index 00000000..6e85d02
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/kprobes_trampoline.S
-> @@ -0,0 +1,93 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Author: Patrick Stählin <me@packi.ch>
-> + */
-> +#include <linux/linkage.h>
-> +
-> +#include <asm/asm.h>
-> +#include <asm/asm-offsets.h>
-> +
-> +	.text
-> +	.altmacro
-> +
-> +	.macro save_all_base_regs
-> +	REG_S x1,  PT_RA(sp)
-> +	REG_S x3,  PT_GP(sp)
-> +	REG_S x4,  PT_TP(sp)
-> +	REG_S x5,  PT_T0(sp)
-> +	REG_S x6,  PT_T1(sp)
-> +	REG_S x7,  PT_T2(sp)
-> +	REG_S x8,  PT_S0(sp)
-> +	REG_S x9,  PT_S1(sp)
-> +	REG_S x10, PT_A0(sp)
-> +	REG_S x11, PT_A1(sp)
-> +	REG_S x12, PT_A2(sp)
-> +	REG_S x13, PT_A3(sp)
-> +	REG_S x14, PT_A4(sp)
-> +	REG_S x15, PT_A5(sp)
-> +	REG_S x16, PT_A6(sp)
-> +	REG_S x17, PT_A7(sp)
-> +	REG_S x18, PT_S2(sp)
-> +	REG_S x19, PT_S3(sp)
-> +	REG_S x20, PT_S4(sp)
-> +	REG_S x21, PT_S5(sp)
-> +	REG_S x22, PT_S6(sp)
-> +	REG_S x23, PT_S7(sp)
-> +	REG_S x24, PT_S8(sp)
-> +	REG_S x25, PT_S9(sp)
-> +	REG_S x26, PT_S10(sp)
-> +	REG_S x27, PT_S11(sp)
-> +	REG_S x28, PT_T3(sp)
-> +	REG_S x29, PT_T4(sp)
-> +	REG_S x30, PT_T5(sp)
-> +	REG_S x31, PT_T6(sp)
-> +	.endm
-> +
-> +	.macro restore_all_base_regs
-> +	REG_L x3,  PT_GP(sp)
-> +	REG_L x4,  PT_TP(sp)
-> +	REG_L x5,  PT_T0(sp)
-> +	REG_L x6,  PT_T1(sp)
-> +	REG_L x7,  PT_T2(sp)
-> +	REG_L x8,  PT_S0(sp)
-> +	REG_L x9,  PT_S1(sp)
-> +	REG_L x10, PT_A0(sp)
-> +	REG_L x11, PT_A1(sp)
-> +	REG_L x12, PT_A2(sp)
-> +	REG_L x13, PT_A3(sp)
-> +	REG_L x14, PT_A4(sp)
-> +	REG_L x15, PT_A5(sp)
-> +	REG_L x16, PT_A6(sp)
-> +	REG_L x17, PT_A7(sp)
-> +	REG_L x18, PT_S2(sp)
-> +	REG_L x19, PT_S3(sp)
-> +	REG_L x20, PT_S4(sp)
-> +	REG_L x21, PT_S5(sp)
-> +	REG_L x22, PT_S6(sp)
-> +	REG_L x23, PT_S7(sp)
-> +	REG_L x24, PT_S8(sp)
-> +	REG_L x25, PT_S9(sp)
-> +	REG_L x26, PT_S10(sp)
-> +	REG_L x27, PT_S11(sp)
-> +	REG_L x28, PT_T3(sp)
-> +	REG_L x29, PT_T4(sp)
-> +	REG_L x30, PT_T5(sp)
-> +	REG_L x31, PT_T6(sp)
-> +	.endm
-> +
-> +ENTRY(kretprobe_trampoline)
-> +	addi sp, sp, -(PT_SIZE_ON_STACK)
-> +	save_all_base_regs
-> +
-> +	move a0, sp /* pt_regs */
-> +
-> +	call trampoline_probe_handler
-> +
-> +	/* use the result as the return-address */
-> +	move ra, a0
-> +
-> +	restore_all_base_regs
-> +	addi sp, sp, PT_SIZE_ON_STACK
-> +
-> +	ret
-> +ENDPROC(kretprobe_trampoline)
-> diff --git a/arch/riscv/kernel/probes/simulate-insn.c b/arch/riscv/kernel/probes/simulate-insn.c
-> new file mode 100644
-> index 00000000..2519ce2
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/simulate-insn.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kprobes.h>
-> +
-> +#include "decode-insn.h"
-> +#include "simulate-insn.h"
-> +
-> +static inline bool rv_insn_reg_get_val(struct pt_regs *regs, u32 index,
-> +				       unsigned long *ptr)
-> +{
-> +	if (index == 0)
-> +		*ptr = 0;
-> +	else if (index <= 31)
-> +		*ptr = *((unsigned long *)regs + index);
-> +	else
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static inline bool rv_insn_reg_set_val(struct pt_regs *regs, u32 index,
-> +				       unsigned long val)
-> +{
-> +	if (index == 0)
-> +		return false;
-> +	else if (index <= 31)
-> +		*((unsigned long *)regs + index) = val;
-> +	else
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +bool __kprobes simulate_jal(u32 opcode, unsigned long addr, struct pt_regs *regs)
-> +{
-> +	/*
-> +	 *     31    30       21    20     19        12 11 7 6      0
-> +	 * imm [20] | imm[10:1] | imm[11] | imm[19:12] | rd | opcode
-> +	 *     1         10          1           8       5    JAL/J
-> +	 */
-> +	bool ret;
-> +	u32 imm;
-> +	u32 index = (opcode >> 7) & 0x1f;
-> +
-> +	ret = rv_insn_reg_set_val(regs, index, addr + 4);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	imm  = ((opcode >> 21) & 0x3ff) << 1;
-> +	imm |= ((opcode >> 20) & 0x1)   << 11;
-> +	imm |= ((opcode >> 12) & 0xff)  << 12;
-> +	imm |= ((opcode >> 31) & 0x1)   << 20;
-> +
-> +	instruction_pointer_set(regs, addr + sign_extend32((imm), 20));
-> +
-> +	return ret;
-> +}
-> +
-> +bool __kprobes simulate_jalr(u32 opcode, unsigned long addr, struct pt_regs *regs)
-> +{
-> +	/*
-> +	 * 31          20 19 15 14 12 11 7 6      0
-> +	 *  offset[11:0] | rs1 | 010 | rd | opcode
-> +	 *      12         5      3    5    JALR/JR
-> +	 */
-> +	bool ret;
-> +	unsigned long base_addr;
-> +	u32 imm = (opcode >> 20) & 0xfff;
-> +	u32 rd_index = (opcode >> 7) & 0x1f;
-> +	u32 rs1_index = (opcode >> 15) & 0x1f;
-> +
-> +	ret = rv_insn_reg_set_val(regs, rd_index, addr + 4);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	ret = rv_insn_reg_get_val(regs, rs1_index, &base_addr);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	instruction_pointer_set(regs, (base_addr + sign_extend32((imm), 11))&~1);
-> +
-> +	return ret;
-> +}
-> diff --git a/arch/riscv/kernel/probes/simulate-insn.h b/arch/riscv/kernel/probes/simulate-insn.h
-> new file mode 100644
-> index 00000000..a62d784
-> --- /dev/null
-> +++ b/arch/riscv/kernel/probes/simulate-insn.h
-> @@ -0,0 +1,47 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +
-> +#ifndef _RISCV_KERNEL_PROBES_SIMULATE_INSN_H
-> +#define _RISCV_KERNEL_PROBES_SIMULATE_INSN_H
-> +
-> +#define __RISCV_INSN_FUNCS(name, mask, val)				\
-> +static __always_inline bool riscv_insn_is_##name(probe_opcode_t code)	\
-> +{									\
-> +	BUILD_BUG_ON(~(mask) & (val));					\
-> +	return (code & (mask)) == (val);				\
-> +}									\
-> +bool simulate_##name(u32 opcode, unsigned long addr,			\
-> +		     struct pt_regs *regs);
-> +
-> +#define RISCV_INSN_REJECTED(name, code)					\
-> +	do {								\
-> +		if (riscv_insn_is_##name(code)) {			\
-> +			return INSN_REJECTED;				\
-> +		}							\
-> +	} while (0)
-> +
-> +__RISCV_INSN_FUNCS(system,	0x7f, 0x73)
-> +__RISCV_INSN_FUNCS(fence,	0x7f, 0x0f)
-> +
-> +#define RISCV_INSN_SET_SIMULATE(name, code)				\
-> +	do {								\
-> +		if (riscv_insn_is_##name(code)) {			\
-> +			api->handler = simulate_##name;			\
-> +			return INSN_GOOD_NO_SLOT;			\
-> +		}							\
-> +	} while (0)
-> +
-> +__RISCV_INSN_FUNCS(c_j,		0xe003, 0xa001)
-> +__RISCV_INSN_FUNCS(c_jr,	0xf007, 0x8002)
-> +__RISCV_INSN_FUNCS(c_jal,	0xe003, 0x2001)
-> +__RISCV_INSN_FUNCS(c_jalr,	0xf007, 0x9002)
-> +__RISCV_INSN_FUNCS(c_beqz,	0xe003, 0xc001)
-> +__RISCV_INSN_FUNCS(c_bnez,	0xe003, 0xe001)
-> +__RISCV_INSN_FUNCS(c_ebreak,	0xffff, 0x9002)
-> +
-> +__RISCV_INSN_FUNCS(auipc,	0x7f, 0x17)
-> +__RISCV_INSN_FUNCS(branch,	0x7f, 0x63)
-> +
-> +__RISCV_INSN_FUNCS(jal,		0x7f, 0x6f)
-> +__RISCV_INSN_FUNCS(jalr,	0x707f, 0x67)
-> +
-> +#endif /* _RISCV_KERNEL_PROBES_SIMULATE_INSN_H */
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index ecec177..ac2e786 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -12,6 +12,7 @@
->  #include <linux/signal.h>
->  #include <linux/kdebug.h>
->  #include <linux/uaccess.h>
-> +#include <linux/kprobes.h>
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/irq.h>
-> @@ -145,6 +146,14 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
->  
->  asmlinkage __visible void do_trap_break(struct pt_regs *regs)
->  {
-> +#ifdef CONFIG_KPROBES
-> +	if (kprobe_single_step_handler(regs))
-> +		return;
-> +
-> +	if (kprobe_breakpoint_handler(regs))
-> +		return;
-> +#endif
-> +
->  	if (user_mode(regs))
->  		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->epc);
->  #ifdef CONFIG_KGDB
-> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-> index ae7b7fe..da0c08c 100644
-> --- a/arch/riscv/mm/fault.c
-> +++ b/arch/riscv/mm/fault.c
-> @@ -13,6 +13,7 @@
->  #include <linux/perf_event.h>
->  #include <linux/signal.h>
->  #include <linux/uaccess.h>
-> +#include <linux/kprobes.h>
->  
->  #include <asm/pgalloc.h>
->  #include <asm/ptrace.h>
-> @@ -40,6 +41,9 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
->  	tsk = current;
->  	mm = tsk->mm;
->  
-> +	if (kprobe_page_fault(regs, cause))
-> +		return;
-> +
->  	/*
->  	 * Fault-in kernel-space virtual memory on-demand.
->  	 * The 'reference' page table is init_mm.pgd.
-> -- 
-> 2.7.4
-> 
+> +	mutex_unlock(&ne_cpu_pool.mutex);
+
+I find the function slightly confusingly structured. Why can't we do =
+
+something like
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+   if (!vcpu_id) {
+     vcpu_id =3D find_next_free_vcpu_id();
+     if (vcpu_id < 0)
+         return -ENOSPC;
+   }
+
+   [logic to handle an explicit vcpu id]
+
+I think that would be much more readable.
+
+> +
+> +	*vcpu_id =3D cpu;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_create_vcpu_ioctl - Add vCPU to the slot associated with the curre=
+nt
+> + * enclave. Create vCPU file descriptor to be further used for CPU handl=
+ing.
+> + *
+> + * This function gets called with the ne_enclave mutex held.
+> + *
+> + * @ne_enclave: private data associated with the current enclave.
+> + * @vcpu_id: id of the CPU to be associated with the given slot, apic id=
+ on x86.
+> + *
+> + * @returns: vCPU fd on success, negative return value on failure.
+> + */
+> +static int ne_create_vcpu_ioctl(struct ne_enclave *ne_enclave, u32 vcpu_=
+id)
+> +{
+> +	struct ne_pci_dev_cmd_reply cmd_reply =3D {};
+> +	int fd =3D 0;
+> +	struct file *file =3D NULL;
+> +	struct ne_vcpu_id *ne_vcpu_id =3D NULL;
+> +	int rc =3D -EINVAL;
+> +	struct slot_add_vcpu_req slot_add_vcpu_req =3D {};
+> +
+> +	if (ne_enclave->mm !=3D current->mm)
+> +		return -EIO;
+> +
+> +	ne_vcpu_id =3D kzalloc(sizeof(*ne_vcpu_id), GFP_KERNEL);
+> +	if (!ne_vcpu_id)
+> +		return -ENOMEM;
+> +
+> +	fd =3D get_unused_fd_flags(O_CLOEXEC);
+> +	if (fd < 0) {
+> +		rc =3D fd;
+> +
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Error in getting unused fd [rc=3D%d]\n", rc);
+> +
+> +		goto free_ne_vcpu_id;
+> +	}
+> +
+> +	/* TODO: Include (vcpu) id in the ne-vm-vcpu naming. */
+> +	file =3D anon_inode_getfile("ne-vm-vcpu", &ne_enclave_vcpu_fops,
+> +				  ne_enclave, O_RDWR);
+> +	if (IS_ERR(file)) {
+> +		rc =3D PTR_ERR(file);
+> +
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Error in anon inode get file [rc=3D%d]\n",
+> +				    rc);
+> +
+> +		goto put_fd;
+> +	}
+> +
+> +	slot_add_vcpu_req.slot_uid =3D ne_enclave->slot_uid;
+> +	slot_add_vcpu_req.vcpu_id =3D vcpu_id;
+> +
+> +	rc =3D ne_do_request(ne_enclave->pdev, SLOT_ADD_VCPU, &slot_add_vcpu_re=
+q,
+> +			   sizeof(slot_add_vcpu_req), &cmd_reply,
+> +			   sizeof(cmd_reply));
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Error in slot add vcpu [rc=3D%d]\n", rc);
+> +
+> +		goto put_file;
+> +	}
+> +
+> +	ne_vcpu_id->vcpu_id =3D vcpu_id;
+> +
+> +	list_add(&ne_vcpu_id->vcpu_id_list_entry, &ne_enclave->vcpu_ids_list);
+> +
+> +	ne_enclave->nr_vcpus++;
+> +
+> +	fd_install(fd, file);
+> +
+> +	return fd;
+> +
+> +put_file:
+> +	fput(file);
+> +put_fd:
+> +	put_unused_fd(fd);
+> +free_ne_vcpu_id:
+> +	kfree(ne_vcpu_id);
+> +
+> +	return rc;
+> +}
+> +
+> +static long ne_enclave_ioctl(struct file *file, unsigned int cmd,
+> +			     unsigned long arg)
+> +{
+> +	struct ne_enclave *ne_enclave =3D file->private_data;
+> +
+> +	if (!ne_enclave || !ne_enclave->pdev)
+> +		return -EINVAL;
+> +
+> +	switch (cmd) {
+> +	case NE_CREATE_VCPU: {
+
+Can this be an ADD_VCPU rather than CREATE? We don't really need a vcpu =
+
+fd after all ...
+
+
+Alex
+
+> +		int rc =3D -EINVAL;
+> +		u32 vcpu_id =3D 0;
+> +
+> +		if (copy_from_user(&vcpu_id, (void *)arg, sizeof(vcpu_id))) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in copy from user\n");
+> +
+> +			return -EFAULT;
+> +		}
+> +
+> +		mutex_lock(&ne_enclave->enclave_info_mutex);
+> +
+> +		if (ne_enclave->state !=3D NE_STATE_INIT) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Enclave isn't in init state\n");
+> +
+> +			mutex_unlock(&ne_enclave->enclave_info_mutex);
+> +
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* Use the CPU pool for choosing a CPU for the enclave. */
+> +		rc =3D ne_get_cpu_from_cpu_pool(ne_enclave, &vcpu_id);
+> +		if (rc < 0) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in get CPU from pool\n");
+> +
+> +			mutex_unlock(&ne_enclave->enclave_info_mutex);
+> +
+> +			return -EINVAL;
+> +		}
+> +
+> +		rc =3D ne_create_vcpu_ioctl(ne_enclave, vcpu_id);
+> +
+> +		/* Put back the CPU in enclave cpu pool, if add vcpu error. */
+> +		if (rc < 0)
+> +			cpumask_set_cpu(vcpu_id, ne_enclave->cpu_siblings);
+> +
+> +		mutex_unlock(&ne_enclave->enclave_info_mutex);
+> +
+> +		if (copy_to_user((void *)arg, &vcpu_id, sizeof(vcpu_id))) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in copy to user\n");
+> +
+> +			return -EFAULT;
+> +		}
+> +
+> +		return rc;
+> +	}
+> +
+> +	default:
+> +		return -ENOTTY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static __poll_t ne_enclave_poll(struct file *file, poll_table *wait)
+>   {
+>   	__poll_t mask =3D 0;
+> @@ -79,6 +562,7 @@ static const struct file_operations ne_enclave_fops =
+=3D {
+>   	.owner		=3D THIS_MODULE,
+>   	.llseek		=3D noop_llseek,
+>   	.poll		=3D ne_enclave_poll,
+> +	.unlocked_ioctl	=3D ne_enclave_ioctl,
+>   };
+>   =
+
+>   /**
+> @@ -286,8 +770,15 @@ static int __init ne_init(void)
+>   =
+
+>   static void __exit ne_exit(void)
+>   {
+> +	struct pci_dev *pdev =3D pci_get_device(PCI_VENDOR_ID_AMAZON,
+> +					      PCI_DEVICE_ID_NE, NULL);
+> +	if (!pdev)
+> +		return;
+> +
+>   	pci_unregister_driver(&ne_pci_driver);
+>   =
+
+> +	ne_teardown_cpu_pool(pdev);
+> +
+>   	free_cpumask_var(ne_cpu_pool.avail);
+>   }
+>   =
+
+> =
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
