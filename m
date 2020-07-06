@@ -2,365 +2,107 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14536C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EE22070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611762070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ok4GIZkg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="prFOwogC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgGFOtd (ORCPT
+        id S1729420AbgGFOth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        Mon, 6 Jul 2020 10:49:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgGFOtc (ORCPT
+        with ESMTP id S1729409AbgGFOtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:49:32 -0400
-Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF58C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:49:31 -0700 (PDT)
-Received: by mail-vk1-xa2e.google.com with SMTP id e10so1814604vkm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:49:31 -0700 (PDT)
+        Mon, 6 Jul 2020 10:49:35 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A10AC08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:49:35 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id o15so20697808vsp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xrAHRiw2LCnTsQAYhalue995neGmTKcUjyd6ccjloho=;
-        b=ok4GIZkgdD9CbteQoY2hR+fRGvG9a7f97+2rVl+iuRPqZnLlQzcI5uk/qRI7SZGuef
-         Dx9CZdkdmX12Sf2bCd1+7Z4gsxctH/xudpH4X0q9IGAK0x0xWiPdt/alT7r3wxRLLoax
-         26iGOkWMxNF7Cb/ZI4u0YeZJys1jDhezH+FjGx+JH3yocrqMi4UuUbHGkpyw/c7667pV
-         3KG0XSOso877PdVEDAlCqV41CnLyGe/d1nIBHaiVgTSg2PQBVbEXtoc/mFkwJC1V4a/9
-         9ZAQYcsutT/tBqqfFJRlizFFCZM9+d9X5KppwjgAjWorDs7ma31QaJ2wmTEta4h+zBiW
-         wSXA==
+        bh=HyMqFb7tzBuwiN7KkfvbwKvQf9DKp/quj/oeR7HiAvA=;
+        b=prFOwogC8BpJ+Dwcz5Rx7XOchM4UmKtnLdv+riLgr4pBLN1VKufGmD+KSXpdMSy23H
+         AmVR0x9sQwVq/9mb9dCKhJcrVAXdoaE7jTI6PgO9Iowgq3o1+Eon7aM43Byp9jF5mUUT
+         opFprijxueAsN99Oh0q1nbhcO+41DmBj1ovyuPKl7vEWz6nt77FClZ/xJ6xOSDPIiZSt
+         UTXETn85MQi171A/ipDu6HZnmnlBNxHxevl+oiXhkh/S/w7mQV1sKJ+TCxFiC9wfCqWa
+         PQoJUgk7fZY9GxcFmV72Je9UNcZxehw/Aqqo342szVSyk6whKUNnXIq+iB8dEN1Dqele
+         rF/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xrAHRiw2LCnTsQAYhalue995neGmTKcUjyd6ccjloho=;
-        b=lAIilnBws2+p7YvOgga2RMXBuEG3eFrMEu60XaQye4f+f4wltQhxtSbs8+3wqh8Xr8
-         rhvJwY76wiHDUeBuQgjy6U/qZiF7kT6D1UAG2KGyU8V+4As+V4darbgpuSSAhwxltNN0
-         INrGY67Bk+qT3nbPZZP030pSfopLPceR9h5Poaf9Eud4Rt9xE9Z6n8Ry4oe7tcsGYtIe
-         nbLmzXEjoSykWsujCmq8C2osudWakKTsOCAFnKk7BUJnPb/IZeLcOgf4/jPZyif/tKMg
-         mAanol6bU6U5XhrIIcgaffiO57T7BY0L15ha13EVC1Y91QSdXj8dJIbDfVFEtCQvajVr
-         P/5g==
-X-Gm-Message-State: AOAM530ePsxFF8D9s8h03MwZ9illPCbcOcjwrrAXsxlQyK7ihO0yMgpC
-        YOu5cwDJkj7pSCqbvurb4WTN8YOpXcywwAQRgtHCbQ==
-X-Google-Smtp-Source: ABdhPJwyjiLUirdHYnW3t1dYh+t3XMHDyGzOQhwgqf4aL8QF/aKTgK4/1roqYJkorFhDvCXrSdtvXmlIYtwiW0dbK70=
-X-Received: by 2002:a05:6122:12a8:: with SMTP id j8mr10487376vkp.43.1594046970888;
- Mon, 06 Jul 2020 07:49:30 -0700 (PDT)
+        bh=HyMqFb7tzBuwiN7KkfvbwKvQf9DKp/quj/oeR7HiAvA=;
+        b=RxW8a2kL7F4/TLM59EcTKRNVf5HCNj5mAxfBeswTnaP54c8yCBAY2UhwAPspCk953U
+         4l2Hlmd46cfDjX9/tgxm57mHKbmHWBWL5pRK9lN9zgP9gYzt+w8HcnjYyau88OT4dX15
+         OUh+pZwXBy+WqC66ge00W9KeWPc/41zRAxmJUrrdpLb+dag3GBoaZZcW+dI6jUy7oyms
+         WoD6KOczQ/TPVnKPqNxzZggot5yW8eT7IlJeI7Yxb7c4TBcWdpOgGnnLqKCNMdAXThPJ
+         UPEvAjS3DYnD/zCpR+GaGytkb2TJIsiwO4KKWkGV5I9NX8groSZAmWku9L+UKGnRNOTI
+         mIIg==
+X-Gm-Message-State: AOAM530WaJuY5AyxBaxr7OA/o/qoH9SeuhsgHCNYuShDuwEUAsnulV2a
+        AyxTBrqEc1su7DIrGvVjET/9VsV6itINxIMziP9RXQ==
+X-Google-Smtp-Source: ABdhPJyRXkNySVdhTSpyDekSoW0nF2LRzTf/2mQXstc8RpWalN5j4CARY/ALlPCDhFkYl3FouP2gH8j7N6FaQBSom1Q=
+X-Received: by 2002:a67:ca03:: with SMTP id z3mr29170488vsk.34.1594046974669;
+ Mon, 06 Jul 2020 07:49:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622164431.3dbc8c5a@xhacker.debian>
-In-Reply-To: <20200622164431.3dbc8c5a@xhacker.debian>
+References: <20200619125801.9530-1-faiz_abbas@ti.com>
+In-Reply-To: <20200619125801.9530-1-faiz_abbas@ti.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 6 Jul 2020 16:48:52 +0200
-Message-ID: <CAPDyKFpWAu0uH_1-XL8O5Jj2WS6zPhLV2ZvoXBFQT_dpqnD0FQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: mmc: Convert pwrseq to json-schema
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+Date:   Mon, 6 Jul 2020 16:48:57 +0200
+Message-ID: <CAPDyKFq0M6fORAxawY4K6CYjEEjtGvdR+t8sicjWDKxnuwFxoQ@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Add support for SD card in AM654x-evm
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 at 10:51, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+On Fri, 19 Jun 2020 at 14:58, Faiz Abbas <faiz_abbas@ti.com> wrote:
 >
-> Convert the pwrseq binding to DT schema format using json-schema.
+> The following patches add driver support for SD card on the
+> am654x-evm. It only enables high speed mode with UHS mode
+> support coming in a future series.
 >
-> At the same time, fix a couple of issues with the examples discovered by
-> the validation tool -- missing ";"
+> DTS support will be added in another series as well.
 >
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Faiz Abbas (7):
+>   dt-bindings: mmc: sdhci-am654: Add ti,clkbuf-sel binding
+>   mmc: sdhci_am654: Add flag for PHY calibration
+>   mmc: sdhci_am654: Add Support for SR2.0
+>   mmc: sdhci_am654: Fix conditions for enabling dll
+>   mmc: sdhci_am654: Update delay chain configuration
+>   mmc: sdhci_am654: Add support for clkbuf_sel property
+>   arm64: defconfig: Enable AM654x SDHCI controller
+>
+>  .../devicetree/bindings/mmc/sdhci-am654.txt   |  1 +
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/mmc/host/sdhci_am654.c                | 86 ++++++++++++++-----
+>  3 files changed, 65 insertions(+), 23 deletions(-)
+>
+> --
+> 2.17.1
+>
 
-Applied for next, thanks!
+Patch 1 to 6, applied for next, thanks!
 
 Kind regards
 Uffe
-
-
-> ---
-> since v1:
->  - conver pwrseq to yaml format rather than fixing old docs
->
->  .../bindings/mmc/mmc-pwrseq-emmc.txt          | 25 --------
->  .../bindings/mmc/mmc-pwrseq-emmc.yaml         | 46 ++++++++++++++
->  .../bindings/mmc/mmc-pwrseq-sd8787.txt        | 16 -----
->  .../bindings/mmc/mmc-pwrseq-sd8787.yaml       | 39 ++++++++++++
->  .../bindings/mmc/mmc-pwrseq-simple.txt        | 31 ----------
->  .../bindings/mmc/mmc-pwrseq-simple.yaml       | 62 +++++++++++++++++++
->  6 files changed, 147 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-> deleted file mode 100644
-> index 3d965d57e00b..000000000000
-> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -* The simple eMMC hardware reset provider
-> -
-> -The purpose of this driver is to perform standard eMMC hw reset
-> -procedure, as described by Jedec 4.4 specification. This procedure is
-> -performed just after MMC core enabled power to the given mmc host (to
-> -fix possible issues if bootloader has left eMMC card in initialized or
-> -unknown state), and before performing complete system reboot (also in
-> -case of emergency reboot call). The latter is needed on boards, which
-> -doesn't have hardware reset logic connected to emmc card and (limited or
-> -broken) ROM bootloaders are unable to read second stage from the emmc
-> -card if the card is left in unknown or already initialized state.
-> -
-> -Required properties:
-> -- compatible : contains "mmc-pwrseq-emmc".
-> -- reset-gpios : contains a GPIO specifier. The reset GPIO is asserted
-> -       and then deasserted to perform eMMC card reset. To perform
-> -       reset procedure as described in Jedec 4.4 specification, the
-> -       gpio line should be defined as GPIO_ACTIVE_LOW.
-> -
-> -Example:
-> -
-> -       sdhci0_pwrseq {
-> -               compatible = "mmc-pwrseq-emmc";
-> -               reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-> -       }
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
-> new file mode 100644
-> index 000000000000..77f746f57284
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-emmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple eMMC hardware reset provider binding
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +description:
-> +  The purpose of this driver is to perform standard eMMC hw reset
-> +  procedure, as described by Jedec 4.4 specification. This procedure is
-> +  performed just after MMC core enabled power to the given mmc host (to
-> +  fix possible issues if bootloader has left eMMC card in initialized or
-> +  unknown state), and before performing complete system reboot (also in
-> +  case of emergency reboot call). The latter is needed on boards, which
-> +  doesn't have hardware reset logic connected to emmc card and (limited or
-> +  broken) ROM bootloaders are unable to read second stage from the emmc
-> +  card if the card is left in unknown or already initialized state.
-> +
-> +properties:
-> +  compatible:
-> +    const: mmc-pwrseq-emmc
-> +
-> +  reset-gpios:
-> +    minItems: 1
-> +    description:
-> +      contains a GPIO specifier. The reset GPIO is asserted
-> +      and then deasserted to perform eMMC card reset. To perform
-> +      reset procedure as described in Jedec 4.4 specification, the
-> +      gpio line should be defined as GPIO_ACTIVE_LOW.
-> +
-> +required:
-> +  - compatible
-> +  - reset-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    sdhci0_pwrseq {
-> +      compatible = "mmc-pwrseq-emmc";
-> +      reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> deleted file mode 100644
-> index 22e9340e4ba2..000000000000
-> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -* Marvell SD8787 power sequence provider
-> -
-> -Required properties:
-> -- compatible: must be "mmc-pwrseq-sd8787".
-> -- powerdown-gpios: contains a power down GPIO specifier with the
-> -                  default active state
-> -- reset-gpios: contains a reset GPIO specifier with the default
-> -                  active state
-> -
-> -Example:
-> -
-> -       wifi_pwrseq: wifi_pwrseq {
-> -               compatible = "mmc-pwrseq-sd8787";
-> -               powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
-> -               reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
-> -       }
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
-> new file mode 100644
-> index 000000000000..a68820d31d50
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-sd8787.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell SD8787 power sequence provider binding
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: mmc-pwrseq-sd8787
-> +
-> +  powerdown-gpios:
-> +    minItems: 1
-> +    description:
-> +      contains a power down GPIO specifier with the default active state
-> +
-> +  reset-gpios:
-> +    minItems: 1
-> +    description:
-> +      contains a reset GPIO specifier with the default active state
-> +
-> +required:
-> +  - compatible
-> +  - powerdown-gpios
-> +  - reset-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    wifi_pwrseq: wifi_pwrseq {
-> +      compatible = "mmc-pwrseq-sd8787";
-> +      powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
-> +      reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> deleted file mode 100644
-> index 9029b45b8a22..000000000000
-> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -* The simple MMC power sequence provider
-> -
-> -The purpose of the simple MMC power sequence provider is to supports a set of
-> -common properties between various SOC designs. It thus enables us to use the
-> -same provider for several SOC designs.
-> -
-> -Required properties:
-> -- compatible : contains "mmc-pwrseq-simple".
-> -
-> -Optional properties:
-> -- reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
-> -       at initialization and prior we start the power up procedure of the card.
-> -       They will be de-asserted right after the power has been provided to the
-> -       card.
-> -- clocks : Must contain an entry for the entry in clock-names.
-> -  See ../clocks/clock-bindings.txt for details.
-> -- clock-names : Must include the following entry:
-> -  "ext_clock" (External clock provided to the card).
-> -- post-power-on-delay-ms : Delay in ms after powering the card and
-> -       de-asserting the reset-gpios (if any)
-> -- power-off-delay-us : Delay in us after asserting the reset-gpios (if any)
-> -       during power off of the card.
-> -
-> -Example:
-> -
-> -       sdhci0_pwrseq {
-> -               compatible = "mmc-pwrseq-simple";
-> -               reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-> -               clocks = <&clk_32768_ck>;
-> -               clock-names = "ext_clock";
-> -       }
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
-> new file mode 100644
-> index 000000000000..449215444723
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-simple.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple MMC power sequence provider binding
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +description:
-> +  The purpose of the simple MMC power sequence provider is to supports a set
-> +  of common properties between various SOC designs. It thus enables us to use
-> +  the same provider for several SOC designs.
-> +
-> +properties:
-> +  compatible:
-> +    const: mmc-pwrseq-simple
-> +
-> +  reset-gpios:
-> +    minItems: 1
-> +    description:
-> +      contains a list of GPIO specifiers. The reset GPIOs are asserted
-> +      at initialization and prior we start the power up procedure of the card.
-> +      They will be de-asserted right after the power has been provided to the
-> +      card.
-> +
-> +  clocks:
-> +    minItems: 1
-> +    description: Handle for the entry in clock-names.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ext_clock
-> +    description: External clock provided to the card.
-> +
-> +  post-power-on-delay-ms:
-> +    description:
-> +      Delay in ms after powering the card and de-asserting the
-> +      reset-gpios (if any).
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  power-off-delay-us:
-> +    description:
-> +      Delay in us after asserting the reset-gpios (if any)
-> +      during power off of the card.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    sdhci0_pwrseq {
-> +      compatible = "mmc-pwrseq-simple";
-> +      reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-> +      clocks = <&clk_32768_ck>;
-> +      clock-names = "ext_clock";
-> +    };
-> +...
-> --
-> 2.27.0
->
