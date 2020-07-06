@@ -2,79 +2,197 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD425C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8CA320760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594030979;
-	bh=hyubO64upSNhqMywGjKfEDtfPQCLU+NfTnStguiiInQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vYNLwoY0aNMfHzYwZrJsSY7+wHJHkxPJ9Pa1hZynTiEGCvSLQ4mgg82K1Fb7QvBA+
-	 08nDq/yXFTsbxSa8FwrdyCx8rBoQsciCumT9K4zDzn0VhRrrrfdUb4f1n8s2se2XI3
-	 biSK9nyLQNlJbm9T2cqRrW4MWsjrIqHzyZFD6gR4=
+	by mail.kernel.org (Postfix) with ESMTP id BCBFF20739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgGFKW6 (ORCPT
+        id S1728856AbgGFKXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbgGFKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:22:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3834720739;
-        Mon,  6 Jul 2020 10:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594030977;
-        bh=hyubO64upSNhqMywGjKfEDtfPQCLU+NfTnStguiiInQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H4G5rNnJWpkPLV7AlSxzZjB4OL/dkUxu4G2J3uDie1OFt2hgg4W+EoO2DFQTwNTP2
-         44OhXBEGR0OXw7WB4966lqDNIa3Il4jASWf2p4v/3GYBEv50TfM06jQgqUNNEZ/zYO
-         ucyO/bNVvwYYAQpaQdrBfkr9cYGkIFT3bGPnJRpE=
-Date:   Mon, 6 Jul 2020 12:22:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     NeilBrown <neilb@suse.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <20200706102254.GA10206@kroah.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
- <87h7ul15le.fsf@notabene.neil.brown.name>
- <20200706072221.GA1947246@kroah.com>
- <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
+        Mon, 6 Jul 2020 06:23:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6821 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728578AbgGFKXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:23:49 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4E3004593BAAE09BC4BC;
+        Mon,  6 Jul 2020 18:23:47 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 6 Jul 2020 18:23:40 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix error path in do_recover_data()
+Date:   Mon, 6 Jul 2020 18:23:36 +0800
+Message-ID: <20200706102336.16955-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:53:55AM +0200, Geert Uytterhoeven wrote:
-> On Mon, Jul 6, 2020 at 9:22 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > look at the USB spec for an example of these terms being used in this
-> > way for many decades.
-> 
-> And when does the "gadget" enter the show? ;-)
+- don't panic kernel if f2fs_get_node_page() fails in
+f2fs_recover_inline_data() or f2fs_recover_inline_xattr();
+- return error number of f2fs_truncate_blocks() to
+f2fs_recover_inline_data()'s caller;
 
-It doesn't, as the USB spec does not describe that in any reasonable way
-for us to use when dealing with drivers for both "types" of devices.  So
-we came up with the word "gadget" on purpose to be able to talk about
-those things in a specific manner.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h     |  4 ++--
+ fs/f2fs/inline.c   | 19 ++++++++++++-------
+ fs/f2fs/node.c     |  6 ++++--
+ fs/f2fs/recovery.c | 10 ++++++++--
+ 4 files changed, 26 insertions(+), 13 deletions(-)
 
-thanks,
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index b3905cbbf731..ef4babc96723 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3345,7 +3345,7 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
+ void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
+ void f2fs_alloc_nid_failed(struct f2fs_sb_info *sbi, nid_t nid);
+ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink);
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
+ int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
+ int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
+@@ -3820,7 +3820,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
+ int f2fs_convert_inline_inode(struct inode *inode);
+ int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry);
+ int f2fs_write_inline_data(struct inode *inode, struct page *page);
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage);
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+ 					const struct f2fs_filename *fname,
+ 					struct page **res_page);
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index def4b8481883..102df444f623 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -254,7 +254,7 @@ int f2fs_write_inline_data(struct inode *inode, struct page *page)
+ 	return 0;
+ }
+ 
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode *ri = NULL;
+@@ -276,7 +276,8 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ 			ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+ process_inline:
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 
+ 		f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+ 
+@@ -289,21 +290,25 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ 
+ 		set_page_dirty(ipage);
+ 		f2fs_put_page(ipage, 1);
+-		return true;
++		return 1;
+ 	}
+ 
+ 	if (f2fs_has_inline_data(inode)) {
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 		f2fs_truncate_inline_inode(inode, ipage, 0);
+ 		clear_inode_flag(inode, FI_INLINE_DATA);
+ 		f2fs_put_page(ipage, 1);
+ 	} else if (ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+-		if (f2fs_truncate_blocks(inode, 0, false))
+-			return false;
++		int ret;
++
++		ret = f2fs_truncate_blocks(inode, 0, false);
++		if (ret)
++			return ret;
+ 		goto process_inline;
+ 	}
+-	return false;
++	return 0;
+ }
+ 
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 6551d5e35c05..85ebdd0e3e7c 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2572,7 +2572,7 @@ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
+ 	return nr - nr_shrink;
+ }
+ 
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ {
+ 	void *src_addr, *dst_addr;
+ 	size_t inline_size;
+@@ -2580,7 +2580,8 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ 	struct f2fs_inode *ri;
+ 
+ 	ipage = f2fs_get_node_page(F2FS_I_SB(inode), inode->i_ino);
+-	f2fs_bug_on(F2FS_I_SB(inode), IS_ERR(ipage));
++	if (IS_ERR(ipage))
++		return PTR_ERR(ipage);
+ 
+ 	ri = F2FS_INODE(page);
+ 	if (ri->i_inline & F2FS_INLINE_XATTR) {
+@@ -2599,6 +2600,7 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ update_inode:
+ 	f2fs_update_inode(inode, ipage);
+ 	f2fs_put_page(ipage, 1);
++	return 0;
+ }
+ 
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page)
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index af974ba273b3..4f12ade6410a 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -544,7 +544,9 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 
+ 	/* step 1: recover xattr */
+ 	if (IS_INODE(page)) {
+-		f2fs_recover_inline_xattr(inode, page);
++		err = f2fs_recover_inline_xattr(inode, page);
++		if (err)
++			goto out;
+ 	} else if (f2fs_has_xattr_block(ofs_of_node(page))) {
+ 		err = f2fs_recover_xattr_data(inode, page);
+ 		if (!err)
+@@ -553,8 +555,12 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 	}
+ 
+ 	/* step 2: recover inline data */
+-	if (f2fs_recover_inline_data(inode, page))
++	err = f2fs_recover_inline_data(inode, page);
++	if (err) {
++		if (err == 1)
++			err = 0;
+ 		goto out;
++	}
+ 
+ 	/* step 3: recover data indices */
+ 	start = f2fs_start_bidx_of_node(ofs_of_node(page), inode);
+-- 
+2.26.2
 
-greg k-h
