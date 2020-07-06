@@ -2,235 +2,77 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2838C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9588C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38BB2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA56A2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594027495;
+	bh=SKlcidpbSyUFcSUEjNJ2TCMy2bmEi2/HDMux5eq+x60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SEtgE8wDxc09dOSajyTj/7u04XSAMMeKCY1ELLFzwGY2oWNBcF+8YHo9ni62p4zB0
+	 zG/ZEWhT/WVG9xnwzNbF0ZhN4rkB1rJwhED/2I+dAFFuLBmebgLDP3OrGWjTuwuKGZ
+	 mjL4uttDNvHXIthVzi+JijMzEcrqbR2iejoFlQlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgGFJYB (ORCPT
+        id S1728886AbgGFJYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:24:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35368 "EHLO mx2.suse.de"
+        Mon, 6 Jul 2020 05:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgGFJYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:24:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D39F8AAF1;
-        Mon,  6 Jul 2020 09:23:59 +0000 (UTC)
-Subject: Re: [PATCH v3] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1593680081-60313-1-git-send-email-tiantao6@hisilicon.com>
- <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
-Message-ID: <d8a0ca1d-0941-a640-2060-433073897eca@suse.de>
-Date:   Mon, 6 Jul 2020 11:23:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728537AbgGFJYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 05:24:53 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B0220724;
+        Mon,  6 Jul 2020 09:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594027492;
+        bh=SKlcidpbSyUFcSUEjNJ2TCMy2bmEi2/HDMux5eq+x60=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y2LSnEn641AvuW/VNIr07O+nmigAhX8C66q9+duZjb/si6SlicgvOawO+diLw9MsM
+         h/2pOBNHrRwRkiR5eGc1dwG3jJN2QpSO4cYA8gD3Lskgdwg/ZmWcseKuSVHgFyRXjA
+         Qs6NGeI4qAJuIMFccyJpCSltXkb8ZfN/KAMMC0O8=
+Date:   Mon, 6 Jul 2020 14:54:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Angelo Dureghello <angelo.dureghello@timesys.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the
+ dmaengine-fixes tree
+Message-ID: <20200706092447.GJ633187@vkoul-mobl>
+References: <20200706175506.7d35ca3e@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="izG3D42C2jxKggzm9TaHG21QjGx4GJk7g"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706175506.7d35ca3e@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---izG3D42C2jxKggzm9TaHG21QjGx4GJk7g
-Content-Type: multipart/mixed; boundary="AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <d8a0ca1d-0941-a640-2060-433073897eca@suse.de>
-Subject: Re: [PATCH v3] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-References: <1593680081-60313-1-git-send-email-tiantao6@hisilicon.com>
- <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
-In-Reply-To: <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
+Hi Stephen,
 
---AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 06-07-20, 17:55, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   09c6b5536361 ("dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu")
+> 
+> is missing a Signed-off-by from its author.
 
-Hi
-
-Am 02.07.20 um 12:12 schrieb Thomas Zimmermann:
-> Thanks!
->=20
-> Am 02.07.20 um 10:54 schrieb Tian Tao:
->> code refactoring for hibmc_drv_vdac.c, no actual function changes.
->>
->> v2:
->> remove the debug message.
->>
->> v3:
->> embedding connector and encoder in struct hibmc_drm_private.
->>
->> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
->=20
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->=20
-> Maybe others want to comment on the patch, so I'll give it a few more
-> days before I add it to drm-misc-next. Don't hesitate to ping me if I
-> forget about it.
-
-I've added the patch to drm-misc-next
-
->=20
-> Best regards
-> Thomas
->=20
->> ---
->>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h  |  2 +
->>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 52 +++++----------=
----------
->>  2 files changed, 13 insertions(+), 41 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers=
-/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
->> index 50a0c1f..6097687 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
->> @@ -29,6 +29,8 @@ struct hibmc_drm_private {
->> =20
->>  	/* drm */
->>  	struct drm_device  *dev;
->> +	struct drm_encoder encoder;
->> +	struct drm_connector connector;
->>  	bool mode_config_initialized;
->>  };
->> =20
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/driver=
-s/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> index 678ac2e..2ca69c3 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_conne=
-ctor_funcs =3D {
->>  	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,=
-
->>  };
->> =20
->> -static struct drm_connector *
->> -hibmc_connector_init(struct hibmc_drm_private *priv)
->> -{
->> -	struct drm_device *dev =3D priv->dev;
->> -	struct drm_connector *connector;
->> -	int ret;
->> -
->> -	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL)=
-;
->> -	if (!connector) {
->> -		DRM_ERROR("failed to alloc memory when init connector\n");
->> -		return ERR_PTR(-ENOMEM);
->> -	}
->> -
->> -	ret =3D drm_connector_init(dev, connector,
->> -				 &hibmc_connector_funcs,
->> -				 DRM_MODE_CONNECTOR_VGA);
->> -	if (ret) {
->> -		DRM_ERROR("failed to init connector: %d\n", ret);
->> -		return ERR_PTR(ret);
->> -	}
->> -	drm_connector_helper_add(connector,
->> -				 &hibmc_connector_helper_funcs);
->> -
->> -	return connector;
->> -}
->> -
->>  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
->>  				   struct drm_display_mode *mode,
->>  				   struct drm_display_mode *adj_mode)
->> @@ -105,23 +79,10 @@ static const struct drm_encoder_funcs hibmc_encod=
-er_funcs =3D {
->>  int hibmc_vdac_init(struct hibmc_drm_private *priv)
->>  {
->>  	struct drm_device *dev =3D priv->dev;
->> -	struct drm_encoder *encoder;
->> -	struct drm_connector *connector;
->> +	struct drm_encoder *encoder =3D &priv->encoder;
->> +	struct drm_connector *connector =3D &priv->connector;
->>  	int ret;
->> =20
->> -	connector =3D hibmc_connector_init(priv);
->> -	if (IS_ERR(connector)) {
->> -		DRM_ERROR("failed to create connector: %ld\n",
->> -			  PTR_ERR(connector));
->> -		return PTR_ERR(connector);
->> -	}
->> -
->> -	encoder =3D devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
->> -	if (!encoder) {
->> -		DRM_ERROR("failed to alloc memory when init encoder\n");
->> -		return -ENOMEM;
->> -	}
->> -
->>  	encoder->possible_crtcs =3D 0x1;
->>  	ret =3D drm_encoder_init(dev, encoder, &hibmc_encoder_funcs,
->>  			       DRM_MODE_ENCODER_DAC, NULL);
->> @@ -131,6 +92,15 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv=
-)
->>  	}
->> =20
->>  	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
->> +
->> +	ret =3D drm_connector_init(dev, connector, &hibmc_connector_funcs,
->> +				 DRM_MODE_CONNECTOR_VGA);
->> +	if (ret) {
->> +		DRM_ERROR("failed to init connector: %d\n", ret);
->> +		return ret;
->> +	}
->> +	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
->> +
->>  	drm_connector_attach_encoder(connector, encoder);
->> =20
->>  	return 0;
->>
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+the sob line was in the patch but after the three dashes causing it to
+stripped, I have fixed that up manually and pushed again
 
 
---AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL--
+Thanks for the report.
 
---izG3D42C2jxKggzm9TaHG21QjGx4GJk7g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8C7a4UHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiM0vQf+OlfARWLP0IaR9nwRnDefB4Q32Gu4
-qlGrTq+sXsrKcUPPO488EfmKNGVxHz6AC4itqdJUNWFgupabeZF557SA5AkstBXj
-khqzsLxIN5gqczxQPvIV8JTFj5B8r5QiNZpKcFclynMvh0FaDwWAjpMp2gkMuWgQ
-XrR6lioiwBd/ag5Eza1v5X0wFFqG5HPPkLUOJGr4n/30oJEebYwaAsX2TDJK4XvW
-7Ir6/s4mOTXn4JSCCBjYhkuKw0eMGVA/07wGuCce+Ah2o8V2seoqn1ZlmTIMvCG+
-dkxy7J5DDS3IePRNLKdvgzr0T9DW94VOXSPoNFoiUxHuU+U2EjDxPbc6ew==
-=155B
------END PGP SIGNATURE-----
-
---izG3D42C2jxKggzm9TaHG21QjGx4GJk7g--
+-- 
+~Vinod
