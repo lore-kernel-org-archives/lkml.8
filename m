@@ -2,197 +2,169 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA653C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8224206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C90A206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhsQDGS9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WzyymKU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgGFLAV (ORCPT
+        id S1728856AbgGFLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
+        Mon, 6 Jul 2020 07:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbgGFLAV (ORCPT
+        with ESMTP id S1728683AbgGFLDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:00:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE02FC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:00:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so40303819wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:00:20 -0700 (PDT)
+        Mon, 6 Jul 2020 07:03:30 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842D5C08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:03:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so44779798ljn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DROFpnBFrE4AtjKVynyf3d8aaP4nTs4hoGNau1puBxU=;
-        b=IhsQDGS9YQ/3aNt+HywQjsJPSy6KwEooCmzK+h9GGokiS/sS6Yq0Pjn/4DFqT65AdJ
-         gVvOJtlb2mEtDmE2xgLkHVkaltXmZMrGGRMJpzomazmum6rqrGtYJiU7tOyJ4suRgznf
-         cYIQVtRD/p17h2HGMHtglJI5a/DZGmy35Jl8p6fkigtHknxjmmWPf3hRDrTOF8yqzKj6
-         M0t6pCTo0MYfFfTZVdwNlW/EHtUjM9FrNXUbOqyX9j1WccQxCoMsES8SfWsdNG9wluyd
-         eJrOrUa5lRA603NIayCnD42yYJbxsUBHCE8E7rrCUZk1zN7QIaueCaNtCAUdDwOk0r0s
-         96Eg==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=dJOoGefz57DaQizOn40gSk42uMJzSXdv0XUjOjwso8w=;
+        b=WzyymKU3k9AASoHQcdTZdMnplRPotDs8uxxWJHFc6Flnkbf6NFg78peAyPELWalHn/
+         DHRdfclt7zrfp/UGrA0aJkRrLNcOMd7ty/Eczr8f0cyNJ+Av4ThgsU0cT7PTu3KIdEoH
+         UDfWPkTNjDwvdkPpfxji7nPz+vcWVftHWjgJJXor1n72nli0dWQabzQ/nBWr1gCgi6G1
+         9jDEeIi/lmN1Pd8bvwB6gAgGe9y+lkq9p+UwsSLLR5WiuJIds9Lfq96fweAmoxuAU4PE
+         r9RCeN5JbGgfHoRoYxgb6TMzO8fFGRIvWS6Ls6tZsGbQdkNYbazm/Lrv066LGJX/jEjP
+         nWWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DROFpnBFrE4AtjKVynyf3d8aaP4nTs4hoGNau1puBxU=;
-        b=iqfAB7uGbNoAD6FttjpXWMFSFDi+t9yN+OPJpuJwgPmn87gi8TyV0rtNpisgH2gYfW
-         SnICOr7bGvUW1FhA0KWj72M0Rtb8byEtklG8r92KIiESapmCKeit/3j5eX8t4fkRfWu1
-         2A9hABglMA7D1Y5JY9FoRxdy4csTn3BS5L6wqyJcJ/GhSyLaVS47ikCN+r5sbnTBUfrF
-         KWSnZz5O+/cd4z0m+P5S2SKNuB+kr4f7Kx5T/CVQ6cCSrWRSMbAEBZvvbhp3SvrKMh9d
-         yD3tnfOb4DAQlwi5Ln1ucefRhNDBxZWL77+9p/f3zMS9Sp9T2NpqmlWVt90SMLLfVsPJ
-         PW8A==
-X-Gm-Message-State: AOAM530iZ2+vMPYZEi9UH3V/Ub817q7q4AgOc7/MlM5xZPvlFMbx/XMS
-        7jVGt4HHuvfrcKvVnjyvFB7iODF8Diw=
-X-Google-Smtp-Source: ABdhPJzMYgg7aSGG3L5htMIEccPSN0wer6gpmayI8AFXcvfBOx0rrS6HrOLSpiYHQywz2WoXtI86Cw==
-X-Received: by 2002:adf:9525:: with SMTP id 34mr50926244wrs.313.1594033219211;
-        Mon, 06 Jul 2020 04:00:19 -0700 (PDT)
-Received: from maphy.uni-hannover.de ([130.75.75.70])
-        by smtp.gmail.com with ESMTPSA id k126sm23527764wmf.3.2020.07.06.04.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 04:00:18 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 13:00:17 +0200
-From:   Tammo Block <tammo.block@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3 6/6] Documentation: Describe console mouse reporting
-Message-ID: <59a6057afa3b2310384f489b35e15eb624af2774.1594032517.git.tammo.block@gmail.com>
-References: <cover.1594032517.git.tammo.block@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=dJOoGefz57DaQizOn40gSk42uMJzSXdv0XUjOjwso8w=;
+        b=nc2GyZoNRhYc7n3d9bKjUox72inzxOe2Mzox465O81A/UjNq216HqfF+cIEzkWjSOK
+         NDH0nkldJikGYT+fvW3TIycN10w8W6ejesJtpNVM3zDW7u+h/eE306t5xKNH8VJsvmhF
+         XZDYlVIy1RK/n+z6JMYi3PNQefv/f7Do6VFUDJgi+cbGc/UyDSgLJKhPPqSKeWJSIYjU
+         +OtuJkJzl+MzUJ6aUQLiU/d3zhItu+TzyIu/cWSEIxqLvZFJzueOIc1uOrK5pzt/KNMb
+         Bx90fg7omXA8HXctS8ygiL64iIWEX3/1/WZOtIIvqfJ2N8hlprUYgpPV7+mLIHuWc7xp
+         UPzQ==
+X-Gm-Message-State: AOAM531/SzdJTa6seSi0Pjwq3tvRvbnzXpinxybgradJoeihu6G42F2Q
+        6RvNpbJErdc8q5W1ECQW81huFdmk9g7RhXYvxjlanw==
+X-Google-Smtp-Source: ABdhPJz2+jMGpdrgo/15hvPjeNV/XflW/4l5Oov/YAJQSgf3S+7RBZhbsozCARaSvlm1nM3TOIP/KJF0UzJJ/nLVHQA=
+X-Received: by 2002:a2e:7401:: with SMTP id p1mr3554097ljc.366.1594033407701;
+ Mon, 06 Jul 2020 04:03:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1594032517.git.tammo.block@gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 6 Jul 2020 16:33:16 +0530
+Message-ID: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
+Subject: [qemu] boot failed: Unable to handle kernel NULL pointer dereference
+ at virtual address 0000000000000000
+To:     linux-serial@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     vkoul@kernel.org, jslaby@suse.com, linux-arm-msm@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        ldewangan@nvidia.com, thierry.reding@gmail.com,
+        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a description of the kernel interface(s) used for vt
-console mouse reporting and describes the protocols and bitmasks.
+While booting qemu_arm64 and qemu_arm with Linux version 5.8.0-rc3-next-20200706
+the kernel panic noticed due to kernel NULL pointer dereference.
 
-Signed-off-by: Tammo Block <tammo.block@gmail.com>
----
- .../admin-guide/console-mouse-reporting.rst   | 88 +++++++++++++++++++
- Documentation/admin-guide/index.rst           |  1 +
- 2 files changed, 89 insertions(+)
- create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 5680d14d59bddc8bcbc5badf00dbbd4374858497
+  git describe: next-20200706
+  make_kernelversion: 5.8.0-rc3
+  kernel-config:
+https://builds.tuxbuild.com/Glr-Ql1wbp3qN3cnHogyNA/kernel.config
 
-diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
-new file mode 100644
-index 000000000000..a05dfe251daf
---- /dev/null
-+++ b/Documentation/admin-guide/console-mouse-reporting.rst
-@@ -0,0 +1,88 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+Console Mouse Reporting
-+=======================
-+
-+A terminal may send escape sequences to enable applications to react to mouse
-+input. As the kernel does not know when to emit these events a mouse daemon
-+is needed to react to mouse movements and signal the kernel accordingly. The
-+kernel will then send an escape sequence to the application. This is called
-+mouse reporting and several types and protocols have been developed over time.
-+
-+See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
-+man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
-+list and description of the various protocols, their bit layout as well as
-+their limitations.
-+
-+Events and formats
-+++++++++++++++++++
-+
-+A Linux console keeps state about two different aspects of mouse reporting,
-+the kind of **events** to be reported and the **format** to send to userspace.
-+
-+A mouse daemon can check which kind of mouse events a client wants to be
-+informed about via the TIOCLINUX ioctl, using the TIOCL_GETMOUSEREPORTING
-+subcall. The values of the supported event classes (9, 1000, 1002, 1003) are
-+described in tiocl.h. Based on this information the daemon is responsible
-+for not sending data packages for unrequested events.
-+
-+A userspace client may request to be informed by the kernel about one of
-+the event classes and choose one of the data formats URXVT (1005), SRG
-+(1006) or X10/X11 (default) via console escape sequences. In general all
-+of them encode similar information, only the escape sequences differ.
-+
-+See the xterm [1]_ or terminalguide [2]_ home pages for all details.
-+
-+Reports from kernel to userspace client
-++++++++++++++++++++++++++++++++++++++++
-+
-+The requested events are sent by the kernel to userspace encoded in an
-+escape sequence; details depend on the chosen format. All of them use one
-+based pointer coordinates and a single byte to encode the button status.
-+
-+Short summary (we call this the SRG button format for the rest of this text):
-+
-+ - 1,2 : Buttons, lower bits (see notes below)
-+ - 3-5 : Modifier keys (Shift, Alt and Ctrl)
-+ - 6   : Mouse movement only, no button status change
-+ - 7-8 : Buttons, upper bits (for buttons 4-15)
-+
-+Reports sent from daemon to kernel
-+++++++++++++++++++++++++++++++++++
-+
-+A report is sent by a mouse daemon to the kernel via the TIOCLINUX ioctl,
-+using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
-+xs and ys, with 0,0 as the upper left corner, but see the note below.
-+The format used by the userspace mouse daemon for button encoding is almost
-+identical to the SRG button layout described above and is put into the sel_mode
-+of the tiocl_selection struct. All bits masked in TIOCL_SELBUTTONMASK are
-+unchanged compared to the SRG button format above; the remaining three are
-+changed the following way:
-+
-+- 3,4  : Unused, must be zero. The kernel knows modifier key state anyway.
-+- 5    : Always 1, identifies mouse report / TIOCL_SELMOUSEREPORT
-+
-+Notes
-++++++
-+
-+Button numbers are encoded like this:
-+
-+- 0-2  : Left, middle and right button
-+- 3    : No button pressed / Button release
-+- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
-+
-+Please note that button releases should only be reported for buttons 0-2.
-+
-+Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
-+syscall but one based for the escape sequences sent by the kernel, so the
-+kernel will increase all coordinates by one.
-+
-+Older kernels only used the lower 4 bits of sel_mode, effectively limiting
-+the protocol to 3 buttons and button click only. The meaning of the 4 bits
-+is equivalent to the SRG button layout. Note that newer kernels will ignore
-+the upper two bits (modifier keys).
-+
-+.. [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
-+.. [2] https://terminalguide.namepad.de/mouse/
-+
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 58c7f9fc2396..c535902f3851 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -71,6 +71,7 @@ configure specific aspects of kernel behavior to your liking.
-    cgroup-v2
-    cifs/index
-    clearing-warn-once
-+   console-mouse-reporting
-    cpu-load
-    cputopology
-    dell_rbu
+qemu arm64 boot crash log,
+
+[    0.972053] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
+[    0.975301] Mem abort info:
+[    0.976316]   ESR = 0x96000004
+[    0.977378]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    0.979363]   SET = 0, FnV = 0
+[    0.980458]   EA = 0, S1PTW = 0
+[    0.981583] Data abort info:
+[    0.982634]   ISV = 0, ISS = 0x00000004
+[    0.984213]   CM = 0, WnR = 0
+[    0.985260] [0000000000000000] user address but active_mm is swapper
+[    0.987600] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    0.989557] Modules linked in:
+[    0.990671] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+5.8.0-rc3-next-20200706 #1
+[    0.993711] Hardware name: linux,dummy-virt (DT)
+[    0.995708] pstate: 00000005 (nzcv daif -PAN -UAO BTYPE=--)
+[    0.998168] pc : pl011_dma_probe+0x90/0x360
+[    1.000015] lr : pl011_dma_probe+0x84/0x360
+[    1.001827] sp : ffff800011f4b880
+[    1.003294] x29: ffff800011f4b880 x28: ffff0000fada5800
+[    1.005562] x27: ffff800011e057d8 x26: 0000000000020002
+[    1.007884] x25: ffff8000110c0ed0 x24: ffff8000110c0b70
+[    1.010164] x23: 0000000000000000 x22: ffff0000faca8000
+[    1.012438] x21: ffff0000faee6000 x20: 0000000000000000
+[    1.014724] x19: ffff0000faee7480 x18: 0000000000000002
+[    1.016977] x17: 0000000000001400 x16: 0000000000001c00
+[    1.019270] x15: 0000000000000001 x14: 000000000003a051
+[    1.021544] x13: ffff000000000000 x12: 0000000000000010
+[    1.023805] x11: 0000000000000004 x10: 0101010101010101
+[    1.026091] x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+[    1.028354] x7 : fefefeff646c606d x6 : 0a0c0c1680808080
+[    1.030645] x5 : 00000000160c0c0a x4 : 0000000000000000
+[    1.032887] x3 : ffff800011de1878 x2 : 0000000000000000
+[    1.035179] x1 : 5d22d5f0b315de00 x0 : 0000000000000000
+[    1.037439] Call trace:
+[    1.038640]  pl011_dma_probe+0x90/0x360
+[    1.040281]  pl011_startup+0x268/0x2f0
+[    1.041935]  uart_startup.part.0+0x124/0x2d8
+[    1.043777]  uart_port_activate+0x60/0x98
+[    1.045483]  tty_port_open+0x90/0x248
+[    1.047163]  uart_open+0x1c/0x30
+[    1.048568]  tty_open+0xf4/0x478
+[    1.049973]  chrdev_open+0xa4/0x1a0
+[    1.051491]  do_dentry_open+0x12c/0x398
+[    1.053156]  vfs_open+0x2c/0x38
+[    1.054551]  path_openat+0x86c/0xdf0
+[    1.056103]  do_filp_open+0x78/0x100
+[    1.057651]  do_sys_openat2+0x1e4/0x2a0
+[    1.059410]  do_sys_open+0x58/0xa0
+[    1.060866]  console_on_rootfs+0x24/0x68
+[    1.062577]  kernel_init_freeable+0x1f4/0x254
+[    1.064450]  kernel_init+0x14/0x110
+[    1.065972]  ret_from_fork+0x10/0x34
+[    1.067504] Code: 97fcf14c aa0003f4 b140041f 54000488 (f9400280)
+[    1.070107] ---[ end trace 8001204d6659f3e5 ]---
+[    1.072104] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x0000000b
+[    1.074875] SMP: stopping secondary CPUs
+[    1.076613] Kernel Offset: disabled
+[    1.078123] CPU features: 0x240002,20002004
+[    1.079916] Memory Limit: none
+[    1.081255] ---[ end Kernel panic - not syncing: Attempted to kill
+init! exitcode=0x0000000b ]---
+
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1542193#L510
+
+qemu command,
+/usr/bin/qemu-system-aarch64 -cpu host -machine virt-2.10,accel=kvm
+-nographic -net nic,model=virtio,macaddr=BA:DD:AD:CC:09:05 -net tap -m
+2048 -monitor none -kernel /kernel/Image --append "console=ttyAMA0
+root=/dev/vda rw" -hda
+/rootfs/rpb-console-image-lkft-juno-20200521172852-2689.rootfs.ext4 -m
+4096 -smp 4 -nographic -drive
+format=qcow2,file=lava-guest.qcow2,media=disk,if=virtio,id=lavatest
+
 -- 
-2.27.0
-
+Linaro LKFT
+https://lkft.linaro.org
