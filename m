@@ -2,157 +2,147 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92506C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618AF20720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFB6206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ds37gxbH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IZZvz7M0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgGFWTb (ORCPT
+        id S1727077AbgGFWYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgGFWTa (ORCPT
+        Mon, 6 Jul 2020 18:24:05 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17942 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgGFWYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:19:30 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A506C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:19:30 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 17so43612289wmo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NqkdrA2uQUAlO29c73BYFCQkyR4aI/R5ksyegWujHhc=;
-        b=Ds37gxbH8kTdcboaWyOmLBOzVYn9G+4iXCiPt13iNouloS7ZbQcuSTawYya6KXtEMz
-         A3piReLOmoQgab9DG8ciDCZDKwkjY6Rya+/M3KutAHdKZczKStcrny8AoHPf5ybVTEes
-         6RuV9SHhlf379uLqKg4D+Buufaie/5cayx6/GWolZGapGg+ZHbkNJrrOQznIJY1T9QNQ
-         hk+0jw207drzYEjLYCkhF/gG1YNy5vClgzSzBcqqV2AeLXkQpk35orU12X6r+k1ig/ed
-         n9PhBsiQnCbnQaLuaG0cZviqbLyPZ6LCQJGJW5W00VMszvM+XfhLk2QYQOj9rhJJqNv2
-         HFLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NqkdrA2uQUAlO29c73BYFCQkyR4aI/R5ksyegWujHhc=;
-        b=DteJjmY8sBqRm+2PrByKvSuzUrtOtJtGgthcEAXGjJenWzgbv0/hlkDEwqV4OebJXY
-         AO4+mFhC5GMt0EppHLTefRpAYay8+6QGMkdAbQlnOswtxuvTno7uKWbBGmTKXITjA/O2
-         4U326QRcrWX3qETyRmC5IdRjDSASdyNoahowZwZ5G3jRDN2hkZks0uXk4Fxyjjd3MJy0
-         7DTSDHSPqxcakWWaQ0s0hDPhn9bkOrt8zCCo3weqOMjYckm4bSxMj5/U+tnSesTy52EE
-         8Jxf1zn6C4RTpJgMjN7npIQEVkqELrXE9h0ONGolvBCyWBAMXEPMSCWmG+K5yLOxGWf9
-         3Rvw==
-X-Gm-Message-State: AOAM532PQ/PZbtYcLFpVIXHGXpnNCHvPN5hlPPW7auKQlyXFvqWW39wK
-        qeksBf06UMDGab2zcQTsgDk=
-X-Google-Smtp-Source: ABdhPJwWsS622bx5CftTPVMMiQZSAV+jKSgMB9jDIkg7FX7h066J9fqLIlkg/sLfE1HURTbSoiapTQ==
-X-Received: by 2002:a1c:b686:: with SMTP id g128mr1202202wmf.145.1594073969184;
-        Mon, 06 Jul 2020 15:19:29 -0700 (PDT)
-Received: from [192.168.43.52] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id j4sm21235712wrp.51.2020.07.06.15.19.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 15:19:28 -0700 (PDT)
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>, torvalds@linux-foundation.org
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <1cceba0f-c8ad-260d-9a09-5417bee32d50@gmail.com>
- <20200706181052.174c290a@oasis.local.home>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [Tech-board-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <717030b7-ecba-2ca4-39ff-6a5a04a732d4@gmail.com>
-Date:   Tue, 7 Jul 2020 01:17:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 6 Jul 2020 18:24:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f03a41a0000>; Mon, 06 Jul 2020 15:22:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jul 2020 15:24:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Jul 2020 15:24:03 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 22:23:58 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 6 Jul 2020 22:23:58 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f03a47e0002>; Mon, 06 Jul 2020 15:23:58 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH 1/5] nouveau: fix storing invalid ptes
+Date:   Mon, 6 Jul 2020 15:23:43 -0700
+Message-ID: <20200706222347.32290-2-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200706222347.32290-1-rcampbell@nvidia.com>
+References: <20200706222347.32290-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200706181052.174c290a@oasis.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594074138; bh=rz9ii3/rSLaotraZODv9PDOOFrnasJhkv9z9XY7GWhs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=IZZvz7M0aehsq4GUCeVSFHS5wuzXzoEtv2WjRoeFwC23ch46wFYGTKQIWv1KbV6A8
+         7vVcF9CK083zwalIbf/GYj2zA4wBdoLTYu3EjKLSiTlzGFYUkbHlh/QQ5s12Bl0UUD
+         nj8P3hYHt47wNrW+8v3BsvsP1GMaWGsl/1vjEFXXeojiQZ6pg8PkU7rLRsmJibD+fn
+         zAg7bX0+NoF6JwNrzrsQ3ihNZ/rYOa4UuV5EN7ZdOIIfkzIcfn3b6K4JyXQ/vBs1PR
+         9NeYULWMvJW1fdUOcfq6SDXBfUHWY+XKJg0KExceRfg814jCXtdVkdB3aO3QuA1eGR
+         E3Ff+WkJ/O0Ew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/07/2020 01:10, Steven Rostedt wrote:
-> On Tue, 7 Jul 2020 00:31:49 +0300
-> Pavel Begunkov <asml.silence@gmail.com> wrote:
->>> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
->>> index 2657a55c6f12..4b15ab671089 100644
->>> --- a/Documentation/process/coding-style.rst
->>> +++ b/Documentation/process/coding-style.rst
->>> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
->>>  problem, which is called the function-growth-hormone-imbalance syndrome.
->>>  See chapter 6 (Functions).
->>>  
->>> +For symbol names, avoid introducing new usage of the words 'slave' and
->>> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
->>> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
->>> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
->>> +'denylist'.  
->>
->> "Subordinate" means that they are unequal, and inequality is a big issue. This
-> 
-> And if two objects are unequal, then that seems to be an appropriate
-> term. We are not concerned about the inequality of devices.
+When migrating a range of system memory to device private memory, some
+of the pages in the address range may not be migrating. In this case,
+the non migrating pages won't have a new GPU MMU entry to store but
+the nvif_object_ioctl() NVIF_VMM_V0_PFNMAP method doesn't check the input
+and stores a bad valid GPU page table entry.
+Fix this by skipping the invalid input PTEs when updating the GPU page
+tables.
 
-Totally agree with you! But do we care then whether two _devices_ or _objects_
-are slave-master? Can't see how it fundamentally differs.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
--- 
-Pavel Begunkov
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c b/drivers/g=
+pu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
+index ed37fddd063f..7eabe9fe0d2b 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
+@@ -79,8 +79,12 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu_=
+pt *pt,
+ 	dma_addr_t addr;
+=20
+ 	nvkm_kmap(pt->memory);
+-	while (ptes--) {
++	for (; ptes; ptes--, map->pfn++) {
+ 		u64 data =3D 0;
++
++		if (!(*map->pfn & NVKM_VMM_PFN_V))
++			continue;
++
+ 		if (!(*map->pfn & NVKM_VMM_PFN_W))
+ 			data |=3D BIT_ULL(6); /* RO. */
+=20
+@@ -100,7 +104,6 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
+_pt *pt,
+ 		}
+=20
+ 		VMM_WO064(pt, vmm, ptei++ * 8, data);
+-		map->pfn++;
+ 	}
+ 	nvkm_done(pt->memory);
+ }
+@@ -310,9 +313,12 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mm=
+u_pt *pt,
+ 	dma_addr_t addr;
+=20
+ 	nvkm_kmap(pt->memory);
+-	while (ptes--) {
++	for (; ptes; ptes--, map->pfn++) {
+ 		u64 data =3D 0;
+=20
++		if (!(*map->pfn & NVKM_VMM_PFN_V))
++			continue;
++
+ 		if (!(*map->pfn & NVKM_VMM_PFN_W))
+ 			data |=3D BIT_ULL(6); /* RO. */
+=20
+@@ -332,7 +338,6 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
+_pt *pt,
+ 		}
+=20
+ 		VMM_WO064(pt, vmm, ptei++ * 16, data);
+-		map->pfn++;
+ 	}
+ 	nvkm_done(pt->memory);
+ }
+--=20
+2.20.1
+
