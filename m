@@ -2,102 +2,83 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42670C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7238BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1852620722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594052573;
-	bh=Zesy/gCYGkgqDAKOfdGWivDxmHPtIcr/6/UXdNtI6j0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b5KvjJ9twffhSsD/KS1fTluxPOJKMmgbiQq71HohbzvxGbj5ZcGb5XlIFLJB3ZnmI
-	 8FhR3/zpEuTJkZcpeO+zco2z1XTaUVtflthYcppy3n87pWzA1qw7BZXDmPkVJqZwSV
-	 iZbmYHung2ffOy00MoR6ZInoIwNvKcsKURNK17bE=
+	by mail.kernel.org (Postfix) with ESMTP id 5788420722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgGFQWw (ORCPT
+        id S1729526AbgGFQW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729372AbgGFQWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:22:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A3EB20720;
-        Mon,  6 Jul 2020 16:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594052571;
-        bh=Zesy/gCYGkgqDAKOfdGWivDxmHPtIcr/6/UXdNtI6j0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZIErwXpdKK+CJDW6zA0O9KL+OxADjW3VDT39dhwKtMbjuIfNpZj50RYd5mQu+gnMf
-         tHpPTOLEYnNTLWueaktiwMowlN3pBkMwZG/6XXZV3KQw/UULZBXnKODW6APfkqqfBH
-         km4OAf6Gbs8D5CsBPULcgo99wuWAMDUDPPe4j/I4=
-Date:   Mon, 6 Jul 2020 17:22:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy
- chain driver.
-Message-ID: <20200706162246.GC6176@sirena.org.uk>
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
- <CAMuHMdW_aTKtrUnGqf3DB=fr0ZxTsjoEjMmwSpPqhwjs-Tz7ig@mail.gmail.com>
- <d80b1b85-ee23-3244-9bb0-876986f6ff17@fastree3d.com>
- <CAMuHMdUV_2DbbUqp+0=XARyLCwPya1RqFCrr6VoTJjVAZiKJzg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUV_2DbbUqp+0=XARyLCwPya1RqFCrr6VoTJjVAZiKJzg@mail.gmail.com>
-X-Cookie: You will be married within a year.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 6 Jul 2020 12:22:57 -0400
+Received: from mailomta13-sa.btinternet.com ([213.120.69.19]:10108 "EHLO
+        sa-prd-fep-042.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729372AbgGFQW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:22:56 -0400
+Received: from sa-prd-rgout-002.btmx-prd.synchronoss.net ([10.2.38.5])
+          by sa-prd-fep-042.btinternet.com with ESMTP
+          id <20200706162254.SQLR2233.sa-prd-fep-042.btinternet.com@sa-prd-rgout-002.btmx-prd.synchronoss.net>;
+          Mon, 6 Jul 2020 17:22:54 +0100
+Authentication-Results: btinternet.com;
+    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
+X-Originating-IP: [31.53.71.41]
+X-OWM-Source-IP: 31.53.71.41 (GB)
+X-OWM-Env-Sender: j.oldman998@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgddutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvufffkffosedttdertdertddtnecuhfhrohhmpeflohhhnhcuqfhlughmrghnuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeegfedthfefueeihffgkeefteehuddttdefudetveelveefvdefhfejieejhffggfenucfkphepfedurdehfedrjedurdegudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrheefrdejuddrgedupdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from henry.home (31.53.71.41) by sa-prd-rgout-002.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
+        id 5ED9AA6E0576508D; Mon, 6 Jul 2020 17:22:54 +0100
+From:   John Oldman <john.oldman@polehill.co.uk>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        John Oldman <john.oldman@polehill.co.uk>
+Subject: [PATCH] staging: rtl8192u: Using comparison to true is error prone
+Date:   Mon,  6 Jul 2020 17:22:40 +0100
+Message-Id: <20200706162240.2770-1-john.oldman@polehill.co.uk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+clear below issues reported by checkpatch.pl:
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+CHECK: Using comparison to false is error prone
 
-On Mon, Jul 06, 2020 at 05:32:51PM +0200, Geert Uytterhoeven wrote:
+Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+---
+ drivers/staging/rtl8192u/r8192U_dm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> However, that information would need to be added to each driver only once.
-> With your proposal, it has to be added to all affected nodes of all DTSes
-> of all users.
+diff --git a/drivers/staging/rtl8192u/r8192U_dm.c b/drivers/staging/rtl8192u/r8192U_dm.c
+index c23e43b095d9..6b301acb584e 100644
+--- a/drivers/staging/rtl8192u/r8192U_dm.c
++++ b/drivers/staging/rtl8192u/r8192U_dm.c
+@@ -2240,7 +2240,7 @@ static void dm_ctstoself(struct net_device *dev)
+ 	unsigned long						curTxOkCnt = 0;
+ 	unsigned long						curRxOkCnt = 0;
 
-Right, these are fixed properties of the silicon which we know simply
-=66rom knowing which device we have - there is no need to put them in DT
-at all.
+-	if (priv->ieee80211->bCTSToSelfEnable != true) {
++	if (!priv->ieee80211->bCTSToSelfEnable) {
+ 		pHTInfo->IOTAction &= ~HT_IOT_ACT_FORCED_CTS2SELF;
+ 		return;
+ 	}
+@@ -2944,7 +2944,7 @@ static void dm_dynamic_txpower(struct net_device *dev)
+ 	unsigned int txhipower_threshold = 0;
+ 	unsigned int txlowpower_threshold = 0;
 
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
+-	if (priv->ieee80211->bdynamic_txpower_enable != true) {
++	if (!priv->ieee80211->bdynamic_txpower_enable) {
+ 		priv->bDynamicTxHighPower = false;
+ 		priv->bDynamicTxLowPower = false;
+ 		return;
+--
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8DT9UACgkQJNaLcl1U
-h9AdMQf8CPLSrHKUudLZQMm6Vt8Js3FhfOfXz0nI3WhVqYA//SpkS8p4LIgH42v/
-YkJJxsehBDQpM1leejTUhrYfV8nq5JlJHMf4y2iVuJx9Oc+/HneV9urnFT2ubUlc
-n/NN3HBsz2lajS+ZJrhIQZdo/NUbh+GvnuUGXXt0aoJd1oRIgackpNz0OuSp8tpC
-+k0jCYYNkn6L1xZnQfnwP3HloL9X1lt2HnQgGPFWn30sc7ckUORptE+pqtzDzOfh
-Tw/pHMZusSusP5cXX+8/k0lApuO+dpbK0KgGcBQM5D7KwWAZ0f15BT+dQa4DOxK0
-oOcuKT9cbFF7NeTq+tLHWUJXzwoT2g==
-=eyDJ
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
