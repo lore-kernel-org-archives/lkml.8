@@ -2,195 +2,206 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F442C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019952070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F1A206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRWNAlNZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tV1JMNZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgGFPIT (ORCPT
+        id S1729316AbgGFPKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
+        Mon, 6 Jul 2020 11:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgGFPIT (ORCPT
+        with ESMTP id S1729140AbgGFPKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:08:19 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97340C061755;
-        Mon,  6 Jul 2020 08:08:18 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id rk21so42928702ejb.2;
-        Mon, 06 Jul 2020 08:08:18 -0700 (PDT)
+        Mon, 6 Jul 2020 11:10:09 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6011C061755;
+        Mon,  6 Jul 2020 08:10:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b92so17154866pjc.4;
+        Mon, 06 Jul 2020 08:10:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+QV0foaqZfR1DGTEKz4tnb7W5JLiiR6E9hmIsjOaInY=;
-        b=eRWNAlNZNgupqf/XW+C4vAF8eh7vePcdv6oiE8s87gxTkZGqEsEBbVe49Lo7v1QOQ2
-         ClaMf13wmAfdlY42+jT8j75GvgKlLSERkFGMqLWFAQ0qDFmMLMYjOZmNHpiPUiEVGEHp
-         z2gvRxZiE+vIwBs5q2owvrp41jdKlxe8+lVNIOq8jS/HEzDCe8dl7RgjgnxgJMHrLxd4
-         Ef5V9EgzLH/X7CemCHZUCoBFI0FclmYdH5A3X8zWGiTqPuGiEWeByijAiazr/jYYd12K
-         CZ5kQiHebxKZIwPySsxaS1zn0UW34MzusEH5AWPAyXMovZ1iYhMOM5H6u0WKyU9/LdWt
-         9wEw==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eBwRBRvbZOXipdiY/rQrSNtoTZTEajJqSqQHdmUlhbM=;
+        b=tV1JMNZzXHdxfvShvh6uNoSuG/8TZP2PahLCFdqv6tZSovyHysS2B/+xdShCD0LNC4
+         OkkYRWzKsgb7+u82U811xXdRnHP0bv7TyYLrM1GBIo81uXGh/fVxSej52lzvV4YIXmwX
+         9brlx3Zaeu6RftVgBNXY/HoaPx+Isst0Lw23OujPqbgnz6jV0mQNmr/P5KmCmtA0Beqh
+         FOHcbJrL8+1hlwFLlwQ2bCAKP+vLolNUyuME4ppAd/DSuUs//QBZ/PocU8Uk5IxiKQBl
+         tIDWsjA3o5RY404Pgkght1Bfpy74xLXW6bV0NUA51RUUzrl7RqARQ/+W9wA6r/NpzY8i
+         mfZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+QV0foaqZfR1DGTEKz4tnb7W5JLiiR6E9hmIsjOaInY=;
-        b=fSIXlfHq1SewDLTsojM8xb9jTGSMKAuAeAReKs99N1LtRmZJK364rDEWpQlvaCR71M
-         AFUhRuPtcKxnkP8SG2aU2/nq+DaWmB/rco857n8/oU7wCpM/EVNmS9hdcTmKU+ZvMLsV
-         H7YWT6QdAuC7f3KTFWaTGe7UFPY/Slw7Feds7guzhGH3ARhau3gN8C1zW/7I+MzDSFF6
-         B91aUPv4DecRf+JO2I+iMawj2eiFxvmXzeupFk31tqVqSdU6SaHw+oe0pqzjkWODsk1A
-         QyAV7LfqnCjyZqDvsVY2R+swvuv8scybLY9KZcsQEGVH4HsjCqBD89+4hzUY6GJX22uM
-         donw==
-X-Gm-Message-State: AOAM532WNAtzoI3xAuif/HNw9gl3pEUfyno1A3JKxPbFcqtobNMDgRPY
-        3jtFuF7tFNxjvIqTPFQ+I2U=
-X-Google-Smtp-Source: ABdhPJx/FKMlLT2apCdXfjM3rMGs1ywVu/BWMY9t0TXGsw7WrkqfVEI3IC2yYq9h6CXPNq4nt2gS3A==
-X-Received: by 2002:a17:906:2a91:: with SMTP id l17mr45311743eje.539.1594048097227;
-        Mon, 06 Jul 2020 08:08:17 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id v5sm16730084ejj.61.2020.07.06.08.08.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 08:08:16 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 18:08:14 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     sorganov@gmail.com, richardcochran@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, andrew@lunn.ch
-Subject: Re: [PATCH  1/5] net: fec: properly support external PTP PHY for
- hardware time stamping
-Message-ID: <20200706150814.kba7dh2dsz4mpiuc@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-2-sorganov@gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eBwRBRvbZOXipdiY/rQrSNtoTZTEajJqSqQHdmUlhbM=;
+        b=YSBnSVWzqItCnKvt2nnsiG9gKT/67YO7mgaxDwhX6o3Tx+II7yL7oidYyRejeF3tjx
+         7BGRcpKNALiVD5j9EoeKOWj9/dm0/tfzR1gYsEnLDp78Td3wx98F0t/MlL7CZtzlZ/Qv
+         KmRU9G8hZQZfzjjOhR4QDMgb8GakbvZwn4oghTrvRrEnmoY6VTLC0bFvg1SlxK0hCOa0
+         m8szrzgoCOMxKcMJp1zHItn5VA/IRGDQBat6io47b0I2In1MiHICwkrghxtTyQHHhzN9
+         ZiI50NuYr8s4V29MKaizychmYk9ma/i5L39xWqB48uqVum0hZ7xcYcuAyJl+70qI3kXq
+         tA8g==
+X-Gm-Message-State: AOAM532B01XLZyFZygZ3YeBVYqASvY8TJkDboAShD/FHS17J23ZqOOzw
+        XzrV3oQOkDdQV8h9oBsPGGM=
+X-Google-Smtp-Source: ABdhPJyYA10lGpxfw9PSuWB0ZRBpDQ5LBoHQWODc3UVIQKefv7hkzOH3ZbtiljU3ldRUABiWfkU5vQ==
+X-Received: by 2002:a17:902:7b89:: with SMTP id w9mr30340110pll.175.1594048208345;
+        Mon, 06 Jul 2020 08:10:08 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e195sm17321997pfh.218.2020.07.06.08.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 08:10:07 -0700 (PDT)
+Subject: Re: [PATCH 1/1] watchdog: Add common nowayout parameter to booke_wdt
+ driver
+To:     Timothy Myers <timothy.myers@adtran.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Boike <david.boike@adtran.com>
+References: <CH2PR19MB3590AFAC86BA1697956EAD1C9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <6b24e27b-c47a-8fd3-179b-761fb53f02b0@roeck-us.net>
+Date:   Mon, 6 Jul 2020 08:10:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706142616.25192-2-sorganov@gmail.com>
+In-Reply-To: <CH2PR19MB3590AFAC86BA1697956EAD1C9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+On 7/6/20 7:13 AM, Timothy Myers wrote:
+> Add the common "nowayout" parameter to booke_wdt to make this behavior
+> selectable at runtime and to make the implementation more consistent with
+> many other watchdog drivers.
+> 
+> Signed-off-by: Timothy Myers <timothy.myers@adtran.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-On Mon, Jul 06, 2020 at 05:26:12PM +0300, Sergey Organov wrote:
-> When external PTP-aware PHY is in use, it's that PHY that is to time
-> stamp network packets, and it's that PHY where configuration requests
-> of time stamping features are to be routed.
-> 
-> To achieve these goals:
-> 
-> 1. Make sure we don't time stamp packets when external PTP PHY is in use
-> 
-> 2. Make sure we redirect ioctl() related to time stamping of Ethernet
->    packets to connected PTP PHY rather than handle them ourselves
-> 
-> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+The added Reviewed-by: makes it v2.
+
+Anyway, your patch is whitespace corrupted.
+
+ERROR: code indent should use tabs where possible
+#36: FILE: drivers/watchdog/booke_wdt.c:45:
++               "Watchdog cannot be stopped once started (default="$
+
+WARNING: please, no spaces at the start of a line
+#36: FILE: drivers/watchdog/booke_wdt.c:45:
++               "Watchdog cannot be stopped once started (default="$
+
+ERROR: code indent should use tabs where possible
+#37: FILE: drivers/watchdog/booke_wdt.c:46:
++                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");$
+
+WARNING: please, no spaces at the start of a line
+#37: FILE: drivers/watchdog/booke_wdt.c:46:
++                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");$
+
+That explains a lot. I guess it is corrupted so badly that patchwork
+doesn't recognize it as patch. Sorry, won't be able to apply it.
+Please send a non-corrupted version.
+
+Guenter
+
 > ---
->  drivers/net/ethernet/freescale/fec.h      |  1 +
->  drivers/net/ethernet/freescale/fec_main.c | 18 ++++++++++++++----
->  drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
->  3 files changed, 27 insertions(+), 4 deletions(-)
+>  drivers/watchdog/booke_wdt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-> index a6cdd5b6..de9f46a 100644
-> --- a/drivers/net/ethernet/freescale/fec.h
-> +++ b/drivers/net/ethernet/freescale/fec.h
-> @@ -595,6 +595,7 @@ struct fec_enet_private {
->  void fec_ptp_init(struct platform_device *pdev, int irq_idx);
->  void fec_ptp_stop(struct platform_device *pdev);
->  void fec_ptp_start_cyclecounter(struct net_device *ndev);
-> +void fec_ptp_disable_hwts(struct net_device *ndev);
->  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
->  int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
->  
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index 2d0d313..995ea2e 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -1298,7 +1298,11 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
->  			ndev->stats.tx_bytes += skb->len;
->  		}
->  
-> +		/* It could be external PHY that had set SKBTX_IN_PROGRESS, so
-> +		 * we still need to check it's we who are to time stamp
-> +		 */
->  		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
-> +		    unlikely(fep->hwts_tx_en) &&
-
-I think this could qualify as a pretty significant fix in its own right,
-that should go to stable trees. Right now, this patch appears pretty
-easy to overlook.
-
-Is this the same situation as what is being described here for the
-gianfar driver?
-
-https://patchwork.ozlabs.org/project/netdev/patch/20191227004435.21692-2-olteanv@gmail.com/
-
-If so, it is interesting because I thought we had agreed that it's only
-DSA who suffers from the double-TX-timestamp design issue, not PHYTER.
-Not to mention, interesting because FEC + a timestamping DSA switch such
-as mv88e6xxx is not unheard of. Hmmm...
-
->  			fep->bufdesc_ex) {
->  			struct skb_shared_hwtstamps shhwtstamps;
->  			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
-> @@ -2755,10 +2759,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
->  		return -ENODEV;
->  
->  	if (fep->bufdesc_ex) {
-> -		if (cmd == SIOCSHWTSTAMP)
-> -			return fec_ptp_set(ndev, rq);
-> -		if (cmd == SIOCGHWTSTAMP)
-> -			return fec_ptp_get(ndev, rq);
-> +		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
-> +
-> +		if (cmd == SIOCSHWTSTAMP) {
-> +			if (use_fec_hwts)
-> +				return fec_ptp_set(ndev, rq);
-> +			fec_ptp_disable_hwts(ndev);
-> +		} else if (cmd == SIOCGHWTSTAMP) {
-> +			if (use_fec_hwts)
-> +				return fec_ptp_get(ndev, rq);
-> +		}
->  	}
->  
->  	return phy_mii_ioctl(phydev, rq, cmd);
-> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-> index 945643c..f8a592c 100644
-> --- a/drivers/net/ethernet/freescale/fec_ptp.c
-> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-> @@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
->  	return -EOPNOTSUPP;
->  }
->  
-> +/**
-> + * fec_ptp_disable_hwts - disable hardware time stamping
-> + * @ndev: pointer to net_device
-> + */
-> +void fec_ptp_disable_hwts(struct net_device *ndev)
-> +{
-> +	struct fec_enet_private *fep = netdev_priv(ndev);
-> +
-> +	fep->hwts_tx_en = 0;
-> +	fep->hwts_rx_en = 0;
-> +}
-> +
->  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
->  {
->  	struct fec_enet_private *fep = netdev_priv(ndev);
-> -- 
-> 2.10.0.1.g57b01a3
+> diff --git a/drivers/watchdog/booke_wdt.c b/drivers/watchdog/booke_wdt.c
+> index 9d09bbfdef20..7817fb976f9c 100644
+> --- a/drivers/watchdog/booke_wdt.c
+> +++ b/drivers/watchdog/booke_wdt.c
+> @@ -39,6 +39,11 @@ static bool booke_wdt_enabled;
+>  module_param(booke_wdt_enabled, bool, 0);
+>  static int  booke_wdt_period = CONFIG_BOOKE_WDT_DEFAULT_TIMEOUT;
+>  module_param(booke_wdt_period, int, 0);
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout,
+> +               "Watchdog cannot be stopped once started (default="
+> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 > 
+>  #ifdef CONFIG_PPC_FSL_BOOK3E
+> 
+> @@ -215,7 +220,6 @@ static void __exit booke_wdt_exit(void)
+>  static int __init booke_wdt_init(void)
+>  {
+>         int ret = 0;
+> -       bool nowayout = WATCHDOG_NOWAYOUT;
+> 
+>         pr_info("powerpc book-e watchdog driver loaded\n");
+>         booke_wdt_info.firmware_version = cur_cpu_spec->pvr_value;
+> 
+> base-commit: dd0d718152e4c65b173070d48ea9dfc06894c3e5
+> --
+> 2.20.1
+> 
+> 
+> 
+> *Timothy Myers*
+> Software Design Engineer
+> 
+> Office: 256.963.8844
+> 
+> ADTRAN
+> 901 Explorer Boulevard 
+> Huntsville, AL 35806 - USA
 
-Cheers,
--Vladimir
