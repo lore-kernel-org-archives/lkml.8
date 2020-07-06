@@ -2,134 +2,376 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A833FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF74A20737
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707E120737
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ord/4yla";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zOF/4irP"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="D37rkd4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgGFCLA (ORCPT
+        id S1728676AbgGFCNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 22:11:00 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:4661 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbgGFCK7 (ORCPT
+        Sun, 5 Jul 2020 22:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728579AbgGFCNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 22:10:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594001459; x=1625537459;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=6wgbhNY74mGvqtpX9PetJavvFQUONN1sLZGgA1ROKnU=;
-  b=ord/4ylam+pSeeGL1XKHdxqwAOR0J0soHDmv3BG/RzP2Zt8Ib3mtd3Pw
-   wyZ1TOCZJjLga7Y24C6Bqp8ccmNOlnEiXWV1eLF7SCWZsgxHSf1fr+tOM
-   Q6fgpms6nWhwMXJc+ABYGpJz/DPcZZDENE+AnDI+omQxXulyvVXsXJ+v6
-   PpawQWd8gyiBCs8Vu4tRXA4DtO15kozlEWrEfmJYoN0VZgj5KEtDyeWVU
-   M4I+DeUhTri47CWcgvvCKDJ+Lf5vqMeJrmVWWjpKj/CG/rforMj2kewDb
-   y1Atgs4WVAjhPvy+VqnOMUE5niaG4ncM0hgrvOlRnpn+gVwUFVj8BcbTV
-   g==;
-IronPort-SDR: OTDhGTsUpS+p0j53JeQgvoD/xvECL5wwybajU9Fv5DuT1ABtxZ9/GVsmErTQ9Glwr2dSkRQrbU
- lBxbZmJtnWTf4eINmrv4lpPyev6nKPL8F/zmaWi1vjmnTG/fYGrUBQA5mAhBeMyy+jNzdnHjyI
- I4T3qTnP9W9UHWG9sGZq8oHBVQ0BStHto5F0qsI/iAJ1OqlVk2wvTtiUPj5pDltm/7Oxfj3gE8
- 6m1Kd8c8f9gMIIUKaVGedTmBA3/9m6IByFMvlMuFSGH6f7FIeU/7mvdhKwNArs1dhW04xFoRVB
- /rQ=
-X-IronPort-AV: E=Sophos;i="5.75,318,1589212800"; 
-   d="scan'208";a="146021443"
-Received: from mail-bn8nam12lp2177.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.177])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jul 2020 10:10:58 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gR4roDR0/gFwW8X8XcFeyUalfivkLN2s7+TvGJSh6rWPU9kUw+3CX0azH+cAzK2CtnO5ro2fK6fNbeTvpgsPw9u6rBNOE1LLp0S9OO6c0BnGkcx1mXorgJrJg6RpvB5UQDrFSZIf+dbmAXB3kL6HeH65BmvvFyBZHCeZPU1bJY9EXDXR77rL0uomXyaKGf9wS3UXb34C0JcVEAUOvJxApsrc6LMdXc5b7nMX0JtMNjEaj9H/TL67WOdnafCOnycXnymjmdwIorVHEyUBYRSXklDX7Rw4wyXXon4ltR83PR4rdMNwTX6sdF1H2pf9/p4SYGjMW6pPuPsJ1h1cVN+qqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6wgbhNY74mGvqtpX9PetJavvFQUONN1sLZGgA1ROKnU=;
- b=LERBtCqrLOLG3Cg4FRROYR53khd8mNbWooacIBS9gCNcusQX8IZW4vtFcVJLmFMTEAZaDm3LBAzvHhP7GHbCfDBzgWJ5fk39uNS2V/miAxOJdRo2TVNdZjdrhdHC4V9B6ebebDqbg9YHbLjK+jBSesaX8DgubNPEbhIKAEKJz3Bclzd5luCgQf8Qac4a+t3EuZq8Q4EzN3x82W/tBHze16GHkSkMrS69vKNxj3DP3WUsA5xnHrhN5xCpY9kZcAPimbgd0+ufFztVeUM9wMp1hufQZFqlI38MmYV/H7OL9Jb7M4J/l47eXo+r/7DDanPZFzKr2b9bi+Kddj/pSy/XCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sun, 5 Jul 2020 22:13:01 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26ADC08C5DE
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:12:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so9631485pjb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 19:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6wgbhNY74mGvqtpX9PetJavvFQUONN1sLZGgA1ROKnU=;
- b=zOF/4irPdcDscbL8VHwBEbDdbuyY+Lpnsqg5+IKkILL/fr65LtyuYS4NtnRxDGVLlfAKjHyLCuQkPiwnpF/0FOg9DYpgc4wg/fC4gGNJjfVTMrbOlHWPt5HM+2OeCiA0xNdhwWfpu/xplA+laveLFM+zS2olRVHKH9qQy008pDU=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB5527.namprd04.prod.outlook.com (2603:10b6:a03:e3::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Mon, 6 Jul
- 2020 02:10:56 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 02:10:56 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>
-CC:     "baolin.wang7@gmail.com" <baolin.wang7@gmail.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] nvme-pci: Fix some comments issues
-Thread-Topic: [PATCH 1/5] nvme-pci: Fix some comments issues
-Thread-Index: AQHWUOVPtXqqYQo8rESYKdvM7jJiyg==
-Date:   Mon, 6 Jul 2020 02:10:56 +0000
-Message-ID: <BYAPR04MB4965FA356D5F3A74F17D6D9286690@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
- <3820a0fc3c74f9a70a8856172d499de4dee3c2b7.1593743937.git.baolin.wang@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux.alibaba.com; dkim=none (message not signed)
- header.d=none;linux.alibaba.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 361d20e0-f8cf-4f49-e197-08d82151d1b0
-x-ms-traffictypediagnostic: BYAPR04MB5527:
-x-microsoft-antispam-prvs: <BYAPR04MB552747A9840A6FD010AE027A86690@BYAPR04MB5527.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:446;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 21eWghvJ/j51CfA0Z7OM4a9oTCGnHzvMjYTRluBZkG/hpz8lBuH8I9Q2qYVBPTCordrKK7nLzuSFHfULUcxlbL1RkoKsWoJ8OYXc39xfn6P+wrPYMW5k77VEnKph9c1Ng2/Aa2z1WgfZ9XsDL9ZnPg3Avsfc7OZAOAKf0l4F6gBkFTcwTF4dlCwCDmktBf2u9LBuuO8PtLcaJ7TNMFpl/QS3tmj51jAF0NcedWSNDL/wBXFgcgT9DVHF1CxyfkEZJs+JqPx/RRFUXi3PaWHyRQTJPy/lUam4qetIEOc0zh3mHQPwtiAhR5XmYF0e3M9P
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(26005)(8676002)(33656002)(64756008)(53546011)(66446008)(66556008)(66476007)(558084003)(7696005)(4326008)(110136005)(478600001)(76116006)(66946007)(8936002)(86362001)(6506007)(316002)(186003)(2906002)(5660300002)(54906003)(9686003)(71200400001)(52536014)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: T71faRM9b72CCBZESLHncSX3MeKmiS1PgUSOFP2VNo2MA5+PaXqG76YKOSPkJp8IIM9nZPtWJHSnJ4BHnKKRatodFLKpohdPw35ziMDSu4i+3gcM+12xhYqzn+tfwNWnJs5FwJx3U6jY36x5h92t29XnxOXw/u7K/zcNYX8yLJ0b2Q8zGMg9FYCNMqJ7XGnEsGDb95AOkbIIT3MpKQg0nJkUbkjnIpGmlB4cKnfSYmavA12ztUh4+H2EVfaQIvCgXDVc2YLpg4FrMjhHG9EnMighVcRIaPgBY2Gi3/+3OxPbf8t52NaasGQcROcIRcX5q0xWqtzevesMOmAjzevruOcyhHxOPQarW/DJHx4E4JowCz+IKNLjxOBrZfTKz0wE/eyAP1xvW8+XoCeAJt+3ltszmK8XjDFE8gOzBnmW4OhiAFLfG2RKmH7voSqDFQzfY/GYgZxDFiut26ZXGva5MQhdazgrB3+MECwmRmb8KuE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=veY7e8MhQbVJmGp0VryBoJeWwwVHOxjlznZ7MrAlILU=;
+        b=D37rkd4vyTnAIChk4j8HUOxzfWgQ6LYHM8+cC0bNEDKAAmKVCMYQvouGUWhT0N7d4D
+         RxL+aWDLprLyFw7xb/XhcVROWRBk9CmR862DedUXHmhzcBBOe/yXx7GJ4Tv1BLfNECbd
+         3dE9CkedoAx2ob7UYc0dwjoIxMh+bcd3yq+nMRG8eot6fOGGFW6nfPYOnkHtkq/Cbwvm
+         vOx7SUwUTqnqHgkDwwTuHM/yb2H/t8a3hh/Ws6HEh+6VB4ewR18EaoYUXGC+GjspRccI
+         Af6ARjcYCSSlDVfgysbiZ3f4hDF0IRF7LeHDrvGu+JbH3E6CWUe7o3AEOLc4Xm8CXk9j
+         ay6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=veY7e8MhQbVJmGp0VryBoJeWwwVHOxjlznZ7MrAlILU=;
+        b=iMq25DvtJNvlZto/dp3imjea4OTxq0rLC+iB6Ml5h2f2cBST8v2dmqrBmCEgkXYad+
+         MbotxRsU3qXwWG4JkqGhK8nfH2Uf3KraCVOQJfyOfKoIsVah7tVsFrwMw1nDlq+As7Wd
+         U6Ok7zrcHIadquAgiNitEL3OBHuxf1+z+eeuAOx1YYh3SZEqAKre/foxYWYVaPxel8MQ
+         jTZV4g+RmFY+7SZCPK5LRRLQ5pemicfRjoBaouWmcwFmDAyvtmnaBIfrf9oKeCQMKD3f
+         BBQUAT4ytP3Dt2VMYpsMJdxA1QQtTTJkfUNYH0vH1wtvqoBLrVhI6h+v0PxH9FrhTqJ9
+         tF6g==
+X-Gm-Message-State: AOAM532P2Srg6T6ISo38NUPimq/gS4QpOBCNAKD7oTdrooYO7eAw7bX1
+        tnUDmY62gyFjJMa6bQP4mEuoDw==
+X-Google-Smtp-Source: ABdhPJy/IdLJjynfkZnC7wj8/PbTGJljVqSj6Q2ack+0VIM4iwONGOONjeXkccXqH27dxG/ivd7F0g==
+X-Received: by 2002:a17:90a:930b:: with SMTP id p11mr49239264pjo.230.1594001579254;
+        Sun, 05 Jul 2020 19:12:59 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id l191sm18103068pfd.149.2020.07.05.19.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 19:12:58 -0700 (PDT)
+Message-ID: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
+Date:   Sun, 05 Jul 2020 19:12:58 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 361d20e0-f8cf-4f49-e197-08d82151d1b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 02:10:56.5583
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cGNoodva0ph6+vr48oaGer+Tl4A25WZmgPhb25aYN+19m3Z/TI/WFgJY+b47Pi6agIXfuwErW/2oCh/ICzhgUi1ZE1oOvm5G8OHE75gfbnk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5527
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc3-225-gbb5a93aaf252
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-cip
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     gtucker@collabora.com, Sudeep Holla <sudeep.holla@arm.com>,
+        kernelci-results@groups.io, Andre Przywara <andre.przywara@arm.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 7:54 PM, Baolin Wang wrote:=0A=
-> Fix comments' typo and remove whitespaces before tabs to cleanup=0A=
-> checkpatch errors.=0A=
-> =0A=
-> Signed-off-by: Baolin Wang<baolin.wang@linux.alibaba.com>=0A=
-=0A=
-Looks good to me.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+
+Summary:
+  Start:      bb5a93aaf252 x86/ldt: use "pr_info_once()" instead of open-co=
+ding it badly
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-225-gbb=
+5a93aaf252/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
+tc1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-225-gbb=
+5a93aaf252/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
+tc1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-cip
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
+
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
+
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
+
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
+
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
+
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
+
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
+ 			};
+ 		};
+ 	};
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [bb5a93aaf25261321db0c499cde7da6ee9d8b164] x86/ldt: use "pr_info_onc=
+e()" instead of open-coding it badly
+git bisect bad bb5a93aaf25261321db0c499cde7da6ee9d8b164
+# bad: [0c7415c31ea9482c4377287af5f459778bf64d2a] Merge tag 'tpmdd-next-v5.=
+8-rc4' of git://git.infradead.org/users/jjs/linux-tpmdd
+git bisect bad 0c7415c31ea9482c4377287af5f459778bf64d2a
+# bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-=
+1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
+# good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_=
+for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
+# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
+ixes
+git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
+# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
+8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
