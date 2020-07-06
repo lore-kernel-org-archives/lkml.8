@@ -2,109 +2,101 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9603C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05145C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D1020715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vxSRk4Iw"
+	by mail.kernel.org (Postfix) with ESMTP id D76B12070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgGFOA5 (ORCPT
+        id S1729288AbgGFOA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 Jul 2020 10:00:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57203 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728940AbgGFOA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 10:00:57 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:25130 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbgGFOA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:00:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594044055; x=1625580055;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=FYZro6D+vcHkEk7Ax8pNjGvrPd0uuRs+UC3n596x+ho=;
-  b=vxSRk4Iwyt4qhDZOZ8aQwyKUBnOTdBElSK1RUgAcsv8Ggs9QuI100WZu
-   npFs/Rhlo3vdwQ0a5eiJ0qN5n7GOA2mi7JWneVnu6UTfHTjG+zx/7xrN2
-   up/xR3prJLUCrK65FzSerV9sJnaUUsqfM93jJFwXEGB7LTqF0WBdjMAUZ
-   Y=;
-IronPort-SDR: Jb5avFILfe91lRr5qkHX24/FwvCL3vPP8pUvaglYQLPpHjyWIxyEFbaTz3G00Xis6cDyC0Rc9P
- uBYc1kZMdoYA==
-X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
-   d="scan'208";a="56397789"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 06 Jul 2020 14:00:37 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 20F02A2083;
-        Mon,  6 Jul 2020 14:00:36 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 14:00:35 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 14:00:28 +0000
-Subject: Re: [PATCH v4 15/18] nitro_enclaves: Add Makefile for the Nitro
- Enclaves driver
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-16-andraprs@amazon.com>
- <2ec8a2f6-0084-bb70-4436-24afc39069b9@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <9552b1fe-d2cc-1365-97ea-297404329ae1@amazon.com>
-Date:   Mon, 6 Jul 2020 17:00:23 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+IronPort-SDR: embVS7qNPj8VpXRvnZcKMMbCIo3DNSOdX1mf8ziYLCu6OiuOSQ50IN/ILthTyii0oMIQsYnD0+
+ eFEHMZm8PhUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127009499"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="127009499"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 07:00:56 -0700
+IronPort-SDR: 95nYChopbbyIok5aSV5FwZ5pkzwn1q71KpL03gPyMNYEqiC/u36zyeasGBSXtiCcovTFMRLRUs
+ OU0SasUX/hBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="323216156"
+Received: from jakubzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.237])
+  by orsmga007.jf.intel.com with ESMTP; 06 Jul 2020 07:00:52 -0700
+Date:   Mon, 6 Jul 2020 17:00:51 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Peter.Huewe@infineon.com
+Cc:     linux-integrity@vger.kernel.org, kjhall@us.ibm.com,
+        ferry.toth@elsinga.info, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, akpm@osdl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Message-ID: <20200706140051.GB3816@linux.intel.com>
+References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+ <e9caad58aba44bb3abeac8569a6bd8ed@infineon.com>
 MIME-Version: 1.0
-In-Reply-To: <2ec8a2f6-0084-bb70-4436-24afc39069b9@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D27UWA004.ant.amazon.com (10.43.160.43) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9caad58aba44bb3abeac8569a6bd8ed@infineon.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 06, 2020 at 11:46:46AM +0000, Peter.Huewe@infineon.com wrote:
+> Hi,
+> NACK
+> 
+> > % git --no-pager grep IFX0102 drivers/char/tpm
+> > drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+> > drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+> > Obviously IFX0102 was added to the HID table for the TCG TIS driver by mistake.
+> 
+> The HID IFX0102 was NOT added by mistake.
+> Let me explain the history a bit:
+> 
+> Old SLB 9635 / 9630 TPMs had two ways to interface them
+> - proprietary 'io' mapped protocol (tpm_infineon) - tis protocol  (tpm_tis)
+> 
+> Both match the same HID.
+> However with the emerging of the tis protocol, the io protocol eventually went away for newer products.
+> So all TPM1.2 by IFX match the HID0102 and the TCG generic ones PNP0C31
+> 
+> So basically you break TPM1.2 support for all (newer) Infineon chips if the platform vendor used the IFX0102 HID as they would speak via tpm_infineon driver.
+> The bug must be something different, especially as it only seems to happen after suspend resume.
 
+Peter,
 
-On 06/07/2020 14:30, Alexander Graf wrote:
->
->
-> On 22.06.20 22:03, Andra Paraschiv wrote:
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+Looking at dmesg:
 
-Added. Thank you.
+1. tmp_infineon initializes cleanly
+2. tpm_tis fails misserably with bunch error messages
 
-Andra
+I'm cool with reverting the patch though. Please send a revert patch and
+explain this in the commit message because right now what you are saying
+is completely undocumented.
 
+Also, this tpm_infineon issue needs to be fixed properly after the
+revert.
 
+The bugzilla bug is unrelated to this issue but it causes extra harm
+fixing any bugs and confusion among the users as the bug discussions
+proves.
 
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+How do we get the quirks for tpm_tis and tpm_infineon so that they can
+separate each other?
 
+/Jarkko
