@@ -2,178 +2,88 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039D8206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B62206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBxefRx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgGFJPn (ORCPT
+        id S1728441AbgGFJTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:15:43 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:53869 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728024AbgGFJPn (ORCPT
+        Mon, 6 Jul 2020 05:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728024AbgGFJTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:15:43 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U1sNi0q_1594026936;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U1sNi0q_1594026936)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 06 Jul 2020 17:15:36 +0800
-Subject: Re: [PATCH v14 07/20] mm/thp: narrow lru locking
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-8-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <124eeef1-ff2b-609e-3bf6-a118100c3f2a@linux.alibaba.com>
-Date:   Mon, 6 Jul 2020 17:15:09 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1593752873-4493-8-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+        Mon, 6 Jul 2020 05:19:20 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC3EC061794;
+        Mon,  6 Jul 2020 02:19:19 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g20so33929686edm.4;
+        Mon, 06 Jul 2020 02:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uJDsGDl+X2ZKKpTpyKbLqB34JLNShecgKArfkfRBOuY=;
+        b=qBxefRx9tPHhfU+1Zb11sBZfxVz64rVd//oqIOptQevIkczC3RiKzomZDHElgWLKMy
+         0eAtRM7tnCOLaNc6CLzs5z8YzCuF88k+BXDY6VMAyX8dXXvQ3T7jP+ushtZyh3jKLiM5
+         nV8BbqzEl/jpCGjk4JKqU1fePHvEZJawqUse9tbz59tPmWBNdlzBv768/3jRPJblRL8E
+         0kdJFaQn8Y4uDbbGP8KdsjLWD74+4DG/n3E/cIkWYjNkKTpbF1cUR8CncxJJ/XQ0XAP/
+         iIg9ig7K25bO5rQz0wnkCr9ZcFFwdr67jTRobSCPMpxQZJt7ASNZXSvqK0+Da3x8GOgO
+         RoYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uJDsGDl+X2ZKKpTpyKbLqB34JLNShecgKArfkfRBOuY=;
+        b=m0gxO2VNalG+JlQ6x6DbXBAJofRLb3UHY/6HCJy5sFLjHidcaKbkYJ+ZRlkvxkEEKx
+         y2Ah4Rb6dW47kpqiyC4kp1fUEN+mtCto+q1Q9TU7V1AX0w7Ub6whrufu6H6tKs0GR9wQ
+         w/dlzdjP4BOe1Zw0sWQDJMbyGHif0EC9gDvBCllOxM+AkYzPvem/0bPQinHCEjxXzqE/
+         gWQ8j/CrdAFOMoEuASkmNFtv2bgw7NTi0vddcFBvabFPr+L4DoRQTLVZFN8MUpTn+OlL
+         s2eqiA0VbdLDUjpmvjgG/RnTz9ohCGdMuKg41gFb+waWHriqDp4fhpQ8Z88EBlpUNPS5
+         T2Fg==
+X-Gm-Message-State: AOAM532JBJ+JCy0sJu1QI8rlLu1gpwkNyV5Wv5rQLWzX+Jj6FNjwtiKF
+        RCVsPgSBGnQ3ODCzgdBqyoQ=
+X-Google-Smtp-Source: ABdhPJxl058d4i42jzDH9WOoApcArUEd6u/r9fZVDiaoK7X1Aziv18hS/pWpFKP9nRU3Uj7WZbD3oA==
+X-Received: by 2002:aa7:c341:: with SMTP id j1mr57003950edr.197.1594027158353;
+        Mon, 06 Jul 2020 02:19:18 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.gmail.com with ESMTPSA id d23sm15975386eja.27.2020.07.06.02.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 02:19:17 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] make UFS dev_cmd more readable
+Date:   Mon,  6 Jul 2020 11:19:03 +0200
+Message-Id: <20200706091905.12885-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill & Johannes & Matthew,
+From: Bean Huo <beanhuo@micron.com>
 
-Would you like to give some comments or share your concern of this patchset,
-specialy for THP part? 
 
-Many Thanks
-Alex
+Bean Huo (2):
+  scsi: ufs: differentiate dev_cmd trace message
+  scsi: ufs: change ufshcd_comp_devman_upiu() to
+    ufshcd_compose_devman_upiu()
 
-ÔÚ 2020/7/3 ÏÂÎç1:07, Alex Shi Ð´µÀ:
-> lru_lock and page cache xa_lock have no reason with current sequence,
-> put them together isn't necessary. let's narrow the lru locking, but
-> left the local_irq_disable to block interrupt re-entry and statistic update.
-> 
-> Hugh Dickins point: split_huge_page_to_list() was already silly,to be
-> using the _irqsave variant: it's just been taking sleeping locks, so
-> would already be broken if entered with interrupts enabled.
-> so we can save passing flags argument down to __split_huge_page().
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/huge_memory.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b18f21da4dac..607869330329 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2433,7 +2433,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
->  }
->  
->  static void __split_huge_page(struct page *page, struct list_head *list,
-> -		pgoff_t end, unsigned long flags)
-> +			      pgoff_t end)
->  {
->  	struct page *head = compound_head(page);
->  	pg_data_t *pgdat = page_pgdat(head);
-> @@ -2442,8 +2442,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  	unsigned long offset = 0;
->  	int i;
->  
-> -	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-> -
->  	/* complete memcg works before add pages to LRU */
->  	mem_cgroup_split_huge_fixup(head);
->  
-> @@ -2455,6 +2453,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  		xa_lock(&swap_cache->i_pages);
->  	}
->  
-> +	/* lock lru list/PageCompound, ref freezed by page_ref_freeze */
-> +	spin_lock(&pgdat->lru_lock);
-> +
-> +	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-> +
->  	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
->  		__split_huge_page_tail(head, i, lruvec, list);
->  		/* Some pages can be beyond i_size: drop them from page cache */
-> @@ -2474,6 +2477,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  	}
->  
->  	ClearPageCompound(head);
-> +	spin_unlock(&pgdat->lru_lock);
-> +	/* Caller disabled irqs, so they are still disabled here */
->  
->  	split_page_owner(head, HPAGE_PMD_ORDER);
->  
-> @@ -2491,8 +2496,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  		page_ref_add(head, 2);
->  		xa_unlock(&head->mapping->i_pages);
->  	}
-> -
-> -	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> +	local_irq_enable();
->  
->  	remap_page(head);
->  
-> @@ -2631,12 +2635,10 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
->  int split_huge_page_to_list(struct page *page, struct list_head *list)
->  {
->  	struct page *head = compound_head(page);
-> -	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
->  	struct deferred_split *ds_queue = get_deferred_split_queue(head);
->  	struct anon_vma *anon_vma = NULL;
->  	struct address_space *mapping = NULL;
->  	int count, mapcount, extra_pins, ret;
-> -	unsigned long flags;
->  	pgoff_t end;
->  
->  	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
-> @@ -2697,9 +2699,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  	unmap_page(head);
->  	VM_BUG_ON_PAGE(compound_mapcount(head), head);
->  
-> -	/* prevent PageLRU to go away from under us, and freeze lru stats */
-> -	spin_lock_irqsave(&pgdata->lru_lock, flags);
-> -
-> +	local_irq_disable();
->  	if (mapping) {
->  		XA_STATE(xas, &mapping->i_pages, page_index(head));
->  
-> @@ -2729,7 +2729,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  				__dec_node_page_state(head, NR_FILE_THPS);
->  		}
->  
-> -		__split_huge_page(page, list, end, flags);
-> +		__split_huge_page(page, list, end);
->  		if (PageSwapCache(head)) {
->  			swp_entry_t entry = { .val = page_private(head) };
->  
-> @@ -2748,7 +2748,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->  		spin_unlock(&ds_queue->split_queue_lock);
->  fail:		if (mapping)
->  			xa_unlock(&mapping->i_pages);
-> -		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-> +		local_irq_enable();
->  		remap_page(head);
->  		ret = -EBUSY;
->  	}
-> 
+ drivers/scsi/ufs/ufshcd.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
