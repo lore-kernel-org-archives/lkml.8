@@ -2,175 +2,135 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E577520739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gz9H1zHR"
+	by mail.kernel.org (Postfix) with ESMTP id 72D6A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgGFGU6 (ORCPT
+        id S1728923AbgGFGV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:20:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24950 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728881AbgGFGU6 (ORCPT
+        Mon, 6 Jul 2020 02:21:26 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:40725 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgGFGVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:20:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594016456;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=92GZ3FW44LhK6ZPwgvJk40XZq6/hfhz1RbVOBgdDt9s=;
-        b=Gz9H1zHRSYmx12KOxzF8jPynQnKvG0qDX5XfHgVV2IsqhsbncKuQbkGSklyixSh02UgfdN
-        kgXSv9IkUiNHDd0A8LwSLozkliVmZjXeW9jFhr7B+rCrn9krV5ZfPMB93ZwX3UDyoXT7l6
-        q72ubUJno3MLc+dA2+nlSJ72rjXXNZ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-rgku8C6SNBGrib4AcC-GFw-1; Mon, 06 Jul 2020 02:20:46 -0400
-X-MC-Unique: rgku8C6SNBGrib4AcC-GFw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2616107ACCD;
-        Mon,  6 Jul 2020 06:20:43 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F8972DE72;
-        Mon,  6 Jul 2020 06:20:33 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 08:20:31 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     syzbot <syzbot+c3157bda041952444952@syzkaller.appspotmail.com>
-Cc:     brouer@redhat.com, andriin@fb.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        kpsingh@chromium.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING in bpf_xdp_adjust_tail
-Message-ID: <20200706082031.3e9f206e@carbon>
-In-Reply-To: <0000000000001936ab05a9ac97d1@google.com>
-References: <0000000000001936ab05a9ac97d1@google.com>
+        Mon, 6 Jul 2020 02:21:25 -0400
+Received: by mail-io1-f72.google.com with SMTP id f25so22943396ioh.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:21:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bifEgsdlIbIjEg7pabMBEtW7TXHbbAKTyRXUw/iOlU8=;
+        b=jHiVTwSxmlOHoJdUyL/2i5bcOntYd1TIn2K4ujnpBojDvoYUnFq4WY1HukrxSvYHKa
+         z8SXYDloAwtOEzGmu9etO0UbP89wgWAqvF43kyegxR4wr7Bz66oBTb6FkXXrxlGLhjmh
+         DmGqgJ8frWPdWgriwd8NuyXJloPQ5W+7miIhi+ozX9mv33X2kMxPChUSPKWmNBaaJVFW
+         IALQ1pWZGJMyJXYESJNWU+Q2xOiVoUwdiRv197ICHyvxXsfUy4msSd9PzQxELxBnbmcm
+         1KQYsVVOVk7Bb2FPoVIhqr7sJV/3EtxH3SqsZBHUaiFTU9e6Ms1HZ0cR6tEZ20UrEqkA
+         BOVg==
+X-Gm-Message-State: AOAM5336/t1C8VrePkd4OHGmwzelTy7gEZBMQouo0B49QqD9eSqVsH2p
+        N3eRNLD9nET8nVjfF3W9mWZrpkscfdS9pMVR0XwCNMVvNvk9
+X-Google-Smtp-Source: ABdhPJw6BPaOH2iRFAYDzIDQMa6riVilt/mJUZnFImpXe7w6tQdhMjaeBAfMXo/O+u1Nxwguoe7XvpMby02Oa+p5AWim5fzXw0F0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Received: by 2002:a6b:e20b:: with SMTP id z11mr23417921ioc.2.1594016484899;
+ Sun, 05 Jul 2020 23:21:24 -0700 (PDT)
+Date:   Sun, 05 Jul 2020 23:21:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000059437305a9bfe2a2@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in bpf_prog_ADDR_L
+From:   syzbot <syzbot+a4c6e533af740abd3922@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 05 Jul 2020 00:20:18 -0700
-syzbot <syzbot+c3157bda041952444952@syzkaller.appspotmail.com> wrote:
+Hello,
 
-> Hello,
-> 
-> syzbot found the following crash on:
+syzbot found the following crash on:
 
-It is WARN that trigger this, due to panic_on_warn set.
+HEAD commit:    cb8e59cc Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1446cfd3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a16ddbc78955e3a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a4c6e533af740abd3922
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-It's great to see that syzbot report these, as the WARN_ONCE is meant
-to catch drivers that forget to init xdp->frame_sz.  In this case it is
-XDP-generic that manage to get an oversized SKB run through this code
-path.
+Unfortunately, I don't have any reproducer for this crash yet.
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a4c6e533af740abd3922@syzkaller.appspotmail.com
 
-> HEAD commit:    2ce578ca net: ipv4: Fix wrong type conversion from hint to..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1190cf23100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c3157bda041952444952
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c3157bda041952444952@syzkaller.appspotmail.com
-> 
-
-It would be practical to get the WARN message here (from console output):
- [  511.164212][T22595] Too BIG xdp->frame_sz = 131072
-
-As call-stack indicate this is XDP-generic (do_xdp_generic).
-Thus the xdp->frame_sz calc comes from:
-
-	xdp->data_hard_start = skb->data - skb_headroom(skb);
-	/* SKB "head" area always have tailroom for skb_shared_info */
-	xdp->frame_sz  = (void *)skb_end_pointer(skb) - xdp->data_hard_start;
-	xdp->frame_sz += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-
-I'm surprised to see a 128KiB (128*1024) sized SKB here (in "head" area).
-How can this happen?
-
-
-> WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 ____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
-> WARNING: CPU: 0 PID: 22595 at net/core/filter.c:3463 bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 22595 Comm: syz-executor.4 Not tainted 5.8.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  panic+0x2e3/0x75c kernel/panic.c:231
->  __warn.cold+0x20/0x45 kernel/panic.c:600
->  report_bug+0x1bd/0x210 lib/bug.c:198
->  exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
->  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
-> RIP: 0010:____bpf_xdp_adjust_tail net/core/filter.c:3463 [inline]
-> RIP: 0010:bpf_xdp_adjust_tail+0x18e/0x1e0 net/core/filter.c:3452
-> Code: 37 fb 84 db 74 09 49 c7 c4 ea ff ff ff eb c7 e8 f8 f5 37 fb 44 89 e6 48 c7 c7 e0 fc fd 88 c6 05 dc f5 6d 04 01 e8 94 3b 09 fb <0f> 0b eb d8 e8 d9 48 77 fb e9 c5 fe ff ff e8 df 48 77 fb e9 92 fe
-> RSP: 0018:ffffc900018878e0 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000040000 RSI: ffffffff815ce8d7 RDI: fffff52000310f0e
-> RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880ae620fcb
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000020000
-> R13: ffff88804c20feef R14: ffff88804c20feef R15: 0000000000000000
->  bpf_prog_4add87e5301a4105+0x20/0x818
->  bpf_prog_run_xdp include/linux/filter.h:734 [inline]
->  netif_receive_generic_xdp+0x70f/0x1760 net/core/dev.c:4647
->  do_xdp_generic net/core/dev.c:4735 [inline]
->  do_xdp_generic+0x96/0x1a0 net/core/dev.c:4728
->  tun_get_user+0x22d2/0x35b0 drivers/net/tun.c:1905
->  tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:1999
->  call_write_iter include/linux/fs.h:1907 [inline]
->  new_sync_write+0x422/0x650 fs/read_write.c:484
->  __vfs_write+0xc9/0x100 fs/read_write.c:497
->  vfs_write+0x268/0x5d0 fs/read_write.c:559
->  ksys_write+0x12d/0x250 fs/read_write.c:612
->  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x416661
-> Code: Bad RIP value.
-> RSP: 002b:00007f8bc3971c60 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00000000005095a0 RCX: 0000000000416661
-> RDX: 000000000000fdef RSI: 0000000020000080 RDI: 00000000000000f0
-> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007f8bc39729d0 R11: 0000000000000293 R12: 00000000ffffffff
-> R13: 0000000000000bfd R14: 00000000004ce559 R15: 00007f8bc39726d4
-> Kernel Offset: disabled
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 85748067 P4D 85748067 PUD 61918067 PMD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 4768 Comm: syz-executor.0 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bpf_prog_6df1c5236f32720a_L+0x1f/0xa18
+Code: cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 e5 48 81 ec 00 00 00 00 53 41 55 41 56 41 57 6a 00 31 c0 48 8b 7f 28 <48> 8b 7f 00 8b bf 00 01 00 00 5b 41 5f 41 5e 41 5d 5b c9 c3 cc cc
+RSP: 0018:ffffc90001ee7ac0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffc900022ea000
+RDX: 0000000000000230 RSI: ffffc90000cb8038 RDI: 0000000000000000
+RBP: ffffc90001ee7ae8 R08: ffff88805dc5e200 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90000cb8000
+R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805dc5e200
+FS:  00007fc83e30f700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000008c0f4000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Call Trace:
+ bpf_prog_run_xdp include/linux/filter.h:734 [inline]
+ bpf_test_run+0x226/0xc70 net/bpf/test_run.c:47
+ bpf_prog_test_run_xdp+0x2ca/0x510 net/bpf/test_run.c:507
+ bpf_prog_test_run kernel/bpf/syscall.c:2998 [inline]
+ __do_sys_bpf+0x28ce/0x4a80 kernel/bpf/syscall.c:4138
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45cb29
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc83e30ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004dade0 RCX: 000000000045cb29
+RDX: 0000000000000040 RSI: 0000000020000040 RDI: 000000000000000a
+RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000005d R14: 00000000004c32db R15: 00007fc83e30f6d4
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 6c5d2c7e681a670d ]---
+RIP: 0010:bpf_prog_6df1c5236f32720a_L+0x1f/0xa18
+Code: cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 e5 48 81 ec 00 00 00 00 53 41 55 41 56 41 57 6a 00 31 c0 48 8b 7f 28 <48> 8b 7f 00 8b bf 00 01 00 00 5b 41 5f 41 5e 41 5d 5b c9 c3 cc cc
+RSP: 0018:ffffc90001ee7ac0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffc900022ea000
+RDX: 0000000000000230 RSI: ffffc90000cb8038 RDI: 0000000000000000
+RBP: ffffc90001ee7ae8 R08: ffff88805dc5e200 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90000cb8000
+R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805dc5e200
+FS:  00007fc83e30f700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000008c0f4000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
