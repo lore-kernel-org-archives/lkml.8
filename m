@@ -2,139 +2,148 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1250BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEFBD2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D611920715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NhmRIhcs";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CI1xBdO+"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="svDu8YJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgGFODZ (ORCPT
+        id S1729205AbgGFOFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:03:25 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:25794 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgGFODY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:03:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594044203; x=1625580203;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
-  b=NhmRIhcsrZKQuoFc4000QozYqxO1pGHIkkPUFTadhKTe1l/HHJJy6JWQ
-   YfgyxZ5CfEFkHSJhEIAMO9rLsvxhiSndD0vT8Vf+GcI7VdFT5QbhpXS47
-   oyQ5IU5HWIfLWhpDl3DjDlOEcVDGPAXZb6rPic6lpm84zD7OKIwktiwJx
-   uSXhuXVfSq/zw7/By3UmBzX2wHeKteUqCgKEwTW3sh5Gblu4L9nvqZ0OE
-   qnJKkPqRG5ZbfNq7gDm0hylZB+ubYiCtBAcYttLSLEqSbS632mKn+hOUd
-   kCNHXu4u6L5wKQD0b7x3bJDI/YybowFLJKVwrm9dYOuScppM0NgGs/F3V
-   A==;
-IronPort-SDR: FMP4oi3EJnmEit2egD2iS6SB3flIoi8mt/6PY8pmsR5mum1s7Q+JjHOiX2Sw4/DwFpKmFEMvKG
- C4wL64+GWBexL+SDi/KdZkDSbmzt0EXx9UkxqH3XfICh3kv0pEijvP3m07Be3axox8ISWAofcw
- e1QDMGkZm0HmIXK+2VpQCy+vdnNXCcd7c1i3n0HEq4SMK134p2XNcEg46GgAIg8MnaKc6FGXwr
- fEW0qer/mkVG1tM4uAd0VvdmIe9EUz6771QIHru6jEjJEE/FbXjHznTYy9MKCtjuw4OEqU3pMw
- +Gk=
-X-IronPort-AV: E=Sophos;i="5.75,320,1589212800"; 
-   d="scan'208";a="141737316"
-Received: from mail-bn8nam12lp2171.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.171])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jul 2020 22:03:21 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yq6IiijucBXvIAzYxjz6W9WluJ2YPN6Xfgsp4mFxxXk7l3lnmM1RPpKi17MQ9a+UZmA2+6An8RW0PbH+s56FIQ/+90BeCkTcF0EnszQHWKZryZCPqfPc3IM+3TUK0MBYyic1hs0VdwJ4i7dxMVctQizGLAwv/pkjuljiWcYr8iOKzAqxAZ2Nn6XLiWpeSjAcGSE8n41h7HYPn7b87wYtv6O8GotsGkCUyTDoI08GY71eKfrF5+e9I2eUYyRtqRI2LnccwmH9KdXXGgGxluBSHxr6TBrEaN3X1rU0znkgaNWeKp1HaLk6i9rSQCJ79YqjHuEsXt5j94MAdOM+SEENcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
- b=odQUvLb4zJa2yDfZ3bzRTguYg58C2cl4KRI6UA9PZ4FIUZPt1BpF4tfu3QZcdH4s5BIjYVGPEQED9VnjSxgsX/Fp6peiHpL4fgmvhmr8WHnaChIvncPOxusw5T4i0IMNMoK3/38NOuLaivQfvGQhA3QvUjrGh3jwICq3fSxKd84TpbpPLegPXEVGvwBy3GvUFSqZMrSLcYASajS71jcvNUl18Gl/qd7+Ex/TeNdxWlioNbzotJiNPe9DiQKS76gKvEGyiER4AYizvHbPO2lzy2QfuJtvzYUkwiaOXXkTH5DhkBb9QMpGZ4t4k1nKEBB1ZUozqs/DD6KRhdRRi1dVXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EalPNVb0Vw0wWP9U9qmkWyocdSSQ6L+t2j3YxTZvkQM=;
- b=CI1xBdO+ntNnI7bFmCGDHTlwd8EMRJypYtr80XVKmI2iP8IKEYFTC9xkt0Z+4GnCBPahxcQ3Gk/48vhyNA8OHFd77ZyJkU/ZcJkVJT5PhcoUYI+57N8h1ue+4lyWvUC5K1WZed6FKEsH7747gLU1OEac3VVBmFRamdIQZVXS3Kk=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4269.namprd04.prod.outlook.com (2603:10b6:805:2d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Mon, 6 Jul
- 2020 14:03:19 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 14:03:19 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: ufs: change upiu_flags to be u8
-Thread-Topic: [PATCH] scsi: ufs: change upiu_flags to be u8
-Thread-Index: AQHWU5KOk90XS+bzbEu6wOOwVZOt26j6lPUQ
-Date:   Mon, 6 Jul 2020 14:03:18 +0000
-Message-ID: <SN6PR04MB4640DDD8167D2F817DD4D4B8FC690@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200706123936.24799-1-huobean@gmail.com>
-In-Reply-To: <20200706123936.24799-1-huobean@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2f1152ee-a0b4-4bcc-d20a-08d821b5561e
-x-ms-traffictypediagnostic: SN6PR04MB4269:
-x-microsoft-antispam-prvs: <SN6PR04MB42690D09E26D1F479132A007FC690@SN6PR04MB4269.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zEahlyy9NoVkBVQaLRsvi9XwxejFHS541R4aXAGbMKgjKwiJFvb1p6BX7Iobvm9ouSB4OoTqlGw/V3FFZM8B9qK6Vbc/VczhkJHt1R2PJKIG7FmnhneIyfpUqWGQcYC64g3o4Smj6Tc0/n6P+eBdTbyPFWguZf8rw/uYlrtz+NLLx5qvrVnHv9kDk3k+1w9Jjky+oO0vHj7e5PiwGkOPwGIehfXN552NIQnEoEGuu4+WN5hHHGar6jywL8EVeS99BAO7LvxtBYQ3d4NOQVf72+F408f3tExwXzrXGMB8WvnMnEh/GbXLyGGgLBbDsU5aW1YZwTrWo4FzMZPeLJiDVa/l9sINlbYfgcGl18TIKPLg35GDGC/vTAmdFuDqsa/V
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(54906003)(7696005)(8936002)(33656002)(186003)(5660300002)(478600001)(76116006)(66946007)(64756008)(6506007)(26005)(9686003)(55016002)(66446008)(52536014)(66476007)(66556008)(8676002)(2906002)(4326008)(316002)(7416002)(86362001)(110136005)(558084003)(71200400001)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: se7X20Quv6C0eW1L9KQ9HBdfHzDkKedIAESu5ulCVmeLvcH7Aq9nx86AUrzW4ClWSEHhUgiTIC1LrQfDUm1yQq7sGvW5Gczd182qZt6GQnwIHfy5jiRhK2utWARKv/FbKEZGF07V82w1DWZFDyoF2EO7o9vsRSj6O5nyeKgGr8Ri1yzRojgKNP5V3Z9APAPGGmzLNvIcfVlTonvcme8QEVmutkAgYWG35tXxoQRLjkDyQQSmNXt6l3Di90cyFQO+2Zo3p5nAk2oX0VdzKu+8YJVcGA3ltgikhSd4ZMPFw+NcZqxUdw1mB6+ftI0Oy3DW+M73Qr0iXxpebDm0p+wRxnopoZgTsJXgkzD+5jLQtdBvCe52rmcXK8DmQotVLMwNXRn+610jZTTLNmRO/M3VgoxwREx1rwVfYQr4tLriF7PlUTBvEQLosBJiwS/t1LfKwZCOG7AXEYyhYMxHl9AWP9qj5I7/m5wIbYFTGCwOOYU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 6 Jul 2020 10:05:53 -0400
+Received: from mout.web.de ([217.72.192.78]:33967 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728940AbgGFOFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 10:05:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1594044257;
+        bh=txLFHk4sKswUobcyqE5f9RkYwUgc2JM+KiU/kOsvK8E=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=svDu8YJYzpJR794LiTYnvaMqQIuimLitSl84yooBmQ3oC5NT2xtvrmHA4HlZwhW2s
+         XcXuHUsJnWGHcHaKOJ/uv662URyBHVXbm+ShqtDYj37g+Hgdje5lJxboYC9bjr9QNE
+         R2qiqlMq/HfV36U7bjGLC2JTzGdU3P1jTloGBFSs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.113.119]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M6mPA-1koxhl2kLM-00wRIo; Mon, 06
+ Jul 2020 16:04:17 +0200
+Subject: Re: [RFC PATCH] vfio: type1: fix kthread use case
+To:     Hillf Danton <hdanton@sina.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        iommu@lists.linux-foundation.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>
+References: <20200706104915.11460-1-hdanton@sina.com>
+ <20200706124241.4392-1-hdanton@sina.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <69f9079f-b1b0-3296-4536-8f0a051a96c2@web.de>
+Date:   Mon, 6 Jul 2020 16:04:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f1152ee-a0b4-4bcc-d20a-08d821b5561e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 14:03:18.9433
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rZwrObM/Iot2xRu+BTWYIWIHK3GnivkOkG4Snq8mdx18+vPgHgmwxFbiAGon7TA6LwU7Tfv3QRk3FczEfsMwtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4269
+In-Reply-To: <20200706124241.4392-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:S6iuadSuppITYZ9YHAjzGVbigTb8/nLwzmleYDcKmFolGDCGlwt
+ vUVVYSUv69Yrvfko9y5sTRXBzPUy4C0JdxeZyz2JUAGMbu596PvOG2GPjx9HyYBR/h8o9E6
+ MConKpwivqH0INVe95xeFaeoha1CYYwA3PKQIUyqjJeRgZOslWERpmupVtsdH30kDJAoC29
+ b7QLRVlfgxIws8Mb+hxVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zTcJAye6cAU=:MgITDtimfovCc5DxsHQxsa
+ 1b5dtbrusuDkN0HGL0HXBawJMGKykNPHkk8HE3Ep+kVhncfhcmDp6UIKN1Yx2rAvzfdM/bMwf
+ M+gGmlrH0IC/bAPzyw/Y5PjjUKDJhz+S6lgfKCbgoA7WKmXBbQnN489X+ATc39E14ii3NYNE0
+ BvLaMD49mrXqHdSJkTNQOw4V8Zg7PPJ0IvhSu25wOucTfY/Vp8VCiJiS3U9E1x0O/xSrB75x7
+ CwmiTi5Y0SXbZdR6WM2kFl5p4tmmQqVbPEwoeD/Ae6d1qLTI1D4iYdzHSQeGaQHOLg2Hi/XyL
+ HlG75+yiSOhoZ88v+iiN+FUEObL/q9z5xWGYN/2vU57YZU+AVG3XqzO2rI9a7I/qkcuiI6gpQ
+ w3TTDFqMd80if2IaG6Txf8JgC8CCMNK9GbgNZvcA4msiG6D580VU+AuY2HtlS/zQEuRzhfutE
+ 1aYPMw+aB8alh7N7HE4OwBzyAaCjPP0/XNXNW4b3xkUV9HQhJpHipd3AkgenbxogifExw1OTV
+ zmt3Emm/PYIuqxonmgvv6+pcc0h8LjsyOOPWBGhb5k26rhE0GybH36TSkYaKwDxOv4zhqWf6O
+ cul4sCiWzkZ3kb40hspUwO32EOSGb9Fz4NtDc/T4MoS85WHhXjTAZkzvvRVNJQNSLUTtpfgNN
+ pYAtudM7PkOmS1h8jnFws4zy4yobwRpRRFF704i0URQAZoZwzxaaEkvj2ESCrO8RFpus/TUZX
+ 37Q/kC0zhsF9x5BeqYlzID/kpQuUa/NjXF5C9/QCvGmLVA/LlIHxrUts3g2InT72Ur/ka8wFd
+ guMgOt8A0cHgVKyqJjq6n6RtG5gkZLMxoJ24j1zJ9MHQ6BtRYWO0+IUepEn02BLgJx9LMWu2S
+ hm3k4qENh8SDDv5O8ILN/iHVDrGXctKf7jktk4W/PhuwamKd3Pvhooh1t3cVoDwX4IhOQEElS
+ ZGy9M2e2YomecOwvnyoObH3p0ShIbdmrzsqAEtuzgD2viDk1AmoyUSlMnUHI7wr8LjDJ4FvpY
+ tj22Nw3CX2Qzr3YUxjTD99nZ1vJjJlwqUJLwC6L7x2Nd++NvC4l6VgoT1VUAEw2KAfUFmyXGV
+ 38ELMJwuT6HKydo7rg81sTlqHakI78YXtKhtl7Mz1466FpCZ+LCcZX8A8ejWZqFmjANYYUnAP
+ IdfR6ibAffMgoJ3G0iV7oDTNYGO6LAd/UYTNg5y1GLpI5PsX/mGKCa58NL2AbFA/p5QXdWAKC
+ Kpxc8olQsz4pRGlrClLF4wMfKkTXV5TFH/R0+lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
->=20
-> From: Bean Huo <beanhuo@micron.com>
->=20
-> According to the UFS Spec, the Flags in the UPIU is one-byte length, not
-> 4 bytes. change it to be u8.
->=20
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+=E2=80=A6
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+=E2=80=A6
+> @@ -2812,11 +2815,10 @@ static int vfio_iommu_type1_dma_rw_chunk
+=E2=80=A6
+>  	if (!mm)
+>  		return -EPERM;
+>
+> -	if (kthread)
+> +	if (kthread && use_mm)
+
+Can another design approach make sense here?
+
++	bool thread_use_mm =3D ((current->flags & PF_KTHREAD) && !current->mm);
++	if (thread_use_mm)
+
+
+>  		kthread_use_mm(mm);
+=E2=80=A6
+
+Regards,
+Markus
