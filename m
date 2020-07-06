@@ -2,100 +2,128 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98466C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B065C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74BB6206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594061671;
-	bh=HzID5Om1HnGgvtiQfrJds62KVOO5oQytyNYfEh5EEfM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ljj9lZRhkAEjLF8S6YFD+MG95QBiI2mIiiYKUeo/IZP/gcb+WrS0pfByIDO7HJBNL
-	 gGjv8tnmUPsyJwy2xz4TH0xUX4EaQjfUXkOSU1mc1sPuXUr/ZetsNallqgb+dcuH9y
-	 oU2O9tcSPOuBWnUTl9tEcMctQIBDHUyFmUjhBkSI=
+	by mail.kernel.org (Postfix) with ESMTP id EAB5C2065F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgGFSya (ORCPT
+        id S1729796AbgGFS5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:54:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43590 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 14:57:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26885 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbgGFSy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:54:29 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA52C206B6;
-        Mon,  6 Jul 2020 18:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594061669;
-        bh=HzID5Om1HnGgvtiQfrJds62KVOO5oQytyNYfEh5EEfM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=egsDbD1Qr1UfPfBNnQQqs3Yh1EU8pbn/cs04DZ0uzS3zCcL71aN43vo9FBLeYERlV
-         qxojRT7tstSVqRECmyjKrHWFA0ajjuepp/TtGPt4uQvlQUf/E3aWifyYJCFY4YBixq
-         CsrITk5XxKPlpbzs8U6KXzHmzvM0F3qyRdaHcbis=
-Date:   Mon, 6 Jul 2020 11:54:27 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 3/3] net: ethtool: Remove PHYLIB direct
- dependency
-Message-ID: <20200706115427.36e4cff2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <262dbde0-2a0e-6820-fd69-157b7f05a8c4@gmail.com>
-References: <20200706042758.168819-1-f.fainelli@gmail.com>
-        <20200706042758.168819-4-f.fainelli@gmail.com>
-        <20200706114000.223e27eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <262dbde0-2a0e-6820-fd69-157b7f05a8c4@gmail.com>
+        id S1729569AbgGFS5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:57:34 -0400
+IronPort-SDR: 105EM1kqwYxoDWJshYhFTXr/A41btxnEadUfkV8JbsXAKzF4ZMDbZbdwGFqWseoN9c89lDMKLF
+ 2I41llygswLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="146555908"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="146555908"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:33 -0700
+IronPort-SDR: SECpC06f7sleVuqjbYi+UhOG9+iSnjgs7OK+Salkc5hC6hqYL4Ic7TvxsQaYMCWcU8u6CShoGI
+ 2P3FCU1ONBeA==
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="456835188"
+Received: from tcramer-mobl.amr.corp.intel.com (HELO [10.255.2.114]) ([10.255.2.114])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:31 -0700
+Subject: Re: [PATCH v3 6/6] dmaengine: idxd: add ABI documentation for shared
+ wq
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     Jing Lin <jing.lin@intel.com>, Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, ashok.raj@intel.com, fenghua.yu@intel.com
+References: <159405827797.19216.15283540319201919054.stgit@djiang5-desk3.ch.intel.com>
+ <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <6dbaf551-125e-bc7f-0b5f-655b48432ab2@intel.com>
+Date:   Mon, 6 Jul 2020 11:57:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 11:45:38 -0700 Florian Fainelli wrote:
-> On 7/6/2020 11:40 AM, Jakub Kicinski wrote:
-> > On Sun,  5 Jul 2020 21:27:58 -0700 Florian Fainelli wrote:  
-> >> +	ops = ethtool_phy_ops;
-> >> +	if (!ops || !ops->start_cable_test) {  
-> > 
-> > nit: don't think member-by-member checking is necessary. We don't
-> > expect there to be any alternative versions of the ops, right?  
-> 
-> There could be, a network device driver not using PHYLIB could register
-> its own operations and only implement a subset of these operations.
+On 7/6/20 11:22 AM, Dave Jiang wrote:
+> +What:		/sys/bus/dsa/devices/dsa<m>/pasid_enabled
+> +Date:		Jul 5, 2020
+> +KernelVersion:	5.9.0
+> +Contact:	dmaengine@vger.kernel.org
+> +Description:	To indicate if PASID (process address space identifier) is
+> +		enabled or not for this device.
+> +
+>  What:           /sys/bus/dsa/devices/dsa<m>/state
+>  Date:           Oct 25, 2019
+>  KernelVersion:  5.6.0
+> @@ -116,6 +123,13 @@ Description:    The maximum number of bandwidth tokens that may be in use at
+>  		one time by operations that access low bandwidth memory in the
+>  		device.
+>  
+> +What:		/sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
+> +Date:		Jul 5, 2020
+> +KernelVersion:	5.9.0
+> +Contact:	dmaengine@vger.kernel.org
+> +Description:	To indicate block on fault is allowed or not for the work queue
+> +		to support on demand paging.
 
-I'd strongly prefer drivers did not insert themselves into
-subsys-to-subsys glue :S
-
-> > We could even risk a direct call:
-> > 
-> > #if IS_REACHABLE(CONFIG_PHYLIB)
-> > static inline int do_x()
-> > {
-> > 	return __do_x();
-> > }
-> > #else
-> > static inline int do_x()
-> > {
-> > 	if (!ops)
-> > 		return -EOPNOTSUPP;
-> > 	return ops->do_x();
-> > }
-> > #endif
-> > 
-> > But that's perhaps doing too much...  
-> 
-> Fine either way with me, let us see what Michal and Andrew think about that.
-
-Ack, let's hear it :)
+I'd also really appreciate some more "why" in addition to the "what" in
+the documentation.  Why would a program or end user care that PASIDs are
+enabled or that on-demand paging is supported?
