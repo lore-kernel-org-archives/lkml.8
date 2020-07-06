@@ -2,166 +2,148 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2507EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01736C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053B620774
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ga5k5Fm9"
+	by mail.kernel.org (Postfix) with ESMTP id D437720715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgGFGIY (ORCPT
+        id S1728918AbgGFGJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbgGFGIX (ORCPT
+        Mon, 6 Jul 2020 02:09:18 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45791 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgGFGJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:08:23 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD7EC061794;
-        Sun,  5 Jul 2020 23:08:23 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id a9so91494oof.12;
-        Sun, 05 Jul 2020 23:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X1BjitBb0woJ/AqYDROx+THUx8rqaPKmjtehNi6j/8Q=;
-        b=ga5k5Fm94tsxJPmvN5Qz7vnzhTrXfjjHXZPRCJk4df64cFFiydOPVyTPH0ugyCSmBv
-         xWRchB3G2ib8qiIIc/u+kxh12gDUiatbOIKDJc3FPtvSMJadpa7v/WSUZyEauK6u2tOu
-         FpaK1eFRuAC1ZlM5KhuqPgkHurDYWgY/Avrf5zUvwjHzIb7vgOc7AK6SNdpXhly8Kh3x
-         ATbUHXPs2V1SeaUyTp1NUrhUNmtK/3BIP/MZU5OdftvpglEYIEw6JH5T+5GFM1A4E5/b
-         jS5JfUrnuYKcLihWEv4AZR4g/l7sSbrZ3PAIO6P4giOKs+iSNEId1+CevqpFav0wkviq
-         OJuQ==
+        Mon, 6 Jul 2020 02:09:17 -0400
+Received: by mail-il1-f199.google.com with SMTP id c1so27027613ilk.12
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:09:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1BjitBb0woJ/AqYDROx+THUx8rqaPKmjtehNi6j/8Q=;
-        b=t11LlXrz0ini0Z3HNeMh/YaNder+20JR2vYZy1DCHZDE4tbWrIyp359i6tijlTVwtr
-         lGALpRQ5+QMtJgLmMFwxnnxsSYOj3hpzXAmhFx/oYpGpSgC+O25/+shOWcAaDd7XS5nV
-         S5Y9qqvGlLosKCrI8tj2eAasEBTK+27Vi2qsaw0scC/rP7gKj3+Lqf6km6a2snvrisVf
-         Rcrb88R45cGzHkj14ojuN8ma9w359R2ZJnQKV2YnssDAyWziFlUpA1UZqCGmWZS5IFy5
-         g/xzTC+D7GJP+SF+uf6bc2ospZHs6ivdDh1c/oh/wv/GxiaSBE+yPn07dL844v3YUtSh
-         qK0Q==
-X-Gm-Message-State: AOAM530zpA7hxvH14/TF0qxRSesPzxj//pvdzVugN/by1N0KTpsL8hU0
-        bn0Q1nrGWEVTerJWQLuyPQiXjPhcdeDm3+HmAmxOitn6
-X-Google-Smtp-Source: ABdhPJz/HAbhyuLArVmNsg/6kUXsngMITW3h2wuAxja2UJS9ppi60bItfwaYPKCzrBJBa4IuDePWvHpWPMn7amISmiE=
-X-Received: by 2002:a4a:dfb5:: with SMTP id k21mr32478997ook.27.1594015702379;
- Sun, 05 Jul 2020 23:08:22 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=UqvjFR3XJzzrT7GERHVDePnddnot7kGWpGScSc1TFoU=;
+        b=iyES8dIvHvfzqSwEjb0zIdLJHmKvAothgn3XXs8AEGgttGLIG2K3rR/SKlVq5S5kux
+         tshN+/GkT2bZA8DqhSZxKCiroesPZnGreuIVXoGJ2/G+h/zs2sbKfRjSNyAkc+gbtQVK
+         YLyr+KAUbmuY5QamhirvTizZ48jsX4hCUh/0Y0Q4hpLKGuokbafg/n4HzzqHvXCfgOY0
+         ANgG0XItUqtv0wjEd4yTURFXZSius+XuZDPp3yJGOiVmfIYdnh1PO/Ft5g5AuZCEZgJ8
+         zsO7q+bZwSEe6XYUoTzK0xyVA6n8C1K3+TTE2eIRuSN/vgN+7rXMNABzbS5+GuFXfPac
+         UmMw==
+X-Gm-Message-State: AOAM531NdL463cSGw4FJLNjqyaEKBlvaRpte4xms+LYHwodnIedUNGHl
+        XWHrxTwMBTpsh8LWr2uuCd4VTN5EW9HkPdtFPB3i1xDWkq7K
+X-Google-Smtp-Source: ABdhPJx251hwN52q29K91QSmP7hrhFqSgXlaxem49CU0V8deoQtdx2eiH8FLpun4hZFL6m8kYO96Z7mQaxKFCJCvPbiBsttEIbNZ
 MIME-Version: 1.0
-References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
- <20200705021631.GR25523@casper.infradead.org> <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
- <20200705031208.GS25523@casper.infradead.org> <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
- <20200705032732.GT25523@casper.infradead.org> <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
- <20200705115851.GB1227929@kroah.com>
-In-Reply-To: <20200705115851.GB1227929@kroah.com>
-From:   Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
-Date:   Mon, 6 Jul 2020 08:07:46 +0200
-Message-ID: <CAODFU0ovM-i=4fNKSzp9SgO_FjPcAOZ0R8S4iRXyGm+QL53C1A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
-        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+X-Received: by 2002:a02:370b:: with SMTP id r11mr50218967jar.119.1594015755906;
+ Sun, 05 Jul 2020 23:09:15 -0700 (PDT)
+Date:   Sun, 05 Jul 2020 23:09:15 -0700
+In-Reply-To: <0000000000000a8e8605a22a1ae0@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e5b5bb05a9bfb63c@google.com>
+Subject: Re: INFO: rcu detected stall in netlink_sendmsg (4)
+From:   syzbot <syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 1:58 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jul 05, 2020 at 06:09:03AM +0200, Jan Ziak wrote:
-> > On Sun, Jul 5, 2020 at 5:27 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Sun, Jul 05, 2020 at 05:18:58AM +0200, Jan Ziak wrote:
-> > > > On Sun, Jul 5, 2020 at 5:12 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > >
-> > > > > You should probably take a look at io_uring.  That has the level of
-> > > > > complexity of this proposal and supports open/read/close along with many
-> > > > > other opcodes.
-> > > >
-> > > > Then glibc can implement readfile using io_uring and there is no need
-> > > > for a new single-file readfile syscall.
-> > >
-> > > It could, sure.  But there's also a value in having a simple interface
-> > > to accomplish a simple task.  Your proposed API added a very complex
-> > > interface to satisfy needs that clearly aren't part of the problem space
-> > > that Greg is looking to address.
-> >
-> > I believe that we should look at the single-file readfile syscall from
-> > a performance viewpoint. If an application is expecting to read a
-> > couple of small/medium-size files per second, then neither readfile
-> > nor readfiles makes sense in terms of improving performance. The
-> > benefits start to show up only in case an application is expecting to
-> > read at least a hundred of files per second. The "per second" part is
-> > important, it cannot be left out. Because readfile only improves
-> > performance for many-file reads, the syscall that applications
-> > performing many-file reads actually want is the multi-file version,
-> > not the single-file version.
->
-> It also is a measurable increase over reading just a single file.
-> Here's my really really fast AMD system doing just one call to readfile
-> vs. one call sequence to open/read/close:
->
->         $ ./readfile_speed -l 1
->         Running readfile test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
->         Took 3410 ns
->         Running open/read/close test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
->         Took 3780 ns
->
-> 370ns isn't all that much, yes, but it is 370ns that could have been
-> used for something else :)
+syzbot has found a reproducer for the following crash on:
 
-I am curious as to how you amortized or accounted for the fact that
-readfile() first needs to open the dirfd and then close it later.
+HEAD commit:    9e50b94b Add linux-next specific files for 20200703
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e6ec33100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
+dashboard link: https://syzkaller.appspot.com/bug?extid=0fb70e87d8e0ac278fe9
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168ab5d5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1771c5d5100000
 
-From performance viewpoint, only codes where readfile() is called
-multiple times from within a loop make sense:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com
 
-dirfd = open();
-for(...) {
-  readfile(dirfd, ...);
-}
-close(dirfd);
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	0-...0: (3 ticks this GP) idle=ff2/1/0x4000000000000000 softirq=8592/8593 fqs=5250 
+	(detected by 1, t=10502 jiffies, g=8273, q=66)
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 6802 Comm: syz-executor688 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__preempt_count_dec_and_test arch/x86/include/asm/preempt.h:94 [inline]
+RIP: 0010:rcu_lockdep_current_cpu_online kernel/rcu/tree.c:1144 [inline]
+RIP: 0010:rcu_lockdep_current_cpu_online+0xc8/0x110 kernel/rcu/tree.c:1131
+Code: 59 48 8d 7d 70 48 8b 5b 20 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 41 48 8b 45 70 48 85 c3 0f 95 c0 <65> ff 0d d1 18 a1 7e 74 07 48 83 c4 08 5b 5d c3 e8 52 93 9f ff eb
+RSP: 0018:ffffc90000007db8 EFLAGS: 00000002
+RAX: 0000000000000001 RBX: 0000000000000001 RCX: 1ffffffff1303b28
+RDX: 1ffffffff1378c1e RSI: 0000000000010204 RDI: ffffffff89bc60f0
+RBP: ffffffff89bc6080 R08: 0000000000000000 R09: ffffffff8aaf028f
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff8880ae627840 R14: ffff888094512340 R15: dffffc0000000000
+FS:  00000000017fe880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000610 CR3: 000000009aba2000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ rcu_read_lock_held_common kernel/rcu/update.c:110 [inline]
+ rcu_read_lock_held_common kernel/rcu/update.c:100 [inline]
+ rcu_read_lock_sched_held+0x25/0xb0 kernel/rcu/update.c:121
+ trace_hrtimer_expire_exit include/trace/events/timer.h:279 [inline]
+ __run_hrtimer kernel/time/hrtimer.c:1523 [inline]
+ __hrtimer_run_queues+0xd13/0xfc0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:765 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x8c/0xe0 kernel/locking/spinlock.c:191
+Code: 48 c7 c0 00 ff b4 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 37 48 83 3d 9b 74 c8 01 00 74 22 48 89 df 57 9d <0f> 1f 44 00 00 bf 01 00 00 00 e8 95 fb 62 f9 65 8b 05 fe 73 15 78
+RSP: 0018:ffffc900010872c0 EFLAGS: 00000282
+RAX: 1ffffffff1369fe0 RBX: 0000000000000282 RCX: 0000000000000002
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000282
+RBP: ffff8880945122e8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000282
+R13: 161f14abb88be58f R14: ffff888094512000 R15: 0000000000000000
+ spin_unlock_irqrestore include/linux/spinlock.h:409 [inline]
+ taprio_change+0x1fdc/0x2960 net/sched/sch_taprio.c:1556
+ taprio_init+0x52e/0x670 net/sched/sch_taprio.c:1669
+ qdisc_create+0x4b6/0x12e0 net/sched/sch_api.c:1245
+ tc_modify_qdisc+0x4c8/0x1990 net/sched/sch_api.c:1661
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:367
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443799
+Code: Bad RIP value.
+RSP: 002b:00007ffceabd28c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443799
+RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
+RBP: 00007ffceabd28d0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffceabd28e0
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
 
-> Look at the overhead these days of a syscall using something like perf
-> to see just how bad things have gotten on Intel-based systems (above was
-> AMD which doesn't suffer all the syscall slowdowns, only some).
->
-> I'm going to have to now dig up my old rpi to get the stats on that
-> thing, as well as some Intel boxes to show the problem I'm trying to
-> help out with here.  I'll post that for the next round of this patch
-> series.
->
-> > I am not sure I understand why you think that a pointer to an array of
-> > readfile_t structures is very complex. If it was very complex then it
-> > would be a deep tree or a large graph.
->
-> Of course you can make it more complex if you want, but look at the
-> existing tools that currently do many open/read/close sequences.  The
-> apis there don't lend themselves very well to knowing the larger list of
-> files ahead of time.  But I could be looking at the wrong thing, what
-> userspace programs are you thinking of that could be easily converted
-> into using something like this?
-
-Perhaps, passing multiple filenames to tools via the command-line is a
-valid and quite general use case where it is known ahead of time that
-multiple files are going to be read, such as "gcc *.o" which is
-commonly used to link shared libraries and executables. Although, in
-case of "gcc *.o" some of the object files are likely to be cached in
-memory and thus unlikely to be required to be fetched from HDD/SSD, so
-the valid use case where we could see a speedup (if gcc was to use the
-multi-file readfiles() syscall) is when the programmer/Makefile
-invokes "gcc *.o" after rebuilding a small subset of the object files
-and the objects files which did not have to be rebuilt are stored on
-HDD/SSD, so basically this means 1st-time use of a project's Makefile
-in a particular day.
