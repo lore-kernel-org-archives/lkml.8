@@ -2,147 +2,92 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69381C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5072070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D940420771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594040839;
+	bh=Ov+r/pBeKpbQ0dIuO2vHfVrS6pIerUv2uCyxIMezj90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2YollrP6MI1jj4fuJP37uVYvD/ohgTXvtjbus6Z3ozw0EoeEVYD3t6YpVUEoP/yk6
+	 9bRYiKIeNSpTatvoPAo8bjYgXbSXVVxvVzl1zynA0sPuciovPbKOv7j7LF9CTKGmik
+	 5VcfXVJTTr71a1+hubCAn2D3HjsujWs9TcWIt798=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgGFNGB (ORCPT
+        id S1729209AbgGFNHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:06:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54386 "EHLO mga14.intel.com"
+        Mon, 6 Jul 2020 09:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729072AbgGFNGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:06:00 -0400
-IronPort-SDR: z3jAbM14aDygqBXuqo9dx3mHcbdWco+5nnCV0Pp7LYkSoQn38+OCSUVsJbF0xyYs9nEC6MMo/m
- 7jK+EutUg3Gw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="146488585"
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="146488585"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 06:05:57 -0700
-IronPort-SDR: aYS46YDa8awy/eI/dw9Hx3SLOfW/Nqbkc4B3A7/eh8+yYhWw5sZ6z2f6XllRLaxaNHr9FJu4ye
- XK/Ri+ojY3RA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="313956434"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 06:05:56 -0700
-Received: from [10.249.225.12] (abudanko-mobl.ccr.corp.intel.com [10.249.225.12])
-        by linux.intel.com (Postfix) with ESMTP id 44698580378;
-        Mon,  6 Jul 2020 06:05:49 -0700 (PDT)
-Subject: Re: [PATCH v9 02/15] tools/libperf: add properties to struct pollfd
- *entries objects
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <09bbbc85-7ef9-ff9f-9865-fce6a1a4e903@linux.intel.com>
- <20200706122413.GB3401866@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <cd132d6b-89ec-1408-f4da-44020e13d4b2@linux.intel.com>
-Date:   Mon, 6 Jul 2020 16:05:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729069AbgGFNHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:07:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C67B2070C;
+        Mon,  6 Jul 2020 13:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594040837;
+        bh=Ov+r/pBeKpbQ0dIuO2vHfVrS6pIerUv2uCyxIMezj90=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ePxHPU2U+bJllopYL/Z5J51H2jX3puwREa9Iu/PnlCHf22mEuIREYuA3mLqBC+WQx
+         3BJCuG0sFYgOnYqd1iZ5eJuLQURZRZoVwWdTP5hOO6BGku4ALo5gwf2YrmTO9LrI5N
+         10BczfJ5LdPLg8+Xekjbo17PmDf9hjB4dt+MqPq4=
+Date:   Mon, 6 Jul 2020 15:07:17 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kars Mulder <kerneldev@karsmulder.nl>
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Pavel Machek <pavel@denx.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH] usb: core: fix quirks_param_set() writing to a const
+ pointer
+Message-ID: <20200706130717.GA2276608@kroah.com>
+References: <20200706103405.GA11622@kroah.com>
+ <5e4e-5f032000-4f-47356f00@80491239>
 MIME-Version: 1.0
-In-Reply-To: <20200706122413.GB3401866@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e4e-5f032000-4f-47356f00@80491239>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 06, 2020 at 02:57:59PM +0200, Kars Mulder wrote:
+> On Monday, July 06, 2020 12:34 CEST, Greg Kroah-Hartman wrote: 
+> > That's a lot of stack space, is it really needed?  Can we just use a
+> > static variable instead, or dynamically allocate this?
+> 
+> It is very possible to statically or dynamically allocate this.
+> 
+> Statically reserving an additional 128 bytes regardless of whether
+> this feature is actually used feels a bit wasteful, so I'd prefer
+> stack or dynamic allocation.
+> 
+> An earlier draft of my patch did dynamically allocate this memory;
+> early discussion (https://lkml.org/lkml/2020/7/3/248) suggested that
+> dynamic allocation has the disadvantage of introducing a new obscure
+> error condition:
+> 
+> On Friday, July 03, 2020 10:13 CEST, David Laight wrote: 
+> > The problem with strdup() is you get the extra (unlikely) failure path.
+> > 128 bytes of stack won't be a problem if the function is (essentially)
+> > a leaf.
 
-On 06.07.2020 15:24, Jiri Olsa wrote:
-> On Fri, Jul 03, 2020 at 10:41:45AM +0300, Alexey Budankov wrote:
->>
->> Store boolean properties per struct pollfd *entries object in a
->> bitmap of int size. Implement fdarray_prop__nonfilterable property
->> to skip object from counting by fdarray_filter().
-> 
-> ok, I think can do it like this, few comments below
-> 
-> thanks,
-> jirka
-> 
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->>  tools/lib/api/fd/array.c                 | 17 +++++++++--------
->>  tools/lib/api/fd/array.h                 | 18 +++++++++++++-----
->>  tools/lib/perf/evlist.c                  | 10 +++++-----
->>  tools/lib/perf/include/internal/evlist.h |  2 +-
->>  tools/perf/tests/fdarray.c               |  2 +-
->>  tools/perf/util/evlist.c                 |  2 +-
->>  6 files changed, 30 insertions(+), 21 deletions(-)
+Just test for memory allocation failure and handle it properly, it isn't
+hard to do.
 
-<SNIP>
+128 bytes on the stack can be a problem, don't get in the habit of doing
+so please.
 
->>
->> diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
->> index b39557d1a88f..19b6a34aeea5 100644
->> --- a/tools/lib/api/fd/array.h
->> +++ b/tools/lib/api/fd/array.h
->> @@ -21,10 +21,18 @@ struct fdarray {
->>  	int	       nr_alloc;
->>  	int	       nr_autogrow;
->>  	struct pollfd *entries;
->> -	union {
->> -		int    idx;
->> -		void   *ptr;
->> -	} *priv;
->> +	struct {
->> +		union {
->> +			int    idx;
->> +			void   *ptr;
->> +		} priv;
->> +		int bits;
->> +	} *prop;
->> +};
-> 
-> why not keeping the 'priv' as a struct, like:
-> 
-> 	struct {
-> 		union {
-> 			int    idx;
-> 			void   *ptr;
-> 		};
-> 		unsigned int flags;
-> 	} *priv;
-> 
-> I think we would have much less changes, also please rename bits
-> to flags and use some unsigned type for that
+thanks,
 
-Well, I supposed that priv is short for private what means the layout
-of struct priv object is opaque to fdarray implementation and it just
-passes the object as a void pointer to external callbacks (e.g in __filter()).
-So I preserved this semantics and wrapped and extended priv object
-with with flags field. It can be implemented with struct priv if you like.
-
-> 
->> +
->> +enum fdarray_props {
->> +	fdarray_prop__default	    = 0x00000000,
->> +	fdarray_prop__nonfilterable = 0x00000001
->>  };
-> 
-> s/fdarray_props/fdarray_flag/
-
-Accepted.
-
-Alexey
+greg k-h
