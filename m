@@ -2,190 +2,236 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9581C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C10C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7629120720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B6A20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ijV5DwcU";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Lluw0UN/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcUs7Cn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgGFMqE (ORCPT
+        id S1729190AbgGFMq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:46:04 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5104 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729043AbgGFMqD (ORCPT
+        Mon, 6 Jul 2020 08:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgGFMq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:46:03 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066ChpwH006602;
-        Mon, 6 Jul 2020 05:45:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=0NHFFgB5h8ICqWmJDa/yBfjm1VBnPzEuNWoZhQoAjmw=;
- b=ijV5DwcUWs83Ba1ZU26x1cf1LETgFrO2P70ZuuwuUO3F2iANE5204upJISFIc+THzJ2e
- 8AC0a1jVhgL82yWjMvyIELc6hel8c4pP2ClJvNdHDzIoV/N05dun+h8FIWg4cY2aQXiO
- dSwWAdcv+kbIVZg8xVlT4URq8kxw51jQrHE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3239r9bxbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 06 Jul 2020 05:45:36 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 6 Jul 2020 05:45:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oVqmONaPa656VV5dMurW5TRbGOL2zJYskaUXBkrebghFwQEP80dkN2l+YKQ/DL6ZwAHCndqxTkHcCmnR3DHWbs1ibW+h8OgDoZAMOdlruwUNI2zXnxHgoAcG2CsefnGMhMjKENcd35XXZPnlBmz0d5iGluwzMZkIcNPb5VaZOgJVGD5+jrU2Dd2K8mo6NvjAMeM7ZuhpQL/gqYk3ROAWRa6OxA81VdJwRQaNPv6vgisehdo/v2vZYn3Z/G5UwZIZWQnTNAopfjq/FcXNNDnO+Rit78ef5goGc/h7VZK+G/shIfyxNbZk0VMlh9X/nsSsK0dmgsl38A+USznyrs6Axg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0NHFFgB5h8ICqWmJDa/yBfjm1VBnPzEuNWoZhQoAjmw=;
- b=ODZu40Zd74T1JtExw/OGiSOiXIMYth9vV1flWXhSTR/8B0gnYBN72CHItj3uZq6K27K/BSkM7EzKJCqtEAvdthZiz++q18MBWzqbNceNuU9x6N4GMRhPzy88/tX/HSqMQwcIJ2kAAls7CVFlhcybh7OweUZQixyaVjtEv4uBslvcjYnE8MaSMmDBxkjSIlgNubNNReoioGdB444ZSkURNHO7zP3tqQDSEDJw2fjLthlsbx+ialyElHrOunPJK6bmKkn2PDgB0Ic9Pnke/uQsFy+Q6wiNpyPmF9YmUuqezQZLLNuVS0klfrU1raD5fMYczbQoKA4aTSfAdIQfapr3uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0NHFFgB5h8ICqWmJDa/yBfjm1VBnPzEuNWoZhQoAjmw=;
- b=Lluw0UN/WoHt9xylXfBMTEuGRfIbqoGmSWCx6y9l5MMPZXGv532pIxU2GW3R3UBQGAMiGiI+CIXevg8OqQwWYxnXKxHSGBTl9dPprwWIBw65lT7tBDEouM4F2YgSSXyAfD2nKBG6E/A7ZYP3aRFJHxxyZoCu1kuu5nj36e82Aw4=
-Received: from MN2PR15MB3582.namprd15.prod.outlook.com (2603:10b6:208:1b5::23)
- by BL0PR1501MB4131.namprd15.prod.outlook.com (2603:10b6:208:83::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Mon, 6 Jul
- 2020 12:45:34 +0000
-Received: from MN2PR15MB3582.namprd15.prod.outlook.com
- ([fe80::e9ef:ba4c:dd70:b372]) by MN2PR15MB3582.namprd15.prod.outlook.com
- ([fe80::e9ef:ba4c:dd70:b372%5]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 12:45:34 +0000
-From:   Chris Mason <clm@fb.com>
-To:     Willy Tarreau <w@1wt.eu>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.clm>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] CodingStyle: Inclusive Terminology
-Thread-Topic: [PATCH] CodingStyle: Inclusive Terminology
-Thread-Index: AQHWUkBiuI9YYVhC60GHlqhklDtDWKj4bGSAgAHNCAA=
-Date:   Mon, 6 Jul 2020 12:45:34 +0000
-Message-ID: <798B0FBF-D7A8-4631-8581-5D199DA50FF9@fb.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200705045505.GA2962@1wt.eu>
-In-Reply-To: <20200705045505.GA2962@1wt.eu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-imapappendstamp: MN2PR15MB3582.namprd15.prod.outlook.com
- (15.20.3153.029)
-x-mailer: MailMate (1.13.1r5671)
-authentication-results: 1wt.eu; dkim=none (message not signed)
- header.d=none;1wt.eu; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [172.101.208.204]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10a04e3f-343c-4625-ad67-08d821aa79ea
-x-ms-traffictypediagnostic: BL0PR1501MB4131:
-x-microsoft-antispam-prvs: <BL0PR1501MB4131745425A78316185AF9DED3690@BL0PR1501MB4131.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SAXF7hOlCWCZoOlZWLFAQ0Tw77+8H7nqlgGLvjtvWh8XKrDeZ22UCGF6RwzJi9vEpnFWrkUJe2/dlNfMQZs+nB3wCB4iQNEDTSJJq1xtFAt+i6AY6NongzXCH8ej96G9FR8G3iOeGuXzeOsBnPkSDxvBd2T5d2TmwrOVfw86ILf9E8qEr1TIoeRRbXqURebZPIyE2tcILpQZXkKnrbEw5hE7hL70H9mxsdjuQ8DZzsC6QVXlHaPvTy/xE8qRox0j35ZWHF3LILgMjHTKdFsjt8z2axSbMaizz+tMaHpIQ29aHg98eQaEtsMSCYmjBa8MCIH4Hssn7aWI5YgcFrlJKQzIgy1z6jR23ldBv8jFfTfT7Xiixezy1VQXF/Hd8Dwy
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR15MB3582.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(396003)(136003)(366004)(8936002)(478600001)(2616005)(54906003)(86362001)(7416002)(316002)(71200400001)(6512007)(8676002)(2906002)(6916009)(66556008)(91956017)(66446008)(64756008)(36756003)(76116006)(6486002)(4326008)(6506007)(66476007)(53546011)(66946007)(33656002)(186003)(5660300002)(26005)(781001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: kDbzzc8iNcH+FXfEvvSblj3lP9V8EymvjeE+TNV+SL2syKjxxpqDRQ6Wxgg0Q4L+8Ku+MOahdlvlEHRatdxaaPb1YyPMlw3hzvTBU0inZSPIDWqpOc3gUkKafzyJcfJ+uonSncwQwValp75Ub1NpSmIu0lASOqbkMDxmRo1cXTLFHmUahiWIB3AL/RhRutmY5qbZOqaEfRJWPj7SWlZ5XcQaQ8QqtUsll1e/YsMdFdG4BqWh/4HINRqjWuxAR6zVEhVwhKZyfSfmqCqWTHM/jboKXciNGZbdL8nMhQGrd+TntetbCorJ3P6SfsN+3eg6HDpYvgneAuquP2g4lLzEZfUV1nY1ioLR5AjS9ddsIsiESPuQuuPBwP6etiuU5U1+IA1WuPwmRudZIBhXOULcjIrcMOx4Y8QNMFUF4PE+fgARZLVNQP7MMb2/ASNVXk5CXlCyehxmtbJyTvp34EZu2nsPgs32TSmB9AyEqybP3sI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <35CE96BBE7FF8F4191DDC042AA4A4E83@fb.onmicrosoft.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR15MB3582.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10a04e3f-343c-4625-ad67-08d821aa79ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 12:45:34.5355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OO6EAFYWFDtmgv9a2uIuSVTV1TqN9RQ6N7UuQf9H5/bRkgeKDcOu93A+4x1Lm79h
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR1501MB4131
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_09:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 clxscore=1011
- priorityscore=1501 lowpriorityscore=0 spamscore=0 malwarescore=0
- mlxscore=0 cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007060098
-X-FB-Internal: deliver
+        Mon, 6 Jul 2020 08:46:56 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA655C061794;
+        Mon,  6 Jul 2020 05:46:56 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e18so18332368pgn.7;
+        Mon, 06 Jul 2020 05:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
+        b=mcUs7Cn+2N0+DolBZjF1mQ9W0RaoemEg9z1dhg5PxlaSZlTmJZWLcVCnOes/jCOx68
+         fR4fCKYoNvCLtGSEaO/+QH3H/M+d8kWtMEFqBbOkaOXcDkndHINCafiDYwlxvoPQ5+d+
+         61TrqLxp4KCW6J3iUugVps9y3hWQnwNKbMt1tnbYODGCz8OmiC/bOWVjFgu1ekejQUs3
+         hMgevpZc+1+1Ky7fUip00QrEa2L2iR7/fnbSgHz+jyDU16teOw6nZJiGCVLx0aD305wK
+         1flD7hUWwNmR/SjwS8dy4r/7By5woZtOd8xVIFQ+vlSQVzMmoGYNu/SlIsM5Jvho6NjV
+         b+aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
+        b=ddF6xQkwHs85Nuul54eFfCvSFyZnsB1kuyvInKsL8Wqxka9haeFGGXzAOPSpPXcrJV
+         pcOU9Wpvc93lUHN+TGGiJU54WUl4wp5Ix+Gglr3yr7zMLDc2G9lnTfmzGrnCvQR19PPn
+         2Wv3WxZcZJGb23qxaba5nV08uPEe6Hb6RI59DShZxWooddXCcxBgZdZmVhLrD+iUi0un
+         nG2iYznLfxDWfUFN4m6JO5yU0smEkoNsh4rAW8t4/37mtckRWCZcHc+26IpOv7DQZqTd
+         kVgjqZt3SWUn1pRClwi+scK/CWRFaZN1epey3iHe49ETpuHdn7gPnhpKVfvPhwBrtKpI
+         TVcg==
+X-Gm-Message-State: AOAM530hiTSZDWcB9p1K6cMm6lBN/kAKC4XxU6cj2d45d1IGJLqLHb8N
+        0leDTBERD3t8XgrlsALihPk=
+X-Google-Smtp-Source: ABdhPJyqV8PExAxba6IkqO2rGw2HCb1TGZFPA7XcQiMO1uMhvLBaIB+Z4fYbbcUGtTwfX4bYXhfu0A==
+X-Received: by 2002:a63:8c5d:: with SMTP id q29mr39122594pgn.249.1594039616345;
+        Mon, 06 Jul 2020 05:46:56 -0700 (PDT)
+Received: from mi-OptiPlex-7050.mioffice.cn ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id az13sm17248951pjb.34.2020.07.06.05.46.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jul 2020 05:46:55 -0700 (PDT)
+From:   yang che <chey84736@gmail.com>
+To:     willy@infradead.org, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        yang che <chey84736@gmail.com>
+Subject: [PATCH v3] hung_task:add detecting task in D state milliseconds timeout
+Date:   Mon,  6 Jul 2020 20:45:33 +0800
+Message-Id: <1594039533-26240-1-git-send-email-chey84736@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5 Jul 2020, at 0:55, Willy Tarreau wrote:=0A=
-=0A=
-> On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:=0A=
->> +Non-inclusive terminology has that same distracting effect which is =0A=
->> why=0A=
->> +it is a style issue for Linux, it injures developer efficiency.=0A=
->=0A=
-> I'm personally thinking that for a non-native speaker it's already=0A=
-> difficult to find the best term to describe something, but having to=0A=
-> apply an extra level of filtering on the found words to figure whether=0A=
-> they are allowed by the language police is even more difficult.=0A=
-=0A=
-Since our discussions are public, we=92ve always had to deal with =0A=
-comments from people outside the community on a range of topics.  But =0A=
-inside the kernel, it=92s just a group of developers trying to help each =
-=0A=
-other produce the best quality of code.  We=92ve got a long history =0A=
-together and in general I think we=92re pretty good at assuming good =0A=
-intent.=0A=
-=0A=
-> *This*=0A=
-> injures developers efficiency. What could improve developers =0A=
-> efficiency=0A=
-> is to take care of removing *all* idiomatic or cultural words then. =0A=
-> For=0A=
-> example I've been participating to projects using the term =0A=
-> "blueprint",=0A=
-> I didn't understand what that meant. It was once explained to me and=0A=
-> given that it had no logical reason for being called this way, I now=0A=
-> forgot. If we follow your reasoning, Such words should be banned for=0A=
-> exactly the same reasons. Same for colors that probably don't mean=0A=
-> anything to those born blind.=0A=
->=0A=
-> For example if in my local culture we eat tomatoes at starters and=0A=
-> apples for dessert, it could be convenient for me to use "tomato" and=0A=
-> "apple" as list elements to name the pointers leading to the beginning=0A=
-> and the end of the list, and it might sound obvious to many people, =0A=
-> but=0A=
-> not at all for many others.=0A=
->=0A=
-> Maybe instead of providing an explicit list of a few words it should=0A=
-> simply say that terms that take their roots in the non-technical world=0A=
-> and whose meaning can only be understood based on history or local=0A=
-> culture ought to be avoided, because *that* actually is the real=0A=
-> root cause of the problem you're trying to address.=0A=
-=0A=
-I=92d definitely agree that it=92s a good goal to keep out non-technical =
-=0A=
-terms.  Even though we already try, every subsystem has its own set of =0A=
-patterns that reflect the most frequent contributors.=0A=
-=0A=
--chris=
+current hung_task_check_interval_secs and hung_task_timeout_secs
+only supports seconds. In some cases,the TASK_UNINTERRUPTIBLE state
+takes less than 1 second,may need to hung task trigger panic
+get ramdump or print all cpu task.
+
+modify hung_task_check_interval_secs to hung_task_check_interval_msecs,
+check interval use milliseconds. Add hung_task_timeout_msecs file to
+set milliseconds.
+task timeout = hung_task_timeout_secs * 1000 + hung_task_timeout_msecs.
+
+Signed-off-by: yang che <chey84736@gmail.com>
+---
+
+v2->v3:
+ Fix some format issues.
+ add use msecs_to_jiffies,jiffies_to_msec.
+ because use timeout = secs * 1000  + msecs,so sysctl_hung_task_timeout_msec
+ = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT * MSEC_PER_SEC; will cause timeout is
+ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT double.
+
+v1->v2:
+ add hung_task_check_interval_millisecs,hung_task_timeout_millisecs.
+ fix writing to the millisecond file silently overrides the setting in
+ the seconds file.
+
+ [1]https://lore.kernel.org/lkml/CAN_w4MWMfoDGfpON-bYHrU=KuJG2vpFj01ZbN4r-iwM4AyyuGw@mail.gmail.com
+ [2]https://lore.kernel.org/lkml/20200705171633.GU25523@casper.infradead.org/
+
+ include/linux/sched/sysctl.h |  3 ++-
+ kernel/hung_task.c           | 31 ++++++++++++++++++++++---------
+ kernel/sysctl.c              | 12 ++++++++++--
+ 3 files changed, 34 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 660ac49..41b426e 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -16,8 +16,9 @@ extern unsigned int sysctl_hung_task_all_cpu_backtrace;
+ 
+ extern int	     sysctl_hung_task_check_count;
+ extern unsigned int  sysctl_hung_task_panic;
++extern unsigned long sysctl_hung_task_timeout_msecs;
+ extern unsigned long sysctl_hung_task_timeout_secs;
+-extern unsigned long sysctl_hung_task_check_interval_secs;
++extern unsigned long sysctl_hung_task_check_interval_msecs;
+ extern int sysctl_hung_task_warnings;
+ int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos);
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index ce76f49..bac6f33 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -37,16 +37,23 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+  * the RCU grace period. So it needs to be upper-bound.
+  */
+ #define HUNG_TASK_LOCK_BREAK (HZ / 10)
++#define MSEC_PER_SEC 1000L
+ 
+ /*
+- * Zero means infinite timeout - no checking done:
++ * Zero and sysctl_hung_task_timeout_msecs zero means infinite timeout - no checking done:
+  */
+ unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
+ 
+ /*
+- * Zero (default value) means use sysctl_hung_task_timeout_secs:
++ * Zero (default value) means only use sysctl_hung_task_timeout_secs
+  */
+-unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
++unsigned long  __read_mostly sysctl_hung_task_timeout_msecs;
++
++/*
++ * Zero (default value) means use
++ * sysctl_hung_task_timeout_secs * MSEC_PER_SEC + sysctl_hung_task_timeout_msecs
++ */
++unsigned long __read_mostly sysctl_hung_task_check_interval_msecs;
+ 
+ int __read_mostly sysctl_hung_task_warnings = 10;
+ 
+@@ -108,7 +115,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 		t->last_switch_time = jiffies;
+ 		return;
+ 	}
+-	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
++
++	if (time_is_after_jiffies(t->last_switch_time + msecs_to_jiffies(timeout)))
+ 		return;
+ 
+ 	trace_sched_process_hang(t);
+@@ -126,13 +134,17 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 	if (sysctl_hung_task_warnings) {
+ 		if (sysctl_hung_task_warnings > 0)
+ 			sysctl_hung_task_warnings--;
+-		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
+-		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
++
++		pr_err("INFO: task %s:%d blocked for more than %ld.%03ld seconds.\n",
++			t->comm, t->pid,
++			jiffies_to_msecs(jiffies - t->last_switch_time) / MSEC_PER_SEC,
++			jiffies_to_msecs(jiffies - t->last_switch_time) % MSEC_PER_SEC);
+ 		pr_err("      %s %s %.*s\n",
+ 			print_tainted(), init_utsname()->release,
+ 			(int)strcspn(init_utsname()->version, " "),
+ 			init_utsname()->version);
+ 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
++			"\"echo 0 > /proc/sys/kernel/hung_task_timeout_msecs\""
+ 			" disables this message.\n");
+ 		sched_show_task(t);
+ 		hung_task_show_lock = true;
+@@ -217,7 +229,7 @@ static long hung_timeout_jiffies(unsigned long last_checked,
+ 				 unsigned long timeout)
+ {
+ 	/* timeout of 0 will disable the watchdog */
+-	return timeout ? last_checked - jiffies + timeout * HZ :
++	return timeout ? last_checked - jiffies + msecs_to_jiffies(timeout) :
+ 		MAX_SCHEDULE_TIMEOUT;
+ }
+ 
+@@ -281,8 +293,9 @@ static int watchdog(void *dummy)
+ 	set_user_nice(current, 0);
+ 
+ 	for ( ; ; ) {
+-		unsigned long timeout = sysctl_hung_task_timeout_secs;
+-		unsigned long interval = sysctl_hung_task_check_interval_secs;
++		unsigned long timeout = sysctl_hung_task_timeout_secs * MSEC_PER_SEC +
++					sysctl_hung_task_timeout_msecs;
++		unsigned long interval = sysctl_hung_task_check_interval_msecs;
+ 		long t;
+ 
+ 		if (interval == 0)
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index db1ce7a..5c52759 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2476,6 +2476,14 @@ static struct ctl_table kern_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 	},
+ 	{
++		.procname       = "hung_task_timeout_msecs",
++		.data           = &sysctl_hung_task_timeout_msecs,
++		.maxlen         = sizeof(unsigned long),
++		.mode           = 0644,
++		.proc_handler   = proc_dohung_task_timeout_secs,
++		.extra2         = &hung_task_timeout_max,
++	},
++	{
+ 		.procname	= "hung_task_timeout_secs",
+ 		.data		= &sysctl_hung_task_timeout_secs,
+ 		.maxlen		= sizeof(unsigned long),
+@@ -2484,8 +2492,8 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= &hung_task_timeout_max,
+ 	},
+ 	{
+-		.procname	= "hung_task_check_interval_secs",
+-		.data		= &sysctl_hung_task_check_interval_secs,
++		.procname	= "hung_task_check_interval_msecs",
++		.data		= &sysctl_hung_task_check_interval_msecs,
+ 		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dohung_task_timeout_secs,
+-- 
+2.7.4
+
