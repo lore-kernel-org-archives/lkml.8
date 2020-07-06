@@ -2,292 +2,126 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 367E920775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594056087;
-	bh=KWxR6mRU/GFOXIHUDBV7Fo+VmYibiF7rALXmdUu7XHQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eb1kMK827Viz5O8zF7I0M65ChcmEWvuO9QV7L3OFeJP5dwXLJjE4JDN8Y8h3boAFE
-	 GyPRFCbvY3agM91i7PBNGbZ5IJO1jAB5DDxys9FXIk40OSy8IerGKybpCICiA4W401
-	 Mz26EtScLXEc7OfCA+czC8SwWikVLvpdrdB9tljA=
+	by mail.kernel.org (Postfix) with ESMTP id C10022070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF27Y2jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgGFRV0 (ORCPT
+        id S1729644AbgGFRWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:21:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgGFRVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:21:25 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 063D120722;
-        Mon,  6 Jul 2020 17:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594056084;
-        bh=KWxR6mRU/GFOXIHUDBV7Fo+VmYibiF7rALXmdUu7XHQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVD7dRWjMXMMZFvE4ZL1idqQBVWov9lTmPqkY4r/8GpnlrqsGrRYbvvh6+GDkqUmC
-         wMdUhTIqKbrJyUHQuvEk7Ti6pcMUF9eBvhKlDQh98freJVZrrPomDkfF7GmYbpXZqz
-         V6Ziz0964HsWhgTNtGNx2C1nuae+TOz44EGUTESQ=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Idan Yaniv <idan.yaniv@ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [RFC PATCH v2 5/5] mm: secretmem: add ability to reserve memory at boot
-Date:   Mon,  6 Jul 2020 20:20:51 +0300
-Message-Id: <20200706172051.19465-6-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200706172051.19465-1-rppt@kernel.org>
-References: <20200706172051.19465-1-rppt@kernel.org>
+        Mon, 6 Jul 2020 13:22:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27717 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729297AbgGFRWm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:22:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594056161;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lA+RHGhMqAzGJ1ls+U/TLssCbOeODGIQqdu8s4E0s7k=;
+        b=dF27Y2jl2If/TWwaw5EABBliEgwuLn3fVekqKnxJqe1RUy/Bx2+vxMYaV2UBlXOoC5Qo7s
+        5RMpEhHrJbEMqOZnIqczZQxCydZBd+FXbsrfTNvxLviDP7gJQZAF/LwIQboYo/OiAuz/UR
+        AUZDXEob7BVxx+nDtKRMH5FcfsEgzNU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-G3fUyo0UOrmMfAtF3lKbIg-1; Mon, 06 Jul 2020 13:22:37 -0400
+X-MC-Unique: G3fUyo0UOrmMfAtF3lKbIg-1
+Received: by mail-qv1-f72.google.com with SMTP id j6so25304200qvl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:22:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=lA+RHGhMqAzGJ1ls+U/TLssCbOeODGIQqdu8s4E0s7k=;
+        b=cOeMsodU/64ID5K8QmGhEHQKmS9z/F/Ksumd5imZgG4LYh6xC9y+sUdhek3nfL6e+G
+         oXuAz1ndxRj/WnQHBtOIAKKyBWsfYGjEHF14tuehdXxkOtvYnYLraa7AFWAVFeuGXGYk
+         IMD6PU0aI4pBatmJsBOIEq6ayILdzCdlGZnmrLXa6jzKSpDNHo88I0dXfWDMguBVjayN
+         LyVH5A3MJMezff17N2VknpcG6yfEjQUZx2Iauyzie3P2s/ooyaaYRHgNdHpky41Acfpf
+         KL0kAvaUk/Ro/XvmSP2VamS1Qt7CV30NBknz3BTq1m31IxShvm9Elbuhitb/Xz3rnPxp
+         So0Q==
+X-Gm-Message-State: AOAM533a8ITIE/ZV4VJHV2V48eP68WUn6Dpv7kUFVzARoiPynNXAeNVL
+        pl+n5zNCIVDxYR3Rq6hZ53ToKcZ6R9cGI7HibnH9DTvxd29kCWhKCr9tFRoADW7IDhYUInNHeEP
+        hJXfSPtJeuZoXwfzN1pO1yBS7
+X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr45379495qvz.76.1594056157142;
+        Mon, 06 Jul 2020 10:22:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzqJSu168JvbM66NiFDodqfcshO3V3kFDEU5JUhxTjCQi+4k9Gi9OaaiE8zyZb4GGxaILrYKA==
+X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr45379478qvz.76.1594056156902;
+        Mon, 06 Jul 2020 10:22:36 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id f15sm18865654qka.120.2020.07.06.10.22.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 10:22:36 -0700 (PDT)
+Message-ID: <2f68590f3352c6384efdf9838f16837d5990d1fe.camel@redhat.com>
+Subject: Re: [PATCH] input/synaptics: enable InterTouch for ThinkPad X1E 1st
+ gen
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     K900 <me@0upti.me>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Gaurav Agrawal <agrawalgaurav@gnome.org>,
+        Yussuf Khalil <dev@pp3345.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Dennis Kadioglu <denk@eclipso.email>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Joe Perches <joe@perches.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 06 Jul 2020 13:22:35 -0400
+In-Reply-To: <20200703143457.132373-1-me@0upti.me>
+References: <20200703143457.132373-1-me@0upti.me>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+FWIW it's not placebo, it's why I always immediately notice when starting up a
+new ThinkPad sample from lenovo if RMI4 is enabled or not :).
 
-Taking pages out from the direct map and bringing them back may create
-undesired fragmentation and usage of the smaller pages in the direct
-mapping of the physical memory.
+Anyway thank you for the patch, assuming you double-checked that clicking with
+the clickpad still works (I made this mistake last time when trying to enable
+this for the second generation X1 extreme):
 
-This can be avoided if a significantly large area of the physical memory
-would be reserved for secretmem purposes at boot time.
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-Add ability to reserve physical memory for secretmem at boot time using
-"secretmem" kernel parameter and then use that reserved memory as a global
-pool for secret memory needs.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- mm/secretmem.c | 145 ++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 137 insertions(+), 8 deletions(-)
-
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index c6fcf6d76951..d50ac9ea1844 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -6,6 +6,8 @@
- #include <linux/printk.h>
- #include <linux/pagemap.h>
- #include <linux/genalloc.h>
-+#include <linux/memblock.h>
-+#include <linux/mm_inline.h>
- #include <linux/pseudo_fs.h>
- #include <linux/set_memory.h>
- #include <linux/sched/signal.h>
-@@ -28,6 +30,39 @@ struct secretmem_ctx {
- 	unsigned int mode;
- };
- 
-+struct secretmem_pool {
-+	struct gen_pool *pool;
-+	unsigned long reserved_size;
-+	void *reserved;
-+};
-+
-+static struct secretmem_pool secretmem_pool;
-+
-+static struct page *secretmem_alloc_huge_page(gfp_t gfp)
-+{
-+	struct gen_pool *pool = secretmem_pool.pool;
-+	unsigned long addr = 0;
-+	struct page *page = NULL;
-+
-+	if (pool) {
-+		if (gen_pool_avail(pool) < HPAGE_PMD_SIZE)
-+			return NULL;
-+
-+		addr = gen_pool_alloc(pool, HPAGE_PMD_SIZE);
-+		if (!addr)
-+			return NULL;
-+
-+		page = virt_to_page(addr);
-+	} else {
-+		page = alloc_pages(gfp, HPAGE_PMD_ORDER);
-+
-+		if (page)
-+			split_page(page, HPAGE_PMD_ORDER);
-+	}
-+
-+	return page;
-+}
-+
- static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
- {
- 	unsigned long nr_pages = (1 << HPAGE_PMD_ORDER);
-@@ -36,12 +71,11 @@ static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
- 	struct page *page;
- 	int err;
- 
--	page = alloc_pages(gfp, HPAGE_PMD_ORDER);
-+	page = secretmem_alloc_huge_page(gfp);
- 	if (!page)
- 		return -ENOMEM;
- 
- 	addr = (unsigned long)page_address(page);
--	split_page(page, HPAGE_PMD_ORDER);
- 
- 	err = gen_pool_add(pool, addr, HPAGE_PMD_SIZE, NUMA_NO_NODE);
- 	if (err) {
-@@ -250,11 +284,23 @@ struct file *secretmem_file_create(const char *name, unsigned int flags)
- 	return file;
- }
- 
--static void secretmem_cleanup_chunk(struct gen_pool *pool,
--				    struct gen_pool_chunk *chunk, void *data)
-+static void secretmem_recycle_range(unsigned long start, unsigned long end)
-+{
-+	unsigned long addr;
-+
-+	for (addr = start; addr < end; addr += PAGE_SIZE) {
-+		struct page *page = virt_to_page(addr);
-+		struct lruvec *lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+
-+		__ClearPageLRU(page);
-+		del_page_from_lru_list(page, lruvec, page_off_lru(page));
-+	}
-+
-+	gen_pool_free(secretmem_pool.pool, start, HPAGE_PMD_SIZE);
-+}
-+
-+static void secretmem_release_range(unsigned long start, unsigned long end)
- {
--	unsigned long start = chunk->start_addr;
--	unsigned long end = chunk->end_addr;
- 	unsigned long nr_pages, addr;
- 
- 	nr_pages = (end - start + 1) / PAGE_SIZE;
-@@ -264,6 +310,18 @@ static void secretmem_cleanup_chunk(struct gen_pool *pool,
- 		put_page(virt_to_page(addr));
- }
- 
-+static void secretmem_cleanup_chunk(struct gen_pool *pool,
-+				    struct gen_pool_chunk *chunk, void *data)
-+{
-+	unsigned long start = chunk->start_addr;
-+	unsigned long end = chunk->end_addr;
-+
-+	if (secretmem_pool.pool)
-+		secretmem_recycle_range(start, end);
-+	else
-+		secretmem_release_range(start, end);
-+}
-+
- static void secretmem_cleanup_pool(struct secretmem_ctx *ctx)
- {
- 	struct gen_pool *pool = ctx->pool;
-@@ -303,14 +361,85 @@ static struct file_system_type secretmem_fs = {
- 	.kill_sb	= kill_anon_super,
- };
- 
-+static int secretmem_reserved_mem_init(void)
-+{
-+	struct gen_pool *pool;
-+	struct page *page;
-+	void *addr;
-+	int err;
-+
-+	if (!secretmem_pool.reserved)
-+		return 0;
-+
-+	pool = gen_pool_create(PMD_SHIFT, NUMA_NO_NODE);
-+	if (!pool)
-+		return -ENOMEM;
-+
-+	err = gen_pool_add(pool, (unsigned long)secretmem_pool.reserved,
-+			   secretmem_pool.reserved_size, NUMA_NO_NODE);
-+	if (err)
-+		goto err_destroy_pool;
-+
-+	for (addr = secretmem_pool.reserved;
-+	     addr < secretmem_pool.reserved + secretmem_pool.reserved_size;
-+	     addr += PAGE_SIZE) {
-+		page = virt_to_page(addr);
-+		__ClearPageReserved(page);
-+		set_page_count(page, 1);
-+	}
-+
-+	secretmem_pool.pool = pool;
-+	page = virt_to_page(secretmem_pool.reserved);
-+	__kernel_map_pages(page, secretmem_pool.reserved_size / PAGE_SIZE, 0);
-+	return 0;
-+
-+err_destroy_pool:
-+	gen_pool_destroy(pool);
-+	return err;
-+}
-+
- static int secretmem_init(void)
- {
--	int ret = 0;
-+	int ret;
-+
-+	ret = secretmem_reserved_mem_init();
-+	if (ret)
-+		return ret;
- 
- 	secretmem_mnt = kern_mount(&secretmem_fs);
--	if (IS_ERR(secretmem_mnt))
-+	if (IS_ERR(secretmem_mnt)) {
-+		gen_pool_destroy(secretmem_pool.pool);
- 		ret = PTR_ERR(secretmem_mnt);
-+	}
- 
- 	return ret;
- }
- fs_initcall(secretmem_init);
-+
-+static int __init secretmem_setup(char *str)
-+{
-+	phys_addr_t align = HPAGE_PMD_SIZE;
-+	unsigned long reserved_size;
-+	void *reserved;
-+
-+	reserved_size = memparse(str, NULL);
-+	if (!reserved_size)
-+		return 0;
-+
-+	if (reserved_size * 2 > HPAGE_PUD_SIZE)
-+		align = HPAGE_PUD_SIZE;
-+
-+	reserved = memblock_alloc(reserved_size, align);
-+	if (!reserved) {
-+		pr_err("failed to reserve %zu bytes\n", secretmem_pool.reserved_size);
-+		return 0;
-+	}
-+
-+	secretmem_pool.reserved_size = reserved_size;
-+	secretmem_pool.reserved = reserved;
-+
-+	pr_info("reserved %zuM\n", reserved_size >> 20);
-+
-+	return 1;
-+}
-+__setup("secretmem=", secretmem_setup);
--- 
-2.26.2
+On Fri, 2020-07-03 at 17:34 +0300, K900 wrote:
+> From: Ilya Katsnelson <me@0upti.me>
+> 
+> Tested on my own laptop, touchpad feels slightly more responsive with
+> this on, though it might just be placebo.
+> 
+> Signed-off-by: Ilya Katsnelson <me@0upti.me>
+> ---
+>  drivers/input/mouse/synaptics.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+> index 758dae8d6500..4b81b2d0fe06 100644
+> --- a/drivers/input/mouse/synaptics.c
+> +++ b/drivers/input/mouse/synaptics.c
+> @@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
+>  	"LEN0093", /* T480 */
+>  	"LEN0096", /* X280 */
+>  	"LEN0097", /* X280 -> ALPS trackpoint */
+> +	"LEN0099", /* X1 Extreme 1st */
+>  	"LEN009b", /* T580 */
+>  	"LEN200f", /* T450s */
+>  	"LEN2044", /* L470  */
 
