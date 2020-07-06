@@ -2,363 +2,153 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BB420771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DA20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GQynL8Sx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdufQKBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgGFMvz (ORCPT
+        id S1729121AbgGFMxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:51:55 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41083 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728989AbgGFMvy (ORCPT
+        Mon, 6 Jul 2020 08:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgGFMw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:51:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594039911;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MI1FzeFA7SBhdD0KctsKzqgSrRlE7bEq8CZ2q3jRouY=;
-        b=GQynL8SxBH8OLOCDyxi3QN4ULoJOZTW5U3vtdrah6uvPd5T9PHC3lRW5hHDa4OugzixBOS
-        uCF1KHgg9UGsrne7JWYcxd20cEWJ6auFgewktWyHtJIYXHSJSRZkIT0X71yDYgp8ez70aD
-        i61kxxsIpHHXHaGE6ZkjvlYG2J1PvVQ=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-5Nx5wSjRPySwXkxgen4rFA-1; Mon, 06 Jul 2020 08:51:44 -0400
-X-MC-Unique: 5Nx5wSjRPySwXkxgen4rFA-1
-Received: by mail-ed1-f72.google.com with SMTP id i3so35173192edq.21
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 05:51:44 -0700 (PDT)
+        Mon, 6 Jul 2020 08:52:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9135C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 05:52:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so16988277pjc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 05:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=63n3eu1019qDhV1WWLoaFPneo8+UWo7KAHMy1cAG4Hs=;
+        b=pdufQKBL4z9O6THKiOF3HGNnAs9TtM0d4Y2XbvddCwlRLItqWYoV/nXuo4wWySYEcT
+         Iw5As1tNsTWI3Ov8PurlLmM+REIRrgM5fhr4oLF2uaBcrWpY3ldbLbZvggkYusFXT92Y
+         nBgR/aYy6dOo8ZfbhcTAsXXc5J+Enid4Q6tWwfvaSP8LtnubQyVUZhbiYz2Y6c96TuaF
+         1VM/DomPKqxsbIVH/yZ3JABytyPlSdtTRAk/YFufh8rpWYuBhVaGMrhMJ+jP0MMsESmH
+         b/M1DuLoGfB3DRdYFAIRk6xIs5D6MkkhXDyUs+eZ0aTmH1v6yBqazXPJEH5M7xg7mVxF
+         a6UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MI1FzeFA7SBhdD0KctsKzqgSrRlE7bEq8CZ2q3jRouY=;
-        b=ocgNdchWJla3SNy774szw04DCrOt6nBes2YF1flhm5k+7pc/TQRI6emjUv8UFyZ0Lu
-         KdUqoruOfNEyBY8Ka3A5bPlB9gp5p9XXjYbkv3YkwTZqRc+FgiyqzubzUzXPRtc12W4n
-         u/w37FVnLxDhEA9g2Rd5m4uzwv9PEtg5H2DMyY1GYlOUq5plRFzGFZqGmPKFzFQi0YVo
-         gdvhbf2oPP83z0civ5OCP/NhQgpuzB9bf9caOHb4wMftND1KBfu/gJMcUkccFLTlWaEF
-         qRX/pbTclGzKM8xyPR2ochqLZ3wIiA1Z//bQMWv+Cc8D3X24jQ0dzBS3t1r39iBs3is/
-         LidQ==
-X-Gm-Message-State: AOAM531P2O+MyKQrkH4r3XMaGWWx50iEcX7A46ZxsCG2AsZ4jz1Mv6aF
-        jfvtz1OmnjSJH9aWpO29owqehemzif5oBOeEpiw+KrgkbvDTU5zjPAlzs3ZZrYXPVHH+ICUNYTu
-        BV44tDd7hxWaxtqNDsKN2HeWs
-X-Received: by 2002:a05:6402:3049:: with SMTP id bu9mr42600769edb.232.1594039903252;
-        Mon, 06 Jul 2020 05:51:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxNvO/1YMo8GP9rOuLLyG5ZTis9lK2MEW3uCEMKowt6CGdru2HeGyfuE+9B9HykuzeraeGZRw==
-X-Received: by 2002:a05:6402:3049:: with SMTP id bu9mr42600738edb.232.1594039902925;
-        Mon, 06 Jul 2020 05:51:42 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id a2sm19819251edt.48.2020.07.06.05.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 05:51:42 -0700 (PDT)
-Subject: Re: [Intel-gfx] [PATCH v9 5/5] drm/i915: Enable support for
- integrated privacy screen
-To:     Rajat Jain <rajatja@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     rajatxjain@gmail.com
-References: <20200312185629.141280-1-rajatja@google.com>
- <20200312185629.141280-6-rajatja@google.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <76d1a721-5f7b-1e86-b8ee-183bffb78ff1@redhat.com>
-Date:   Mon, 6 Jul 2020 14:51:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=63n3eu1019qDhV1WWLoaFPneo8+UWo7KAHMy1cAG4Hs=;
+        b=o80xFTbv3PZOtjRs3ZUApRntuyD4wXwUKn5op79Tkqq9y/9AyuA0dA8zXNdquyzT5x
+         t1ae9bT3Dbk6UqC0fF3Z7iB6St87DYblLER0YiHU56tDofBZOc0SZv6UnDgdUU2UWHz2
+         AHSTNHJOq6IedYIEOU8taIUD1cpt8XKk1iNp9TPxgu8X/5IiAU6T4FK11ECI5jnBFSzp
+         Ipu5Ajr5jgM/BpVTb4VShBldQzOtgVRwncpAdJVJ3wjNwzZp8Bfmk3cO5E0MXgRcIV0D
+         G75J4nfxM4nmEkNqwcXWt3e/vf8Rhil9JGGMFmjXRkds/OmjgM8dUxkuVDdn3M805hxT
+         eGdQ==
+X-Gm-Message-State: AOAM5307aI5dsGBE/eHxc5SlKbpxfDvKvNfbRDB8U4z8VuihpSZInA91
+        IseAzFY6zxXCXt/vQMeXxfXtzXz2
+X-Google-Smtp-Source: ABdhPJw1dqpt6oCO4C46Jh1fR3buvobCMZgz4vEV9P426VnKbvny6+RPA7bdVo36G9FfKFKKJ15czA==
+X-Received: by 2002:a17:90a:c28f:: with SMTP id f15mr38433803pjt.72.1594039979421;
+        Mon, 06 Jul 2020 05:52:59 -0700 (PDT)
+Received: from cosmos ([122.166.128.47])
+        by smtp.gmail.com with ESMTPSA id q29sm19016939pfl.77.2020.07.06.05.52.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jul 2020 05:52:59 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 18:22:55 +0530
+From:   Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+To:     christian@brauner.io
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] pidfd: fix memory leak in pidfd_getfd()
+Message-ID: <20200706125250.GA2828@cosmos>
 MIME-Version: 1.0
-In-Reply-To: <20200312185629.141280-6-rajatja@google.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+kmemleak backtrace:
 
-On 3/12/20 7:56 PM, Rajat Jain wrote:
-> Add support for an ACPI based integrated privacy screen that is
-> available on some systems.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+comm "pidfd_getfd_tes", pid 1406, jiffies 4294936898 (age 8.644s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 90 da d8 f6 80 d5 6f f2  ..............o.
+    b8 fb 9b ea c0 91 99 d1 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<8da987ad>] kmem_cache_alloc+0x199/0x4c0
+    [<8ff6a575>] __alloc_file+0x1e/0xe0
+    [<e1479798>] alloc_empty_file+0x45/0x100
+    [<727fe6eb>] alloc_file+0x23/0xf0
+    [<457148ef>] alloc_file_pseudo+0x98/0x100
+    [<c104ed3d>] __shmem_file_setup.part.67+0x66/0x120
+    [<5edc3e9b>] shmem_file_setup+0x4c/0x70
+    [<9c446684>] __ia32_sys_memfd_create+0x122/0x1c0
+    [<e129fc9c>] do_syscall_32_irqs_on+0x3d/0x260
+    [<62569441>] do_fast_syscall_32+0x39/0xb0
+    [<3c515b7e>] do_SYSENTER_32+0x15/0x20
+    [<69819a3a>] entry_SYSENTER_32+0xa9/0xfc
 
-So as discussed a while ago I'm working on adding support for the
-privacy-screen on Lenovo Thinkpads, introducing a small new
-subsystem / helper-class as intermediary for when the privacy-screen
-is controlled by e.g. some random drivers/platform/x86 driver rather
-then directly by the GPU driver.
+comm "pidfd_getfd_tes", pid 1406, jiffies 4294936898 (age 8.644s)
+  hex dump (first 16 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<8da987ad>] kmem_cache_alloc+0x199/0x4c0
+    [<b67faec5>] security_file_alloc+0x20/0x90
+    [<ed849d41>] __alloc_file+0x40/0xe0
+    [<e1479798>] alloc_empty_file+0x45/0x100
+    [<727fe6eb>] alloc_file+0x23/0xf0
+    [<457148ef>] alloc_file_pseudo+0x98/0x100
+    [<c104ed3d>] __shmem_file_setup.part.67+0x66/0x120
+    [<5edc3e9b>] shmem_file_setup+0x4c/0x70
+    [<9c446684>] __ia32_sys_memfd_create+0x122/0x1c0
+    [<e129fc9c>] do_syscall_32_irqs_on+0x3d/0x260
+    [<62569441>] do_fast_syscall_32+0x39/0xb0
+    [<3c515b7e>] do_SYSENTER_32+0x15/0x20
+    [<69819a3a>] entry_SYSENTER_32+0xa9/0xfc
 
-I'm almost ready to send out v1. I was working on hooking things
-up in the i915 code and I was wondering what you were doing when
-the property is actually changed and we need to commit the new
-privacy-screen state to the hardware.
+This is because in pidfd_getfd(), the file->f_count is incremented twice
+1) __pidfd_fget() gets file ref by incrementing f_count in __fget_files()
+2) f_count is incremented While installing fd in __fd_install_received()
+   i.e. get_file().
 
-This made me look at this patch, some comments inline:
+Memory leak occurs because the refs count do not match, the struct file
+object is never freed.
 
-> ---
-> v9: same as v8
-> v8: - separate the APCI privacy screen into a separate patch.
->      - Don't destroy the property if there is no privacy screen (because
->        drm core doesn't like destroying property in late_register()).
->      - The setting change needs to be committed in ->update_pipe() for
->        ddi.c as well as dp.c and both of them call intel_dp_add_properties()
-> v7: Look for ACPI node in ->late_register() hook.
->      Do the scan only once per drm_device (instead of 1 per drm_connector)
-> v6: Addressed minor comments from Jani at
->      https://lkml.org/lkml/2020/1/24/1143
->       - local variable renamed.
->       - used drm_dbg_kms()
->       - used acpi_device_handle()
->       - Used opaque type acpi_handle instead of void*
-> v5: same as v4
-> v4: Same as v3
-> v3: fold the code into existing acpi_device_id_update() function
-> v2: formed by splitting the original patch into ACPI lookup, and privacy
->      screen property. Also move it into i915 now that I found existing code
->      in i915 that can be re-used.
-> 
->   drivers/gpu/drm/i915/display/intel_atomic.c |  2 ++
->   drivers/gpu/drm/i915/display/intel_ddi.c    |  1 +
->   drivers/gpu/drm/i915/display/intel_dp.c     | 34 ++++++++++++++++++++-
->   drivers/gpu/drm/i915/display/intel_dp.h     |  5 +++
->   4 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-> index d043057d2fa03..9898d8980e7ce 100644
-> --- a/drivers/gpu/drm/i915/display/intel_atomic.c
-> +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-> @@ -150,6 +150,8 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
->   	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
->   	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
->   	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-> +	    new_conn_state->base.privacy_screen_status !=
-> +		old_conn_state->base.privacy_screen_status ||
->   	    !blob_equal(new_conn_state->base.hdr_output_metadata,
->   			old_conn_state->base.hdr_output_metadata))
->   		crtc_state->mode_changed = true;
+Secondly the error validity check (ret < 0) after the call to
+fd_install_received() is not needed since this function cannot return
+negative number after incrementing f_count. So it is wrong to call fput
+on condition (ret < 0).
 
-Right I was planning on doing this to.
+Change pidfd_getfd() to call fput() on file reference once its installed
+as new_fd in target process.
 
-> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-> index 73d0f4648c06a..69a5423216dc5 100644
-> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-> @@ -3708,6 +3708,7 @@ static void intel_ddi_update_pipe(struct intel_encoder *encoder,
->   	if (!intel_crtc_has_type(crtc_state, INTEL_OUTPUT_HDMI))
->   		intel_ddi_update_pipe_dp(encoder, crtc_state, conn_state);
->   
-> +	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
->   	intel_hdcp_update_pipe(encoder, crtc_state, conn_state);
->   }
->   
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+---
+ kernel/pid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And this too.
-
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 3ddc424b028c1..5f33ebb466135 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -62,6 +62,7 @@
->   #include "intel_lspcon.h"
->   #include "intel_lvds.h"
->   #include "intel_panel.h"
-> +#include "intel_privacy_screen.h"
->   #include "intel_psr.h"
->   #include "intel_sideband.h"
->   #include "intel_tc.h"
-> @@ -5886,6 +5887,10 @@ intel_dp_connector_register(struct drm_connector *connector)
->   		dev_priv->acpi_scan_done = true;
->   	}
->   
-> +	/* Check for integrated Privacy screen support */
-> +	if (intel_privacy_screen_present(to_intel_connector(connector)))
-> +		drm_connector_attach_privacy_screen_property(connector);
-> +
->   	DRM_DEBUG_KMS("registering %s bus for %s\n",
->   		      intel_dp->aux.name, connector->kdev->kobj.name);
->   
-> @@ -6883,6 +6888,33 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
->   		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
->   
->   	}
-> +
-> +	/*
-> +	 * Created here, but depending on result of probing for privacy-screen
-> +	 * in intel_dp_connector_register(), gets attached in that function.
-> +	 * Need to create here because the drm core doesn't like creating
-> +	 * properties during ->late_register().
-> +	 */
-> +	drm_connector_create_privacy_screen_property(connector);
-> +}
-> +
-> +void
-> +intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-> +			       const struct intel_crtc_state *crtc_state,
-> +			       const struct drm_connector_state *conn_state)
-> +{
-> +	struct drm_connector *connector = conn_state->connector;
-> +
-> +	intel_privacy_screen_set_val(to_intel_connector(connector),
-> +				     conn_state->privacy_screen_status);
-> +}
-> +
-> +static void intel_dp_update_pipe(struct intel_encoder *encoder,
-> +				 const struct intel_crtc_state *crtc_state,
-> +				 const struct drm_connector_state *conn_state)
-> +{
-> +	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
-> +	intel_panel_update_backlight(encoder, crtc_state, conn_state);
->   }
->   
->   static void intel_dp_init_panel_power_timestamps(struct intel_dp *intel_dp)
-> @@ -7826,7 +7858,7 @@ bool intel_dp_init(struct drm_i915_private *dev_priv,
->   	intel_encoder->compute_config = intel_dp_compute_config;
->   	intel_encoder->get_hw_state = intel_dp_get_hw_state;
->   	intel_encoder->get_config = intel_dp_get_config;
-> -	intel_encoder->update_pipe = intel_panel_update_backlight;
-> +	intel_encoder->update_pipe = intel_dp_update_pipe;
->   	intel_encoder->suspend = intel_dp_encoder_suspend;
->   	if (IS_CHERRYVIEW(dev_priv)) {
->   		intel_encoder->pre_pll_enable = chv_dp_pre_pll_enable;
-
-And this too.
-
-One problem here is that AFAICT the update_pipe callback is only called on
-fast modesets. So if the privacy_screen state is changed as part of a
-full modeset, then the change will be ignored.
-
-Even if we ignore that for now, this means that we end up calling
-intel_privacy_screen_set_val(), or my equivalent of that for
-each fast modeset.
-
-In patch 4/5 intel_privacy_screen_set_val() is defined like this:
-
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum drm_privacy_screen_status val)
-+{
-+	struct drm_device *drm = connector->base.dev;
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 5799ae5..d00139c 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -653,8 +653,8 @@ static int pidfd_getfd(struct pid *pid, int fd)
+ 		return PTR_ERR(file);
+ 
+ 	ret = fd_install_received(file, O_CLOEXEC);
+-	if (ret < 0)
+-		fput(file);
 +
-+	if (val == PRIVACY_SCREEN_DISABLED) {
-+		drm_dbg_kms(drm, "%s: disabling privacy-screen\n",
-+			    CONN_NAME(connector));
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_DISABLE);
-+	} else {
-+		drm_dbg_kms(drm, "%s: enabling privacy-screen\n",
-+			    CONN_NAME(connector));
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_ENABLE);
-+	}
-+}
-+
-
-There are 2 problems with this:
-
-1. It makes the call even if there is no privacy-screen, and then
-acpi_privacy_screen_call_dsm() will log an error (if the connector has an
-associated handle but not the DSM).
-
-2. It makes this call on any modeset, even if the property did non change
-(and even if there is no privacy-screen) and AFAIK these ACPI calls are somewhat
-expensive to make.
-
-1. Should be easy to fix, fixing 2. is trickier. We really need access
-to the new and old connector_state here to only make the ACPI calls when
-necessary. But ATM all callbacks only ever get passed the new-state and
-these callbacks are all called after drm_atomic_helper_swap_state() at
-which point there is no way to get the old_state from the new_state.
-
-I've chosen to instead do this to update the privacy-screen change:
-
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -15501,6 +15503,9 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
-  			intel_color_load_luts(new_crtc_state);
-  	}
-
-+	for_each_new_connector_in_state(&state->base, connector, new_connector_state, i)
-+		drm_connector_update_privacy_screen(connector, &state->base);
-+
-  	/*
-  	 * Now that the vblank has passed, we can go ahead and program the
-  	 * optimal watermarks on platforms that need two-step watermark
-
-With drm_connector_update_privacy_screen() looking like this:
-
-+void drm_connector_update_privacy_screen(struct drm_connector *connector,
-+					 struct drm_atomic_state *state)
-+{
-+	struct drm_connector_state *new_connector_state, *old_connector_state;
-+	int ret;
-+
-+	if (!connector->privacy_screen)
-+		return;
-+
-+	new_connector_state = drm_atomic_get_new_connector_state(state, connector);
-+	old_connector_state = drm_atomic_get_old_connector_state(state, connector);
-+
-+	if (new_connector_state->privacy_screen_sw_state ==
-+	    old_connector_state->privacy_screen_sw_state)
-+		return;
-+
-+	ret = drm_privacy_screen_set_sw_state(connector->privacy_screen,
-+				new_connector_state->privacy_screen_sw_state);
-+	if (ret)
-+		drm_err(connector->dev, "Error updating privacy-screen sw_state\n");
-+}
-
-Which avoids all the problems described above.
-
-REgards,
-
-Hans
-
-
-
-
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
-> index 0c7be8ed1423a..e4594e27ce5a8 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.h
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.h
-> @@ -123,4 +123,9 @@ static inline unsigned int intel_dp_unused_lane_mask(int lane_count)
->   
->   u32 intel_dp_mode_to_fec_clock(u32 mode_clock);
->   
-> +void
-> +intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-> +			       const struct intel_crtc_state *crtc_state,
-> +			       const struct drm_connector_state *conn_state);
-> +
->   #endif /* __INTEL_DP_H__ */
-> 
++	fput(file);
+ 	return ret;
+ }
+ 
+-- 
+2.7.4
 
