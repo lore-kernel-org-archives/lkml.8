@@ -2,173 +2,86 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B384FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B70EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0752073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="nT+s8a//"
+	by mail.kernel.org (Postfix) with ESMTP id 5A6232073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgGFL3B (ORCPT
+        id S1729067AbgGFL3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:29:01 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:13192 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728697AbgGFL3B (ORCPT
+        Mon, 6 Jul 2020 07:29:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36961 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbgGFL3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:29:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1594034940; x=1625570940;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=mRr0O6TaoOSD4wC+mXJIuv+LEUU0XRuAYgb7yAKzoIM=;
-  b=nT+s8a///Hel3kSognMPQ7K4gj6Cc8DTgZa5vTwmxiCDcDET/r5G4Fud
-   9u34cDBChux0VmdzH84pOsvwssL6OqO11/qN/3cXPaeerkH5KO5A3Ucnv
-   ZN9RQDCMFB4yE7ZIIH5MzAGaS5JGUc8DnzVH7biF3GVlFJT8ZMVsmJ8mC
-   s=;
-IronPort-SDR: OiGbs+Yy6tDcmbAeuB4uhipDt8XAeSJSDgwjEP3FC+3Px0eQawXZO5CsgDNjMQ3KykAeVFkSXm
- pixhiIZoH/ig==
-X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
-   d="scan'208";a="57612227"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Jul 2020 11:28:59 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 401F7A2874;
-        Mon,  6 Jul 2020 11:28:57 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 11:28:56 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.26) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 11:28:47 +0000
-Subject: Re: [PATCH v4 14/18] nitro_enclaves: Add Kconfig for the Nitro
- Enclaves driver
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-15-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <0576a41d-f915-24b3-e6f9-0bc3616fd75b@amazon.de>
-Date:   Mon, 6 Jul 2020 13:28:45 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 6 Jul 2020 07:29:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id w17so23524207otl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:29:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+rvwDnB7KNdTk0PTa6sJ+inXwhfjZGb6BKn9QP1KQI=;
+        b=sdXRGMv2Eip1u2HWZTidTwQ3aGmRI7n0M08mxEPN3SMhzK2nAfmXQquiuYKUZz3g2q
+         XbRBzdWCvEzYnvv08W0nZhcXvw1snNDSkt5bKUvhk+SY/e0MA7SKTZy59u4JUtJ7VwS7
+         7v8RMC9Y2n6MPivGmixKuOgE16V2ijcSlLQ5W1URQODx7c0BP9W8EbCJ3sjmRg+NbERb
+         WJLGiTdDzHLPoCGXaEB0qgOlxgC2ZEhTukwZxBbLw1hj+IsA0lK5jAFtPiCzRjgD7TV2
+         1RYu5gao2psQ8E+GcmTkFNyHG4khMl16iK+yUGRAVv97jVf2U1jBCqsbCNWX4ZPTJTSk
+         hqsA==
+X-Gm-Message-State: AOAM531li42TJywsY4Rt3K/BqIMqKq8nd16rTeSCWaFIoME8ypW4MKA9
+        /vvORtP39y624Zfc0u9n2DhDG6lGqT+IsAkIc3L+JRV2
+X-Google-Smtp-Source: ABdhPJwPUSr6ZLB+SjD6scglo9H3KlFknYKAbY71zGS5tOBZVvDJAlogGl2aI54HOoLHq5ZOD1V5P1PfcjhR7ovqXEg=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr8365677otl.145.1594034944241;
+ Mon, 06 Jul 2020 04:29:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200622200329.52996-15-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D30UWC002.ant.amazon.com (10.43.162.235) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+References: <20200706095100.19157-1-geert@linux-m68k.org> <CAHp75Ve49Ucy9nMy1UBYirWX2niJ=6tfEGzmD+DpfRgb=JdZAA@mail.gmail.com>
+In-Reply-To: <CAHp75Ve49Ucy9nMy1UBYirWX2niJ=6tfEGzmD+DpfRgb=JdZAA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jul 2020 13:28:53 +0200
+Message-ID: <CAMuHMdXQX3MXCPjqoKkFh3Jh1dBqBKSBVSjT-DNhTn9YLCd2uA@mail.gmail.com>
+Subject: Re: [PATCH] lib/test_bitops: Do the full test during module init
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andy,
+
+On Mon, Jul 6, 2020 at 12:39 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Jul 6, 2020 at 12:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > Currently, the bitops test consists of two parts: one part is executed
+> > during module load, the second part during module unload. This is
+> > cumbersome for the user, as he has to perform two steps to execute all
+> > tests, and is different from most (all?) other tests.
+> >
+> > Merge the two parts, so both are executed during module load.
+>
+> Does your change prevent you from unloading the module?
+
+Good point, you need a dummy module_exit() for that.
+Stay tuned for v2.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
-On 22.06.20 22:03, Andra Paraschiv wrote:
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
-> Changelog
-> =
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> v3 -> v4
-> =
-
-> * Add PCI and SMP dependencies.
-> =
-
-> v2 -> v3
-> =
-
-> * Remove the GPL additional wording as SPDX-License-Identifier is
->    already in place.
-> =
-
-> v1 -> v2
-> =
-
-> * Update path to Kconfig to match the drivers/virt/nitro_enclaves
->    directory.
-> * Update help in Kconfig.
-> ---
->   drivers/virt/Kconfig                |  2 ++
->   drivers/virt/nitro_enclaves/Kconfig | 16 ++++++++++++++++
->   2 files changed, 18 insertions(+)
->   create mode 100644 drivers/virt/nitro_enclaves/Kconfig
-> =
-
-> diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-> index cbc1f25c79ab..80c5f9c16ec1 100644
-> --- a/drivers/virt/Kconfig
-> +++ b/drivers/virt/Kconfig
-> @@ -32,4 +32,6 @@ config FSL_HV_MANAGER
->   	     partition shuts down.
->   =
-
->   source "drivers/virt/vboxguest/Kconfig"
-> +
-> +source "drivers/virt/nitro_enclaves/Kconfig"
->   endif
-> diff --git a/drivers/virt/nitro_enclaves/Kconfig b/drivers/virt/nitro_enc=
-laves/Kconfig
-> new file mode 100644
-> index 000000000000..69e41aa2222d
-> --- /dev/null
-> +++ b/drivers/virt/nitro_enclaves/Kconfig
-> @@ -0,0 +1,16 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> +
-> +# Amazon Nitro Enclaves (NE) support.
-> +# Nitro is a hypervisor that has been developed by Amazon.
-> +
-> +config NITRO_ENCLAVES
-> +	tristate "Nitro Enclaves Support"
-> +	depends on HOTPLUG_CPU && PCI && SMP
-
-Let's also depend on ARM64 || X86, so that we don't burden all of the =
-
-other archs that are not available in EC2 today with an additional =
-
-config option to think about.
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
