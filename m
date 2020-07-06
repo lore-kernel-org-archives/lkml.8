@@ -2,171 +2,124 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6014BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32ADA206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613A0206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cuPtkJba"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1/ZKuIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgGFUHz (ORCPT
+        id S1726769AbgGFULx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51842 "EHLO
+        Mon, 6 Jul 2020 16:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGFUHz (ORCPT
+        with ESMTP id S1725860AbgGFULw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:07:55 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E64DC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:07:55 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id u8so17807085qvj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 13:07:55 -0700 (PDT)
+        Mon, 6 Jul 2020 16:11:52 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CB5C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:11:52 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id d4so32643056otk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 13:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WxzYL3dtx1zZhE+eRZlLjbwpIDVIPj8EL53YBYdx0TI=;
-        b=cuPtkJbaS39CURKAqpISO45og9V35Wm8LvNFovTPQXECcB/wRJKfWkj8laPXGy6twl
-         zp8M7LibaxgtspVjZB7kR0moa5dlodTBbW069rxuX3ng7a7XtVE0kjKDvPIGW8FvHNHI
-         yBbIuhNeMAq40Yj/j1LKFwPWfLW6eDYPwJBWM=
+         :cc:content-transfer-encoding;
+        bh=NH51QzKoo8vcvgmX1earnUW3W8VarBLxn3wxnDS2NOk=;
+        b=y1/ZKuIhjHhOsxpSw+1xMcKmg2e5dWBH3F1+AO7aZkt4nuahkvlotHPyJkqTmzHRcU
+         dayynd91m96Pxs75SBm30PdnqAQSw9PL8yc4R6iUdxaAF1DhMjqCqX5AiCR1neYMayFs
+         YcV2BKubqr6RmiXZqJp8NyNrKmK28zR8AhFYLntpBZX43yc4BitVunCWcr/iQBkUgeor
+         rhyMSBQvEvS+98Wzh3MLqUIDMsOKDiXerdn7gA2pjwesgHWpial6dAPS2MAqVfiQBxqR
+         MGIVvMl/Md/p013QyXWb4A0uMaG16Xbv1m23EGeoS82CBXGGKDuB5gOktniOknC0nkwX
+         B2WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WxzYL3dtx1zZhE+eRZlLjbwpIDVIPj8EL53YBYdx0TI=;
-        b=A8AjvM68OFjqcYJ0QyUNDTkShBkoJFqdIBnUtY9+5j8rwJYPx6bakNFuwUiTZFbkCr
-         KuTepolGaeiqmhRLnJ6Zo7M3hNxfK7i7JS0vCSSMhKw7CfteIgiF+lFx7BQ/Ubmkgnmu
-         vSd5Os5PF40xohg5Qit/x4iVF+bgQLfVfyrV9XbOQbHbQ7UPspnTRhbfe16muPbJbI0H
-         geL8ELul7+9OwZbo4d9rDZKAGnQEpkgW5TwplhBqDI6Ion+7eT7rVr/tFedurncfBOiD
-         bqlwlZY6ZqGk2K4FcSneLG2WoD7C2cuPb5Vr6hOfqIdMsWqGNB+xs6eT8GQHi6OJH5VL
-         A8Rg==
-X-Gm-Message-State: AOAM531abJez6Hjeg2lDZmAV03IRejk6k/az0mtvyQZAXeDZ1ftd29PD
-        DzM1PtbU4+M/rkoX/2fXYavq38oGjOPbfgGdxGQUgg==
-X-Google-Smtp-Source: ABdhPJx+GkC86LHajgKBMCmAEAcQ4s60gsju8Yj9ox3fC0QHxw7eLh8UqWqA3W6xZom/ImNXa6fymbnHkRWAIhwfjwY=
-X-Received: by 2002:a0c:a8e6:: with SMTP id h38mr42900484qvc.15.1594066074183;
- Mon, 06 Jul 2020 13:07:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NH51QzKoo8vcvgmX1earnUW3W8VarBLxn3wxnDS2NOk=;
+        b=Ow9YwVwFerpXKgrqIK4fa/Hux4RRSmaMRQGMIhOq7zJ75de/DWx/1zbtjB19F5R9JZ
+         io98UmABqhVPLHOJVfLNachMiKNzDTZBDWz00bbiEmQlKpAEwA6wVu8GvP4lOejPz1wN
+         3KcMpgHmcyc1YY9fW2LTzcjEea6MIeUx8zCaHmRL4fVrFHJvRnItNK0bqBxe/Muf/Bau
+         e5a7XMxUbdQE73kgMhXU7q5ACsPhS1I81gjiLfRwSgsAhEwAwkSmdOLLJepGA2VzO7T1
+         cCt8TRct82gNvbrNMzSNCHW0ec37sBLamGNCTPWX+C9GeMY7XTPy2tR9Yv8hyrpP+Cmc
+         JS/g==
+X-Gm-Message-State: AOAM533tZuYywPpRsILbKTTzhAgxaLpM2ZIyLGnSKQl4DPf1Cq34Mx83
+        rEymWcDYC4wmjXeItNyfxIXqwHwa8EISM6Y7x+Hx6Q==
+X-Google-Smtp-Source: ABdhPJxWWUEOZiTzl4XMzBiep/6hLNneDCfCqQ3s06apjoLTB29tsG8ceo9LV97cMRx0HUQs4qjZVEIL4axcOjO71UI=
+X-Received: by 2002:a05:6830:1e13:: with SMTP id s19mr45133059otr.102.1594066311761;
+ Mon, 06 Jul 2020 13:11:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200704142607.171400-1-linux@roeck-us.net> <20200706185230.GA792857@google.com>
- <20200706194120.GB180826@roeck-us.net>
-In-Reply-To: <20200706194120.GB180826@roeck-us.net>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 6 Jul 2020 13:07:43 -0700
-Message-ID: <CACeCKadx5vmqT9dnTTr49T3s-ZG1h3YnKZRvFVB4vrUhnD2faw@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to
- Linux error codes
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
+References: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
+ <20200620212616.93894-1-zenczykowski@gmail.com> <CALAqxLVeg=EE06Eh5yMBoXtb2KTHLKKnBLXwGu-yGV4aGgoVMA@mail.gmail.com>
+ <CAADnVQJOpsQhT0oY5GZikf00MT1=pR3vpCZkn+Z4hp2_duUFSQ@mail.gmail.com>
+In-Reply-To: <CAADnVQJOpsQhT0oY5GZikf00MT1=pR3vpCZkn+Z4hp2_duUFSQ@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 6 Jul 2020 13:11:42 -0700
+Message-ID: <CALAqxLVfxSj961C5muL5iAYjB5p_JTx7T6E7zQ7nsfQGC-exFA@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] restore behaviour of CAP_SYS_ADMIN allowing the
+ loading of networking bpf programs
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>,
+        =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 12:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Mon, Jul 06, 2020 at 11:52:30AM -0700, Prashant Malani wrote:
-> > Hi Guenter,
-> >
-> > On Sat, Jul 04, 2020 at 07:26:07AM -0700, Guenter Roeck wrote:
-> > > The EC reports a variety of error codes. Most of those, with the exception
-> > > of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-> > > error code gets lost. Convert all EC errors to Linux error codes to report
-> > > a more meaningful error to the caller to aid debugging.
+On Tue, Jun 23, 2020 at 5:54 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Mon, Jun 22, 2020 at 12:44 PM John Stultz <john.stultz@linaro.org> wro=
+te:
+> > On Sat, Jun 20, 2020 at 2:26 PM Maciej =C5=BBenczykowski
+> > <zenczykowski@gmail.com> wrote:
+> > > From: Maciej =C5=BBenczykowski <maze@google.com>
 > > >
-> > > Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > > Cc: Prashant Malani <pmalani@chromium.org>
-> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > > ---
-> > >  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
-> > >  1 file changed, 29 insertions(+), 8 deletions(-)
+> > > This is a fix for a regression introduced in 5.8-rc1 by:
+> > >   commit 2c78ee898d8f10ae6fb2fa23a3fbaec96b1b7366
+> > >   'bpf: Implement CAP_BPF'
 > > >
-> > > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> > > index 3e745e0fe092..10aa9e483d35 100644
-> > > --- a/drivers/platform/chrome/cros_ec_proto.c
-> > > +++ b/drivers/platform/chrome/cros_ec_proto.c
-> > > @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
-> > >  }
-> > >  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+> > > Before the above commit it was possible to load network bpf programs
+> > > with just the CAP_SYS_ADMIN privilege.
 > > >
-> > > +static const int cros_ec_error_map[] = {
-> > > +   [EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-> > > +   [EC_RES_ERROR] = -EIO,
-> > > +   [EC_RES_INVALID_PARAM] = -EINVAL,
-> > > +   [EC_RES_ACCESS_DENIED] = -EACCES,
-> > > +   [EC_RES_INVALID_RESPONSE] = -EPROTO,
-> > > +   [EC_RES_INVALID_VERSION] = -ENOTSUPP,
-> > > +   [EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-> > > +   [EC_RES_IN_PROGRESS] = -EINPROGRESS,
-> > > +   [EC_RES_UNAVAILABLE] = -ENODATA,
-> > > +   [EC_RES_TIMEOUT] = -ETIMEDOUT,
-> > > +   [EC_RES_OVERFLOW] = -EOVERFLOW,
-> > > +   [EC_RES_INVALID_HEADER] = -EBADR,
-> > > +   [EC_RES_REQUEST_TRUNCATED] = -EBADR,
-> > > +   [EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-> > > +   [EC_RES_BUS_ERROR] = -EFAULT,
-> > > +   [EC_RES_BUSY] = -EBUSY,
-> > > +   [EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-> > > +   [EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-> > > +   [EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-> > > +   [EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-> > > +};
-> > > +
-> > >  /**
-> > >   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
-> > >   * @ec_dev: EC device.
-> > > @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> > >   *
-> > >   * Return:
-> > >   * >=0 - The number of bytes transferred
-> > > - * -ENOTSUPP - Operation not supported
-> > > - * -EPROTO - Protocol error
-> > > + * <0 - Linux error code
-> > >   */
-> > >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> > >                         struct cros_ec_command *msg)
-> > > @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> > >     ret = cros_ec_cmd_xfer(ec_dev, msg);
-> > >     if (ret < 0) {
-> > >             dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
-> > > -   } else if (msg->result == EC_RES_INVALID_VERSION) {
-> > > -           dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
-> > > -                   msg->result);
-> > > -           return -ENOTSUPP;
-> > >     } else if (msg->result != EC_RES_SUCCESS) {
-> > > -           dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> > > -           return -EPROTO;
-> > > +           if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
+> > > The Android bpfloader happens to run in such a configuration (it has
+> > > SYS_ADMIN but not NET_ADMIN) and creates maps and loads bpf programs
+> > > for later use by Android's netd (which has NET_ADMIN but not SYS_ADMI=
+N).
+> > >
+> > > Cc: Alexei Starovoitov <ast@kernel.org>
+> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > > Reported-by: John Stultz <john.stultz@linaro.org>
+> > > Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
+> > > Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
 > >
-> > Do we expect a case where cros_ec_error_map[msg->result] == 0?
+> > Thanks so much for helping narrow this regression down and submitting t=
+his fix!
+> > It's much appreciated!
 > >
+> > Tested-by: John Stultz <john.stultz@linaro.org>
 >
-> It seemed to be prudent to assume that this code is not going to be
-> updated whenever a new EC error code is added. Doing nothing would
-> risk returning 0, and addding WARN_ON or dev_warn seemed excessive.
-> Having said that, I don't really have a strong opinion one way
-> or another, and I'll be happy to change the code to whatever people
-> think is appropriate.
+> Applied to bpf tree. Thanks
 
-Thanks for providing the rationale. I think if a new EC error code is
-added (and this array isn't updated),
-msg->result < ARRAY_SIZE(cros_ec_error_map) would return false, and
-the code block would return -EPROTO.
+Hey all,
+  Just wanted to follow up on this as I've not seen the regression fix
+land in 5.8-rc4 yet? Is it still pending, or did it fall through a
+gap?
 
-I'll defer to the maintainer's opinion(s), but I think we can remove
-the condition after '&&'.
-
-Best regards,
-
->
-> Thanks,
-> Guenter
+thanks
+-john
