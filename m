@@ -2,119 +2,103 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52614C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5654120720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC5C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="J8Agmnbm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlaataya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbgGFL7F (ORCPT
+        id S1729069AbgGFMAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:59:05 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:39336 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729062AbgGFL6y (ORCPT
+        Mon, 6 Jul 2020 08:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729005AbgGFMAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:58:54 -0400
+        Mon, 6 Jul 2020 08:00:23 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30D7C061794;
+        Mon,  6 Jul 2020 05:00:22 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t6so18298686pgq.1;
+        Mon, 06 Jul 2020 05:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594036733; x=1625572733;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=pVcOoTXfEhP95n40P2tq5dup7mBPSiPPU6Yt3e8a7DQ=;
-  b=J8AgmnbmHb1haAsWwWOvbDDwyt28veLcvuQaQPkJuX0DMvuoGAa4JQ0o
-   j7rpBPtTzLgAle9/TLXQuTvGM9vJ2ei7cZtLcOn8erhv/KvxIPsaX70hs
-   EJX+hBPHLzCczqIPY/x3hqHuw4MMlnOM/GvXvkBgQO52sRxQ1PSpRE8y2
-   8=;
-IronPort-SDR: qgI9ioM6R8agcTnj85nMh/1WQ8oh+E0VkU3pnTeVoxJRJRPrlHRJwcrmF8NT8XDDt+sXb1FlCT
- 5IqCT4grAfmA==
-X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
-   d="scan'208";a="40204357"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 11:58:49 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id D841EA1755;
-        Mon,  6 Jul 2020 11:58:46 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 11:58:46 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 11:58:30 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v17 15/15] MAINTAINERS: Update for DAMON
-Date:   Mon, 6 Jul 2020 13:53:22 +0200
-Message-ID: <20200706115322.29598-16-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706115322.29598-1-sjpark@amazon.com>
-References: <20200706115322.29598-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k2wZVBCbFmyS4f19I96bMfACN0zJyTtZkt6TGll4q3k=;
+        b=hlaatayaR5fM1opYuZxRQLjh4ia6UrS5+Yv1bc51QztaZUkLdZqiiFOlARsV/10S+g
+         wAS+W4QYhOVXxXbgq5TQkVkrSJ85UafIRr4amXG5cPrHTh08pZAcj7sZFZt889Dy33WE
+         AKD13FxipQxWJi3e17SAXeR8Pl6RlECF49No27zMOnymNDFN0vgkswwL32JsKk5dNAsQ
+         tdA/1QXmjwSK3FbslaFy1djWK9pS2DLpD1be8JBZyiLMkWFhhdY+UFF3H4JhUbakzU2s
+         +UehpbLn1c9La4/0z6Nn6GUnu98WfQuOpf2tCH4/s2KxHPlSoPp71BQBpPSjdpzwfjbB
+         wF/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k2wZVBCbFmyS4f19I96bMfACN0zJyTtZkt6TGll4q3k=;
+        b=eamASyljo05LcW22bQGuXBivnD9apjAsjCXYJQvOE53Ztuit6G94xls0Cx2Hd08rfM
+         x7RFb9O/irml1GBrhjvhwxjuEYVAPjQTOoiN0PFARTA7L2D+724adqW7cg8+ChJJd2P3
+         +Ia2ZJI/yBzf1MLCAh4Uo0mheT9Pod+jzNRkg6l7UHwJRUfFttvct9K9zJCDVpw+FECQ
+         xPcxKERjMVMMbDRfHVNx31bv24k2laI8YDxz+OIH/wZt+4ZRvSVxmHyanBi2Yv/mxJtA
+         agSTaXZL5YJfxL2C3RTlEsJO4k1VxpkvL9V+wGpoGtfMXM4DYdhgfowTg5GfEngiXMAY
+         2QLw==
+X-Gm-Message-State: AOAM532b8Rzbe15M9mk7+LcKr/CqrRrC9q7/8eGzS69H86T2fE/6sLeU
+        q3Akdv4Ki4pBvX3h9iQM3MGBWQhRyGFAf2+n584wax1S
+X-Google-Smtp-Source: ABdhPJyZUDdsT0fW5oP+iefGIEpVQz6jAxKgMmdAQvjFqCUC77UY7uGD7cjaa+Huw//BrBpqY2aJROFgCll8Wr/laqo=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr16751991pgi.203.1594036822196;
+ Mon, 06 Jul 2020 05:00:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D21UWA003.ant.amazon.com (10.43.160.184) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+References: <20200705133038.161547-1-mans0n@gorani.run> <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+In-Reply-To: <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Jul 2020 15:00:05 +0300
+Message-ID: <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Sungbo Eo <mans0n@gorani.run>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, Jul 6, 2020 at 2:21 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:>
+> On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
+> >
+> > NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+> > Its ports are controlled only by a data byte without register address.
+> >
 
-This commit updates MAINTAINERS file for DAMON related files.
+> > Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+> >
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+No blank line here.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 50659d76976b..2396a9098715 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4686,6 +4686,18 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/damon/*
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+F:	tools/testing/selftests/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
+> > Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+
+> This driver looks nice now but why did you remove the mutex in v3? I
+> think when Andy commented on that, he meant not understanding why the
+> error check is protected, not the i2c operations.
+
+Right.
+
+> Are you sure you don't need this lock?
+
+It's a good point!
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
