@@ -2,69 +2,89 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF677C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9640A206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594056007;
-	bh=TAcaiC9HAg4zsFhqleVIFXRCXuX/BfEGTEuJsk6DBso=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=p6STWKS208xxqCfXm6UoPeSjzu4mjXgouEVMsw6dCB9YbyPTV/MmaHxHSonoRrree
-	 W+kDm0CgHneKA0JwXDOAxRcKsmawojGGGfQUuRYGCslICl/trw93Gsw7vf3GZcHpNp
-	 L1m7nvJTXMSu+d2xKyRaOCgcAUzw5d0TcHTQbvJs=
+	by mail.kernel.org (Postfix) with ESMTP id 102DD206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgGFRUG (ORCPT
+        id S1729663AbgGFRUS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgGFRUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:20:05 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.8-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594056005;
-        bh=TAcaiC9HAg4zsFhqleVIFXRCXuX/BfEGTEuJsk6DBso=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kjj3drK7PwbYbJpRX7XWcTjz559jjuk7Oqb7YggHDsG3tJO6Iaejobfgb+Y1QYcGr
-         xM8j4weNG013XDtlirC2UQaJfdPHRMCEa2dEnXVeBrVNsgvKjxS/sRJSe4ENpNxeeJ
-         6sUyyypFwA8yx8M9zvqbF7G1ywzDQ9uQVPJqz4QQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200706154417.GH4707@osiris>
-References: <20200706154417.GH4707@osiris>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200706154417.GH4707@osiris>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-4
-X-PR-Tracked-Commit-Id: 075ebfe19fa3fa8838d2afdde5e87c86b7953b1e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5c82ec00dd00c7a2b02d4b42cf59ae87592cb75f
-Message-Id: <159405600526.28251.15078784772412494474.pr-tracker-bot@kernel.org>
-Date:   Mon, 06 Jul 2020 17:20:05 +0000
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        Mon, 6 Jul 2020 13:20:18 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:60364 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729551AbgGFRUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:20:18 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21731955-1500050 
+        for multiple; Mon, 06 Jul 2020 18:19:51 +0100
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200703125046.8395-1-f.suligoi@asem.it>
+References: <20200703125046.8395-1-f.suligoi@asem.it>
+Subject: Re: [PATCH] drm/i915: Fix spelling mistake in i915_reg.h
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Flavio Suligoi <f.suligoi@asem.it>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Flavio Suligoi <f.suligoi@asem.it>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Date:   Mon, 06 Jul 2020 18:19:49 +0100
+Message-ID: <159405598951.24180.13345481240552002697@build.alporthouse.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 6 Jul 2020 17:44:17 +0200:
+Quoting Flavio Suligoi (2020-07-03 13:50:46)
+> Fix typo: "TRIGER" --> "TRIGGER"
+> 
+> The two misplelled macros:
+> 
+> 1) OAREPORTTRIG1_EDGE_LEVEL_TRIGER_SELECT_MASK
+> 2) OAREPORTTRIG5_EDGE_LEVEL_TRIGER_SELECT_MASK
+> 
+> are not used in any other sources of the kernel,
+> so this change can be consider only a local change
+> for the i915_reg.h file.
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  drivers/gpu/drm/i915/i915_reg.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
+> index 9d6536afc94b..c2153364724a 100644
+> --- a/drivers/gpu/drm/i915/i915_reg.h
+> +++ b/drivers/gpu/drm/i915/i915_reg.h
+> @@ -868,7 +868,7 @@ static inline bool i915_mmio_reg_valid(i915_reg_t reg)
+>  
+>  #define OAREPORTTRIG1 _MMIO(0x2740)
+>  #define OAREPORTTRIG1_THRESHOLD_MASK 0xffff
+> -#define OAREPORTTRIG1_EDGE_LEVEL_TRIGER_SELECT_MASK 0xffff0000 /* 0=level */
+> +#define OAREPORTTRIG1_EDGE_LEVEL_TRIGGER_SELECT_MASK 0xffff0000 /* 0=level */
+>  
+>  #define OAREPORTTRIG2 _MMIO(0x2744)
+>  #define OAREPORTTRIG2_INVERT_A_0  (1 << 0)
+> @@ -921,7 +921,7 @@ static inline bool i915_mmio_reg_valid(i915_reg_t reg)
+>  
+>  #define OAREPORTTRIG5 _MMIO(0x2750)
+>  #define OAREPORTTRIG5_THRESHOLD_MASK 0xffff
+> -#define OAREPORTTRIG5_EDGE_LEVEL_TRIGER_SELECT_MASK 0xffff0000 /* 0=level */
+> +#define OAREPORTTRIG5_EDGE_LEVEL_TRIGGER_SELECT_MASK 0xffff0000 /* 0=level */
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-4
+Ok, these names are not copied straight from the docs, so renaming them
+will not hinder us when finding the relevant fields.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5c82ec00dd00c7a2b02d4b42cf59ae87592cb75f
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+-Chris
