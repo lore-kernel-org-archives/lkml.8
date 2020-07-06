@@ -2,142 +2,103 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E740C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0218D20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE9F20674
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="YoIQFPcJ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ccX4QfgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgGFVyf (ORCPT
+        id S1726329AbgGFWAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 17:54:35 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:29865 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFVye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 17:54:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=from:subject:in-reply-to:references:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=zH7tX8PPrQOiC8YQYfNApiiYgPL8wf8hdlJJn7cx1Rc=;
-        b=YoIQFPcJX23K4CfU4auvTouFdT/J035h8AJE9Py+DXVx+HiFocDTHIKMR4sU/q5+ebKd
-        SnjjrxkFIXmWqyK1Mmqzo3j8MrIyuxj5sMpBGhDEN2xboGAGp797rYqw8lei6CtOnvwRoN
-        r6pLbjS3vK1YXJkV68S/75j5kn5RkcxVY=
-Received: by filterdrecv-p3iad2-5b55dcd864-pbk2w with SMTP id filterdrecv-p3iad2-5b55dcd864-pbk2w-17-5F039D99-1F
-        2020-07-06 21:54:33.351928764 +0000 UTC m=+881113.475332882
-Received: from bionic.localdomain (unknown)
-        by ismtpd0008p1lon1.sendgrid.net (SG) with ESMTP
-        id coCc3ZK0SEeNipq-mYYnXg
-        Mon, 06 Jul 2020 21:54:33.104 +0000 (UTC)
-From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 00/12] media: rkvdec: Add H.264 High 10 and 4:2:2 profile
- support
-Date:   Mon, 06 Jul 2020 21:54:33 +0000 (UTC)
-Message-Id: <20200706215430.22859-1-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701215616.30874-1-jonas@kwiboo.se>
-References: <20200701215616.30874-1-jonas@kwiboo.se>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hypXKcIOeSYpNSUeY?=
- =?us-ascii?Q?emRpIrZd9puwQGdPqGdlyH4xQt+Xy=2Fer833ML+Z?=
- =?us-ascii?Q?Yb0lIUcPP=2FZt=2F5FyizZgascWuYLH4=2FCRpegcw8t?=
- =?us-ascii?Q?OiQ3sf5dAiNQK0gg2PpbwVykAG0ZRE3+jx=2Ftyvm?=
- =?us-ascii?Q?rpp3KczLXXCy4CHAVMa9UkjTCGAIpypgDQUnrfm?=
- =?us-ascii?Q?cGWuFy9tleCHfpWySLXsA=3D=3D?=
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Jul 2020 18:00:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:53981 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgGFWAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 18:00:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0zyB11NHz9s1x;
+        Tue,  7 Jul 2020 08:00:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594072802;
+        bh=UXYG+NlDuPRRy5dtPsarnIzjPJrnE86KFdNzmLeK3k8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ccX4QfgAS48Mia2K3KxM9KbflbFvmHxuxGceEojNOMllclSfhSqHirENfQEXvenov
+         QmhafmdWnaNHhURfcCDkL8pQZMCvekVmd6tGfNIGh4J2Iaw3ettgGTTimvTt9mPAbo
+         oOEcRHLU1+r+QwuWkptA9DiD2BUKzx4LvL3xblX+noYUdMAV6/rijfilGup3OxxcMN
+         dfPU+xlF8Qem9x0YZBEtc/5hQDUHCl5d+DBlSHKN+miX5b7oLPavAfcVaV7RfsS1qU
+         JsOoNPJqURB7AmosEZ3CMq3nvP2eAOpD1I9FG5rR6WzzDuv56OpKieM0Cn7WD3U5rP
+         jp2er7WyPv3eA==
+Date:   Tue, 7 Jul 2020 08:00:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the spi tree
+Message-ID: <20200707080000.507aed2c@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/rox1eQqkVFA0OpS/Z5ogLwp";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series contains minor fixes and adds H.264 High 10 and 4:2:2 profile
-support to the Rockchip Video Decoder driver.
+--Sig_/rox1eQqkVFA0OpS/Z5ogLwp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Patch 1 and 3 fixes two issues when decoding field encoded content. Patch 2
-ensures CAPTURE buffer is same resolution or larger than OUTPUT buffer.
+Hi all,
 
-Patch 5 allows userspace to set OUTPUT sizeimage.
+Commits
 
-Patch 6 updates the v4l2_format helpers to consider block width and height
-when calculating plane bytesperline and sizeimage.
+  878d4d57a6e5 ("spi: spi-sun6i: sun6i_spi_transfer_one(): enable RF_RDY in=
+terrupt only if needed")
+  1e9ca016b623 ("spi: spi-sun6i: sun6i_spi_transfer_one(): collate write to=
+ Interrupt Control Register")
+  15254b028dd6 ("spi: spi-sun6i: sun6i_spi_fill_fifo(): remove not needed l=
+ength argument")
+  60b1f09675f2 ("spi: spi-sun6i: sun6i_spi_drain_fifo(): remove not needed =
+length argument")
+  9bfc242a9379 ("spi: spi-sun6i: sun6i_spi_drain_fifo(): introduce sun6i_sp=
+i_get_rx_fifo_count() and make use of it")
+  e0430d904098 ("spi: spi-sun6i: sun6i_spi_get_tx_fifo_count: Convert manua=
+l shift+mask to FIELD_GET()")
+  05bf34283c8e ("spi: spi-sun6i: sun6i_spi_transfer_one(): remove not neede=
+d masking of transfer length")
+  642d75131c8c ("spi: spi-sun6i: sun6i_spi_transfer_one(): remove useless g=
+oto")
+  09a7139e9e17 ("spi: spi-sun6i: sun6i_spi_transfer_one(): report effectivl=
+y used speed_hz of transfer")
 
-Patch 7 adds two new pixelformats for 10-bit 4:2:0/4:2:2.
+are missing a Signed-off-by from their committer.
 
-Patch 8 change to use bytesperline and buffer height to configure strides.
+--=20
+Cheers,
+Stephen Rothwell
 
-Patch 9 and 10 add support for limit/lock down a pixelformat based on SPS.
+--Sig_/rox1eQqkVFA0OpS/Z5ogLwp
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Patch 11 adds final bits to support H.264 High 10 and 4:2:2 profiles.
+-----BEGIN PGP SIGNATURE-----
 
-Patch 12 adds profile and level controls.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8DnuEACgkQAVBC80lX
+0GzBuAf9EDuT/Wy/8OoXWI4xKtYTUPCWW0w6wST0fSalfaQI3C52kEFlAI/RI33q
+miduGX5odX9QJ4vrpEAfpkMD7GKlBtxT8PdzaQjSmSUBpvCr8OHrQonmJRqTHfe8
+nvA4hYiucm7ttIoK1Z+aOI1pjhT7/NDRyTxO5MFFbcOkDPTvB9fpNd5/Gev6z1x0
+Xp4AYQwza630Di/JLgsJ1nZZkzfYzb+q7MjestGT3uZKA1/1h+dC3+56TT9o+hvm
+L9s0lEWc4eIa+p0Jv88iL2t63uDK9Q6JKmirf8dHc2F8PG7/va5qc42gdZj+IfpD
+/yBhGqvnKsvLjTwzc+Qto6x4q1SdeA==
+=5qMH
+-----END PGP SIGNATURE-----
 
-Changes in v2:
-- Collect r-b tags
-- SPS pic width and height in mbs validation moved to rkvdec_try_ctrl
-- New patch to not override output buffer sizeimage
-- Reworked pixel format validation
-- Only align decoded buffer instead of changing frmsize step_width
-See indivitual patch for changes.
-
-This series depend on the "handle unsupported H.264 bitstreams" series at [1]
-with a small fixup, s/p_cur/p_new/.
-
-To fully runtime test this series you may need drm patches from [2] and
-ffmpeg patches from [3], this series and drm patches is also available at [4].
-
-[1] https://patchwork.linuxtv.org/cover/64977/
-[2] https://patchwork.freedesktop.org/series/78099/
-[3] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3-rkvdec-high-10
-[4] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-high-10-v2
-
-Regards,
-Jonas
-
-Jonas Karlman (12):
-  media: rkvdec: h264: Fix reference frame_num wrap for second field
-  media: rkvdec: Ensure decoded resolution fit coded resolution
-  media: rkvdec: h264: Validate and use pic width and height in mbs
-  media: rkvdec: h264: Fix bit depth wrap in pps packet
-  media: rkvdec: h264: Do not override output buffer sizeimage
-  media: v4l2-common: Add helpers to calculate bytesperline and
-    sizeimage
-  media: v4l2: Add NV15 and NV20 pixel formats
-  media: rkvdec: h264: Use bytesperline and buffer height to calculate
-    stride
-  media: rkvdec: Extract rkvdec_fill_decoded_pixfmt helper method
-  media: rkvdec: Lock capture pixel format in s_ctrl and s_fmt
-  media: rkvdec: h264: Support High 10 and 4:2:2 profiles
-  media: rkvdec: h264: Support profile and level controls
-
- .../userspace-api/media/v4l/pixfmt-nv15.rst   | 101 ++++++++++++++
- .../userspace-api/media/v4l/pixfmt-nv20.rst   |  99 +++++++++++++
- .../userspace-api/media/v4l/yuv-formats.rst   |   2 +
- drivers/media/v4l2-core/v4l2-common.c         |  80 +++++------
- drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
- drivers/staging/media/rkvdec/rkvdec-h264.c    |  45 ++++--
- drivers/staging/media/rkvdec/rkvdec.c         | 130 ++++++++++++++----
- drivers/staging/media/rkvdec/rkvdec.h         |   2 +
- include/uapi/linux/videodev2.h                |   3 +
- 9 files changed, 384 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
- create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
-
--- 
-2.17.1
-
+--Sig_/rox1eQqkVFA0OpS/Z5ogLwp--
