@@ -2,118 +2,109 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9603C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE3C2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D1020715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvdVXroX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vxSRk4Iw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgGFN7t (ORCPT
+        id S1729274AbgGFOA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:59:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55112 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728940AbgGFN7t (ORCPT
+        Mon, 6 Jul 2020 10:00:57 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:25130 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728940AbgGFOA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:59:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594043988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DK4/PcR5dFxByvykusuy2iYWwJ1NONwxquwieynQjzM=;
-        b=gvdVXroXw2gbtQsn2IFxiZySah/vltpBloWj/eUT6+0cawFL2ExMk2g8h9j7Zk0D0FRfQB
-        9MrauSENU0XUGZ2bgY3EoDvJftK9O+SV+QhlyHDcty8HF59yU3msGNHD2Z7/diaiuBNbk2
-        EpawBQzVMSBcLxwJ7T7aM8mLE77UXGE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-JNc9btf_MXefKsQBKiCktw-1; Mon, 06 Jul 2020 09:59:44 -0400
-X-MC-Unique: JNc9btf_MXefKsQBKiCktw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA6F2107ACF3;
-        Mon,  6 Jul 2020 13:59:42 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-118.ams2.redhat.com [10.36.112.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D35471665;
-        Mon,  6 Jul 2020 13:59:36 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Turner <pjt@google.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 2/3] Linux: Use rseq in sched_getcpu if available (v9)
-References: <20200629190036.26982-1-mathieu.desnoyers@efficios.com>
-        <20200629190036.26982-3-mathieu.desnoyers@efficios.com>
-Date:   Mon, 06 Jul 2020 15:59:35 +0200
-In-Reply-To: <20200629190036.26982-3-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers's message of "Mon, 29 Jun 2020 15:00:35 -0400")
-Message-ID: <877dvg4ud4.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 6 Jul 2020 10:00:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594044055; x=1625580055;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=FYZro6D+vcHkEk7Ax8pNjGvrPd0uuRs+UC3n596x+ho=;
+  b=vxSRk4Iwyt4qhDZOZ8aQwyKUBnOTdBElSK1RUgAcsv8Ggs9QuI100WZu
+   npFs/Rhlo3vdwQ0a5eiJ0qN5n7GOA2mi7JWneVnu6UTfHTjG+zx/7xrN2
+   up/xR3prJLUCrK65FzSerV9sJnaUUsqfM93jJFwXEGB7LTqF0WBdjMAUZ
+   Y=;
+IronPort-SDR: Jb5avFILfe91lRr5qkHX24/FwvCL3vPP8pUvaglYQLPpHjyWIxyEFbaTz3G00Xis6cDyC0Rc9P
+ uBYc1kZMdoYA==
+X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
+   d="scan'208";a="56397789"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 06 Jul 2020 14:00:37 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 20F02A2083;
+        Mon,  6 Jul 2020 14:00:36 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 14:00:35 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 14:00:28 +0000
+Subject: Re: [PATCH v4 15/18] nitro_enclaves: Add Makefile for the Nitro
+ Enclaves driver
+To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-16-andraprs@amazon.com>
+ <2ec8a2f6-0084-bb70-4436-24afc39069b9@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <9552b1fe-d2cc-1365-97ea-297404329ae1@amazon.com>
+Date:   Mon, 6 Jul 2020 17:00:23 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2ec8a2f6-0084-bb70-4436-24afc39069b9@amazon.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D27UWA004.ant.amazon.com (10.43.160.43) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
 
-> When available, use the cpu_id field from __rseq_abi on Linux to
-> implement sched_getcpu().  Fall-back on the vgetcpu vDSO if
-> unavailable.
 
-I've pushed this to glibc master, but unfortunately it looks like this
-exposes a kernel bug related to affinity mask changes.
+On 06/07/2020 14:30, Alexander Graf wrote:
+>
+>
+> On 22.06.20 22:03, Andra Paraschiv wrote:
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
 
-After building and testing glibc, this
+Added. Thank you.
 
-  for x in {1..2000} ; do posix/tst-affinity-static  & done
+Andra
 
-produces some =E2=80=9Cerror:=E2=80=9D lines for me:
 
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
 
-=E2=80=9Cexpected 0=E2=80=9D is a result of how the test has been written, =
-it bails out
-on the first failure, which happens with CPU ID 0.
-
-Smaller systems can use a smaller count than 2000 to reproduce this.  It
-also happens sporadically when running the glibc test suite itself
-(which is why it took further testing to reveal this issue).
-
-I can reproduce this with the Debian 4.19.118-2+deb10u1 kernel, the
-Fedora 5.6.19-300.fc32 kernel, and the Red Hat Enterprise Linux kernel
-4.18.0-193.el8 (all x86_64).
-
-As to the cause, I'd guess that the exit path in the sched_setaffinity
-system call fails to update the rseq area, so that userspace can observe
-the outdated CPU ID there.
-
-Thanks,
-Florian
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
