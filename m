@@ -2,167 +2,125 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3991BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E90206DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16845206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZQQk4dLt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q23x4gWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgGFSDx (ORCPT
+        id S1729745AbgGFSEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
+        Mon, 6 Jul 2020 14:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729648AbgGFSDw (ORCPT
+        with ESMTP id S1729589AbgGFSEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:03:52 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08983C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:03:52 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so40263139wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:03:51 -0700 (PDT)
+        Mon, 6 Jul 2020 14:04:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69108C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:04:40 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x3so11742761pfo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1r9nQdWAuC8N3L1BUVcnwpS3LGqvBj+wWQMPJCqLtvo=;
-        b=ZQQk4dLtYx4rXkZhrV/UnqXCtRf6fQ6sUIDr2YabKGUhR3TxA0ZyoT+fKfNxfCeS5y
-         7aOUhd8r/us9cpKZjarVN6ikyylNM1kju32WZAhE3M1azxKGbrY3FVWjpzhoRKVXkH+n
-         UMUo4V/JgYe4Za1zs45PoQnm0h8bH6oHoi49Q=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mt7RscZq1TJMb1tWvWuPIetOt+Q1/nE1Zx/gXdxvawg=;
+        b=q23x4gWkEKgxG/i1z9YbYrVkvHDm9PQY1dG75p9Cq/6mHNPUrcfflET/MB6PpKClEG
+         nbkV2v9/v5x4Q6IvTO67PADDQYppWAbpP3oqjBUUc/eLhCHVZkTx4APdBzBvfT49KnS1
+         MXoHMXH+BMegcK10pJS4MuRM7B0ybit5zVlcjqkneRyDJU0/7KTQhJ+JXJB43YBOQ9gc
+         p8Hwv+oNtkdlkpLvDz2yask5Vrb9t3aQ6jRrmrCF8A0rYiXekArNovlbNq/GGvMGvAwo
+         4sTSY329v9qgn7X919roRObd1DpAStVWsLbEF3Bl0QJ1sqivhjCKUNN3i6J7D7OXFnwG
+         35UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1r9nQdWAuC8N3L1BUVcnwpS3LGqvBj+wWQMPJCqLtvo=;
-        b=lKiTMFkojnNmNVI7gDT0EMdNkKe9atHV1PNKIeOg7jDZkto7BFO/Od+f38xJnvKrjc
-         Klf/mDbNdTht5rJiJrSuPuhIiPrhu2ApmRdjb8gmGN/kPSBuQ3pA90h+eT4gQUSeugNS
-         MzRvDLI/LGHL6HUGu32/pIPQLefW8kL6bk7B/is2Vo6v6mcP/0AmIvyCVJPNtEKLl+YE
-         LUv9RtnwmSH0XgdL5O0I7jEzNcMHkjzntjvR3eDG12AJkLNGPGvIJoqVOWE5GKO8g29E
-         /Fd9XVtEHbK7K0MqYLLWInaSzNwNWnDaA9iLdE+p7CpNasOBtCRTBoxRIy+hkb9b8CUe
-         Ar0w==
-X-Gm-Message-State: AOAM531w6NA35iMhVx32qi3G721irZWnfLTJ1lZ9Qm/5Djk7JmAfreIb
-        DZ7pt4wTqJUNUwnBTBynvqXnIep/3Kc4czaqTuvnBTUFHe6JjPMnT8z6WKHzbuLzumC/moE+PWh
-        5e7VupZ+GJJUPhAJ3g2jPrHrWPu79DEbtXktQFSHPCp01zLHz92pqoJKMNTfaTFnFoMr38xdfjN
-        J/
-X-Google-Smtp-Source: ABdhPJxIvXroKVjZ+FrZo4o+fwxqV9fn7/P/NvJsQUHYWvoNqS6xwkV4tFfScORJId5peKPFn3S9WQ==
-X-Received: by 2002:a1c:32c4:: with SMTP id y187mr382139wmy.79.1594058629837;
-        Mon, 06 Jul 2020 11:03:49 -0700 (PDT)
-Received: from [192.168.1.201] (d162-156-48-252.bchsia.telus.net. [162.156.48.252])
-        by smtp.gmail.com with ESMTPSA id x5sm314958wmg.2.2020.07.06.11.03.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 11:03:49 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
- <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
- <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
- <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
- <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
- <cd40f919-f8d9-cde4-6cc5-f523e4973c3b@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <b0f14acc-fcb1-9e29-e95a-902640d3dff9@broadcom.com>
-Date:   Mon, 6 Jul 2020 11:03:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mt7RscZq1TJMb1tWvWuPIetOt+Q1/nE1Zx/gXdxvawg=;
+        b=kxt43kbVKUsDgm0T2GKPAvBjrWALfSqP4SXIj27WFoY+xDdPU946v7ayVDd3GHICJ6
+         PpMMbnLoOMQ2OlIFz73sm5jVeii4nLb9runMjHOA/LY/Xtcvxo96QYe1Bbd8WhEq525y
+         zfznRCikFrBjbjoNvXwyYEkCeGg5njADMulxZ35u2GjEEEoaL5KpG4ggwZdYM/NQTNWc
+         suaY6HA+Xa723gnqU5Ig6KVFLBYLUhes6OJfvfV7A9cJLG4VN5Nwvq5fmh0Miq+k6NZK
+         gxPV3Dha+tU6uJVX/Dy7EWs5eeJS3+cDchPpmyOGz89eZAoLjYt0eMoRC1CDa7y49+cX
+         VC5Q==
+X-Gm-Message-State: AOAM530nTeSxXhRjq5uTOXZ90O0cFVRsg9HjGGwnxSTYcNhrQFQY0aSw
+        sjCEnh7OscQT69tHCIAwNXDBeQ==
+X-Google-Smtp-Source: ABdhPJyaUf4iyVeVudOQqfvRRfSSiadh+8eBe/LyFvtUQy7eIyw5mrvdsAsQTwxI347UihI7KpSf3A==
+X-Received: by 2002:aa7:952b:: with SMTP id c11mr18629395pfp.186.1594058679877;
+        Mon, 06 Jul 2020 11:04:39 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id u74sm20051365pgc.58.2020.07.06.11.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 11:04:39 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:04:37 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Deepak Kumar Singh <deesin@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, clew@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 0/4] Signaling api support in glink/rpmsg clients
+Message-ID: <20200706180437.GB614737@xps15>
+References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <cd40f919-f8d9-cde4-6cc5-f523e4973c3b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Deepak,
 
-
-On 6/30/2020 9:44 PM, Florian Fainelli wrote:
+On Fri, Jun 26, 2020 at 08:16:55PM +0530, Deepak Kumar Singh wrote:
+> Change from version 5
+> [V5,4/4] rpmsg: char: Add signal callback and POLLPRI support
+> Updated for sparse warning. Replaced POLLPRI => EPOLLPRI to fix
+> warning.
 > 
+> Change from version 4
+> I am taking over these patches from aneela@codeaurora.org
+> Fixed all the trivial review comments.
 > 
-> On 6/30/2020 9:37 PM, Mark Tomlinson wrote:
->> On Tue, 2020-06-30 at 20:14 -0700, Florian Fainelli wrote:
->>> Sorry, it looks like I made a mistake in my testing (or I was lucky),
->>>> and this patch doesn't fix the issue. What is happening is:
->>>> 1) nsp-pinmux driver is registered (arch_initcall).
->>>> 2) nsp-gpio-a driver is registered (arch_initcall_sync).
->>>> 3) of_platform_default_populate_init() is called (also at level
->>>> arch_initcall_sync), which scans the device tree, adds the nsp-gpio-a
->>>> device, runs its probe, and this returns -EPROBE_DEFER with the error
->>>> message.
->>>> 4) Only now nsp-pinmux device is probed.
->>>>
->>>> Changing the 'arch_initcall_sync' to 'device_initcall' in nsp-gpio-a
->>>> ensures that the pinmux is probed first since
->>>> of_platform_default_populate_init() will be called between the two
->>>> register calls, and the error goes away. Is this change acceptable as a
->>>> solution?
->>>
->>> If probe deferral did not work, certainly but it sounds like this is
->>> being done just for the sake of eliminating a round of probe deferral,
->>> is there a functional problem this is fixing?
->>
->> No, I'm just trying to prevent an "error" message appearing in syslog.
->>
->>>> The actual error message in syslog is:
->>>>
->>>> kern.err kernel: gpiochip_add_data_with_key: GPIOs 480..511
->>>> (18000020.gpio) failed to register, -517
->>>>
->>>> So an end user sees "err" and "failed", and doesn't know what "-517"
->>>> means.
->>>
->>> How about this instead:
->>>
->>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->>> index 4fa075d49fbc..10d9d0c17c9e 100644
->>> --- a/drivers/gpio/gpiolib.c
->>> +++ b/drivers/gpio/gpiolib.c
->>> @@ -1818,9 +1818,10 @@ int gpiochip_add_data_with_key(struct gpio_chip
->>> *gc, void *data,
->>>         ida_simple_remove(&gpio_ida, gdev->id);
->>>  err_free_gdev:
->>>         /* failures here can mean systems won't boot... */
->>> -       pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
->>> -              gdev->base, gdev->base + gdev->ngpio - 1,
->>> -              gc->label ? : "generic", ret);
->>> +       if (ret != -EPROBE_DEFER)
->>> +               pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n",
->>> +                       __func__, gdev->base, gdev->base + gdev->ngpio - 1,
->>> +                       gc->label ? : "generic", ret);
->>>         kfree(gdev);
->>>         return ret;
->>>  }
->>>
->> That was one of my thoughts too. I found someone had tried that
->> earlier, but it was rejected:
->>
->>
->> https://patchwork.ozlabs.org/project/linux-gpio/patch/1516566774-1786-1-git-send-email-david@lechnology.com/
+> Signal conversion to and from native signal as done in patch V4,2/4
+> is intentional.
 > 
-> clk or reset APIs do not complain loudly on EPROBE_DEFER, it seems to me
-> that GPIO should follow here. Also, it does look like Linus was in
-> agreement in the end, not sure why it was not applied though.
+> Arun Kumar Neelakantam (3):
+>   rpmsg: glink: Add support to handle signals command
+>   rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
+>   rpmsg: char: Add signal callback and POLLPRI support
 > 
+> Deepak Kumar Singh (1):
+>   rpmsg: core: Add signal API support
 
-I think either we silently drop this or we explicitly make it obvious
-that it failed due to EPROBE_DEFER. Both seem acceptable to me.
+I'm confused here - V5 (or what I think it is) was sent out on June 24th without
+a cover letter.  This set has a cover letter but it is labeled V5.  So is this
+the cover letter that should have been sent out on the 24th and the content
+herein relevent to that set?  Or is it accurate and the label on the cover
+letter of this set is wrong and should have been V6?
 
-Thanks!
+I have little confidence in both sets and as such won't be reviewing them.
+Please send a new revision that is properly labeled.
 
-Ray
+Thanks,
+Mathieu   
+
+
+> 
+>  drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
+>  drivers/rpmsg/rpmsg_char.c        |  76 ++++++++++++++++++++++-
+>  drivers/rpmsg/rpmsg_core.c        |  40 ++++++++++++
+>  drivers/rpmsg/rpmsg_internal.h    |   5 ++
+>  include/linux/rpmsg.h             |  27 ++++++++
+>  5 files changed, 270 insertions(+), 3 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
