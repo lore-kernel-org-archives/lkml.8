@@ -2,126 +2,122 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA04C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0289020672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2B420702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OK6kB8Q0"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PI1rsLYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgGFR5l (ORCPT
+        id S1729793AbgGFR5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729732AbgGFR5h (ORCPT
+        Mon, 6 Jul 2020 13:57:51 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:44823 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbgGFR5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:57:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1515C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 10:57:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so42121911wrw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=oTojjIFZzclanf7cLLuaYi/sgvjqGLuwhbXDv27Czb8=;
-        b=OK6kB8Q0qPe86xIOUaHuGwfdS2zOPVnI1nFVI5idSlyGCaQ0kwkLr5OQ3iqaCDrVgp
-         bSOqJkCjp0ec0QS590uLshH3kIWpHf1xbHU4eFZSHTSz2iazne518HLTBvJhqDK56dUJ
-         VfvvqQ499iFKyO7u5d9hnovYGKCEt81Di/gCvWZ/6DEke38vxLl9lqh8sFCeusLjL1Ml
-         2qR161f3NJOvDObqFI6szLGqFQi4ZzNG3O+MRRM8N5BRRw06NsO/2NWwp4otwehlAyaq
-         GjgvDbYRQdLgMd7gAaG1L8Juu1JYUeppORL67+udHl59TzHLYTVJB6lnzxfeszfPKiFn
-         3hag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=oTojjIFZzclanf7cLLuaYi/sgvjqGLuwhbXDv27Czb8=;
-        b=aJbAI+gJPsXjo4dM+rGojd4K0a4IRncSlrHIeu2B5azhZZCk2mKQSqL8VAI4rst3Sg
-         b+OVhPCFPjtd8GsNUOGtDAfImo0iRo8muKR43HSUQtOSxwOOpLO7hf+Sd6s7BUmsQBeI
-         /9hnptU47mNvWXYMEEJhpA6nMDJ2c49QYvi0Th47AyDcSKwp/3O84me8JSdMTiWdAC/W
-         kShkotdHS/0eBoUC2/cAwOpEJUgcZ/f8XBo2VyO29jrN/YSldV0eGYrs6LbxuqbBT1hT
-         ApPWvfPRjXGZXMehN7pGspRiBwUMKgPjQ8XOBVfZSaM4PHHfXrnIKn0R44+zaLtpv3YI
-         s/mw==
-X-Gm-Message-State: AOAM532xd1dXs/hZsyp0AY6HvLZySShh2ONYd2qyHSIfkkTj/ig3hj9H
-        ehbUFp14XC+sPGTbMJPQl8AjvQ==
-X-Google-Smtp-Source: ABdhPJxS0ATrWjLo9sj+XUyy8koys1QP+PJvoeoFNUvPJiTVFA4tFZil89Y+Fn6a3oT6x5JiwFKCRQ==
-X-Received: by 2002:adf:b198:: with SMTP id q24mr19941076wra.335.1594058255478;
-        Mon, 06 Jul 2020 10:57:35 -0700 (PDT)
-Received: from dell ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id r8sm24689046wrp.40.2020.07.06.10.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 10:57:34 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 18:57:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Yinghai Lu <yhlu.kernel@gmail.com>,
-        Jason Wessel <jason.wessel@windriver.com>
-Subject: Re: [PATCH 25/32] usb: early: ehci-dbgp: Remove set but never
- checked variable 'ret'
-Message-ID: <20200706175733.GB3500@dell>
-References: <20200706133341.476881-1-lee.jones@linaro.org>
- <20200706133341.476881-26-lee.jones@linaro.org>
- <87imf0mvk7.fsf@x220.int.ebiederm.org>
+        Mon, 6 Jul 2020 13:57:40 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A1DB423076;
+        Mon,  6 Jul 2020 19:57:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594058258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uaJTib0El6RuCqem4ff+qm2uIBnrMR78QamdeJxxetg=;
+        b=PI1rsLYwJehgdpqwbXSJvkqoSb4GMDxGR1x7/ZwKjFv8gBuqW1sw/K2jh96pWheyBUBBrg
+        ZEkesL1gLIHlvrwSJRW81iIJ2x8Vqqq7vTbQM+KNsdKlE9jHY2pU4/gftpIl3hW3d0xua2
+        dNR72mAuUB33kOJTaVcn40vms8emoE8=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
+Date:   Mon,  6 Jul 2020 19:53:52 +0200
+Message-Id: <20200706175353.16404-13-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
+References: <20200706175353.16404-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87imf0mvk7.fsf@x220.int.ebiederm.org>
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Jul 2020, Eric W. Biederman wrote:
+Now that we have support for GPIO lines of the SMARC connector, enable
+LED support on the KBox A-230-LS. There are two LEDs without fixed
+functions, one is yellow and one is green. Unfortunately, it is just one
+multi-color LED, thus while it is possible to enable both at the same
+time it is hard to tell the difference between "yellow only" and "yellow
+and green".
 
-> Lee Jones <lee.jones@linaro.org> writes:
-> 
-> > 'ret' hasn't  been checked since the driver's inception in 2009.
-> 
-> Minor quibble the inception was in 5c05917e7fe3 ("x86: usb debug port
-> early console, v4") in July of 2008.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+Changes since v4:
+ - none
 
-I'm only going back as far as the inception of ehci-dbgp.c.
+Changes since v3:
+ - see cover letter
 
-> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts          | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Great, thanks.
-
-> > Fixes the following W=1 kernel build warning(s):
-> >
-> >  drivers/usb/early/ehci-dbgp.c: In function ‘early_dbgp_write’:
-> >  drivers/usb/early/ehci-dbgp.c:915:13: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-> >  915 | int chunk, ret;
-> >  | ^~~
-> >
-> > Cc: Sumit Garg <sumit.garg@linaro.org>
-> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> > Cc: Yinghai Lu <yhlu.kernel@gmail.com>
-> > Cc: Jason Wessel <jason.wessel@windriver.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/usb/early/ehci-dbgp.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
+index 4b4cc6a1573d..49cf4fe05c80 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
+@@ -16,6 +16,20 @@
+ 	model = "Kontron KBox A-230-LS";
+ 	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var4",
+ 		     "kontron,sl28", "fsl,ls1028a";
++
++	leds {
++		compatible = "gpio-leds";
++
++		user_yellow {
++			label = "s1914:yellow:user";
++			gpios = <&sl28cpld_gpio0 0 0>;
++		};
++
++		user_green {
++			label = "s1914:green:user";
++			gpios = <&sl28cpld_gpio1 3 0>;
++		};
++	};
+ };
+ 
+ &enetc_mdio_pf3 {
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
