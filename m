@@ -2,137 +2,104 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A203EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139BF2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C4820720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594078899;
-	bh=yuEVLSFWzFuIU16JSRCjoy4DCC3vZQD9mtnpRVx+k3Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mRZLxq5eNcTnMSPps1wzny25IXURHUU7tJisbTxbZcL9pVWcZAnjP35IyvsttIn3q
-	 m6GD1gekfpk7U0/k99Sax4UaB2zrg8jaaCEUx8z3S5i7jbiaD5PrA8JumO7H+XKWKx
-	 MX6puDxZ//bhr4MJugoQSTbJL6UPXceF/0iA6/kU=
+	s=default; t=1594078943;
+	bh=t/nO/7PyzLhpBEiwo9upsXorfRn3O1Jz/2RyIvBEB5I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ExIrJrB6dUv2XgX2Epcw5iqHiN0Mmvr4AaqqUbMCHjGI7LQzr+mx5aelBNrMfkw+J
+	 +iPI0imBqh4qAYpcBSJ5wIp4ske5Z/u9ayKaFy7WotRwbwxidv4qkCHrbzO1H3+1FJ
+	 lwDj9sWK9VgF6rnX1UfNbtj0AduIcnYZ6s0FwzRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGFXli (ORCPT
+        id S1727928AbgGFXmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 19:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbgGFXlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:41:37 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        id S1726280AbgGFXmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:42:21 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9A620720;
-        Mon,  6 Jul 2020 23:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1FD2206E9;
+        Mon,  6 Jul 2020 23:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594078897;
-        bh=yuEVLSFWzFuIU16JSRCjoy4DCC3vZQD9mtnpRVx+k3Q=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kH6JpuxO4VcDqDcyojdQfYGTHKg4PNOiHrbQiENKeoPSy0ZVSRSUp36IctVlrxCfg
-         Py5tnQ3aqNWzAsUWq7cSTJZ9xs4GrC7bOF7ScnS6uyF1RxsPRZrbPsF6yIEB4yWmBX
-         Q00WDW1a9kdhgxJoHkm8GLzgTCfs57TBHtdBC46w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F16FE3522637; Mon,  6 Jul 2020 16:41:36 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 16:41:36 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        s=default; t=1594078941;
+        bh=t/nO/7PyzLhpBEiwo9upsXorfRn3O1Jz/2RyIvBEB5I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gf08immkIY0zN6dKfIodzmcYTFcyBsLPgNlF2Zxveg00m2kfu570Aa8vSheBrB4qA
+         9sJr1So6ZaP888dMXSbmFZZBkTvpsdR/c4hRv1ONC3MVK9hG57f452K2n3Nr1i0YBs
+         atWUXl54/p//1sVSBkLN7G/yaHRCgNxao2HHpZ5I=
+Date:   Mon, 6 Jul 2020 16:42:20 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Andi Kleen <andi.kleen@intel.com>
+Cc:     Feng Tang <feng.tang@intel.com>, Qian Cai <cai@lca.pw>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
         Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200706234136.GS9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703144228.GF9247@paulmck-ThinkPad-P72>
- <20200706162633.GA13288@paulmck-ThinkPad-P72>
- <20200706182926.GH4800@hirez.programming.kicks-ass.net>
- <20200706183933.GE9247@paulmck-ThinkPad-P72>
- <20200706194012.GA5523@worktop.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706194012.GA5523@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
+        dave.hansen@intel.com, ying.huang@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-Id: <20200706164220.cc73e53c7f1b285910c82807@linux-foundation.org>
+In-Reply-To: <20200706133434.GA3483883@tassilo.jf.intel.com>
+References: <20200705044454.GA90533@shbuild999.sh.intel.com>
+        <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
+        <20200705125854.GA66252@shbuild999.sh.intel.com>
+        <20200705155232.GA608@lca.pw>
+        <20200706014313.GB66252@shbuild999.sh.intel.com>
+        <20200706023614.GA1231@lca.pw>
+        <20200706132443.GA34488@shbuild999.sh.intel.com>
+        <20200706133434.GA3483883@tassilo.jf.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:40:12PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 06, 2020 at 11:39:33AM -0700, Paul E. McKenney wrote:
-> > On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
-> > > On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
-> 
-> > > If they do not consider their Linux OS running correctly :-)
-> > 
-> > Many of them really do not care at all.  In fact, some would consider
-> > Linux failing to run as an added bonus.
-> 
-> This I think is why we have compiler people in the thread that care a
-> lot more.
+On Mon, 6 Jul 2020 06:34:34 -0700 Andi Kleen <andi.kleen@intel.com> wrote:
 
-Here is hoping! ;-)
+> >  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> > -	if (ret == 0 && write)
+> > +	if (ret == 0 && write) {
+> > +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
+> > +			schedule_on_each_cpu(sync_overcommit_as);
+> 
+> The schedule_on_each_cpu is not atomic, so the problem could still happen
+> in that window.
+> 
+> I think it may be ok if it eventually resolves, but certainly needs
+> a comment explaining it.
 
-> > > > Nevertheless, yes, control dependencies also need attention.
-> > > 
-> > > Today I added one more \o/
-> > 
-> > Just make sure you continually check to make sure that compilers
-> > don't break it, along with the others you have added.  ;-)
-> 
-> There's:
-> 
-> kernel/locking/mcs_spinlock.h:  smp_cond_load_acquire(l, VAL);                          \
-> kernel/sched/core.c:                    smp_cond_load_acquire(&p->on_cpu, !VAL);
-> kernel/smp.c:   smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
-> 
-> arch/x86/kernel/alternative.c:          atomic_cond_read_acquire(&desc.refs, !VAL);
-> kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-> kernel/locking/qrwlock.c:       atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-> kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
-> kernel/locking/qspinlock.c:             atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_MASK));
-> kernel/locking/qspinlock.c:     val = atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK));
-> 
-> include/linux/refcount.h:               smp_acquire__after_ctrl_dep();
-> ipc/mqueue.c:                   smp_acquire__after_ctrl_dep();
-> ipc/msg.c:                      smp_acquire__after_ctrl_dep();
-> ipc/sem.c:                      smp_acquire__after_ctrl_dep();
-> kernel/locking/rwsem.c:                 smp_acquire__after_ctrl_dep();
-> kernel/sched/core.c:    smp_acquire__after_ctrl_dep();
-> 
-> kernel/events/ring_buffer.c:__perf_output_begin()
-> 
-> And I'm fairly sure I'm forgetting some... One could argue there's too
-> many of them to check already.
-> 
-> Both GCC and CLANG had better think about it.
+It sure does.
 
-That would be good!
+The new exported-to-everything percpu_counter_sync() should have full
+formal documentation as well, please.
 
-I won't list the number of address/data dependencies given that there
-are well over a thousand of them.
-
-							Thanx, Paul
+> Can you do some stress testing toggling the
+> policy all the time on different CPUs and running the test on
+> other CPUs and see if the test fails?
+> 
+> The other alternative would be to define some intermediate state
+> for the sysctl variable and only switch to never once the schedule_on_each_cpu
+> returned. But that's more complexity.
+> 
+> 
+> -Andi
