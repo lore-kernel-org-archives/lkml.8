@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78889C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51EAE20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663A720674
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="gegNJQ/C"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ZnsptEwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGFVy4 (ORCPT
+        id S1727123AbgGFVyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 17:54:56 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:29568 "EHLO
+        Mon, 6 Jul 2020 17:54:37 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:26499 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbgGFVyi (ORCPT
+        with ESMTP id S1726918AbgGFVyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 17:54:38 -0400
+        Mon, 6 Jul 2020 17:54:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
         h=from:subject:in-reply-to:references:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=Xti8MeJ8Buq5Qftfoor5F4zHqB4uXzWh3iX3dz9i1n4=;
-        b=gegNJQ/Cza48PHNmiYol3bMb+VwjtoSy8ATO5peZAUPptJePkso14bAVCxgL0ato3Lkx
-        pSXIu3UiEpUw5Kejcn/EsclTy+rKbN/VF6Z0t6fnQg7Td+f4gzleRFwmWbw7tR8018x8lp
-        k7/SIprTDr9p0n6hdCq4ItuThlP7SeJyE=
-Received: by filterdrecv-p3iad2-5b55dcd864-hp5f5 with SMTP id filterdrecv-p3iad2-5b55dcd864-hp5f5-19-5F039D9D-4
-        2020-07-06 21:54:37.156872496 +0000 UTC m=+881115.200300484
+        s=001; bh=cwF57Yd3nZtjPAkGbWz1sj11wL8vtzFB8jLVo6QFcIM=;
+        b=ZnsptEwt5pk9pQUUQHZnrPCxrlJvV+eFjTyh1ZD2Km2EfnA6etRAM9ci095i2iX274kw
+        JqmldnNPnoJ7rpPoqky+64n47oh5tPjVWsaAyp9ldu7XMImg0Nslxaz/zTHbmGZQ+OrOel
+        Yiwo0ePnEgtTrKU3udyk36z/3+Y5yRq6M=
+Received: by filterdrecv-p3iad2-5b55dcd864-n86tl with SMTP id filterdrecv-p3iad2-5b55dcd864-n86tl-21-5F039D9A-2C
+        2020-07-06 21:54:34.700927518 +0000 UTC m=+881118.466369360
 Received: from bionic.localdomain (unknown)
         by ismtpd0008p1lon1.sendgrid.net (SG) with ESMTP
-        id juJseSgoSt6z8Gm-IMNBng
-        Mon, 06 Jul 2020 21:54:36.786 +0000 (UTC)
+        id b1_Boy5iS3SQY-lAi3uGrA
+        Mon, 06 Jul 2020 21:54:34.331 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 09/12] media: rkvdec: Extract rkvdec_fill_decoded_pixfmt
- helper method
-Date:   Mon, 06 Jul 2020 21:54:37 +0000 (UTC)
-Message-Id: <20200706215430.22859-10-jonas@kwiboo.se>
+Subject: [PATCH v2 03/12] media: rkvdec: h264: Validate and use pic width and
+ height in mbs
+Date:   Mon, 06 Jul 2020 21:54:34 +0000 (UTC)
+Message-Id: <20200706215430.22859-4-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200706215430.22859-1-jonas@kwiboo.se>
 References: <20200701215616.30874-1-jonas@kwiboo.se>
  <20200706215430.22859-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hzopxZlLT9tDvbnpZ?=
- =?us-ascii?Q?je3k9acDUv2WkNylHW0j6kACYxx49WD22f7CERO?=
- =?us-ascii?Q?r37QhI9pBQcxUTEwTpXNASxS4ZrEhabG7RlxksF?=
- =?us-ascii?Q?qnqB1vA9G2CIuYJKjJLWkNBb8VWY=2Fo99DrAuBzg?=
- =?us-ascii?Q?LWKulR3hyQm233RVvE41F6OCUSBGnVp5kAJ+JN5?=
- =?us-ascii?Q?2I3G26peScnHS1M0XK6ng=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h9qXHT5HF1Lnoqt7i?=
+ =?us-ascii?Q?s33+HITW1dRwIOmFbYeLljfuRRo1rVg5ZzV=2Ft65?=
+ =?us-ascii?Q?2lKedAkyvqU9lOpy+i46k2Wq6oCefRrXMDergI5?=
+ =?us-ascii?Q?5JKr4PoNa+aSZf6iUdIOF1WFU9Gh3Vje=2FpCSYcg?=
+ =?us-ascii?Q?t1WlmSMswsPgpZO1AcaXUetZD7l8pr3nhfFtiaf?=
+ =?us-ascii?Q?4fBkRWqdEglt6oppgr7BQ=3D=3D?=
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
@@ -67,71 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This extract setting decoded pixfmt into a helper method, current code is
-replaced with a call to the new helper method.
+The width and height in mbs is currently configured based on OUTPUT buffer
+resolution, this works for frame pictures but can cause issues for field
+pictures.
 
-The helper method is also called from a new function in next patch.
+When frame_mbs_only_flag is 0 the height in mbs should be height of
+the field instead of height of frame.
+
+Validate pic_width_in_mbs_minus1 and pic_height_in_map_units_minus1
+against OUTPUT buffer resolution and use these values to configure HW.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
 Changes in v2:
-- New patch
+- Validate against coded_fmt instead of decoded_fmt
+- Validation moved to rkvdec_try_ctrl
 ---
- drivers/staging/media/rkvdec/rkvdec.c | 29 ++++++++++++++-------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec-h264.c |  4 ++--
+ drivers/staging/media/rkvdec/rkvdec.c      | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index f0cfed84d60d..3498e9eec3d8 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -672,8 +672,8 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
+ 		  LOG2_MAX_PIC_ORDER_CNT_LSB_MINUS4);
+ 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_DELTA_PIC_ORDER_ALWAYS_ZERO),
+ 		  DELTA_PIC_ORDER_ALWAYS_ZERO_FLAG);
+-	WRITE_PPS(DIV_ROUND_UP(ctx->coded_fmt.fmt.pix_mp.width, 16), PIC_WIDTH_IN_MBS);
+-	WRITE_PPS(DIV_ROUND_UP(ctx->coded_fmt.fmt.pix_mp.height, 16), PIC_HEIGHT_IN_MBS);
++	WRITE_PPS(sps->pic_width_in_mbs_minus1 + 1, PIC_WIDTH_IN_MBS);
++	WRITE_PPS(sps->pic_height_in_map_units_minus1 + 1, PIC_HEIGHT_IN_MBS);
+ 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY),
+ 		  FRAME_MBS_ONLY_FLAG);
+ 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD),
 diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 7a9f78bc0a55..911132be6d50 100644
+index 4ab8f7e0566b..7a9f78bc0a55 100644
 --- a/drivers/staging/media/rkvdec/rkvdec.c
 +++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -27,6 +27,17 @@
- #include "rkvdec.h"
- #include "rkvdec-regs.h"
+@@ -29,8 +29,11 @@
  
-+static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
-+				       struct v4l2_pix_format_mplane *pix_mp)
-+{
-+	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
-+			    pix_mp->width, pix_mp->height);
-+	pix_mp->plane_fmt[0].sizeimage += 128 *
-+		DIV_ROUND_UP(pix_mp->width, 16) *
-+		DIV_ROUND_UP(pix_mp->height, 16);
-+	pix_mp->field = V4L2_FIELD_NONE;
-+}
-+
  static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
  {
- 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-@@ -179,13 +190,9 @@ static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
- 
- 	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
- 	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
--	v4l2_fill_pixfmt_mp(&f->fmt.pix_mp,
--			    ctx->coded_fmt_desc->decoded_fmts[0],
--			    ctx->coded_fmt.fmt.pix_mp.width,
--			    ctx->coded_fmt.fmt.pix_mp.height);
--	f->fmt.pix_mp.plane_fmt[0].sizeimage += 128 *
--		DIV_ROUND_UP(f->fmt.pix_mp.width, 16) *
--		DIV_ROUND_UP(f->fmt.pix_mp.height, 16);
-+	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
-+	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
-+	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
- }
- 
- static int rkvdec_enum_framesizes(struct file *file, void *priv,
-@@ -251,13 +258,7 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
- 				       &pix_mp->height,
- 				       &coded_desc->frmsize);
- 
--	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
--			    pix_mp->width, pix_mp->height);
--	pix_mp->plane_fmt[0].sizeimage +=
--		128 *
--		DIV_ROUND_UP(pix_mp->width, 16) *
--		DIV_ROUND_UP(pix_mp->height, 16);
--	pix_mp->field = V4L2_FIELD_NONE;
-+	rkvdec_fill_decoded_pixfmt(ctx, pix_mp);
- 
++	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
++
+ 	if (ctrl->id == V4L2_CID_MPEG_VIDEO_H264_SPS) {
+ 		const struct v4l2_ctrl_h264_sps *sps = ctrl->p_new.p;
++		unsigned int width, height;
+ 		/*
+ 		 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
+ 		 * but it's currently broken in the driver.
+@@ -45,6 +48,13 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+ 		if (sps->bit_depth_luma_minus8 != 0)
+ 			/* Only 8-bit is supported */
+ 			return -EINVAL;
++
++		width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
++		height = (sps->pic_height_in_map_units_minus1 + 1) * 16;
++
++		if (width > ctx->coded_fmt.fmt.pix_mp.width ||
++		    height > ctx->coded_fmt.fmt.pix_mp.height)
++			return -EINVAL;
+ 	}
  	return 0;
  }
 -- 
