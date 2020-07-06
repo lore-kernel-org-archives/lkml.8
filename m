@@ -2,150 +2,102 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D05D20771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F7C2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOdg5H2E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKYPns3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgGFEg3 (ORCPT
+        id S1728839AbgGFEgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49206 "EHLO
+        Mon, 6 Jul 2020 00:36:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgGFEg2 (ORCPT
+        with ESMTP id S1728466AbgGFEgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:36:28 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2958FC061794;
-        Sun,  5 Jul 2020 21:36:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so37800804wmh.4;
-        Sun, 05 Jul 2020 21:36:28 -0700 (PDT)
+        Mon, 6 Jul 2020 00:36:49 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F05C061794;
+        Sun,  5 Jul 2020 21:36:48 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i25so38074342iog.0;
+        Sun, 05 Jul 2020 21:36:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cAuLxDL8CkBp1tpBnhqClilHhcD0O782TDI+bdg1kNU=;
-        b=XOdg5H2E4lNGYFhYc0/rxP9u8/fuTv6VeFja8Noz+koduO9ASBPQiUJIZhJUoe3FZ1
-         5j6pJEMPoDcUJa4a693ePzR0S0bWCuP+okHF201wWOQJPeFXc19q1Wjad8zvFortsca4
-         BAU2cWVym6HmdO3WF6QoeaegeTIDsaaabWgHbqVLzx2BEzkwec86jclgPu2E2A4yUupb
-         d2wbC887pQ79Xz0sn+vujqemnZPZJNUPEuhO9Ih5S3OuA12J314AIXAeIrWLtZfjUxBp
-         DPfOl5ls1Z513+Q9hqkmMlLQbBDtAUtP8bHoauVyDliR6Voin8q9hhSW7niY5xE76rE4
-         BlLg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1wlXgxNX6Ukh/qiixaaDUJ5g+jEymKNQEKfVHnNZOhk=;
+        b=WKYPns3LbcL1OTp5M394z1f6iMzxxGo8ZwKAScrHQgZ2R91UJP7hrAcchMKYW+rQ8S
+         iB7n8AvymbXR/fOaU9uOxpHftwgglC7ngUN7VSy1ejACqm8CNRSumhplDqpnM5CxYigj
+         gUYrBBYc4KnywEm3RgTYE+w0mCylkFmbYLuCpK1gZRJ15DbqrL+7y+wDxX6b/VXTC4d6
+         XtqLmc+H1zIZ4g1fayHbRPmLegEwqhRSEHbve8eO7CjatLit8XiDAZkUapcKWKWnxTpf
+         hIMaayvSMqMzsaTYAzKoY/Duy9ho0BQdYiistGkP8zF3c3TOE38Cr4opN01wYAtU/VIc
+         mpCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cAuLxDL8CkBp1tpBnhqClilHhcD0O782TDI+bdg1kNU=;
-        b=bWze14XuD7ETshOYdBvGCLIa1YxkZSVULXH4g0ZPhOoVFVlIIGX2rZNfhxr10gJO+C
-         Yylr+1/UGO4I9yUREDNI0/yJVaF0McGyVAy4zvIg3rJdfOgTVY3EZp+ENe1C0nZtldha
-         mP5I01QsU5r9r1brjioQPfO3/IMcjv2FbyMi1h8l+1y9YCVsTpB7XoFue2O1v1SMy81y
-         tmWPdm6C1b2GhYEqQ+pOjI3syf7VyFwFSIi6h00NgBT1T9WcwvitoV/M1Yzb/ipdA7RQ
-         99CshD/SmGM0vAC0dBFObX8rWeAVTO39BGM7Ql//pORd0Ca2+VvytOg2TXxuSrSfN8uV
-         2VlQ==
-X-Gm-Message-State: AOAM531gYmRqXO1FWa2m6dHABgJJKuc7cxsQNXfTC6osxeADTtsnScd7
-        LfM9OnQ+9vVeBPCXGPuqoEc=
-X-Google-Smtp-Source: ABdhPJw3xwCHjl66IDwjNwnrVaS+sYKKRxEjT29tJBVhRnVy0iHX8mmwPpg7n6zCTYEyHFzW18ALwQ==
-X-Received: by 2002:a7b:c44d:: with SMTP id l13mr49403893wmi.66.1594010186996;
-        Sun, 05 Jul 2020 21:36:26 -0700 (PDT)
-Received: from bobo.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id r10sm22202309wrm.17.2020.07.05.21.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 21:36:26 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v3 6/6] powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the lock hint
-Date:   Mon,  6 Jul 2020 14:35:40 +1000
-Message-Id: <20200706043540.1563616-7-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200706043540.1563616-1-npiggin@gmail.com>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1wlXgxNX6Ukh/qiixaaDUJ5g+jEymKNQEKfVHnNZOhk=;
+        b=kbIuosFc2SEH/EPJhZJ67tQgNGzEngaGnW2COLZj5OJ5pkD5RdCNaZ9xGD2OlGGWjv
+         9aqj/IJnyIgYP+Eyapyixu5TjPqRwlV50cAJGcynRh8BOZT1IOKScjbXPho3qXTPkap9
+         sxgRsaR3dH5rvf/rwQ8L78ZLhjMjvEhv89Bo/BVnXl7V5vuAwHp1SbCH+lJ5ST3if2zw
+         hxithMbBJaAtj0QtvBU7f607Veoq5Dq48/KNvPPIARC7fiBI06zOr2DEGs/MzZvLhofh
+         06qiO0x0TXNlpkh8g2hJGZ9Qls9wHqVbVwrXSwZAWxDbsf2iW9kuj3OG6G2xf4wOLQOh
+         m2YQ==
+X-Gm-Message-State: AOAM533JUN7JtrTZkG53Tt2M8mAm/QsXCHOlMpkVSb1EBzgaFUTNyamA
+        rGc7BDPxwmArBFOymEyJ0pbwg0hKs0DvOj3kIvc=
+X-Google-Smtp-Source: ABdhPJzHThS8tRGDZMm4VWWwx7UJh8NaEMFXkXErWwarLP//8jm7j2BkmjFBMwEhnILHvsf+I/9fj8ziPNEHQaNcHdI=
+X-Received: by 2002:a02:908f:: with SMTP id x15mr49850033jaf.12.1594010208288;
+ Sun, 05 Jul 2020 21:36:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+In-Reply-To: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sun, 5 Jul 2020 23:36:37 -0500
+Message-ID: <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This brings the behaviour of the uncontended fast path back to
-roughly equivalent to simple spinlocks -- a single atomic op with
-lock hint.
+On Tue, Jun 16, 2020 at 10:56 AM Daniele Alessandrelli
+<daniele.alessandrelli@linux.intel.com> wrote:
+>
+> Hi,
+>
+> This patch-set adds initial support for a new Intel Movidius SoC code-named
+> Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel Movidius VPU.
+>
+> This initial patch-set enables only the minimal set of components required to
+> make the Keem Bay EVM board boot into initramfs.
+>
+> Brief summary of the patch-set:
+> * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to enable SCMI in
+>   Keem Bay)
+> * Patch 3 adds the ARCH_KEEMBAY config option
+> * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay EVM
+>   (together with information about the SoC maintainers)
+>
+Please break this into two patchsets - first enabling platform support
+and second adding mailbox support.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/include/asm/atomic.h    | 28 ++++++++++++++++++++++++++++
- arch/powerpc/include/asm/qspinlock.h |  2 +-
- 2 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
-index 498785ffc25f..f6a3d145ffb7 100644
---- a/arch/powerpc/include/asm/atomic.h
-+++ b/arch/powerpc/include/asm/atomic.h
-@@ -193,6 +193,34 @@ static __inline__ int atomic_dec_return_relaxed(atomic_t *v)
- #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
- #define atomic_xchg_relaxed(v, new) xchg_relaxed(&((v)->counter), (new))
- 
-+/*
-+ * Don't want to override the generic atomic_try_cmpxchg_acquire, because
-+ * we add a lock hint to the lwarx, which may not be wanted for the
-+ * _acquire case (and is not used by the other _acquire variants so it
-+ * would be a surprise).
-+ */
-+static __always_inline bool
-+atomic_try_cmpxchg_lock(atomic_t *v, int *old, int new)
-+{
-+	int r, o = *old;
-+
-+	__asm__ __volatile__ (
-+"1:\t"	PPC_LWARX(%0,0,%2,1) "	# atomic_try_cmpxchg_acquire	\n"
-+"	cmpw	0,%0,%3							\n"
-+"	bne-	2f							\n"
-+"	stwcx.	%4,0,%2							\n"
-+"	bne-	1b							\n"
-+"\t"	PPC_ACQUIRE_BARRIER "						\n"
-+"2:									\n"
-+	: "=&r" (r), "+m" (v->counter)
-+	: "r" (&v->counter), "r" (o), "r" (new)
-+	: "cr0", "memory");
-+
-+	if (unlikely(r != o))
-+		*old = r;
-+	return likely(r == o);
-+}
-+
- /**
-  * atomic_fetch_add_unless - add unless the number is a given value
-  * @v: pointer of type atomic_t
-diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
-index f5066f00a08c..b752d34517b3 100644
---- a/arch/powerpc/include/asm/qspinlock.h
-+++ b/arch/powerpc/include/asm/qspinlock.h
-@@ -37,7 +37,7 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
- {
- 	u32 val = 0;
- 
--	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL)))
-+	if (likely(atomic_try_cmpxchg_lock(&lock->val, &val, _Q_LOCKED_VAL)))
- 		return;
- 
- 	queued_spin_lock_slowpath(lock, val);
--- 
-2.23.0
-
+thanks.
