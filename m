@@ -2,103 +2,119 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5906EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ED9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43485206DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D80206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgGFI4u (ORCPT
+        id S1728672AbgGFI4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 Jul 2020 04:56:52 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:57602 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbgGFI4u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 04:56:50 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47850 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728135AbgGFI4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:56:49 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj99B5wJf_pVQAA--.131S3;
-        Mon, 06 Jul 2020 16:56:34 +0800 (CST)
-Subject: Re: [PATCH] watchdog: bcm_kona_wdt: Use correct return value for
- bcm_kona_wdt_probe()
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-References: <1590391864-308-1-git-send-email-yangtiezhu@loongson.cn>
- <99e82049-2d99-9a8e-4023-96f585b47e30@roeck-us.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <19929e73-253b-7d29-b8f8-365266d88a5f@loongson.cn>
-Date:   Mon, 6 Jul 2020 16:56:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+X-Greylist: delayed 475 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jul 2020 04:56:47 EDT
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id E636372CC6C;
+        Mon,  6 Jul 2020 11:48:50 +0300 (MSK)
+Received: by imap.altlinux.org (Postfix, from userid 705)
+        id B3DAB4A4AEF; Mon,  6 Jul 2020 11:48:50 +0300 (MSK)
+Date:   Mon, 6 Jul 2020 11:48:50 +0300
+From:   Michael Shigorin <mike@altlinux.org>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] CodingStyle: Inclusive Terminology
+Message-ID: <20200706084850.GT25779@imap.altlinux.org>
 MIME-Version: 1.0
-In-Reply-To: <99e82049-2d99-9a8e-4023-96f585b47e30@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxj99B5wJf_pVQAA--.131S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFy8ArWrWw4kGF4UXr1DJrb_yoWDtwb_Ga
-        12krZ3ury8Wr10vFn0yay5ZwsxtFn8uF1kXw1xKay3X347JryfArW09r1ftw43Ww4Yyrsx
-        AFyDWw4a9rnrGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
-        x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUsF4iUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/25/2020 09:47 PM, Guenter Roeck wrote:
-> On 5/25/20 12:31 AM, Tiezhu Yang wrote:
->> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
->> to check the return value and return PTR_ERR() if failed.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+	Hi guys,
+do you think playing with words will really get you anywhere
+or help anyone?
 
-Hi,
+> +On the triviality of replacing words
 
-Could you please apply this patch?
+You're not going to make white black, make a native African
+white, or fix age-old crimes by this "triviality".
 
-Thanks,
-Tiezhu
+You're only going to sort of please those who actually
+hate you -- and everyone creative -- because they envy.
+Or rather subdue to their twisted will (what's next on
+the list, cannibalism aproval extorted from you?).
 
->
->> ---
->>   drivers/watchdog/bcm_kona_wdt.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/watchdog/bcm_kona_wdt.c b/drivers/watchdog/bcm_kona_wdt.c
->> index eb850a8..8237c4e 100644
->> --- a/drivers/watchdog/bcm_kona_wdt.c
->> +++ b/drivers/watchdog/bcm_kona_wdt.c
->> @@ -279,7 +279,7 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
->>   
->>   	wdt->base = devm_platform_ioremap_resource(pdev, 0);
->>   	if (IS_ERR(wdt->base))
->> -		return -ENODEV;
->> +		return PTR_ERR(wdt->base);
->>   
->>   	wdt->resolution = SECWDOG_DEFAULT_RESOLUTION;
->>   	ret = bcm_kona_wdt_set_resolution_reg(wdt);
->>
 
+Have you seen this post by a teacher?
+https://www.reddit.com/r/TrueOffMyChest/comments/gulna2/i_used_to_teach_in_a_black_inner_city_school/
+
+Do you believe that a typical late-USSRish quota system
+for those who do not want to learn will help them learn?
+
+I'd rather start with helping those who DO want to learn
+by protecting them from their disruptive environment that
+pulls them back into morass.
+
+
+That whole "inclusivity" agenda is extremely toxic and
+hypocritical -- this king is so naked that it takes a late
+Soviet-style propaganda and party-bashing to make people
+shut up and not even confess that a black criminal's life
+might only be an excuse and not the reason to murder and
+pillage zounds of other people of any skin color -- with
+only some black people daring to point out that the said
+criminal was once threating a pregnant black woman with
+his gun aimed at her baby not yet even born, for example.
+
+That orwellish "inclusivity" that excludes on intent,
+ill-meaning "goodwill", silencing "free speech" is what
+seems to be going to bury the country where many of you
+work and live.
+
+I wouldn't say I wish USA good health and good luck --
+it is the country that ruined USSR on intent and that
+ruined former Ukraine on intent (I used to live in Kiev
+since early 1980s up till 2014 when USA-made nazi coup
+destroyed the country).  But I should at least warn you
+that you're playing with demon core, not even with fire;
+you're rushing to support moral rapists when you could
+at least stay where you are.
+
+
+I write that as a person made in USSR back in 1979,
+just in case.  It was still Russia, but I remember
+those kitchen talks that are no more needed.  And I
+remember a "why do you learn?" question back in 1993.
+
+You can argue and call me an intolerant liar, welcome.
+Time will tell and you have no power over it, comrades.
+
+
+PS: those who find this kind of abuse unacceptable
+are welcome to Russia if they fail to protect their
+homeland -- we've learned it all too well already,
+so we *do* value our freedom -- and stand by it.
+Look for Innopolis.
+
+PPS: James, kudos to you!  Prepare for your share
+of "democratic shelling" though.  Hope you stand.
+
+-- 
+š---- WBR, Michael Shigorin / http://altlinux.org
+šš------ http://opennet.ru / http://anna-news.info
