@@ -2,305 +2,156 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E61C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA92C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C0C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC50206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHUr0UIP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NbM6fBWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGFWc2 (ORCPT
+        id S1727999AbgGFWd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgGFWc0 (ORCPT
+        Mon, 6 Jul 2020 18:33:27 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5364 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgGFWdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:32:26 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B4BC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:32:26 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f5so31690434ljj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7jWD5vHooiaDqnTbtnYwVQHOG6k2FU8e2JhUtfDscDY=;
-        b=PHUr0UIPdkWgLSJepxSrub2FtIg2X2XWPcXgvp5CWfRhIf0zvVCVAlmLPDlfRGfjWV
-         ZydzybHf4FhrtbyDwGy0pM3rTAg6xRmq5dFmZ/8/Q157z6DJlScHF92HL2p1Af2ThFwL
-         X08QczssEp3vy1f0JcKXWpHtWn5TQeJewcttuw3P0jnnd/2viQRlDytRJSa0c0+KSrGw
-         5lLYlDaiK0VF79m0s+BT2kYwJ3RepZZe9PMNgm0Cc8o3TqLuUZz7zlYxxJpE78n5GkUC
-         BkkmVbwVdsduUk9ax/y1RWZ2Lu0dk0zZDF/1Sp4oZSatL2vfgewmEsCuw8egv+yiBUps
-         7Lkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7jWD5vHooiaDqnTbtnYwVQHOG6k2FU8e2JhUtfDscDY=;
-        b=Km/RfHe/m/MbW+wfMm0wCJNmoI3tIXm0vA3tPYfHs2XkBAUX/Ky3T/zgep9PuUPXuq
-         L+XDzIMtLwSsfEVyas8auEbDmD5K5WwqMD1twRU6XAgLeHR45XwDKO4u93Q4SW2AIcjq
-         /bxORvOnHXh+NiKNzXeeVkvrqKuAiAoWEBw6X0gPGxwdiKH92g/Oja/6oIqrZTH8bZa6
-         nLzH8I1X/ZfOQ0kBbSTQdmzw4A2IGz88gB4pKno3wCTxLiLmwls7BvMcFppiuauRqcHl
-         ZH4C3fuwgdn/efZRZJ8uAmibkaBkTwjibHMJiJe0g5JexTnfSQ8HB8qJtVTOiB/doPjo
-         xTJA==
-X-Gm-Message-State: AOAM530pb3CGmwtz0gU2q+5Ep9JPyV2UQVSVrpto5CENs69Qe+ew5jay
-        EdxRW6H5yf2O/8TtzBPzj2qsUbjeUNARLxrf1OVP9YDs8Hw=
-X-Google-Smtp-Source: ABdhPJzB21KJ4LK/FE4YW6ebuBjyCZjP1YIA1Wom+fxwjuhACfVBKSC4uOygcHbB8iMIMSJngmUbQ633jaaJQ+KyCc0=
-X-Received: by 2002:a05:651c:550:: with SMTP id q16mr28254147ljp.188.1594074744364;
- Mon, 06 Jul 2020 15:32:24 -0700 (PDT)
+        Mon, 6 Jul 2020 18:33:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f03a6a70000>; Mon, 06 Jul 2020 15:33:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jul 2020 15:33:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Jul 2020 15:33:23 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 22:33:14 +0000
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 6 Jul 2020 22:33:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RBiNpySy2ZnS39LrNCUJbTboCN7xGKdlyljScqUpZ9iAxHTUGsxvdwPrBsaV0NvCqm5Aywh+OGIEs/Eq09Ash27BLPMrCOJ3lwKo6FvhTTBf6yv+0FXPUvRtE/Bl9S5uPoAEFSQjo3povLzousZuc+rIMYhLOk0tDwJkjk33hEja9uPowk0K5MC2T7txIBTHWez6dR3Q/IUx17zB6ysfwafwe4Rvj3+fPoi01QwooxqiBL9lWQruL2exGgNCIhHRRqLUB0qXzw4n6iLn3RmaQCJV2m6kj2a598jQOwNe/2fMSKAP1LaeW1nKtof5mjsxjbObk/rOWbgnqGcJDO9VWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4XSYFsynAKK0JcqTFFaqTRZxUdut5rm9tEY0ltHWXEA=;
+ b=TrDwptAM/qk9hO8IuFZgvgJ/Czsk9LLtTe7VlthEhQohmv7qMt8oXla6H5YN3dFxSSAxqTxxXtNIDk6fYMO0D4SPRlLY7ERnDI5o2HBAOv9uta/M/+0yvalsbYa50j17y+gZ4Uo5Nf4DwQEV+WIrwbGia8kIthkOTGAjkSydGaJgONaEPHUyjzANuSL7kWD/50hAnZaTVQzFDTKASZbCZ0o0KY0fikoVuSpRPkdEhRElftTAB4T83RVc5/x3amd49Xhqs89WMKE079OuosfPaRftcPnASEMF4elXTvuEgO2nXXmqok9PTvpkCKBZPusqKQnl71UT5nlhEyi4Ou9pjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Mon, 6 Jul
+ 2020 22:33:13 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 22:33:13 +0000
+Date:   Mon, 6 Jul 2020 19:33:12 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: [PATCH rdma-next v2 0/3] Convert XRC to use xarray
+Message-ID: <20200706223312.GA1257718@nvidia.com>
+References: <20200706122716.647338-1-leon@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200706122716.647338-1-leon@kernel.org>
+X-ClientProxiedBy: YTXPR0101CA0046.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::23) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-References: <20200630044943.3425049-3-rajatja@google.com> <20200706163805.GA120024@bjorn-Precision-5520>
-In-Reply-To: <20200706163805.GA120024@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 6 Jul 2020 15:31:47 -0700
-Message-ID: <CACK8Z6FhWyZOJvkrPcHacyvJucGMupOpL=Jm8BpyO7wPrZ_DQA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
- devices only
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YTXPR0101CA0046.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Mon, 6 Jul 2020 22:33:13 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jsZfk-005HCK-D8; Mon, 06 Jul 2020 19:33:12 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 18055a57-5491-451c-c9f2-08d821fc91de
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1337:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB13372CACBC1E6D18C50A1D57C2690@DM5PR12MB1337.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 04569283F9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UM+K0F2xL0arNJVYNkk3NhPWUfB0nWt86JQ8TOODyZIXJv4j2H4qf7hmOwPgVx0jeHUURXIKvwnN//1i5sEVIEmp6G1T6LUC2Oen9sBRW5fNssdT/juFNccvigm9ipHbhxsSm6EoQdweXwvKwm/HEI31TJXyvwATSUozzg38jcu98ON1qcBsuXOf+JBwG235ZAAHzR2dofNmploow2Fu4DNp//KMjT9XbTOgEsfaPhOFeXG01mSu9bNQQWYQH1QprOkuTFCWyEcryoYR4FGBRnAJyNlnykDyOrSOvFIuvohZQfSVvVBSd1cE+ifFr0f3N29qf8gkIanXURoob02QWB5toAtbAIrFT2kpgUt57O8xlkkePUztxNaSZEAKPzboEBhgq5u8TrjvV+RgOuj3AQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(478600001)(316002)(966005)(54906003)(86362001)(8676002)(33656002)(426003)(9786002)(6916009)(26005)(2616005)(5660300002)(9746002)(66476007)(4744005)(2906002)(66556008)(36756003)(66946007)(4326008)(186003)(8936002)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ahs5rJ6GyQYKjMTWNHZyP3cuCEn0ye2u3IG9dx6KTxkrV0FOxkneU8BAP3CUkEcE0jmwtTNyFkkURrtKWZ3wZMCRZSi0LD925/sMHsaLmdUFIqpMw2750lMX3ZhPbUqhlsituhUcTVvGcH1wUiYU1n/6iPpD8oaEwbQ4lk9J68eDW4ng/7YP1/MB4QFhn0wSjDfPqm2brSFpTPG3PlXI1EN9fNWAcvwgcAsposvuRZZTT+QlOIe8K/gS1tw+8/i+CbMKSCrX1BQnhQJqlDQ7g0r+23whaBQHW64X4gkDgVcek7JKpkPJzEdRmvqjpipK62ANsKewTelMxAQ6gf/uYrZ6pqMtKGFQ13shWFvItdPXCRpYRzfe18USwwEzcrS1cu6YNoXEUS0G7u5JxOFLLFmfZ5mNAwmQwhF27jMv92on5zgcQIWWXTNrzqvxvCyhnRUMHjxQgN6cfkqG5pHqZnOlwVfF9w95/1WRkv+b8YjTXS2cBWu1at+syfBdwCy+
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18055a57-5491-451c-c9f2-08d821fc91de
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2020 22:33:13.7616
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 75GN9LuYkB6LoG6S6x/EPGss5QbaJ3cTcsB67xaVodXv0FkDI/HuCBNEb82w2aT4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1337
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594074791; bh=4XSYFsynAKK0JcqTFFaqTRZxUdut5rm9tEY0ltHWXEA=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-Forefront-PRVS:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=NbM6fBWmQWmRo0eJHAyIgRPqZ/KWROoO9vWyDxtgdNhvKknMaByiF+32PEeEiSqdi
+         UHt6N3UtaPcEmMrFVK7hubztmHoiqJSaD95XdXaGj8DORAiw3pUJXWA+unymhqqH5f
+         O/J5AJM7t6dYhkXzh+0rDDrDs/qBPKoCZab8PNMt+IS1JE0aKp1S9xrSbJTrWEmFvR
+         54F2o6rFWxKqQ1Tsj1ocqIG3fD7odHa5C0fEdw6nSTs9EbY+L4w3CfbcyLXhPo2nOh
+         He5WxZIx3ZMq2oxV/EwpZDVuDdJMbHcefbKGTWdwGRJ7FFtVLJ6V7To0g6zYSo1EVW
+         KcKh26zIOqi6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jul 06, 2020 at 03:27:13PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Changelog:
+> v2: Rewrote mlx5 part to avoid ib_xrcd allocation.
+> v1: https://lore.kernel.org/lkml/20200623111531.1227013-1-leon@kernel.org
+> Changed ib_dealloc_xrcd_user() do not iterate over tgt list, because
+> it is expected to be empty.
+> v0: https://lore.kernel.org/lkml/20200621104110.53509-1-leon@kernel.org
+> Two small patches to simplify and improve XRC logic.
+> 
+> Thanks
+> 
+> Leon Romanovsky (1):
+>   RDMA/mlx5: Get XRCD number directly for the internal use
+> 
+> Maor Gottlieb (2):
+>   RDMA/core: Clean ib_alloc_xrcd() and reuse it to allocate XRC domain
+>   RDMA/core: Optimize XRC target lookup
 
-On Mon, Jul 6, 2020 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
-> > The "ExternalFacing" devices (root ports) are still internal devices that
-> > sit on the internal system fabric and thus trusted. Currently they were
-> > being marked untrusted.
-> >
-> > This patch uses the platform flag to identify the external facing devices
-> > and then use it to mark any downstream devices as "untrusted". The
-> > external-facing devices themselves are left as "trusted". This was
-> > discussed here: https://lkml.org/lkml/2020/6/10/1049
->
-> Use the imperative mood in the commit log, as you did for 1/7.  E.g.,
-> instead of "This patch uses ...", say "Use the platform flag ...".
-> That helps all the commit logs read nicely together.
->
-> I think this patch makes two changes that should be separated:
->
->   - Treat "external-facing" devices as internal.
->
->   - Look for the "external-facing" or "ExternalFacing" property on
->     Switch Downstream Ports as well as Root Ports.
->
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v2: cosmetic changes in commit log
-> >
-> >  drivers/iommu/intel/iommu.c |  2 +-
-> >  drivers/pci/of.c            |  2 +-
-> >  drivers/pci/pci-acpi.c      | 13 +++++++------
-> >  drivers/pci/probe.c         |  2 +-
-> >  include/linux/pci.h         |  8 ++++++++
-> >  5 files changed, 18 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> > index d759e7234e982..1ccb224f82496 100644
-> > --- a/drivers/iommu/intel/iommu.c
-> > +++ b/drivers/iommu/intel/iommu.c
-> > @@ -4743,7 +4743,7 @@ static inline bool has_untrusted_dev(void)
-> >       struct pci_dev *pdev = NULL;
-> >
-> >       for_each_pci_dev(pdev)
-> > -             if (pdev->untrusted)
-> > +             if (pdev->untrusted || pdev->external_facing)
->
-> I think checking pdev->external_facing is enough for this case,
-> because it's impossible to have pdev->untrusted unless a parent has
-> pdev->external_facing.
+Applied to for-next, thanks
 
-Agree.
-
->
-> IIUC, this usage is asking "might we ever have an external device?"
-> as opposed to the "pdev->untrusted" uses, which are asking "is *this*
-> device an external device?"
-
-Agree.
-
->
-> >                       return true;
-> >
-> >       return false;
-> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > index 27839cd2459f6..22727fc9558df 100644
-> > --- a/drivers/pci/of.c
-> > +++ b/drivers/pci/of.c
-> > @@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
-> >       } else {
-> >               node = of_node_get(bus->self->dev.of_node);
-> >               if (node && of_property_read_bool(node, "external-facing"))
-> > -                     bus->self->untrusted = true;
-> > +                     bus->self->external_facing = true;
-> >       }
-> >
-> >       bus->dev.of_node = node;
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index 7224b1e5f2a83..492c07805caf8 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1213,22 +1213,23 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
-> >       ACPI_FREE(obj);
-> >  }
-> >
-> > -static void pci_acpi_set_untrusted(struct pci_dev *dev)
-> > +static void pci_acpi_set_external_facing(struct pci_dev *dev)
-> >  {
-> >       u8 val;
-> >
-> > -     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> > +     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
-> > +         pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
->
-> This looks like a change worthy of its own patch.  We used to look for
-> "ExternalFacingPort" only on Root Ports; now we'll also do it for
-> Switch Downstream Ports.
-
-Can do. (please see below)
-
->
-> Can you include DT and ACPI spec references if they exist?  I found
-> this mention:
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
-> which actually says it should only be implemented for Root Ports.
-
-I actually have no references. It seems to me that the microsoft spec
-assumes that all external ports must be implemented on root ports, but
-I think it would be equally fair for systems with PCIe switches to
-implement one on one of their switch downstream ports. I don't have an
-immediate use of this anyway, so if you think this should rather wait
-unless someone really has this case, this can wait. Let me know.
-
->
-> It also mentions a "DmaProperty" that looks related.  Maybe Linux
-> should also pay attention to this?
-
-Interesting. Since this is not in use currently by the kernel as well
-as not exposed by (our) BIOS, I don't have an immediate use case for
-this. I'd like to defer this for later (as-the-need-arises).
-
->
-> If we do change this, should we use pcie_downstream_port(), which
-> includes PCI-to-PCIe bridges as well?
-
-Sure, can do that.
-
->
-> >               return;
-> >       if (device_property_read_u8(&dev->dev, "ExternalFacingPort", &val))
-> >               return;
-> >
-> >       /*
-> > -      * These root ports expose PCIe (including DMA) outside of the
-> > -      * system so make sure we treat them and everything behind as
-> > +      * These root/down ports expose PCIe (including DMA) outside of the
-> > +      * system so make sure we treat everything behind them as
-> >        * untrusted.
-> >        */
-> >       if (val)
-> > -             dev->untrusted = 1;
-> > +             dev->external_facing = 1;
-> >  }
-> >
-> >  static void pci_acpi_setup(struct device *dev)
-> > @@ -1240,7 +1241,7 @@ static void pci_acpi_setup(struct device *dev)
-> >               return;
-> >
-> >       pci_acpi_optimize_delay(pci_dev, adev->handle);
-> > -     pci_acpi_set_untrusted(pci_dev);
-> > +     pci_acpi_set_external_facing(pci_dev);
-> >       pci_acpi_add_edr_notifier(pci_dev);
-> >
-> >       pci_acpi_add_pm_notifier(adev, pci_dev);
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 6d87066a5ecc5..8c40c00413e74 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
-> >        * untrusted as well.
-> >        */
-> >       parent = pci_upstream_bridge(dev);
-> > -     if (parent && parent->untrusted)
-> > +     if (parent && (parent->untrusted || parent->external_facing))
-> >               dev->untrusted = true;
-> >  }
-> >
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index a26be5332bba6..fe1bc603fda40 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -432,6 +432,14 @@ struct pci_dev {
-> >        * mappings to make sure they cannot access arbitrary memory.
-> >        */
-> >       unsigned int    untrusted:1;
-> > +     /*
-> > +      * Devices are marked as external-facing using info from platform
-> > +      * (ACPI / devicetree). An external-facing device is still an internal
-> > +      * trusted device, but it faces external untrusted devices. Thus any
-> > +      * devices enumerated downstream an external-facing device is marked
-> > +      * as untrusted.
->
-> This comment has a subject/verb agreement problem.
-
-I assume you meant s/is/are/ in last sentence. Will do.
-
-Thanks,
-
-Rajat
-
-
->
-> > +      */
-> > +     unsigned int    external_facing:1;
-> >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be used */
-> >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O windows */
-> >       unsigned int    irq_managed:1;
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
+Jason
