@@ -2,155 +2,160 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77884C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB624C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C6420720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ADTRAN.onmicrosoft.com header.i=@ADTRAN.onmicrosoft.com header.b="pSJC32hu"
+	by mail.kernel.org (Postfix) with ESMTP id C20E320722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594053297;
+	bh=KGB5xCGGGIp9bGUY4wuMOuO+TBUq2UB1oRA8b9IjLnw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Uw+e6dE07q4KysTd8RvbJCa8FCHeX8jC5EreVd97sWpQbGt7lbJxIlY7zTQfFiCOz
+	 YWNs/oVJTI/o6rYHG5GXu/AhPbfJUYeBYOIjoxJ4TWyNfRJAPulEy20wL7s6sOODDh
+	 Q/M5taL0H7veVTQrtblVy7QYFCQqEBDigZdeH/JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgGFQde (ORCPT
+        id S1729494AbgGFQe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:33:34 -0400
-Received: from mail-co1nam11on2113.outbound.protection.outlook.com ([40.107.220.113]:39264
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729293AbgGFQdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:33:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iQi4kz9V4DrapQtUBtkPkKP0149viDeeUxUqGSlfCvIL3pJB9IUOVwu8qBHPd6//z9xzSNNsGF24hyLmDa4ZAt5TDA1pYB+nftBBBkDlz/qHHgY/qGXOsYClcX+aFoWQbXKwi6FBkv9a98h/0Bwa6/KXoQbvUxFbeSn9hGyAYWaGLt0XPDToO3ILEAIwZNvDP3LC3KNo011vO8/KG4G9gqQpnLuKVheWqRvwAExHSlpuP23N/elb6rXSzT5hofFGlqPbN4PB/tHzf4ei+WBwYIK/OHGQyaK3WE15mvUK1zt5HLAOxrDADhQARmSKqBOFtF5OQkrimTj7DOTLvTTuFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UHQQBFom6Hig5u53Ks8iq+cE258DtbFv2laWaEQWAhM=;
- b=hDx7hL1YYF/YOArxUpT3gQP3lPe3AzrtCVZNSrXVx0FIwlm2+uLUYxpiVnSvG5LzvG5XCD2b81XxCixxJWMFXcyJ+9rGYLEfy4Ms9ylcitRMZzN0+vqhKbKkTCmUD8XxR4mcQQF+wOXqBDFOUbpMQiZIFC1qrXUfnG3PngyMlQ3/3XCGeo/76Y3P881qmpXbHvsUuNZaQgsinessovE4XewdGXLGwTZM1KR37/HJ5zrGXvBqn8ZkS9nRZ9MQI27jpANIvUIQcoET5k9LImFwIHs/bgqUH3ZBS5jAlY/V8XKCTzYrFsUB8QpksU/bQ1slcVzm0lD6iaIP4s3vEzww/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=adtran.com; dmarc=pass action=none header.from=adtran.com;
- dkim=pass header.d=adtran.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=ADTRAN.onmicrosoft.com; s=selector2-ADTRAN-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UHQQBFom6Hig5u53Ks8iq+cE258DtbFv2laWaEQWAhM=;
- b=pSJC32huZ8vfG/WJ9laE9edG51NTxnEEe6jHVGe894Sf6+salaftKEjMtfKFX+DWLdmXcIRcxIAh2A2+LEopBK3LMlELf7PXbNYWup0SOK8cuskIu5Ac4XUvXNur+qkwLFRXXrO1pxptmf3MnPorlU4dTEn2fg6S64loSvWz9Zc=
-Received: from CH2PR19MB3590.namprd19.prod.outlook.com (2603:10b6:610:41::21)
- by CH2PR19MB3990.namprd19.prod.outlook.com (2603:10b6:610:97::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Mon, 6 Jul
- 2020 16:33:31 +0000
-Received: from CH2PR19MB3590.namprd19.prod.outlook.com
- ([fe80::d08:8df0:e25a:2a83]) by CH2PR19MB3590.namprd19.prod.outlook.com
- ([fe80::d08:8df0:e25a:2a83%3]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 16:33:31 +0000
-From:   Timothy Myers <timothy.myers@adtran.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Boike <david.boike@adtran.com>
-Subject: [PATCH v3 1/1] watchdog: Add common nowayout parameter to booke_wdt
- driver
-Thread-Topic: [PATCH v3 1/1] watchdog: Add common nowayout parameter to
- booke_wdt driver
-Thread-Index: AQHWU7JDRSh3gBbtWE2YCV42YoqLzw==
-Date:   Mon, 6 Jul 2020 16:33:31 +0000
-Message-ID: <CH2PR19MB359059AA5C8917D8D24633FF9D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-watchdog.org; dkim=none (message not signed)
- header.d=none;linux-watchdog.org; dmarc=none action=none
- header.from=adtran.com;
-x-originating-ip: [24.96.75.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b436e88-8fc4-4e25-b60b-08d821ca51c0
-x-ms-traffictypediagnostic: CH2PR19MB3990:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR19MB399001ED62129360BE09307D9D690@CH2PR19MB3990.namprd19.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GhSFKfA1pIbDWMCraKAIEFOSbLaVE5EkcyWxYIA274drYtE4Xb5CK5zxXLpHsnAaRxVt48jodQcI3wPyZILqF+NMyQUyEo3W7dKckKcO5QFOIAjwkuf+HBIfAzMpiaF2vN6p+0gpZI7mYsSNRiz0PeCFcqF/9pNupdqyjz5vTLc8gHZfgwaevsd7RHkUIiF/iI7o5e5Vny3kcIuicpf9RFtRGZy7BA/TFLBiFBJwP+DpeI3b/nMk2fxlsC4hu2PY4NNP76jJ8gzXdnjDmT9k3gU+eZC6R2ITZOo4BIYfwl01L5/K9EG9RRpF+lBr22IY8jOMaQFQ7Xk3LBStxbXigfNP+k5uBGn4YEgJHyANb6JQqLOp9HnUQiQeNLf2oCNGIAbdLiKYWUvhWoAdmzvkjw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR19MB3590.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(366004)(39850400004)(396003)(64756008)(44832011)(66946007)(55016002)(66476007)(66446008)(2906002)(66556008)(76116006)(15974865002)(7696005)(91956017)(71200400001)(8936002)(4326008)(186003)(107886003)(9686003)(86362001)(8676002)(54906003)(110136005)(316002)(478600001)(83380400001)(5660300002)(6506007)(26005)(33656002)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Bf2m0ymGamQdUFPWExkPX0DrqNIuwe+GrRlYeC67IYn8ToUZa4xLIqA7PCoqkCYX7TirZHsw8nuwvjPnHTVIZBUDCKjdb0RbA6TxihNv9TVuEuFF/ZaVY4/M2EXPkp9Xxyq7xkwwcPZoNrzcNvERexMIS5WuAorg9T+p5zPKPjHj5XEIhznpIE+cx9NoTlQqwL2K9HX3v8+ukbJZc6vB2S10NVC68/NwJkgNiuMV0xEmhuc2yGQU7l0hYFOUFh8TYdxPusPyyRR5t4HWozdRAjy82F6+R5OeoSLywWO86smMqy8EzFbQBl3prQO9EwB4RZ5ZmYwX7z5DrqiRQLSjmeXeK0o+YsT/al1pjj+iVPH+nPDqtUCyFgLxDsqcYcC1R4qWPyh3OEDZ2Oylrt51EoYCpRzjYdNhpGO7x/liCUYNp95Wrof/rUae0OYnA9/4EyzawBMibX0/eFG7C1me1u0vl/uNBXBMSTzILZRn6VA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 6 Jul 2020 12:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729293AbgGFQe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:34:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7345420702;
+        Mon,  6 Jul 2020 16:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594053295;
+        bh=KGB5xCGGGIp9bGUY4wuMOuO+TBUq2UB1oRA8b9IjLnw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CHLWFWDo8o64Xe0c2/fzvbWFaEMk6o22PbdfvrK7GELHs/X5AtEKtnN0BphATdwFR
+         bSR78oZCcfnO+2bi4GnxLfEsTymAInrr8QncUPTgymdjH15TLfzhyj1g5NyiQAHmsh
+         iJCvy6z1juiNZ95VKkAJqYjJOckCwB9Y2v97+7CI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 592A13521502; Mon,  6 Jul 2020 09:34:55 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 09:34:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matt Turner <mattst88@gmail.com>, kernel-team@android.com,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
+ CLANG_LTO=y
+Message-ID: <20200706163455.GV9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200630173734.14057-1-will@kernel.org>
+ <20200630173734.14057-19-will@kernel.org>
+ <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
+ <20200702072301.GA15963@willie-the-truck>
+ <20200706160023.GB10992@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: adtran.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR19MB3590.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b436e88-8fc4-4e25-b60b-08d821ca51c0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 16:33:31.0550
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 423946e4-28c0-4deb-904c-a4a4b174fb3f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9a0cQ2pECW4oBwVw8oHyA4/DFBn6+SWLlBDZDvW6RNRHU/f1J0fhQ6aFLraB57QXhqc2AqLnDq5+iiistiz5F010w+nP9obV/PGihw67fiQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB3990
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706160023.GB10992@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the common "nowayout" parameter to booke_wdt to make this behavior=0A=
-selectable at runtime and to make the implementation more consistent with=
-=0A=
-many other watchdog drivers.=0A=
-=0A=
-Signed-off-by: Timothy Myers <timothy.myers@adtran.com>=0A=
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>=0A=
-=0A=
-Changes in:=0A=
-	v2:=0A=
-		Added Guenter Roeck's reviewed-by tag at his request=0A=
-	v3:=0A=
-		Fix whitespace formatting in message.=0A=
----=0A=
- drivers/watchdog/booke_wdt.c | 6 +++++-=0A=
- 1 file changed, 5 insertions(+), 1 deletion(-)=0A=
-=0A=
-diff --git a/drivers/watchdog/booke_wdt.c b/drivers/watchdog/booke_wdt.c=0A=
-index 9d09bbfdef20..7817fb976f9c 100644=0A=
---- a/drivers/watchdog/booke_wdt.c=0A=
-+++ b/drivers/watchdog/booke_wdt.c=0A=
-@@ -39,6 +39,11 @@ static bool booke_wdt_enabled;=0A=
- module_param(booke_wdt_enabled, bool, 0);=0A=
- static int  booke_wdt_period =3D CONFIG_BOOKE_WDT_DEFAULT_TIMEOUT;=0A=
- module_param(booke_wdt_period, int, 0);=0A=
-+static bool nowayout =3D WATCHDOG_NOWAYOUT;=0A=
-+module_param(nowayout, bool, 0);=0A=
-+MODULE_PARM_DESC(nowayout,=0A=
-+		"Watchdog cannot be stopped once started (default=3D"=0A=
-+				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");=0A=
- =0A=
- #ifdef CONFIG_PPC_FSL_BOOK3E=0A=
- =0A=
-@@ -215,7 +220,6 @@ static void __exit booke_wdt_exit(void)=0A=
- static int __init booke_wdt_init(void)=0A=
- {=0A=
- 	int ret =3D 0;=0A=
--	bool nowayout =3D WATCHDOG_NOWAYOUT;=0A=
- =0A=
- 	pr_info("powerpc book-e watchdog driver loaded\n");=0A=
- 	booke_wdt_info.firmware_version =3D cur_cpu_spec->pvr_value;=0A=
-=0A=
-base-commit: dd0d718152e4c65b173070d48ea9dfc06894c3e5=0A=
--- =0A=
-2.20.1=0A=
-=0A=
-Timothy Myers=0A=
-Software Design Engineer=0A=
-=0A=
-Office: 256.963.8844=0A=
-Email: timothy.myers@adtran.com=0A=
-Web:=A0www.adtran.com=0A=
-=0A=
-ADTRAN=0A=
-901 Explorer Boulevard=A0=0A=
-Huntsville, AL 35806 - USA=
+On Mon, Jul 06, 2020 at 05:00:23PM +0100, Dave Martin wrote:
+> On Thu, Jul 02, 2020 at 08:23:02AM +0100, Will Deacon wrote:
+> > On Wed, Jul 01, 2020 at 06:07:25PM +0100, Dave P Martin wrote:
+> > > On Tue, Jun 30, 2020 at 06:37:34PM +0100, Will Deacon wrote:
+> > > > When building with LTO, there is an increased risk of the compiler
+> > > > converting an address dependency headed by a READ_ONCE() invocation
+> > > > into a control dependency and consequently allowing for harmful
+> > > > reordering by the CPU.
+> > > > 
+> > > > Ensure that such transformations are harmless by overriding the generic
+> > > > READ_ONCE() definition with one that provides acquire semantics when
+> > > > building with LTO.
+> > > > 
+> > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > > ---
+> > > >  arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
+> > > >  arch/arm64/kernel/vdso/Makefile   |  2 +-
+> > > >  arch/arm64/kernel/vdso32/Makefile |  2 +-
+> > > >  3 files changed, 65 insertions(+), 2 deletions(-)
+> > > >  create mode 100644 arch/arm64/include/asm/rwonce.h
+> > > > 
+> > > > diff --git a/arch/arm64/include/asm/rwonce.h b/arch/arm64/include/asm/rwonce.h
+> > > > new file mode 100644
+> > > > index 000000000000..515e360b01a1
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/include/asm/rwonce.h
+> > > > @@ -0,0 +1,63 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +/*
+> > > > + * Copyright (C) 2020 Google LLC.
+> > > > + */
+> > > > +#ifndef __ASM_RWONCE_H
+> > > > +#define __ASM_RWONCE_H
+> > > > +
+> > > > +#ifdef CONFIG_CLANG_LTO
+> > > 
+> > > Don't we have a generic option for LTO that's not specific to Clang.
+> > 
+> > /me looks at the LTO series some more
+> > 
+> > Oh yeah, there's CONFIG_LTO which is selected by CONFIG_LTO_CLANG, which is
+> > the non-typoed version of the above. I can switch this to CONFIG_LTO.
+> > 
+> > > Also, can you illustrate code that can only be unsafe with Clang LTO?
+> > 
+> > I don't have a concrete example, but it's an ongoing concern over on the LTO
+> > thread [1], so I cooked this to show one way we could deal with it. The main
+> > concern is that the whole-program optimisations enabled by LTO may allow the
+> > compiler to enumerate possible values for a pointer at link time and replace
+> > an address dependency between two loads with a control dependency instead,
+> > defeating the dependency ordering within the CPU.
+> 
+> Why can't that happen without LTO?
+
+Because without LTO, the compiler cannot see all the pointers all at
+the same time due to their being in different translation units.
+
+But yes, if the compiler could see all the pointer values and further
+-know- that it was seeing all the pointer values, these optimizations
+could happen even without LTO.  But it is quite easy to make sure that
+the compiler thinks that there are additional pointer values that it
+does not know about.
+
+> > We likely won't realise if/when this goes wrong, other than impossible to
+> > debug, subtle breakage that crops up seemingly randomly. Ideally, we'd be
+> > able to detect this sort of thing happening at build time, and perhaps
+> > even prevent it with compiler options or annotations, but none of that is
+> > close to being available and I'm keen to progress the LTO patches in the
+> > meantime because they are a requirement for CFI.
+> 
+> My concern was not so much why LTO makes things dangerous, as why !LTO
+> makes things safe...
+
+Because ignorant compilers are safe compilers!  ;-)
+
+							Thanx, Paul
