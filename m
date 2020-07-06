@@ -2,128 +2,103 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A12BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8C92075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mnbjh8Xe"
+	by mail.kernel.org (Postfix) with ESMTP id 848B020739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgGFG2d (ORCPT
+        id S1728029AbgGFGem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgGFG2c (ORCPT
+        Mon, 6 Jul 2020 02:34:42 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56429 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgGFGem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:28:32 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA84C061794;
-        Sun,  5 Jul 2020 23:28:31 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0bHL1HNxz9sDX;
-        Mon,  6 Jul 2020 16:28:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594016910;
-        bh=CSfTwczMMuvQ4g3DAivl5gAh9rlvh6YmiWzEMt9uuds=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mnbjh8Xe20FVk7mMsTROVN6HfMfQHqw6KU4acOmWwpJif8UIB2JmX1cn9x8WRPc2o
-         VNthzXdrb+7FxkI0oShPuAEA9sfPqfCOmSP3FMnHTuKGcHB0CQ/99QkmX6D03bI9i1
-         F2omE15+7ROQJoH60xjT8ENxfvGUMlTADjerdCo+g91J/RELDXRvV35aRR82RY49eR
-         tViwLGlam99Tf2FB3kIudmvsHN0qps34VwS0QbWQ7mRU15nvkHwa9q8ReXge3an/ue
-         vk0vszi/3VTaUj0Q7+w5oed0mtwt/Qksucvd/M2lrolzCE8SDmIvz+30UZ/fHL7okk
-         p2arCXcrdgJ7Q==
-Date:   Mon, 6 Jul 2020 16:28:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm-current tree with the s390
- tree
-Message-ID: <20200706162829.2fed3b5b@canb.auug.org.au>
+        Mon, 6 Jul 2020 02:34:42 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DD885C000B;
+        Mon,  6 Jul 2020 06:34:38 +0000 (UTC)
+Date:   Mon, 6 Jul 2020 08:34:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alessandro Zummo <a.zummo@towertech.it>
+Subject: Re: [PATCH v2] rtc: rtc-ds1374: wdt: Use watchdog core for watchdog
+ part
+Message-ID: <20200706063438.GF6538@piout.net>
+References: <HK2PR01MB3281245DE7A646BCB12D987DFA6A0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200705152410.GB5663@roeck-us.net>
+ <HK2PR01MB328121F60A378124D2C83698FA690@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/h68QK2TVgLs405oId1uaKXM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <HK2PR01MB328121F60A378124D2C83698FA690@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/h68QK2TVgLs405oId1uaKXM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 06/07/2020 05:18:39+0000, Johnson CH Chen (陳昭勳) wrote:
+> > >  #endif /*CONFIG_RTC_DRV_DS1374_WDT*/
+> > >  /*
+> > > @@ -653,15 +514,25 @@ static int ds1374_probe(struct i2c_client
+> > > *client,
+> > >
+> > >  #ifdef CONFIG_RTC_DRV_DS1374_WDT
+> > >  	save_client = client;
+> > > -	ret = misc_register(&ds1374_miscdev);
+> > > -	if (ret)
+> > > -		return ret;
+> > > -	ret = register_reboot_notifier(&ds1374_wdt_notifier);
+> > > +	ds1374->wdt.info = &ds1374_wdt_info;
+> > > +	ds1374->wdt.ops = &ds1374_wdt_ops;
+> > > +	ds1374->wdt.timeout = TIMER_MARGIN_DEFAULT;
+> > > +	ds1374->wdt.min_timeout = TIMER_MARGIN_MIN;
+> > > +	ds1374->wdt.max_timeout = TIMER_MARGIN_MAX;
+> > > +
+> > > +	watchdog_init_timeout(&ds1374->wdt, wdt_margin, &client->dev);
+> > > +	watchdog_set_nowayout(&ds1374->wdt, nowayout);
+> > > +	watchdog_stop_on_reboot(&ds1374->wdt);
+> > > +	watchdog_stop_on_unregister(&ds1374->wdt);
+> > > +	ds1374_wdt_settimeout(&ds1374->wdt, wdt_margin);
+> > > +
+> > > +	ret = devm_watchdog_register_device(&client->dev, &ds1374->wdt);
+> > >  	if (ret) {
+> > > -		misc_deregister(&ds1374_miscdev);
+> > > +		dev_err(&client->dev, "failed to register DS1374 watchdog
+> > > +device\n");
 
-Hi all,
+There was no error message before, I don't think this one is necessary.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> > >  		return ret;
+> > >  	}
+> > > -	ds1374_wdt_settimeout(131072);
+> > > +
+> > > +	dev_info(&client->dev, "DS1374 watchdog device enabled\n");
+> > 
+> > Is that necessary ?
+> > 
+> 
+> I think it's good to show watchdog initial timeout. I'll include above suggestions in v3, thanks!
+> 
 
-  drivers/s390/crypto/ap_bus.h
+No, please avoid adding more strings in that driver.
 
-between commit:
 
-  74ecbef7b908 ("s390/zcrypt: code beautification and struct field renames")
-
-from the s390 tree and commit:
-
-  a0062965cc01 ("mm, treewide: rename kzfree() to kfree_sensitive()")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/s390/crypto/ap_bus.h
-index 1a1d5e3c8d45,823de10479bd..000000000000
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@@ -219,8 -218,8 +219,8 @@@ static inline void ap_init_message(stru
-   */
-  static inline void ap_release_message(struct ap_message *ap_msg)
-  {
-- 	kzfree(ap_msg->msg);
-- 	kzfree(ap_msg->private);
- -	kfree_sensitive(ap_msg->message);
-++	kfree_sensitive(ap_msg->msg);
-+ 	kfree_sensitive(ap_msg->private);
-  }
- =20
-  /*
-
---Sig_/h68QK2TVgLs405oId1uaKXM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8CxI0ACgkQAVBC80lX
-0GzTkgf/and/d0LRUkMpWdZPpYnOeGVzA+2Cx3vq4RqKIvE84GFT3X1uKVwMOXBX
-hUEY03eQ4SJD49aoNnRiTHA4X77Z/pLKpdSd06kX0yZo/jAGRKTGI+2SZgapJdym
-tu1UiskDjElbRG32Xmtjvq8VL2yLt+FweIkAVXmjUPQ/JXLCRWuKYt/bxW/M/uJ+
-IYVycP3xzYQYxxDlFQiz2CDKVnQcGW45eAp6pCpTU60dJ4wq1d4EPIbhkmpGhQB7
-HS9CCxJO4rUI68vTW//lRTNJtL9iejZ9K2nCjmKVT/oF0zzcGUMGTKRoYHkM+vbG
-h3G/Dfy3VK8PK02VC0x++mt7nSehnw==
-=hNnx
------END PGP SIGNATURE-----
-
---Sig_/h68QK2TVgLs405oId1uaKXM--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
