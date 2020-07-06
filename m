@@ -2,86 +2,495 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B762EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFE82074D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546972074D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="vgZKQghS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGFKqq (ORCPT
+        id S1728712AbgGFKrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:46:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:56656 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbgGFKqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:46:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB54530E;
-        Mon,  6 Jul 2020 03:46:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 511D43F68F;
-        Mon,  6 Jul 2020 03:46:42 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 11:46:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, roy.zang@nxp.com,
-        amurray@thegoodpenguin.co.uk, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v6 00/11] Add the multiple PF support for DWC and
- Layerscape
-Message-ID: <20200706104639.GC26377@e121166-lin.cambridge.arm.com>
-References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
+        Mon, 6 Jul 2020 06:47:08 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:23852 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgGFKrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:47:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1594032426; x=1625568426;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=mngr/DCNG1zQgPe4uz33ML7KchEuJI/oFtw5XXaQ5bI=;
+  b=vgZKQghShw3BEN/84o7Vpbk6AbmBTaG+mQneM1JyNWWXMSjtU3Kq9H8U
+   pGqeI4FjW2GLAFLDlLYLlepOAxcuCLqmBS8zL9APNZJ5Q5FpqE+Jm2/SR
+   PN3rBvY3gZEPHJQdN2i9O4IyUK1ztIfetyNyFWy13h13ddpyeNV3nUaBK
+   c=;
+IronPort-SDR: ibx+QrhuD3wA/1gKbt2iK64wHshbX34Ug3vdF6uJdvVGk2gbzJGTkCSh8fLI69LrEoNC1ar5g6
+ 7MxrkNP5d/cA==
+X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
+   d="scan'208";a="49373822"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 06 Jul 2020 10:47:00 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id DC3D6A205C;
+        Mon,  6 Jul 2020 10:46:57 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 10:46:57 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.85) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 10:46:51 +0000
+Subject: Re: [PATCH v4 11/18] nitro_enclaves: Add logic for enclave memory
+ region set
+To:     Andra Paraschiv <andraprs@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-12-andraprs@amazon.com>
+From:   Alexander Graf <graf@amazon.de>
+Message-ID: <798dbb9f-0fe4-9fd9-2e64-f6f2bc740abf@amazon.de>
+Date:   Mon, 6 Jul 2020 12:46:39 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314033038.24844-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200622200329.52996-12-andraprs@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.85]
+X-ClientProxiedBy: EX13D16UWB003.ant.amazon.com (10.43.161.194) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 11:30:27AM +0800, Xiaowei Bao wrote:
-> Add the PCIe EP multiple PF support for DWC and Layerscape, add
-> the doorbell MSIX function for DWC, use list to manage the PF of
-> one PCIe controller, and refactor the Layerscape EP driver due to
-> some platforms difference.
-> 
-> Xiaowei Bao (11):
->   PCI: designware-ep: Add multiple PFs support for DWC
->   PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
->   PCI: designware-ep: Move the function of getting MSI capability
->     forward
->   PCI: designware-ep: Modify MSI and MSIX CAP way of finding
->   dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
->     and ls2088a
->   PCI: layerscape: Fix some format issue of the code
->   PCI: layerscape: Modify the way of getting capability with different
->     PEX
->   PCI: layerscape: Modify the MSIX to the doorbell mode
->   PCI: layerscape: Add EP mode support for ls1088a and ls2088a
->   arm64: dts: layerscape: Add PCIe EP node for ls1088a
->   misc: pci_endpoint_test: Add LS1088a in pci_device_id table
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
->  drivers/misc/pci_endpoint_test.c                   |   2 +
->  drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
->  drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
->  drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
->  drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
->  7 files changed, 404 insertions(+), 93 deletions(-)
 
-Can you rebase it against v5.8-rc1 please ?
 
-Thanks,
-Lorenzo
+On 22.06.20 22:03, Andra Paraschiv wrote:
+> Another resource that is being set for an enclave is memory. User space
+> memory regions, that need to be backed by contiguous memory regions,
+> are associated with the enclave.
+> =
+
+> One solution for allocating / reserving contiguous memory regions, that
+> is used for integration, is hugetlbfs. The user space process that is
+> associated with the enclave passes to the driver these memory regions.
+> =
+
+> The enclave memory regions need to be from the same NUMA node as the
+> enclave CPUs.
+> =
+
+> Add ioctl command logic for setting user space memory region for an
+> enclave.
+> =
+
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> ---
+> Changelog
+> =
+
+> v3 -> v4
+> =
+
+> * Check enclave memory regions are from the same NUMA node as the
+>    enclave CPUs.
+> * Use dev_err instead of custom NE log pattern.
+> * Update the NE ioctl call to match the decoupling from the KVM API.
+> =
+
+> v2 -> v3
+> =
+
+> * Remove the WARN_ON calls.
+> * Update static calls sanity checks.
+> * Update kzfree() calls to kfree().
+> =
+
+> v1 -> v2
+> =
+
+> * Add log pattern for NE.
+> * Update goto labels to match their purpose.
+> * Remove the BUG_ON calls.
+> * Check if enclave max memory regions is reached when setting an enclave
+>    memory region.
+> * Check if enclave state is init when setting an enclave memory region.
+> ---
+>   drivers/virt/nitro_enclaves/ne_misc_dev.c | 257 ++++++++++++++++++++++
+>   1 file changed, 257 insertions(+)
+> =
+
+> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
+ro_enclaves/ne_misc_dev.c
+> index cfdefa52ed2a..17ccb6cdbd75 100644
+> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> @@ -476,6 +476,233 @@ static int ne_create_vcpu_ioctl(struct ne_enclave *=
+ne_enclave, u32 vcpu_id)
+>   	return rc;
+>   }
+>   =
+
+> +/**
+> + * ne_sanity_check_user_mem_region - Sanity check the userspace memory
+> + * region received during the set user memory region ioctl call.
+> + *
+> + * This function gets called with the ne_enclave mutex held.
+> + *
+> + * @ne_enclave: private data associated with the current enclave.
+> + * @mem_region: user space memory region to be sanity checked.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_sanity_check_user_mem_region(struct ne_enclave *ne_enclave,
+> +	struct ne_user_memory_region *mem_region)
+> +{
+> +	if (ne_enclave->mm !=3D current->mm)
+> +		return -EIO;
+> +
+> +	if ((mem_region->memory_size % NE_MIN_MEM_REGION_SIZE) !=3D 0) {
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Mem size not multiple of 2 MiB\n");
+> +
+> +		return -EINVAL;
+
+Can we make this an error that gets propagated to user space explicitly? =
+
+I'd rather have a clear error return value of this function than a =
+
+random message in dmesg.
+
+> +	}
+> +
+> +	if ((mem_region->userspace_addr & (NE_MIN_MEM_REGION_SIZE - 1)) ||
+
+This logic already relies on the fact that NE_MIN_MEM_REGION_SIZE is a =
+
+power of two. Can you do the same above on the memory_size check?
+
+> +	    !access_ok((void __user *)(unsigned long)mem_region->userspace_addr,
+> +		       mem_region->memory_size)) {
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Invalid user space addr range\n");
+> +
+> +		return -EINVAL;
+
+Same comment again. Return different errors for different conditions, so =
+
+that user space has a chance to print proper errors to its users.
+
+Also, don't we have to check alignment of userspace_addr as well?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_set_user_memory_region_ioctl - Add user space memory region to the=
+ slot
+> + * associated with the current enclave.
+> + *
+> + * This function gets called with the ne_enclave mutex held.
+> + *
+> + * @ne_enclave: private data associated with the current enclave.
+> + * @mem_region: user space memory region to be associated with the given=
+ slot.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
+> +	struct ne_user_memory_region *mem_region)
+> +{
+> +	struct ne_pci_dev_cmd_reply cmd_reply =3D {};
+> +	long gup_rc =3D 0;
+> +	unsigned long i =3D 0;
+> +	struct ne_mem_region *ne_mem_region =3D NULL;
+> +	unsigned long nr_phys_contig_mem_regions =3D 0;
+> +	unsigned long nr_pinned_pages =3D 0;
+> +	struct page **phys_contig_mem_regions =3D NULL;
+> +	int rc =3D -EINVAL;
+> +	struct slot_add_mem_req slot_add_mem_req =3D {};
+> +
+> +	rc =3D ne_sanity_check_user_mem_region(ne_enclave, mem_region);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	ne_mem_region =3D kzalloc(sizeof(*ne_mem_region), GFP_KERNEL);
+> +	if (!ne_mem_region)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * TODO: Update nr_pages value to handle contiguous virtual address
+> +	 * ranges mapped to non-contiguous physical regions. Hugetlbfs can give
+> +	 * 2 MiB / 1 GiB contiguous physical regions.
+> +	 */
+> +	ne_mem_region->nr_pages =3D mem_region->memory_size /
+> +		NE_MIN_MEM_REGION_SIZE;
+> +
+> +	ne_mem_region->pages =3D kcalloc(ne_mem_region->nr_pages,
+> +				       sizeof(*ne_mem_region->pages),
+> +				       GFP_KERNEL);
+> +	if (!ne_mem_region->pages) {
+> +		kfree(ne_mem_region);
+> +
+> +		return -ENOMEM;
+
+kfree(NULL) is a nop, so you can just set rc and goto free_mem_region =
+
+here and below.
+
+> +	}
+> +
+> +	phys_contig_mem_regions =3D kcalloc(ne_mem_region->nr_pages,
+> +					  sizeof(*phys_contig_mem_regions),
+> +					  GFP_KERNEL);
+> +	if (!phys_contig_mem_regions) {
+> +		kfree(ne_mem_region->pages);
+> +		kfree(ne_mem_region);
+> +
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/*
+> +	 * TODO: Handle non-contiguous memory regions received from user space.
+> +	 * Hugetlbfs can give 2 MiB / 1 GiB contiguous physical regions. The
+> +	 * virtual address space can be seen as contiguous, although it is
+> +	 * mapped underneath to 2 MiB / 1 GiB physical regions e.g. 8 MiB
+> +	 * virtual address space mapped to 4 physically contiguous regions of 2
+> +	 * MiB.
+> +	 */
+> +	do {
+> +		unsigned long tmp_nr_pages =3D ne_mem_region->nr_pages -
+> +			nr_pinned_pages;
+> +		struct page **tmp_pages =3D ne_mem_region->pages +
+> +			nr_pinned_pages;
+> +		u64 tmp_userspace_addr =3D mem_region->userspace_addr +
+> +			nr_pinned_pages * NE_MIN_MEM_REGION_SIZE;
+> +
+> +		gup_rc =3D get_user_pages(tmp_userspace_addr, tmp_nr_pages,
+> +					FOLL_GET, tmp_pages, NULL);
+> +		if (gup_rc < 0) {
+> +			rc =3D gup_rc;
+> +
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in gup [rc=3D%d]\n", rc);
+> +
+> +			unpin_user_pages(ne_mem_region->pages, nr_pinned_pages);
+> +
+> +			goto free_mem_region;
+> +		}
+> +
+> +		nr_pinned_pages +=3D gup_rc;
+> +
+> +	} while (nr_pinned_pages < ne_mem_region->nr_pages);
+
+Can this deadlock the kernel? Shouldn't we rather return an error when =
+
+we can't pin all pages?
+
+> +
+> +	/*
+> +	 * TODO: Update checks once physically contiguous regions are collected
+> +	 * based on the user space address and get_user_pages() results.
+> +	 */
+> +	for (i =3D 0; i < ne_mem_region->nr_pages; i++) {
+> +		if (!PageHuge(ne_mem_region->pages[i])) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Not a hugetlbfs page\n");
+> +
+> +			goto unpin_pages;
+> +		}
+> +
+> +		if (huge_page_size(page_hstate(ne_mem_region->pages[i])) !=3D
+> +		    NE_MIN_MEM_REGION_SIZE) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Page size isn't 2 MiB\n");
+
+Why is a huge page size of >2MB a problem? Can't we just make =
+
+huge_page_size() the ne mem slot size?
+
+> +
+> +			goto unpin_pages;
+> +		}
+> +
+> +		if (ne_enclave->numa_node !=3D
+> +		    page_to_nid(ne_mem_region->pages[i])) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Page isn't from NUMA node %d\n",
+> +					    ne_enclave->numa_node);
+> +
+> +			goto unpin_pages;
+
+Is there a way to give user space hints on *why* things are going wrong?
+
+> +		}
+> +
+> +		/*
+> +		 * TODO: Update once handled non-contiguous memory regions
+> +		 * received from user space.
+> +		 */
+> +		phys_contig_mem_regions[i] =3D ne_mem_region->pages[i];
+> +	}
+> +
+> +	/*
+> +	 * TODO: Update once handled non-contiguous memory regions received
+> +	 * from user space.
+> +	 */
+> +	nr_phys_contig_mem_regions =3D ne_mem_region->nr_pages;
+> +
+> +	if ((ne_enclave->nr_mem_regions + nr_phys_contig_mem_regions) >
+> +	    ne_enclave->max_mem_regions) {
+> +		dev_err_ratelimited(ne_misc_dev.this_device,
+> +				    "Reached max memory regions %lld\n",
+> +				    ne_enclave->max_mem_regions);
+> +
+> +		goto unpin_pages;
+> +	}
+> +
+> +	for (i =3D 0; i < nr_phys_contig_mem_regions; i++) {
+> +		u64 phys_addr =3D page_to_phys(phys_contig_mem_regions[i]);
+> +
+> +		slot_add_mem_req.slot_uid =3D ne_enclave->slot_uid;
+> +		slot_add_mem_req.paddr =3D phys_addr;
+> +		/*
+> +		 * TODO: Update memory size of physical contiguous memory
+> +		 * region, in case of non-contiguous memory regions received
+> +		 * from user space.
+> +		 */
+> +		slot_add_mem_req.size =3D NE_MIN_MEM_REGION_SIZE;
+
+Yeah, for now, just make it huge_page_size()! :)
+
+> +
+> +		rc =3D ne_do_request(ne_enclave->pdev, SLOT_ADD_MEM,
+> +				   &slot_add_mem_req, sizeof(slot_add_mem_req),
+> +				   &cmd_reply, sizeof(cmd_reply));
+> +		if (rc < 0) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in slot add mem [rc=3D%d]\n",
+> +					    rc);
+> +
+> +			/* TODO: Only unpin memory regions not added. */
+
+Are we sure we're not creating an unusable system here?
+
+> +			goto unpin_pages;
+> +		}
+> +
+> +		ne_enclave->mem_size +=3D slot_add_mem_req.size;
+> +		ne_enclave->nr_mem_regions++;
+> +
+> +		memset(&slot_add_mem_req, 0, sizeof(slot_add_mem_req));
+> +		memset(&cmd_reply, 0, sizeof(cmd_reply));
+
+If you define the variables in the for loop scope, you don't need to =
+
+manually zero them again.
+
+
+Alex
+
+> +	}
+> +
+> +	list_add(&ne_mem_region->mem_region_list_entry,
+> +		 &ne_enclave->mem_regions_list);
+> +
+> +	kfree(phys_contig_mem_regions);
+> +
+> +	return 0;
+> +
+> +unpin_pages:
+> +	unpin_user_pages(ne_mem_region->pages, ne_mem_region->nr_pages);
+> +free_mem_region:
+> +	kfree(phys_contig_mem_regions);
+> +	kfree(ne_mem_region->pages);
+> +	kfree(ne_mem_region);
+> +
+> +	return rc;
+> +}
+> +
+>   static long ne_enclave_ioctl(struct file *file, unsigned int cmd,
+>   			     unsigned long arg)
+>   {
+> @@ -561,6 +788,36 @@ static long ne_enclave_ioctl(struct file *file, unsi=
+gned int cmd,
+>   		return 0;
+>   	}
+>   =
+
+> +	case NE_SET_USER_MEMORY_REGION: {
+> +		struct ne_user_memory_region mem_region =3D {};
+> +		int rc =3D -EINVAL;
+> +
+> +		if (copy_from_user(&mem_region, (void *)arg,
+> +				   sizeof(mem_region))) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Error in copy from user\n");
+> +
+> +			return -EFAULT;
+> +		}
+> +
+> +		mutex_lock(&ne_enclave->enclave_info_mutex);
+> +
+> +		if (ne_enclave->state !=3D NE_STATE_INIT) {
+> +			dev_err_ratelimited(ne_misc_dev.this_device,
+> +					    "Enclave isn't in init state\n");
+> +
+> +			mutex_unlock(&ne_enclave->enclave_info_mutex);
+> +
+> +			return -EINVAL;
+> +		}
+> +
+> +		rc =3D ne_set_user_memory_region_ioctl(ne_enclave, &mem_region);
+> +
+> +		mutex_unlock(&ne_enclave->enclave_info_mutex);
+> +
+> +		return rc;
+> +	}
+> +
+>   	default:
+>   		return -ENOTTY;
+>   	}
+> =
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
