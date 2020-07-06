@@ -2,146 +2,145 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B642BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B2320715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Rc42P7/I"
+	by mail.kernel.org (Postfix) with ESMTP id AEC8A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgGFO1W (ORCPT
+        id S1729303AbgGFO25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgGFO1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:27:20 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13630C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:27:20 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id k6so33031472ili.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5pd6A1qQMmxK9eO0hxzM1d+CDCdrMgAG1MKgD8BGrbY=;
-        b=Rc42P7/IdLVkITZMFrzCbZkYZ4ZIgvn2LtkG42gtQLhGoZsjoJcXj0BSWaI25x8o8R
-         7itie3dpxY6qcuJnSy8nE8tS8E9MyEUREajrdVW4SYsLSI/7aE5+4pHPiOfgsN7XMsdA
-         G9dk4PCCutn9VfgT+wlNLDcZs1eoiBi29U6hIq/oTNbaMXCdyIODVqHtVQVCsZbVRirr
-         Bd7Mmu+AgPx2jL0ok/xTe+wfcifeYyyHPyFtGq7CtCL4KDq0TwDaSXuXu8CNt6ve4aFY
-         bFm05TkOE/UqeqqENDY8gGCu6Hk5MMGNNZ1fnpT1oxDn+iKT9OWA8Ml1WieaD0HAt2kd
-         fqrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5pd6A1qQMmxK9eO0hxzM1d+CDCdrMgAG1MKgD8BGrbY=;
-        b=ZnR6zfbTI+qfQG75JFCdFgSJGdLte/WDrJKpV9+ipJpwPo9BZCZcDg+TguEHm0wcYu
-         AT345+jGm72pNaL98W1CjUeRtCrGqSWcx6bQFj3PDXTZF6zkZS9ctgPE0dTJEZ+e/aXB
-         ZZXaEd0Bk+g+cJMWjLWc1Dtd7da9HWF6vG6B317vfqColuAGvQQcbyLiuraQt9CyE63Z
-         p8D0WRr3EZJ07fMcTrJO/s+QdueaKT58OZ+8w4dDvf1Fgpek14jQ6Pyd7kzb9ZXEyQX9
-         pL/k58azU/qs1HC1U1f6l8wGT1+NS62KnvokWyjLbyf45lXpNR/rI2F1LN/8rKAWV3h7
-         Tl9w==
-X-Gm-Message-State: AOAM5335ZxM3liqJQ2J/k3ByTc4bYYXtLqJaidR7WqNc8hE20Fkh69Yk
-        yn37LRYh34IxVyJNuhb+JvEJ7g==
-X-Google-Smtp-Source: ABdhPJytwi3Jr/FCbXzOMe56zwLXCUJGMaAswEThWlUWh8Rtp741kwbuv/W0FRFpufAvVJHK0JmMjw==
-X-Received: by 2002:a05:6e02:13a9:: with SMTP id h9mr31133265ilo.232.1594045639434;
-        Mon, 06 Jul 2020 07:27:19 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f76sm11518888ilg.62.2020.07.06.07.27.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 07:27:18 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
- <20200706141002.GZ25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
-Date:   Mon, 6 Jul 2020 08:27:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200706141002.GZ25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Jul 2020 10:28:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:45100 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729158AbgGFO25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 10:28:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B40630E;
+        Mon,  6 Jul 2020 07:28:56 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF0773F71E;
+        Mon,  6 Jul 2020 07:28:53 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v6 0/2] sched/uclamp: new sysctl for default RT boost value
+Date:   Mon,  6 Jul 2020 15:28:37 +0100
+Message-Id: <20200706142839.26629-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 8:10 AM, Matthew Wilcox wrote:
-> On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
->> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
->>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
->>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
->>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
->>>>>
->>>>> For zone-append, block-layer will return zone-relative offset via ret2
->>>>> of ki_complete interface. Make changes to collect it, and send to
->>>>> user-space using cqe->flags.
-> 
->>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
->>> address.
->>
->> Yeah, it's not great either, but we have less leeway there in terms of
->> how much space is available to pass back extra data.
->>
->>> What do you think to my idea of interpreting the user_data as being a
->>> pointer to somewhere to store the address?  Obviously other things
->>> can be stored after the address in the user_data.
->>
->> I don't like that at all, as all other commands just pass user_data
->> through. This means the application would have to treat this very
->> differently, and potentially not have a way to store any data for
->> locating the original command on the user side.
-> 
-> I think you misunderstood me.  You seem to have thought I meant
-> "use the user_data field to return the address" when I actually meant
-> "interpret the user_data field as a pointer to where userspace
-> wants the address stored".
+This series introduces a new sysctl_sched_uclamp_util_min_rt_default to control
+at runtime the default boost value of RT tasks.
 
-It's still somewhat weird to have user_data have special meaning, you're
-now having the kernel interpret it while every other command it's just
-an opaque that is passed through.
+Full rationale is in patch 1 commit message.
 
-But it could of course work, and the app could embed the necessary
-u32/u64 in some other structure that's persistent across IO. If it
-doesn't have that, then it'd need to now have one allocated and freed
-across the lifetime of the IO.
+v6 has changed the approach taken in v5 [1] and earlier by moving away from the
+lazy update approach that touched the fast path to a synchronous one that is
+performed when the write to the procfs entry is done.
 
-If we're going that route, it'd be better to define the write such that
-you're passing in the necessary information upfront. In syscall terms,
-then that'd be something ala:
+for_each_process_thread() is used to update all existing RT tasks now. And to
+handle the race with a concurrent fork() we introduce sched_post_fork() in
+_do_fork() to ensure a concurrently forked RT tasks gets the right update.
 
-ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
-			off_t *offset, int flags);
+To ensure the race condition is handled correctly, I wrote this small (simple!)
+test program:
 
-where *offset is copied out when the write completes. That removes the
-need to abuse user_data, with just providing the storage pointer for the
-offset upfront.
+	https://github.com/qais-yousef/uclamp_test.git
+
+And ran it on 4core x86 system and 8core big.LITTLE juno-r2 system.
+
+From juno-r2 run, 10 iterations each run:
+
+Without sched_post_fork()
+
+	# ./run.sh
+	pid 3105 has 336 but default should be 337
+	pid 13162 has 336 but default should be 337
+	pid 23256 has 338 but default should be 339
+	All forked RT tasks had the correct uclamp.min
+	pid 10638 has 334 but default should be 335
+	All forked RT tasks had the correct uclamp.min
+	pid 30683 has 335 but default should be 336
+	pid 8247 has 336 but default should be 337
+	pid 18170 has 1024 but default should be 334
+	pid 28274 has 336 but default should be 337
+
+With sched_post_fork()
+
+	# ./run.sh
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+
+Thanks
+
+--
+Qais Yousef
+
+[1] https://lore.kernel.org/lkml/20200511154053.7822-1-qais.yousef@arm.com/
+
+CC: Jonathan Corbet <corbet@lwn.net>
+CC: Juri Lelli <juri.lelli@redhat.com>
+CC: Vincent Guittot <vincent.guittot@linaro.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Segall <bsegall@google.com>
+CC: Mel Gorman <mgorman@suse.de>
+CC: Luis Chamberlain <mcgrof@kernel.org>
+CC: Kees Cook <keescook@chromium.org>
+CC: Iurii Zaikin <yzaikin@google.com>
+CC: Quentin Perret <qperret@google.com>
+CC: Valentin Schneider <valentin.schneider@arm.com>
+CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+CC: Pavan Kondeti <pkondeti@codeaurora.org>
+CC: linux-doc@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-fsdevel@vger.kernel.org
+
+Qais Yousef (2):
+  sched/uclamp: Add a new sysctl to control RT default boost value
+  Documentation/sysctl: Document uclamp sysctl knobs
+
+ Documentation/admin-guide/sysctl/kernel.rst |  54 ++++++++
+ include/linux/sched/sysctl.h                |   1 +
+ include/linux/sched/task.h                  |   1 +
+ kernel/fork.c                               |   1 +
+ kernel/sched/core.c                         | 132 ++++++++++++++++++--
+ kernel/sysctl.c                             |   7 ++
+ 6 files changed, 189 insertions(+), 7 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
