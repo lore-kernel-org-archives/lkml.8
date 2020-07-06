@@ -2,249 +2,108 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB420DD4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:09:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JtynVoZW"
+	by mail.kernel.org (Postfix) with ESMTP id AA0FC2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgGFNJu (ORCPT
+        id S1729080AbgGFNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:09:50 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:57095 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbgGFNJt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594040988; x=1625576988;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=BlwG9nXEMUJKtGb7sDbCMSZ1W89qCavZBm8vM3wztvw=;
-  b=JtynVoZWQW7NDwx/7OfFtTF4TszxiNQPEVhUrdXCtmiqSpbmren6XWXP
-   LKgFK/DmozH/cji2qQQoiw7yyBg0uFaHoLuXAylUCWhUuVh91VMbh2+c0
-   X+RZWHnyZTA18JeyiqqUU6wwxtIl0MEsHMUNIc9UMUdg/XNNmtdH4QMGJ
-   0=;
-IronPort-SDR: zux/nt/nVgKWDRuywLo9E6Q72oLw6RX9rYYGlazez0u3OIUTPdgTxa/MR1Vcs9/XKlCZv8XmTs
- +kXw1Cmuv82A==
-X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
-   d="scan'208";a="40220435"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 13:09:46 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 76143A24CC;
-        Mon,  6 Jul 2020 13:09:45 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 13:09:44 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 13:09:37 +0000
-Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        "Matt Wilson" <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-8-andraprs@amazon.com>
- <391ad4b0-2011-4d63-8274-9ccb77a5351f@amazon.de>
- <7cd235d0-25a8-5476-985f-3ee7a60ce3de@amazon.com>
- <55521a26-278c-f6c8-f87a-ab3d3ba67754@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <8af490be-01e3-5ba1-a3c1-4de49bf717e5@amazon.com>
-Date:   Mon, 6 Jul 2020 16:09:26 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Mon, 6 Jul 2020 09:10:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60068 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729048AbgGFNKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:10:19 -0400
+IronPort-SDR: SLj7Mnz2XTPTQ89mJXCQORtU4KMghDkUbVd7xlUL+V2K/3A/1v2k3H5kAX0RJutDGE3SZzyvu6
+ bE6QIbkEHYUA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127484103"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="127484103"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 06:10:18 -0700
+IronPort-SDR: 4QI7l/L3S1SdwuCmFTFMu+6dnMHcnOhbm1mqvg4y60IowS0rGap0WYIdcQeIgFNQwqWEizbRxY
+ 6fBTzu9qh77Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="283033062"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 06 Jul 2020 06:10:17 -0700
+Received: from [10.249.225.12] (abudanko-mobl.ccr.corp.intel.com [10.249.225.12])
+        by linux.intel.com (Postfix) with ESMTP id C9C6B580378;
+        Mon,  6 Jul 2020 06:10:15 -0700 (PDT)
+Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+ <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
+ <20200706123743.GE3401866@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b43873d9-2b29-23ed-2187-9e2eb31ee587@linux.intel.com>
+Date:   Mon, 6 Jul 2020 16:10:14 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <55521a26-278c-f6c8-f87a-ab3d3ba67754@amazon.de>
+In-Reply-To: <20200706123743.GE3401866@krava>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D39UWA003.ant.amazon.com (10.43.160.235) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 06.07.2020 15:37, Jiri Olsa wrote:
+> On Fri, Jul 03, 2020 at 10:47:22AM +0300, Alexey Budankov wrote:
+> 
+> SNIP
+> 
+>>  
+>>  	while (1) {
+>>  		if (forks)
+>> @@ -574,11 +610,22 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times, st
+>>  		if (done || stop || child_exited)
+>>  			break;
+>>  
+>> -		nanosleep(ts, NULL);
+>> -		if (timeout)
+>> -			stop = true;
+>> -		else
+>> -			stop = handle_interval(interval, times);
+>> +		clock_gettime(CLOCK_MONOTONIC, &time_start);
+>> +		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
+>> +			if (timeout)
+>> +				stop = true;
+>> +			else
+>> +				stop = handle_interval(interval, times);
+>> +			time_to_sleep = sleep_time;
+>> +		} else { /* fd revent */
+>> +			stop = process_evlist(evsel_list, interval, times);
+>> +			clock_gettime(CLOCK_MONOTONIC, &time_stop);
+>> +			diff_timespec(&time_diff, &time_stop, &time_start);
+>> +			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
+>> +					 time_diff.tv_nsec / NSEC_PER_MSEC;
+>> +			if (time_to_sleep < 0)
+>> +				time_to_sleep = 0;
+> 
+> could this computation go to a separate function? something like:
+> 
+> time_to_sleep = compute_tts(time_start, time_stop);
 
-On 06/07/2020 11:01, Alexander Graf wrote:
->
->
-> On 06.07.20 09:49, Paraschiv, Andra-Irina wrote:
->>
->>
->> On 06/07/2020 10:13, Alexander Graf wrote:
->>>
->>>
->>> On 22.06.20 22:03, Andra Paraschiv wrote:
->>>> The Nitro Enclaves driver provides an ioctl interface to the user =
+Accepted. In v10.
 
->>>> space
->>>> for enclave lifetime management e.g. enclave creation / termination =
-
->>>> and
->>>> setting enclave resources such as memory and CPU.
->>>>
->>>> This ioctl interface is mapped to a Nitro Enclaves misc device.
->>>>
->>>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->>>> ---
->>>> Changelog
->>>>
->>>> v3 -> v4
->>>>
->>>> * Use dev_err instead of custom NE log pattern.
->>>> * Remove the NE CPU pool init during kernel module loading, as the CPU
->>>> =A0=A0 pool is now setup at runtime, via a sysfs file for the kernel
->>>> =A0=A0 parameter.
->>>> * Add minimum enclave memory size definition.
->>>>
->>>> v2 -> v3
->>>>
->>>> * Remove the GPL additional wording as SPDX-License-Identifier is
->>>> =A0=A0 already in place.
->>>> * Remove the WARN_ON calls.
->>>> * Remove linux/bug and linux/kvm_host includes that are not needed.
->>>> * Remove "ratelimited" from the logs that are not in the ioctl call
->>>> =A0=A0 paths.
->>>> * Remove file ops that do nothing for now - open and release.
->>>>
->>>> v1 -> v2
->>>>
->>>> * Add log pattern for NE.
->>>> * Update goto labels to match their purpose.
->>>> * Update ne_cpu_pool data structure to include the global mutex.
->>>> * Update NE misc device mode to 0660.
->>>> * Check if the CPU siblings are included in the NE CPU pool, as =
-
->>>> full CPU
->>>> =A0=A0 cores are given for the enclave(s).
->>>> ---
->>>> =A0 drivers/virt/nitro_enclaves/ne_misc_dev.c | 133 =
-
->>>> ++++++++++++++++++++++
->>>> =A0 drivers/virt/nitro_enclaves/ne_pci_dev.c=A0 |=A0 11 ++
->>>> =A0 2 files changed, 144 insertions(+)
->>>> =A0 create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
->>>>
->>>> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c =
-
->>>> b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->>>> new file mode 100644
->>>> index 000000000000..628fb10c2b36
->>>> --- /dev/null
->>>> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->>>> @@ -0,0 +1,133 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights =
-
->>>> Reserved.
->>>> + */
->>>> +
->>>> +/**
->>>> + * Enclave lifetime management driver for Nitro Enclaves (NE).
->>>> + * Nitro is a hypervisor that has been developed by Amazon.
->>>> + */
->>>> +
->>>> +#include <linux/anon_inodes.h>
->>>> +#include <linux/capability.h>
->>>> +#include <linux/cpu.h>
->>>> +#include <linux/device.h>
->>>> +#include <linux/file.h>
->>>> +#include <linux/hugetlb.h>
->>>> +#include <linux/list.h>
->>>> +#include <linux/miscdevice.h>
->>>> +#include <linux/mm.h>
->>>> +#include <linux/mman.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/mutex.h>
->>>> +#include <linux/nitro_enclaves.h>
->>>> +#include <linux/pci.h>
->>>> +#include <linux/poll.h>
->>>> +#include <linux/slab.h>
->>>> +#include <linux/types.h>
->>>> +
->>>> +#include "ne_misc_dev.h"
->>>> +#include "ne_pci_dev.h"
->>>> +
->>>> +#define NE_EIF_LOAD_OFFSET (8 * 1024UL * 1024UL)
->>>> +
->>>> +#define NE_MIN_ENCLAVE_MEM_SIZE (64 * 1024UL * 1024UL)
->>>> +
->>>> +#define NE_MIN_MEM_REGION_SIZE (2 * 1024UL * 1024UL)
->>>> +
->>>> +/*
->>>> + * TODO: Update logic to create new sysfs entries instead of using
->>>> + * a kernel parameter e.g. if multiple sysfs files needed.
->>>> + */
->>>> +static const struct kernel_param_ops ne_cpu_pool_ops =3D {
->>>
->>> Adding an empty ops struct looks very odd. If you fill it in a later =
-
->>> patch, please indicate so in a comment here.
->>
->> True, I already updated this in v5, to have the .get function here =
-
->> and the .set one in a later patch.
->>
->>>
->>>> +};
->>>> +
->>>> +static char ne_cpus[PAGE_SIZE];
->>>
->>> PAGE_SIZE is a bit excessive, no? Even if you list every single CPU =
-
->>> of a 256 CPU system you are <1024.
->>
->> It is a bit too much, I was thinking of it while declaring this. I =
-
->> can update to 1024 in v5.
->
-> The largest NUMA node CPU count I'm aware of today is 64. Since we =
-
-> limit the pool to a single node, we can't go beyond that. Let's be a =
-
-> bit future proof and double that number: 128. Then we get to 401 =
-
-> characters if you pass in every single CPU as comma separated. I would =
-
-> seriously hope most people would just pass ranges though.
->
-> So how about we make it 512 for now?
-
-We can set it like this, I changed to 512 and updated the comment as well.
-
-Thanks,
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+Alexey
