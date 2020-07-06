@@ -2,118 +2,103 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5906EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E325020739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYBdtG0l"
+	by mail.kernel.org (Postfix) with ESMTP id 43485206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgGFIxP (ORCPT
+        id S1728637AbgGFI4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgGFIxP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:53:15 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ADCC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 01:53:14 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id q192so15698394qka.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 01:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=nn1O+W5EF/DppeDjb/j++wKQhD1vgt5fSJyldwn+gr0=;
-        b=KYBdtG0lzBfVvrUkrfz0r108HsyZcZi/XmN0umNhNVvTlM8fpVEjbJi4SPx9oneLiM
-         M/8fMNWhiR3NWpli+VYKaJb+41nmadZixzlqEtOcI3qlgwcOVpNbsaYN1CR+NxJ6ahb9
-         tl/elsz1PQ1HtSXJRnyBvVduGH7Fnf5l5lJsNKenGYNnpEWBB8bQBPaIqms56clYlvxm
-         4jkNvY3ATegxSVNYuaNUbhUY2ZhcrKN5J/clF6nFeiz2AYYE3LCM8/6FqACCevrRy2Mx
-         9gLstIU0qSZz3YvbJymzIiTTKZapgKLyUA96aeuFV7wrYaG2xTdj34QN8KzWTwizXfhy
-         wxzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=nn1O+W5EF/DppeDjb/j++wKQhD1vgt5fSJyldwn+gr0=;
-        b=j/VQ7JrhxR3t2etmt3WDfKI7Cu8RoVP3rWVn82pCccoC6Jo6lVGgACzswWVjbj2/MA
-         pcNrTgCuEnHZgBggr6fpot3goCVqS6J8XMWtK1UeK2jDRl8xrCoX/8LSaPI1RZgqh+bE
-         GA+JYQ0CGu3p9jDcSQm+5D5xpVvsMWAn0I0FfA/nx6Dxw7DIS2Phs2OxQHaZz7OrVekl
-         3boxZ6SYvf8DSkzDEbQemEcc9qUegr2Kdxblhj+hoUzyAWl6UldhS+q5hvf8Mpx4oscq
-         6oTeYmQ7ttupM60GSCjzfbvn058hKCqArb2fh2u29kPCaHTvyABKOzXPOYwOcXtlcwdl
-         307Q==
-X-Gm-Message-State: AOAM530A4R5u1yWDzBTsS8DNSiGFUv0ET73/2IYHei9IRPgbDQZmwmmI
-        3tvqRqx/RzrcZ0ShK4mC8+gLNwvPX8I=
-X-Google-Smtp-Source: ABdhPJwG1fHRy4VggT3+PmM+BVlmrAXKXA76Zr3GApVvJaKpT8zYZUmtqmAOf+97SJeq844FjtnlNSsNxEk=
-X-Received: by 2002:a0c:ab55:: with SMTP id i21mr46962478qvb.139.1594025593948;
- Mon, 06 Jul 2020 01:53:13 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 10:52:38 +0200
-Message-Id: <20200706085240.1979622-1-darekm@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] media: cros-ec-cec: disable the device wakeup on remove
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-To:     linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dariusz Marcinkiewicz <darekm@chromium.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jul 2020 04:56:50 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47850 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728135AbgGFI4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 04:56:49 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj99B5wJf_pVQAA--.131S3;
+        Mon, 06 Jul 2020 16:56:34 +0800 (CST)
+Subject: Re: [PATCH] watchdog: bcm_kona_wdt: Use correct return value for
+ bcm_kona_wdt_probe()
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+References: <1590391864-308-1-git-send-email-yangtiezhu@loongson.cn>
+ <99e82049-2d99-9a8e-4023-96f585b47e30@roeck-us.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <19929e73-253b-7d29-b8f8-365266d88a5f@loongson.cn>
+Date:   Mon, 6 Jul 2020 16:56:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <99e82049-2d99-9a8e-4023-96f585b47e30@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxj99B5wJf_pVQAA--.131S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFy8ArWrWw4kGF4UXr1DJrb_yoWDtwb_Ga
+        12krZ3ury8Wr10vFn0yay5ZwsxtFn8uF1kXw1xKay3X347JryfArW09r1ftw43Ww4Yyrsx
+        AFyDWw4a9rnrGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+        x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUsF4iUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device is enabled for wake up while the driver is loaded.
-For symmetry, disable wakeup when it is removed.
+On 05/25/2020 09:47 PM, Guenter Roeck wrote:
+> On 5/25/20 12:31 AM, Tiezhu Yang wrote:
+>> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+>> to check the return value and return PTR_ERR() if failed.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
----
- drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-index 2d95e16cd248..3881ed7bc3d9 100644
---- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-+++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-@@ -277,8 +277,6 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cros_ec_cec);
- 	cros_ec_cec->cros_ec = cros_ec;
- 
--	device_init_wakeup(&pdev->dev, 1);
--
- 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
- 						 DRV_NAME,
- 						 CEC_CAP_DEFAULTS |
-@@ -306,6 +304,8 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto out_probe_notify;
- 
-+	device_init_wakeup(&pdev->dev, 1);
-+
- 	return 0;
- 
- out_probe_notify:
-@@ -335,6 +335,8 @@ static int cros_ec_cec_remove(struct platform_device *pdev)
- 					 cros_ec_cec->adap);
- 	cec_unregister_adapter(cros_ec_cec->adap);
- 
-+	device_init_wakeup(&pdev->dev, 0);
-+
- 	return 0;
- }
- 
--- 
-2.27.0.212.ge8ba1cc988-goog
+Could you please apply this patch?
+
+Thanks,
+Tiezhu
+
+>
+>> ---
+>>   drivers/watchdog/bcm_kona_wdt.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/watchdog/bcm_kona_wdt.c b/drivers/watchdog/bcm_kona_wdt.c
+>> index eb850a8..8237c4e 100644
+>> --- a/drivers/watchdog/bcm_kona_wdt.c
+>> +++ b/drivers/watchdog/bcm_kona_wdt.c
+>> @@ -279,7 +279,7 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
+>>   
+>>   	wdt->base = devm_platform_ioremap_resource(pdev, 0);
+>>   	if (IS_ERR(wdt->base))
+>> -		return -ENODEV;
+>> +		return PTR_ERR(wdt->base);
+>>   
+>>   	wdt->resolution = SECWDOG_DEFAULT_RESOLUTION;
+>>   	ret = bcm_kona_wdt_set_resolution_reg(wdt);
+>>
 
