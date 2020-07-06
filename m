@@ -2,127 +2,179 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7526DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF836C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B8E207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594060807;
-	bh=GCzjI5LNoEYSHBzDGeERWoVoi65qdJkPvvM8agbWZJs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Oojziy/4Z4QCg0TM2MMbdEuD2PaWbIecmtUGDrYnAWn3J4UCQvY+ELuljGcuNiFbs
-	 pHFRp7GhQ/PuDjryQPDkbAynOFAPoElMBuA44Uk4g61dUxmqhEi/rWwWP5gweuW/Mh
-	 LBoFLW0D43nAoJIvSyLd7wF5KU4nRn14aQs00jhg=
+	by mail.kernel.org (Postfix) with ESMTP id 8BEB8207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NncC+SeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgGFSkG (ORCPT
+        id S1730092AbgGFSkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgGFSkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:40:03 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 6 Jul 2020 14:40:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20975 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729806AbgGFSkC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:40:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594060801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fGfzwKmfId0nPt6AjeRSKqUxZBg1dc0lbe/SE6/v6yI=;
+        b=NncC+SeT6Hdb3T1ZKv3cUKPtJJgPS0Ok5WWDoUjzK+rIJOW8bzHXp4wEmGlZ070R8ZvNap
+        t1zO0idWjW//u/T8PsWXIwv9u52t6xJzvlO6mcsdzBpP6/Fq45g4XfdwowAcdtqYyDlme3
+        pPiVCmF3l41od2F3GlCTHjathk3iT54=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-ZRiGS6MdOQm63DvY3owoAw-1; Mon, 06 Jul 2020 14:39:57 -0400
+X-MC-Unique: ZRiGS6MdOQm63DvY3owoAw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F416207C4;
-        Mon,  6 Jul 2020 18:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594060802;
-        bh=GCzjI5LNoEYSHBzDGeERWoVoi65qdJkPvvM8agbWZJs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uNc6pW6pEw9WAHZwQsD1YUi1tX+QGaA9mBT8oOELvl/1DZcXiF3JRphX2BdFezDaq
-         6GGpP76mQSF0TuxLVNdhODTfyKVOeS+ibt5CZ/qu5aJEZQDxE4lN/hJddzHHOjgM0+
-         RRKo8OKLGNaz1fu8Xof5bZQifk1gO+S9SLcbV3GE=
-Date:   Mon, 6 Jul 2020 11:40:00 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH net-next v2 3/3] net: ethtool: Remove PHYLIB direct
- dependency
-Message-ID: <20200706114000.223e27eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200706042758.168819-4-f.fainelli@gmail.com>
-References: <20200706042758.168819-1-f.fainelli@gmail.com>
-        <20200706042758.168819-4-f.fainelli@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 597AF8014D4;
+        Mon,  6 Jul 2020 18:39:55 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-98.rdu2.redhat.com [10.10.117.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 150B52C2BC;
+        Mon,  6 Jul 2020 18:39:54 +0000 (UTC)
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+Date:   Mon, 6 Jul 2020 14:39:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200706043540.1563616-1-npiggin@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jul 2020 21:27:58 -0700 Florian Fainelli wrote:
-> +	ops = ethtool_phy_ops;
-> +	if (!ops || !ops->start_cable_test) {
+On 7/6/20 12:35 AM, Nicholas Piggin wrote:
+> v3 is updated to use __pv_queued_spin_unlock, noticed by Waiman (thank you).
+>
+> Thanks,
+> Nick
+>
+> Nicholas Piggin (6):
+>    powerpc/powernv: must include hvcall.h to get PAPR defines
+>    powerpc/pseries: move some PAPR paravirt functions to their own file
+>    powerpc: move spinlock implementation to simple_spinlock
+>    powerpc/64s: implement queued spinlocks and rwlocks
+>    powerpc/pseries: implement paravirt qspinlocks for SPLPAR
+>    powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
+>      lock hint
+>
+>   arch/powerpc/Kconfig                          |  13 +
+>   arch/powerpc/include/asm/Kbuild               |   2 +
+>   arch/powerpc/include/asm/atomic.h             |  28 ++
+>   arch/powerpc/include/asm/paravirt.h           |  89 +++++
+>   arch/powerpc/include/asm/qspinlock.h          |  91 ++++++
+>   arch/powerpc/include/asm/qspinlock_paravirt.h |   7 +
+>   arch/powerpc/include/asm/simple_spinlock.h    | 292 +++++++++++++++++
+>   .../include/asm/simple_spinlock_types.h       |  21 ++
+>   arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
+>   arch/powerpc/include/asm/spinlock_types.h     |  17 +-
+>   arch/powerpc/lib/Makefile                     |   3 +
+>   arch/powerpc/lib/locks.c                      |  12 +-
+>   arch/powerpc/platforms/powernv/pci-ioda-tce.c |   1 +
+>   arch/powerpc/platforms/pseries/Kconfig        |   5 +
+>   arch/powerpc/platforms/pseries/setup.c        |   6 +-
+>   include/asm-generic/qspinlock.h               |   4 +
+>   16 files changed, 577 insertions(+), 322 deletions(-)
+>   create mode 100644 arch/powerpc/include/asm/paravirt.h
+>   create mode 100644 arch/powerpc/include/asm/qspinlock.h
+>   create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
+>   create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
+>   create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
+>
+This patch looks OK to me.
 
-nit: don't think member-by-member checking is necessary. We don't
-expect there to be any alternative versions of the ops, right?
+I had run some microbenchmark on powerpc system with or w/o the patch.
 
-> +		ret = -EOPNOTSUPP;
-> +		goto out_rtnl;
-> +	}
-> +
->  	ret = ethnl_ops_begin(dev);
->  	if (ret < 0)
->  		goto out_rtnl;
->  
-> -	ret = phy_start_cable_test(dev->phydev, info->extack);
-> +	ret = ops->start_cable_test(dev->phydev, info->extack);
+On a 2-socket 160-thread SMT4 POWER9 system (not virtualized):
 
-nit: my personal preference would be to hide checking the ops and
-calling the member in a static inline helper.
+5.8.0-rc4
+=========
 
-Note that we should be able to remove this from phy.h now:
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 160, Min/Mean/Max = 77,665/90,153/106,895
+Threads = 160, Total Rate = 1,441,759 op/s; Percpu Rate = 9,011 op/s
 
-#if IS_ENABLED(CONFIG_PHYLIB)
-int phy_start_cable_test(struct phy_device *phydev,
-			 struct netlink_ext_ack *extack);
-int phy_start_cable_test_tdr(struct phy_device *phydev,
-			     struct netlink_ext_ack *extack,
-			     const struct phy_tdr_config *config);
-#else
-static inline
-int phy_start_cable_test(struct phy_device *phydev,
-			 struct netlink_ext_ack *extack)
-{
-	NL_SET_ERR_MSG(extack, "Kernel not compiled with PHYLIB support");
-	return -EOPNOTSUPP;
-}
-static inline
-int phy_start_cable_test_tdr(struct phy_device *phydev,
-			     struct netlink_ext_ack *extack,
-			     const struct phy_tdr_config *config)
-{
-	NL_SET_ERR_MSG(extack, "Kernel not compiled with PHYLIB support");
-	return -EOPNOTSUPP;
-}
-#endif
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 160, Min/Mean/Max = 47,879/53,807/63,689
+Threads = 160, Total Rate = 860,192 op/s; Percpu Rate = 5,376 op/s
 
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 80, Min/Mean/Max = 242,907/319,514/463,161
+Threads = 80, Total Rate = 2,555 kop/s; Percpu Rate = 32 kop/s
 
-We could even risk a direct call:
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 80, Min/Mean/Max = 146,161/187,474/259,270
+Threads = 80, Total Rate = 1,498 kop/s; Percpu Rate = 19 kop/s
 
-#if IS_REACHABLE(CONFIG_PHYLIB)
-static inline int do_x()
-{
-	return __do_x();
-}
-#else
-static inline int do_x()
-{
-	if (!ops)
-		return -EOPNOTSUPP;
-	return ops->do_x();
-}
-#endif
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 40, Min/Mean/Max = 646,639/1,000,817/1,455,205
+Threads = 40, Total Rate = 4,001 kop/s; Percpu Rate = 100 kop/s
 
-But that's perhaps doing too much...
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 40, Min/Mean/Max = 402,165/597,132/814,555
+Threads = 40, Total Rate = 2,388 kop/s; Percpu Rate = 60 kop/s
+
+5.8.0-rc4-qlock+
+================
+
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 160, Min/Mean/Max = 123,835/124,580/124,587
+Threads = 160, Total Rate = 1,992 kop/s; Percpu Rate = 12 kop/s
+
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 160, Min/Mean/Max = 254,210/264,714/276,784
+Threads = 160, Total Rate = 4,231 kop/s; Percpu Rate = 26 kop/s
+
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 80, Min/Mean/Max = 599,715/603,397/603,450
+Threads = 80, Total Rate = 4,825 kop/s; Percpu Rate = 60 kop/s
+
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 80, Min/Mean/Max = 492,687/525,224/567,456
+Threads = 80, Total Rate = 4,199 kop/s; Percpu Rate = 52 kop/s
+
+Running locktest with spinlock [runtime = 10s, load = 1]
+Threads = 40, Min/Mean/Max = 1,325,623/1,325,628/1,325,636
+Threads = 40, Total Rate = 5,299 kop/s; Percpu Rate = 132 kop/s
+
+Running locktest with rwlock [runtime = 10s, r% = 50%, load = 1]
+Threads = 40, Min/Mean/Max = 1,249,731/1,292,977/1,342,815
+Threads = 40, Total Rate = 5,168 kop/s; Percpu Rate = 129 kop/s
+
+On systems on large number of cpus, qspinlock lock is faster and more fair.
+
+With some tuning, we may be able to squeeze out more performance.
+
+Cheers,
+Longman
+
