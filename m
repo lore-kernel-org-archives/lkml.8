@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A15C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 432A120720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F3120720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYmDnfr2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEACz1Ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgGFSIL (ORCPT
+        id S1729804AbgGFSIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
+        Mon, 6 Jul 2020 14:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729785AbgGFSIJ (ORCPT
+        with ESMTP id S1729658AbgGFSIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:08:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA49AC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:08:09 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j7so2285290plk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:08:09 -0700 (PDT)
+        Mon, 6 Jul 2020 14:08:16 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F6B0C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:08:16 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so3652741pfm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lQCZlvushcOD69EcXhMHyrU/TPLV5UJPHlxcyr/r1Xg=;
-        b=PYmDnfr2KReJ6L3ka/pFQ5TCVzJeDABsscKdIo2hVK+g6RynNJZXKJA8nKzjJjOnq0
-         L2VdcsAO3SDozGKprBlSPKVlFyWx7ATEpTpHPmuQpqv+2Av+4+UtEMqP4nkiI/TBFFud
-         YrT89cUVzUAujSFRvMPiwbghNFNc5iir/1aAB3zwSpXHvBizJQ+zLqhEevq9ZGMXUgDo
-         /5JbKtwsVXV5OZ84G6tunl9EnJlXINSomZ+kuBkCV+2h8io0Gx75UW8PzdiOGLFGAV3E
-         N4+IHa22YZq1UWZL12+aqy8rW4h9Ghp2VSD7l8bky+RMlBK5Ez4iWmccWaS138Ltdd4F
-         J8rg==
+        bh=ljWc7ncVT9pbFQys6lUrJ2oby+afUmM7eFZjxIhMARg=;
+        b=jEACz1RudmH76IjHbdFlmoPGUPJKFxQCq2v9MrfJJA8KB3hgvmPKoJ6dh7OSUm81N/
+         tl3W9rYACLLYLqhNvYdQec8GTl2ejOttzQ58EI02HItGcnKiiC5/2aB5g66OCIZC/E1u
+         /mQOQRtDqM/vypg2TSJ4IrsIMarYUK8d/G66KFBDESnUPDZbWua4S7CX2i+MFnWN6+gm
+         TAl9dt7TTOtSu6v1DhRGv8HYoLhUJhndqmVklEGZWSNyfwLROdQQHvcrbP7ORlKCEii6
+         54YlItX98evWB9sVh7JTXi0t4Ki9jcwLstQgwmyBLwwyw2nX7hSrmTmI1pu9DpWmC1n2
+         Kljg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=lQCZlvushcOD69EcXhMHyrU/TPLV5UJPHlxcyr/r1Xg=;
-        b=OkpFreQGaaPlKDiuMeYD4FO1ZeR8LjpjwoIzaeJ083aRi9Ts28XUtByWZh+XpaapcW
-         oUjYDZf+BNAYded0vcY5pKJCTKdj4vcoiDK+I2Se1nLng6nkJnFxRUGPo7Q3Rz5nGml+
-         qO1YrF7Q3bOvG6KmdYomr0J0mF+PqQV8yUpXqUlwLIV83/94rYPfGj6vh6ZB0rtIrqSm
-         rdszJE7IVORrQ3pwyZaCAe7mirHAEVTPMXieX7feLWgBAWPnH01iz10GwaPuKeDQvgeB
-         dtQJ5laByP7R3UQySBdiuTW2mWGTY3zBIAFcdqr9AnnYiyN7X6zwj8TIEDKH7RrZGfTj
-         7Ddw==
-X-Gm-Message-State: AOAM532MXOOnxKkTF8w2wuv3CLD39tBfx8/R1G2chCezOTRgyBclT5er
-        5HIF62R+PL9UvHqGbi86Pt8=
-X-Google-Smtp-Source: ABdhPJxXyvj4hRWrdgEtWV/PcGf7R0fJvjrqlaQ3A42V+efb3QSuM3VXtxd7bpryewDUbBJN29AM8A==
-X-Received: by 2002:a17:90a:ff92:: with SMTP id hf18mr461075pjb.10.1594058889231;
-        Mon, 06 Jul 2020 11:08:09 -0700 (PDT)
+        bh=ljWc7ncVT9pbFQys6lUrJ2oby+afUmM7eFZjxIhMARg=;
+        b=SVmi6Dt9VxC7V9s2hgFrpoaYXLHsNobiJw8m0vQ0/leilWyya5rh4SEVJuSUu7WB5n
+         YPSaSQ8D/X7kF0IUL2npmteIMwtSLdb3sejU8+faoDS7arTTVlbnK+IUbkHggHLJydmR
+         VW49nRYFniRFi+NTQ4HkOkSTn2dW5HjNrEiDsu9H5LaVD5c64R3OVr0U5RN6eaFlFDfg
+         yfuUnyTlskfe3fOXyXI5kZPv/TDP398V5U4A0ycnVgBlf10XKfowSZQOlMf+tI+NKSOm
+         w8Ez2nGiQJEYqcGP3klePsHA0krd7PewKaLDYuI5aNED1tihZEwfJS2++H6LyV21hLn1
+         BJtw==
+X-Gm-Message-State: AOAM532FS98inmoWWdJF/85kxMN2VIfQ0GWVZdqiw9pN6TBDCQau5+QV
+        IrKdRdlreYs36bA5I+sF2i0pxVJ54sM=
+X-Google-Smtp-Source: ABdhPJxIo6PQngVuGXtLZOqfdIq2vAywCi8VVu0pPrqJTL0U3sjfe2jLu94RvE7iZvdk15XpRbmE0w==
+X-Received: by 2002:a65:5682:: with SMTP id v2mr41106431pgs.231.1594058895951;
+        Mon, 06 Jul 2020 11:08:15 -0700 (PDT)
 Received: from jordon-HP-15-Notebook-PC.domain.name ([122.171.43.125])
-        by smtp.gmail.com with ESMTPSA id 199sm20425544pgc.79.2020.07.06.11.08.06
+        by smtp.gmail.com with ESMTPSA id 199sm20425544pgc.79.2020.07.06.11.08.13
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jul 2020 11:08:08 -0700 (PDT)
+        Mon, 06 Jul 2020 11:08:15 -0700 (PDT)
 From:   Souptick Joarder <jrdr.linux@gmail.com>
 To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
 Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
         Souptick Joarder <jrdr.linux@gmail.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Paul Durrant <xadimgnik@gmail.com>
-Subject: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
-Date:   Mon,  6 Jul 2020 23:46:11 +0530
-Message-Id: <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com>
+Subject: [PATCH v2 3/3] xen/privcmd: Convert get_user_pages*() to  pin_user_pages*()
+Date:   Mon,  6 Jul 2020 23:46:12 +0530
+Message-Id: <1594059372-15563-4-git-send-email-jrdr.linux@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
 References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
@@ -76,32 +76,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pages need to be marked as dirty before unpinned it in
-unlock_pages() which was oversight. This is fixed now.
+In 2019, we introduced pin_user_pages*() and now we are converting
+get_user_pages*() to the new API as appropriate. [1] & [2] could
+be referred for more information. This is case 5 as per document [1].
+
+[1] Documentation/core-api/pin_user_pages.rst
+
+[2] "Explicit pinning of user-space pages":
+        https://lwn.net/Articles/807108/
 
 Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Suggested-by: John Hubbard <jhubbard@nvidia.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
 Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Cc: Paul Durrant <xadimgnik@gmail.com>
 ---
- drivers/xen/privcmd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/xen/privcmd.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index 33677ea..f6c1543 100644
+index f6c1543..5c5cd24 100644
 --- a/drivers/xen/privcmd.c
 +++ b/drivers/xen/privcmd.c
-@@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
- {
- 	unsigned int i;
+@@ -594,7 +594,7 @@ static int lock_pages(
+ 		if (requested > nr_pages)
+ 			return -ENOSPC;
  
--	for (i = 0; i < nr_pages; i++)
-+	for (i = 0; i < nr_pages; i++) {
-+		if (!PageDirty(pages[i]))
-+			set_page_dirty_lock(pages[i]);
- 		put_page(pages[i]);
-+	}
+-		page_count = get_user_pages_fast(
++		page_count = pin_user_pages_fast(
+ 			(unsigned long) kbufs[i].uptr,
+ 			requested, FOLL_WRITE, pages);
+ 		if (page_count < 0)
+@@ -610,13 +610,7 @@ static int lock_pages(
+ 
+ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+ {
+-	unsigned int i;
+-
+-	for (i = 0; i < nr_pages; i++) {
+-		if (!PageDirty(pages[i]))
+-			set_page_dirty_lock(pages[i]);
+-		put_page(pages[i]);
+-	}
++	unpin_user_pages_dirty_lock(pages, nr_pages, true);
  }
  
  static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
