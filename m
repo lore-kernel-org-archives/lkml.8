@@ -2,133 +2,395 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A12C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A64012070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Fs+Md3hR";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="oXNKF+Lp"
+	by mail.kernel.org (Postfix) with ESMTP id 377CE2070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgGFCZL (ORCPT
+        id S1728679AbgGFC2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 22:25:11 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:22055 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728632AbgGFCZK (ORCPT
+        Sun, 5 Jul 2020 22:28:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34844 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgGFC2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 22:25:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594002309; x=1625538309;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=c2T259ic0yKu7rg6tYhMNSjKPQjSk30g0Su6IzM1ulM=;
-  b=Fs+Md3hRmHjqdbD5UMMkKzOIqQcbiC85gQjHCSM/rSUWPO6v3Em9yOel
-   5Q0DRMXDQtYLZUHt9gYnRnW0f4lmN9vDfQL+YWtnWTSW8gaN3t9TKnDMb
-   ErvsOs8u8c98PZyqy2GjzEO7E7JPQcSTWb3p6Oxxy9SHAOBoaN/VRoLfi
-   K5JxNLXZoxYDtSbTekwlhpaef64rH8Rl0mq5FG+QTfCJB5/c+Tis9nAHy
-   vKXAbLKnNnC81hd63U+ZjfLd73BPWZaaQkE3kDjGM1rztbG1LIm/gpX+R
-   Bd25bLgG067pHK+NGr/IDRyK3mB/O3Dbioa0Wyr/h/ERnAx6LXFAznsO9
-   A==;
-IronPort-SDR: r2aBXyLxg94vbPZdMMCLO7+tolQ4F8HXhcXaiZJR5/w++Kmn11mdnsNZxCWVyS6283/W0c2IBH
- YeTw07oR1Mfg1F2oqqe2Rx/oKYxMdjh44hULEZEhbSmX2v1CHZwa+CcfPoQhszDe7KpLvL/3mL
- RRFPAZgQJCHssrK9zfPJer+Ew8isabfIS8Ui7KyxGTqumhyGKVH329vP1B0YDdC7SuTOjrqs6K
- gupnH+c2nb0UQ/5yE+jLaQc0KLxw/o5d/6I8wCaUmZaZqYhrK4zV1Oi5Z52d6FCf8ghPAOXcQK
- aQg=
-X-IronPort-AV: E=Sophos;i="5.75,318,1589212800"; 
-   d="scan'208";a="141699381"
-Received: from mail-sn1nam04lp2053.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.53])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jul 2020 10:25:08 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QITeg0D8WQxtVQdwAkUl0rmP3awtV2XzSVuN4yH1XCK/SKh9Qvy0s0bP/6Mug6177s1T0mlU+bl2xH7oZj683qklNJu1T8aZkkenZ7mcvF9jioxmNH/LLVXDw9MZVkp7BUG2s7N8/A6/CJXObk2Yya36AAy2InJFEBUzDT31wTiuHnVli8ZHe8ympLbhG6TWLFneyP0zyukA6ro0NU/qLEHJ3V6Oz+IQz1qKH1Hb7Gg8MNS4Zet0n3U4aIOvRi5wq9K1iIOn3VSiAj8Ta8Q7LeDJxTXMSswUqe4nlYBnvAwH95pzHnB+oGqRpMNJxvUO7fu2my8lacuySawH7BiUvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c2T259ic0yKu7rg6tYhMNSjKPQjSk30g0Su6IzM1ulM=;
- b=jvBNcRTZ5v06BaIaB3SoVYKBRctQVC4h/KwZ+RMonbmTVIK9KMku7jY/7Rn1GKDK9VJDn+ttX2NJo/azDSHMTgaQOZ0SgJ790rOrrMg80iDq81Qik/pUXJh39ZbdaPuBZhp4CCnfPFJOhzb54hjSGzkrSOx4y0+wKUKubgSsBXHtWD/dQ1daEPLI4oRS3YGnpRifW9m/e5mHtX2PZIV4t2uKb5rmsLWeR2ICRzFUtIB0X1rjZ7m6LJzF3F7pxWSZ6FRIcmBWg6ICbl3b1+0hguIpx6g57RUzAjf2nvDkjojMR8qDMZiCTgiUHmMHkTOGp0LoEsJp5CyWQPZimt67Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c2T259ic0yKu7rg6tYhMNSjKPQjSk30g0Su6IzM1ulM=;
- b=oXNKF+LpsnA3vPhq44+QGnnONUzyPK59VrzT7YU6lDjfuvBKAvHjlhJfnxH95mRDcGeBLjIROOqA/5DNy2+iBLZjhqpxwrxRMA5gIKvkLuSRHQrtz0PrDWZOrQrVrs5/aHRglO7O4HIZzQhvuo7xX9/mqfHo0c0WV4rz7BTl0GY=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB6102.namprd04.prod.outlook.com (2603:10b6:a03:e8::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Mon, 6 Jul
- 2020 02:25:07 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 02:25:07 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>
-CC:     "baolin.wang7@gmail.com" <baolin.wang7@gmail.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] nvme-pci: Use standard block status macro
-Thread-Topic: [PATCH 5/5] nvme-pci: Use standard block status macro
-Thread-Index: AQHWUOVmjr1DYiX5Qkm8oEEpRUYj2Q==
-Date:   Mon, 6 Jul 2020 02:25:06 +0000
-Message-ID: <BYAPR04MB49657FA8E31516885C73513986690@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
- <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux.alibaba.com; dkim=none (message not signed)
- header.d=none;linux.alibaba.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 220d8d8e-ed2f-45e4-f082-08d82153cc92
-x-ms-traffictypediagnostic: BYAPR04MB6102:
-x-microsoft-antispam-prvs: <BYAPR04MB610265D113148BCDBD27C84B86690@BYAPR04MB6102.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:305;
-x-forefront-prvs: 04569283F9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hsXa5B8w1qV8wCs8VMnU8V1JNoGV7NRayoyLlR9p1/hDf6kBp/rrAyKNJLRPQeAX8wAvyD1+jvNkAZ8H9uRf0Xdf7CdchiNaGLvRF6hEhnlkSG+EoXLgimRicbAnzpHV4mkMc0hrfxjTpMhPcfVbtgP8xlLp+RpB1umqPIoiTbAphH2IjlbjF66Vd7bDPnVkcj4GCyCRaaPSCZ/E5pVQ9OSHIsisCI7LnByj2A0U2tXjwV//p5KmJ/bk/0vz4tgDCVQ4Rwtq5gU/yxedyFWyEsbpNwmd8TswtkRePEoYbGuEMqvayJA+ncjIdpHHhrPAkKTcbSSj3WOh48nThvy9ww==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(376002)(346002)(4326008)(2906002)(186003)(110136005)(7696005)(6506007)(53546011)(54906003)(71200400001)(478600001)(9686003)(316002)(26005)(76116006)(66446008)(66476007)(66946007)(66556008)(64756008)(558084003)(55016002)(33656002)(5660300002)(83380400001)(86362001)(8676002)(52536014)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: K7ju2MJAylvCWM4vp2njuk1sz58eStQfEmdOulG/MDWqO7gBcG8cPE21I8a2sFOM8mI77xzVG5hzwZ8d1+88a9d7N8kirtpei01T7aDCqaEZBWq7yVQ5zOfY3B1z/6Klo1Cd8/BKQkxzWqj16U3t2G3ibhbHpvEwmqYvftcGt5HoZjQbpa4GYv1UDwy6QFJtj9PmQsKepWJXe9NJOUpezFmhjhacMgqXnt/U7KGhOVPupV3BC6DrnpQ5rK+tiMb70AmMF1aLhIcCf9TjSHyDnkVBiluWHxB8YU+3Fg5dFOLfbs+72nL9nI6CcvksaJ7lTSMk3tDUplf/rqWSyhc0HZMXBPFH+LXol3fNy6TI/MowWaXiLaV/VlO7/ZbIBm7lvvkNvTNYPzw8EMqFM0As0AQF8knW5OAWGAE1hQ+Yj2fn2ul81/8KDTpY1hn7RbfMPPgEKPQ386Zvx74dWgRZrMk7Ffl+wk980JubsBOLDCk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 Jul 2020 22:28:42 -0400
+Received: from 124x35x43x17.ap124.ftth.ucom.ne.jp ([124.35.43.17] helo=[172.16.81.130])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <nobuto.murata@canonical.com>)
+        id 1jsGrr-00048P-5E; Mon, 06 Jul 2020 02:28:27 +0000
+Subject: Re: [dm-devel] [PATCH v2] dm crypt: add flags to optionally bypass
+ dm-crypt workqueues
+To:     Ignat Korchagin <ignat@cloudflare.com>, agk@redhat.com,
+        snitzer@redhat.com, dm-devel@redhat.com, dm-crypt@saout.de,
+        linux-kernel@vger.kernel.org
+Cc:     Damien.LeMoal@wdc.com, herbert@gondor.apana.org.au,
+        kernel-team@cloudflare.com, ebiggers@kernel.org,
+        mpatocka@redhat.com, nobuto.murata@canonical.com
+References: <20200626210302.1813-1-ignat@cloudflare.com>
+From:   Nobuto Murata <nobuto.murata@canonical.com>
+Message-ID: <7832ce68-5025-5a70-42e3-c07fc0513f79@canonical.com>
+Date:   Mon, 6 Jul 2020 11:28:22 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 220d8d8e-ed2f-45e4-f082-08d82153cc92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 02:25:06.9540
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dM7R9JK4I779LPi0543JlPCzA2nNBJI/ezmiuUz93VAB4x70o7DU+k18386ZcCJjtr4/Rcr9vjCcqoS1EAloWYWSKItIykps013NN2eiP5I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6102
+In-Reply-To: <20200626210302.1813-1-ignat@cloudflare.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 7:55 PM, Baolin Wang wrote:=0A=
-> Use standard block status macro.=0A=
-> =0A=
-> Signed-off-by: Baolin Wang<baolin.wang@linux.alibaba.com>=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+On 6/27/20 6:03 AM, Ignat Korchagin wrote:
+> This is a follow up from [1]. Consider the following script:
+> 
+> sudo modprobe brd rd_nr=1 rd_size=4194304
+> 
+> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0' | \
+> sudo dmsetup create eram0
+> 
+> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_write_workqueue' | \
+> sudo dmsetup create eram0-inline-write
+> 
+> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_read_workqueue' | \
+> sudo dmsetup create eram0-inline-read
+> 
+> devices="/dev/ram0 /dev/mapper/eram0 /dev/mapper/eram0-inline-read "
+> devices+="/dev/mapper/eram0-inline-write"
+> 
+> for dev in $devices; do
+>    echo "reading from $dev"
+>    sudo fio --filename=$dev --readwrite=read --bs=4k --direct=1 \
+>    --loops=1000000 --runtime=3m --name=plain | grep READ
+> done
+> 
+> for dev in $devices; do
+>    echo "writing to $dev"
+>    sudo fio --filename=$dev --readwrite=write --bs=4k --direct=1 \
+>    --loops=1000000 --runtime=3m --name=plain | grep WRITE
+> done
+> 
+> This script creates a ramdisk (to eliminate hardware bias in the benchmark) and
+> three dm-crypt instances on top. All dm-crypt instances use the NULL cipher
+> to eliminate potentially expensive crypto bias (the NULL cipher just uses memcpy
+> for "encyption"). The first instance is the current dm-crypt implementation from
+> 5.8-rc2, the two others have new optional flags enabled, which bypass kcryptd
+> workqueues for reads and writes respectively and write sorting for writes. On
+> my VM (Debian in VirtualBox with 4 cores on 2.8 GHz Quad-Core Intel Core i7) I
+> get the following output (formatted for better readability):
+> 
+> reading from /dev/ram0
+>     READ: bw=508MiB/s (533MB/s), 508MiB/s-508MiB/s (533MB/s-533MB/s), io=89.3GiB (95.9GB), run=180000-180000msec
+> 
+> reading from /dev/mapper/eram0
+>     READ: bw=80.6MiB/s (84.5MB/s), 80.6MiB/s-80.6MiB/s (84.5MB/s-84.5MB/s), io=14.2GiB (15.2GB), run=180000-180000msec
+> 
+> reading from /dev/mapper/eram0-inline-read
+>     READ: bw=295MiB/s (309MB/s), 295MiB/s-295MiB/s (309MB/s-309MB/s), io=51.8GiB (55.6GB), run=180000-180000msec
+> 
+> reading from /dev/mapper/eram0-inline-write
+>     READ: bw=114MiB/s (120MB/s), 114MiB/s-114MiB/s (120MB/s-120MB/s), io=20.1GiB (21.5GB), run=180000-180000msec
+> 
+> writing to /dev/ram0
+>    WRITE: bw=516MiB/s (541MB/s), 516MiB/s-516MiB/s (541MB/s-541MB/s), io=90.7GiB (97.4GB), run=180001-180001msec
+> 
+> writing to /dev/mapper/eram0
+>    WRITE: bw=40.4MiB/s (42.4MB/s), 40.4MiB/s-40.4MiB/s (42.4MB/s-42.4MB/s), io=7271MiB (7624MB), run=180001-180001msec
+> 
+> writing to /dev/mapper/eram0-inline-read
+>    WRITE: bw=38.9MiB/s (40.8MB/s), 38.9MiB/s-38.9MiB/s (40.8MB/s-40.8MB/s), io=7000MiB (7340MB), run=180001-180001msec
+> 
+> writing to /dev/mapper/eram0-inline-write
+>    WRITE: bw=277MiB/s (290MB/s), 277MiB/s-277MiB/s (290MB/s-290MB/s), io=48.6GiB (52.2GB), run=180000-180000msec
+
+I've applied this v2 patch on top of Ubuntu 5.4 kernel and followed the 
+test case on my personal testbed (bare metal) with AMD Ryzen 7 2700. 
+Indeed it made things faster in general, but I saw mixed results when 
+running it with some scenarios close to the actual workloads. I went 
+back to the test case and ran it with various blocksize, iodepth, and 
+numjobs, then I saw similar and mixed trends. One of the cases where 
+no_(read|write)_workqueue doesn't perform well is as follows:
+
+##################################################
+# 4m ioengine=libaio iodepth=16 numjobs=1
+##################################################
+reading from /dev/ram0
+    READ: bw=6208MiB/s (6510MB/s)
+reading from /dev/mapper/eram0
+    READ: bw=4773MiB/s (5005MB/s)
+reading from /dev/mapper/eram0-inline-read
+    READ: bw=2782MiB/s (2918MB/s)
+reading from /dev/mapper/eram0-inline-write
+    READ: bw=4757MiB/s (4988MB/s)
+writing to /dev/ram0
+   WRITE: bw=5497MiB/s (5764MB/s)
+writing to /dev/mapper/eram0
+   WRITE: bw=3143MiB/s (3296MB/s)
+writing to /dev/mapper/eram0-inline-read
+   WRITE: bw=3144MiB/s (3297MB/s)
+writing to /dev/mapper/eram0-inline-write
+   WRITE: bw=1818MiB/s (1906MB/s)
+
+I've collected the output in:
+https://gist.github.com/nobuto-m/74849fb181d9016ddde17c806dac2421#file-patch-v2-testcase_result-txt
+
+Do you see similar trends when blocksize, iodepth, and numjobs are 
+changed? Wondered if I should test it again with the latest kernel as 
+5.8-rcX properly instead of 5.4.
+
+Thanks,
+
+> 
+> Current dm-crypt implementation creates a significant IO performance overhead
+> (at least on small IO block sizes) for both latency and throughput. We suspect
+> offloading IO request processing into workqueues and async threads is more
+> harmful these days with the modern fast storage. I also did some digging into
+> the dm-crypt git history and much of this async processing is not needed
+> anymore, because the reasons it was added are mostly gone from the kernel. More
+> details can be found in [2] (see "Git archeology" section).
+> 
+> This change adds no_(read|write)_workqueue flags separately for read and write
+> BIOs, which direct dm-crypt not to offload crypto operations into kcryptd
+> workqueues and process everything inline. In addition, writes are not buffered
+> to be sorted in the dm-crypt red-black tree, but dispatched immediately. For
+> cases, where crypto operations cannot happen inline (hard interrupt context,
+> for example the read path of some NVME drivers), we offload the work to a
+> tasklet rather than a workqueue.
+> 
+> These flags ensure inline BIO processing in the dm-crypt module only. It is
+> worth noting that some Crypto API implementations may offload encryption into
+> their own workqueues, which are independent of the dm-crypt and its
+> configuration. However upon enabling no_(read|write)_workqueue flags dm-crypt
+> will instruct Crypto API not to backlog crypto requests.
+> 
+> [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
+> [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
+> 
+> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+> ---
+>   drivers/md/dm-crypt.c | 68 +++++++++++++++++++++++++++++++++----------
+>   1 file changed, 52 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index 000ddfab5ba0..6924eb49b1df 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -69,6 +69,7 @@ struct dm_crypt_io {
+>   	u8 *integrity_metadata;
+>   	bool integrity_metadata_from_pool;
+>   	struct work_struct work;
+> +	struct tasklet_struct tasklet;
+>   
+>   	struct convert_context ctx;
+>   
+> @@ -127,7 +128,8 @@ struct iv_elephant_private {
+>    * and encrypts / decrypts at the same time.
+>    */
+>   enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,
+> -	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD };
+> +	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD,
+> +	     DM_CRYPT_NO_READ_WORKQUEUE, DM_CRYPT_NO_WRITE_WORKQUEUE };
+>   
+>   enum cipher_flags {
+>   	CRYPT_MODE_INTEGRITY_AEAD,	/* Use authenticated mode for cihper */
+> @@ -1449,7 +1451,7 @@ static void kcryptd_async_done(struct crypto_async_request *async_req,
+>   			       int error);
+>   
+>   static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+> -				     struct convert_context *ctx)
+> +				     struct convert_context *ctx, bool nobacklog)
+>   {
+>   	unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
+>   
+> @@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+>   	 * requests if driver request queue is full.
+>   	 */
+>   	skcipher_request_set_callback(ctx->r.req,
+> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,
+> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+>   	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));
+>   }
+>   
+>   static void crypt_alloc_req_aead(struct crypt_config *cc,
+> -				 struct convert_context *ctx)
+> +				 struct convert_context *ctx, bool nobacklog)
+>   {
+>   	if (!ctx->r.req_aead)
+>   		ctx->r.req_aead = mempool_alloc(&cc->req_pool, GFP_NOIO);
+> @@ -1480,17 +1482,17 @@ static void crypt_alloc_req_aead(struct crypt_config *cc,
+>   	 * requests if driver request queue is full.
+>   	 */
+>   	aead_request_set_callback(ctx->r.req_aead,
+> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,
+> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+>   	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req_aead));
+>   }
+>   
+>   static void crypt_alloc_req(struct crypt_config *cc,
+> -			    struct convert_context *ctx)
+> +			    struct convert_context *ctx, bool nobacklog)
+>   {
+>   	if (crypt_integrity_aead(cc))
+> -		crypt_alloc_req_aead(cc, ctx);
+> +		crypt_alloc_req_aead(cc, ctx, nobacklog);
+>   	else
+> -		crypt_alloc_req_skcipher(cc, ctx);
+> +		crypt_alloc_req_skcipher(cc, ctx, nobacklog);
+>   }
+>   
+>   static void crypt_free_req_skcipher(struct crypt_config *cc,
+> @@ -1523,7 +1525,7 @@ static void crypt_free_req(struct crypt_config *cc, void *req, struct bio *base_
+>    * Encrypt / decrypt data from one bio to another one (can be the same one)
+>    */
+>   static blk_status_t crypt_convert(struct crypt_config *cc,
+> -			 struct convert_context *ctx)
+> +			 struct convert_context *ctx, bool noresched)
+>   {
+>   	unsigned int tag_offset = 0;
+>   	unsigned int sector_step = cc->sector_size >> SECTOR_SHIFT;
+> @@ -1533,7 +1535,7 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+>   
+>   	while (ctx->iter_in.bi_size && ctx->iter_out.bi_size) {
+>   
+> -		crypt_alloc_req(cc, ctx);
+> +		crypt_alloc_req(cc, ctx, noresched);
+>   		atomic_inc(&ctx->cc_pending);
+>   
+>   		if (crypt_integrity_aead(cc))
+> @@ -1566,7 +1568,8 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+>   			atomic_dec(&ctx->cc_pending);
+>   			ctx->cc_sector += sector_step;
+>   			tag_offset++;
+> -			cond_resched();
+> +			if (!noresched)
+> +				cond_resched();
+>   			continue;
+>   		/*
+>   		 * There was a data integrity error.
+> @@ -1879,6 +1882,9 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+>   	unsigned long flags;
+>   	sector_t sector;
+>   	struct rb_node **rbp, *parent;
+> +	bool nosort =
+> +			(likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
+> +			test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+>   
+>   	if (unlikely(io->error)) {
+>   		crypt_free_buffer_pages(cc, clone);
+> @@ -1892,7 +1898,7 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+>   
+>   	clone->bi_iter.bi_sector = cc->start + io->sector;
+>   
+> -	if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {
+> +	if (nosort) {
+>   		generic_make_request(clone);
+>   		return;
+>   	}
+> @@ -1941,7 +1947,7 @@ static void kcryptd_crypt_write_convert(struct dm_crypt_io *io)
+>   	sector += bio_sectors(clone);
+>   
+>   	crypt_inc_pending(io);
+> -	r = crypt_convert(cc, &io->ctx);
+> +	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
+>   	if (r)
+>   		io->error = r;
+>   	crypt_finished = atomic_dec_and_test(&io->ctx.cc_pending);
+> @@ -1971,7 +1977,7 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
+>   	crypt_convert_init(cc, &io->ctx, io->base_bio, io->base_bio,
+>   			   io->sector);
+>   
+> -	r = crypt_convert(cc, &io->ctx);
+> +	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags));
+>   	if (r)
+>   		io->error = r;
+>   
+> @@ -2031,9 +2037,29 @@ static void kcryptd_crypt(struct work_struct *work)
+>   		kcryptd_crypt_write_convert(io);
+>   }
+>   
+> +static void kcryptd_crypt_tasklet(unsigned long work)
+> +{
+> +	kcryptd_crypt((struct work_struct *)work);
+> +}
+> +
+>   static void kcryptd_queue_crypt(struct dm_crypt_io *io)
+>   {
+>   	struct crypt_config *cc = io->cc;
+> +	bool noworkqueue =
+> +			(bio_data_dir(io->base_bio) == READ && test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags)) ||
+> +			(bio_data_dir(io->base_bio) == WRITE && test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
+> +
+> +	if (noworkqueue) {
+> +		if (in_irq()) {
+> +			/* Crypto API's "skcipher_walk_first() refuses to work in hard IRQ context */
+> +			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
+> +			tasklet_schedule(&io->tasklet);
+> +			return;
+> +		}
+> +
+> +		kcryptd_crypt(&io->work);
+> +		return;
+> +	}
+>   
+>   	INIT_WORK(&io->work, kcryptd_crypt);
+>   	queue_work(cc->crypt_queue, &io->work);
+> @@ -2838,7 +2864,7 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+>   	struct crypt_config *cc = ti->private;
+>   	struct dm_arg_set as;
+>   	static const struct dm_arg _args[] = {
+> -		{0, 6, "Invalid number of feature args"},
+> +		{0, 8, "Invalid number of feature args"},
+>   	};
+>   	unsigned int opt_params, val;
+>   	const char *opt_string, *sval;
+> @@ -2868,6 +2894,10 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+>   
+>   		else if (!strcasecmp(opt_string, "submit_from_crypt_cpus"))
+>   			set_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
+> +		else if (!strcasecmp(opt_string, "no_read_workqueue"))
+> +			set_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
+> +		else if (!strcasecmp(opt_string, "no_write_workqueue"))
+> +			set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+>   		else if (sscanf(opt_string, "integrity:%u:", &val) == 1) {
+>   			if (val == 0 || val > MAX_TAG_SIZE) {
+>   				ti->error = "Invalid integrity arguments";
+> @@ -3196,6 +3226,8 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+>   		num_feature_args += !!ti->num_discard_bios;
+>   		num_feature_args += test_bit(DM_CRYPT_SAME_CPU, &cc->flags);
+>   		num_feature_args += test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
+> +		num_feature_args += test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
+> +		num_feature_args += test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+>   		num_feature_args += cc->sector_size != (1 << SECTOR_SHIFT);
+>   		num_feature_args += test_bit(CRYPT_IV_LARGE_SECTORS, &cc->cipher_flags);
+>   		if (cc->on_disk_tag_size)
+> @@ -3208,6 +3240,10 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+>   				DMEMIT(" same_cpu_crypt");
+>   			if (test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags))
+>   				DMEMIT(" submit_from_crypt_cpus");
+> +			if (test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags))
+> +				DMEMIT(" no_read_workqueue");
+> +			if (test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags))
+> +				DMEMIT(" no_write_workqueue");
+>   			if (cc->on_disk_tag_size)
+>   				DMEMIT(" integrity:%u:%s", cc->on_disk_tag_size, cc->cipher_auth);
+>   			if (cc->sector_size != (1 << SECTOR_SHIFT))
+> @@ -3320,7 +3356,7 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
+>   
+>   static struct target_type crypt_target = {
+>   	.name   = "crypt",
+> -	.version = {1, 21, 0},
+> +	.version = {1, 22, 0},
+>   	.module = THIS_MODULE,
+>   	.ctr    = crypt_ctr,
+>   	.dtr    = crypt_dtr,
+> 
+
