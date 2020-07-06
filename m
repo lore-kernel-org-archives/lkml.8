@@ -2,114 +2,104 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E528CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C4C20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C448420663
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MIkuIgJM"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kYIFEzQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgGFUm1 (ORCPT
+        id S1726727AbgGFUtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGFUm0 (ORCPT
+        Mon, 6 Jul 2020 16:49:42 -0400
+Received: from mail.efficios.com ([167.114.26.124]:56924 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFUtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:42:26 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C9EC061755;
-        Mon,  6 Jul 2020 13:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kjc+i1Ow6AGEI/8UmiAWIVEudBZeCQL7t56EDRRq/Ls=; b=MIkuIgJMIqdETfNCL3n847E40
-        Wb0ekcn2OLahMEs0hWJb2A2EnVA2Oy4VJHiKAHlhIAXhHvegQcO8eFORTceME+3UQ/OW+NmVDc2+w
-        11+ONZNOhxs7+LRekH/dOdI2tU7qhMFeqZMXhxAgFlWeXDuI4Ktc4tpMvsIIRkCZFXKGQ8ehHBBo4
-        5k35Y/0HmpFCREhBPJBfvjXmni6ZSHhcyabewqGqNEYWm4nHi5Ic1RN8OgATan0XchJAORcW0Ik5o
-        R7icLtogIFIedgbLbCNwGQagMm8JS+oVGEkdlS2taTT55W/RrfNuO87m/I2lbwV5OEbfR5EOx/qEJ
-        TLILAkYXw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36170)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jsXwW-0006OZ-FJ; Mon, 06 Jul 2020 21:42:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jsXwW-0006E6-7y; Mon, 06 Jul 2020 21:42:24 +0100
-Date:   Mon, 6 Jul 2020 21:42:24 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: sfp: Unique GPIO interrupt names
-Message-ID: <20200706204224.GW1551@shell.armlinux.org.uk>
-References: <CAFXsbZp5A7FHoXPA6Rg8XqZPD9NXmSeZZb-RsEGXnktbo04GOw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFXsbZp5A7FHoXPA6Rg8XqZPD9NXmSeZZb-RsEGXnktbo04GOw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 6 Jul 2020 16:49:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 926692DCDA5;
+        Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id zgXfZ8ULZHuK; Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2780F2DCE1F;
+        Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2780F2DCE1F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594068581;
+        bh=XlqRnfsoWKc5MVLCjC5AxpBd+CFQtEQAvuC1zE63+Y0=;
+        h=From:To:Date:Message-Id;
+        b=kYIFEzQeOrM7uwndSuipxq1i/t1+T8X4j91h/fDUIb/fqSqnT31p+CpQ3crCqc5iw
+         B3X3jvDFQjenxqoTmKUiCZ/XtNaZyEutEyla1JpI2DaD3oe4vDj2EOUimK3ypjg2r6
+         sgz4/DCtz9YHhweZaiprXuqe7OwlzbJBLqu8q6hCz2loIwsxJlvQEkteiG6AcnwWfW
+         r9wqv00CWTEo8RDX7G1ynaFN5dWmc2WND8hvuVXfdF+SyXd8bing4Ilhk4MZUWxmzD
+         wDyppX9nX214yeF4WgxT5dupBKCZDO6j+Th5hIfeGX2M1yy3nZKFqEoCZLOPd2AuNk
+         XblzTfeWga1cQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 1T7FcRgLYua3; Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id A243A2DCDA3;
+        Mon,  6 Jul 2020 16:49:40 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH for 5.8 0/4] rseq cpu_id ABI fix
+Date:   Mon,  6 Jul 2020 16:49:09 -0400
+Message-Id: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 12:38:37PM -0700, Chris Healy wrote:
-> Dynamically generate a unique GPIO interrupt name, based on the
-> device name and the GPIO name.  For example:
-> 
-> 103:          0   sx1503q  12 Edge      sff2-los
-> 104:          0   sx1503q  13 Edge      sff3-los
-> 
-> The sffX indicates the SFP the loss of signal GPIO is associated with.
-> 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+Hi,
 
-This doesn't work in all cases.
+Recent integration of rseq into glibc unearthed an issue with inaccurate
+cpu_id field for newly created tasks. This series includes a fix for the
+underlying issue (meant to be backported to stable), as well as new rseq
+flags to let user-space know that the kernel implements this fix, so
+glibc and other rseq users can use this flag to know whether they can
+safely use rseq without risk of corrupting their per-cpu data. This new
+flag could either be added only to the master branch (no stable
+backport) or backported to stable, depending on what seems the most
+appropriate.
 
-> ---
->  drivers/net/phy/sfp.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-> index 73c2969f11a4..9b03c7229320 100644
-> --- a/drivers/net/phy/sfp.c
-> +++ b/drivers/net/phy/sfp.c
-> @@ -220,6 +220,7 @@ struct sfp {
->      struct phy_device *mod_phy;
->      const struct sff_data *type;
->      u32 max_power_mW;
-> +    char sfp_irq_name[32];
-> 
->      unsigned int (*get_state)(struct sfp *);
->      void (*set_state)(struct sfp *, unsigned int);
-> @@ -2349,12 +2350,15 @@ static int sfp_probe(struct platform_device *pdev)
->              continue;
->          }
-> 
-> +        snprintf(sfp->sfp_irq_name, sizeof(sfp->sfp_irq_name),
-> +             "%s-%s", dev_name(sfp->dev), gpio_of_names[i]);
+This is an RFC aiming for quick inclusion into the Linux kernel, unless
+we prefer reverting the entire rseq glibc integration and try again in 6
+months. Their upcoming release is on August 3rd, so we need to take a
+decision on this matter quickly.
 
-sfp_irq_name will be overwritten for each GPIO IRQ claimed, which means
-all IRQs for a particular cage will end up with the same name.
-sfp_irq_name[] therefore needs to be an array of names, one per input.
+Thanks,
 
-Thanks.
+Mathieu
+
+Mathieu Desnoyers (4):
+  sched: Fix unreliable rseq cpu_id for new tasks
+  rseq: Introduce RSEQ_FLAG_REGISTER
+  rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
+  rseq: selftests: Expect reliable cpu_id field
+
+ include/uapi/linux/rseq.h           | 15 +++++-
+ kernel/rseq.c                       | 81 ++++++++++++++++-------------
+ kernel/sched/core.c                 |  2 +
+ tools/testing/selftests/rseq/rseq.c | 10 +++-
+ 4 files changed, 71 insertions(+), 37 deletions(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.17.1
+
