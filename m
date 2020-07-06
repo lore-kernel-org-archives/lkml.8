@@ -2,170 +2,127 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA06C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA5D206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC8320720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXd2NakA"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MrXZoUTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgGFDrV (ORCPT
+        id S1728748AbgGFD4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 23:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        Sun, 5 Jul 2020 23:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728668AbgGFDrU (ORCPT
+        with ESMTP id S1728703AbgGFD4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 23:47:20 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3230C061794;
-        Sun,  5 Jul 2020 20:47:20 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id q8so37889774iow.7;
-        Sun, 05 Jul 2020 20:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IbFKvwUAZYidEEuDI3n6ueyYMeGnBHxKERKc5eSxw+c=;
-        b=PXd2NakAyUx5SjY38+/3VFE5sAGCgZ9aBGUq/ScZpncOh9+s2PP5Sl4F/sigLmGNoB
-         3DWbg8XVnymQXfm9NzZugObhNcTtdwNaAOuwmS67c5icYy3Lk0crSRK/BkdO8p4eRi6W
-         vv8PXOnuz69lz1LloiXbV3eTXD3NL8Zh8O4PobTFibsF/eMoAN35uyDgf8xLOwbqw+xB
-         Xm1YL7eRVOula8mR8Tes43+TDH50NGELPtDolE+1AR7uttajcyof8rz4Dbt3Gc/v0kkM
-         10yHonaMVG+eAuCJkGUZYxtJsqfRys2m/m5BwlpSm78x/5Gb9NQYALJUH4tzveU8+1lg
-         KOug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IbFKvwUAZYidEEuDI3n6ueyYMeGnBHxKERKc5eSxw+c=;
-        b=uKXYGrf5fWKhzscpnee2LUGADBEBhxrdwVbli58B4DUzdnnpQgR39jX9Clkj3pZY7U
-         zBvYjmCKwjydDyxbJZl2kQvblub/ABQjgmlTu5Uk9HRkPFuk3NfDLOI/u2fEDXfJOZr+
-         fcNa2NYRzfd5B/S8LsRoTta0EdoaAAYW5+kcEiqqIMGUNJc2+sJj30sTFP7e8bv/6u5Z
-         etjLEY4lplB4WRSZ2eXiupUd0JdMliofNKn6aa9iv5xvfpM3FvRXIYf/rtHF5pc18/1c
-         EjhTneJUoG4Csumza4eKIlcAIp3YIN+BZ0iuQjg8XPqNdntKprBoJPMsz4N6eiCbbGce
-         cehg==
-X-Gm-Message-State: AOAM5312u2lcj7EiVZiOLUzANgVs3hIlCBE4nP9TY5iBIF30nL0l8nJk
-        SrlsdxRSH4ditht2PyPOIZqjBMGIQFfyzKvKiHg=
-X-Google-Smtp-Source: ABdhPJyTjmaguZSDwR71fF4ldBSLkkKOt6qXIwC1RPm0/zFCPQUQ4QDhV1oO5ORP1DeBUObkMEgkS9VhRJqR9hekIZ4=
-X-Received: by 2002:a5e:cb42:: with SMTP id h2mr23198425iok.43.1594007239994;
- Sun, 05 Jul 2020 20:47:19 -0700 (PDT)
+        Sun, 5 Jul 2020 23:56:25 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59D5C061794;
+        Sun,  5 Jul 2020 20:56:24 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0Wvp3BNhz9sDX;
+        Mon,  6 Jul 2020 13:56:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594007783;
+        bh=/GNJJfWsDedN7nVwHZr6z5cQt0v1HcsF+F3L1Pwaz90=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MrXZoUTyNi7bONm8l2xVKk21phHM1bS15MV7wvzBU3o5dXbkYWE1NR16W42ZJuvRR
+         9BTBCNSPY2zoNr9XrxnnCm3bbVwQd18e09o//S0TaXboE0SOHfMQMIr8dk2EWemZDK
+         Yhh3Ct5yic5LevCa3XTEi2dfGnUjzPTU6nWz5PQM78ij9LROb6fr6mRPSJTT8ECDli
+         6zvkY0S2bOv9ksdP2IYaofA2L4Q+bAkl/2ZuosIz9dIHiKOsJjBd2PEfmjq/vBWNhr
+         eRsdt8YrWBsjAD/SBhYXxrv0ljHdKzEXh6g9R5X7CrISJ9cDaQASquIvoKjzVm6LHw
+         yAPsdinAaRo1g==
+Date:   Mon, 6 Jul 2020 13:56:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: linux-next: manual merge of the dmaengine tree with the
+ dmaengine-fixes tree
+Message-ID: <20200706135621.0113ebf9@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200705060435.504-1-linux.amoon@gmail.com> <20200705180248.GA2765@kozik-lap>
-In-Reply-To: <20200705180248.GA2765@kozik-lap>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 6 Jul 2020 09:17:09 +0530
-Message-ID: <CANAwSgQzQuP5i8ZkvxHS===oVO2y-ZWZZRt9CyRtq1AiyrL81w@mail.gmail.com>
-Subject: Re: [PATCH v2] phy: samsung: Use readl_poll_timeout function
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/O_.bJSqbvpcSYxxIO4hO7HV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+--Sig_/O_.bJSqbvpcSYxxIO4hO7HV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your review comments.
+Hi all,
 
-On Sun, 5 Jul 2020 at 23:32, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sun, Jul 05, 2020 at 06:04:35AM +0000, Anand Moon wrote:
-> > User readl_poll_timeout function instead of open
-> > coded handling in crport_handshake function.
->
-> Your change does not replace only the "open coded handling" with
-> readl_poll_timeout(). Your change does more - switches busy waiting with
-> udelay to a sleeping mode. I am not sure if it is correct but definitly
-> it should be mentioned.  Otherwise how can we be sure that you checked
-> if this is allowed in this section? Did you test everything with
-> DEBUG_ATOMIC_SLEEP?
-Yes this DEBUG_ATOMIC_SLEEP is enabled in exynos_defconfig.
->
-Ok how about the below commit message.
+Today's linux-next merge of the dmaengine tree got a conflict in:
 
-Instead of a busy waiting loop while loop using udelay use readl_poll_timeout
-function to check the condition is met or timeout occurs in
-crport_handshake function.
+  drivers/dma/idxd/sysfs.c
 
-> >
-> > Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Changes v2:
-> > --used the default timeout values.
-> > --Added missing Fixed tags.
-> > ---
-> >  drivers/phy/samsung/phy-exynos5-usbdrd.c | 37 +++++++++---------------
-> >  1 file changed, 13 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > index e510732afb8b..c97f5fb6a9a0 100644
-> > --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/iopoll.h>
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/mutex.h>
-> > @@ -556,40 +557,28 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
-> >  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
-> >                           u32 val, u32 cmd)
-> >  {
-> > -     u32 usec = 100;
-> > +     u32 timeout_us = 100, sleep_us = 1;
->
-> No need for the variables actually and their type does not match. Just
-> use the values directly.
-Ok thanks
->
-> >       unsigned int result;
-> > +     int err;
-> >
-> >       writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
-> >
-> > -     do {
-> > -             result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> > -             if (result & PHYREG1_CR_ACK)
-> > -                     break;
-> > -
-> > -             udelay(1);
-> > -     } while (usec-- > 0);
-> > -
-> > -     if (!usec) {
-> > -             dev_err(phy_drd->dev,
-> > -                     "CRPORT handshake timeout1 (0x%08x)\n", val);
-> > +     err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> > +                     result, (result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-> > +     if (err) {
-> > +             dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
-> >               return -ETIME;
-> >       }
-> >
-> > -     usec = 100;
-> > +     timeout_us = 100;
-> > +     sleep_us = 1;
->
-> Why defining then again?
-I had removed this in this but last minute I added this code again.
->
-> Best regards,
-> Krzysztof
->
+between commit:
 
-Best Regards
--Anand
+  da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
+
+from the dmaengine-fixes tree and commit:
+
+  f50b150e315e ("dmaengine: idxd: add work queue drain support")
+
+from the dmaengine tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/dma/idxd/sysfs.c
+index 2e2c5082f322,6f0711a822a1..000000000000
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
+  		}
+ =20
+  		idxd_unregister_dma_device(idxd);
+- 		spin_lock_irqsave(&idxd->dev_lock, flags);
+  		rc =3D idxd_device_disable(idxd);
+ +		for (i =3D 0; i < idxd->max_wqs; i++) {
+ +			struct idxd_wq *wq =3D &idxd->wqs[i];
+ +
+ +			idxd_wq_disable_cleanup(wq);
+ +		}
+- 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
+  		module_put(THIS_MODULE);
+  		if (rc < 0)
+  			dev_warn(dev, "Device disable failed\n");
+
+--Sig_/O_.bJSqbvpcSYxxIO4hO7HV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8CoOUACgkQAVBC80lX
+0Gxepgf9Exf0v/hgKm9nThGRVGpJkNO8LnCNxkLEHsBLHIRnm/QfrC58JJ6UHfEh
+egt9UBDiuuiyok+aMPt4G3hYvspuoaeweBxoVQTLIymcnme5CEfTaPBR/WvSNTuq
+xdY/dJR7Bv1kRx3ZLapFEAboQg3J/E+UECB3+PTpi7rhCWurFf8PNspRXcFcWcQC
+oU4i1eN0c+A+LxnG7cExx1sgf56WfV4wjdMzUKyT+ME4MY24MWlmfJXYHBHoegrC
+RW2BcDC31KnIagCzLKLKrynuZGwuCqM+cEaiidZzk4akR3/ir3SGzW5Ze7xU1+Rw
+8cL+X6Di9jrkuXggD+T99u8yAo4UIg==
+=9vKe
+-----END PGP SIGNATURE-----
+
+--Sig_/O_.bJSqbvpcSYxxIO4hO7HV--
