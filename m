@@ -2,94 +2,79 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD425C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA0C20739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CA320760
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594030979;
+	bh=hyubO64upSNhqMywGjKfEDtfPQCLU+NfTnStguiiInQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vYNLwoY0aNMfHzYwZrJsSY7+wHJHkxPJ9Pa1hZynTiEGCvSLQ4mgg82K1Fb7QvBA+
+	 08nDq/yXFTsbxSa8FwrdyCx8rBoQsciCumT9K4zDzn0VhRrrrfdUb4f1n8s2se2XI3
+	 biSK9nyLQNlJbm9T2cqRrW4MWsjrIqHzyZFD6gR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgGFKWg (ORCPT
+        id S1728848AbgGFKW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:22:36 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:35517 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728578AbgGFKWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:22:36 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MOAr1-1kGlgB1kqH-00Oa3m; Mon, 06 Jul 2020 12:22:34 +0200
-Received: by mail-qk1-f173.google.com with SMTP id e11so34265600qkm.3;
-        Mon, 06 Jul 2020 03:22:34 -0700 (PDT)
-X-Gm-Message-State: AOAM530MgDirLOiWHLUDcilfkaKz/gw5j8i67BJpxyeWmq8ljCalEAuQ
-        eCToEo2hnmN//p9oWK8kVAgiL4sO1blAupdncD8=
-X-Google-Smtp-Source: ABdhPJwfccsMavAEuOwPnZc5nlPwwAbRxA+LRFVk2Ze6EPLxLwoPZgaxnZdS7cDtAne9ISoMCR1TRoPiXSUYSIzVeB8=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr46501282qkf.394.1594030953207;
- Mon, 06 Jul 2020 03:22:33 -0700 (PDT)
+        Mon, 6 Jul 2020 06:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728578AbgGFKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:22:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3834720739;
+        Mon,  6 Jul 2020 10:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594030977;
+        bh=hyubO64upSNhqMywGjKfEDtfPQCLU+NfTnStguiiInQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H4G5rNnJWpkPLV7AlSxzZjB4OL/dkUxu4G2J3uDie1OFt2hgg4W+EoO2DFQTwNTP2
+         44OhXBEGR0OXw7WB4966lqDNIa3Il4jASWf2p4v/3GYBEv50TfM06jQgqUNNEZ/zYO
+         ucyO/bNVvwYYAQpaQdrBfkr9cYGkIFT3bGPnJRpE=
+Date:   Mon, 6 Jul 2020 12:22:54 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     NeilBrown <neilb@suse.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+Message-ID: <20200706102254.GA10206@kroah.com>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
+ <87h7ul15le.fsf@notabene.neil.brown.name>
+ <20200706072221.GA1947246@kroah.com>
+ <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
- <CAK8P3a2zzXHNB7CX8efpKeQF2gJkF2J4FwafU58wT2RGvjjTxw@mail.gmail.com>
- <CAFmMkTHrQ4LZk4+-3kdJ+dc47MXR1Jd76AXbO-ceT2zsfDRFGQ@mail.gmail.com>
- <CAK8P3a1bbpmD0wJkhkjqW9YttBpMmdn8Z5oTLm0cr-0gjyU2zA@mail.gmail.com> <CAFmMkTE3z6OZQ_v3jx-4MzMr8v+4qcF2uLn0ASGydj5oqDnfjg@mail.gmail.com>
-In-Reply-To: <CAFmMkTE3z6OZQ_v3jx-4MzMr8v+4qcF2uLn0ASGydj5oqDnfjg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 6 Jul 2020 12:22:17 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3rkiBMB55HJGi8T4Nw4gUrG2M=BAq+w=WMbS8DzwnPqw@mail.gmail.com>
-Message-ID: <CAK8P3a3rkiBMB55HJGi8T4Nw4gUrG2M=BAq+w=WMbS8DzwnPqw@mail.gmail.com>
-Subject: Re: [PATCH] SPI LPC information kernel module
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xAHZFbDFiis48mgI7mbogK8K/Dw5XVQKztXbK7rDQy43AeZdjiH
- Py2HQ//3YJC+ATKS4vqUszoMLXlvbCRT9DSV3qya/19Qyqm3WQmu6F6x60CnGiTGrnqaWSZ
- kB7eD0/PHmLwKOoB3cbEJpqClVsV2ZKczOy4uKOGz3iez6r9og6Kxod1+h6rKQNF/Aouxi4
- /gOGmZM/MZsXnPDyYPzqQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uBWNFIPmyZ0=:e8gzHP87+Mhr5exEWhs1oR
- hoL1yee5u3KjnVA4j94nWBPQZWqHE/K2VRYZZfB8GHWjAJg7aRESALZB+N+pVx6X+PJNZPG5z
- yc+hYqeooeLoMnHZG5rUrvgZ9ENV6QaaWFYCFzqffkpFC3V+9qmXPdY+5ANchA+ZNfGrP+3Gt
- o9C0UmjslQqfq8x/LVUCO/un7u6NfnNC3WAMw5M34yOmub59eO9d1ufMg9oe+TqNDLK/q8mC0
- OdpSp2XlOSOO+wHdQatm4CaSeOLUMgH9Lgukty0/JB7LzYuLct6/aW/XJ9Wqwxs54Tq9za0tx
- EQus+c5MlUxng1pRhu/h2ej9u687gAD9t/nrh2+EYs72b5yYfBHc7l+cynr2SscdPkQZ/4zGz
- GbyD/CHQ299DRMMIF6dbklVyszHTtq/lU9a4jMj0t3XcTjZvP2RiqUcK7ToekSfQSbdDfS2FZ
- Ylck4YO1bWUBza4/Ad/s3qrljQdX2ZiHyXlJJNkjn1LmNDaLZeNXIo4SBSh6GrWRZAOFIeOUG
- 4+jE9jOXh60OyXfau6Z3qAZz82WGvDIf/tllFUl/D8lJHspWS47cD04Jusvn9nT7Cz9DoCTUk
- K28IXjNFGLZyBLyLaZAalq+m94cpM/+5KpXm1Zg0eTcZvH2UioOOcF8sob67tGWfFuX1AkWlS
- 18LbQ7h8Q/2YbdJpWqmGPYamyDKTw7mHao6+jU6+N+LseI7M9zA3m53RE5lCy+aJe36MCxFcf
- NI0yarEF5S3qmmhThTvlJ2fbuvJp7QkjH+rIvfJx+8Tu2Ku40u8REEmiIhJ+Yny+T/VbYrNPn
- PSIUb4J7TnnSwdYgOUQvc3Gt9xNL6Jf/aF/M4/FtVXvspqfFRbMc8iUzbKJMU20l21S7WML5j
- TcZEQfnTBe5YogsbXwjLTkdh04Ak0wHmzxbQWVv91Mx1wv1QAPoGHyD2qM1WjyZDgUvOsSmoR
- 57qQEHX5lO1P5TsbDLB+KF8iqL+COGrPYdyWGktmwoLatJdoSd887
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 10:43 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+On Mon, Jul 06, 2020 at 09:53:55AM +0200, Geert Uytterhoeven wrote:
+> On Mon, Jul 6, 2020 at 9:22 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > look at the USB spec for an example of these terms being used in this
+> > way for many decades.
+> 
+> And when does the "gadget" enter the show? ;-)
 
-> After analyzing the intel-spi driver, I came up to these observations that led me conclude that it is not what I need to use:
->
-> * Some SPI Controllers have 0xFFFF as their VID DID bytes in the PCI config space. This causes that the PCI devices enumeration doesn't include them,
-> and thus a PCI device driver won't be probed even despite listing the DID that the datasheet specifies. I effectively confirmed this by doing a PCI device driver and
-> trying the intel-spi in systems with this characteristic. In short, the intel-spi driver doesn't work with these systems.
+It doesn't, as the USB spec does not describe that in any reasonable way
+for us to use when dealing with drivers for both "types" of devices.  So
+we came up with the word "gadget" on purpose to be able to talk about
+those things in a specific manner.
 
-Maybe this part can be handled with a fixup in drivers/pci that
-changes the effective
-PCI device ID on the systems that do need to access the device.
+thanks,
 
-Adding the PCI mailing list for other ideas. Basically it sounds like
-the BIOS has
-intentionally configured the SPI-NOR device to be hidden from PCI probing to
-prevent operating systems from accessing it, but you want to ignore that and
-access it anyway, correct?
-
-      Arnd
+greg k-h
