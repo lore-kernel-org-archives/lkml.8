@@ -2,79 +2,122 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E613C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D880C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78109206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42268206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LlUm6PLA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M6qDT0k4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgGFSnN (ORCPT
+        id S1729774AbgGFSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729569AbgGFSnM (ORCPT
+        Mon, 6 Jul 2020 14:45:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52122 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729599AbgGFSp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:43:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEEDC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ORm6apFlr0or9eIN6c2S/XYj8igaAicJE5rQj2wwahI=; b=LlUm6PLA9QnRBupzFu+RUt3epj
-        it2UhGCR9Xm0YBc8IurnHhCXq6hz+Qt7i5aLzzdjLgebFPBTtw9OQZJVo5T/3tkBTwYEO43fUh6cO
-        YlJbTcga7+RPn/7onL/ahOB3bmm6ZEoiH1qrTe/vx3AGS0OLRtMhaD/ng6SBs/7bvIP9h9aPURC7E
-        f1VXBZIkDCEZrX0/rYIwQMqDIT6omuEBOG83AOCw3MTZmhOq5THdOj4Mu6XwqeGJIDLlM4JPKyUhh
-        khOoEc6ToKZTwKLnlZF01AkP3MuA7T+IEw0XKb1kWJwUDMVnpNPkkv4kPTIy11CznURRRrvaJsaoU
-        P/N26CVQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsW54-00088w-Rc; Mon, 06 Jul 2020 18:43:08 +0000
-Subject: Re: [PATCH v3 6/6] Documentation: Describe console mouse reporting
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-References: <cover.1594032517.git.tammo.block@gmail.com>
- <59a6057afa3b2310384f489b35e15eb624af2774.1594032517.git.tammo.block@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0da88f04-792c-8b8e-7a0e-72a61ffb4b70@infradead.org>
-Date:   Mon, 6 Jul 2020 11:43:02 -0700
+        Mon, 6 Jul 2020 14:45:28 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 066IjQru127801;
+        Mon, 6 Jul 2020 13:45:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594061126;
+        bh=PcCdHop+GwSCzLkx0JmARyDO1A24Eate1XRLBtTMA40=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=M6qDT0k4TEgef3OaQkqIPgZk8BwC+8sw6byBrzGey0J/gK3+jLg+vmu8tr48+Za1J
+         h5DtyjJFk1Og1jMpX+LRW7d/8Fc64GYEt6a5/VIxOW8EslwlTXby7lccCDyBunmx0+
+         zMoxFaelMm9FgyrsqF900mUzaptanDFC3srgeTYo=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 066IjQoG102161
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jul 2020 13:45:26 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 6 Jul
+ 2020 13:45:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 6 Jul 2020 13:45:26 -0500
+Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 066IjOjF081156;
+        Mon, 6 Jul 2020 13:45:24 -0500
+Subject: Re: [EXTERNAL] Re: [PATCH v15 2/4] dt-bindings: power: Convert
+ battery.txt to battery.yaml
+To:     Rob Herring <robh@kernel.org>
+CC:     <pali@kernel.org>, <linux-pm@vger.kernel.org>,
+        <sspatil@android.com>, <linux-kernel@vger.kernel.org>,
+        <afd@ti.com>, <dmurphy@ti.com>, <sre@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200701211044.18590-1-r-rivera-matos@ti.com>
+ <20200701211044.18590-3-r-rivera-matos@ti.com>
+ <20200702205320.GA1672139@bogus>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
+Date:   Mon, 6 Jul 2020 13:45:24 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <59a6057afa3b2310384f489b35e15eb624af2774.1594032517.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200702205320.GA1672139@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 4:00 AM, Tammo Block wrote:
-> This patch adds a description of the kernel interface(s) used for vt
-> console mouse reporting and describes the protocols and bitmasks.
-> 
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
-> ---
->  .../admin-guide/console-mouse-reporting.rst   | 88 +++++++++++++++++++
->  Documentation/admin-guide/index.rst           |  1 +
->  2 files changed, 89 insertions(+)
->  create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
+Rob
 
+On 7/2/20 3:53 PM, Rob Herring wrote:
+> On Wed, 01 Jul 2020 16:10:42 -0500, Ricardo Rivera-Matos wrote:
+>> From: Dan Murphy <dmurphy@ti.com>
+>>
+>> Convert the battery.txt file to yaml and fix up the examples.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../bindings/power/supply/battery.txt         |  86 +---------
+>>   .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
+>>   2 files changed, 158 insertions(+), 85 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+>>
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
+> Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/power/supply/battery.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/power/supply/battery.example.dts] Error 255
+> make[1]: *** Waiting for unfinished jobs....
+> Makefile:1347: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+I think your bot is looking for the types.yaml in the wrong place. 
+'/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml' 
+should be 
+'/usr/local/lib/python3.6/dist-packages/dtschema/schemas/types.yaml'. I 
+renamed might 'schemas' directory to 'schema' and my battery.yaml passed 
+the dt_binding_check.
+>
+>
+> See https://patchwork.ozlabs.org/patch/1320813
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Confirmed on latest dt-schema
+>
+> Please check and re-submit.
 
-Looks good to me.  Thanks.
+     Thanks,
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+         Ricardo
 
--- 
-~Randy
+>
