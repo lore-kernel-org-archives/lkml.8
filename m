@@ -2,428 +2,204 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E661C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5967206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116EB20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VS83TbHo"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="HVxLVbvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgGFNps (ORCPT
+        id S1729255AbgGFNp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:45:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59599 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729139AbgGFNps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:45:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594043146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pjKEXQ6i5alDGKSUnpnCOM5ougmsFiB6czLmwa0OSSE=;
-        b=VS83TbHoXWcnl97VPNFuLDfx7ii10rrWZQdciZsFrD6fyrb7SDEbTB9LFPjL2D0yI/D0zl
-        T5x0jyY1ZtQCILxrZqHRqWWE/xpgN9lw/mh9aHMPYhs5hpICYMzfSYiH0jV/ZIXGHbXGve
-        ieu3WPCjpa9jEWnr+hPzMqSQ9Q8hq2A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-4heq6mkvOOGL3ZOSEYc41w-1; Mon, 06 Jul 2020 09:45:41 -0400
-X-MC-Unique: 4heq6mkvOOGL3ZOSEYc41w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F55E107ACCA;
-        Mon,  6 Jul 2020 13:45:39 +0000 (UTC)
-Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 986AF5D9CC;
-        Mon,  6 Jul 2020 13:45:30 +0000 (UTC)
-Subject: Re: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to
- userspace
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
- <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
- <d434cbcc-d3b1-d11d-0304-df2d2c93efa0@redhat.com>
- <DM5PR11MB1435290B6CD561EC61027892C3690@DM5PR11MB1435.namprd11.prod.outlook.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <94b4e5d3-8d24-9a55-6bee-ed86f3846996@redhat.com>
-Date:   Mon, 6 Jul 2020 15:45:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Jul 2020 09:45:57 -0400
+Received: from mail-dm6nam10on2068.outbound.protection.outlook.com ([40.107.93.68]:49025
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729151AbgGFNp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:45:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MFdQTkWmdLRUTyO+/tNYqzB6PnZgS026c8pl1UsgM3jQtpfEv22J9QW71c0yaDLb1Y2LyKB94SKFTt5zey5z5gY4C6sprvscuVoUC7FAnkkb7LOUewdyK6VKyf9ZaXjBCmvYr+AZAQ0NwTlqbqBr3iEpjHDjipxIulPprnqJHiQSE4T6qmZAUr0FV4ED+nXDxyyI4mNcJcvNJlzuQDaQ3WvP762+fJRZH3efzpztHRQwIgByYlNxEjcePySSfZQJUqwiPHfwqrqnrsmi/fub+B5VQL9E3TBkRyAU2vR0O+TDlu7wWG9jeF+iw8bDabOa6pwwdnz/kMjDmk2kIz011Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZKinwsGGQjVtapJPiUlpAjygSxy/aOc7HGxwuHW3DA=;
+ b=Uea8UyWzxi74/VV5k1M3YlOV/tOxO/ueNqViAOh7m3DwIGk7CqCXIqkFTgiR+0JRz+g5yb61W3C8vtdz8ESwaWPA0n44pjbMoIdu5r9W3V8Aeg6LzM8SGv28mE+IdpzF62XaX2nZ8d6B6Qk2STEqPLmZXpDBj+6UeNByOpwc8p40BuF4HSeL19mAC2kZqok+SfNg0Ysi9ruD2Itm/Wo0H8UOgKh9P2u5+V04NMogzCqw1zLFhLvmADFZkKVqNw9AGn5SVDKxj/iGKHdUk4Kq3EqJzjZkVV4aDmXjYJDlqNbf7TX4uZ4GqOdD++yZQuP6014SLCFgWRKa/oPmvkD7Ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZKinwsGGQjVtapJPiUlpAjygSxy/aOc7HGxwuHW3DA=;
+ b=HVxLVbvjnonUQ99sgPl4NgpKpkANyQP4FgQDEp69J57bs62FDT1joxn9jl7EbiXkveimLIItoB2UOf9Q1gtrn12zZsme/LJffq0460skKjqRLzLi48ZWZOhqN4alzxHTXLwAyVnZzfpnR2tFCMQa70fcYlrush9HI8HmaMIEAng=
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
+ by BYAPR11MB3670.namprd11.prod.outlook.com (2603:10b6:a03:f8::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Mon, 6 Jul
+ 2020 13:45:53 +0000
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::3d7d:dfc1:b35d:63d1]) by BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::3d7d:dfc1:b35d:63d1%7]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 13:45:52 +0000
+From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+To:     Petr Mladek <pmladek@suse.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "wsa@kernel.org" <wsa@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Subject: =?gb2312?B?u9i4tDogW2t0aHJlYWRdIGE5MDQ3N2YwYzk6IFdBUk5JTkc6YXRfa2VybmVs?=
+ =?gb2312?B?L2t0aHJlYWQuYzoja3RocmVhZF9xdWV1ZV93b3Jr?=
+Thread-Topic: [kthread] a90477f0c9:
+ WARNING:at_kernel/kthread.c:#kthread_queue_work
+Thread-Index: AQHWU3lGAWNhfabfOE65Hog1VLiffaj6UcV0gAA7VGI=
+Date:   Mon, 6 Jul 2020 13:45:52 +0000
+Message-ID: <BYAPR11MB26325D9F68A75D1415C4DE9BFF690@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200706093822.GC3874@shao2-debian>,<BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
+In-Reply-To: <BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=windriver.com;
+x-originating-ip: [106.39.149.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf426578-821f-4110-384b-08d821b2e6a0
+x-ms-traffictypediagnostic: BYAPR11MB3670:
+x-microsoft-antispam-prvs: <BYAPR11MB36702F0EBB40DBDA675C474AFF690@BYAPR11MB3670.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04569283F9
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 40dWH1kL5UQ/gSg8qaxR1bwmcW87VXTA2Io4w9CvUMdcGDwfFGX4eq2Q3BZxrP3If0X+zSsutZH5auMA0y6GoKVlulkK+jXEG/0fkqgbck0i5WkPEwQ3Y0igRbsEe2u3V1nwPOf+b87/FYF9WvHHjpyYn9mH3nE2cVo5JDpMf9bmBxSzxKM3scPWu37Np+D/wsy/xKjkrP+Q1cnC/5sm1iukMSkkFaPw1Tb8C0Vtq7p1KpbrM2brH+3dz3tLU300MxZ/SJDjP4ZYAjMsoeaeV9fP/oFyLW0S2Qqjceswyd1abm1odK1A31frhbdp/J+1KoADG5116++uGdSJ42WrEdN9ZfmlOQd8qG4SCBy8QhlOuEvZ8J98Ep+OjZe6rAPmUUAK4x6wQX3msh8jx5JDhw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(376002)(39850400004)(366004)(136003)(71200400001)(478600001)(966005)(4326008)(316002)(8936002)(7696005)(2940100002)(186003)(6916009)(6506007)(26005)(55016002)(9686003)(86362001)(33656002)(224303003)(66476007)(66556008)(64756008)(91956017)(76116006)(66946007)(66446008)(2906002)(54906003)(52536014)(45080400002)(83380400001)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NyEyxcm7eA4w/0B2Semhx72YmQ+agnmSP/S0hWXk9vxl/Dy/hC2RS63RaLtOE9PgGFHddYT3pvo7ixrYA0dy6eSVU4R8SDVH3SBxbMieg4po78GNKz4St1r4PLcUHoOJbqYcrCJ0qp+zXleMHy5gGdhSCVvokBz9844FiN4GUdq7yhyaBccHJ9sReX9X27Rl8C0vlITyoweSF+0SIsxf9FywjGmHDeBkT3FA3SY3EiDjJtpCGDlyqaMarnjFfhrDck7mj4YQzmAwStSlBRpdxyC210/wIgKwTDSDVYPXMyEdZ1+yW1EspJpEX0d10DucUFqoV2xGMnGUa2JfbZzUuA+NuPb5BaMrHph7i+LkbPa4B1VjH9agK6rqfVceEen6/x2ZhHPzAsCzSwsZF9A/VUfkQFkYhsItcjGxcSeZKMPDttlNyeFGFXHqVitafV66v4Kp13L/S6D6iiVDEOtoTYxORnht1dbxuTgQI/Sx3ok=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <DM5PR11MB1435290B6CD561EC61027892C3690@DM5PR11MB1435.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf426578-821f-4110-384b-08d821b2e6a0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 13:45:52.8441
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eInGiqCU9bZ9uEqhwQwP1eQlmy1Fw2KzX6nmr9IiMnsd0r1BC0em7DMorwW82k3JBBr/g2X+V1bTOxx8icxuUU0QrUsPBkVesd/pBADTy1I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
-
-On 7/6/20 3:10 PM, Liu, Yi L wrote:
-> Hi Eric,
-> 
->> From: Auger Eric <eric.auger@redhat.com>
->> Sent: Monday, July 6, 2020 6:37 PM
->>
->> Yi,
->>
->> On 7/4/20 1:26 PM, Liu Yi L wrote:
->>> This patch exports iommu nesting capability info to user space through
->>> VFIO. User space is expected to check this info for supported uAPIs (e.g.
->>> PASID alloc/free, bind page table, and cache invalidation) and the vendor
->>> specific format information for first level/stage page table that will be
->>> bound to.
->>>
->>> The nesting info is available only after the nesting iommu type is set
->>> for a container. Current implementation imposes one limitation - one
->>> nesting container should include at most one group. The philosophy of
->>> vfio container is having all groups/devices within the container share
->>> the same IOMMU context. When vSVA is enabled, one IOMMU context could
->>> include one 2nd-level address space and multiple 1st-level address spaces.
->>> While the 2nd-leve address space is reasonably sharable by multiple groups
->> level
-> 
-> oh, yes.
-> 
->>> , blindly sharing 1st-level address spaces across all groups within the
->>> container might instead break the guest expectation. In the future sub/
->>> super container concept might be introduced to allow partial address space
->>> sharing within an IOMMU context. But for now let's go with this restriction
->>> by requiring singleton container for using nesting iommu features. Below
->>> link has the related discussion about this decision.
->>>
->>> https://lkml.org/lkml/2020/5/15/1028
->>>
->>> Cc: Kevin Tian <kevin.tian@intel.com>
->>> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Cc: Alex Williamson <alex.williamson@redhat.com>
->>> Cc: Eric Auger <eric.auger@redhat.com>
->>> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
->>> Cc: Joerg Roedel <joro@8bytes.org>
->>> Cc: Lu Baolu <baolu.lu@linux.intel.com>
->>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->>> ---
->>> v3 -> v4:
->>> *) address comments against v3.
->>>
->>> v1 -> v2:
->>> *) added in v2
->>> ---
->>>
->>>  drivers/vfio/vfio_iommu_type1.c | 105
->> +++++++++++++++++++++++++++++++++++-----
->>>  include/uapi/linux/vfio.h       |  16 ++++++
->>>  2 files changed, 109 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->>> index 7accb59..80623b8 100644
->>> --- a/drivers/vfio/vfio_iommu_type1.c
->>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>> @@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
->>>  		 "Maximum number of user DMA mappings per container (65535).");
->>>
->>>  struct vfio_iommu {
->>> -	struct list_head	domain_list;
->>> -	struct list_head	iova_list;
->>> -	struct vfio_domain	*external_domain; /* domain for external user */
->>> -	struct mutex		lock;
->>> -	struct rb_root		dma_list;
->>> -	struct blocking_notifier_head notifier;
->>> -	unsigned int		dma_avail;
->>> -	uint64_t		pgsize_bitmap;
->>> -	bool			v2;
->>> -	bool			nesting;
->>> -	bool			dirty_page_tracking;
->>> -	bool			pinned_page_dirty_scope;
->>> +	struct list_head		domain_list;
->>> +	struct list_head		iova_list;
->>> +	struct vfio_domain		*external_domain; /* domain for
->>> +							     external user */
->> nit: put the comment before the field?
-> 
-> do you mean below?
-> 
-> +	/* domain for external user */
-> +	struct vfio_domain		*external_domain;
-yes that's what I meant
-> 
->>> +	struct mutex			lock;
->>> +	struct rb_root			dma_list;
->>> +	struct blocking_notifier_head	notifier;
->>> +	unsigned int			dma_avail;
->>> +	uint64_t			pgsize_bitmap;
->>> +	bool				v2;
->>> +	bool				nesting;
->>> +	bool				dirty_page_tracking;
->>> +	bool				pinned_page_dirty_scope;
->>> +	struct iommu_nesting_info	*nesting_info;
->>>  };
->>>
->>>  struct vfio_domain {
->>> @@ -130,6 +132,9 @@ struct vfio_regions {
->>>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->>>  					(!list_empty(&iommu->domain_list))
->>>
->>> +#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
->>> +					 (!list_empty(&iommu->domain_list)))
->> rename into something like CONTAINER_HAS_DOMAIN()?
-> 
-> got it.
-> 
->>> +
->>>  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) /
->> BITS_PER_BYTE)
->>>
->>>  /*
->>> @@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct
->> vfio_iommu *iommu,
->>>
->>>  	list_splice_tail(iova_copy, iova);
->>>  }
->>> +
->>> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
->>> +{
->>> +	kfree(iommu->nesting_info);
->>> +	iommu->nesting_info = NULL;
->>> +}
->>> +
->>>  static int vfio_iommu_type1_attach_group(void *iommu_data,
->>>  					 struct iommu_group *iommu_group)
->>>  {
->>> @@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void
->> *iommu_data,
->>>  		}
->>>  	}
->>>
->>> +	/* Nesting type container can include only one group */
->>> +	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
->>> +		mutex_unlock(&iommu->lock);
->>> +		return -EINVAL;
->>> +	}
->>> +
->>>  	group = kzalloc(sizeof(*group), GFP_KERNEL);
->>>  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
->>>  	if (!group || !domain) {
->>> @@ -2029,6 +2047,36 @@ static int vfio_iommu_type1_attach_group(void
->> *iommu_data,
->>>  	if (ret)
->>>  		goto out_domain;
->>>
->>> +	/* Nesting cap info is available only after attaching */
->>> +	if (iommu->nesting) {
->>> +		struct iommu_nesting_info tmp;
->>> +		struct iommu_nesting_info *info;
->>> +
->>> +		/* First get the size of vendor specific nesting info */
->>> +		ret = iommu_domain_get_attr(domain->domain,
->>> +					    DOMAIN_ATTR_NESTING,
->>> +					    &tmp);
->>> +		if (ret)
->>> +			goto out_detach;
->>> +
->>> +		info = kzalloc(tmp.size, GFP_KERNEL);
->> nit: you may directly use iommu->nesting_info
-> 
-> got you.
-> 
->>> +		if (!info) {
->>> +			ret = -ENOMEM;
->>> +			goto out_detach;
->>> +		}
->>> +
->>> +		/* Now get the nesting info */
->>> +		info->size = tmp.size;
->>> +		ret = iommu_domain_get_attr(domain->domain,
->>> +					    DOMAIN_ATTR_NESTING,
->>> +					    info);
->>> +		if (ret) {
->>> +			kfree(info);
->> ... and set it back to NULL here if it fails
-> 
-> and maybe no need to free it here as vfio_iommu_release_nesting_info()
-> will free the nesting_info.
-> 
->>> +			goto out_detach;
->>> +		}
->>> +		iommu->nesting_info = info;
->>> +	}
->>> +
->>>  	/* Get aperture info */
->>>  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY,
->> &geo);
->>>
->>> @@ -2138,6 +2186,7 @@ static int vfio_iommu_type1_attach_group(void
->> *iommu_data,
->>>  	return 0;
->>>
->>>  out_detach:
->>> +	vfio_iommu_release_nesting_info(iommu);
->>>  	vfio_iommu_detach_group(domain, group);
->>>  out_domain:
->>>  	iommu_domain_free(domain->domain);
->>> @@ -2338,6 +2387,8 @@ static void vfio_iommu_type1_detach_group(void
->> *iommu_data,
->>>  					vfio_iommu_unmap_unpin_all(iommu);
->>>  				else
->>>
->> 	vfio_iommu_unmap_unpin_reaccount(iommu);
->>> +
->>> +				vfio_iommu_release_nesting_info(iommu);
->>>  			}
->>>  			iommu_domain_free(domain->domain);
->>>  			list_del(&domain->next);
->>> @@ -2546,6 +2597,30 @@ static int vfio_iommu_migration_build_caps(struct
->> vfio_iommu *iommu,
->>>  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
->>>  }
->>>
->>> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
->>> +					   struct vfio_info_cap *caps)
->>> +{
->>> +	struct vfio_info_cap_header *header;
->>> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
->>> +	size_t size;
->>> +
->>> +	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
->>> +
->>> +	header = vfio_info_cap_add(caps, size,
->>> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
->>> +	if (IS_ERR(header))
->>> +		return PTR_ERR(header);
->>> +
->>> +	nesting_cap = container_of(header,
->>> +				   struct vfio_iommu_type1_info_cap_nesting,
->>> +				   header);
->>> +
->>> +	memcpy(&nesting_cap->info, iommu->nesting_info,
->>> +	       iommu->nesting_info->size);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->>>  				     unsigned long arg)
->>>  {
->>> @@ -2586,6 +2661,12 @@ static int vfio_iommu_type1_get_info(struct
->> vfio_iommu *iommu,
->>>  	if (ret)
->>>  		return ret;
->>>
->>> +	if (iommu->nesting_info) {
->>> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
->>> +		if (ret)
->>> +			return ret;
->>> +	}
->>> +
->>>  	if (caps.size) {
->>>  		info.flags |= VFIO_IOMMU_INFO_CAPS;
->>>
->>> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
->>> index 9204705..3e3de9c 100644
->>> --- a/include/uapi/linux/vfio.h
->>> +++ b/include/uapi/linux/vfio.h
->>> @@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
->>>  	__u64	max_dirty_bitmap_size;		/* in bytes */
->>>  };
->>>
->>> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
->>
->> You may improve the documentation by taking examples from the above caps.
-> 
-> yes, it is. I somehow broke the style. how about below?
-> 
-> 
-> 
-> /*
->  * The nesting capability allows to report the related capability
->  * and info for nesting iommu type.
->  *
->  * The structures below define version 1 of this capability.
->  *
->  * User space should check this cap for setup nesting iommu type.
-before setting up stage 1 information? The wording above sounds a bit
-confusing to me as it can be interpreted as before choosing
-VFIO_TYPE1_NESTING_IOMMU.
-
-You also need to document it returns the capability only after a group
-is attached - which looks strange by the way -.
-
-Thanks
-
-Eric
->  *
->  * @info:	the nesting info provided by IOMMU driver. Today
->  *		it is expected to be a struct iommu_nesting_info
->  *		data.
-> #define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-> 
-> struct vfio_iommu_type1_info_cap_nesting {
-> 	...
-> };
-> 
->>> +
->>> +/*
->>> + * Reporting nesting info to user space.
->>> + *
->>> + * @info:	the nesting info provided by IOMMU driver. Today
->>> + *		it is expected to be a struct iommu_nesting_info
->>> + *		data.
->> Is it expected to change?
-> 
-> honestly, I'm not quite sure on it. I did considered to embed
-> struct iommu_nesting_info here instead of using info[]. but I
-> hesitated as using info[] may leave more flexibility on this
-> struct. how about your opinion? perhaps it's fine to embed the
-> struct iommu_nesting_info here as long as VFIO is setup nesting
-> based on IOMMU UAPI.
-> 
->>> + */
->>> +struct vfio_iommu_type1_info_cap_nesting {
->>> +	struct	vfio_info_cap_header header;
->>> +	__u32	flags;
->> You may document flags.
-> 
-> sure. it's reserved for future.
-> 
-> Regards,
-> Yi Liu
-> 
->>> +	__u32	padding;
->>> +	__u8	info[];
->>> +};
->>> +
->>>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
->>>
->>>  /**
->>>
->> Thanks
->>
->> Eric
-> 
-
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCreivP7IyzogWmhhbmcs
+IFFpYW5nIDxRaWFuZy5aaGFuZ0B3aW5kcml2ZXIuY29tPgq3osvNyrG85DogMjAyMMTqN9TCNsjV
+IDE4OjE3CsrVvP7IyzogUGV0ciBNbGFkZWsKs63LzTogQW5kcmV3IE1vcnRvbjsgbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZwrW98ziOiC72Li0OiBba3RocmVhZF0gYTkwNDc3ZjBjOTogV0FS
+TklORzphdF9rZXJuZWwva3RocmVhZC5jOiNrdGhyZWFkX3F1ZXVlX3dvcmsKCkhpICwgUGV0ciBN
+bGFkZWsKVGhlcmUgc29tZSBxdWVzdGlvbiBmb3IgIldvcmsgY291bGQgbm90IGJlIHF1ZXVlZCB3
+aGVuIHdvcmtlciBiZWluZyBkZXN0cm95ZWQiIHBhdGNoLAoKd2hlbiBpbiAic3BpX2luaXRfcXVl
+dWUiIGZ1bmMgOgoia3RocmVhZF9pbml0X3dvcmtlcigmY3Rsci0+a3dvcmtlcik7ICAgICAod29y
+a2VyLT50YXNrID0gTlVMTCkKIGN0bHItPmt3b3JrZXJfdGFzayA9IGt0aHJlYWRfcnVuKGt0aHJl
+YWRfd29ya2VyX2ZuLCAmY3Rsci0+a3dvcmtlciwKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAiJXMiLCBkZXZfbmFtZSgmY3Rsci0+ZGV2KSk7ICIKCiBpbiAic3BpX3N0
+YXJ0X3F1ZXVlIiBmdW5jOgogImt0aHJlYWRfcXVldWVfd29yaygmY3Rsci0+a3dvcmtlciwgJmN0
+bHItPnB1bXBfbWVzc2FnZXMpOyIKCiBCZWNhc3VlIHRoZSBrdGhyZWFkX3dvcmtlcl9mbiBpcyBu
+b3QgYmVnaW4gcnVubmluZywgIGlmIHF1ZXVlIHdvcmsgdG8gd29ya2VyLAogdGhlICIhd29ya2Vy
+LT50YXNrIiA9IHRydWUsIHRyaWdnZXIgV0FSTi4KCiBBcmUgTmVlZCB0byAgIiB0ZXN0X2JpdChL
+VEhSRUFEX1NIT1VMRF9TVE9QLCAgJnRvX2t0aHJlYWQoY3VycmVudCktPmZsYWdzKSAiIHJlcGxh
+Y2UgIldBUk5fT04oIXdvcmtlci0+dGFzaykiIGluIHF1ZXVpbmdfYmxvY2tlZCBmdW5jIAogb3Ig
+CiAia3RocmVhZF9jcmVhdGVfd29ya2VyIiByZXBsYWNlICJrdGhyZWFkX3J1bihrdGhyZWFkX3dv
+cmtlcl9mbi4uIiBpbiBzcGlfaW5pdF9xdWV1ZSBmdW5jCiAoYmVjYXVzZSBpbiBrdGhyZWFkX2Ny
+ZWF0ZV93b3JrZXIsICJ3b3JrZXItPnRhc2siIHdpbGwgYmUgYXNzaWduZWQgYSB2YWx1ZSkgPwoK
+IFpoYW5nIFFpYW5nCgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CreivP7Iyzoga2VybmVsIHRlc3Qgcm9ib3QgPHJvbmcuYS5jaGVuQGludGVsLmNvbT4Kt6LLzcqx
+vOQ6IDIwMjDE6jfUwjbI1SAxNzozOArK1bz+yMs6IFpoYW5nLCBRaWFuZwqzrcvNOiBsa3BAbGlz
+dHMuMDEub3JnCtb3zOI6IFtrdGhyZWFkXSBhOTA0NzdmMGM5OiBXQVJOSU5HOmF0X2tlcm5lbC9r
+dGhyZWFkLmM6I2t0aHJlYWRfcXVldWVfd29yawoKR3JlZXRpbmcsCgpGWUksIHdlIG5vdGljZWQg
+dGhlIGZvbGxvd2luZyBjb21taXQgKGJ1aWx0IHdpdGggZ2NjLTcpOgoKY29tbWl0OiBhOTA0Nzdm
+MGM5NTY2MjFlYjBkZDY5ZjBhYmZiNjA2NmFkOGZiZWY3ICgia3RocmVhZDogd29yayBjb3VsZCBu
+b3QgYmUgcXVldWVkIHdoZW4gd29ya2VyIGJlaW5nIGRlc3Ryb3llZCIpCmh0dHBzOi8vZ2l0aHVi
+LmNvbS9obmF6L2xpbnV4LW1tIG1hc3RlcgoKaW4gdGVzdGNhc2U6IHRyaW5pdHkKd2l0aCBmb2xs
+b3dpbmcgcGFyYW1ldGVyczoKCiAgICAgICAgcnVudGltZTogMzAwcwoKdGVzdC1kZXNjcmlwdGlv
+bjogVHJpbml0eSBpcyBhIGxpbnV4IHN5c3RlbSBjYWxsIGZ1enogdGVzdGVyLgp0ZXN0LXVybDog
+aHR0cDovL2NvZGVtb25rZXkub3JnLnVrL3Byb2plY3RzL3RyaW5pdHkvCgoKb24gdGVzdCBtYWNo
+aW5lOiBxZW11LXN5c3RlbS1pMzg2IC1lbmFibGUta3ZtIC1jcHUgU2FuZHlCcmlkZ2UgLXNtcCAy
+IC1tIDE2RwoKY2F1c2VkIGJlbG93IGNoYW5nZXMgKHBsZWFzZSByZWZlciB0byBhdHRhY2hlZCBk
+bWVzZy9rbXNnIGZvciBlbnRpcmUgbG9nL2JhY2t0cmFjZSk6CgoKKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
+LSsKfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDg1
+YzYxMjdlMDYgfCBhOTA0NzdmMGM5IHwKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSsKfCBib290X3N1Y2Nl
+c3NlcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYgICAgICAgICAgfCAwICAg
+ICAgICAgIHwKfCBib290X2ZhaWx1cmVzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IDAgICAgICAgICAgfCAzMCAgICAgICAgIHwKfCBXQVJOSU5HOmF0X2tlcm5lbC9rdGhyZWFk
+LmM6I2t0aHJlYWRfcXVldWVfd29yayB8IDAgICAgICAgICAgfCAzMCAgICAgICAgIHwKfCBFSVA6
+a3RocmVhZF9xdWV1ZV93b3JrICAgICAgICAgICAgICAgICAgICAgICAgICB8IDAgICAgICAgICAg
+fCAzMCAgICAgICAgIHwKfCBCVUc6a2VybmVsX2hhbmdfaW5fdGVzdF9zdGFnZSAgICAgICAgICAg
+ICAgICAgICB8IDAgICAgICAgICAgfCAyICAgICAgICAgIHwKKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSsK
+CgpJZiB5b3UgZml4IHRoZSBpc3N1ZSwga2luZGx5IGFkZCBmb2xsb3dpbmcgdGFnClJlcG9ydGVk
+LWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8cm9uZy5hLmNoZW5AaW50ZWwuY29tPgoKClsgICAgNS41
+NTQyODJdIFdBUk5JTkc6IENQVTogMCBQSUQ6IDEgYXQga2VybmVsL2t0aHJlYWQuYzo4MTcga3Ro
+cmVhZF9xdWV1ZV93b3JrKzB4ZjgvMHgxMjAKWyAgICA1LjU1NjIwNF0gTW9kdWxlcyBsaW5rZWQg
+aW46ClsgICAgNS41NTYyMDRdIENQVTogMCBQSUQ6IDEgQ29tbTogc3dhcHBlciBUYWludGVkOiBH
+IFMgICAgICAgICAgICAgICAgNS44LjAtcmMzLTAwMDE0LWdhOTA0NzdmMGM5NTY2ICMxClsgICAg
+NS41NTYyMDRdIEhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgs
+IDE5OTYpLCBCSU9TIDEuMTIuMC0xIDA0LzAxLzIwMTQKWyAgICA1LjU1NjIwNF0gRUlQOiBrdGhy
+ZWFkX3F1ZXVlX3dvcmsrMHhmOC8weDEyMApbICAgIDUuNTU2MjA0XSBDb2RlOiAwMCA1OSBlOSA2
+NyBmZiBmZiBmZiA4ZCA3NiAwMCA4YiA0ZSAxMCA4NSBjOSA3NSBhNiA4ZCA0YiAyOCA4OSBmMiA4
+OSBkOCBiZiAwMSAwMCAwMCAwMCBlOCBmMCBmNSBmZiBmZiBlYiA5MyA4ZCBiNiAwMCAwMCAwMCAw
+MCA8MGY+IDBiIDZhIDAwIDMxIGM5IGJhIDAxIDAwIDAwIDAwIGI4IDA4IDZjIDY0IGMzIGU4IGYz
+IDA0IDBiIDAwIDViClsgICAgNS41NTYyMDRdIEVBWDogMDAwMDAwMDAgRUJYOiBlZWZmNTM4YyBF
+Q1g6IDAwMDAwMDAwIEVEWDogMDAwMDAwMDEKWyAgICA1LjU1NjIwNF0gRVNJOiBlZWZmNTNkMCBF
+REk6IDAwMDAwMDAwIEVCUDogZjVlZGRlNzAgRVNQOiBmNWVkZGU1YwpbICAgIDUuNTU2MjA0XSBE
+UzogMDA3YiBFUzogMDA3YiBGUzogMDAwMCBHUzogMDAwMCBTUzogMDA2OCBFRkxBR1M6IDAwMDEw
+MDQ2ClsgICAgNS41NTYyMDRdIENSMDogODAwNTAwMzMgQ1IyOiBiN2VkYTg0NCBDUjM6IDAzOGFl
+MDAwIENSNDogMDAwNDA2ZDAKWyAgICA1LjU1NjIwNF0gQ2FsbCBUcmFjZToKWyAgICA1LjU1NjIw
+NF0gIHNwaV9zdGFydF9xdWV1ZSsweDUwLzB4NzAKWyAgICA1LjU1NjIwNF0gIHNwaV9yZWdpc3Rl
+cl9jb250cm9sbGVyKzB4NjQyLzB4YTgwClsgICAgNS41NTYyMDRdICA/IGtvYmplY3RfZ2V0KzB4
+NTQvMHhmMApbICAgIDUuNTU2MjA0XSAgPyBwYXJwb3J0X3BjX3BsYXRmb3JtX3Byb2JlKzB4MTAv
+MHgxMApbICAgIDUuNTU2MjA0XSAgc3BpX2JpdGJhbmdfc3RhcnQrMHgyZi8weDcwClsgICAgNS41
+NTYyMDRdICA/IHBhcnBvcnRfcGNfcGxhdGZvcm1fcHJvYmUrMHgxMC8weDEwClsgICAgNS41NTYy
+MDRdICBidXR0ZXJmbHlfYXR0YWNoKzB4MTY0LzB4MmMwClsgICAgNS41NTYyMDRdICA/IGRyaXZl
+cl9kZXRhY2grMHgzMC8weDMwClsgICAgNS41NTYyMDRdICBwb3J0X2NoZWNrKzB4MWMvMHgzMApb
+ICAgIDUuNTU2MjA0XSAgYnVzX2Zvcl9lYWNoX2RldisweDVhLzB4OTAKWyAgICA1LjU1NjIwNF0g
+IF9fcGFycG9ydF9yZWdpc3Rlcl9kcml2ZXIrMHg3Ni8weGEwClsgICAgNS41NTYyMDRdICA/IGRy
+aXZlcl9kZXRhY2grMHgzMC8weDMwClsgICAgNS41NTYyMDRdICA/IHNwaV9lbmdpbmVfZHJpdmVy
+X2luaXQrMHgxNi8weDE2ClsgICAgNS41NTYyMDRdICBidXR0ZXJmbHlfaW5pdCsweDE5LzB4MWIK
+WyAgICA1LjU1NjIwNF0gIGRvX29uZV9pbml0Y2FsbCsweDc5LzB4MzEwClsgICAgNS41NTYyMDRd
+ICA/IHBhcnNlX2FyZ3MrMHg3MC8weDQyMApbICAgIDUuNTU2MjA0XSAgPyByY3VfcmVhZF9sb2Nr
+X3NjaGVkX2hlbGQrMHgyZi8weDUwClsgICAgNS41NTYyMDRdICA/IHRyYWNlX2luaXRjYWxsX2xl
+dmVsKzB4OTUvMHhjNwpbICAgIDUuNTU2MjA0XSAgPyBrZXJuZWxfaW5pdF9mcmVlYWJsZSsweDEy
+OS8weDE5ZgpbICAgIDUuNTU2MjA0XSAga2VybmVsX2luaXRfZnJlZWFibGUrMHgxNDgvMHgxOWYK
+WyAgICA1LjU1NjIwNF0gID8gcmVzdF9pbml0KzB4MTAwLzB4MTAwClsgICAgNS41NTYyMDRdICBr
+ZXJuZWxfaW5pdCsweGQvMHhmMApbICAgIDUuNTU2MjA0XSAgcmV0X2Zyb21fZm9yaysweDFjLzB4
+MjgKWyAgICA1LjU1NjIwNF0gaXJxIGV2ZW50IHN0YW1wOiA4NjIwNDEwClsgICAgNS41NTYyMDRd
+IGhhcmRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDg2MjA0MDkpOiBbPGMyNjc1ZGFhPl0gX3Jhd19z
+cGluX3VubG9ja19pcnFyZXN0b3JlKzB4MmEvMHg1MApbICAgIDUuNTU2MjA0XSBoYXJkaXJxcyBs
+YXN0IGRpc2FibGVkIGF0ICg4NjIwNDEwKTogWzxjMjY3NWJiND5dIF9yYXdfc3Bpbl9sb2NrX2ly
+cXNhdmUrMHgxNC8weDQwClsgICAgNS41NTYyMDRdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQg
+KDg2MjAyNjIpOiBbPGMyNjc3OTAwPl0gX19kb19zb2Z0aXJxKzB4MmUwLzB4NDgwClsgICAgNS41
+NTYyMDRdIHNvZnRpcnFzIGxhc3QgZGlzYWJsZWQgYXQgKDg2MjAyNDkpOiBbPGMxMDIzY2Y1Pl0g
+Y2FsbF9vbl9zdGFjaysweDQ1LzB4NTAKWyAgICA1LjU1NjIwNF0gLS0tWyBlbmQgdHJhY2UgMTg0
+MDYxYTQ0MmI1ZmQ2ZiBdLS0tCgoKVG8gcmVwcm9kdWNlOgoKICAgICAgICAjIGJ1aWxkIGtlcm5l
+bAogICAgICAgIGNkIGxpbnV4CiAgICAgICAgY3AgY29uZmlnLTUuOC4wLXJjMy0wMDAxNC1nYTkw
+NDc3ZjBjOTU2NiAuY29uZmlnCiAgICAgICAgbWFrZSBIT1NUQ0M9Z2NjLTcgQ0M9Z2NjLTcgQVJD
+SD1pMzg2IG9sZGRlZmNvbmZpZyBwcmVwYXJlIG1vZHVsZXNfcHJlcGFyZSBiekltYWdlCgogICAg
+ICAgIGdpdCBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvbGtwLXRlc3RzLmdpdAogICAg
+ICAgIGNkIGxrcC10ZXN0cwogICAgICAgIGJpbi9sa3AgcWVtdSAtayA8YnpJbWFnZT4gam9iLXNj
+cmlwdCAjIGpvYi1zY3JpcHQgaXMgYXR0YWNoZWQgaW4gdGhpcyBlbWFpbAoKCgpUaGFua3MsClJv
+bmcgQ2hlbgoK
