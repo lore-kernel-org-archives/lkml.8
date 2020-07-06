@@ -2,103 +2,94 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF20C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9232D206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0upti.me header.i=@0upti.me header.b="ABiIRI47"
+	by mail.kernel.org (Postfix) with ESMTP id 714A2206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGFT1M (ORCPT
+        id S1726825AbgGFT1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:27:12 -0400
-Received: from forward500p.mail.yandex.net ([77.88.28.110]:58470 "EHLO
-        forward500p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbgGFT1M (ORCPT
+        Mon, 6 Jul 2020 15:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgGFT1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:27:12 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jul 2020 15:27:10 EDT
-Received: from mxback19j.mail.yandex.net (mxback19j.mail.yandex.net [IPv6:2a02:6b8:0:1619::95])
-        by forward500p.mail.yandex.net (Yandex) with ESMTP id 747DC9400DB;
-        Mon,  6 Jul 2020 22:20:48 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback19j.mail.yandex.net (mxback/Yandex) with ESMTP id Icus1Vpk93-KluuMZ36;
-        Mon, 06 Jul 2020 22:20:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0upti.me; s=mail; t=1594063248;
-        bh=ZHGsVMNkZpFDM7El5aZ1YiZR+LlM3nbtR3lE1SqzI3I=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=ABiIRI47iGjTPoQRdrfSPg6kjExVzno1ruGriDYOupJIuBSZ777M4Z2BNm4ZiCH59
-         BqronQEURmI7702ILgvJHo8VBgTSJ/4yaZ5VCaLRXe4pXZfgpjlx+AdpZ6GSWVgaQb
-         LcZIzMApkAa86yyqabbQx3jImJtaDHspfV/ywI0A=
-Authentication-Results: mxback19j.mail.yandex.net; dkim=pass header.i=@0upti.me
-Received: by iva2-15a880c55b23.qloud-c.yandex.net with HTTP;
-        Mon, 06 Jul 2020 22:20:47 +0300
-From:   Ilya K <me@0upti.me>
-To:     "lyude@redhat.com" <lyude@redhat.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Gaurav Agrawal <agrawalgaurav@gnome.org>,
-        Yussuf Khalil <dev@pp3345.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Dennis Kadioglu <denk@eclipso.email>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <2f68590f3352c6384efdf9838f16837d5990d1fe.camel@redhat.com>
-References: <20200703143457.132373-1-me@0upti.me> <2f68590f3352c6384efdf9838f16837d5990d1fe.camel@redhat.com>
-Subject: Re: [PATCH] input/synaptics: enable InterTouch for ThinkPad X1E 1st gen
-MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Mon, 06 Jul 2020 22:20:47 +0300
-Message-Id: <1295871594063151@mail.yandex.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+        Mon, 6 Jul 2020 15:27:49 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBB2C061755;
+        Mon,  6 Jul 2020 12:27:49 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 193CD1277EA61;
+        Mon,  6 Jul 2020 12:27:49 -0700 (PDT)
+Date:   Mon, 06 Jul 2020 12:27:48 -0700 (PDT)
+Message-Id: <20200706.122748.828248704525141203.davem@davemloft.net>
+To:     horatiu.vultur@microchip.com
+Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        kuba@kernel.org, jiri@resnulli.us, ivecera@redhat.com,
+        andrew@lunn.ch, UNGLinuxDriver@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Subject: Re: [PATCH net-next 02/12] bridge: uapi: mrp: Extend MRP
+ attributes for MRP interconnect
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200706091842.3324565-3-horatiu.vultur@microchip.com>
+References: <20200706091842.3324565-1-horatiu.vultur@microchip.com>
+        <20200706091842.3324565-3-horatiu.vultur@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 12:27:49 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(sorry for resending - the previous message got sent as HTML and bounced off the mailing list)
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Mon, 6 Jul 2020 11:18:32 +0200
 
-This actually made me retest it just now - it most definitely works, both by tapping and by actually clicking the button.
+> +struct br_mrp_in_state {
+> +	__u16 in_id;
+> +	__u32 in_state;
+> +};
 
-06.07.2020, 20:22, "Lyude Paul" <lyude@redhat.com>:
-> FWIW it's not placebo, it's why I always immediately notice when starting up a
-> new ThinkPad sample from lenovo if RMI4 is enabled or not :).
->
-> Anyway thank you for the patch, assuming you double-checked that clicking with
-> the clickpad still works (I made this mistake last time when trying to enable
-> this for the second generation X1 extreme):
->
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
->
-> On Fri, 2020-07-03 at 17:34 +0300, K900 wrote:
->>  From: Ilya Katsnelson <me@0upti.me>
->>
->>  Tested on my own laptop, touchpad feels slightly more responsive with
->>  this on, though it might just be placebo.
->>
->>  Signed-off-by: Ilya Katsnelson <me@0upti.me>
->>  ---
->>   drivers/input/mouse/synaptics.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->>  diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
->>  index 758dae8d6500..4b81b2d0fe06 100644
->>  --- a/drivers/input/mouse/synaptics.c
->>  +++ b/drivers/input/mouse/synaptics.c
->>  @@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
->>           "LEN0093", /* T480 */
->>           "LEN0096", /* X280 */
->>           "LEN0097", /* X280 -> ALPS trackpoint */
->>  + "LEN0099", /* X1 Extreme 1st */
->>           "LEN009b", /* T580 */
->>           "LEN200f", /* T450s */
->>           "LEN2044", /* L470 */
+Put the __u32 first then the __u16.
+
+> +struct br_mrp_in_role {
+> +	__u16 in_id;
+> +	__u32 ring_id;
+> +	__u32 in_role;
+> +	__u32 i_ifindex;
+> +};
+
+Likewise.
+
+> +struct br_mrp_start_in_test {
+> +	__u16 in_id;
+> +	__u32 interval;
+> +	__u32 max_miss;
+> +	__u32 period;
+> +};
+
+Likewise.
+
+> +struct br_mrp_in_test_hdr {
+> +	__be16 id;
+> +	__u8 sa[ETH_ALEN];
+> +	__be16 port_role;
+> +	__be16 state;
+> +	__be16 transitions;
+> +	__be32 timestamp;
+> +};
+
+Likewise.  Put the larger members first.  There is lots of unnecessary
+padding in this structure.
+
