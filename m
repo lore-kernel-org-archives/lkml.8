@@ -2,571 +2,216 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53563C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE0420724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:34:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i30VFbDT"
+	by mail.kernel.org (Postfix) with ESMTP id A636A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgGFJeq (ORCPT
+        id S1728646AbgGFJfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:34:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42140 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728024AbgGFJep (ORCPT
+        Mon, 6 Jul 2020 05:35:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbgGFJfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:34:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594028082;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5MEDWWvk+qcgc/ZkcrKpEqVi0Kz0+bZ4hd7DqooWYAI=;
-        b=i30VFbDTMTkqUjl8jxg14zfoOkEeKATE6sbaiJy4uIy6TnFP/g4amYw8VQ3Oyaf537ZFJW
-        +UY2Uie6afUDQS30q+2B++yaet1auk7MSfzvcx4u+0MPxYW1I+rOgMnGlfIEIh9oObwPpY
-        qMu8Wftlk4dK+k4uJ7bPVnKxClq8aGU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-LCCAOYu7Nxyl1o6YT79DLA-1; Mon, 06 Jul 2020 05:34:37 -0400
-X-MC-Unique: LCCAOYu7Nxyl1o6YT79DLA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48016107ACF4;
-        Mon,  6 Jul 2020 09:34:35 +0000 (UTC)
-Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 452132DE72;
-        Mon,  6 Jul 2020 09:34:26 +0000 (UTC)
-Subject: Re: [PATCH v4 01/15] vfio/type1: Refactor vfio_iommu_type1_ioctl()
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
- <1593861989-35920-2-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0622db04-8254-8068-e00a-4681ec8686a8@redhat.com>
-Date:   Mon, 6 Jul 2020 11:34:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1593861989-35920-2-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Mon, 6 Jul 2020 05:35:01 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED8EC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 02:35:01 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e012:1552:6e81:c371])
+        by michel.telenet-ops.be with bizsmtp
+        id zlay220010tDR5Q06layLU; Mon, 06 Jul 2020 11:34:58 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jsNWb-0005S6-Tb; Mon, 06 Jul 2020 11:34:57 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jsNWb-000450-RT; Mon, 06 Jul 2020 11:34:57 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-m68k@lists.linux-m68k.org
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.8-rc3
+Date:   Mon,  6 Jul 2020 11:34:56 +0200
+Message-Id: <20200706093456.15641-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+Re-enable modular build of DES crypto algorithm (no longer auto-enabled
+since commit be01369859b8aa07 ("esp, ah: modernize the crypto algorithm
+selections")).
 
-On 7/4/20 1:26 PM, Liu Yi L wrote:
-> This patch refactors the vfio_iommu_type1_ioctl() to use switch instead of
-> if-else, and each cmd got a helper function.
-command
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 392 ++++++++++++++++++++++------------------
->  1 file changed, 213 insertions(+), 179 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 5e556ac..7accb59 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -2453,6 +2453,23 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
->  	return ret;
->  }
->  
-> +static int vfio_iommu_type1_check_extension(struct vfio_iommu *iommu,
-> +					    unsigned long arg)
-> +{
-> +	switch (arg) {
-> +	case VFIO_TYPE1_IOMMU:
-> +	case VFIO_TYPE1v2_IOMMU:
-> +	case VFIO_TYPE1_NESTING_IOMMU:
-> +		return 1;
-> +	case VFIO_DMA_CC_IOMMU:
-> +		if (!iommu)
-> +			return 0;
-> +		return vfio_domains_have_iommu_cache(iommu);
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
->  static int vfio_iommu_iova_add_cap(struct vfio_info_cap *caps,
->  		 struct vfio_iommu_type1_info_cap_iova_range *cap_iovas,
->  		 size_t size)
-> @@ -2529,238 +2546,255 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
->  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
->  }
->  
-> -static long vfio_iommu_type1_ioctl(void *iommu_data,
-> -				   unsigned int cmd, unsigned long arg)
-> +static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
-> +				     unsigned long arg)
->  {
-> -	struct vfio_iommu *iommu = iommu_data;
-> +	struct vfio_iommu_type1_info info;
->  	unsigned long minsz;
-> +	struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-> +	unsigned long capsz;
-> +	int ret;
->  
-> -	if (cmd == VFIO_CHECK_EXTENSION) {
-> -		switch (arg) {
-> -		case VFIO_TYPE1_IOMMU:
-> -		case VFIO_TYPE1v2_IOMMU:
-> -		case VFIO_TYPE1_NESTING_IOMMU:
-> -			return 1;
-> -		case VFIO_DMA_CC_IOMMU:
-> -			if (!iommu)
-> -				return 0;
-> -			return vfio_domains_have_iommu_cache(iommu);
-> -		default:
-> -			return 0;
-> -		}
-> -	} else if (cmd == VFIO_IOMMU_GET_INFO) {
-> -		struct vfio_iommu_type1_info info;
-> -		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-> -		unsigned long capsz;
-> -		int ret;
-> -
-> -		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
-> +	minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
->  
-> -		/* For backward compatibility, cannot require this */
-> -		capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
-> +	/* For backward compatibility, cannot require this */
-> +	capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
->  
-> -		if (copy_from_user(&info, (void __user *)arg, minsz))
-> -			return -EFAULT;
-> +	if (copy_from_user(&info, (void __user *)arg, minsz))
-> +		return -EFAULT;
->  
-> -		if (info.argsz < minsz)
-> -			return -EINVAL;
-> +	if (info.argsz < minsz)
-> +		return -EINVAL;
->  
-> -		if (info.argsz >= capsz) {
-> -			minsz = capsz;
-> -			info.cap_offset = 0; /* output, no-recopy necessary */
-> -		}
-> +	if (info.argsz >= capsz) {
-> +		minsz = capsz;
-> +		info.cap_offset = 0; /* output, no-recopy necessary */
-> +	}
->  
-> -		mutex_lock(&iommu->lock);
-> -		info.flags = VFIO_IOMMU_INFO_PGSIZES;
-> +	mutex_lock(&iommu->lock);
-> +	info.flags = VFIO_IOMMU_INFO_PGSIZES;
->  
-> -		info.iova_pgsizes = iommu->pgsize_bitmap;
-> +	info.iova_pgsizes = iommu->pgsize_bitmap;
->  
-> -		ret = vfio_iommu_migration_build_caps(iommu, &caps);
-> +	ret = vfio_iommu_migration_build_caps(iommu, &caps);
->  
-> -		if (!ret)
-> -			ret = vfio_iommu_iova_build_caps(iommu, &caps);
-> +	if (!ret)
-> +		ret = vfio_iommu_iova_build_caps(iommu, &caps);
->  
-> -		mutex_unlock(&iommu->lock);
-> +	mutex_unlock(&iommu->lock);
->  
-> -		if (ret)
-> -			return ret;
-> +	if (ret)
-> +		return ret;
->  
-> -		if (caps.size) {
-> -			info.flags |= VFIO_IOMMU_INFO_CAPS;
-> +	if (caps.size) {
-> +		info.flags |= VFIO_IOMMU_INFO_CAPS;
->  
-> -			if (info.argsz < sizeof(info) + caps.size) {
-> -				info.argsz = sizeof(info) + caps.size;
-> -			} else {
-> -				vfio_info_cap_shift(&caps, sizeof(info));
-> -				if (copy_to_user((void __user *)arg +
-> -						sizeof(info), caps.buf,
-> -						caps.size)) {
-> -					kfree(caps.buf);
-> -					return -EFAULT;
-> -				}
-> -				info.cap_offset = sizeof(info);
-> +		if (info.argsz < sizeof(info) + caps.size) {
-> +			info.argsz = sizeof(info) + caps.size;
-> +		} else {
-> +			vfio_info_cap_shift(&caps, sizeof(info));
-> +			if (copy_to_user((void __user *)arg +
-> +					sizeof(info), caps.buf,
-> +					caps.size)) {
-> +				kfree(caps.buf);
-> +				return -EFAULT;
->  			}
-> -
-> -			kfree(caps.buf);
-> +			info.cap_offset = sizeof(info);
->  		}
->  
-> -		return copy_to_user((void __user *)arg, &info, minsz) ?
-> -			-EFAULT : 0;
-> +		kfree(caps.buf);
-> +	}
->  
-> -	} else if (cmd == VFIO_IOMMU_MAP_DMA) {
-> -		struct vfio_iommu_type1_dma_map map;
-> -		uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
-> -				VFIO_DMA_MAP_FLAG_WRITE;
-> +	return copy_to_user((void __user *)arg, &info, minsz) ?
-> +			-EFAULT : 0;
-> +}
->  
-> -		minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
-> +static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
-> +				    unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_dma_map map;
-> +	unsigned long minsz;
-> +	uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
-> +			VFIO_DMA_MAP_FLAG_WRITE;
-nit: may fit into a single line? other examples below.
->  
-> -		if (copy_from_user(&map, (void __user *)arg, minsz))
-> -			return -EFAULT;
-> +	minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
->  
-> -		if (map.argsz < minsz || map.flags & ~mask)
-> -			return -EINVAL;
-> +	if (copy_from_user(&map, (void __user *)arg, minsz))
-> +		return -EFAULT;
->  
-> -		return vfio_dma_do_map(iommu, &map);
-> +	if (map.argsz < minsz || map.flags & ~mask)
-> +		return -EINVAL;
->  
-> -	} else if (cmd == VFIO_IOMMU_UNMAP_DMA) {
-> -		struct vfio_iommu_type1_dma_unmap unmap;
-> -		struct vfio_bitmap bitmap = { 0 };
-> -		int ret;
-> +	return vfio_dma_do_map(iommu, &map);
-> +}
->  
-> -		minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
-> +static int vfio_iommu_type1_unmap_dma(struct vfio_iommu *iommu,
-> +				      unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_dma_unmap unmap;
-> +	struct vfio_bitmap bitmap = { 0 };
-> +	unsigned long minsz;
-> +	long ret;
-int?
->  
-> -		if (copy_from_user(&unmap, (void __user *)arg, minsz))
-> -			return -EFAULT;
-> +	minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
->  
-> -		if (unmap.argsz < minsz ||
-> -		    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
-> -			return -EINVAL;
-> +	if (copy_from_user(&unmap, (void __user *)arg, minsz))
-> +		return -EFAULT;
->  
-> -		if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
-> -			unsigned long pgshift;
-> +	if (unmap.argsz < minsz ||
-> +	    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
-> +		return -EINVAL;
->  
-> -			if (unmap.argsz < (minsz + sizeof(bitmap)))
-> -				return -EINVAL;
-> +	if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
-> +		unsigned long pgshift;
->  
-> -			if (copy_from_user(&bitmap,
-> -					   (void __user *)(arg + minsz),
-> -					   sizeof(bitmap)))
-> -				return -EFAULT;
-> +		if (unmap.argsz < (minsz + sizeof(bitmap)))
-> +			return -EINVAL;
->  
-> -			if (!access_ok((void __user *)bitmap.data, bitmap.size))
-> -				return -EINVAL;
-> +		if (copy_from_user(&bitmap,
-> +				   (void __user *)(arg + minsz),
-> +				   sizeof(bitmap)))
-> +			return -EFAULT;
->  
-> -			pgshift = __ffs(bitmap.pgsize);
-> -			ret = verify_bitmap_size(unmap.size >> pgshift,
-> -						 bitmap.size);
-> -			if (ret)
-> -				return ret;
-> -		}
-> +		if (!access_ok((void __user *)bitmap.data, bitmap.size))
-> +			return -EINVAL;
->  
-> -		ret = vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-> +		pgshift = __ffs(bitmap.pgsize);
-> +		ret = verify_bitmap_size(unmap.size >> pgshift,
-> +					 bitmap.size);
->  		if (ret)
->  			return ret;
-> +	}
-> +
-> +	ret = vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-> +	if (ret)
-> +		return ret;
->  
-> -		return copy_to_user((void __user *)arg, &unmap, minsz) ?
-> +	return copy_to_user((void __user *)arg, &unmap, minsz) ?
->  			-EFAULT : 0;
-> -	} else if (cmd == VFIO_IOMMU_DIRTY_PAGES) {
-> -		struct vfio_iommu_type1_dirty_bitmap dirty;
-> -		uint32_t mask = VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
-> -				VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
-> -				VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
-> -		int ret = 0;
-> +}
->  
-> -		if (!iommu->v2)
-> -			return -EACCES;
-> +static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
-> +					unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_dirty_bitmap dirty;
-> +	uint32_t mask = VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
-> +			VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
-> +			VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
-> +	unsigned long minsz;
-> +	int ret = 0;
->  
-> -		minsz = offsetofend(struct vfio_iommu_type1_dirty_bitmap,
-> -				    flags);
-> +	if (!iommu->v2)
-> +		return -EACCES;
->  
-> -		if (copy_from_user(&dirty, (void __user *)arg, minsz))
-> -			return -EFAULT;
-> +	minsz = offsetofend(struct vfio_iommu_type1_dirty_bitmap,
-> +			    flags);
-single line?
->  
-> -		if (dirty.argsz < minsz || dirty.flags & ~mask)
-> -			return -EINVAL;
-> +	if (copy_from_user(&dirty, (void __user *)arg, minsz))
-> +		return -EFAULT;
-> +
-> +	if (dirty.argsz < minsz || dirty.flags & ~mask)
-> +		return -EINVAL;
-> +
-> +	/* only one flag should be set at a time */
-> +	if (__ffs(dirty.flags) != __fls(dirty.flags))
-> +		return -EINVAL;
-> +
-> +	if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
-> +		size_t pgsize;
->  
-> -		/* only one flag should be set at a time */
-> -		if (__ffs(dirty.flags) != __fls(dirty.flags))
-> +		mutex_lock(&iommu->lock);
-> +		pgsize = 1 << __ffs(iommu->pgsize_bitmap);
-> +		if (!iommu->dirty_page_tracking) {
-> +			ret = vfio_dma_bitmap_alloc_all(iommu, pgsize);
-> +			if (!ret)
-> +				iommu->dirty_page_tracking = true;
-> +		}
-> +		mutex_unlock(&iommu->lock);
-> +		return ret;
-> +	} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
-> +		mutex_lock(&iommu->lock);
-> +		if (iommu->dirty_page_tracking) {
-> +			iommu->dirty_page_tracking = false;
-> +			vfio_dma_bitmap_free_all(iommu);
-> +		}
-> +		mutex_unlock(&iommu->lock);
-> +		return 0;
-> +	} else if (dirty.flags &
-> +			 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
-single line?
-> +		struct vfio_iommu_type1_dirty_bitmap_get range;
-> +		unsigned long pgshift;
-> +		size_t data_size = dirty.argsz - minsz;
-> +		size_t iommu_pgsize;
-> +
-> +		if (!data_size || data_size < sizeof(range))
->  			return -EINVAL;
->  
-> -		if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
-> -			size_t pgsize;
-> +		if (copy_from_user(&range, (void __user *)(arg + minsz),
-> +				   sizeof(range)))
-> +			return -EFAULT;
->  
-> -			mutex_lock(&iommu->lock);
-> -			pgsize = 1 << __ffs(iommu->pgsize_bitmap);
-> -			if (!iommu->dirty_page_tracking) {
-> -				ret = vfio_dma_bitmap_alloc_all(iommu, pgsize);
-> -				if (!ret)
-> -					iommu->dirty_page_tracking = true;
-> -			}
-> -			mutex_unlock(&iommu->lock);
-> +		if (range.iova + range.size < range.iova)
-> +			return -EINVAL;
-> +		if (!access_ok((void __user *)range.bitmap.data,
-> +			       range.bitmap.size))
-> +			return -EINVAL;
-> +
-> +		pgshift = __ffs(range.bitmap.pgsize);
-> +		ret = verify_bitmap_size(range.size >> pgshift,
-> +					 range.bitmap.size);
-> +		if (ret)
->  			return ret;
-> -		} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
-> -			mutex_lock(&iommu->lock);
-> -			if (iommu->dirty_page_tracking) {
-> -				iommu->dirty_page_tracking = false;
-> -				vfio_dma_bitmap_free_all(iommu);
-> -			}
-> -			mutex_unlock(&iommu->lock);
-> -			return 0;
-> -		} else if (dirty.flags &
-> -				 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
-idem
-> -			struct vfio_iommu_type1_dirty_bitmap_get range;
-> -			unsigned long pgshift;
-> -			size_t data_size = dirty.argsz - minsz;
-> -			size_t iommu_pgsize;
-> -
-> -			if (!data_size || data_size < sizeof(range))
-> -				return -EINVAL;
-> -
-> -			if (copy_from_user(&range, (void __user *)(arg + minsz),
-> -					   sizeof(range)))
-> -				return -EFAULT;
->  
-> -			if (range.iova + range.size < range.iova)
-> -				return -EINVAL;
-> -			if (!access_ok((void __user *)range.bitmap.data,
-> -				       range.bitmap.size))
-> -				return -EINVAL;
-> +		mutex_lock(&iommu->lock);
->  
-> -			pgshift = __ffs(range.bitmap.pgsize);
-> -			ret = verify_bitmap_size(range.size >> pgshift,
-> -						 range.bitmap.size);
-> -			if (ret)
-> -				return ret;
-> +		iommu_pgsize = (size_t)1 << __ffs(iommu->pgsize_bitmap);
->  
-> -			mutex_lock(&iommu->lock);
-> +		/* allow only smallest supported pgsize */
-> +		if (range.bitmap.pgsize != iommu_pgsize) {
-> +			ret = -EINVAL;
-> +			goto out_unlock;
-> +		}
-> +		if (range.iova & (iommu_pgsize - 1)) {
-> +			ret = -EINVAL;
-> +			goto out_unlock;
-> +		}
-> +		if (!range.size || range.size & (iommu_pgsize - 1)) {
-> +			ret = -EINVAL;
-> +			goto out_unlock;
-> +		}
->  
-> -			iommu_pgsize = (size_t)1 << __ffs(iommu->pgsize_bitmap);
-> +		if (iommu->dirty_page_tracking)
-> +			ret = vfio_iova_dirty_bitmap(range.bitmap.data,
-> +					iommu, range.iova, range.size,
-> +					range.bitmap.pgsize);
-> +		else
-> +			ret = -EINVAL;
-> +out_unlock:
-> +		mutex_unlock(&iommu->lock);
->  
-> -			/* allow only smallest supported pgsize */
-> -			if (range.bitmap.pgsize != iommu_pgsize) {
-> -				ret = -EINVAL;
-> -				goto out_unlock;
-> -			}
-> -			if (range.iova & (iommu_pgsize - 1)) {
-> -				ret = -EINVAL;
-> -				goto out_unlock;
-> -			}
-> -			if (!range.size || range.size & (iommu_pgsize - 1)) {
-> -				ret = -EINVAL;
-> -				goto out_unlock;
-> -			}
-> +		return ret;
-> +	}
->  
-> -			if (iommu->dirty_page_tracking)
-> -				ret = vfio_iova_dirty_bitmap(range.bitmap.data,
-> -						iommu, range.iova, range.size,
-> -						range.bitmap.pgsize);
-> -			else
-> -				ret = -EINVAL;
-> -out_unlock:
-> -			mutex_unlock(&iommu->lock);
-> +	return -EINVAL;
-> +}
->  
-> -			return ret;
-> -		}
-> +static long vfio_iommu_type1_ioctl(void *iommu_data,
-> +				   unsigned int cmd, unsigned long arg)
-> +{
-> +	struct vfio_iommu *iommu = iommu_data;
-> +
-> +	switch (cmd) {
-> +	case VFIO_CHECK_EXTENSION:
-> +		return vfio_iommu_type1_check_extension(iommu, arg);
-> +	case VFIO_IOMMU_GET_INFO:
-> +		return vfio_iommu_type1_get_info(iommu, arg);
-> +	case VFIO_IOMMU_MAP_DMA:
-> +		return vfio_iommu_type1_map_dma(iommu, arg);
-> +	case VFIO_IOMMU_UNMAP_DMA:
-> +		return vfio_iommu_type1_unmap_dma(iommu, arg);
-> +	case VFIO_IOMMU_DIRTY_PAGES:
-> +		return vfio_iommu_type1_dirty_pages(iommu, arg);
-default:
-	return -ENOTTY; ?
->  	}
->  
->  	return -ENOTTY;
-> 
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+To be combined with "m68k: defconfig: Update defconfigs for v5.8-rc1".
+---
+ arch/m68k/configs/amiga_defconfig    | 1 +
+ arch/m68k/configs/apollo_defconfig   | 1 +
+ arch/m68k/configs/atari_defconfig    | 1 +
+ arch/m68k/configs/bvme6000_defconfig | 1 +
+ arch/m68k/configs/hp300_defconfig    | 1 +
+ arch/m68k/configs/mac_defconfig      | 1 +
+ arch/m68k/configs/multi_defconfig    | 1 +
+ arch/m68k/configs/mvme147_defconfig  | 1 +
+ arch/m68k/configs/mvme16x_defconfig  | 1 +
+ arch/m68k/configs/q40_defconfig      | 1 +
+ arch/m68k/configs/sun3_defconfig     | 1 +
+ arch/m68k/configs/sun3x_defconfig    | 1 +
+ 12 files changed, 12 insertions(+)
 
-Besides
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
+diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
+index 28831ed23a1a8918..f9f4fa595e1338d2 100644
+--- a/arch/m68k/configs/amiga_defconfig
++++ b/arch/m68k/configs/amiga_defconfig
+@@ -594,6 +594,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
+index 821ee9afcb2d29f0..f4828e86d547ebbf 100644
+--- a/arch/m68k/configs/apollo_defconfig
++++ b/arch/m68k/configs/apollo_defconfig
+@@ -550,6 +550,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
+index a4aec77d38086ec3..a9d300a83d6e3d64 100644
+--- a/arch/m68k/configs/atari_defconfig
++++ b/arch/m68k/configs/atari_defconfig
+@@ -582,6 +582,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
+index 4ecea1bd1491b24f..d574e438e6dbae2c 100644
+--- a/arch/m68k/configs/bvme6000_defconfig
++++ b/arch/m68k/configs/bvme6000_defconfig
+@@ -543,6 +543,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
+index dbb561d2fd3e0af3..c7ce206e6138210e 100644
+--- a/arch/m68k/configs/hp300_defconfig
++++ b/arch/m68k/configs/hp300_defconfig
+@@ -552,6 +552,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
+index 06d6fbfc4b996257..522dcf624aa509d0 100644
+--- a/arch/m68k/configs/mac_defconfig
++++ b/arch/m68k/configs/mac_defconfig
+@@ -574,6 +574,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
+index 09fd5a8c58210829..2433409f4369d0cd 100644
+--- a/arch/m68k/configs/multi_defconfig
++++ b/arch/m68k/configs/multi_defconfig
+@@ -660,6 +660,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
+index 487d8c3202514f5a..5568aa7d9d41d565 100644
+--- a/arch/m68k/configs/mvme147_defconfig
++++ b/arch/m68k/configs/mvme147_defconfig
+@@ -542,6 +542,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
+index ed4c8f3b5bdcc553..5b1e72ce53f863c2 100644
+--- a/arch/m68k/configs/mvme16x_defconfig
++++ b/arch/m68k/configs/mvme16x_defconfig
+@@ -543,6 +543,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
+index 83b98f9aa72c8554..c3a3dcf30fb95039 100644
+--- a/arch/m68k/configs/q40_defconfig
++++ b/arch/m68k/configs/q40_defconfig
+@@ -561,6 +561,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
+index 5baadb7a98b22557..3c00e52f1bf0b75b 100644
+--- a/arch/m68k/configs/sun3_defconfig
++++ b/arch/m68k/configs/sun3_defconfig
+@@ -545,6 +545,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
+index 3c54035283e6d5da..241242d73cbd9ddb 100644
+--- a/arch/m68k/configs/sun3x_defconfig
++++ b/arch/m68k/configs/sun3x_defconfig
+@@ -544,6 +544,7 @@ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_DES=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+ CONFIG_CRYPTO_SALSA20=m
+-- 
+2.17.1
 
