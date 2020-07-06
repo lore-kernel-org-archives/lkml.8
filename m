@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C428C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11AD20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFB02070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwJgFzF4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLyPYVQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgGFO0q (ORCPT
+        id S1729347AbgGFO0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
+        Mon, 6 Jul 2020 10:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgGFO0n (ORCPT
+        with ESMTP id S1729316AbgGFO0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:26:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6AEC061755;
-        Mon,  6 Jul 2020 07:26:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so45644813ljn.4;
-        Mon, 06 Jul 2020 07:26:43 -0700 (PDT)
+        Mon, 6 Jul 2020 10:26:45 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E16CC061755;
+        Mon,  6 Jul 2020 07:26:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so45644945ljn.4;
+        Mon, 06 Jul 2020 07:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UOEVL4GhyWIgjIGro4u3aeU8FKwvHOzzUyyl/y7LzzM=;
-        b=GwJgFzF4vwHAAJ9Igj1btv4X98+abEBXTkXaJZd4XUjoI3wQ49U2dO6cr6EZOncZjV
-         8CUGnb3yaqduB61MnMIh8tjAfEaEEsxmY87gbpyUU1pfCt8hMZqQMXzNcHtMsrXApMrH
-         uoHJc/INvyON42mOvXlO9pHWffZ5vHgEHFkWpePEqTq5WQ8piQL7rE1Zwq+UzRDcu7Hh
-         BfBhV0UBxuq0rNCbskU41ZQ28yaq4HhXOa4+InYgMl3Svv+PqbLDyBDPcnxMQdCLLpgo
-         PlRkzWkNnMLTRIbq/kSIBW0ChTMaghoE5ZIjHTMZTUohzZAC+TQzT98L36cf4FkWrVfW
-         9HLg==
+        bh=I9zWyh5IRnPtslhUp0gx5s8P6pChDI6lXjljvVorqz0=;
+        b=GLyPYVQLzWgfduWMlQwvKC2vOrQsfzPP/5SXEwthVMiu5k3fPmEsJrCiqTb8eM+BPp
+         DoYp5u2favnc83oPc+/qTFhvTr+bw9WiRkhXYzjU7wU9TQImWzt/etIBwBzJws44pBcE
+         z/TVLO9eBVqJ265t2FUQoEUeMf/HiXYKVD9/jcvEEMNVjczeI1gy8u5soi2wRGl4XE5p
+         GD0Y9qJG0Nh6dtsNozVtsYLsFwDwIVHFhaKkagyndIi5y9Emfrecy1ISdcKxVBnlQPkl
+         m1HoxL55rkMH3eKues5DYexJZpFPvkTIxkz2OvvUaCqMX266nB2rXysZ4fBKTOMPpBK6
+         7TEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UOEVL4GhyWIgjIGro4u3aeU8FKwvHOzzUyyl/y7LzzM=;
-        b=OeMVgEt/76BMl8BypoY0xYkLg14qQC0bzeQp8Q5KbTdyFMQGbHC99IkWhZJR0ca7v1
-         FPnPZVBP4rtsMa3idoGlWeBA29ZhNitrjPCsziM7np85hnJFhJSyjwkgGTf2nOz54stX
-         8t5jGLyQDhbP0+eY4pcr3lW0JvT2OkB1hx8D4xzV6sGTJEoyk0dWXqLwn0C5X0fov9SV
-         mvhy2ZCpYAcxtHQB3bSrcGbzIsIq2G3aWguKXOVXpmEOEV1EaPsY/3VyYXT8Vmng2mib
-         LI9JFcLnLgytKZ/xaqe7jiEjiBD5qxLwwsyDYnq81fuwHeJDjsAdgEXVk++4Ma4B+4yd
-         BztA==
-X-Gm-Message-State: AOAM53029FMEaQFl/k2epMr1JBC2DVG7nDnTG3GiXA2AtyZ/bBvXIrud
-        npaBygFwjo1G+ZyRTTSMdesd0TO6
-X-Google-Smtp-Source: ABdhPJx65mOdy4rdE4Yc/AybeGLiQPj1+soHDPM5kdQ/ZJFnf7yWRwT7qVEAbIJIHh5LjyiOSBty/g==
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr27224758ljp.266.1594045601430;
-        Mon, 06 Jul 2020 07:26:41 -0700 (PDT)
+        bh=I9zWyh5IRnPtslhUp0gx5s8P6pChDI6lXjljvVorqz0=;
+        b=Nmh70qxO39MBSYO2btURnLx8YNBVNLWES5WwdF6ISGcSsrariBoYZ4EaNF7tbHUT6j
+         6v4KTSBDZZlOnI5p4t0p3OOj3XCMgltoUJxoTGFQIvZ798gZrKMiIw10f67EdSVq53+7
+         LnixgYi6eRKcrIRU6i9ZAvZ/N34mEXIzCoO8lsdDmwKdEMgckVXaaFFztkt2d3eghkwZ
+         0NdncVhbeCQg4uV1T+j5CH6fW9eC4cAiM8u+LnnkMtx3Yi6OBk9DfV7GvkpL11BprIea
+         +J6MhHe7xt9bef4R/eS9PX771jcbPrBWC/Ol3vnw4Na6BQ5lHQQVdss7X30J1Z/fQ5Bz
+         fL6Q==
+X-Gm-Message-State: AOAM533ryezyeYsJDQDDbsPiqu7+kYdiG422RspRUt/TQSSBaHen46fZ
+        EcE2PlUlyFPSOXcv4FOo/YP5Jp2g
+X-Google-Smtp-Source: ABdhPJwjld0HsWrGlQS8J4OCk+h8FlvHfwPR9qYPBxe55ZfMFg2DOBZnF5QB+LUekRj1jCJL2d2MEQ==
+X-Received: by 2002:a05:651c:c5:: with SMTP id 5mr3194693ljr.9.1594045603550;
+        Mon, 06 Jul 2020 07:26:43 -0700 (PDT)
 Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id m14sm11744638lfp.18.2020.07.06.07.26.40
+        by smtp.gmail.com with ESMTPSA id m14sm11744638lfp.18.2020.07.06.07.26.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 07:26:40 -0700 (PDT)
+        Mon, 06 Jul 2020 07:26:43 -0700 (PDT)
 From:   Sergey Organov <sorganov@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Sergey Organov <sorganov@gmail.com>
-Subject: [PATCH  3/5] net: fec: initialize clock with 0 rather than current kernel time
-Date:   Mon,  6 Jul 2020 17:26:14 +0300
-Message-Id: <20200706142616.25192-4-sorganov@gmail.com>
+Subject: [PATCH  5/5] net: fec: replace snprintf() with strlcpy() in fec_ptp_init()
+Date:   Mon,  6 Jul 2020 17:26:16 +0300
+Message-Id: <20200706142616.25192-6-sorganov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200706142616.25192-1-sorganov@gmail.com>
 References: <20200706142616.25192-1-sorganov@gmail.com>
@@ -79,14 +79,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initializing with 0 makes it much easier to identify time stamps from
-otherwise uninitialized clock.
-
-Initialization of PTP clock with current kernel time makes little sense as
-PTP time scale differs from UTC time scale that kernel time represents.
-It only leads to confusion when no actual PTP initialization happens, as
-these time scales differ in a small integer number of seconds (37 at the
-time of writing.)
+No need to use snprintf() on a constant string, nor using magic
+constant in the fixed code was a good idea.
 
 Signed-off-by: Sergey Organov <sorganov@gmail.com>
 ---
@@ -94,18 +88,18 @@ Signed-off-by: Sergey Organov <sorganov@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 4a12086..e455343 100644
+index 4152cae..a0c1f44 100644
 --- a/drivers/net/ethernet/freescale/fec_ptp.c
 +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -264,7 +264,7 @@ void fec_ptp_start_cyclecounter(struct net_device *ndev)
- 	fep->cc.mult = FEC_CC_MULT;
+@@ -582,7 +582,7 @@ void fec_ptp_init(struct platform_device *pdev, int irq_idx)
+ 	int ret;
  
- 	/* reset the ns time counter */
--	timecounter_init(&fep->tc, &fep->cc, ktime_to_ns(ktime_get_real()));
-+	timecounter_init(&fep->tc, &fep->cc, 0);
+ 	fep->ptp_caps.owner = THIS_MODULE;
+-	snprintf(fep->ptp_caps.name, 16, "fec ptp");
++	strlcpy(fep->ptp_caps.name, "fec ptp", sizeof(fep->ptp_caps.name));
  
- 	spin_unlock_irqrestore(&fep->tmreg_lock, flags);
- }
+ 	fep->ptp_caps.max_adj = 250000000;
+ 	fep->ptp_caps.n_alarm = 0;
 -- 
 2.10.0.1.g57b01a3
 
