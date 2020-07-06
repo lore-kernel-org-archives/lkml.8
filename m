@@ -2,52 +2,54 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD248C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3CA8205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B08205CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bHQJApw8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4aHYOoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgGFRAX (ORCPT
+        id S1729664AbgGFRA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:00:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22959 "EHLO
+        Mon, 6 Jul 2020 13:00:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46520 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729495AbgGFRAV (ORCPT
+        with ESMTP id S1729631AbgGFRAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:00:21 -0400
+        Mon, 6 Jul 2020 13:00:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594054820;
+        s=mimecast20190719; t=1594054821;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OjkZPREvKip3rVS6iZU65nBkLJdMZelkk5lBM6xndR0=;
-        b=bHQJApw8V/G7QFJG5MR09DYC4gNW5p12xPjHvHo6l3FtVO461LL73ukuE7xjZC9ps4ofL1
-        CI0BAoG/sOYmK2tFd5tVM3sHPzok4f7lOYaBtdCLN1DIT8KC+AdaBG0nSYk+IrLwKkgfvB
-        ncTBZ1TUHl/A6D798Za2AUW9dHappbQ=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sxp8KWaWgJw4WshhI3nQX8hZlCBBJb92GnlvBY7ow9Q=;
+        b=b4aHYOoJB7CuVLzd931pxa2WOdP8dj9kXolTWigg5y5ufhpUg29OE6z026Blf/lJrwB+rw
+        AWaBaSTbGYHeAbXRI0ENtzLG5r5ZImdWrI9tur5dvqJJeqm0lWjZCnYtZUGcryzuAqIaed
+        L9AkqRSlL4TZxygLDKu8p0/3DeryTHA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-pvjmzEPGO5C6GIwqNZljAQ-1; Mon, 06 Jul 2020 13:00:15 -0400
-X-MC-Unique: pvjmzEPGO5C6GIwqNZljAQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-261-5wWf46BnOtmQAa7b9mq7OQ-1; Mon, 06 Jul 2020 13:00:19 -0400
+X-MC-Unique: 5wWf46BnOtmQAa7b9mq7OQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EBEA64A74;
-        Mon,  6 Jul 2020 17:00:14 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E717787950B;
+        Mon,  6 Jul 2020 17:00:17 +0000 (UTC)
 Received: from firesoul.localdomain (unknown [10.40.208.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 653FE60F8D;
-        Mon,  6 Jul 2020 17:00:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 953235C290;
+        Mon,  6 Jul 2020 17:00:17 +0000 (UTC)
 Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 7139E300019CC;
-        Mon,  6 Jul 2020 19:00:06 +0200 (CEST)
-Subject: [PATCH bpf-next V2 0/2] BPF selftests test runner 'test_progs' use
- proper shell exit codes
+        by firesoul.localdomain (Postfix) with ESMTP id 95636300019CC;
+        Mon,  6 Jul 2020 19:00:16 +0200 (CEST)
+Subject: [PATCH bpf-next V2 2/2] selftests/bpf: test_progs avoid minus shell
+ exit codes
 From:   Jesper Dangaard Brouer <brouer@redhat.com>
 To:     bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
@@ -56,40 +58,82 @@ Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         vkabatov@redhat.com, jbenc@redhat.com, yhs@fb.com, kafai@fb.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 06 Jul 2020 19:00:06 +0200
-Message-ID: <159405478968.1091613.16934652228902650021.stgit@firesoul>
+Date:   Mon, 06 Jul 2020 19:00:16 +0200
+Message-ID: <159405481655.1091613.6475075949369245359.stgit@firesoul>
+In-Reply-To: <159405478968.1091613.16934652228902650021.stgit@firesoul>
+References: <159405478968.1091613.16934652228902650021.stgit@firesoul>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset makes it easier to use test_progs from shell scripts, by using
-proper shell exit codes. The process's exit status should be a number
-between 0 and 255 as defined in man exit(3) else it will be masked to comply.
+There are a number of places in test_progs that use minus-1 as the argument
+to exit(). This improper use as a process exit status is masked to be a
+number between 0 and 255 as defined in man exit(3).
 
-Shell exit codes used by programs should be below 127. As 127 and above are
-used for indicating signals. E.g. 139 means 11=SIGSEGV $((139 & 127))=11.
-POSIX defines in man wait(3p) signal check if WIFSIGNALED(STATUS) and
-WTERMSIG(139)=11. (Hint: cmd 'kill -l' list signals and their numbers).
+This patch use two different positive exit codes instead, to allow a shell
+script to tell the two error cases apart.
 
-Using Segmentation fault as an example, as these have happened before with
-different tests (that are part of test_progs). CI people writing these
-shell-scripts could pickup these hints and report them, if that makes sense.
-
+Fixes: fd27b1835e70 ("selftests/bpf: Reset process and thread affinity after each test/sub-test")
+Fixes: 811d7e375d08 ("bpf: selftests: Restore netns after each test")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 ---
+ tools/testing/selftests/bpf/test_progs.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Jesper Dangaard Brouer (2):
-      selftests/bpf: test_progs use another shell exit on non-actions
-      selftests/bpf: test_progs avoid minus shell exit codes
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index e8f7cd5dbae4..50803b080593 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -12,7 +12,9 @@
+ #include <string.h>
+ #include <execinfo.h> /* backtrace */
+ 
+-#define EXIT_NO_TEST 2
++#define EXIT_NO_TEST		2
++#define EXIT_ERR_NETNS		3
++#define EXIT_ERR_RESET_AFFINITY	4
+ 
+ /* defined in test_progs.h */
+ struct test_env env = {};
+@@ -113,13 +115,13 @@ static void reset_affinity() {
+ 	if (err < 0) {
+ 		stdio_restore();
+ 		fprintf(stderr, "Failed to reset process affinity: %d!\n", err);
+-		exit(-1);
++		exit(EXIT_ERR_RESET_AFFINITY);
+ 	}
+ 	err = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
+ 	if (err < 0) {
+ 		stdio_restore();
+ 		fprintf(stderr, "Failed to reset thread affinity: %d!\n", err);
+-		exit(-1);
++		exit(EXIT_ERR_RESET_AFFINITY);
+ 	}
+ }
+ 
+@@ -128,7 +130,7 @@ static void save_netns(void)
+ 	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
+ 	if (env.saved_netns_fd == -1) {
+ 		perror("open(/proc/self/ns/net)");
+-		exit(-1);
++		exit(EXIT_ERR_NETNS);
+ 	}
+ }
+ 
+@@ -137,7 +139,7 @@ static void restore_netns(void)
+ 	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
+ 		stdio_restore();
+ 		perror("setns(CLONE_NEWNS)");
+-		exit(-1);
++		exit(EXIT_ERR_NETNS);
+ 	}
+ }
+ 
 
-
- tools/testing/selftests/bpf/test_progs.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
---
 
