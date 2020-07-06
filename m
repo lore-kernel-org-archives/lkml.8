@@ -2,136 +2,198 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5382C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A98C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B811A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E21206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KYXVtEnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgGFLeB (ORCPT
+        id S1728998AbgGFLfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:34:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50859 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgGFLeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:34:01 -0400
-IronPort-SDR: ePR4olwShwi4UOsiopsZIr4Yr11XzFZACnYTbmlm7zTIuNKosIZwyeXi6/WuWIIQSjf0lhzval
- a77xGGipaHLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127473481"
-X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
-   d="scan'208";a="127473481"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 04:34:00 -0700
-IronPort-SDR: VztLuEsJgrosVmMFsJXymfd6iaG3kqLQtlbM6feRg8HB5WJNr3KjwMfwJ/iGNnMLCJwaMc2TyW
- PYb/29AoM+Kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
-   d="scan'208";a="322359492"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Jul 2020 04:33:59 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jsPNo-000Iop-96; Mon, 06 Jul 2020 14:34:00 +0300
-Date:   Mon, 6 Jul 2020 14:34:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] lib/test_bitops: Do the full test during module init
-Message-ID: <20200706113400.GU3703480@smile.fi.intel.com>
-References: <20200706112900.7097-1-geert@linux-m68k.org>
+        Mon, 6 Jul 2020 07:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbgGFLfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:35:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962FDC061794;
+        Mon,  6 Jul 2020 04:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=OEy4U14lLKI068FHS0JNccIDytAin8DP0F/8fksYMHM=; b=KYXVtEnDEU3QfsHNKDl8JD6cEA
+        IdtyW0WG0Z/5mgR9zDgpmcd2IGC5N6d50cIM/Q3NuAxlEzPib6+8TwZ8YuBaOn/pi2sEhzNmR5hkh
+        k5U2rRABYmgA/UOuXfSnde6iXrCiOgypj593SKiGNG1o73ZDYlrCYEDhvQL4K+FN08k+QOz9LIKEx
+        +CHnrREONgkl9Ff10suBnwJn49Kb+Bp87ssbB+0smB+PwOaVVWwzHql4tVCNYUV7pG7Ha4pBv0xKN
+        QslQOwWxYu8tcBZ+GfPPW/YqSwHaROA7+J57WrQ9xQR1mOtL8v1hBZlx+MKCGOrHOQ55gBh4dwUyZ
+        4/1VaErA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsPOz-00057v-Bn; Mon, 06 Jul 2020 11:35:13 +0000
+Date:   Mon, 6 Jul 2020 12:35:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v14 07/20] mm/thp: narrow lru locking
+Message-ID: <20200706113513.GY25523@casper.infradead.org>
+References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1593752873-4493-8-git-send-email-alex.shi@linux.alibaba.com>
+ <124eeef1-ff2b-609e-3bf6-a118100c3f2a@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200706112900.7097-1-geert@linux-m68k.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <124eeef1-ff2b-609e-3bf6-a118100c3f2a@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 01:29:00PM +0200, Geert Uytterhoeven wrote:
-> Currently, the bitops test consists of two parts: one part is executed
-> during module load, the second part during module unload. This is
-> cumbersome for the user, as he has to perform two steps to execute all
-> tests, and is different from most (all?) other tests.
+On Mon, Jul 06, 2020 at 05:15:09PM +0800, Alex Shi wrote:
+> Hi Kirill & Johannes & Matthew,
 > 
-> Merge the two parts, so both are executed during module load.
+> Would you like to give some comments or share your concern of this patchset,
+> specialy for THP part? 
 
-I think it's right way to go, sorry, I didn't notice this during module
-submission.
+I don't have the brain space to understand this patch set fully at
+the moment.  I'll note that the realtime folks are doing their best to
+stamp out users of local_irq_disable(), so they won't be pleased to see
+you adding a new one.  Also, you removed the comment explaining why the
+lock needed to be taken.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-One question though, is compiler barrier enough to prevent potential ordering issues?
-
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> v2:
->   - Keep a dummy module_exit() function to support module unloading.
-> ---
->  lib/test_bitops.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
+> Many Thanks
+> Alex
 > 
-> diff --git a/lib/test_bitops.c b/lib/test_bitops.c
-> index ced25e3a779baf96..471141ddd6913724 100644
-> --- a/lib/test_bitops.c
-> +++ b/lib/test_bitops.c
-> @@ -52,9 +52,9 @@ static unsigned long order_comb_long[][2] = {
->  
->  static int __init test_bitops_startup(void)
->  {
-> -	int i;
-> +	int i, bit_set;
->  
-> -	pr_warn("Loaded test module\n");
-> +	pr_info("Starting bitops test\n");
->  	set_bit(BITOPS_4, g_bitmap);
->  	set_bit(BITOPS_7, g_bitmap);
->  	set_bit(BITOPS_11, g_bitmap);
-> @@ -81,12 +81,8 @@ static int __init test_bitops_startup(void)
->  				       order_comb_long[i][0]);
->  	}
->  #endif
-> -	return 0;
-> -}
->  
-> -static void __exit test_bitops_unstartup(void)
-> -{
-> -	int bit_set;
-> +	barrier();
->  
->  	clear_bit(BITOPS_4, g_bitmap);
->  	clear_bit(BITOPS_7, g_bitmap);
-> @@ -98,7 +94,13 @@ static void __exit test_bitops_unstartup(void)
->  	if (bit_set != BITOPS_LAST)
->  		pr_err("ERROR: FOUND SET BIT %d\n", bit_set);
->  
-> -	pr_warn("Unloaded test module\n");
-> +	pr_info("Completed bitops test\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit test_bitops_unstartup(void)
-> +{
->  }
->  
->  module_init(test_bitops_startup);
-> -- 
-> 2.17.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 在 2020/7/3 下午1:07, Alex Shi 写道:
+> > lru_lock and page cache xa_lock have no reason with current sequence,
+> > put them together isn't necessary. let's narrow the lru locking, but
+> > left the local_irq_disable to block interrupt re-entry and statistic update.
+> > 
+> > Hugh Dickins point: split_huge_page_to_list() was already silly,to be
+> > using the _irqsave variant: it's just been taking sleeping locks, so
+> > would already be broken if entered with interrupts enabled.
+> > so we can save passing flags argument down to __split_huge_page().
+> > 
+> > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> > Cc: Hugh Dickins <hughd@google.com>
+> > Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> > Cc: Andrea Arcangeli <aarcange@redhat.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/huge_memory.c | 24 ++++++++++++------------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index b18f21da4dac..607869330329 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -2433,7 +2433,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
+> >  }
+> >  
+> >  static void __split_huge_page(struct page *page, struct list_head *list,
+> > -		pgoff_t end, unsigned long flags)
+> > +			      pgoff_t end)
+> >  {
+> >  	struct page *head = compound_head(page);
+> >  	pg_data_t *pgdat = page_pgdat(head);
+> > @@ -2442,8 +2442,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+> >  	unsigned long offset = 0;
+> >  	int i;
+> >  
+> > -	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+> > -
+> >  	/* complete memcg works before add pages to LRU */
+> >  	mem_cgroup_split_huge_fixup(head);
+> >  
+> > @@ -2455,6 +2453,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+> >  		xa_lock(&swap_cache->i_pages);
+> >  	}
+> >  
+> > +	/* lock lru list/PageCompound, ref freezed by page_ref_freeze */
+> > +	spin_lock(&pgdat->lru_lock);
+> > +
+> > +	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+> > +
+> >  	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
+> >  		__split_huge_page_tail(head, i, lruvec, list);
+> >  		/* Some pages can be beyond i_size: drop them from page cache */
+> > @@ -2474,6 +2477,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+> >  	}
+> >  
+> >  	ClearPageCompound(head);
+> > +	spin_unlock(&pgdat->lru_lock);
+> > +	/* Caller disabled irqs, so they are still disabled here */
+> >  
+> >  	split_page_owner(head, HPAGE_PMD_ORDER);
+> >  
+> > @@ -2491,8 +2496,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+> >  		page_ref_add(head, 2);
+> >  		xa_unlock(&head->mapping->i_pages);
+> >  	}
+> > -
+> > -	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> > +	local_irq_enable();
+> >  
+> >  	remap_page(head);
+> >  
+> > @@ -2631,12 +2635,10 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
+> >  int split_huge_page_to_list(struct page *page, struct list_head *list)
+> >  {
+> >  	struct page *head = compound_head(page);
+> > -	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
+> >  	struct deferred_split *ds_queue = get_deferred_split_queue(head);
+> >  	struct anon_vma *anon_vma = NULL;
+> >  	struct address_space *mapping = NULL;
+> >  	int count, mapcount, extra_pins, ret;
+> > -	unsigned long flags;
+> >  	pgoff_t end;
+> >  
+> >  	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
+> > @@ -2697,9 +2699,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+> >  	unmap_page(head);
+> >  	VM_BUG_ON_PAGE(compound_mapcount(head), head);
+> >  
+> > -	/* prevent PageLRU to go away from under us, and freeze lru stats */
+> > -	spin_lock_irqsave(&pgdata->lru_lock, flags);
+> > -
+> > +	local_irq_disable();
+> >  	if (mapping) {
+> >  		XA_STATE(xas, &mapping->i_pages, page_index(head));
+> >  
+> > @@ -2729,7 +2729,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+> >  				__dec_node_page_state(head, NR_FILE_THPS);
+> >  		}
+> >  
+> > -		__split_huge_page(page, list, end, flags);
+> > +		__split_huge_page(page, list, end);
+> >  		if (PageSwapCache(head)) {
+> >  			swp_entry_t entry = { .val = page_private(head) };
+> >  
+> > @@ -2748,7 +2748,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+> >  		spin_unlock(&ds_queue->split_queue_lock);
+> >  fail:		if (mapping)
+> >  			xa_unlock(&mapping->i_pages);
+> > -		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
+> > +		local_irq_enable();
+> >  		remap_page(head);
+> >  		ret = -EBUSY;
+> >  	}
+> > 
