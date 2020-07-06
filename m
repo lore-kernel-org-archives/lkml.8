@@ -2,191 +2,74 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB5720663
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A639F20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:04:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dlxSHNda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgGFU7A (ORCPT
+        id S1726467AbgGFVEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:59:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3273 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgGFU7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:59:00 -0400
-IronPort-SDR: tTW7E40kVs5dGH8e+ntCDjS5wXqg1ucms4YGVmE7bRmISvn5Vuqg12wnyOtCD13Ev3REnIL4Yo
- 7zBNL2b4j/5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145605313"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="145605313"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 13:58:59 -0700
-IronPort-SDR: 3rvXn4NLKCIRVFAX6OYMotbGWW3F8BZp0YCQDd18XpMnkX/ikCcWy/6zuniWkNQCloi8AQBWUG
- qs1u15e8crxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="305424906"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 13:58:59 -0700
-Date:   Mon, 6 Jul 2020 14:05:17 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
+        Mon, 6 Jul 2020 17:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFVEx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 17:04:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93BCC061755;
+        Mon,  6 Jul 2020 14:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VQZbAsypdz5nTGvJ0jbsKWLVxreIxVFtueOxSKqcRXs=; b=dlxSHNdalP32C7i7q3Zsk4xoIS
+        GmyDJ77PEjA8xgJA6aDuC080iku5c8dCCUYfjycwbnAply2G2PK/D0pvYv55CpBgKXCxnrTCMpHvG
+        y16UfCk8bZ8QrLvGnxA5umVt1h6th5+Gtsg7LXyK8tKVbSut0leUThF7EKoPfwYC77VURKds4u8c/
+        bKLvEa2AprGsrXmQwS6ZBcl10ryPbW4or9EsYiU2/wF7TnOeYEH+Lp3W+VogG+AqzBg6zCql4okrn
+        9hk2RiQIdc2/TZArCQpxz8nEP1ddbfdM51SOk78gBQ4f7ETBxtHW/9cMMtJCVQebXLA5jpe6CwpjV
+        umdI9+OQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsYI4-0005so-14; Mon, 06 Jul 2020 21:04:40 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1A06B9816EA; Mon,  6 Jul 2020 23:04:39 +0200 (CEST)
+Date:   Mon, 6 Jul 2020 23:04:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 5/7] iommu/vt-d: Fix devTLB flush for vSVA
-Message-ID: <20200706140517.3f6ca616@jacob-builder>
-In-Reply-To: <f44409e8-7c68-9b26-cf87-b0887668e879@redhat.com>
-References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1593617636-79385-6-git-send-email-jacob.jun.pan@linux.intel.com>
-        <f44409e8-7c68-9b26-cf87-b0887668e879@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 01/20] Documentation: locking: Describe seqlock design
+ and usage
+Message-ID: <20200706210439.GD5523@worktop.programming.kicks-ass.net>
+References: <20200630054452.3675847-1-a.darwish@linutronix.de>
+ <20200630054452.3675847-2-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630054452.3675847-2-a.darwish@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 10:39:26 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+On Tue, Jun 30, 2020 at 07:44:33AM +0200, Ahmed S. Darwish wrote:
+> +Sequence counters (:c:type:`seqcount_t`)
+> +========================================
 
-> Hi Jacob, Yi,
-> On 7/1/20 5:33 PM, Jacob Pan wrote:
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> > 
-> > For guest SVA usage, in order to optimize for less VMEXIT, guest
-> > request of IOTLB flush also includes device TLB.
-> > 
-> > On the host side, IOMMU driver performs IOTLB and implicit devTLB
-> > invalidation. When PASID-selective granularity is requested by the
-> > guest we need to derive the equivalent address range for devTLB
-> > instead of using the address information in the UAPI data. The
-> > reason for that is, unlike IOTLB flush, devTLB flush does not
-> > support PASID-selective granularity. This is to say, we need to set
-> > the following in the PASID based devTLB invalidation descriptor:
-> > - entire 64 bit range in address ~(0x1 << 63)
-> > - S bit = 1 (VT-d CH 6.5.2.6).
-> > 
-> > Without this fix, device TLB flush range is not set properly for
-> > PASID selective granularity. This patch also merged devTLB flush
-> > code for both implicit and explicit cases.
-> > 
-> > Fixes: 6ee1b77ba3ac ("iommu/vt-d: Add svm/sva invalidate function")
-> > Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel/iommu.c | 28 ++++++++++++++++++----------
-> >  1 file changed, 18 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel/iommu.c
-> > b/drivers/iommu/intel/iommu.c index 96340da57075..6a0c62c7395c
-> > 100644 --- a/drivers/iommu/intel/iommu.c
-> > +++ b/drivers/iommu/intel/iommu.c
-> > @@ -5408,7 +5408,7 @@ intel_iommu_sva_invalidate(struct
-> > iommu_domain *domain, struct device *dev, sid = PCI_DEVID(bus,
-> > devfn); 
-> >  	/* Size is only valid in address selective invalidation */
-> > -	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
-> > +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
-> >  		size =
-> > to_vtd_size(inv_info->addr_info.granule_size,
-> > inv_info->addr_info.nb_granules); 
-> > @@ -5417,6 +5417,7 @@ intel_iommu_sva_invalidate(struct
-> > iommu_domain *domain, struct device *dev, IOMMU_CACHE_INV_TYPE_NR) {
-> >  		int granu = 0;
-> >  		u64 pasid = 0;
-> > +		u64 addr = 0;
-> >  
-> >  		granu = to_vtd_granularity(cache_type,
-> > inv_info->granularity); if (granu == -EINVAL) {
-> > @@ -5456,24 +5457,31 @@ intel_iommu_sva_invalidate(struct
-> > iommu_domain *domain, struct device *dev, (granu ==
-> > QI_GRAN_NONG_PASID) ? -1 : 1 << size, inv_info->addr_info.flags &
-> > IOMMU_INV_ADDR_FLAGS_LEAF); 
-> > +			if (!info->ats_enabled)
-> > +				break;
-> >  			/*
-> >  			 * Always flush device IOTLB if ATS is
-> > enabled. vIOMMU
-> >  			 * in the guest may assume IOTLB flush is
-> > inclusive,
-> >  			 * which is more efficient.
-> >  			 */
-> > -			if (info->ats_enabled)
-> > -				qi_flush_dev_iotlb_pasid(iommu,
-> > sid,
-> > -						info->pfsid, pasid,
-> > -						info->ats_qdep,
-> > -
-> > inv_info->addr_info.addr,
-> > -						size);
-> > -			break;
-> > +			fallthrough;
-> >  		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-> > +			/*
-> > +			 * There is no PASID selective flush for
-> > device TLB, so
-> > +			 * the equivalent of that is we set the
-> > size to be the
-> > +			 * entire range of 64 bit. User only
-> > provides PASID info
-> > +			 * without address info. So we set addr to
-> > 0.  
-> The "PASID selective flush for device TLB" terminology above sounds a
-> bit confusing to me. I would rather say Intel device TLB has no
-> support for OMMU_INV_GRANU_PASID granularity but only supports
-> IOMMU_INV_GRANU_ADDR. Indeed 6.5.2.6 title is "PASID-based-Device-TLB
-> Invalidate Descriptor"
-Sounds good, will rewrite comment accordingly.
+> +.. code-block:: c
 
-> > +			 */
-> > +			if (inv_info->granularity ==
-> > IOMMU_INV_GRANU_PASID) {
-> > +				size = 64 - VTD_PAGE_SHIFT;
-> > +				addr = 0;  
-> I have my answer for previous patch review question. In that case the
-> addr is not formatted with the least significant 0 matching the
-> size_order.
-> 
-> > +			} else if (inv_info->granularity ==
-> > IOMMU_INV_GRANU_ADDR)
-> > +				addr = inv_info->addr_info.addr;
-> > +
-> >  			if (info->ats_enabled)
-> >  				qi_flush_dev_iotlb_pasid(iommu,
-> > sid, info->pfsid, pasid,
-> > -						info->ats_qdep,
-> > -
-> > inv_info->addr_info.addr,
-> > +						info->ats_qdep,
-> > addr, size);
-> >  			else
-> >  				pr_warn_ratelimited("Passdown
-> > device IOTLB flush w/o ATS!\n"); 
-> 
-> Besides
-> 
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
-> 
-
-[Jacob Pan]
+I so hate RST, of course it's C. Also, ISTR Jon saying you can leave
+that all out without issue.
