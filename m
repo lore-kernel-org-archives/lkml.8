@@ -2,127 +2,180 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D195DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC56A20747
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E89B20739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu7P5pHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgGFBCc (ORCPT
+        id S1728525AbgGFBCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:02:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726760AbgGFBCb (ORCPT
+        Sun, 5 Jul 2020 21:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgGFBCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:02:31 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06611O8e097912;
-        Sun, 5 Jul 2020 21:02:22 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 322kcwus2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 05 Jul 2020 21:02:22 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06610XN6008554;
-        Mon, 6 Jul 2020 01:02:21 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03dal.us.ibm.com with ESMTP id 322hd8eu5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 01:02:21 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06612KBI43843988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jul 2020 01:02:20 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4009978063;
-        Mon,  6 Jul 2020 01:02:20 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19EC17805C;
-        Mon,  6 Jul 2020 01:02:19 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.80.239.156])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Jul 2020 01:02:18 +0000 (GMT)
-Message-ID: <1593997337.4657.30.camel@linux.ibm.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: AHA152X SCSI driver
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        fischer@norbit.de, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 05 Jul 2020 18:02:17 -0700
-In-Reply-To: <20200705214442.28370-1-grandmaster@al2klimov.de>
-References: <20200705214442.28370-1-grandmaster@al2klimov.de>
+        Sun, 5 Jul 2020 21:02:45 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4F1C061794;
+        Sun,  5 Jul 2020 18:02:45 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a12so37658297ion.13;
+        Sun, 05 Jul 2020 18:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=w9Yeb7gwy/GZ1b3/U19gbbXAoGkciXgijg+0bbd2Ohk=;
+        b=Cu7P5pHO4MUnblELFIqozSvLN3AdyVtb7SjJC9za6rYpER4A8GRt4pkx9SMzhEdaOO
+         PzVJ3+hP8UfZVfyN/QOu20AJ3Wca4P8lek/uaqzXu7niB0LjGXN6SkLfp6gaNrDiMdVv
+         jh26aw1fXPeRJvlAb24TQfxDzjhYvnPxvkuLBmTAcTCg5DinFsNLo6iZt8nc8e+V7NVS
+         +xQpD+rZAD3zBuE9VP1QsmjIo/BSW4ah92YGVcXbNYSRGeZ1y5wHyou9vIwA/dz2dwjq
+         ssFvXsh65PAMCpxi7oPvXzvj0HaH4wcwDYHbGuf0btLyEkjaMnQptdtmz32dRaAO4h/r
+         B5RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=w9Yeb7gwy/GZ1b3/U19gbbXAoGkciXgijg+0bbd2Ohk=;
+        b=KxkT8VfGLLQwtirOzuQmBKK7E0xRWefLkpMvJZvaJveNf8ykSyZd0LKSoe96IoKwxb
+         Fjnjcsd+MTzYM8uSAXrlKd6OLXxD67AL6xErd2KTCRAKpCTBKpMWqdg7dWSv1ebvW+zn
+         eFB7sTsamlBewbxxaD/TD/KgnwsE9kBDFi3LriSbfbdZv4T5+mvBLb6JccvXFCMVRkez
+         scAi3tJ6MxbCH/GJtuO5oKsma3vOW64/OVFjpg110VtCjwJowym2Ch0cPvTic2tbmqi4
+         xp4qqTOjHKcWM1hw2vFnzo8qlZwFqcKdk6AvEWcP0GMwppoaTdZQvDfb5PibazFv0b/Q
+         TUTg==
+X-Gm-Message-State: AOAM532lj/A///hiFAjuHqZYjWjo+yR6ylLuSFOW2k/AAAKW+OHl0Sbk
+        sopYOt1lmTQcdgmhn90JYtbM5BWg7y3Ib4wSVmc=
+X-Google-Smtp-Source: ABdhPJw0neuwPIyT4dt1aR40e5Kqmv9haPxUPYfkxMLm2fJ5PQtRUklWARQwoAwZqcQEhwmTLrBlhgOl7jmPFQ/Z8Lw=
+X-Received: by 2002:a5d:8f0b:: with SMTP id f11mr23113977iof.200.1593997364570;
+ Sun, 05 Jul 2020 18:02:44 -0700 (PDT)
+MIME-Version: 1.0
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Sun, 5 Jul 2020 18:02:33 -0700
+Message-ID: <CAFXsbZo3xXXgCSd4AgDs8U46hBR0+HkQgzsvwJ=B6rUiondydA@mail.gmail.com>
+Subject: [PATCH] arm: DT: vf610-zii-scu4-aib.dts: Configure fibre ports to 1000BaseX
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-05_19:2020-07-02,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- spamscore=0 cotscore=-2147483648 mlxlogscore=999 mlxscore=0 malwarescore=0
- clxscore=1011 bulkscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007060003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-05 at 23:44 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
-> 
->  If there are any URLs to be removed completely or at least not
-> HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
-> 
->  drivers/scsi/pcmcia/aha152x_stub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/pcmcia/aha152x_stub.c
-> b/drivers/scsi/pcmcia/aha152x_stub.c
-> index df82a349e969..0c471915b20f 100644
-> --- a/drivers/scsi/pcmcia/aha152x_stub.c
-> +++ b/drivers/scsi/pcmcia/aha152x_stub.c
-> @@ -10,7 +10,7 @@
->      The contents of this file are subject to the Mozilla Public
->      License Version 1.1 (the "License"); you may not use this file
->      except in compliance with the License. You may obtain a copy of
-> -    the License at http://www.mozilla.org/MPL/
-> +    the License at https://www.mozilla.org/MPL/
+The SFF soldered onto the board expect the ports to use 1000BaseX.  It
+makes no sense to have the ports set to SGMII, since they don't even
+support that mode.
 
-Um, no, you can't do that: that's licence boilerplate copied from the
-actual standard licence header:
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-https://spdx.org/licenses/MPL-1.1.html
-
-However, it does strike me that the whole of this should have been
-replaced by a SPDX header.
-
-James
-
+diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+index b642520199ba..040a1f8b6130 100644
+--- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
++++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+@@ -186,7 +186,7 @@
+                     port@2 {
+                         reg = <2>;
+                         label = "eth_fc_1000_2";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff1>;
+                     };
+@@ -194,7 +194,7 @@
+                     port@3 {
+                         reg = <3>;
+                         label = "eth_fc_1000_3";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff2>;
+                     };
+@@ -202,7 +202,7 @@
+                     port@4 {
+                         reg = <4>;
+                         label = "eth_fc_1000_4";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff3>;
+                     };
+@@ -210,7 +210,7 @@
+                     port@5 {
+                         reg = <5>;
+                         label = "eth_fc_1000_5";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff4>;
+                     };
+@@ -218,7 +218,7 @@
+                     port@6 {
+                         reg = <6>;
+                         label = "eth_fc_1000_6";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff5>;
+                     };
+@@ -226,7 +226,7 @@
+                     port@7 {
+                         reg = <7>;
+                         label = "eth_fc_1000_7";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff6>;
+                     };
+@@ -234,7 +234,7 @@
+                     port@9 {
+                         reg = <9>;
+                         label = "eth_fc_1000_1";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff0>;
+                     };
+@@ -269,7 +269,7 @@
+                     port@2 {
+                         reg = <2>;
+                         label = "eth_fc_1000_8";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff7>;
+                     };
+@@ -277,7 +277,7 @@
+                     port@3 {
+                         reg = <3>;
+                         label = "eth_fc_1000_9";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff8>;
+                     };
+@@ -285,7 +285,7 @@
+                     port@4 {
+                         reg = <4>;
+                         label = "eth_fc_1000_10";
+-                        phy-mode = "sgmii";
++                        phy-mode = "1000base-x";
+                         managed = "in-band-status";
+                         sfp = <&sff9>;
+                     };
+-- 
+2.21.3
