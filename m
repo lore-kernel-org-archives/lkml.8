@@ -2,95 +2,117 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2376C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E01120715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3159520715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EPvISo3L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QJ0oiGCo"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d6OFUJ0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgGFPPD (ORCPT
+        id S1729338AbgGFPQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729197AbgGFPPC (ORCPT
+        Mon, 6 Jul 2020 11:16:33 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8577 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbgGFPQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:15:02 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC34C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 08:15:02 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594048501;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DsNO+/1JsvNJbroP7auXk8XsvL1r19S8fjPApteHYN8=;
-        b=EPvISo3L8lTW3nOG0l4QQjdLDPqehXQWSPg0uYBgQTwb/2KQxNxocE0nezNIW5Nq/KVq6B
-        TXH102N4t2a5WS8VwMNASYBNsgk67x/zpJ7XEnRKaugcvYhV8meFiXbPG78mBYFwaeQAxv
-        zg+zd4gXAqmNkBikmYsIrdMRJ2D3yFBElYFkh8HO5ujoWdFgoKJzSi53fj6vBd3nDbvLV4
-        rIENbVz7M85G4SO8HBc9GLb6Wr6KwfUOfzcPy+88EuRleXoCxdVmDqMoWg1KypPYvkXwUQ
-        t9MTuN+PUKLCPXmh6cKnGhfsI8DSUQpcI/eOvlW7ExDWJCmqoHnXeKP/+wTAzA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594048501;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DsNO+/1JsvNJbroP7auXk8XsvL1r19S8fjPApteHYN8=;
-        b=QJ0oiGCoBT5kpWsl8vz/8h8yGNN+XQ7VSxBpK8tMLdSxgUOfZB3+GWDcizxQgEQ4YgVBlH
-        9ZrSQdbAF/oaEwDw==
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH RFC 0/7] CPU feature evaluation after microcode late loading
-In-Reply-To: <20200702184216.GG3575@linux.intel.com>
-References: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com> <20200702184216.GG3575@linux.intel.com>
-Date:   Mon, 06 Jul 2020 17:15:00 +0200
-Message-ID: <87r1tor7yj.fsf@nanos.tec.linutronix.de>
+        Mon, 6 Jul 2020 11:16:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f033fe70000>; Mon, 06 Jul 2020 08:14:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 Jul 2020 08:16:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 06 Jul 2020 08:16:32 -0700
+Received: from [10.26.72.33] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 15:16:20 +0000
+Subject: Re: [PATCH 7/8] ASoC: tegra: tegra20_das: remove always-true
+ comparison
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>
+CC:     <tiwai@suse.de>, <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
+ <20200702165901.164100-8-pierre-louis.bossart@linux.intel.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1a7c7025-7689-54a0-dbc0-00b5c1fcd0f1@nvidia.com>
+Date:   Mon, 6 Jul 2020 16:16:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200702165901.164100-8-pierre-louis.bossart@linux.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594048487; bh=S3qOsW4jy3ZymnO+RQ9II2XOQKKoroUl5+GuXsnukfU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=d6OFUJ0pQtg6JQNVFCgkn/XX5QvOjZQA7YGkzOh5jeFI1EEr9d+9uXjmZBMHygc7i
+         +fMiz5QaZP2St9MCr/wjAiDsGA3nMwV9kXM12bX28umi38ousxAkAwYFukFs2+qr9m
+         DCXLZZuViVo6JARF8034PM2zUKb1ihpLn+de3tmDU2jrBRyOr0vEwRg86NdPauItf4
+         lMLsoErnsyCo6EWjSVqqgECpya2Upq1awjOuxQRTSbpVVcDhRZ3bb7a3UXdcX1futz
+         EbIQZhihEllFEKDsBgXLOX++Y4glQJTFP9jMsvK+dVkDw0Ou1BJJiDy1U19xd9q99L
+         6MUUXS/P0jwUQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> On Thu, Jul 02, 2020 at 06:18:20PM +0300, Mihai Carabas wrote:
->> This RFC patch set aims to provide the ability to re-evaluate all CPU
->> features and take proper bug mitigation in place after a microcode
->> late loading.
->> 
->> This was debated last year and this patch set implements a subset of
->> point #2 from Thomas Gleixner's idea:
->> https://lore.kernel.org/lkml/alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de/
 
-An incomplete and dangerous subset.
+On 02/07/2020 17:59, Pierre-Louis Bossart wrote:
+> Fix W=1 warning:
+> 
+> sound/soc//tegra/tegra20_das.c:101:11: warning:
+> comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+>   101 |  if ((reg >= TEGRA20_DAS_DAP_CTRL_SEL) &&
+>       |           ^~
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  sound/soc/tegra/tegra20_das.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/tegra/tegra20_das.c b/sound/soc/tegra/tegra20_das.c
+> index 1070b2710d5e..79dba878d854 100644
+> --- a/sound/soc/tegra/tegra20_das.c
+> +++ b/sound/soc/tegra/tegra20_das.c
+> @@ -98,8 +98,7 @@ EXPORT_SYMBOL_GPL(tegra20_das_connect_dac_to_dap);
+>  
+>  static bool tegra20_das_wr_rd_reg(struct device *dev, unsigned int reg)
+>  {
+> -	if ((reg >= TEGRA20_DAS_DAP_CTRL_SEL) &&
+> -	    (reg <= LAST_REG(DAP_CTRL_SEL)))
+> +	if (reg <= LAST_REG(DAP_CTRL_SEL))
+>  		return true;
+>  	if ((reg >= TEGRA20_DAS_DAC_INPUT_DATA_CLK_SEL) &&
+>  	    (reg <= LAST_REG(DAC_INPUT_DATA_CLK_SEL)))
+> 
 
-> KVM aside, it wouldn't surprise in the least if there is other code in the
-> kernel that captures bug state locally.  This series feels like it needs a
-> fair bit of infrastructure to either detect conflicting usage at build time
-> or actively prevent consuming stale state at runtime.
->
-> There's also the problem of the flags being exposed to userspace via
-> /proc/cpuinfo, though I suppose that's userspace's problem to not shoot
-> itself in the foot.
+Thanks!
 
-User space is the least of my worries. Inconsistent kernel state as I
-described in my mail referenced above is the far more dangerous issue.
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-And just reevaluating some bits is not covering the whole
-problem. Microcode can bring substantial changes and as long as we don't
-have any clear advise and documentation from the vendors it's all
-wishful thinking.
+Cheers
+Jon
 
-Thanks,
-
-        tglx
+-- 
+nvpublic
