@@ -2,53 +2,54 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E528CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A70EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C448420663
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559F920663
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kYIFEzQe"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="efnws94p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgGFUtm (ORCPT
+        id S1727094AbgGFUtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:49:42 -0400
-Received: from mail.efficios.com ([167.114.26.124]:56924 "EHLO
+        Mon, 6 Jul 2020 16:49:46 -0400
+Received: from mail.efficios.com ([167.114.26.124]:57052 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFUtm (ORCPT
+        with ESMTP id S1726939AbgGFUtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:49:42 -0400
+        Mon, 6 Jul 2020 16:49:45 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 926692DCDA5;
-        Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id B6C5C2DCBC2;
+        Mon,  6 Jul 2020 16:49:44 -0400 (EDT)
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zgXfZ8ULZHuK; Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+        with ESMTP id ZWQUH0zUNbht; Mon,  6 Jul 2020 16:49:44 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2780F2DCE1F;
-        Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2780F2DCE1F
+        by mail.efficios.com (Postfix) with ESMTP id 35EAC2DCCBF;
+        Mon,  6 Jul 2020 16:49:44 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 35EAC2DCCBF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594068581;
-        bh=XlqRnfsoWKc5MVLCjC5AxpBd+CFQtEQAvuC1zE63+Y0=;
+        s=default; t=1594068584;
+        bh=mnMMKvJaOAN7AlfDW7S7IlXwHCI9soK/a0/c/Zir58M=;
         h=From:To:Date:Message-Id;
-        b=kYIFEzQeOrM7uwndSuipxq1i/t1+T8X4j91h/fDUIb/fqSqnT31p+CpQ3crCqc5iw
-         B3X3jvDFQjenxqoTmKUiCZ/XtNaZyEutEyla1JpI2DaD3oe4vDj2EOUimK3ypjg2r6
-         sgz4/DCtz9YHhweZaiprXuqe7OwlzbJBLqu8q6hCz2loIwsxJlvQEkteiG6AcnwWfW
-         r9wqv00CWTEo8RDX7G1ynaFN5dWmc2WND8hvuVXfdF+SyXd8bing4Ilhk4MZUWxmzD
-         wDyppX9nX214yeF4WgxT5dupBKCZDO6j+Th5hIfeGX2M1yy3nZKFqEoCZLOPd2AuNk
-         XblzTfeWga1cQ==
+        b=efnws94pwSMtS/IAS5Ys121F4Iq0KkCiCQgYcjiDsebUjlu6LXkPm9zpyge1fMqPv
+         9nQd/m9xFhZdjfHt09PE4YdZFXpRUysulFSKGtxJiFGQt0WJvoAAyA5kpzyrcTXF49
+         7sBqxwZT49TCWK+pYyRF3XbxL9x1ATX+FoViBCvI0MRSyrTai+lJf7HOyB8+FCASkF
+         T+MPqNjCmWJNJ+hprRVDdzAWKUc3EVs1h65dEysJLOiFRsOXnK4xgxnGLg+xT52nJz
+         XEWqPNi6KMWbw7cM2ah1xYQJcMM0Pbqx1leWRmlLRMEQoI1tF5hCte7ygzCBjCdbFs
+         SdYo2KTPeLw4w==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1T7FcRgLYua3; Mon,  6 Jul 2020 16:49:41 -0400 (EDT)
+        with ESMTP id wTGn1GJVJk5q; Mon,  6 Jul 2020 16:49:44 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id A243A2DCDA3;
-        Mon,  6 Jul 2020 16:49:40 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id BD4512DCDA9;
+        Mon,  6 Jul 2020 16:49:42 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org,
@@ -57,49 +58,78 @@ Cc:     linux-kernel@vger.kernel.org,
         Boqun Feng <boqun.feng@gmail.com>,
         "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
         linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [RFC PATCH for 5.8 0/4] rseq cpu_id ABI fix
-Date:   Mon,  6 Jul 2020 16:49:09 -0400
-Message-Id: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>,
+        linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH for 5.8 4/4] rseq: selftests: Expect reliable cpu_id field
+Date:   Mon,  6 Jul 2020 16:49:13 -0400
+Message-Id: <20200706204913.20347-5-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The rseq selftests should discover whether the kernel implements the
+RSEQ_FLAG_RELIABLE_CPU_ID flag, which indicates that the
+__rseq_abi.cpu_id field is reliable.
 
-Recent integration of rseq into glibc unearthed an issue with inaccurate
-cpu_id field for newly created tasks. This series includes a fix for the
-underlying issue (meant to be backported to stable), as well as new rseq
-flags to let user-space know that the kernel implements this fix, so
-glibc and other rseq users can use this flag to know whether they can
-safely use rseq without risk of corrupting their per-cpu data. This new
-flag could either be added only to the master branch (no stable
-backport) or backported to stable, depending on what seems the most
-appropriate.
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Neel Natu <neelnatu@google.com>
+Cc: linux-api@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+---
+ tools/testing/selftests/rseq/rseq.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-This is an RFC aiming for quick inclusion into the Linux kernel, unless
-we prefer reverting the entire rseq glibc integration and try again in 6
-months. Their upcoming release is on August 3rd, so we need to take a
-decision on this matter quickly.
-
-Thanks,
-
-Mathieu
-
-Mathieu Desnoyers (4):
-  sched: Fix unreliable rseq cpu_id for new tasks
-  rseq: Introduce RSEQ_FLAG_REGISTER
-  rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-  rseq: selftests: Expect reliable cpu_id field
-
- include/uapi/linux/rseq.h           | 15 +++++-
- kernel/rseq.c                       | 81 ++++++++++++++++-------------
- kernel/sched/core.c                 |  2 +
- tools/testing/selftests/rseq/rseq.c | 10 +++-
- 4 files changed, 71 insertions(+), 37 deletions(-)
-
+diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
+index 7159eb777fd3..55f1edb0649c 100644
+--- a/tools/testing/selftests/rseq/rseq.c
++++ b/tools/testing/selftests/rseq/rseq.c
+@@ -73,6 +73,11 @@ static int sys_rseq(volatile struct rseq *rseq_abi, uint32_t rseq_len,
+ 	return syscall(__NR_rseq, rseq_abi, rseq_len, flags, sig);
+ }
+ 
++static bool rseq_reliable_cpu_id(void)
++{
++	return sys_rseq(NULL, 0, RSEQ_FLAG_RELIABLE_CPU_ID, 0) == 0;
++}
++
+ int rseq_register_current_thread(void)
+ {
+ 	int rc, ret = 0;
+@@ -87,7 +92,8 @@ int rseq_register_current_thread(void)
+ 	}
+ 	if (__rseq_refcount++)
+ 		goto end;
+-	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq), 0, RSEQ_SIG);
++	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq),
++		      RSEQ_FLAG_REGISTER | RSEQ_FLAG_RELIABLE_CPU_ID, RSEQ_SIG);
+ 	if (!rc) {
+ 		assert(rseq_current_cpu_raw() >= 0);
+ 		goto end;
+@@ -96,6 +102,8 @@ int rseq_register_current_thread(void)
+ 		__rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
+ 	ret = -1;
+ 	__rseq_refcount--;
++	if (errno == EINVAL && !rseq_reliable_cpu_id())
++		fprintf(stderr, "Error: rseq does not provide a reliable cpu_id field.\n");
+ end:
+ 	signal_restore(oldset);
+ 	return ret;
 -- 
 2.17.1
 
