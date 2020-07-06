@@ -2,136 +2,158 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAEA206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E9C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J9lTuX6B"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EW5/UN7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGFXcq (ORCPT
+        id S1727874AbgGFXct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 Jul 2020 19:32:49 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:29340 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbgGFXcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 19:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgGFXcp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:32:45 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE75C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 16:32:45 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id h5so27390218pgq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 16:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=4fIH4GN6n6dAxulY3f2rwIOekdlU8y7grvtSAmvPzI8=;
-        b=J9lTuX6BUejRFhEHNFaUM+EGnZQ/75bZdLy4iNsT5Hfg9e9Vp2ZjxgzbX6pUw+Lcpn
-         tg1r43Kv4uTk2BFurA1fcOtde1w2S5Je2ywaJQQJWmwP1e8BwNtQBgUHZQNR3MaXk813
-         KuuesbqVFVvSo/GTlZp2ModcBzp2zvzYYFI+7B3gCdZbgJX8NyUO1ctAA8jzvSYvoZ2S
-         XjPbtdKmePRNKr5bdqJi4L7kLsiJO1NYgKJn8l9OGXLA+HENv1Ai/LM+1uZFkp7+mArP
-         Lt24vuKQtog0Wr1766hzamg6DKROwdRAxNd37B1qvIDbC2ELunnN1EbkQ2Lt4eBKXH6n
-         Gyyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=4fIH4GN6n6dAxulY3f2rwIOekdlU8y7grvtSAmvPzI8=;
-        b=o8DQi8GRk6BtbRKXBHlK0rLaf9DAOLMkPyRtai7GG6j4C7MUTTqqWKehbxZI7CJKWX
-         7ljtk2ukhTa1Dg8C/0IyYDyYPwXH/8gOYInB9JIfUGaEFpU/CUsD6b4pXT4Zpz0Wz8TR
-         OVjoEJ6n0Cklk3Af97qX7TMxb/AYaXu4zerWDQmcCzP6xQbYJ7aUr269JfJdOBmt6pYy
-         D+tFdfcha7SbFTUGjScTbF3nA4X6qVAQb1iJwj6IxrWz198888Wf0Kf5NkPDObV+f7Co
-         6N6SdPy8Tf7+QWyD0uBAweu+bSABnfA8EIWICyruLxX/VIwfdXB/OEGpBoU1E1OS03gi
-         M9gQ==
-X-Gm-Message-State: AOAM533Ir7XRnzSrXqSqlXH2Ab7OGUfGIkfaKqZHW4tFQUehszLj+pw9
-        oPOOwQI7h6NlhtVzQAYLi8qvlaC0UbKc
-X-Google-Smtp-Source: ABdhPJyzU+Syk8Z8h9GVkTKPHXiJJGlAsi/qdcYnGS/wnQmGjay+JpyjugMliaODOoNeHqqjGG/4eRSGb/8V
-X-Received: by 2002:a17:902:8c8a:: with SMTP id t10mr40175484plo.153.1594078364821;
- Mon, 06 Jul 2020 16:32:44 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 16:32:40 -0700
-Message-Id: <20200706233240.3245512-1-rajatja@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH RESEND v2] PCI: Add device even if driver attach failed
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        stable@vger.kernel.org
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f03b49a0000>; Tue, 07 Jul 2020 07:32:43 +0800
+Received: from HKMAIL102.nvidia.com ([10.18.16.11])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 Jul 2020 16:32:43 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Mon, 06 Jul 2020 16:32:43 -0700
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
+ (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 23:32:27 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 6 Jul 2020 23:32:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KjXg9orIOAk/mXpNuwnlEMxChnof1CB4JGWVeLf3W7Lgp1E1X2gAnu9csDGoKz3bwlvywKfDbWMn+jSux3Pntuok2/wXFG7oi3cTxeuFnKW11umcH+n3IB4xSAbNOKX9wf+EvoG75i1qB4vyX0dOUBQU5L9Xc6JmOzZrorSYazrzeg4i8QG0Z+1rkWf8mAYE8jBaupy9q7MHRLlggnaw/oWlghIWX/0/gyTacRMGJ2/09MEk7i99GzXp+aRZp2i4y559fA4+jITe8V0dhYlsjlT76iZXPdj4JXTRNfTfbITgRgvY8tQQZXwz1opvmx95HtO4vGBEJSMyMi8flR7amQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VlK/xaRrNWsTrAJOvZjacaisuorHJUrmZLMkw3BWGyc=;
+ b=CbwDlLYv/A0QXhwCkuTrstdQnPL2JFogiRBaW1ZOibpX6xzqqseoVW/WaYXgA8I1YSmThrJIbnOyCnCX3CwaXQx22hrCUJIYduXY8HCpFymIk7QCpChv5UIkm9wIVkyF7kSRzHsakSGxXzW7aic4PNlHvRkQOE3+yRCm3LD0zwN8VnSqtu7zG6EDDpP0+m6ssFLIQkmFF+faz7g+WhTOWf3+/jNSVS/Hd2US74s+ZiE5Rz4hJYGhF/JSa3tQ31zm0m7fNo4izdSXiEp2km132hMdDnIutBD6mKhbTqeKAktInADEldlubR3B7k3VEZifzHBYmxAHupea0waogmPjxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.29; Mon, 6 Jul
+ 2020 23:32:25 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 23:32:25 +0000
+Date:   Mon, 6 Jul 2020 20:13:50 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Lijun Ou <oulijun@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Weihang Li <liweihang@huawei.com>,
+        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-next v1 0/4] ib_core allocation patches
+Message-ID: <20200706231350.GA1307144@nvidia.com>
+References: <20200630101855.368895-1-leon@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200630101855.368895-1-leon@kernel.org>
+X-ClientProxiedBy: YT1PR01CA0055.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2e::24) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0055.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2e::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Mon, 6 Jul 2020 23:32:25 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jsaJ4-005U3e-Jt; Mon, 06 Jul 2020 20:13:50 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d9016543-e3e7-42e8-c59a-08d82204d6e5
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3116:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB311641084A917DA6F1C6C10AC2690@DM6PR12MB3116.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 04569283F9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DHC8C6PN/HEdReYLLIpXQUUCCr5Io3o6S54S8ln62Ftid8scPmASDd/Tu8wc7NqAzwp+1sbtP9agBi8aT1124++xlnwlh2+RqTQzc8ctqGP4JrMGgnwRIuxpMckRwNd7QZBavVLRN+VGuXaJvoFVjaXPjilLBgIZNDzJ0MCVNuhUuiCYfSwAL/d1Gq19psRz5oddPOuZRkDi2vvUmAXtdy4rDG4n9LKCAgllS1eWZ6J4+g8CqquxPugTKFQAgU+6Z3lWS8a4tRRWpF9HOhNusxUC0xMRXWSECzZKWdtbudbXIUgPe3DjoTUn0KaZ6o9HY9fkg39bruFld6IORNsf14k8SFxc/QSoafJrjdJ3I+YrttcX0SAeTD4WBJwvujQHBT3BxgCQQjxlkzt6Suy7sA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(54906003)(316002)(2616005)(9746002)(9786002)(426003)(966005)(2906002)(6916009)(8676002)(7416002)(83380400001)(4326008)(26005)(33656002)(1076003)(8936002)(4744005)(186003)(36756003)(478600001)(66946007)(86362001)(66556008)(66476007)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: jBNCDreWe2dqUHscvOGtNgrJMLaijveO9uPUs84eyTZueq1dMeol3uPqDuVSaPHXmpF7VS/JNxRgMn3mtxOEG702xGDpL2noAZUHJc2pwE7p85TUzI2puCzU4pBVJHW/MaatJ78TWhVvFz6H7sIKO83y+W54/bR1mW9iw84gc4G7IqujHAZld6OojXJKfaOH0uAXdNBRYB6L1u8LSW5gEPdm9kSOQ555Fhcm6QlT7OaIlHuSuEuRlcp4dkrSKYTDr5dbP0t6aEKH1/Denh5JraW7gdaVnwNPum7SCBzNq9Af4wHGzg79sshu7I4BOK8/CaeCVe5GZrRAZgFaZ3dshyDZlpa7K+wOQCEK2XyQi1PEFM61OL7uiMY1GEqGNUcA6v+OAoBxAnoJIcvHBKQNX+banpAluOoGjIqwLjHuKbcUO5BCUCvkZ9r/dJ1+nCXv+/plaNYi/RJB5AGh8bT2Jkx7dG09OP65Y6IajPLmIEGIScMVLzWyKdJS+afpO69d
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9016543-e3e7-42e8-c59a-08d82204d6e5
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2020 23:32:25.5090
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ncewO0txKrnce0tqVcfPt7LR6jr9Js0AA/qJ/8bIb+SSDmr55Pi9KbFXWR6jj9Ey
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3116
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594078363; bh=VlK/xaRrNWsTrAJOvZjacaisuorHJUrmZLMkw3BWGyc=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-Forefront-PRVS:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=EW5/UN7wavCxTDjBuQLiecMNBYErv/DSYIJSDSfNAorho6LfsEt1vmnN8RF6JGa0R
+         B5bvaec/26uDM+1RCAtH2iVS7er5/DBGGs19wwLZpYSaAG0YbYZ4x4r1wevj6JPcNH
+         oyv79luHmM5l4f64ZaW5dPDMZTKUVYbMVZjCLdrBeKBnO2947VL/I8bMS/CMrG5biD
+         Ayc9ziJk+T3W9xsE/heSW/BQzG9IwnTZRMtKV+YclCi4s1kcjgPiXKfdqiWpkSG3yj
+         DRFCcPpe2wh6txe99FvIQflhxjkjAHxfF68C5vHzcG0Wgew3ULdwRaxMdzXuuLnfZm
+         EFCrObKcK+EDg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_attach() returning failure indicates a driver error while trying to
-probe the device. In such a scenario, the PCI device should still be added
-in the system and be visible to the user.
+On Tue, Jun 30, 2020 at 01:18:51PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Changelog
+> v1:
+>  * Removed empty "//" comment
+>  * Deleted destroy_rwq_ind_table from object tree
+>  * One patch was accepted, so rebased on latest for-upstream
+> v0:
+> https://lore.kernel.org/lkml/20200624105422.1452290-1-leon@kernel.org
+> 
+> 
+> Let's continue my allocation work.
+> 
+> Leon Romanovsky (4):
+>   RDMA/core: Create and destroy counters in the ib_core
+>   RDMA: Move XRCD to be under ib_core responsibility
 
-This patch partially reverts:
-commit ab1a187bba5c ("PCI: Check device_attach() return value always")
+These two applied to for-next
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-Resending to stable, independent from other patches per Greg's suggestion
-v2: Add Greg's reviewed by, fix commit log
-
- drivers/pci/bus.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 8e40b3e6da77d..3cef835b375fd 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
- 
- 	dev->match_driver = true;
- 	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER) {
-+	if (retval < 0 && retval != -EPROBE_DEFER)
- 		pci_warn(dev, "device attach failed (%d)\n", retval);
--		pci_proc_detach_device(dev);
--		pci_remove_sysfs_dev_files(dev);
--		return;
--	}
- 
- 	pci_dev_assign_added(dev, true);
- }
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+Thanks,
+Jason
