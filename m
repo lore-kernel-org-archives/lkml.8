@@ -2,154 +2,235 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B66C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2838C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9AC920760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="YSXvQNgx"
+	by mail.kernel.org (Postfix) with ESMTP id D38BB2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgGFJXf (ORCPT
+        id S1728793AbgGFJYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgGFJXe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:23:34 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2762FC08C5E0
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 02:23:34 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y10so41593197eje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 02:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=F6fo77lXw3Wa9Ww9ysq9BOqYKJ0fNyxAE2eRhCOsSNc=;
-        b=YSXvQNgxeN2qzLB+St45pcHZ/m81Pnb4zyDkQ6gegeYhVS1FY7bXxEqEocf0voPJJU
-         HKbqdCgjSddYDNZftx5Un7qw+elwZ3E/9wFERFyGKgxYtvL/QeAbUXnaPMSSjUEKKSRJ
-         HqT+QsznvXgR15DfoNIvc3SClvGwGQuyZ3bWPD1o4r31Lv7hvUCd9UClHA0NgMz/O/VQ
-         WJ8ukwPCwe6sn0vYfvKiIEYbr1B9mOYJCZSbnBIudMeL+lABv8K3O4E6YTLeJwBn4ZM7
-         2oisQMY8CXbrLw6VA96xX+P8O9XZk2fSJ3UWaMLalEY0QbKifD7Y8RdZ86AsSynSuqE0
-         hhVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=F6fo77lXw3Wa9Ww9ysq9BOqYKJ0fNyxAE2eRhCOsSNc=;
-        b=EUfNLvUyAWjsVRopRPq7WFWq/BCWTT64ig33tMcelszPmMX5GOBPmmnmVREzGXq9ES
-         4ZEeAmyIj2JRwf0HQoDjTdAbd4Gpfcw8V9EjW9l0FtwbmIUfhRluGnoCUIuVUOvea4CY
-         4TS5rTlPA4sevNeQE2NpVd2sYyrNABGMHYuLJ0lLUAx1zUc/7aJEigmrdYl6iL0O8vWM
-         21SO9kvQAe3mem8nHK2sy4jrHCqI3tNG/D/Gp70e3L7BnvQcUZOv8CyAXc4oY3OXjhDI
-         BMgZWHIykYdrK8fppEL/xueC54ERTF1g8EYMJIr5XaqOw6o6tcQ+7kccHLUgyH24Bn2w
-         UGiQ==
-X-Gm-Message-State: AOAM532ueMsDZKkGOLIDc//i2wcdam9Pn7WysB6ntweW2WsPEmQJhhG0
-        Fy1Kz7Sb5sv436+n97KZzV8m
-X-Google-Smtp-Source: ABdhPJwpyAHaCGzluPP24M/BnJk1LROk9XKUZIbY7we5jc8pngCTX3YsRtf++tZzjXF0rmbzFu2NIg==
-X-Received: by 2002:a17:906:dbcf:: with SMTP id yc15mr32612198ejb.222.1594027412796;
-        Mon, 06 Jul 2020 02:23:32 -0700 (PDT)
-Received: from localhost.localdomain (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id bm21sm15895244ejb.13.2020.07.06.02.23.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 02:23:32 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     geert@linux-m68k.org, lukas@wunner.de,
-        Adrian Fiergolski <adrian.fiergolski@fastree3d.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy chain driver.
-Date:   Mon,  6 Jul 2020 11:22:44 +0200
-Message-Id: <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+        Mon, 6 Jul 2020 05:24:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35368 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728609AbgGFJYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 05:24:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D39F8AAF1;
+        Mon,  6 Jul 2020 09:23:59 +0000 (UTC)
+Subject: Re: [PATCH v3] drm/hisilicon: Code refactoring for hibmc_drv_vdac
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1593680081-60313-1-git-send-email-tiantao6@hisilicon.com>
+ <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
+Message-ID: <d8a0ca1d-0941-a640-2060-433073897eca@suse.de>
+Date:   Mon, 6 Jul 2020 11:23:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="izG3D42C2jxKggzm9TaHG21QjGx4GJk7g"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for SPI daisy chain driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--izG3D42C2jxKggzm9TaHG21QjGx4GJk7g
+Content-Type: multipart/mixed; boundary="AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+ airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+ alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <d8a0ca1d-0941-a640-2060-433073897eca@suse.de>
+Subject: Re: [PATCH v3] drm/hisilicon: Code refactoring for hibmc_drv_vdac
+References: <1593680081-60313-1-git-send-email-tiantao6@hisilicon.com>
+ <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
+In-Reply-To: <8aac2194-e122-e4bb-dbd1-e6530fc77427@suse.de>
 
-Signed-off-by: Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
----
- .../bindings/spi/spi-daisy_chain.txt          | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
+--AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-new file mode 100644
-index 000000000000..1e5b046dda83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-@@ -0,0 +1,56 @@
-+spi-daisy_chain : The driver handling SPI daisy chains.
-+-----------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "spi,daisy_chain"
-+- reg			: Chip select assigned to the chain
-+
-+  For the SPI devices on a common SPI chain - nodes of daisy_chain):
-+- spi-daisy-chain-len  : Length (in bytes) of the SPI transfer,
-+		         when the SPI device is part of a device chain.
-+- spi-daisy-chain-noop : Byte string of no-operation command which should
-+		         be send when device is not addressed during the
-+			 given SPI transfer
-+
-+Optional properties:
-+  (for the SPI devices on a common SPI chain (nodes of daisy_chain):
-+- spi-daisy-chain-bits_per_word : no-operation transfers involve
-+                                  one or more words; word sizes like
-+				  eight or 12 bits are common.
-+				  In-memory wordsizes are powers of two
-+				  bytes (e.g. 20 bit samples use 32 bits).
-+				  If not defined, it is assumed to be 8.
-+
-+The daisy chain is a virtual device represented as a regular SPI device. Its
-+nodes define physical devices available on the chain. The order of the nodes
-+defines the order of the physical devices on the chain: MOSI pin of a device
-+represented by the first node is the last one on the MOSI daisy chain. The
-+daisy-chain functionality is transparent to the drivers of the physical devices
-+on the chain. All nodes share SPI mode, chip select and a max speed of the
-+virtual daisy chain device. Once one of the physical devices is being accessed,
-+the spi-daisy_chain driver combines this data with no-operation commands of all
-+other devices on the chain.
-+
-+Example:
-+
-+	daisy_chain0: daisy_chain@0 {
-+	        compatible = "spi,daisy_chain";
-+		spi-max-frequency = <10000000>;
-+		reg = <0>;
-+
-+		dac0: ltc2632@0 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+		dac1: ltc2632@1 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+		dac2: ltc2632@2 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+	};
--- 
-2.27.0
+Hi
 
+Am 02.07.20 um 12:12 schrieb Thomas Zimmermann:
+> Thanks!
+>=20
+> Am 02.07.20 um 10:54 schrieb Tian Tao:
+>> code refactoring for hibmc_drv_vdac.c, no actual function changes.
+>>
+>> v2:
+>> remove the debug message.
+>>
+>> v3:
+>> embedding connector and encoder in struct hibmc_drm_private.
+>>
+>> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+>=20
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>=20
+> Maybe others want to comment on the patch, so I'll give it a few more
+> days before I add it to drm-misc-next. Don't hesitate to ping me if I
+> forget about it.
+
+I've added the patch to drm-misc-next
+
+>=20
+> Best regards
+> Thomas
+>=20
+>> ---
+>>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h  |  2 +
+>>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 52 +++++----------=
+---------
+>>  2 files changed, 13 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers=
+/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>> index 50a0c1f..6097687 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>> @@ -29,6 +29,8 @@ struct hibmc_drm_private {
+>> =20
+>>  	/* drm */
+>>  	struct drm_device  *dev;
+>> +	struct drm_encoder encoder;
+>> +	struct drm_connector connector;
+>>  	bool mode_config_initialized;
+>>  };
+>> =20
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/driver=
+s/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> index 678ac2e..2ca69c3 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_conne=
+ctor_funcs =3D {
+>>  	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,=
+
+>>  };
+>> =20
+>> -static struct drm_connector *
+>> -hibmc_connector_init(struct hibmc_drm_private *priv)
+>> -{
+>> -	struct drm_device *dev =3D priv->dev;
+>> -	struct drm_connector *connector;
+>> -	int ret;
+>> -
+>> -	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL)=
+;
+>> -	if (!connector) {
+>> -		DRM_ERROR("failed to alloc memory when init connector\n");
+>> -		return ERR_PTR(-ENOMEM);
+>> -	}
+>> -
+>> -	ret =3D drm_connector_init(dev, connector,
+>> -				 &hibmc_connector_funcs,
+>> -				 DRM_MODE_CONNECTOR_VGA);
+>> -	if (ret) {
+>> -		DRM_ERROR("failed to init connector: %d\n", ret);
+>> -		return ERR_PTR(ret);
+>> -	}
+>> -	drm_connector_helper_add(connector,
+>> -				 &hibmc_connector_helper_funcs);
+>> -
+>> -	return connector;
+>> -}
+>> -
+>>  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
+>>  				   struct drm_display_mode *mode,
+>>  				   struct drm_display_mode *adj_mode)
+>> @@ -105,23 +79,10 @@ static const struct drm_encoder_funcs hibmc_encod=
+er_funcs =3D {
+>>  int hibmc_vdac_init(struct hibmc_drm_private *priv)
+>>  {
+>>  	struct drm_device *dev =3D priv->dev;
+>> -	struct drm_encoder *encoder;
+>> -	struct drm_connector *connector;
+>> +	struct drm_encoder *encoder =3D &priv->encoder;
+>> +	struct drm_connector *connector =3D &priv->connector;
+>>  	int ret;
+>> =20
+>> -	connector =3D hibmc_connector_init(priv);
+>> -	if (IS_ERR(connector)) {
+>> -		DRM_ERROR("failed to create connector: %ld\n",
+>> -			  PTR_ERR(connector));
+>> -		return PTR_ERR(connector);
+>> -	}
+>> -
+>> -	encoder =3D devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
+>> -	if (!encoder) {
+>> -		DRM_ERROR("failed to alloc memory when init encoder\n");
+>> -		return -ENOMEM;
+>> -	}
+>> -
+>>  	encoder->possible_crtcs =3D 0x1;
+>>  	ret =3D drm_encoder_init(dev, encoder, &hibmc_encoder_funcs,
+>>  			       DRM_MODE_ENCODER_DAC, NULL);
+>> @@ -131,6 +92,15 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv=
+)
+>>  	}
+>> =20
+>>  	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
+>> +
+>> +	ret =3D drm_connector_init(dev, connector, &hibmc_connector_funcs,
+>> +				 DRM_MODE_CONNECTOR_VGA);
+>> +	if (ret) {
+>> +		DRM_ERROR("failed to init connector: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
+>> +
+>>  	drm_connector_attach_encoder(connector, encoder);
+>> =20
+>>  	return 0;
+>>
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--AtTw58yqFNxjIu71QxwyahvrsJAE6H1aL--
+
+--izG3D42C2jxKggzm9TaHG21QjGx4GJk7g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8C7a4UHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiM0vQf+OlfARWLP0IaR9nwRnDefB4Q32Gu4
+qlGrTq+sXsrKcUPPO488EfmKNGVxHz6AC4itqdJUNWFgupabeZF557SA5AkstBXj
+khqzsLxIN5gqczxQPvIV8JTFj5B8r5QiNZpKcFclynMvh0FaDwWAjpMp2gkMuWgQ
+XrR6lioiwBd/ag5Eza1v5X0wFFqG5HPPkLUOJGr4n/30oJEebYwaAsX2TDJK4XvW
+7Ir6/s4mOTXn4JSCCBjYhkuKw0eMGVA/07wGuCce+Ah2o8V2seoqn1ZlmTIMvCG+
+dkxy7J5DDS3IePRNLKdvgzr0T9DW94VOXSPoNFoiUxHuU+U2EjDxPbc6ew==
+=155B
+-----END PGP SIGNATURE-----
+
+--izG3D42C2jxKggzm9TaHG21QjGx4GJk7g--
