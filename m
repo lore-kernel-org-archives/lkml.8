@@ -2,147 +2,129 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D00F206BE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594069608;
-	bh=8FQG3v8b4r+oJ69mw3ZRz9kF6YWmcxHtUuE/bUg9230=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=BZEAsbRhqjRdCvtsWd7sHAgKZD5SXe/Hgt2GCMy5eaabZPfALUGz/9Pkbx7e+LGCN
-	 aUBq6Qz5V4P9/38lezwHyTnsLWl4PdjR7XKXjW8opBIdA3aTbxwk31NdYpA41W1XOB
-	 dPpYKAhX+9ki1pflWupjhBvfIBqQh38I2MG71xoI=
+	by mail.kernel.org (Postfix) with ESMTP id C0E79206BE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:07:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2cbsGNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGFVGq (ORCPT
+        id S1726799AbgGFVHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 17:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgGFVGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 17:06:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B15F206B6;
-        Mon,  6 Jul 2020 21:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594069605;
-        bh=8FQG3v8b4r+oJ69mw3ZRz9kF6YWmcxHtUuE/bUg9230=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=foRYrq9kQ8dcpUY0oJNtXHqyBIQDhSti8Zu24qyU8tMqrPo7ahmkAkAmccqfPDpI4
-         hBrQ+B0jTKbMlBQv+Fz6L+QKxuIukK9J3cWq8K+OzsFQ7QCQcAaiSEaRXs3QE//7KN
-         oW6uKVLXAnnJJIXwvcMbiXxgIaQBw23ijiHqbfYE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 549073522637; Mon,  6 Jul 2020 14:06:45 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 14:06:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200706210645.GJ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
- <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
- <20200702164826.GQ9247@paulmck-ThinkPad-P72>
- <20200702201908.jfiacgvion6a4nmj@linutronix.de>
+        Mon, 6 Jul 2020 17:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFVHa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 17:07:30 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 025CDC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 14:07:30 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x3so11931036pfo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 14:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ltxd3dYIIoYCEWLVWkAFd+Lvzl8zZTtrqnBoRTLOPrw=;
+        b=h2cbsGNvG0tAe/ImaTVsxGwkE46Q+vlxD3xFsSo9MKqc4fVdwDwBfTqyph9hswjzur
+         CYqkBZet0gWna39RzAOQhznMY3bFxO6++cwd1MVuakUPA9PHjxpwnjzfSkwh/f1/OrM7
+         aSBK9wYYoe8Umfp4asSMM2vMDK98EqA4ftz7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ltxd3dYIIoYCEWLVWkAFd+Lvzl8zZTtrqnBoRTLOPrw=;
+        b=Pt0tmK+LXEImgLkYz0pV3dCRS0tP47VrdSszRWNjCihJpjgBCsjpapPfp3CdC/H8LC
+         uEehuIvqdPfkMnl8nVKmFRhyLZ1uPK+jt9m976xcPW3rx3BOLCQlnZjQgVj2yYE5O0p1
+         RLG+tLetqkvrt9TPSG8R07bilGx+jrudc8cPmyF3XCYs1s9BjdABMWSZU1rUrByP0LFx
+         rm7r5u0wmkW7gTekUlL5qPJ38/gki3nnR9iRldkcG8vi/d63j5tNgTJyDiRrhshLNpsI
+         B/kouItNKF4fa8u0jZgXsHS73DMS7UlRP1n6lTWBr42LcQpcTtM3qNefNZjxuzOm3fT/
+         es9g==
+X-Gm-Message-State: AOAM5334CxU/2eFo8CToIo88iIistB5/eedT+Jv/+Rqh5Vwzeh8MxAl3
+        RkH3zHgit40HzA4jKUZVGKy9gg==
+X-Google-Smtp-Source: ABdhPJy7PL/hlbFhwfnzuhW1Tr79eUWHhfP6EcBz2eu08ukka/c7cEFGGfAvpTJxtAZYYZAIv4kw1Q==
+X-Received: by 2002:a63:338c:: with SMTP id z134mr27954169pgz.245.1594069649524;
+        Mon, 06 Jul 2020 14:07:29 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id j8sm21088609pfd.145.2020.07.06.14.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 14:07:28 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     linux-pm@vger.kernel.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        rafael.j.wysocki@intel.com, swboyd@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH v2 0/1] power: Emit change uevent when updating sysfs
+Date:   Mon,  6 Jul 2020 14:07:16 -0700
+Message-Id: <20200706210717.1210639-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702201908.jfiacgvion6a4nmj@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:19:08PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-07-02 09:48:26 [-0700], Paul E. McKenney wrote:
-> > On Thu, Jul 02, 2020 at 04:12:16PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
-> > > > > This is not going to work together with the "wait context validator"
-> > > > > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> > > > > printk() which is why it is still disabled by default.
-> > > > 
-> > > > Fixing that should be "interesting".  In particular, RCU CPU stall
-> > > > warnings rely on the raw spin lock to reduce false positives due
-> > > > to race conditions.  Some thought will be required here.
-> > > 
-> > > I don't get this part. Can you explain/give me an example where to look
-> > > at?
-> > 
-> > Starting from the scheduler-clock interrupt's call into RCU,
-> > we have rcu_sched_clock_irq() which calls rcu_pending() which
-> > calls check_cpu_stall() which calls either print_cpu_stall() or
-> > print_other_cpu_stall(), depending on whether the stall is happening on
-> > the current CPU or on some other CPU, respectively.
-> > 
-> > Both of these last functions acquire the rcu_node structure's raw ->lock
-> > and expect to do printk()s while holding it.
-> 
-> …
-> > Thoughts?
-> 
-> Okay. So in the RT queue there is a printk() rewrite which fixes this
-> kind of things. Upstream the printk() interface is still broken in this
-> regard and therefore CONFIG_PROVE_RAW_LOCK_NESTING is disabled.
-> [Earlier the workqueue would also trigger a warning but this has been
-> fixed as of v5.8-rc1.]
-> This was just me explaining why this bad, what debug function would
-> report it and why it is not enabled by default.
 
-Whew!!!  ;-)
+Hi linux-pm,
 
-> > > > > So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> > > > > complain that you have a raw_spinlock_t acquired (the one from patch
-> > > > > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-> > > > 
-> > > > Given that the slab allocator doesn't acquire any locks until it gets
-> > > > a fair way in, wouldn't it make sense to allow a "shallow" allocation
-> > > > while a raw spinlock is held?  This would require yet another GFP_ flag,
-> > > > but that won't make all that much of a difference in the total.  ;-)
-> > > 
-> > > That would be one way of dealing with. But we could go back to
-> > > spinlock_t and keep the memory allocation even for RT as is. I don't see
-> > > a downside of this. And we would worry about kfree_rcu() from real
-> > > IRQ-off region once we get to it.
-> > 
-> > Once we get to it, your thought would be to do per-CPU queuing of
-> > memory from IRQ-off kfree_rcu(), and have IRQ work or some such clean
-> > up after it?  Or did you have some other trick in mind?
-> 
-> So for now I would very much like to revert the raw_spinlock_t back to
-> the spinlock_t and add a migrate_disable() just avoid the tiny
-> possible migration between obtaining the CPU-ptr and acquiring the lock
-> (I think Joel was afraid of performance hit).
+ChromeOS has a udev rule to chown the `power/wakeup` attribute so that
+the power manager can modify it during runtime.
 
-Performance is indeed a concern here.
+(https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/platform2/power_manager/udev/99-powerd-permissions.rules)
 
-> Should we get to a *real* use case where someone must invoke kfree_rcu()
-> from a hard-IRQ-off region then we can think what makes sense. per-CPU
-> queues and IRQ-work would be one way of dealing with it.
+In our automated tests, we found that the `power/wakeup` attributes
+weren't being chown-ed for some boards. On investigating, I found that
+when the drivers probe and call device_set_wakeup_capable, no uevent was
+being emitted for the newly added power/wakeup attribute. This was
+manifesting at boot on some boards (Marvell SDIO bluetooth and Broadcom
+Serial bluetooth drivers) or during usb disconnects during resume
+(Realtek btusb driver with reset resume quirk).
 
-It looks like workqueues can also be used, at least in their current
-form.  And timers.
+It seems reasonable to me that changes to the attributes of a device
+should cause a changed uevent so I have added that here.
 
-Vlad, Joel, thoughts?
+Here's an example of the kernel events after toggling the authorized
+bit of /sys/bus/usb/devices/1-3/
 
-							Thanx, Paul
+$ echo 0 > /sys/bus/usb/devices/1-3/authorized
+KERNEL[27.357994] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0/rfkill1 (rfkill)
+KERNEL[27.358049] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0 (bluetooth)
+KERNEL[27.358458] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0 (usb)
+KERNEL[27.358486] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.1 (usb)
+KERNEL[27.358529] change   /devices/pci0000:00/0000:00:15.0/usb1/1-3 (usb)
+
+$ echo 1 > /sys/bus/usb/devices/1-3/authorized
+KERNEL[36.415749] change   /devices/pci0000:00/0000:00:15.0/usb1/1-3 (usb)
+KERNEL[36.415798] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0 (usb)
+KERNEL[36.417414] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0 (bluetooth)
+KERNEL[36.417447] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0/rfkill2 (rfkill)
+KERNEL[36.417481] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.1 (usb)
+
+Thanks
+Abhishek
+
+Changes in v2:
+- Add newline at end of bt_dev_err
+
+Abhishek Pandit-Subedi (1):
+  power: Emit changed uevent on wakeup_sysfs_add/remove
+
+ drivers/base/power/sysfs.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
