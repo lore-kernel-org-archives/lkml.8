@@ -2,108 +2,169 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90532C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7844C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C026206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860072070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taqKJ3OB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cp5s15ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgGFOuG (ORCPT
+        id S1729307AbgGFOwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbgGFOuF (ORCPT
+        Mon, 6 Jul 2020 10:52:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22997 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729224AbgGFOwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:50:05 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C6BC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:50:04 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id q15so9983979vso.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RWA25aZsg+amDOJvt4Y158PEbRGk+vCsxnKr+qd7EXU=;
-        b=taqKJ3OBsVxei3aYyQpx5E7jAO+c1xVScXydVxtz+3dHOGbroJQYL2n3DOlwxJKzKs
-         Ouh0ocprkUbxvvDhnFX3mOW7itQeN18QlyQPR9ViQuihWANWXVwzs0XcFq3Il0omKTd0
-         rnFJEXbqLgNILJf/LvtWVnER9c8BBEzTqmGHfUouCPej5YWpqxus3RAxsF+YRw4r7yeg
-         hstbRwZJNQ35po06x1VPte01xdU7/Krn8zqZR20t6O65tB0PaY4zxV2Mq/CQ+s9CrUdk
-         2uvqdo1jp7/DbNX8p+WrRWjuQvoWBcOLffugp10y9AwsF65NstPUP37Br1k/mHijY374
-         rnTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RWA25aZsg+amDOJvt4Y158PEbRGk+vCsxnKr+qd7EXU=;
-        b=mcUqvCoqxrAboQ2WtQ3rj6eoKDSGtniRwvYCvrtWvEsgWF/yjCrjRUR2ZYwjhEm5ax
-         f3+NOj09A7Q+d8QNA1LMdXgeRmaSSncUsYiYKgEeVUTYKRya8AHZzbf4jfr5FhOQ7KP/
-         O52A1XXHsino/De4iXssVmRbCv8GFc5SFFxWt6NIjG1i2p6OteJxlscKfTjDz7y66wWo
-         YpImzuII/EWE9nAecHiqvmrTMpr/oe1ZlYttgZyjICvtHdQofX51a9UyQEWqGsa5C1Ff
-         G4kX5BW/PkHXC0RXHkyOkXmLdIadoROwXrhFMUookKrC+IdclIzvaC9r5kvmZh/CGbjD
-         64Ug==
-X-Gm-Message-State: AOAM532yvGHdWHRX2unYbmT+Q9b9lRQNVwSdeABR7QeLJk/0FQz0t7Dc
-        5+ATlHPs7GTrl4EStu1jtgR7Zvqd8G4GUx9Od1VjUg==
-X-Google-Smtp-Source: ABdhPJxp7EQdsYXKyXmIwNKtH/jXmN/JFTTqCw29aNQ82/P1aOfsCs80wZaC7wnclqEWyJePDEkpHKIZfvV8xexmmqk=
-X-Received: by 2002:a05:6102:126a:: with SMTP id q10mr18466459vsg.35.1594047004092;
- Mon, 06 Jul 2020 07:50:04 -0700 (PDT)
+        Mon, 6 Jul 2020 10:52:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594047151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZKdVspges85ZduPH9Q6FYljsttWOZWyavYYfs+vHaPE=;
+        b=cp5s15haQq6dCsC1mWqSalF+CcjMs0EkZdlXEiTMhmKpw7pPK/wFPEQN0m5ZFrDogbhUjK
+        fwXGHPZlWFi5NIOCrg3SqbBd/Yoc1QMEiUSQ6rWBylOgKxWgI2T3lxaXCYB8Xecpfj37Jf
+        0b91gAp/akSX+4WDPlx/s+B4bVk51NA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-6abRn3w7MLOiHY4XoIRN0w-1; Mon, 06 Jul 2020 10:52:27 -0400
+X-MC-Unique: 6abRn3w7MLOiHY4XoIRN0w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97E93107ACF9;
+        Mon,  6 Jul 2020 14:52:25 +0000 (UTC)
+Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 500D260BF3;
+        Mon,  6 Jul 2020 14:52:16 +0000 (UTC)
+Subject: Re: [PATCH v4 06/15] iommu/vt-d: Support setting ioasid set to domain
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
+ <1593861989-35920-7-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d47367ab-f986-4c09-2578-3e364aa57835@redhat.com>
+Date:   Mon, 6 Jul 2020 16:52:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200630223655.2627-1-l4stpr0gr4m@gmail.com>
-In-Reply-To: <20200630223655.2627-1-l4stpr0gr4m@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 6 Jul 2020 16:49:26 +0200
-Message-ID: <CAPDyKFqS6Ew2Op1qx_YHMCd0qFmRm_XtUQrgdWLY_+v0kxr8pA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mmc: sdhci-sirf
-To:     Kangmin Park <l4stpr0gr4m@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593861989-35920-7-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 00:37, Kangmin Park <l4stpr0gr4m@gmail.com> wrote:
->
-> Fix unit address to match the first address specified in the reg
-> property of the node.
+Hi Yi,
 
-Rather than fixing legacy DT doc, can you please consider to convert
-the doc into the yaml format instead?
-
-Kind regards
-Uffe
-
-
->
-> Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
+On 7/4/20 1:26 PM, Liu Yi L wrote:
+> From IOMMU p.o.v., PASIDs allocated and managed by external components
+> (e.g. VFIO) will be passed in for gpasid_bind/unbind operation. IOMMU
+> needs some knowledge to check the PASID ownership, hence add an interface
+> for those components to tell the PASID owner.
+> 
+> In latest kernel design, PASID ownership is managed by IOASID set where
+> the PASID is allocated from. This patch adds support for setting ioasid
+> set ID to the domains used for nesting/vSVA. Subsequent SVA operations
+> on the PASID will be checked against its IOASID set for proper ownership.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-sirf.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> index dd6ed464bcb8..61185bbfdf9e 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> @@ -11,7 +11,7 @@ Optional properties:
->
->  Example:
->
-> -       sd0: sdhci@56000000 {
-> +       sd0: sdhci@cd000000 {
->                 compatible = "sirf,prima2-sdhc";
->                 reg = <0xcd000000 0x100000>;
->                 cd-gpios = <&gpio 6 0>;
-> --
-> 2.26.2
->
+>  drivers/iommu/intel/iommu.c | 16 ++++++++++++++++
+>  include/linux/intel-iommu.h |  4 ++++
+>  include/linux/iommu.h       |  1 +
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 62ebe01..89d708d 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1793,6 +1793,7 @@ static struct dmar_domain *alloc_domain(int flags)
+>  	if (first_level_by_default())
+>  		domain->flags |= DOMAIN_FLAG_USE_FIRST_LEVEL;
+>  	domain->has_iotlb_device = false;
+> +	domain->ioasid_sid = INVALID_IOASID_SET;
+>  	INIT_LIST_HEAD(&domain->devices);
+>  
+>  	return domain;
+> @@ -6039,6 +6040,21 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
+>  		}
+>  		spin_unlock_irqrestore(&device_domain_lock, flags);
+>  		break;
+> +	case DOMAIN_ATTR_IOASID_SID:
+no need to take the device_domain_lock?
+> +		if (!(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE)) {
+> +			ret = -ENODEV;
+> +			break;
+> +		}
+> +		if ((dmar_domain->ioasid_sid != INVALID_IOASID_SET) &&
+> +		    (dmar_domain->ioasid_sid != (*(int *) data))) {
+storing *(int *) data) in a local variable would increase the
+readability of the code I think.
+> +			pr_warn_ratelimited("multi ioasid_set (%d:%d) setting",
+> +					    dmar_domain->ioasid_sid,
+> +					    (*(int *) data));
+> +			ret = -EBUSY;
+> +			break;
+> +		}
+> +		dmar_domain->ioasid_sid = *(int *) data;
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 3f23c26..0d0ab32 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -549,6 +549,10 @@ struct dmar_domain {
+>  					   2 == 1GiB, 3 == 512GiB, 4 == 1TiB */
+>  	u64		max_addr;	/* maximum mapped address */
+>  
+> +	int		ioasid_sid;	/*
+> +					 * the ioasid set which tracks all
+> +					 * PASIDs used by the domain.
+> +					 */
+>  	int		default_pasid;	/*
+>  					 * The default pasid used for non-SVM
+>  					 * traffic on mediated devices.
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 2567c33..21d32be 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -124,6 +124,7 @@ enum iommu_attr {
+>  	DOMAIN_ATTR_FSL_PAMUV1,
+>  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+>  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> +	DOMAIN_ATTR_IOASID_SID,
+>  	DOMAIN_ATTR_MAX,
+>  };
+>  
+> 
+Thanks
+
+Eric
+
