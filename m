@@ -2,125 +2,76 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2695BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3693AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6E52070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594032059;
-	bh=u/VokkyrXOkfDl6vX7N/i4GaNLlmne5E7vZQ4+W8KSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ifkKY7UlCrEm9ng4KAcpgAiQO5y24uedUQRIj82DfFppiBSZEsyatUs005BFwaR4e
-	 c6KNDNyyQ3LWP1VOxdvP2B7gakhFymROSmIT1j/L5q1K3hYurBBFGrP2cXQsr/O4ck
-	 AoUT48fLuD1QdAxMH1vXFaTAkOroKEMtL+kvN8xw=
+	by mail.kernel.org (Postfix) with ESMTP id 0C6F62070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgGFKk5 (ORCPT
+        id S1728933AbgGFKlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:40:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35482 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgGFKk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:40:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z2so17992945wrp.2;
-        Mon, 06 Jul 2020 03:40:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nXbYME0w6wo1ywRbD8zJP/dk/w6azoTUgUnE1Fm/WOQ=;
-        b=a0VlsCfgKwfQbx+VwilhOVGRli4MKVKbJ6d11QRiXqVElNuYSZShW9p1KO+p2sySG0
-         skFAtxkr6m3cTqATklDlQLQlyzQgjELxT6CBT8WLEVbm3BXtW8OqChlPGAtLOhKtQ6Zj
-         la/vTdHODq7BLPR9Rw6g3RVDZ7nXTVugRjwxUoUgdtGkOyZYU7QnFGkPuox609DGPpTv
-         b+/nsiN0U4FpuusT++qpNBME7Mzc1KXSU2456MAgRAUJmJ64gzNz8Hp5dEqnmiW7qbIZ
-         oPPmRXHy6xg2IwJnZ46XlF6kp3024LHAALy+G7/5G+H7kL89qAMx5kJzv6LTBaGxjf7W
-         Mbtw==
-X-Gm-Message-State: AOAM533vDl/qlGuTlMxhyjRYWdFSJMpwHtjHIsRX2TFnhFs3Hi3e3YrP
-        5dTC0n08gSMF5UCq9V8U2UVlRF/+
-X-Google-Smtp-Source: ABdhPJyaTTacfY19alYylsAPF//5GC76pvTVNMe9CH3/3gACJygP1MuC39DqHbYUHYnn1WQUK+yU/g==
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr47123552wrw.405.1594032055439;
-        Mon, 06 Jul 2020 03:40:55 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id e5sm24067935wrs.33.2020.07.06.03.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 03:40:54 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 10:40:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Hyper-V core and
- drivers
-Message-ID: <20200706104053.3kx6dg76n3bw4jro@liuwe-devbox-debian-v2>
-References: <20200705214457.28433-1-grandmaster@al2klimov.de>
+        Mon, 6 Jul 2020 06:41:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:56264 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728525AbgGFKlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:41:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 165A830E;
+        Mon,  6 Jul 2020 03:41:16 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B69F3F68F;
+        Mon,  6 Jul 2020 03:41:14 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 11:41:12 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/2] sched: Optionally skip uclamp logic in fast path
+Message-ID: <20200706104111.yfopcjm3kiqlxhx2@e107158-lin.cambridge.arm.com>
+References: <20200630112123.12076-1-qais.yousef@arm.com>
+ <CAKfTPtCjTCBbGN0gN_=7MJdiY3N-PPy0ApZWH5xd7KDQ9=0yMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200705214457.28433-1-grandmaster@al2klimov.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAKfTPtCjTCBbGN0gN_=7MJdiY3N-PPy0ApZWH5xd7KDQ9=0yMg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 11:44:57PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On 07/03/20 14:09, Vincent Guittot wrote:
+> I have run the perf bench sched pipe that have have already run
+> previously with this v6 and the results are similar to my previous
+> tests:
+> The impact is -1.61% similarly to v2 which is better compared the
+> original -3.66% without your patch
 
-Thanks for the patch.
+Thanks Vincent.
 
-I will reword the subject line to be more specific to:
+Can you afford doing a capture of `perf record` and share the resulting
+perf.dat with vmlinux (with debug symbols)?
 
- tools: hv: change http to https in hv_kvp_daemon.c
+Having a before/after capture would be even better.
 
-.
+Not sure if we can do  much about this -1.61% in your case, but it'd be good to
+understand why if possible. perf bench sched pipe is very sensitive to tiniest
+of changes which could be due to binary-to-binary differences.
 
-> ---
->  Continuing my work started at 93431e0607e5.
-> 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
-> 
->  tools/hv/hv_kvp_daemon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index ee9c1bb2293e..1e6fd6ca513b 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -437,7 +437,7 @@ void kvp_get_os_info(void)
->  
->  	/*
->  	 * Parse the /etc/os-release file if present:
-> -	 * http://www.freedesktop.org/software/systemd/man/os-release.html
-> +	 * https://www.freedesktop.org/software/systemd/man/os-release.html
->  	 */
->  	file = fopen("/etc/os-release", "r");
->  	if (file != NULL) {
-> -- 
-> 2.27.0
-> 
+Thanks
+
+--
+Qais Yousef
