@@ -2,137 +2,305 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17033C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD83CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D796F2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Kj3THlCB"
+	by mail.kernel.org (Postfix) with ESMTP id 8ECB5206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgGFIEb (ORCPT
+        id S1728325AbgGFIFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:04:31 -0400
-Received: from mail-mw2nam10on2059.outbound.protection.outlook.com ([40.107.94.59]:30752
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728300AbgGFIEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:04:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PYeoi7mEUawO4aTxw25iNvrbYRXJqgO2DH2oEArHNLAvVAgry1YZ7QiGYuxcmxiZcAgg6FBBX7od9ygOC2liLENBsUsL9ZwkAjP+hvejZa/lv03B7VZjbO8jd7/x5LicfXrHy/P5LiB05SLFhrCNKRzkathnAiUnkDoKR6f55NU6kFdAGLo9Wl93mToqakybnA4u05fzaveV5y0SngggZWNW0QQP6RVSOu0McZaA4DAMLIhs+RS3yV+4cPkl89rla/FOkl8gF5zqHskPDDQcFy0TQcSCauGhpGKAlqP8BEsYVhCqlnHGzL1hduHrAKcVDYAq50yI0DOwV8KwEhH6dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+jn4t2RKrnmol0kl0/pF2b4qW3Q793dNkidnyB0XxPs=;
- b=AVbmtYHJhRvmMNFSoJDlxFFJ5fqpRBTTj50j4gZdk87aweCQTp2dWPXo2Y/rYihawtYCOW5oHeTebn6X4CO317+D3hUwITYvJjrtVYOmUAKhmMApI+YgCBH5LWC/9lgzVH/oAkDXzj+tVIgfzlmg3LVzEwAlTlpFwU5R+TvYk/odkvUPKPZ/kapYvXgCSWbfnW+BwhPU+qBGUhNPg0LXYxT+UbA2Tkk5m2SuAEeA8Xuph17XURLazM/g00gHOdWs9qB3BhtI4XzxTO+IUy5WwKC5bzLQt2+Diz+ccUM2hJLLd3hY5yRsHPjhEUYpbCkun+ZRl2psLgwb5j2p4/KejA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+jn4t2RKrnmol0kl0/pF2b4qW3Q793dNkidnyB0XxPs=;
- b=Kj3THlCBYfaafRJ4/N1g1OFWT6CoDuV1yN0cvebLloq5J0xkwDuOQxm3c/7Yia65jpO2t4V7CiZunCq5zFZakwlIDGsrBcrAFDik8uCEZ2gVZJP0WYGAEnmP/rSIhS1ub3e7zHDhUgZD1rB32U9DsNKmIVV2oVHWSwbppq/F9kk=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB3749.namprd03.prod.outlook.com (2603:10b6:a03:6b::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Mon, 6 Jul
- 2020 08:04:27 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
- 08:04:26 +0000
-Date:   Mon, 6 Jul 2020 16:04:11 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] arm64: perf: add support for Cortex-A55/A75/A76
-Message-ID: <20200706160411.19d91904@xhacker.debian>
-In-Reply-To: <20200703123346.GB18953@willie-the-truck>
-References: <20200619184423.5e61a838@xhacker.debian>
-        <20200703123346.GB18953@willie-the-truck>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCPR01CA0002.jpnprd01.prod.outlook.com (2603:1096:405::14)
- To BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+        Mon, 6 Jul 2020 04:05:52 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10219 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbgGFIFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 04:05:52 -0400
+IronPort-SDR: fdR69CBSH/hRPG3Z1UAemsHy6iTruD033IrCNj/Wq0v2KF6D3zF+ZaK7LFHSAt3jNM3/5WN92x
+ VIPxnQgtBCEQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="147377255"
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="147377255"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 01:05:50 -0700
+IronPort-SDR: 6HsmcXyDEUY6BxwIoJfUHAYxBBcNaU9HWXgXbEOazpaYkeXfwfnHmeLfBLVOxXAANC5f0eRRfO
+ qurpA2LjFP3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="305196255"
+Received: from lkp-server01.sh.intel.com (HELO 82346ce9ac16) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 01:05:49 -0700
+Received: from kbuild by 82346ce9ac16 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jsM8K-00008g-OK; Mon, 06 Jul 2020 08:05:48 +0000
+Date:   Mon, 06 Jul 2020 16:05:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:irq/core] BUILD SUCCESS
+ 8fa88a88d573093868565a1afba43b5ae5b3a316
+Message-ID: <5f02db4c.CqbEdFDnSQ4Yk8d8%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYCPR01CA0002.jpnprd01.prod.outlook.com (2603:1096:405::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Mon, 6 Jul 2020 08:04:24 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4afbf8af-8255-4c75-4272-08d821833385
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3749:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB374983A13F92D652E35553D4ED690@BYAPR03MB3749.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 04569283F9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QbGXAupL14yl0wr/vK0L3xDWbJbM5cIuGi1w1QiCCN7LGiEVMOPh1O6P/KJDEeOVxgNTzm9gDeykW8L3XcEAlksx0CEiPdH9pBLqtVdy6AZ2+pW0xOPafHS/2TvKSuz6cwI3DJTd6Boay0NO/pofwV7CjgLskvDyR5GY43OW6yt5CM3KJUEoUN+GKS4n4Fmk1/v9q7TybOr/n9q1uriHKl6aEc7IWre+s156Psq/MShD9mUdy5x3SyoUJvEL2+D4eUdbRFHWg2T68mvcojhD8goO7gJAC4LJBdzp3HJq4zCeeLa5yIvViWSO6s2VkQ7K
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(366004)(39860400002)(376002)(396003)(8936002)(186003)(16526019)(6666004)(6506007)(478600001)(26005)(55016002)(4326008)(2906002)(6916009)(9686003)(83380400001)(8676002)(5660300002)(86362001)(956004)(1076003)(66946007)(66476007)(66556008)(52116002)(54906003)(7696005)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: STHMby97wEEW3LTOL3YhfWnmK/7Ra8q3VufgZI7ztPxXocJ+QcYG+yJgCU67VQfKDvOPgt5k2ytfLpf5wHJ3y/9KEzoPa5tGEQEZx1PTcmAVJ4iDvTg1S4WenEH4tnJsfvtCQiARmUtcne6Ry2y00w82uxjEtSb0Z3C2/55rx1yD1k1Y2u+U2RSbA6/5/42q5vbYpI5e9tPXkmHn61LDuqkGmU+J+si/8rhD+G1/eYEAQmP1dREbItqNdvAY5lmDoUwErBzlKwV3shM4hMd9e28yLi4dT0TzvXvxThIcjDUWGQF9exO2Jlic1TKuah2PEOFYyY2QAkxZSkjgriEMO2hPGxsLjQ/it5jwbbX7ETDH+2UpgJ2nTCSg3mic5+PgZnTyiKVnlPAHbr8MKURhJ3tY5X7WRIhA2vBp0qV12/+4+WaRzt8tOBmAymLosp5eumdl0M+jmzcXTEFymWD43TDEL8JHpSEIJ5YUWkvLLWE99eZ+M8zO98hboZC2OGjU
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4afbf8af-8255-4c75-4272-08d821833385
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2020 08:04:26.4857
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UdlQzg2Dn9bREZiYkOOldN3xjveozEi2uYCxwvFqS8UW5mIjhJvpJxbacWq9aKRX0JdzosOSWgiYa6plOtPbYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3749
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/core
+branch HEAD: 8fa88a88d573093868565a1afba43b5ae5b3a316  genirq: Remove preflow handler support
 
-On Fri, 3 Jul 2020 13:33:47 +0100 Will Deacon wrote:
+elapsed time: 2881m
 
-> 
-> 
-> On Fri, Jun 19, 2020 at 06:44:37PM +0800, Jisheng Zhang wrote:
-> > The Cortex-A55/A75/A76 use some implementation defined perf events.
-> > Add the support.
-> >
-> > Jisheng Zhang (3):
-> >   arm64: perf: add support for Cortex-A55
-> >   arm64: perf: add support for Cortex-A75
-> >   arm64: perf: add support for Cortex-A76
-> >
-> >  arch/arm64/kernel/perf_event.c | 49 +++++++++++++++++++++++++++++++---
-> >  1 file changed, 45 insertions(+), 4 deletions(-)  
-> 
-> Do we really need this? I'd prefer for this stuff to live in userspace
+configs tested: 235
+configs skipped: 34
 
-IMHO, this stuff is to add a relationship between linux standard
-HW events and ARM PMU events, take CA55 for example:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-w/o the stuff, perf -e PREFETCH_LINEFILL
+arm                                 defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sh                                  defconfig
+arm                          moxart_defconfig
+arm                            qcom_defconfig
+arm                          iop32x_defconfig
+mips                           ip28_defconfig
+powerpc                     pq2fads_defconfig
+arm                         at91_dt_defconfig
+sh                           cayman_defconfig
+arm                       aspeed_g4_defconfig
+m68k                         amcore_defconfig
+arc                             nps_defconfig
+arm                        trizeps4_defconfig
+microblaze                    nommu_defconfig
+h8300                       h8s-sim_defconfig
+arc                        nsim_700_defconfig
+c6x                        evmc6472_defconfig
+m68k                        m5272c3_defconfig
+arc                        nsimosci_defconfig
+riscv                            alldefconfig
+h8300                    h8300h-sim_defconfig
+arm                         s3c2410_defconfig
+mips                        vocore2_defconfig
+mips                           ip27_defconfig
+sh                         apsh4a3a_defconfig
+arc                 nsimosci_hs_smp_defconfig
+sh                            titan_defconfig
+powerpc                     skiroot_defconfig
+sh                               allmodconfig
+arm                         assabet_defconfig
+powerpc                      ppc40x_defconfig
+h8300                     edosk2674_defconfig
+nios2                         10m50_defconfig
+arm                          pxa3xx_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                      ppc6xx_defconfig
+mips                          ath25_defconfig
+ia64                             allmodconfig
+xtensa                              defconfig
+arm                      jornada720_defconfig
+powerpc                       maple_defconfig
+mips                      pistachio_defconfig
+h8300                               defconfig
+arm                          simpad_defconfig
+xtensa                         virt_defconfig
+sh                          landisk_defconfig
+sh                          rsk7264_defconfig
+arm                          ep93xx_defconfig
+m68k                        stmark2_defconfig
+sh                           se7780_defconfig
+um                           x86_64_defconfig
+powerpc                          g5_defconfig
+powerpc                      pmac32_defconfig
+microblaze                          defconfig
+sh                          r7785rp_defconfig
+openrisc                         allyesconfig
+arm                           efm32_defconfig
+sh                               alldefconfig
+powerpc                    mvme5100_defconfig
+mips                          rb532_defconfig
+xtensa                          iss_defconfig
+m68k                       m5475evb_defconfig
+arm                         s5pv210_defconfig
+arm                        vexpress_defconfig
+arm                         lpc32xx_defconfig
+mips                   sb1250_swarm_defconfig
+sparc                            alldefconfig
+mips                  mips_paravirt_defconfig
+sh                        dreamcast_defconfig
+sh                     sh7710voipgw_defconfig
+nios2                            alldefconfig
+m68k                            q40_defconfig
+mips                      malta_kvm_defconfig
+sh                        edosk7760_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                   milbeaut_m10v_defconfig
+openrisc                    or1ksim_defconfig
+arc                        vdk_hs38_defconfig
+mips                         bigsur_defconfig
+arm                           tegra_defconfig
+m68k                             alldefconfig
+arc                      axs103_smp_defconfig
+ia64                          tiger_defconfig
+arm                         vf610m4_defconfig
+mips                        jmr3927_defconfig
+arm                         nhk8815_defconfig
+arm                             pxa_defconfig
+powerpc                      mgcoge_defconfig
+arm                         bcm2835_defconfig
+mips                        maltaup_defconfig
+m68k                            mac_defconfig
+sh                     magicpanelr2_defconfig
+mips                             allyesconfig
+powerpc                     mpc5200_defconfig
+s390                          debug_defconfig
+ia64                                defconfig
+s390                             alldefconfig
+sh                            shmin_defconfig
+sh                           se7705_defconfig
+parisc                           alldefconfig
+arm                          imote2_defconfig
+mips                         rt305x_defconfig
+sh                          rsk7269_defconfig
+sparc64                          alldefconfig
+powerpc                         wii_defconfig
+arm                  colibri_pxa300_defconfig
+arm                            mps2_defconfig
+arm                        oxnas_v6_defconfig
+arm                           viper_defconfig
+arm                         orion5x_defconfig
+m68k                          multi_defconfig
+arm                       imx_v4_v5_defconfig
+arm                             rpc_defconfig
+arm                         mv78xx0_defconfig
+s390                                defconfig
+arm                         socfpga_defconfig
+mips                            e55_defconfig
+arm                              zx_defconfig
+arc                          axs103_defconfig
+arm                          prima2_defconfig
+powerpc                      ppc64e_defconfig
+h8300                            alldefconfig
+arc                                 defconfig
+arm                         ebsa110_defconfig
+powerpc                       ppc64_defconfig
+m68k                       bvme6000_defconfig
+mips                           xway_defconfig
+ia64                              allnoconfig
+arm                          tango4_defconfig
+powerpc                        cell_defconfig
+um                            kunit_defconfig
+powerpc                          alldefconfig
+arm                           stm32_defconfig
+arc                            hsdk_defconfig
+sh                             espt_defconfig
+um                             i386_defconfig
+sh                           se7721_defconfig
+alpha                            allyesconfig
+arm                           corgi_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                            pleb_defconfig
+arm                          lpd270_defconfig
+mips                         tb0219_defconfig
+powerpc                  storcenter_defconfig
+m68k                       m5249evb_defconfig
+arm                      footbridge_defconfig
+arm                          badge4_defconfig
+powerpc                          allmodconfig
+sh                              ul2_defconfig
+arm                          pxa168_defconfig
+arm                        neponset_defconfig
+sh                            migor_defconfig
+alpha                               defconfig
+mips                           gcw0_defconfig
+nios2                         3c120_defconfig
+c6x                        evmc6678_defconfig
+sh                   sh7770_generic_defconfig
+sparc64                          allmodconfig
+microblaze                        allnoconfig
+powerpc                      chrp32_defconfig
+mips                 pnx8335_stb225_defconfig
+sh                         ecovec24_defconfig
+sh                          polaris_defconfig
+sh                   sh7724_generic_defconfig
+mips                          ath79_defconfig
+parisc                generic-64bit_defconfig
+mips                 decstation_r4k_defconfig
+sh                           se7206_defconfig
+xtensa                generic_kc705_defconfig
+m68k                        mvme16x_defconfig
+m68k                           sun3_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                              allyesconfig
+sh                                allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc                            allyesconfig
+sparc64                          allyesconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-w/ the stuff, perf -e L1-dcache-prefetch-misses
-
-But indeed, we also need to add json descriptions in perf tool, I'll submit
-patches.
-
-Thanks
-
-> now that the perf tool has supported JSON event descriptions for a while,
-> and the in-kernel driver advertises the architected events advertised
-> by PMCEID*.
-> 
-> Will
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
