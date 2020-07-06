@@ -2,106 +2,168 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E06C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A1B2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E28920715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ptGYskGv"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GC367V6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgGFNuk (ORCPT
+        id S1729217AbgGFNut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgGFNuk (ORCPT
+        Mon, 6 Jul 2020 09:50:49 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:20605 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbgGFNus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:50:40 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE69FC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:50:39 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y18so22603941lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:50:39 -0700 (PDT)
+        Mon, 6 Jul 2020 09:50:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bZa4D2WVaPlaakSVKPmHAJSxY8fXE4lQvmGAH+tBorA=;
-        b=ptGYskGv1m95IZBNJzIfZnin0DxW2ky4zsTAvaGQ7qCdVYqxtkWr3YkNMJk00OU6jl
-         rjKibEAOvR21dG93X0GtNYsFXtdyCoswPKAWlXqg2qf9GnSLKRldJRdkeOi2FdbkZ/Qx
-         oBmxb+zeaFCaQBqDONAmIphaLQdDp8JiZLLj4dNZr6UmY8/IvS5VTU7uzX0guza42Gem
-         EbPFPQQuDDIow4BRrJRDptF5BQQbJ8x6mVhfZ2c1LlG0UxYRjJP+7WS7YrjND9Fu8SGM
-         edJ1njN1w1Jdvoye53BRFDo6ju+wjPybEaRYR8Zi9JzZzYTe5v45cEWicsJMP9jH+KjG
-         1azA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bZa4D2WVaPlaakSVKPmHAJSxY8fXE4lQvmGAH+tBorA=;
-        b=QGvcz8lc1ikEQPQZFbHX0jNOoRwMW45scP14qYgn5G9REqQWUxqzyhIfY5pRJnfdMW
-         4LuojcVxwiIKZOn8yzicq48Bwy5ArGoDy5btVzvA3wEYgjlV3HHqQkZk6Mw6RBITy9m4
-         6rhQHnbFP1PWPytsUuRqTungCIixF4yKNgX2l8a5IF6TLc/KmdOpCmYMEZvkBfbrPQhq
-         kcJO8WfQtqKSNEbfJMxCMXN0hvPIj7orcg8m+p+ANs2c9wWJvF983cZprRnuC2FUJsZF
-         GfbUrETvSEkr2ZHUFc/k+cEr7d7xY+Zd4MiUgT3o8hVgiuipyGoE6GafHDciV2WLP+u0
-         +Kmw==
-X-Gm-Message-State: AOAM532cuTIvNdyQZCQ+w1HkG+zFszpBScyhn1DlMa55MiYgaEFz0eh7
-        dXgriqtQz7d+elFii2/s/aSdIwOSGWFn7YqkfMGTgg==
-X-Google-Smtp-Source: ABdhPJyE/i5NtJKyl94ORQWnZwkdrc7UJFTX3szYTfRnZPwJk3XM4Xzi3d1UQ20PCIRJq2mGQ94KPFghCdzVZx15ftU=
-X-Received: by 2002:a05:6512:3107:: with SMTP id n7mr30947798lfb.63.1594043438117;
- Mon, 06 Jul 2020 06:50:38 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594043448; x=1625579448;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=cqMisbW4G4BBUuKTd9vQVVtJLyPCiNtYX4T4czXDsWw=;
+  b=GC367V6MDKdljpTBmDU7qhWL/12Q3tjKNJEJln928uhjJJBS/2BKx5+1
+   f0olDDXbzW564/x431r86zt1rwDxXr5lmq7t639HI4fkhxBwbQQwtV6Be
+   i8DvAGL7BmTibVVU/MuL0CQIpi0naK9BHVacCh9Jnp8feWDxAYDvJ/BNt
+   U=;
+IronPort-SDR: N373rT1nSZVN0L7Ho6D+HHXlYdhs++lhKiA8wz+6md6BEeVC2Gkl/mpBQNV4vW062Ix+wr42tQ
+ oESuk94vsDVw==
+X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
+   d="scan'208";a="49434461"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 06 Jul 2020 13:50:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id BA0CAA1A94;
+        Mon,  6 Jul 2020 13:50:41 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 13:50:41 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.48) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 6 Jul 2020 13:50:32 +0000
+Subject: Re: [PATCH v4 14/18] nitro_enclaves: Add Kconfig for the Nitro
+ Enclaves driver
+To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-15-andraprs@amazon.com>
+ <0576a41d-f915-24b3-e6f9-0bc3616fd75b@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <3da5e023-47d0-09c1-89b8-94a80fbeba85@amazon.com>
+Date:   Mon, 6 Jul 2020 16:50:23 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200706133341.476881-1-lee.jones@linaro.org> <20200706133341.476881-27-lee.jones@linaro.org>
-In-Reply-To: <20200706133341.476881-27-lee.jones@linaro.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 6 Jul 2020 15:50:11 +0200
-Message-ID: <CAG48ez3c98x7dEpKcSnhHKbHKfF6=XOdU5WGL8FtvdqsrYMNhg@mail.gmail.com>
-Subject: Re: [PATCH 26/32] usb: early: xhci-dbc: Supply missing 'xhci-dbgp.h' headerfile
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0576a41d-f915-24b3-e6f9-0bc3616fd75b@amazon.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.48]
+X-ClientProxiedBy: EX13D17UWC001.ant.amazon.com (10.43.162.188) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 3:34 PM Lee Jones <lee.jones@linaro.org> wrote:
-> If the header file containing a function's prototype isn't included by
-> the sourcefile containing the associated function, the build system
-> complains of missing prototypes.
->
-> Fixes the following W=3D1 kernel build warning(s):
->
->  drivers/usb/early/ehci-dbgp.c: In function =E2=80=98early_dbgp_write=E2=
-=80=99:
->  drivers/usb/early/ehci-dbgp.c:915:13: warning: variable =E2=80=98ret=E2=
-=80=99 set but not used [-Wunused-but-set-variable]
->  915 | int chunk, ret;
->  | ^~~
->  drivers/usb/early/xhci-dbc.c:600:12: warning: no previous prototype for =
-=E2=80=98early_xdbc_parse_parameter=E2=80=99 [-Wmissing-prototypes]
->  600 | int __init early_xdbc_parse_parameter(char *s)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~~
->  drivers/usb/early/xhci-dbc.c:653:12: warning: no previous prototype for =
-=E2=80=98early_xdbc_setup_hardware=E2=80=99 [-Wmissing-prototypes]
->  653 | int __init early_xdbc_setup_hardware(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~
->  drivers/usb/early/xhci-dbc.c:910:13: warning: no previous prototype for =
-=E2=80=98early_xdbc_register_console=E2=80=99 [-Wmissing-prototypes]
->  910 | void __init early_xdbc_register_console(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Reviewed-by: Jann Horn <jannh@google.com>
+
+On 06/07/2020 14:28, Alexander Graf wrote:
+>
+>
+> On 22.06.20 22:03, Andra Paraschiv wrote:
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>> ---
+>> Changelog
+>>
+>> v3 -> v4
+>>
+>> * Add PCI and SMP dependencies.
+>>
+>> v2 -> v3
+>>
+>> * Remove the GPL additional wording as SPDX-License-Identifier is
+>> =A0=A0 already in place.
+>>
+>> v1 -> v2
+>>
+>> * Update path to Kconfig to match the drivers/virt/nitro_enclaves
+>> =A0=A0 directory.
+>> * Update help in Kconfig.
+>> ---
+>> =A0 drivers/virt/Kconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=
+=A0 2 ++
+>> =A0 drivers/virt/nitro_enclaves/Kconfig | 16 ++++++++++++++++
+>> =A0 2 files changed, 18 insertions(+)
+>> =A0 create mode 100644 drivers/virt/nitro_enclaves/Kconfig
+>>
+>> diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+>> index cbc1f25c79ab..80c5f9c16ec1 100644
+>> --- a/drivers/virt/Kconfig
+>> +++ b/drivers/virt/Kconfig
+>> @@ -32,4 +32,6 @@ config FSL_HV_MANAGER
+>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 partition shuts down.
+>> =A0 =A0 source "drivers/virt/vboxguest/Kconfig"
+>> +
+>> +source "drivers/virt/nitro_enclaves/Kconfig"
+>> =A0 endif
+>> diff --git a/drivers/virt/nitro_enclaves/Kconfig =
+
+>> b/drivers/virt/nitro_enclaves/Kconfig
+>> new file mode 100644
+>> index 000000000000..69e41aa2222d
+>> --- /dev/null
+>> +++ b/drivers/virt/nitro_enclaves/Kconfig
+>> @@ -0,0 +1,16 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +#
+>> +# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights =
+
+>> Reserved.
+>> +
+>> +# Amazon Nitro Enclaves (NE) support.
+>> +# Nitro is a hypervisor that has been developed by Amazon.
+>> +
+>> +config NITRO_ENCLAVES
+>> +=A0=A0=A0 tristate "Nitro Enclaves Support"
+>> +=A0=A0=A0 depends on HOTPLUG_CPU && PCI && SMP
+>
+> Let's also depend on ARM64 || X86, so that we don't burden all of the =
+
+> other archs that are not available in EC2 today with an additional =
+
+> config option to think about.
+
+Included the arch specs.
+
+Thanks,
+Andra
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
+
