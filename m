@@ -2,144 +2,110 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1216C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC61BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C979A20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIS2xLAW"
+	by mail.kernel.org (Postfix) with ESMTP id BA38420786
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgGFBP3 (ORCPT
+        id S1728553AbgGFBTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgGFBP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:15:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFEB9C061794;
-        Sun,  5 Jul 2020 18:15:28 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b16so16268769pfi.13;
-        Sun, 05 Jul 2020 18:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=kKz4Uc8g6oN59bjHPGbiXHOBXR+HQpK1+CYrAwQF6u8=;
-        b=GIS2xLAWfhMaHveWqzZJDX6s+nlPSKSGES/PgtapW79bxCXnHLgwpi3IRej0D/5vea
-         vcMjrsmYG2ido/dabasTOULFOK/llqAitqk9qCPIkktoAEosRf+H5oTnlVJ2HNT/zXm5
-         zKILOGDgvrzAgw6KZvRC8+Qb1o0kLcUyL03Sgw5A3ko7mKZvOe5Q9p6ZFKOUndmSvEV1
-         6SJzXM0CmToBu7vnOj+tYiSX8dy2bQPwil8jyvU5gUV3kR0ou38nGG7XOv8L92UibqIX
-         QnDf03bF08Z2Hr0Zm1gKNGxQba7TKOYg2dRNLE8fsqm8V2+TpuHWKULuDXFvtToLtQ55
-         Xi1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=kKz4Uc8g6oN59bjHPGbiXHOBXR+HQpK1+CYrAwQF6u8=;
-        b=tovt66Hnr+NbAtKGgog/oXiMUY8HSJ7FmOUfGrz6qHOP7BnoBlW59j2ePlBl6vDZr/
-         vhKBi8aQsk3fG9MtuSdteXDjzh1JjZO+MP7rSTSLOWgMyqoY2l/3Lry4AjOr9yWFIFov
-         PUuCAL7g8oGbGeKPFzjUg7r1RP0LYiMAEIy3HeKHUHOoha0UFAofjxxbJMfr6X86oHGy
-         OOhrxNWfRiSWMGQRiTYVWqERqzLvCTgGqGrzUoficOczrteSxBkRwf3CUy50IMmKtOFz
-         8rNkdcU/GZgcHwBBJzVaB7tW7RP9hGuhcuW5wYkL+Xu5Vh0j2T37LyvRdIEzJK6PTU7C
-         e8OA==
-X-Gm-Message-State: AOAM5307PXEGNBqrllBQLoTntS5HeEfQ+ZVQcsIbgfvJvXiX4pUUKGWG
-        ZM7PeOvszUKqgVXBQ/O+oeQ=
-X-Google-Smtp-Source: ABdhPJx0bijqELQmwViOLeclUZEr6ZTl8k5qss/sx+9ojiJYxl/I3BLU3z+/ZuiTlj/nDQzOs87zvw==
-X-Received: by 2002:a62:ae0d:: with SMTP id q13mr34199195pff.89.1593998128402;
-        Sun, 05 Jul 2020 18:15:28 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id e12sm17074775pfd.69.2020.07.05.18.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 18:15:27 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 11:15:22 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 4/5] powerpc/mm: Remove custom stack expansion
- checking
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>
-Cc:     hughd@google.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200703141327.1732550-1-mpe@ellerman.id.au>
-        <20200703141327.1732550-4-mpe@ellerman.id.au>
-        <fb3aad5f-17a1-93cc-1a3a-c50fe16ab711@csgroup.eu>
-In-Reply-To: <fb3aad5f-17a1-93cc-1a3a-c50fe16ab711@csgroup.eu>
-MIME-Version: 1.0
-Message-Id: <1593997323.8pwn48yz8u.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 Jul 2020 21:19:38 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:46926 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728280AbgGFBTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 21:19:37 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S2;
+        Mon, 06 Jul 2020 09:19:27 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH v5 00/14] irqchip: Fix potential resource leaks
+Date:   Mon,  6 Jul 2020 09:19:11 +0800
+Message-Id: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFy5GF48uFW8Wr4xCryxGrg_yoW8tw1rpF
+        4xta9Ivr48Cay3JrnxAw1jyFy3ZwnYyay7K3s3A343Xwn5uryDGF1UAw1rXryUWayfG3Wj
+        kr4FyFyUC3WDAFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6w4l42xK82IY
+        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56MNUUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christophe Leroy's message of July 6, 2020 3:49 am:
->=20
->=20
-> Le 03/07/2020 =C3=A0 16:13, Michael Ellerman a =C3=A9crit=C2=A0:
->> We have powerpc specific logic in our page fault handling to decide if
->> an access to an unmapped address below the stack pointer should expand
->> the stack VMA.
->>=20
->> The logic aims to prevent userspace from doing bad accesses below the
->> stack pointer. However as long as the stack is < 1MB in size, we allow
->> all accesses without further checks. Adding some debug I see that I
->> can do a full kernel build and LTP run, and not a single process has
->> used more than 1MB of stack. So for the majority of processes the
->> logic never even fires.
->>=20
->> We also recently found a nasty bug in this code which could cause
->> userspace programs to be killed during signal delivery. It went
->> unnoticed presumably because most processes use < 1MB of stack.
->>=20
->> The generic mm code has also grown support for stack guard pages since
->> this code was originally written, so the most heinous case of the
->> stack expanding into other mappings is now handled for us.
->>=20
->> Finally although some other arches have special logic in this path,
->> from what I can tell none of x86, arm64, arm and s390 impose any extra
->> checks other than those in expand_stack().
->>=20
->> So drop our complicated logic and like other architectures just let
->> the stack expand as long as its within the rlimit.
->=20
-> I agree that's probably not worth a so complicated logic that is nowhere=20
-> documented.
+When I test the irqchip code of Loongson, I read the related code of other
+chips in drivers/irqchip and I find some potential resource leaks in the
+error path, I think it is better to fix them.
 
-Agreed.
+v2:
+  - Split the first patch into a new patch series which
+    includes small patches and add "Fixes" tag
+  - Use "goto" label to handle error path in some patches
 
->> @@ -569,30 +488,15 @@ static int __do_page_fault(struct pt_regs *regs, u=
-nsigned long address,
->>   	vma =3D find_vma(mm, address);
->>   	if (unlikely(!vma))
->>   		return bad_area(regs, address);
->> -	if (likely(vma->vm_start <=3D address))
->> -		goto good_area;
->> -	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
->> -		return bad_area(regs, address);
->>  =20
->> -	/* The stack is being expanded, check if it's valid */
->> -	if (unlikely(bad_stack_expansion(regs, address, vma, flags,
->> -					 &must_retry))) {
->> -		if (!must_retry)
->> +	if (unlikely(vma->vm_start > address)) {
->> +		if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
->=20
-> We are already in an unlikely() branch, I don't think it is worth having=20
-> a second level of unlikely(), better let gcc decide what's most efficient=
-.
+v3:
+  - Add missed variable "ret" in the patch #5 and #13
 
-I'm not sure being nested matters. It does in terms of how the code is=20
-generated and how much it might acutally matter, but if we say we=20
-optimise the expand stack case rather than the segfault case, then=20
-unlikely is fine here. I find it can be a readability aid as well.
+v4:
+  - Modify the commit message of each patch suggested by Markus Elfring
+  - Make "irq_domain_remove(root_domain)" under CONFIG_SMP in patch #3
+  - Add a return statement before goto label in patch #4
 
-Thanks,
-Nick
+v5:
+  - Modify the commit messages and do some code cleanups
+
+Tiezhu Yang (14):
+  irqchip/ath79-misc: Fix potential resource leaks
+  irqchip/csky-apb-intc: Fix potential resource leaks
+  irqchip/csky-mpintc: Fix potential resource leaks
+  irqchip/davinci-aintc: Fix potential resource leaks
+  irqchip/davinci-cp-intc: Fix potential resource leaks
+  irqchip/digicolor: Fix potential resource leaks
+  irqchip/dw-apb-ictl: Fix potential resource leaks
+  irqchip/ls1x: Fix potential resource leaks
+  irqchip/mscc-ocelot: Fix potential resource leaks
+  irqchip/nvic: Fix potential resource leaks
+  irqchip/omap-intc: Fix potential resource leak
+  irqchip/riscv-intc: Fix potential resource leak
+  irqchip/s3c24xx: Fix potential resource leaks
+  irqchip/xilinx-intc: Fix potential resource leak
+
+ drivers/irqchip/irq-ath79-misc.c      | 14 +++++++++++---
+ drivers/irqchip/irq-csky-apb-intc.c   | 11 +++++++++--
+ drivers/irqchip/irq-csky-mpintc.c     | 31 ++++++++++++++++++++++---------
+ drivers/irqchip/irq-davinci-aintc.c   | 18 ++++++++++++++----
+ drivers/irqchip/irq-davinci-cp-intc.c | 18 +++++++++++++++---
+ drivers/irqchip/irq-digicolor.c       | 14 +++++++++++---
+ drivers/irqchip/irq-dw-apb-ictl.c     | 11 ++++++++---
+ drivers/irqchip/irq-ls1x.c            |  4 +++-
+ drivers/irqchip/irq-mscc-ocelot.c     |  6 ++++--
+ drivers/irqchip/irq-nvic.c            | 12 +++++++++---
+ drivers/irqchip/irq-omap-intc.c       |  4 +++-
+ drivers/irqchip/irq-riscv-intc.c      |  1 +
+ drivers/irqchip/irq-s3c24xx.c         | 23 +++++++++++++++++------
+ drivers/irqchip/irq-xilinx-intc.c     | 11 ++++++-----
+ 14 files changed, 133 insertions(+), 45 deletions(-)
+
+-- 
+2.1.0
+
