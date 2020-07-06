@@ -2,117 +2,324 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5340AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BAE20720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5893920722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iIlTIgm1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jr1V22ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgGFOGo (ORCPT
+        id S1729255AbgGFOHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgGFOGn (ORCPT
+        Mon, 6 Jul 2020 10:07:18 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24884 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729171AbgGFOHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:06:43 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433BEC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:06:43 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2C02E97E;
-        Mon,  6 Jul 2020 16:06:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594044400;
-        bh=Y0Dxs8yHGnMAS7O4nFNLcSPnhsF1XRUFurGKDDc2C1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iIlTIgm1Aik/z6QQROo3wt9iJVpDdvg2MnZhovSOh2B7EtM+YuYI+0QWr/3eTfOiB
-         KOlUPFLn3y02tmJbMEs+p7usOW8gVlVttuUPMizP7QNCD/DJS7Y4PcZ1KU8KVrnomu
-         c03J1o18JljXK4F14qbxCbOPKkPghGt7iuxWdGuc=
-Date:   Mon, 6 Jul 2020 17:06:36 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Chris Mason <clm@fb.com>
-Cc:     Willy Tarreau <w@1wt.eu>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <20200706140636.GA19803@pendragon.ideasonboard.com>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200705045505.GA2962@1wt.eu>
- <798B0FBF-D7A8-4631-8581-5D199DA50FF9@fb.com>
+        Mon, 6 Jul 2020 10:07:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594044435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Y5cU4PUylMhNC1xQk7BSZrwpGJlM4THoxcFfVjC9RU=;
+        b=Jr1V22ETcb5gzZlJzRunRg4rk++PbK8ZMxWv1RjXINuZboW1Yul9ntU0G7nZBVDHqlQRk4
+        jDtaoUDC49YDSZr/e1zNcXzHWz8rdNlyLyWvrDvZuxLDDCgUpd2kXd/P19RK7v0b2lufLa
+        UD+pnBiY2v+BzWr1bV5eB2Cmz5UEKlk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-nLO9FkFEM3ealMhUw29Umw-1; Mon, 06 Jul 2020 10:07:11 -0400
+X-MC-Unique: nLO9FkFEM3ealMhUw29Umw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CE0E800C64;
+        Mon,  6 Jul 2020 14:07:09 +0000 (UTC)
+Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A64460BEC;
+        Mon,  6 Jul 2020 14:07:00 +0000 (UTC)
+Subject: Re: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to
+ userspace
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
+ <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d3de1052-e363-b81e-1384-0de62d1ceeda@redhat.com>
+Date:   Mon, 6 Jul 2020 16:06:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <798B0FBF-D7A8-4631-8581-5D199DA50FF9@fb.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
-
-On Mon, Jul 06, 2020 at 12:45:34PM +0000, Chris Mason via Ksummit-discuss wrote:
-> On 5 Jul 2020, at 0:55, Willy Tarreau wrote:
-> > On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:
-> >> +Non-inclusive terminology has that same distracting effect which is why
-> >> +it is a style issue for Linux, it injures developer efficiency.
-> >
-> > I'm personally thinking that for a non-native speaker it's already
-> > difficult to find the best term to describe something, but having to
-> > apply an extra level of filtering on the found words to figure whether
-> > they are allowed by the language police is even more difficult.
+Hi Yi,
+On 7/4/20 1:26 PM, Liu Yi L wrote:
+> This patch exports iommu nesting capability info to user space through
+> VFIO. User space is expected to check this info for supported uAPIs (e.g.
+> PASID alloc/free, bind page table, and cache invalidation) and the vendor
+> specific format information for first level/stage page table that will be
+> bound to.
 > 
-> Since our discussions are public, we’ve always had to deal with 
-> comments from people outside the community on a range of topics.  But 
-> inside the kernel, it’s just a group of developers trying to help each 
-> other produce the best quality of code.  We’ve got a long history 
-> together and in general I think we’re pretty good at assuming good 
-> intent.
+> The nesting info is available only after the nesting iommu type is set
+> for a container. Current implementation imposes one limitation - one
+> nesting container should include at most one group. The philosophy of
+> vfio container is having all groups/devices within the container share
+> the same IOMMU context. When vSVA is enabled, one IOMMU context could
+> include one 2nd-level address space and multiple 1st-level address spaces.
+> While the 2nd-leve address space is reasonably sharable by multiple groups
+> , blindly sharing 1st-level address spaces across all groups within the
+> container might instead break the guest expectation. In the future sub/
+> super container concept might be introduced to allow partial address space
+> sharing within an IOMMU context. But for now let's go with this restriction
+> by requiring singleton container for using nesting iommu features. Below
+> link has the related discussion about this decision.
 > 
-> > *This* injures developers efficiency. What could improve developers efficiency
-> > is to take care of removing *all* idiomatic or cultural words then. For
-> > example I've been participating to projects using the term "blueprint",
-> > I didn't understand what that meant. It was once explained to me and
-> > given that it had no logical reason for being called this way, I now
-> > forgot. If we follow your reasoning, Such words should be banned for
-> > exactly the same reasons. Same for colors that probably don't mean
-> > anything to those born blind.
-> >
-> > For example if in my local culture we eat tomatoes at starters and
-> > apples for dessert, it could be convenient for me to use "tomato" and
-> > "apple" as list elements to name the pointers leading to the beginning
-> > and the end of the list, and it might sound obvious to many people, but
-> > not at all for many others.
-> >
-> > Maybe instead of providing an explicit list of a few words it should
-> > simply say that terms that take their roots in the non-technical world
-> > and whose meaning can only be understood based on history or local
-> > culture ought to be avoided, because *that* actually is the real
-> > root cause of the problem you're trying to address.
+> https://lkml.org/lkml/2020/5/15/1028
 > 
-> I’d definitely agree that it’s a good goal to keep out non-technical 
-> terms.  Even though we already try, every subsystem has its own set of 
-> patterns that reflect the most frequent contributors.
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+> v3 -> v4:
+> *) address comments against v3.
+> 
+> v1 -> v2:
+> *) added in v2
+> ---
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 105 +++++++++++++++++++++++++++++++++++-----
+>  include/uapi/linux/vfio.h       |  16 ++++++
+>  2 files changed, 109 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 7accb59..80623b8 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
+>  		 "Maximum number of user DMA mappings per container (65535).");
+>  
+>  struct vfio_iommu {
+> -	struct list_head	domain_list;
+> -	struct list_head	iova_list;
+> -	struct vfio_domain	*external_domain; /* domain for external user */
+> -	struct mutex		lock;
+> -	struct rb_root		dma_list;
+> -	struct blocking_notifier_head notifier;
+> -	unsigned int		dma_avail;
+> -	uint64_t		pgsize_bitmap;
+> -	bool			v2;
+> -	bool			nesting;
+> -	bool			dirty_page_tracking;
+> -	bool			pinned_page_dirty_scope;
+> +	struct list_head		domain_list;
+> +	struct list_head		iova_list;
+> +	struct vfio_domain		*external_domain; /* domain for
+> +							     external user */
+> +	struct mutex			lock;
+> +	struct rb_root			dma_list;
+> +	struct blocking_notifier_head	notifier;
+> +	unsigned int			dma_avail;
+> +	uint64_t			pgsize_bitmap;
+> +	bool				v2;
+> +	bool				nesting;
+> +	bool				dirty_page_tracking;
+> +	bool				pinned_page_dirty_scope;
+> +	struct iommu_nesting_info	*nesting_info;
+>  };
+>  
+>  struct vfio_domain {
+> @@ -130,6 +132,9 @@ struct vfio_regions {
+>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
+>  					(!list_empty(&iommu->domain_list))
+>  
+> +#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
+> +					 (!list_empty(&iommu->domain_list)))
+> +
+>  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
+>  
+>  /*
+> @@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
+>  
+>  	list_splice_tail(iova_copy, iova);
+>  }
+> +
+> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
+> +{
+> +	kfree(iommu->nesting_info);
+> +	iommu->nesting_info = NULL;
+> +}
+> +
+>  static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  					 struct iommu_group *iommu_group)
+>  {
+> @@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  		}
+>  	}
+>  
+> +	/* Nesting type container can include only one group */
+> +	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
+> +		mutex_unlock(&iommu->lock);
+> +		return -EINVAL;
+> +	}
+> +
+>  	group = kzalloc(sizeof(*group), GFP_KERNEL);
+>  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
+>  	if (!group || !domain) {
+> @@ -2029,6 +2047,36 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	if (ret)
+>  		goto out_domain;
+>  
+> +	/* Nesting cap info is available only after attaching */
+> +	if (iommu->nesting) {
+> +		struct iommu_nesting_info tmp;
+> +		struct iommu_nesting_info *info;
+> +
+> +		/* First get the size of vendor specific nesting info */
+> +		ret = iommu_domain_get_attr(domain->domain,
+> +					    DOMAIN_ATTR_NESTING,
+> +					    &tmp);
+> +		if (ret)
+> +			goto out_detach;
+> +
+> +		info = kzalloc(tmp.size, GFP_KERNEL);
+> +		if (!info) {
+> +			ret = -ENOMEM;
+> +			goto out_detach;
+> +		}
+> +
+> +		/* Now get the nesting info */
+> +		info->size = tmp.size;
+> +		ret = iommu_domain_get_attr(domain->domain,
+> +					    DOMAIN_ATTR_NESTING,
+> +					    info);
+> +		if (ret) {
+> +			kfree(info);
+> +			goto out_detach;
+> +		}
+> +		iommu->nesting_info = info;
+> +	}
+> +
+>  	/* Get aperture info */
+>  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
+>  
+> @@ -2138,6 +2186,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	return 0;
+>  
+>  out_detach:
+> +	vfio_iommu_release_nesting_info(iommu);
+>  	vfio_iommu_detach_group(domain, group);
+>  out_domain:
+>  	iommu_domain_free(domain->domain);
+> @@ -2338,6 +2387,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>  					vfio_iommu_unmap_unpin_all(iommu);
+>  				else
+>  					vfio_iommu_unmap_unpin_reaccount(iommu);
+> +
+> +				vfio_iommu_release_nesting_info(iommu);
+>  			}
+>  			iommu_domain_free(domain->domain);
+>  			list_del(&domain->next);
+> @@ -2546,6 +2597,30 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
+>  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
+>  }
+>  
+> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> +					   struct vfio_info_cap *caps)
+> +{
+> +	struct vfio_info_cap_header *header;
+> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> +	size_t size;
+> +
+> +	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
+> +
+> +	header = vfio_info_cap_add(caps, size,
+> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> +	if (IS_ERR(header))
+> +		return PTR_ERR(header);
+> +
+> +	nesting_cap = container_of(header,
+> +				   struct vfio_iommu_type1_info_cap_nesting,
+> +				   header);
+> +
+> +	memcpy(&nesting_cap->info, iommu->nesting_info,
+> +	       iommu->nesting_info->size);
+> +
+> +	return 0;
+> +}
+> +
+>  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+>  				     unsigned long arg)
+>  {
+> @@ -2586,6 +2661,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (iommu->nesting_info) {
+> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
+I think this should happen while holding the &iommu->lock because
+nothing prevents the group from being detached in-between
 
-That's an interesting point, because to me, it's the exact opposite. One
-of the intellectual rewards I find in working with the kernel is that
-our community is international and multicultural, allowing me to learn
-about other cultures. Aiming for the lowest common denominator seems to
-me to be closer to erasing cultural differences than including them.
+Thanks
 
--- 
-Regards,
+Eric
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	if (caps.size) {
+>  		info.flags |= VFIO_IOMMU_INFO_CAPS;
+>  
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 9204705..3e3de9c 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
+>  	__u64	max_dirty_bitmap_size;		/* in bytes */
+>  };
+>  
+> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
+> +
+> +/*
+> + * Reporting nesting info to user space.
+> + *
+> + * @info:	the nesting info provided by IOMMU driver. Today
+> + *		it is expected to be a struct iommu_nesting_info
+> + *		data.
+> + */
+> +struct vfio_iommu_type1_info_cap_nesting {
+> +	struct	vfio_info_cap_header header;
+> +	__u32	flags;
+> +	__u32	padding;
+> +	__u8	info[];
+> +};
+> +
+>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+>  
+>  /**
+> 
 
-Laurent Pinchart
