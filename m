@@ -2,131 +2,151 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2358CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0E020715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BE320773
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrFauHm6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VatyV3O7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgGFM10 (ORCPT
+        id S1729133AbgGFM2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:27:26 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37286 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729051AbgGFM10 (ORCPT
+        Mon, 6 Jul 2020 08:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgGFM2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:27:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594038445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WPXvApqxqLDntBlzk8IwXZWQao6uBNHUfWsS3vG9Elo=;
-        b=hrFauHm6jgAwA1c64O6HFCdbv+1wTUG8dqMg5uwqiwl1umDOqnnaqHMeW26i1Z4HGJdnY3
-        0CMCOFym+fV0KKlsb1Wt0wvNwHSxHIIlW1nHd4aaVC69/HDFxOmjXVCpaVj9NkdzC6icqU
-        p2RZaty/I8Zy+2u+OM2dhSuq++E5w7g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-NGyHy7JrNNmXy0KXnq_DCg-1; Mon, 06 Jul 2020 08:27:21 -0400
-X-MC-Unique: NGyHy7JrNNmXy0KXnq_DCg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D157A18FE871;
-        Mon,  6 Jul 2020 12:27:19 +0000 (UTC)
-Received: from krava (unknown [10.40.193.8])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 156727B410;
-        Mon,  6 Jul 2020 12:27:17 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 14:27:17 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 09/15] perf stat: factor out event handling loop into
- dispatch_events()
-Message-ID: <20200706122717.GC3401866@krava>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <e4ccb3e9-5f5e-36bf-4a87-dd9d7098d83b@linux.intel.com>
+        Mon, 6 Jul 2020 08:28:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05DFC061794;
+        Mon,  6 Jul 2020 05:27:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b92so16960076pjc.4;
+        Mon, 06 Jul 2020 05:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uGcN/dQUvfFHJxD7/3RQyI8ooNZFu20+CAJIaRPmdZ0=;
+        b=VatyV3O7C+Ui7z6K5O70hpojcHAAyPU4Co4495eo6U8tcd6W2pvYu2tqDT10sHSq4t
+         jd8ULr4xAUbXCgw3VwNwNRmxQ+BwjfOE3pudDOeHvLDrENsjWdGv2jsVdbyzAmmG2STD
+         C8pkMyD7CFMl0LNP/TMbe1xg30oxROSxWUlgqux3K1VcZHSZSrC9niKfr+7hhKZwSh0e
+         ILtsIvJvTRwFyM25RK4ju2iyu+Ym0t9DzY5q+e4TQgilIpnJrYX2CuIQmrnE8UPumO5W
+         JxCTqPORWo5Wq0kxrKipYVUl6c19JjzuKKBA8SsCpZ4VEmv313X9/C3PsR4wq94RTBlN
+         iH1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uGcN/dQUvfFHJxD7/3RQyI8ooNZFu20+CAJIaRPmdZ0=;
+        b=ugWHQjJzJDEtocI35S75PJKQUsSCtNVNQJi5kq4KWh2MxuEyqhSvbJDbXHDyjckD/J
+         D33QwTEtq7V0wyUW6J9a34PkX2kSR7v7KHUAP4tDr44guMYosZq5himYqPd2Xpi2FRB8
+         ZjnEwU/usY6vWcN7919AM0+HJdQ2UPccKX2fI8avcHOjyDySgbEuRoZLqoS8uiZOAsKm
+         cF+1esWzQlA5e0KWK3F845n1bPf/f7HjwqJuV0KfHOeMCVkLcFm8akGddSPYE83jpRfd
+         XShZuI/emDMjHyNBhpQ1kKeaA5+JhibQxEug0tClEY574WhqtYPHJEzn8ap+1iV47r5r
+         zt/Q==
+X-Gm-Message-State: AOAM531JcMYHDDhilqQ8PntziErchHR0zkw5VL09MSjQAYiXpLF0bvBK
+        ytTYRmEzOh8Z/lu5jGO047Jk8xqIzftwNQ3mzLc=
+X-Google-Smtp-Source: ABdhPJxxwlXggdrm4VJkoXTr5IdbXdYn4AroBkGeJR82Z/mrkOfNtZ5dmAeXfN2gW7lUT6+1freCth262v4Tzf8FiZU=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr25700821pjb.181.1594038479529;
+ Mon, 06 Jul 2020 05:27:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4ccb3e9-5f5e-36bf-4a87-dd9d7098d83b@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200705133038.161547-1-mans0n@gorani.run>
+In-Reply-To: <20200705133038.161547-1-mans0n@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Jul 2020 15:27:43 +0300
+Message-ID: <CAHp75VcsVWBJ6Lu+QsZmabHcCN6B0s884FGf0d3Ld_UsgChTLw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 10:46:15AM +0300, Alexey Budankov wrote:
-> 
-> Consolidate event dispatching loops for fork, attach and system
-> wide monitoring use cases into common dispatch_events() function.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/perf/builtin-stat.c | 42 +++++++++++++++++++++++++--------------
->  1 file changed, 27 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 3e11f854ffc8..723f1fe27d63 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -550,6 +550,30 @@ static bool is_target_alive(struct target *_target,
->  	return false;
->  }
->  
-> +static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
+On Sun, Jul 5, 2020 at 4:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+
+Thank you for an update, my comments (besides what Bart has) below.
+
+> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+>
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+
+No blank line in between.
+
+...
+
+> +#include <linux/gpio/driver.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+
+It also needs property.h.
+
+...
+
+> +struct pca9570 {
+> +       struct gpio_chip chip;
+
+> +       struct i2c_client *client;
+
+This basically a duplication of reference to a parent device of GPIO chip.
+See below.
+
+> +       u8 out;
+> +};
+> +
+> +static int pca9570_read(struct pca9570 *gpio, u8 *value)
 > +{
-> +	bool stop = false;
-> +	int child_exited = 0, status = 0;
+
+struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+
+> +       int ret;
 > +
-> +	while (1) {
-> +		if (forks)
-> +			child_exited = waitpid(child_pid, &status, WNOHANG);
-> +		else
-> +			child_exited = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
+> +       ret = i2c_smbus_read_byte(gpio->client);
+> +       if (ret < 0)
+> +               return ret;
 > +
-> +		if (done || stop || child_exited)
-> +			break;
-
-can (done || stop) be in the while condition and
-we'd check just child_exited in here?
-
-> +
-> +		nanosleep(ts, NULL);
-> +		if (timeout)
-> +			stop = true;
-
-can we just break out in here? like the original code?
-I don't think we need the extra iteration
-
-> +		else
-> +			stop = handle_interval(interval, times);
-
-same here..?
-
-
-thanks,
-jirka
-
-
-> +	}
-> +
-> +	return status;
+> +       *value = ret;
+> +       return 0;
 > +}
+
+...
+
+> +static const struct i2c_device_id pca9570_id_table[] = {
+> +       { "pca9570", 4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
 > +
+> +static const struct of_device_id pca9570_of_match_table[] = {
+> +       { .compatible = "nxp,pca9570", .data = (void *)4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
 
-SNIP
+These structures now can be located closer to the end of the driver
+(exactly before first use).
 
+...
+
+> +       gpio->chip = template_chip;
+
+I'm not sure why we need an additional structure to just memcpy() to the chip.
+But here I have no strong opinion (perhaps the compiler even optimizes this).
+
+-- 
+With Best Regards,
+Andy Shevchenko
