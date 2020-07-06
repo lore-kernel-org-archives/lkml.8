@@ -2,134 +2,129 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB3420722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B22120715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G6sMfBcy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lLLTcpYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgGFObl (ORCPT
+        id S1729267AbgGFOcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56190 "EHLO
+        Mon, 6 Jul 2020 10:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgGFObk (ORCPT
+        with ESMTP id S1729171AbgGFOcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:31:40 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4C5C08C5DF
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:31:40 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so33138777wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lhw/BUTROVOYN40TpUh0RgTpP5MGKfF0bQwNQn8IkII=;
-        b=G6sMfBcyiYZnXJjewARbxvkBt3nPIhVdokEGhTOdGLVzWM49cWwLxahf6Rk2CZ1TFB
-         s/0S87lpRaLeyIqVJQEXwzGp3bW5n5qiDoJasdHuh95CUnRkVR+HzZeQgjKbYbhlqt3b
-         WD9MqtcyVkJe4aVoz5MvW6z5eWkzVtxC+SoaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lhw/BUTROVOYN40TpUh0RgTpP5MGKfF0bQwNQn8IkII=;
-        b=ja1BrcSeAM48SJaANWdw6s4pIdEIaYpZKabIY9FeJn+1vUB4b0UBY6q5cXXONERQRH
-         3qNzkQWRMAnH+d3Bp+iWBK97dYNS76TPxx8JSCLwHGcwANXUavq2eq5+4JsCyu2K+zPy
-         i9Etms+XGnRH7S1aj3blMVfc/vWNASpLU2jIbZssqrPi2C3FgjS7KJwpRCfPqxt1is4k
-         57FJ/Vjifj3IUu/bbl8/SSKOrwWDUSCXKXhiKT9MllxiPkK/mRXVwNdoiT4rbQCysz2W
-         5793s0yVJTr742HuZmg0NgJsVxjE+Ylm6On9f743aCn/hFfHmCtBrxI+p7YhPvptB1hA
-         20pw==
-X-Gm-Message-State: AOAM533WGyqm6A6hTC8Ej/dL9CkvS9TxnvCPnojgK9Dmc1JTfzODL6Rt
-        PhhvhJ/HSPbTWtrBRGg2fx2Efcuvakh1ByfOjxyQNw==
-X-Google-Smtp-Source: ABdhPJyHqRH6FGwmZgD3+KEklIah/GrAEhS53xleM7Xl7Ibxb6V9FYXfGur/MTogqCYMmnM+3ePQijdxNsAEQ6ymJm4=
-X-Received: by 2002:adf:edc6:: with SMTP id v6mr49556859wro.413.1594045898580;
- Mon, 06 Jul 2020 07:31:38 -0700 (PDT)
+        Mon, 6 Jul 2020 10:32:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6F7C061755;
+        Mon,  6 Jul 2020 07:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EwRW73shu2IKaqwwBXGdBFaT6QYUJm5UYLekvD4vwS0=; b=lLLTcpYoSD5PpyNLbnXTbjoIA9
+        4suCDa81YT0EEaz4cW1srEqKFWuGaYeA1plgRjsfDXWOZT+p0jeMWZRzBSlZUNCiW9xzY2G+31lVB
+        XJD4LLXG/qg1RxSIsgrEf00z6MR8q+wQgBSEzH4qg5NEYNW18NTwRpN5zVMqJmXHJoSBevmtzS+Y1
+        KTMYa/J34CAPdVNoMfKQEoZMJDNEcO1eEwkhhtGX3GwcMW242hIRLmnfd59FU5lZRGU67EmcnbjWy
+        5OeKclqo9JScO2avW8guw3tHuk8n5ZIN72H65ae+5ZknuOEESp3AOfuHHJtLIApuw5SUPZoA7ZRta
+        cyMXfJIw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsSAC-0004pr-4L; Mon, 06 Jul 2020 14:32:08 +0000
+Date:   Mon, 6 Jul 2020 15:32:08 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200706143208.GA25523@casper.infradead.org>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200705210947.GW25523@casper.infradead.org>
+ <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+ <20200706141002.GZ25523@casper.infradead.org>
+ <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
 MIME-Version: 1.0
-References: <20200701212155.37830-1-james.quinlan@broadcom.com>
- <20200701212155.37830-3-james.quinlan@broadcom.com> <968d6802-b30e-b618-1dd5-1b1a5ba6548a@cogentembedded.com>
-In-Reply-To: <968d6802-b30e-b618-1dd5-1b1a5ba6548a@cogentembedded.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Mon, 6 Jul 2020 10:31:27 -0400
-Message-ID: <CA+-6iNyoMiy6gybczF6_fqazHAjps-gbJt9pyJ65wTxSp1Lmpw@mail.gmail.com>
-Subject: Re: [PATCH v6 02/12] ata: ahci_brcm: Fix use of BCM7216 reset controller
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 5:32 AM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->
-> Hello!
->
-> On 02.07.2020 0:21, Jim Quinlan wrote:
->
-> > From: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> > driver for the BrcmSTB 7216 chip.  Use
-> > devm_reset_control_get_optional_shared control() to handle this sharing.
->
->     Not "devm_reset_control_get_optional_shared() control"?
+On Mon, Jul 06, 2020 at 08:27:17AM -0600, Jens Axboe wrote:
+> On 7/6/20 8:10 AM, Matthew Wilcox wrote:
+> > On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
+> >> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
+> >>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+> >>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
+> >>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+> >>>>>
+> >>>>> For zone-append, block-layer will return zone-relative offset via ret2
+> >>>>> of ki_complete interface. Make changes to collect it, and send to
+> >>>>> user-space using cqe->flags.
+> > 
+> >>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
+> >>> address.
+> >>
+> >> Yeah, it's not great either, but we have less leeway there in terms of
+> >> how much space is available to pass back extra data.
+> >>
+> >>> What do you think to my idea of interpreting the user_data as being a
+> >>> pointer to somewhere to store the address?  Obviously other things
+> >>> can be stored after the address in the user_data.
+> >>
+> >> I don't like that at all, as all other commands just pass user_data
+> >> through. This means the application would have to treat this very
+> >> differently, and potentially not have a way to store any data for
+> >> locating the original command on the user side.
+> > 
+> > I think you misunderstood me.  You seem to have thought I meant
+> > "use the user_data field to return the address" when I actually meant
+> > "interpret the user_data field as a pointer to where userspace
+> > wants the address stored".
+> 
+> It's still somewhat weird to have user_data have special meaning, you're
+> now having the kernel interpret it while every other command it's just
+> an opaque that is passed through.
+> 
+> But it could of course work, and the app could embed the necessary
+> u32/u64 in some other structure that's persistent across IO. If it
+> doesn't have that, then it'd need to now have one allocated and freed
+> across the lifetime of the IO.
+> 
+> If we're going that route, it'd be better to define the write such that
+> you're passing in the necessary information upfront. In syscall terms,
+> then that'd be something ala:
+> 
+> ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
+> 			off_t *offset, int flags);
+> 
+> where *offset is copied out when the write completes. That removes the
+> need to abuse user_data, with just providing the storage pointer for the
+> offset upfront.
 
+That works for me!  In io_uring terms, would you like to see that done
+as adding:
 
-Hi Sergei, sorry for the delay in my response.  I will fix the above.
+        union {
+                __u64   off;    /* offset into file */
++		__u64   *offp;	/* appending writes */
+                __u64   addr2;
+        };
 
-Thanks again,
-Jim
-
->
->
-> >
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> > Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
-> > ---
-> >   drivers/ata/ahci_brcm.c | 11 +++--------
-> >   1 file changed, 3 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> > index 6853dbb4131d..d6115bc04b09 100644
-> > --- a/drivers/ata/ahci_brcm.c
-> > +++ b/drivers/ata/ahci_brcm.c
-> [...]
-> > @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
-> >
-> >       /* Reset is optional depending on platform and named differently */
-> >       if (priv->version == BRCM_SATA_BCM7216)
-> > -             reset_name = "rescal";
-> > +             priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-> >       else
-> > -             reset_name = "ahci";
-> > +             priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
-> >
-> > -     priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-> >       if (IS_ERR(priv->rcdev))
-> >               return PTR_ERR(priv->rcdev);
-> >
-> [...]
->
-> MBR, Sergei
