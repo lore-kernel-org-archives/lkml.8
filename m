@@ -2,180 +2,115 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D698C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B89B206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF98206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgGFJwU (ORCPT
+        id S1728613AbgGFJyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgGFJwT (ORCPT
+        Mon, 6 Jul 2020 05:54:20 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:47945 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgGFJyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:52:19 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FC4C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 02:52:18 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e012:1552:6e81:c371])
-        by baptiste.telenet-ops.be with bizsmtp
-        id zlsH220030tDR5Q01lsHt0; Mon, 06 Jul 2020 11:52:17 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsNnM-0005o0-VM
-        for linux-kernel@vger.kernel.org; Mon, 06 Jul 2020 11:52:16 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsNnM-0005ZU-UO
-        for linux-kernel@vger.kernel.org; Mon, 06 Jul 2020 11:52:16 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-kernel@vger.kernel.org
-Subject: Build regressions/improvements in v5.8-rc4
-Date:   Mon,  6 Jul 2020 11:52:16 +0200
-Message-Id: <20200706095216.21374-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jul 2020 05:54:20 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MGzDv-1k5G8n2R3T-00E1bd for <linux-kernel@vger.kernel.org>; Mon, 06 Jul
+ 2020 11:54:18 +0200
+Received: by mail-qk1-f172.google.com with SMTP id b185so23571340qkg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 02:54:18 -0700 (PDT)
+X-Gm-Message-State: AOAM5308NGPfl05De0IDhrJYkS8+WPNTfOHTrNmpxYM0sfHRL8isZUwX
+        KIzD9MreFfQ9BKTQC7rBMSRxfxc0cvbY+W0sEuw=
+X-Google-Smtp-Source: ABdhPJyI+T0XwLNN+frxQL1BscXmAJg7nv/4NCAKtRRhcWmBGieWiHxBlU3HK4v/EGx8e/2Vj/78baWXJ4QgU6Zm3Xc=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr45967200qke.286.1594029257459;
+ Mon, 06 Jul 2020 02:54:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+ <CAK8P3a2zzXHNB7CX8efpKeQF2gJkF2J4FwafU58wT2RGvjjTxw@mail.gmail.com>
+ <CAFmMkTHrQ4LZk4+-3kdJ+dc47MXR1Jd76AXbO-ceT2zsfDRFGQ@mail.gmail.com>
+ <CAK8P3a1bbpmD0wJkhkjqW9YttBpMmdn8Z5oTLm0cr-0gjyU2zA@mail.gmail.com>
+ <CAFmMkTE3z6OZQ_v3jx-4MzMr8v+4qcF2uLn0ASGydj5oqDnfjg@mail.gmail.com> <CAK8P3a2G_UzKv5HmQk1gyaHXY+YzVedknwof+9fmCjQuF+hu2A@mail.gmail.com>
+In-Reply-To: <CAK8P3a2G_UzKv5HmQk1gyaHXY+YzVedknwof+9fmCjQuF+hu2A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Jul 2020 11:54:01 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2TUAfhdoAL7u2fun7ZztrjGLxAGAX-WWDqsyNqP2=gZA@mail.gmail.com>
+Message-ID: <CAK8P3a2TUAfhdoAL7u2fun7ZztrjGLxAGAX-WWDqsyNqP2=gZA@mail.gmail.com>
+Subject: Re: [PATCH] SPI LPC information kernel module
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:LX/ZL4RL97tfg5BTf5fkFx/XD/SJ9nQeZ3mhU+HpDDffkkVefQA
+ g7jaIcSW7M4xwyDveoAyWgCTiWAQPMsKDnw8BI54zMf5s1Wk/9iu/fERvE1KM+Bp2s9la0+
+ D5Hpyp/MPgoXCYdSbLbdo2AO6RqnEzj0c59kEc+g0OAajORvrL85IASRHNOJBK6x0FJ0VL0
+ qOrsa4eETYeQdpHXLm+HA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BIqU10ElbOo=:mTMzrlXygrGqlIziKIBWwo
+ SW1D9bdfuqXNsZjC+T/rM7bGdD/8l5HHEoGoMHQv213fYNM1PgE7I6HtfTjvaeHT7M4PJ+jzl
+ ibVHcLx+0B02LXvqWjYFsIBve70ZrMBwKpj2sNs1U++2PqGPhA4dT45K4nvj3PL7lnwKMqE/s
+ qZ5Ri591lUoRs02DOPrzGwnjoSVdgOSPsGk0Uw+dH9/g+SSyU8hTbG2ctQY8nBZOR9M9I+1jx
+ 5byU5sWfiIRh+RS3bUOlvQRR5ILSnTwEJ3qvPi8BljRZQP0nYo0eaq+QkqRsWmlNZljPQRHnh
+ eyTx2CzYitq9FZWzr5DPj3QmGZmG9c0Pppt7NpZTlvQkvXP9wB+Z3MDR5+4L2MhBtzZeBkRRX
+ 7lzxOepvMKyfkeNHAwuEv9OWZFpjuGez8o9KRSKEWew3wbjlr+e65neGm0sPMVcOcs7ii/Mv1
+ QUjBHvQ3gql3qXcTVSOWB4saCtnVsXVm7VTsyjjHXpi7+PiW1295eNdzXoBRIc9JW6wh0dVg3
+ sQXqhyXCnm/HiFerJPzgDXCTO/uY/nPTdLr5DhdrLMCnILLBQWoc0fzahxEUtPb6L8lXdFsVe
+ /vBDW9FwOGp9mCoVO5QQgfYMxmJ2mNLrcSFOySxhu22Kj9qVN1LvGFQGxTi8THU8TzBpE/Pol
+ RkMOuJZglbamvFKFywvuXkHN9cFuJiqo/09eRsYSC94En4nP4tGwrsAuZ5FbreIoiXswTOUlJ
+ fWzmg2O5JJSVHg9sOlijGgS4OH91XrDXPX15xDB8JxfpDY4oMor4TNMOeVedOUTbgvwH1AZKT
+ bNyrw11IYIeLMClyzWcRE2sZb4ck+856R2AOPBY2lePXsH1Fsg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Below is the list of build error/warning regressions/improvements in
-v5.8-rc4[1] compared to v5.7[2].
+On Mon, Jul 6, 2020 at 11:20 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> > Because of these reasons, I'm proposing a misc (not-device) driver that supports
+> > many Intel architectures (and families) to expose the information.
+> > I understand your proposal to first enhance existing _device_ drivers, but I
+> > couldn't find suitable options.
+>
+> Maybe try adding an interface to one of the drivers at first, and then extend
+> it to the other hardware after an initial code review. Do not bypass the driver
+> model or try to do everything at once with a single module that knows
+> details of multiple unrelated hardware implementations.
 
-Summarized:
-  - build errors: +4/-4
-  - build warnings: +38/-41
+To clarify further how I think you can have a chance of getting the
+interface you want, here's a step-by-step list:
 
-JFYI, when comparing v5.8-rc4[1] to v5.8-rc3[3], the summaries are:
-  - build errors: +0/-0
-  - build warnings: +0/-4
+1. keep the current securityfs interface (or any other user space
+  ABI if you have already changed it), but put it into a separate loadable
+  module with a pair of exported functions:
+  spi_lpc_register_info(struct spi_lpc_data *info);
+  spi_lpc_unregister_info(struct spi_lpc_data *info);
+  The names will have to change later, but the idea is that any driver
+  can just pass the information you want to export to user space,
+  and the interface module does not care where those values came
+  from.
 
-Note that there may be false regressions, as some logs are incomplete.
-Still, they're build errors/warnings.
+2. For any PCI device ID that is handled by drivers/mtd/spi-nor/intel-spi-pci.c,
+  move the code to call the function from your driver into that file,
+  reading the registers with pci_read_config_dword() or
+  readl(ispi->base + CONSTANT).
 
-Happy fixing! ;-)
+3. For any PCI device ID that is handled by drivers/mfd/lpc_ich.c,
+  do the same by moving the code to
+  drivers/mtd/spi-nor/controllers/intel-spi-platform.c.
 
-Thanks to the linux-next team for providing the build service.
+4. For any remaining PCI device ID you look at that does not have
+  a driver, create a new PCI driver that binds to those IDs and
+  does the same thing. If you have multiple device IDs that
+  use the same register layout, then handle those with a common
+  driver.
 
-[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258/ (192 out of 194 configs)
-[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162/ (all 194 configs)
-[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68/ (192 out of 194 configs)
-
-
-*** ERRORS ***
-
-4 error regressions:
-  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5100), (.head.text+0x5040)
-  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
-  + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0xc), (.fixup+0x4)
-  + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x34), (.fixup+0x28), (.fixup+0x4), (.fixup+0x10), (.fixup+0x1c)
-
-4 error improvements:
-  - error: modpost: "devm_ioremap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
-  - error: modpost: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!: N/A => 
-  - error: modpost: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!: N/A => 
-  - error: modpost: "devm_of_iomap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
-
-
-*** WARNINGS ***
-
-38 warning regressions:
-  + /kisskb/src/block/genhd.c: warning: the frame size of 1160 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 1623:1
-  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]:  => 205:23
-  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]:  => 67:23
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_resume_noirq' defined but not used [-Wunused-function]:  => 611:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_resume' defined but not used [-Wunused-function]:  => 638:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_suspend' defined but not used [-Wunused-function]:  => 629:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_suspend_noirq' defined but not used [-Wunused-function]:  => 601:12
-  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]:  => 197:33
-  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 198:32
-  + /kisskb/src/drivers/scsi/dc395x.c: warning: value computed is not used [-Wunused-value]:  => 155:36
-  + /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.39' uses dynamic stack allocation:  => 498:1
-  + /kisskb/src/include/linux/compiler_attributes.h: warning: statement will never be executed [-Wswitch-unreachable]:  => 201:41
-  + /kisskb/src/include/linux/kern_levels.h: warning: format '%zd' expects argument of type 'signed size_t', but argument 2 has type 'ssize_t {aka int}' [-Wformat=]:  => 5:18
-  + /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.24' uses dynamic stack allocation:  => 3498:1
-  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.57' uses dynamic stack allocation:  => 2230:1
-  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.56' uses dynamic stack allocation:  => 1929:1
-  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.55' uses dynamic stack allocation:  => 2298:1
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'add_llc.hd') [-Wmissing-braces]:  => 1145:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'del_llc.hd') [-Wmissing-braces]:  => 1178:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'delllc.hd') [-Wmissing-braces]:  => 1250:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: missing braces around initializer [-Wmissing-braces]:  => 1250:9, 1178:9, 1145:9
-  + /kisskb/src/samples/seccomp/user-trap.c: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]:  => 50:2, 83:2
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + warning: 136 bad relocations:  => N/A
-  + warning: 148 bad relocations:  => N/A
-
-41 warning improvements:
-  - /kisskb/src/arch/m68k/include/asm/amigahw.h: warning: this statement may fall through [-Wimplicit-fallthrough=]: 42:50 => 
-  - /kisskb/src/block/genhd.c: warning: the frame size of 1192 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 1617:1 => 
-  - /kisskb/src/drivers/android/binderfs.c: warning: (near initialization for 'device_info.name') [-Wmissing-braces]: 653:9 => 
-  - /kisskb/src/drivers/android/binderfs.c: warning: missing braces around initializer [-Wmissing-braces]: 653:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'encoder_control.header') [-Wmissing-braces]: 116:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'pixel_clock.header') [-Wmissing-braces]: 342:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: missing braces around initializer [-Wmissing-braces]: 116:9, 342:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: (near initialization for 'PLAT_54186_wa.header') [-Wmissing-braces]: 781:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: missing braces around initializer [-Wmissing-braces]: 368:9, 781:9 => 368:9
-  - /kisskb/src/drivers/gpu/drm/bridge/tc358768.c: warning: the frame size of 2224 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 840:1 => 
-  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: (near initialization for 'desc.ident') [-Wmissing-braces]: 5502:9 => 
-  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: missing braces around initializer [-Wmissing-braces]: 5502:9 => 
-  - /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.34' uses dynamic stack allocation: 498:1 => 
-  - /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.23' uses dynamic stack allocation: 3269:1 => 
-  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_left' uses dynamic stack allocation: 547:1 => 
-  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_right' uses dynamic stack allocation: 557:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.42' uses dynamic stack allocation: 2203:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.41' uses dynamic stack allocation: 1910:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.40' uses dynamic stack allocation: 2271:1 => 
-  - /kisskb/src/security/integrity/ima/ima_crypto.c: warning: the frame size of 1032 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 510:1 => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/md/raid456.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp: N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1a0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1ac): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2b0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2bc): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
-  - warning: 12 bad relocations: N/A => 
-  - warning: unmet direct dependencies detected for SND_SOC_WM9712: N/A => 
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+      Arnd
