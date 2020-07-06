@@ -2,183 +2,138 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2291C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB05206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89BB206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgGFPBH (ORCPT
+        id S1729497AbgGFPBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:01:07 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25978 "EHLO mga04.intel.com"
+        Mon, 6 Jul 2020 11:01:48 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1771 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgGFPBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:01:06 -0400
-IronPort-SDR: hBdLNDZoHhjxPDCwyH6WCLAVB5bXxR1Y/sNDtSdh2IjXxtBZUDqk9EIPqMAPY9ciw2U40F+BIk
- GR0/uDfn6M+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="144931809"
+        id S1729121AbgGFPBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:01:48 -0400
+IronPort-SDR: gdygv/P6C2GNO3sjtMQuOnODrauRvPzyFNlU4WnIsdHsNOnwUPxPiEEOL7xO/YFRybAtHwzMqk
+ bMyP+3XNg5xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="146504673"
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="144931809"
+   d="scan'208";a="146504673"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:01:05 -0700
-IronPort-SDR: +vpazag5h9NFqzMeig/fARcURoClfchVzLi7o//zaDevGgoHM+ZHjMU0IFuM4npR/dFu61cflc
- n/xFFyy/gD9Q==
-X-ExtLoop1: 1
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:01:47 -0700
+IronPort-SDR: C8I4Rf7q1jd2VoYzmkyAUPZEW/3Zv9xkokghzFMebXW85QNKgh2gMe+j02eX4umH5PRW8lFkgD
+ R/gQwJYiroAQ==
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="313985346"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.168.148]) ([10.212.168.148])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 08:01:04 -0700
-Subject: Re: [qemu] boot failed: Unable to handle kernel NULL pointer
- dereference at virtual address 0000000000000000
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux-serial@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ldewangan@nvidia.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
-        lkft-triage@lists.linaro.org
-References: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
- <CAK8P3a1Lda8HhsDvDREf-cOgb4RkCgEKK5Q-Zj+UhK8tsAaBLw@mail.gmail.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <51d6e5bb-3de1-36dc-15a4-c341b23ca8cd@intel.com>
-Date:   Mon, 6 Jul 2020 08:01:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="315191035"
+Received: from smtp.ostc.intel.com ([10.54.29.231])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:01:46 -0700
+Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 5832C637E;
+        Mon,  6 Jul 2020 08:01:46 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 08:01:46 -0700
+From:   mark gross <mgross@linux.intel.com>
+To:     Abhishek Bhardwaj <abhishekbh@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+Message-ID: <20200706150146.GA21121@mtg-dev.jf.intel.com>
+Reply-To: mgross@linux.intel.com
+References: <20200702161916.2456342-1-abhishekbh@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1Lda8HhsDvDREf-cOgb4RkCgEKK5Q-Zj+UhK8tsAaBLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702161916.2456342-1-abhishekbh@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 02, 2020 at 09:19:16AM -0700, Abhishek Bhardwaj wrote:
+> This change adds a new kernel configuration that sets the l1d cache
+> flush setting at compile time rather than at run time.
 
+Why is this desired?
 
-On 7/6/2020 5:53 AM, Arnd Bergmann wrote:
-> On Mon, Jul 6, 2020 at 1:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>
->> While booting qemu_arm64 and qemu_arm with Linux version 5.8.0-rc3-next-20200706
->> the kernel panic noticed due to kernel NULL pointer dereference.
->>
->> metadata:
->>    git branch: master
->>    git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->>    git commit: 5680d14d59bddc8bcbc5badf00dbbd4374858497
->>    git describe: next-20200706
->>    make_kernelversion: 5.8.0-rc3
->>    kernel-config:
->> https://builds.tuxbuild.com/Glr-Ql1wbp3qN3cnHogyNA/kernel.config
->>
->> qemu arm64 boot crash log,
->>
->> [    0.972053] Unable to handle kernel NULL pointer dereference at
->> virtual address 0000000000000000
->> [    0.975301] Mem abort info:
->> [    0.976316]   ESR = 0x96000004
->> [    0.977378]   EC = 0x25: DABT (current EL), IL = 32 bits
->> [    0.979363]   SET = 0, FnV = 0
->> [    0.980458]   EA = 0, S1PTW = 0
->> [    0.981583] Data abort info:
->> [    0.982634]   ISV = 0, ISS = 0x00000004
->> [    0.984213]   CM = 0, WnR = 0
->> [    0.985260] [0000000000000000] user address but active_mm is swapper
->> [    0.987600] Internal error: Oops: 96000004 [#1] PREEMPT SMP
->> [    0.989557] Modules linked in:
->> [    0.990671] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
->> 5.8.0-rc3-next-20200706 #1
->> [    0.993711] Hardware name: linux,dummy-virt (DT)
->> [    0.995708] pstate: 00000005 (nzcv daif -PAN -UAO BTYPE=--)
->> [    0.998168] pc : pl011_dma_probe+0x90/0x360
-> 
-> This is the code from you vmlinux file:
-> 
-> ffff8000107233e4:       b90087e2        str     w2, [sp, #132]
-> ffff8000107233e8:       97fcf14c        bl      ffff80001065f918
-> <dma_request_chan>
-> ffff8000107233ec:       aa0003f4        mov     x20, x0
-> ffff8000107233f0:       b140041f        cmn     x0, #0x1, lsl #12
-> ffff8000107233f4:       54000488        b.hi    ffff800010723484
-> <pl011_dma_probe+0x11c>  // b.pmore
-> ffff8000107233f8:       f9400280        ldr     x0, [x20]
-> ffff8000107233fc:       f9409c02        ldr     x2, [x0, #312]
-> ffff800010723400:       b4000082        cbz     x2, ffff800010723410
-> <pl011_dma_probe+0xa8>
-> 
-> It's the "ldr     x0, [x20]" dereferencing 'chan' in pl011_dma_probe() after
-> checking it for an error value. However it's a NULL pointer, not an
-> error pointer, indicating that there is a bug in the dmaengine driver
-> that you use here, or in the dmaengine core code.
-
-Arnd,
-I'm looking at the pl001_dma_probe(), I think we could make it more robust if it 
-uses IS_ERR_OR_NULL(chan) instead of IS_ERR(). Should I send a patch for it? I 
-suppose looking at the comment header for dma_request_chan() it does say return 
-chan ptr or error ptr. Sorry I missed that.
-
-
-Vinod,
-It looks like the only fix for dmaengine for the patch is where Arnd pointed out 
-as far as I can tell after auditing it. Let me know how you want to handle this. 
-Thanks!
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 0d6529eff66f..48e159e83cf5 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -852,7 +852,7 @@ struct dma_chan *dma_request_chan(struct device *dev, const 
-char *name)
-         mutex_lock(&dma_list_mutex);
-         if (list_empty(&dma_device_list)) {
-                 mutex_unlock(&dma_list_mutex);
--               return NULL;
-+               return ERR_PTR(-ENODEV);
-         }
-
-         list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
-
+--mark
 
 > 
-> I don't see anything suspicious in dmaengine drivers, but there is a
-> recent series
-> from Dave Jiang that might explain it. Could you try reverting  commit
-> deb9541f5052 ("dmaengine: check device and channel list for empty")?
+> Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
+> ---
 > 
-> I think the broken change is this one:
+>  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
+>  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
+>  2 files changed, 25 insertions(+)
 > 
-> @@ -819,6 +850,11 @@ struct dma_chan *dma_request_chan(struct device
-> *dev, const char *name)
-> 
->          /* Try to find the channel via the DMA filter map(s) */
->          mutex_lock(&dma_list_mutex);
-> +       if (list_empty(&dma_device_list)) {
-> +               mutex_unlock(&dma_list_mutex);
-> +               return NULL;
-> +       }
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 0b71970d2d3d2..1dcc875cf5547 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
+>  #if IS_ENABLED(CONFIG_KVM_INTEL)
+>  EXPORT_SYMBOL_GPL(l1tf_mitigation);
+>  #endif
+> +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
+> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
+> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
+> +#else
+>  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+> +#endif
+>  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
+>  
+>  /*
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index b277a2db62676..f82a0c564e931 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
+>  	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
+>  	 auditing of KVM MMU events at runtime.
+>  
+> +config KVM_VMENTRY_L1D_FLUSH
+> +	int "L1D cache flush settings (1-3)"
+> +	range 1 3
+> +	default "2"
+> +	depends on KVM && X86 && X86_64
+> +	help
+> +	 This setting determines the L1D cache flush behavior before a VMENTER.
+> +	 This is similar to setting the option / parameter to
+> +	 kvm-intel.vmentry_l1d_flush.
+> +	 1 - Never flush.
+> +	 2 - Conditinally flush.
+> +	 3 - Always flush.
 > +
->          list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
->                  dma_cap_mask_t mask;
->                  const struct dma_slave_map *map = dma_filter_match(d,
-> name, dev);
-> 
-> which needs to return an error code like -ENODEV instead of NULL. There
-> may be other changes in the same patch that introduce the same bug
-> elsewhere.
-> 
->       Arnd
+> +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
+> +# the virtualization menu.
+> +source "drivers/vhost/Kconfig"
+> +
+>  endif # VIRTUALIZATION
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
 > 
