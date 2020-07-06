@@ -2,89 +2,146 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13F7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 102DD206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B106520720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594056061;
+	bh=rp3iLbG4NzFQ6srRlKxeSGp+kPRUVlRaIbnd6z2D5UY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HQZZ+jliGky9Dh1onIVYghvjIMjQregVcDj26ODxtoA57kct/9iWPpanOGz/biYuy
+	 OoTu4xKc3UBsNUnVXSQIvpSv+nZEUy7XgYcAte0eF4joCrOyoE2sZNf0+pY9lAr359
+	 saLSNGa0RDEuA7j0bi/CAzK/O/vtrixIWlaJPiaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgGFRUS convert rfc822-to-8bit (ORCPT
+        id S1729657AbgGFRVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:20:18 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:60364 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729551AbgGFRUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:20:18 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21731955-1500050 
-        for multiple; Mon, 06 Jul 2020 18:19:51 +0100
-Content-Type: text/plain; charset="utf-8"
+        Mon, 6 Jul 2020 13:21:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729478AbgGFRVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:21:00 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28431206CD;
+        Mon,  6 Jul 2020 17:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594056059;
+        bh=rp3iLbG4NzFQ6srRlKxeSGp+kPRUVlRaIbnd6z2D5UY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l76C5n6D647knTaiC1Ofb1gHincOwMnY9GaLtoXpCGO4qWLWz68KmJY4gVJQ/6d/k
+         VR/PWu6VIqUgb9u1FiEtG5Gf3RnfhjbueTLXu9dsFSDOZ2ky6V19VYmfJjX5c3HeU/
+         pCMYh7UCO/5pYVrWEUvl/qjqN1iCeEqppXWkAh9c=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [RFC PATCH v2 0/5] mm: extend memfd with ability to create "secret" memory areas
+Date:   Mon,  6 Jul 2020 20:20:46 +0300
+Message-Id: <20200706172051.19465-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200703125046.8395-1-f.suligoi@asem.it>
-References: <20200703125046.8395-1-f.suligoi@asem.it>
-Subject: Re: [PATCH] drm/i915: Fix spelling mistake in i915_reg.h
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Flavio Suligoi <f.suligoi@asem.it>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Flavio Suligoi <f.suligoi@asem.it>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Date:   Mon, 06 Jul 2020 18:19:49 +0100
-Message-ID: <159405598951.24180.13345481240552002697@build.alporthouse.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Flavio Suligoi (2020-07-03 13:50:46)
-> Fix typo: "TRIGER" --> "TRIGGER"
-> 
-> The two misplelled macros:
-> 
-> 1) OAREPORTTRIG1_EDGE_LEVEL_TRIGER_SELECT_MASK
-> 2) OAREPORTTRIG5_EDGE_LEVEL_TRIGER_SELECT_MASK
-> 
-> are not used in any other sources of the kernel,
-> so this change can be consider only a local change
-> for the i915_reg.h file.
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  drivers/gpu/drm/i915/i915_reg.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
-> index 9d6536afc94b..c2153364724a 100644
-> --- a/drivers/gpu/drm/i915/i915_reg.h
-> +++ b/drivers/gpu/drm/i915/i915_reg.h
-> @@ -868,7 +868,7 @@ static inline bool i915_mmio_reg_valid(i915_reg_t reg)
->  
->  #define OAREPORTTRIG1 _MMIO(0x2740)
->  #define OAREPORTTRIG1_THRESHOLD_MASK 0xffff
-> -#define OAREPORTTRIG1_EDGE_LEVEL_TRIGER_SELECT_MASK 0xffff0000 /* 0=level */
-> +#define OAREPORTTRIG1_EDGE_LEVEL_TRIGGER_SELECT_MASK 0xffff0000 /* 0=level */
->  
->  #define OAREPORTTRIG2 _MMIO(0x2744)
->  #define OAREPORTTRIG2_INVERT_A_0  (1 << 0)
-> @@ -921,7 +921,7 @@ static inline bool i915_mmio_reg_valid(i915_reg_t reg)
->  
->  #define OAREPORTTRIG5 _MMIO(0x2750)
->  #define OAREPORTTRIG5_THRESHOLD_MASK 0xffff
-> -#define OAREPORTTRIG5_EDGE_LEVEL_TRIGER_SELECT_MASK 0xffff0000 /* 0=level */
-> +#define OAREPORTTRIG5_EDGE_LEVEL_TRIGGER_SELECT_MASK 0xffff0000 /* 0=level */
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Ok, these names are not copied straight from the docs, so renaming them
-will not hinder us when finding the relevant fields.
+Hi,
 
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+This is a second version of "secret" mappings implementation backed by a
+file descriptor. 
+
+The file descriptor is created using memfd_create() syscall with a new
+MFD_SECRET flag. The file descriptor should be configured using ioctl() to
+define the desired protection and then mmap() of the fd will create a
+"secret" memory mapping. The pages in that mapping will be marked as not
+present in the direct map and will have desired protection bits set in the
+user page table. For instance, current implementation allows uncached
+mappings.
+
+Hiding secret memory mappings behind an anonymous file allows (ab)use of
+the page cache for tracking pages allocated for the "secret" mappings as
+well as using address_space_operations for e.g. page migration callbacks.
+
+The anonymous file may be also used implicitly, like hugetlb files, to
+implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
+ABIs.
+
+As the fragmentation of the direct map was one of the major concerns raised
+during the previous postings, I've added an amortizing cache of PMD-size
+pages to each file descriptor and an ability to reserve large chunks of the
+physical memory at boot time and then use this memory as an allocation pool
+for the secret memory areas.
+
+In addition, I've tried to find some numbers that show the benefit of using
+larger pages in the direct map, but I couldn't find anything so I've run a
+couple of benchmarks from phoronix-test-suite on my laptop (i7-8650U with
+32G RAM).
+
+I've tested three variants: the default with 28G of the physical memory
+covered with 1G pages, then I disabled 1G pages using "nogbpages" in the
+kernel command line and at last I've forced the entire direct map to use 4K
+pages using a simple patch to arch/x86/mm/init.c.
+I've made runs of the benchmarks with SSD and tmpfs.
+
+Surprisingly, the results does not show huge advantage for large pages. For
+instance, here the results for kernel build with 'make -j8', in seconds:
+
+                        |  1G    |  2M    |  4K
+------------------------+--------+--------+---------
+ssd, mitigations=on	| 308.75 | 317.37 | 314.9 
+ssd, mitigations=off	| 305.25 | 295.32 | 304.92 
+ram, mitigations=on	| 301.58 | 322.49 | 306.54 
+ram, mitigations=off	| 299.32 | 288.44 | 310.65
+
+All the results I have are available at [1].
+If anybody is interested in plain text, please let me know.
+
+[1] https://docs.google.com/spreadsheets/d/1tdD-cu8e93vnfGsTFxZ5YdaEfs2E1GELlvWNOGkJV2U/edit?usp=sharing
+
+Mike Rapoport (5):
+  mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always available
+  mmap: make mlock_future_check() global
+  mm: extend memfd with ability to create "secret" memory areas
+  mm: secretmem: use PMD-size pages to amortize direct map fragmentation
+  mm: secretmem: add ability to reserve memory at boot
+
+ include/linux/huge_mm.h    |  10 +-
+ include/linux/memfd.h      |   9 +
+ include/uapi/linux/magic.h |   1 +
+ include/uapi/linux/memfd.h |   6 +
+ mm/Kconfig                 |   3 +
+ mm/Makefile                |   1 +
+ mm/internal.h              |   3 +
+ mm/memfd.c                 |  10 +-
+ mm/mmap.c                  |   5 +-
+ mm/secretmem.c             | 445 +++++++++++++++++++++++++++++++++++++
+ 10 files changed, 480 insertions(+), 13 deletions(-)
+ create mode 100644 mm/secretmem.c
+
+
+base-commit: 7c30b859a947535f2213277e827d7ac7dcff9c84
+-- 
+2.26.2
+
