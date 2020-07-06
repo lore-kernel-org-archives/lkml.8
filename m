@@ -2,149 +2,150 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A7920663
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334BA2065D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iqizygs0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lkiB0iet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgGFS1Y (ORCPT
+        id S1729760AbgGFS2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36394 "EHLO
+        Mon, 6 Jul 2020 14:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbgGFS1Y (ORCPT
+        with ESMTP id S1729736AbgGFS2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:27:24 -0400
-Received: from mail-oi1-x249.google.com (mail-oi1-x249.google.com [IPv6:2607:f8b0:4864:20::249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33950C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:27:24 -0700 (PDT)
-Received: by mail-oi1-x249.google.com with SMTP id d185so9741761oia.21
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:27:24 -0700 (PDT)
+        Mon, 6 Jul 2020 14:28:51 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D71DC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:28:51 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id h39so19403312ybj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qqoupK5Oq6XKew6i6oyqJ6+pHqm95p/dfVqnR40LUaA=;
-        b=Iqizygs0Qd97GZDMVr5MpvwQmOfgjGa2UIYaRHiioHiJ0vLDD6W8swj+li7Hr5Svhx
-         LO9/lPvsugaN0/6egSTnXgsy1EAyz4KJfFrZkFR3QfG5BCtd18pLxBtTzFA1CaLlqbCt
-         jEQOGwpkEXPy06MIkntvurVJNu6a9JgL7UByfxIbHsVXnoEyOJIeT8aFVonyvm+CJ3aZ
-         t+s1JZPyorXK4j2tSOLwFoLeEu6MA/Z9EYSoxsjont9Q0X1H4GaAcgtCMEvAPlLLJEuw
-         RZuxLdkZO/u32IzVhZf6kw4qro5XTFTAe+CI7wDg0ODIHGUzHlAtbeIzRiLNK2m11JyB
-         V8xw==
+        bh=Fc1eobGkBG0LfrmIA8F/omWKPRs9OPzS9PtwTncDCio=;
+        b=lkiB0iet4A7NoqcA5oXP9qmuH+bhzljxF7Ags3GHHhJGRUrKfD8yqwz2kidFGMhP1f
+         fhZ66BhBcRivO6XXv9eoyyzSngp177HbNssYFPzYNxW26bEHVxQfEXmb0pu/tG/qFREN
+         +QreEMqxYub+zw5QGJJU0kIucfmzmtPsDg1fp/Khf4Mn1D6Y9OJkPSmSjC7twKJ0cIQH
+         YAatRD7IOqs+e22Qw4+WOlP2lrYpzQtfsMj4OzoIRcUUacyj6unhYRPxXF00rywzJB2H
+         DvyqRmLEWtQS3LFPGq9wNEM8BjHftSOwe3Lym1kwSAf6HvDdaqb38YhHagYmXtmQ5INP
+         qbEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=qqoupK5Oq6XKew6i6oyqJ6+pHqm95p/dfVqnR40LUaA=;
-        b=ASIebniY9fSj6XVPGGmxvTyzrvvLgsmqFIxWe+xl6jy01YVs0LkHg12HjkHPd0ipdo
-         HiuLGQoK39Bz8nfAvLb62rMOmmyVcNjGisayG+J4KaM1MoC/1oDkWBhTCZYMxTO0V0Vf
-         Hgkm+L5dG+bg5mApGKjijsMq5+yUNKxVBgTh7HSJR0HtlCkcJos0Cz5VPZvA1ZmC+IA4
-         xQGKLjCLVrFQty8b7xfMvAy7StKyKup6jLvlRxjABn9RU8PXm1bIubH9/XAsBIiEf77k
-         qp45OHa91KWc6sCZZGhzwpenQZC0c34k4anfTqC5di4zrz55yF257O1FC+hcXk5j1Hc4
-         PoXA==
-X-Gm-Message-State: AOAM530H0PldT4Ykm+Pmlfm5fLmF1OtvWqEWuay/2yy7ovs+/huU0Brj
-        3fZVMfLFBYhjy+fd3cj0M/TAF7oXDg==
-X-Google-Smtp-Source: ABdhPJyWVGryZT5XObBbMQLsdgzLLnVckhY0wPAFG2dfmer9W5MvZSPtNAV1kDIPh+YBKZzAr3C5UarrWg==
-X-Received: by 2002:aca:c683:: with SMTP id w125mr443202oif.37.1594060043510;
- Mon, 06 Jul 2020 11:27:23 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 18:27:13 +0000
-In-Reply-To: <1592531704.23014.1.camel@mtkswgap22>
-Message-Id: <20200706182713.3693762-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <1592531704.23014.1.camel@mtkswgap22>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2] ARM: stacktrace: Fix unwind_frame for clang-built kernels
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     linux@armlinux.org.uk, vincent.whitchurch@axis.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>,
-        Miles Chen <miles.chen@mediatek.com>, stable@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fc1eobGkBG0LfrmIA8F/omWKPRs9OPzS9PtwTncDCio=;
+        b=ByaMsE96YVxVW8ycMKcLo0h6XSoL66wIAlHHLc+Z+Xilm4gDKtbIb929xs7cKCrtyw
+         ZMo4XQ532Oo20qbWkk1B0zCjAiHHMIzQBZgraO4Yp8JyG7or7pSJbPSor7UWXzWErMoL
+         lWZrTwXcf5yC7XBFXKJsgmKnxAOEsK2/NtZBlaTLC8wpQia7mI2BOjSBlkhWRmZOU2LP
+         6PUtniRR6jMmEfYSijt+26wU5s/1zBQi3k9dG2XRwHrxLc3eOFPViDm0HFMWeFdAtXkC
+         ZLShRS3FCckcNMoke0p18SQR4zudSUDtsrlc+ft876AXK1x11s5GPs5Za6btE/VK00Ls
+         g/sQ==
+X-Gm-Message-State: AOAM531IIMfTMAaF/Hm+W/7c30eneo6kJ+D6k5BhlU9xJRHGc9kIeXCt
+        um2zg8xooQb+XqoFjOXy62EFKBxMWIsPyBzD8u1Grw==
+X-Google-Smtp-Source: ABdhPJycPKnm1SHI3nIY2MqxnRDhdIXGF6R+WCPW780X94mszgAHRiNGVOLgKdr8gSQvtPh7ppX2ciAVAegt5u+FMvs=
+X-Received: by 2002:a25:b90e:: with SMTP id x14mr82241403ybj.8.1594060130357;
+ Mon, 06 Jul 2020 11:28:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200424053651.61226-1-agoode@google.com>
+In-Reply-To: <20200424053651.61226-1-agoode@google.com>
+From:   Adam Goode <agoode@google.com>
+Date:   Mon, 6 Jul 2020 14:28:13 -0400
+Message-ID: <CAOf41Nkv+GV7xGM3Mrfw+XTDUQbDhQ=RmTSML3omHATUQpff+g@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Ensure all probed info is returned to v4l2
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since clang does not push pc and sp in function prologues, the current
-implementation of unwind_frame does not work. By using the previous
-frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
-kernels.
+On Fri, Apr 24, 2020 at 1:37 AM Adam Goode <agoode@google.com> wrote:
+>
+> bFrameIndex and bFormatIndex can be negotiated by the camera during
+> probing, resulting in the camera choosing a different format than
+> expected. v4l2 can already accommodate such changes, but the code was
+> not updating the proper fields.
+>
+> Without such a change, v4l2 would potentially interpret the payload
+> incorrectly, causing corrupted output. This was happening on the
+> Elgato HD60 S+, which currently always renegotiates to format 1.
+>
+> As an aside, the Elgato firmware is buggy and should not be renegotating,
+> but it is still a valid thing for the camera to do. Both macOS and Windows
+> will properly probe and read uncorrupted images from this camera.
+>
+> With this change, both qv4l2 and chromium can now read uncorrupted video
+> from the Elgato HD60 S+.
+>
+> Signed-off-by: Adam Goode <agoode@google.com>
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 0335e69b70ab..7f14096cb44d 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -247,11 +247,37 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
+>         if (ret < 0)
+>                 goto done;
+>
+> +       /* After the probe, update fmt with the values returned from
+> +        * negotiation with the device.
+> +        */
+> +       for (i = 0; i < stream->nformats; ++i) {
+> +               if (probe->bFormatIndex == stream->format[i].index) {
+> +                       format = &stream->format[i];
+> +                       break;
+> +               }
+> +       }
+> +       if (i == stream->nformats) {
+> +               uvc_trace(UVC_TRACE_FORMAT, "Unknown bFormatIndex %u.\n",
+> +                         probe->bFormatIndex);
+> +               return -EINVAL;
+> +       }
+> +       for (i = 0; i < format->nframes; ++i) {
+> +               if (probe->bFrameIndex == format->frame[i].bFrameIndex) {
+> +                       frame = &format->frame[i];
+> +                       break;
+> +               }
+> +       }
+> +       if (i == format->nframes) {
+> +               uvc_trace(UVC_TRACE_FORMAT, "Unknown bFrameIndex %u.\n",
+> +                         probe->bFrameIndex);
+> +               return -EINVAL;
+> +       }
+>         fmt->fmt.pix.width = frame->wWidth;
+>         fmt->fmt.pix.height = frame->wHeight;
+>         fmt->fmt.pix.field = V4L2_FIELD_NONE;
+>         fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+>         fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
+> +       fmt->fmt.pix.pixelformat = format->fcc;
+>         fmt->fmt.pix.colorspace = format->colorspace;
+>
+>         if (uvc_format != NULL)
+> --
+> 2.25.3
+>
 
-The bounds check on next frame pointer must be changed as well since
-there are 8 less bytes between frames.
+Hi,
 
-This fixes /proc/<pid>/stack.
+Could someone please take a look at this patch? Is there another
+process I should follow to have this reviewed?
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/912
-Reported-by: Miles Chen <miles.chen@mediatek.com>
-Tested-by: Miles Chen <miles.chen@mediatek.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- arch/arm/kernel/stacktrace.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index cc726afea023..76ea4178a55c 100644
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -22,6 +22,19 @@
-  * A simple function epilogue looks like this:
-  *	ldm	sp, {fp, sp, pc}
-  *
-+ * When compiled with clang, pc and sp are not pushed. A simple function
-+ * prologue looks like this when built with clang:
-+ *
-+ *	stmdb	{..., fp, lr}
-+ *	add	fp, sp, #x
-+ *	sub	sp, sp, #y
-+ *
-+ * A simple function epilogue looks like this when built with clang:
-+ *
-+ *	sub	sp, fp, #x
-+ *	ldm	{..., fp, pc}
-+ *
-+ *
-  * Note that with framepointer enabled, even the leaf functions have the same
-  * prologue and epilogue, therefore we can ignore the LR value in this case.
-  */
-@@ -34,6 +47,16 @@ int notrace unwind_frame(struct stackframe *frame)
- 	low = frame->sp;
- 	high = ALIGN(low, THREAD_SIZE);
- 
-+#ifdef CONFIG_CC_IS_CLANG
-+	/* check current frame pointer is within bounds */
-+	if (fp < low + 4 || fp > high - 4)
-+		return -EINVAL;
-+
-+	frame->sp = frame->fp;
-+	frame->fp = *(unsigned long *)(fp);
-+	frame->pc = frame->lr;
-+	frame->lr = *(unsigned long *)(fp + 4);
-+#else
- 	/* check current frame pointer is within bounds */
- 	if (fp < low + 12 || fp > high - 4)
- 		return -EINVAL;
-@@ -42,6 +65,7 @@ int notrace unwind_frame(struct stackframe *frame)
- 	frame->fp = *(unsigned long *)(fp - 12);
- 	frame->sp = *(unsigned long *)(fp - 8);
- 	frame->pc = *(unsigned long *)(fp - 4);
-+#endif
- 
- 	return 0;
- }
--- 
-2.27.0.212.ge8ba1cc988-goog
+Thanks,
 
+Adam
