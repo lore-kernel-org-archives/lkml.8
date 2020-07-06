@@ -6,72 +6,82 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3693AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B762EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6F62070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFE82074D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgGFKlR (ORCPT
+        id S1728620AbgGFKqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:41:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:56264 "EHLO foss.arm.com"
+        Mon, 6 Jul 2020 06:46:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:56656 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbgGFKlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:41:16 -0400
+        id S1728521AbgGFKqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:46:45 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 165A830E;
-        Mon,  6 Jul 2020 03:41:16 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B69F3F68F;
-        Mon,  6 Jul 2020 03:41:14 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 11:41:12 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 0/2] sched: Optionally skip uclamp logic in fast path
-Message-ID: <20200706104111.yfopcjm3kiqlxhx2@e107158-lin.cambridge.arm.com>
-References: <20200630112123.12076-1-qais.yousef@arm.com>
- <CAKfTPtCjTCBbGN0gN_=7MJdiY3N-PPy0ApZWH5xd7KDQ9=0yMg@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB54530E;
+        Mon,  6 Jul 2020 03:46:44 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 511D43F68F;
+        Mon,  6 Jul 2020 03:46:42 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 11:46:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, roy.zang@nxp.com,
+        amurray@thegoodpenguin.co.uk, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v6 00/11] Add the multiple PF support for DWC and
+ Layerscape
+Message-ID: <20200706104639.GC26377@e121166-lin.cambridge.arm.com>
+References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCjTCBbGN0gN_=7MJdiY3N-PPy0ApZWH5xd7KDQ9=0yMg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200314033038.24844-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/20 14:09, Vincent Guittot wrote:
-> I have run the perf bench sched pipe that have have already run
-> previously with this v6 and the results are similar to my previous
-> tests:
-> The impact is -1.61% similarly to v2 which is better compared the
-> original -3.66% without your patch
+On Sat, Mar 14, 2020 at 11:30:27AM +0800, Xiaowei Bao wrote:
+> Add the PCIe EP multiple PF support for DWC and Layerscape, add
+> the doorbell MSIX function for DWC, use list to manage the PF of
+> one PCIe controller, and refactor the Layerscape EP driver due to
+> some platforms difference.
+> 
+> Xiaowei Bao (11):
+>   PCI: designware-ep: Add multiple PFs support for DWC
+>   PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+>   PCI: designware-ep: Move the function of getting MSI capability
+>     forward
+>   PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+>   dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
+>     and ls2088a
+>   PCI: layerscape: Fix some format issue of the code
+>   PCI: layerscape: Modify the way of getting capability with different
+>     PEX
+>   PCI: layerscape: Modify the MSIX to the doorbell mode
+>   PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+>   arm64: dts: layerscape: Add PCIe EP node for ls1088a
+>   misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+> 
+>  .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
+>  drivers/misc/pci_endpoint_test.c                   |   2 +
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
+>  drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
+>  drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
+>  drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
+>  7 files changed, 404 insertions(+), 93 deletions(-)
 
-Thanks Vincent.
+Can you rebase it against v5.8-rc1 please ?
 
-Can you afford doing a capture of `perf record` and share the resulting
-perf.dat with vmlinux (with debug symbols)?
-
-Having a before/after capture would be even better.
-
-Not sure if we can do  much about this -1.61% in your case, but it'd be good to
-understand why if possible. perf bench sched pipe is very sensitive to tiniest
-of changes which could be due to binary-to-binary differences.
-
-Thanks
-
---
-Qais Yousef
+Thanks,
+Lorenzo
