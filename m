@@ -2,68 +2,80 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F608C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4A3206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3BE206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGFUTM (ORCPT
+        id S1727792AbgGFUT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgGFUTL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:19:11 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA917C061755;
-        Mon,  6 Jul 2020 13:19:11 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F7D3120ED4AD;
-        Mon,  6 Jul 2020 13:19:11 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 13:19:10 -0700 (PDT)
-Message-Id: <20200706.131910.1401749404818988951.davem@davemloft.net>
-To:     alobakin@marvell.com
-Cc:     kuba@kernel.org, irusskikh@marvell.com,
-        michal.kalderon@marvell.com, aelior@marvell.com,
-        denis.bolotin@marvell.com, GR-everest-linux-l2@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/9] net: qed/qede: W=1 C=1 warnings cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200706153821.786-1-alobakin@marvell.com>
-References: <20200706153821.786-1-alobakin@marvell.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 13:19:11 -0700 (PDT)
+        Mon, 6 Jul 2020 16:19:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35159 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgGFUT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 16:19:57 -0400
+IronPort-SDR: nbhH2bSgIDfFYKOctCl/mh7cUL/rIIO54qMOjta0YUpdtmbM1OoCAMr0gQySQWZJYxyK4cS1Gm
+ 0/dD8N+jlYHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="149011865"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="149011865"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 13:19:57 -0700
+IronPort-SDR: 3BSlNuO2KXikjBngo+wNaqVNmV3zQUTDkjml4aOc/RpldiXpP1T8cEi6HYwkxOytSN/E8JRvFA
+ R0GfNdOpaQkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="483254110"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Jul 2020 13:19:56 -0700
+Date:   Mon, 6 Jul 2020 13:19:56 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] x86, sched: Bail out of frequency invariance if
+ turbo frequency is unknown
+Message-ID: <20200706201956.GA1390666@iweiny-DESK2.sc.intel.com>
+References: <20200531182453.15254-1-ggherdovich@suse.cz>
+ <20200531182453.15254-3-ggherdovich@suse.cz>
+ <20200601233418.GA15416@ranerica-svr.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601233418.GA15416@ranerica-svr.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
-Date: Mon, 6 Jul 2020 18:38:12 +0300
-
-> This set cleans qed/qede build log under W=1 C=1 with GCC 8 and
-> sparse 0.6.2. The only thing left is "context imbalance -- unexpected
-> unlock" in one of the source files, which will be issued later during
-> the refactoring cycles.
+On Mon, Jun 01, 2020 at 04:34:18PM -0700, Ricardo Neri wrote:
+> On Sun, May 31, 2020 at 08:24:52PM +0200, Giovanni Gherdovich wrote:
+> > There may be CPUs that support turbo boost but don't declare any turbo
+> > ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
+> > scale-invariant calculations can't be performed.
+> > 
+> > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> > Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 > 
-> The biggest part is handling the endianness warnings. The current code
-> often just assumes that both host and device operate in LE, which is
-> obviously incorrect (despite the fact that it's true for x86 platforms),
-> and makes sparse {s,m}ad.
+> FWIW,
 > 
-> The rest of the series is mostly random non-functional fixes
-> here-and-there.
+> Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-Series applied, thank you.
+Is this going to make it as a fix to 5.8?
+
+Tested-by: Ira Weiny <ira.weiny@intel.com>
+
