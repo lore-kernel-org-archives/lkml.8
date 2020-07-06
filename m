@@ -2,220 +2,133 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856CAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8EDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6962070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1B42070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="HAbD/y9D"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sgSnX4Bv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgGFHNr (ORCPT
+        id S1728863AbgGFHTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 03:13:47 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:4793 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgGFHNq (ORCPT
+        Mon, 6 Jul 2020 03:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728832AbgGFHTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 03:13:46 -0400
+        Mon, 6 Jul 2020 03:19:52 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20AD6C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 00:19:52 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x3so11065826pfo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 00:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1594019625; x=1625555625;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=VB95bLc+g+UmqWSFzbL0u4bPsb7J3t0bL/7bnKUwHs4=;
-  b=HAbD/y9DB6Eo/9r0ahSS+no4unCwo/+DQapfJX19WUZ3odWCw4bF7mQd
-   ntdAnRsVkQjULw9gmSTO9I3bnylatP/H9Wy+m3xAxZ40TdNIlLsZeKcEz
-   mf77upqiTBgbOjZVKPEccAn2JvvOPB923WAbxc405RK0mQ5t6g03miPvR
-   Q=;
-IronPort-SDR: kiJ824QJQ+IdadidvsuVJT+aOsVUniEOlOdVMKHebjWDlsaXcHzny5EzUwawmx4lNzmlAPPZzm
- 7WG2uX4IxGmQ==
-X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
-   d="scan'208";a="56253262"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 06 Jul 2020 07:13:43 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 46F6BA2038;
-        Mon,  6 Jul 2020 07:13:42 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 07:13:41 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.65) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 07:13:34 +0000
-Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        "Matt Wilson" <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-8-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <391ad4b0-2011-4d63-8274-9ccb77a5351f@amazon.de>
-Date:   Mon, 6 Jul 2020 09:13:29 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O74Nuai4i0SLX5VBGfHYZHCvuzscSOHQ2q6kAb3CK+Q=;
+        b=sgSnX4BvnCsHbxM0A5WWFsmuE95MfmeQXIjkXZbR2BNWgcCW1NKpULF4OKiZwMPf2F
+         SkM7pF7DPNg+vYebyjW8hcfK/wLQvoRq8NDdij03laNTuA/b0770dCQrB9Sal4EyYLgV
+         YdRhA0c/egElceVCWwUTJI5re6E2kthSlvIAaEIOWCRjD5G3YPHELvH7WFlivgQbJswP
+         ErLpEU4nnu0sZg68ioKM3Tf4RdO6DAaaO/ybGyTahRQZI8lmCpEZMAPlDoGRoAhNz4cU
+         XxOWXJg9ydKvmgsX0zaiUnu2Rv45vfUmfHcFhxxqgAfYImQ2TqZ6sLU0FvU5ESorX9D/
+         +XAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O74Nuai4i0SLX5VBGfHYZHCvuzscSOHQ2q6kAb3CK+Q=;
+        b=I3jcnC3JwFw6LIxbdpfumX6dSkzC+zJSDBypp3+dvNYgjOIRWQrulxe6mh/+/uy16J
+         thl/4fjjVdqLxfutF0fLQ1oxdYoOLeh7BzwxufVx+CXG7LYL9kl7lq+KqIW930HMkgC0
+         ILLFVvSsYJXaLJpJFuovg0fbOxJDdrVzgdhK4PYMaTJcYC+wlN+P4SDPThf+mtTVOuGv
+         /QyeXdzUaBwHVB7mbdwyRekMJriQhpyEIzpap4U8tBDy/qkLEDrDDbrdePLJI5WKUHoA
+         7p/E0kI6opjQwbOywCB9wqwpSHK34Yd5NvpDNiE4eGKs90Vwvh8Ln46eX899SM7Hz1bM
+         6wiw==
+X-Gm-Message-State: AOAM532vPvlZz+H5HGTM9uMXlF+Ii5Afs0iKA4yhs3KKYDGKrHRz+yo8
+        Ifuw6Ufzx9q0qRejKyheUogV3nC+dJxSkA==
+X-Google-Smtp-Source: ABdhPJy97C5d00A/1zRlOr0gcTDJG1/xcPA2z9ugXTaAcrfTaHjW/vgXKJw1+14TyG8kSOVZet0P2Q==
+X-Received: by 2002:aa7:848b:: with SMTP id u11mr28920909pfn.72.1594019991291;
+        Mon, 06 Jul 2020 00:19:51 -0700 (PDT)
+Received: from starnight.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.googlemail.com with ESMTPSA id f18sm17825210pgv.84.2020.07.06.00.19.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 00:19:50 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Takashi Iwai <tiwai@suse.com>
+Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>
+Subject: [PATCH v3 1/3] ALSA: hda/realtek - Enable audio jacks of Acer vCopperbox with ALC269VC
+Date:   Mon,  6 Jul 2020 15:18:25 +0800
+Message-Id: <20200706071826.39726-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <aa62a43d4f1f458fb11794c26d373528@realtek.com>
+References: <aa62a43d4f1f458fb11794c26d373528@realtek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622200329.52996-8-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB002.ant.amazon.com (10.43.161.20) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Acer desktop vCopperbox with ALC269VC cannot detect the MIC of
+headset, the line out and internal speaker until
+ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS quirk applied.
 
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+v3: Change the chained ID to ALC269_FIXUP_HEADSET_MIC according to
+    Realtek's suggestion
 
-On 22.06.20 22:03, Andra Paraschiv wrote:
-> The Nitro Enclaves driver provides an ioctl interface to the user space
-> for enclave lifetime management e.g. enclave creation / termination and
-> setting enclave resources such as memory and CPU.
-> =
+ sound/pci/hda/patch_realtek.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> This ioctl interface is mapped to a Nitro Enclaves misc device.
-> =
-
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
-> Changelog
-> =
-
-> v3 -> v4
-> =
-
-> * Use dev_err instead of custom NE log pattern.
-> * Remove the NE CPU pool init during kernel module loading, as the CPU
->    pool is now setup at runtime, via a sysfs file for the kernel
->    parameter.
-> * Add minimum enclave memory size definition.
-> =
-
-> v2 -> v3
-> =
-
-> * Remove the GPL additional wording as SPDX-License-Identifier is
->    already in place.
-> * Remove the WARN_ON calls.
-> * Remove linux/bug and linux/kvm_host includes that are not needed.
-> * Remove "ratelimited" from the logs that are not in the ioctl call
->    paths.
-> * Remove file ops that do nothing for now - open and release.
-> =
-
-> v1 -> v2
-> =
-
-> * Add log pattern for NE.
-> * Update goto labels to match their purpose.
-> * Update ne_cpu_pool data structure to include the global mutex.
-> * Update NE misc device mode to 0660.
-> * Check if the CPU siblings are included in the NE CPU pool, as full CPU
->    cores are given for the enclave(s).
-> ---
->   drivers/virt/nitro_enclaves/ne_misc_dev.c | 133 ++++++++++++++++++++++
->   drivers/virt/nitro_enclaves/ne_pci_dev.c  |  11 ++
->   2 files changed, 144 insertions(+)
->   create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
-> =
-
-> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
-ro_enclaves/ne_misc_dev.c
-> new file mode 100644
-> index 000000000000..628fb10c2b36
-> --- /dev/null
-> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
-d.
-> + */
-> +
-> +/**
-> + * Enclave lifetime management driver for Nitro Enclaves (NE).
-> + * Nitro is a hypervisor that has been developed by Amazon.
-> + */
-> +
-> +#include <linux/anon_inodes.h>
-> +#include <linux/capability.h>
-> +#include <linux/cpu.h>
-> +#include <linux/device.h>
-> +#include <linux/file.h>
-> +#include <linux/hugetlb.h>
-> +#include <linux/list.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/nitro_enclaves.h>
-> +#include <linux/pci.h>
-> +#include <linux/poll.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include "ne_misc_dev.h"
-> +#include "ne_pci_dev.h"
-> +
-> +#define NE_EIF_LOAD_OFFSET (8 * 1024UL * 1024UL)
-> +
-> +#define NE_MIN_ENCLAVE_MEM_SIZE (64 * 1024UL * 1024UL)
-> +
-> +#define NE_MIN_MEM_REGION_SIZE (2 * 1024UL * 1024UL)
-> +
-> +/*
-> + * TODO: Update logic to create new sysfs entries instead of using
-> + * a kernel parameter e.g. if multiple sysfs files needed.
-> + */
-> +static const struct kernel_param_ops ne_cpu_pool_ops =3D {
-
-Adding an empty ops struct looks very odd. If you fill it in a later =
-
-patch, please indicate so in a comment here.
-
-> +};
-> +
-> +static char ne_cpus[PAGE_SIZE];
-
-PAGE_SIZE is a bit excessive, no? Even if you list every single CPU of a =
-
-256 CPU system you are <1024.
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 737ef82a75fd..13c32655df44 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6149,6 +6149,7 @@ enum {
+ 	ALC236_FIXUP_HP_MUTE_LED,
+ 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7327,6 +7328,17 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE
+ 	},
++	[ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x14, 0x90100120 }, /* use as internal speaker */
++			{ 0x18, 0x02a111f0 }, /* use as headset mic, without its own jack detect */
++			{ 0x1a, 0x01011020 }, /* use as line out */
++			{ },
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7346,6 +7358,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
++	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+-- 
+2.27.0
 
