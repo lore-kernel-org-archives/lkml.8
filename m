@@ -2,164 +2,178 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2B02070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3592070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IgeFwe3M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ipe82HpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgGFOdm (ORCPT
+        id S1729316AbgGFOeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729224AbgGFOdm (ORCPT
+        Mon, 6 Jul 2020 10:34:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53777 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729201AbgGFOeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:33:42 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0483BC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:33:42 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r12so25860376ilh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fmUO+MRhKaF9iDr809BkP0BZ1FEwKum+d6TqO74BCHY=;
-        b=IgeFwe3MEabbYSbiAs+p2J1s7Hx8+qkGi0XKQXS+TMUtSUDcHZAsfvxQjSInnGs/hG
-         n6Fz7r5BjsVqrvUpgJdUSa9Ot7cb3E6+iRdD+agLt9B0IjYMp38UYZJEIF9y1vE2HjAp
-         Kbh529x6F3DrjiKAglmQCbHz0hx2QoAmqXWuzy5jvlhkcptALLA19v/KuTWX5paTji/t
-         nnKCxKV6cikD2Rff9ULQNZcyBUKvKrKkgmgVI2AKCBdtELl8UVLddf8bUulVaSn76hIL
-         edeo419KBLPKXNwu7YGkq7y+OUUCily9z0J0WPonnjRVbqCDElrL1f6uf/ihcltKINg7
-         tOpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fmUO+MRhKaF9iDr809BkP0BZ1FEwKum+d6TqO74BCHY=;
-        b=VwOzLMUOOWkcoeaFCyhdewN5Cg406A0L2rxQKgwYTcXbq+ZyqkBndXCeg9HPO6sJbz
-         THVH1OLGgMuywSitrA14l1xa2Tzt+EdxMZeiET3SUdd80LORKBtt0QvbaMVMHHfPFDfr
-         uip9FTS0/mVBLShTAi1Y47W+z8kzlXP6WzBACs21egJCZzOZAifqUgol2kBDvmXRWef6
-         mFcdBz5wtahG2cmY7WlyAsynOcWgFeZyMlao8cScnKx0BBBi0LTRgbXmgesPOStQeuTy
-         g0IcKfVH9Fwb1e/Q30eKSCbfhfzGHOacf03CTd2beVhuRvKUs5YLUSR8EZ1TFxk3QDGb
-         5hjA==
-X-Gm-Message-State: AOAM532w1dqKG6BvsnRt7A8iy3XYMEmLy3NChgquEdnr6OuksL4fPz64
-        j3wxTCmSfA5hkXfmNxereCJpA88GIxWV1w==
-X-Google-Smtp-Source: ABdhPJwOtHmNnHmEW2Bjrz3fklq2Hr32zEZPkqI1YmYfRyWomLR+5Awwy7juGYxR0E2eZ/0IStYegA==
-X-Received: by 2002:a05:6e02:10d4:: with SMTP id s20mr31143956ilj.203.1594046021328;
-        Mon, 06 Jul 2020 07:33:41 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y6sm10971417ila.74.2020.07.06.07.33.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 07:33:40 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
- <20200706141002.GZ25523@casper.infradead.org>
- <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
- <20200706143208.GA25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ee671380-86f0-d50d-7fb4-2e1901c4173c@kernel.dk>
-Date:   Mon, 6 Jul 2020 08:33:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 10:34:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594046058;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hBET4KTCF7VLtikUgOS5OyaCCHxUdfauUuYPMbcHgTI=;
+        b=ipe82HpRb4vj7yLs1qxZw908pEIE8JWwwA+Fvm4bFH+0IUr7XE+vHh4qTe8YgVjOFfsfPE
+        ZNCDihoFRcRrb4sIUYs8b+WgCOwyTctpuhqyeHdLUfFWlkzhvfXel2PuVm7E8MIrFvI1+J
+        DdRKlya2mjKfe3tor/nkwkuGc3sw2A0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-8UAvHL0EOOKZDXFTB_A5Fw-1; Mon, 06 Jul 2020 10:34:16 -0400
+X-MC-Unique: 8UAvHL0EOOKZDXFTB_A5Fw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7F1B10506E1;
+        Mon,  6 Jul 2020 14:33:49 +0000 (UTC)
+Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C3B41A914;
+        Mon,  6 Jul 2020 14:33:43 +0000 (UTC)
+Date:   Mon, 6 Jul 2020 16:33:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200706163340.2ce7a5f2.cohuck@redhat.com>
+In-Reply-To: <a677decc-5be3-8095-bc33-0f95634011f6@linux.ibm.com>
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+        <20200629115651-mutt-send-email-mst@kernel.org>
+        <20200629180526.41d0732b.cohuck@redhat.com>
+        <26ecd4c6-837b-1ce6-170b-a0155e4dd4d4@linux.ibm.com>
+        <a677decc-5be3-8095-bc33-0f95634011f6@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200706143208.GA25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 8:32 AM, Matthew Wilcox wrote:
-> On Mon, Jul 06, 2020 at 08:27:17AM -0600, Jens Axboe wrote:
->> On 7/6/20 8:10 AM, Matthew Wilcox wrote:
->>> On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
->>>> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
->>>>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
->>>>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
->>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
->>>>>>>
->>>>>>> For zone-append, block-layer will return zone-relative offset via ret2
->>>>>>> of ki_complete interface. Make changes to collect it, and send to
->>>>>>> user-space using cqe->flags.
->>>
->>>>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
->>>>> address.
->>>>
->>>> Yeah, it's not great either, but we have less leeway there in terms of
->>>> how much space is available to pass back extra data.
->>>>
->>>>> What do you think to my idea of interpreting the user_data as being a
->>>>> pointer to somewhere to store the address?  Obviously other things
->>>>> can be stored after the address in the user_data.
->>>>
->>>> I don't like that at all, as all other commands just pass user_data
->>>> through. This means the application would have to treat this very
->>>> differently, and potentially not have a way to store any data for
->>>> locating the original command on the user side.
->>>
->>> I think you misunderstood me.  You seem to have thought I meant
->>> "use the user_data field to return the address" when I actually meant
->>> "interpret the user_data field as a pointer to where userspace
->>> wants the address stored".
->>
->> It's still somewhat weird to have user_data have special meaning, you're
->> now having the kernel interpret it while every other command it's just
->> an opaque that is passed through.
->>
->> But it could of course work, and the app could embed the necessary
->> u32/u64 in some other structure that's persistent across IO. If it
->> doesn't have that, then it'd need to now have one allocated and freed
->> across the lifetime of the IO.
->>
->> If we're going that route, it'd be better to define the write such that
->> you're passing in the necessary information upfront. In syscall terms,
->> then that'd be something ala:
->>
->> ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
->> 			off_t *offset, int flags);
->>
->> where *offset is copied out when the write completes. That removes the
->> need to abuse user_data, with just providing the storage pointer for the
->> offset upfront.
-> 
-> That works for me!  In io_uring terms, would you like to see that done
-> as adding:
-> 
->         union {
->                 __u64   off;    /* offset into file */
-> +		__u64   *offp;	/* appending writes */
->                 __u64   addr2;
->         };
-> 
+On Mon, 6 Jul 2020 15:37:37 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Either that, or just use addr2 for it directly. I consider the appending
-writes a marginal enough use case that it doesn't really warrant adding
-a specially named field for that.
+> On 2020-07-02 15:03, Pierre Morel wrote:
+> >=20
+> >=20
+> > On 2020-06-29 18:05, Cornelia Huck wrote: =20
+> >> On Mon, 29 Jun 2020 11:57:14 -0400
+> >> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> >> =20
+> >>> On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote: =20
+> >>>> An architecture protecting the guest memory against unauthorized host
+> >>>> access may want to enforce VIRTIO I/O device protection through the
+> >>>> use of VIRTIO_F_IOMMU_PLATFORM.
+> >>>>
+> >>>> Let's give a chance to the architecture to accept or not devices
+> >>>> without VIRTIO_F_IOMMU_PLATFORM.
+> >>>>
+> >>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >>>> Acked-by: Jason Wang <jasowang@redhat.com>
+> >>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> >>>> ---
+> >>>> =C2=A0 arch/s390/mm/init.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++++++
+> >>>> =C2=A0 drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
+> >>>> =C2=A0 include/linux/virtio.h=C2=A0 |=C2=A0 2 ++
+> >>>> =C2=A0 3 files changed, 30 insertions(+) =20
+> >> =20
+> >>>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct=20
+> >>>> virtio_device *dev)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!virtio_has_feature(dev, VIRTIO_F=
+_VERSION_1))
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+> >>>> +=C2=A0=C2=A0=C2=A0 if (arch_needs_virtio_iommu_platform(dev) &&
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !virtio_has_feature(dev,=
+ VIRTIO_F_IOMMU_PLATFORM)) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_warn(&dev->dev,
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENODEV;
+> >>>> +=C2=A0=C2=A0=C2=A0 }
+> >>>> +
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 virtio_add_status(dev, VIRTIO_CONFIG_=
+S_FEATURES_OK);
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D dev->config->get_status(de=
+v);
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(status & VIRTIO_CONFIG_S_FEATUR=
+ES_OK)) { =20
+> >>>
+> >>> Well don't you need to check it *before* VIRTIO_F_VERSION_1, not afte=
+r? =20
+> >>
+> >> But it's only available with VERSION_1 anyway, isn't it? So it probably
+> >> also needs to fail when this feature is needed if VERSION_1 has not be=
+en
+> >> negotiated, I think. =20
+>=20
+>=20
+> would be something like:
+>=20
+> -       if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> -               return 0;
+> +       if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+> +               ret =3D arch_accept_virtio_features(dev);
+> +               if (ret)
+> +                       dev_warn(&dev->dev,
+> +                                "virtio: device must provide=20
+> VIRTIO_F_VERSION_1\n");
+> +               return ret;
+> +       }
 
--- 
-Jens Axboe
+That looks wrong; I think we want to validate in all cases. What about:
+
+ret =3D arch_accept_virtio_features(dev); // this can include checking for
+                                        // older or newer features
+if (ret)
+	// assume that the arch callback moaned already
+	return ret;
+
+if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+	return 0;
+
+// do the virtio-1 only FEATURES_OK dance
+
+>=20
+>=20
+> just a thought on the function name:
+> It becomes more general than just IOMMU_PLATFORM related.
+>=20
+> What do you think of:
+>=20
+> arch_accept_virtio_features()
+
+Or maybe arch_validate_virtio_features()?
+
+>=20
+> ?
+>=20
+> Regards,
+> Pierre
+>=20
+>=20
 
