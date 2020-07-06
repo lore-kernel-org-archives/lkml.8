@@ -2,51 +2,50 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C97C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B95AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEF72074D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604F32074D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgGFKr1 (ORCPT
+        id S1728998AbgGFKsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:47:27 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54815 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgGFKrR (ORCPT
+        Mon, 6 Jul 2020 06:48:20 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38602 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728441AbgGFKsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:47:17 -0400
-Received: by mail-io1-f72.google.com with SMTP id q207so700356iod.21
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:47:16 -0700 (PDT)
+        Mon, 6 Jul 2020 06:48:20 -0400
+Received: by mail-io1-f71.google.com with SMTP id l13so23385464ioj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:48:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=o/+nsIISRaR1UrBUB4a9yq3mmK58VS9sslSGe+mCmmE=;
-        b=WLiwCf+1Yy524aHUcgJ1bB1QDJJXD4PWLtvIqQO7QJ8v+Rjx+xc54nTyfS9IUL3oc7
-         6Hw+MtuexQy1a8o7YeWOnU9fEk6Lx/UE9Pfhp66v5EqqwpN8W0XU5WA3FdgvhYa4nnHr
-         XQ7t2Qr4Tbt9OWOHLENZ+0VDAB/gAwJt75qehdVD5/BipY/SsUbTFjn72zjKMTbdnUP3
-         MUiHiMQ4vECa84MjmRR9QOeaNTo0NMX4Xabb4ODsyFa44B5YMN8BF59VH5WSnbD/xYp3
-         pQ1m67ZUu4PNGJktshwUGU88+Z1kjWhxqbGWMOQZAZ5kb7MRXbDy16fPF+rSrm1ZWav8
-         b8sg==
-X-Gm-Message-State: AOAM531CgDPq09i2LROQo9DZaGqaMEyJWu50f7FXX91HfM4Y/EtVPBrr
-        osSF4RVkCN1icTy1fDsumLDZqC+gGXojtY9UIUVHAyN0OJOb
-X-Google-Smtp-Source: ABdhPJyk+EJS6DncAZ9gMYNkHM+eSchccXnLzjXZJPLRW6EFCALsyjxejwWsDLJN4YPNct78Z7zPBLtVeU7M1lyUHeCk2wLjk3cl
+        bh=ZSkvF6FpHO5ed0FFo5QShyZ2DWco4e/MYymtN3KmtXg=;
+        b=kziiDla0XekXFQmLkXr9q/DKP06yCWn1UYg7fwMGt5Pth2W4UXNLuehXdz/GdjclZl
+         QR+ocvShp1WKvus35FP4tihXLYtAx2uC7/OBWQZ1Tr05YdZ1em10R9nAI1XgYyIn/xTn
+         xt0g4m4vmzqnxCnS0pmvuuN8vVeX5izORDNKYBN8Clxc4s2bw/N5qzN5xZZ7UZQYlRwR
+         x6WsvW6vXv5EG01FzwZEaTiXj51+BtfNjOYBiwDV+wksn3uVIBUeWhE2EyhlMGe45xEm
+         SQ8cCtHpv7sP30YD8xrvV8ndImiHmiwtppsIvqLFroUC0dlxTM/FqqXy92JGV9lnN9WI
+         66HA==
+X-Gm-Message-State: AOAM532JSxxRAAKSn5dp+e7BRJf1veGUOTevnfuCsXeI8FGgTcEa/qi2
+        cK1/PWU7rfAD8H3BN+XXJdClkNgVMeAGxKjn7yaXR6mUnGim
+X-Google-Smtp-Source: ABdhPJx2JPkeJrBN4d8dtIgR2239fFzLl4X8Mk2EOjJMfbB9/oYjSs+R2SPYnhjp1Uy66oTAKpPu3fJ8Q3/W+lAXIB7GrGzwAEJO
 MIME-Version: 1.0
-X-Received: by 2002:a92:bf0c:: with SMTP id z12mr28944209ilh.151.1594032436051;
- Mon, 06 Jul 2020 03:47:16 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 03:47:16 -0700
+X-Received: by 2002:a92:2ca:: with SMTP id 193mr30378243ilc.299.1594032499112;
+ Mon, 06 Jul 2020 03:48:19 -0700 (PDT)
+Date:   Mon, 06 Jul 2020 03:48:19 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001c866805a9c3993f@google.com>
-Subject: WARNING in remove_one_compat_dev
-From:   syzbot <syzbot+4e28a66bf14b987f9dee@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000debe1c05a9c39c93@google.com>
+Subject: WARNING in ipvlan_l3s_unregister
+From:   syzbot <syzbot+bb3d7a24f705078b1286@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,61 +56,66 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b3ffe2100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4e28a66bf14b987f9dee
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1744dc83100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=bb3d7a24f705078b1286
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4e28a66bf14b987f9dee@syzkaller.appspotmail.com
+Reported-by: syzbot+bb3d7a24f705078b1286@syzkaller.appspotmail.com
 
-infiniband syz1: Port 1 not found
-infiniband syz1: Couldn't close port 1 for agents
-infiniband syz1: Port 1 not found
-infiniband syz1: Couldn't close port 1
 ------------[ cut here ]------------
-sysfs group 'power' not found for kobject 'syz1'
-WARNING: CPU: 1 PID: 3384 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
-WARNING: CPU: 1 PID: 3384 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+WARNING: CPU: 0 PID: 17717 at drivers/net/ipvlan/ipvlan_l3s.c:148 ipvlan_unregister_nf_hook drivers/net/ipvlan/ipvlan_l3s.c:148 [inline]
+WARNING: CPU: 0 PID: 17717 at drivers/net/ipvlan/ipvlan_l3s.c:148 ipvlan_l3s_unregister+0x145/0x1d0 drivers/net/ipvlan/ipvlan_l3s.c:221
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 3384 Comm: kworker/u4:2 Not tainted 5.7.0-rc7-syzkaller #0
+CPU: 0 PID: 17717 Comm: syz-executor.3 Not tainted 5.8.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events_unbound ib_unregister_work
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
-RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
-Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 20 f2 39 88 e8 03 bb 5e ff <0f> 0b eb 95 e8 32 50 cb ff e9 d2 fe ff ff 48 89 df e8 25 50 cb ff
-RSP: 0018:ffffc90005447b40 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffffffff88931b20 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815cf161 RDI: fffff52000a88f5a
-RBP: 0000000000000000 R08: ffff888066c68280 R09: ffffed1015ce45f1
-R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: ffff88808995c000
-R13: ffffffff889320c0 R14: ffff88808eae8700 R15: ffff8880aa034800
- dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
- device_del+0x18b/0xd30 drivers/base/core.c:2711
- remove_one_compat_dev+0x52/0x70 drivers/infiniband/core/device.c:940
- remove_compat_devs drivers/infiniband/core/device.c:951 [inline]
- disable_device+0x1ab/0x230 drivers/infiniband/core/device.c:1282
- __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
- ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:231
+ __warn+0x227/0x250 kernel/panic.c:600
+ report_bug+0x1b1/0x2e0 lib/bug.c:198
+ handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+RIP: 0010:ipvlan_unregister_nf_hook drivers/net/ipvlan/ipvlan_l3s.c:148 [inline]
+RIP: 0010:ipvlan_l3s_unregister+0x145/0x1d0 drivers/net/ipvlan/ipvlan_l3s.c:221
+Code: 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 f7 e8 92 94 dc fc 49 c7 06 00 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 0b 95 9d fc <0f> 0b eb c8 e8 02 95 9d fc c6 05 79 32 92 04 01 48 c7 c7 6c c6 e9
+RSP: 0018:ffffc90019d57330 EFLAGS: 00010287
+RAX: ffffffff84d6e705 RBX: 1ffff11013b08b98 RCX: 0000000000040000
+RDX: ffffc9000f539000 RSI: 00000000000006d7 RDI: 00000000000006d8
+RBP: 0000000000000000 R08: ffffffff84d6e68e R09: fffffbfff12da576
+R10: fffffbfff12da576 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff88809d845cc0 R14: ffff88804bd08000 R15: ffff888055fd6100
+ ipvlan_set_port_mode+0x33e/0x420 drivers/net/ipvlan/ipvlan_main.c:37
+ ipvlan_nl_changelink+0x18a/0x340 drivers/net/ipvlan/ipvlan_main.c:435
+ __rtnl_newlink net/core/rtnetlink.c:3255 [inline]
+ rtnl_newlink+0x15e3/0x1bf0 net/core/rtnetlink.c:3397
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5460
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb29
+Code: Bad RIP value.
+RSP: 002b:00007f7160e6cc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000502760 RCX: 000000000045cb29
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a43 R14: 00000000004cd2a1 R15: 00007f7160e6d6d4
 Kernel Offset: disabled
 Rebooting in 86400 seconds..
 
