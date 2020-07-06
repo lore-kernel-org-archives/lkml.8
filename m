@@ -2,176 +2,144 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FA4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7804F20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DvZp82W1"
+	by mail.kernel.org (Postfix) with ESMTP id 3A13B20739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594032971;
+	bh=wE6DdNR1wSEf9OTx8mVFbk4dGAMhmh4ZvSw7oDB1EdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pnVNhi8OpMdphk9fa1+0a0fJ3piD0fZZ/SPwMpGRC3Ldzf+hjxQTTGNmtguq+Q+fX
+	 wfikVlmVrJrT1pjWJ/YBtcKB+xuZLJVbAyVGKEdBzHQfWD4I0c4A5VpfXiL7dVUaWM
+	 r7HOizPZ8mjyxMh7HQqYlyqrsgEYO4JNQnFg4gII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgGFK4A (ORCPT
+        id S1728859AbgGFK4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 6 Jul 2020 06:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbgGFKzx (ORCPT
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38027 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgGFKzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 06:55:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FE0C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:55:53 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w3so28962063wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=JR9CBuqG9kFS0yJ3zc7/YXBJvqVFjvO0122JPCTEViY=;
-        b=DvZp82W1MgjPHYb6KpQO6W7bAHFLro9apdhW4T5UwkcECRsELXxTEEWzyY+A9qEe4F
-         VCEH673T27dLls1dhOLF4ALR3ZzXDMTWMZ/CueswfPzGP504CbGGMb/EKjAsou3UhQjs
-         XoLiWDgEjbgeRQVP3P63h6Jsn+vUM56BoG5vFN3bX5boOxycdRcXfj0ASRM/L7fzbYz6
-         iEIpLVKObOrvJJQZcJJZbLltsmb6QpRcWb71Rp7AE9Hb2oX9QLaNTjLbyLKmb1kwr+C2
-         vHFKBAZb2zxE7t5gzJe5gfcMhHwSfxtdG4jQX/mW/dqKoDjviPTeAvkyDTcGGcfNJ5Cv
-         dlXg==
+Received: by mail-wm1-f66.google.com with SMTP id f18so41433293wml.3;
+        Mon, 06 Jul 2020 03:55:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JR9CBuqG9kFS0yJ3zc7/YXBJvqVFjvO0122JPCTEViY=;
-        b=l6d2inW1LVg/YRuIS7iM0UjcDuK3zUEaQulpZ8UWWk6IKrRBFVA5jjbxPJOh0JjK6T
-         OE+gUMCbhr5iQrPFsDpK56rpa3GRec//8qFB+jSpuwaVqaerOSyIk80x2QVoA9/aN1JV
-         pcyxknN5Bybr/txnHZ7MY++zCvUZYc50BfZ8ELwUt78Qr9l2F6q1ffVWXsvQAz6Xrj1S
-         qJ4KLtsWbcCJoxuWSZmKQUprw0+ejKOxSk/JKJAhsvyWH5Q6nLTgZOgo+uPoR3h9H8iu
-         5E4lkaA8R26xBzaJ2QrLhdFA7mjGkdLq5emkvbqE+qeqZKjnbdc1THCOb8C048UQc4Hy
-         0PiA==
-X-Gm-Message-State: AOAM530Gd6YsoP2qwlYlrNKFPvgMLZykQFxXo/WZ/gJWpM6KlEm44Jsg
-        CUgXal7qGG6xl9R41J9xpfoYiw==
-X-Google-Smtp-Source: ABdhPJzK9D1Jd6yiKePZjI7JUrN3QDcPdX06rP4pEMkPHlOqaqAXxgftGLQNEW0SRHYdK90XFJ4jJA==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr40352121wma.7.1594032951854;
-        Mon, 06 Jul 2020 03:55:51 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id a22sm22931481wmj.9.2020.07.06.03.55.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=biFGacWJgPGBoPEjc+gEhsuak0pUoudIvrL6jPqp5rY=;
+        b=QYj6UVyQYvLTFsB1bwGKIXJebSW7oFYH8r2SQ2+/gvLdkISzoTlBzqhLVZqlPiHqI4
+         tGJPrZb3MElQbOAFSIpzWURZbnQdT6MFF9pxd0pKF7uqM+zKsD4kYigqw+oaCVVcenYM
+         bhGL0ciTWiqQGCktIxdG+n6/6Le0YBJHVSvCV2jURX5U0hSgOs1n1yy53H3CXgUpgN65
+         ohTVVfJ6OZr3htooPVrnvtw4jR0gexwnzUlmeSQPrAZ9DPxE6RoGwiVJmunTuhx7B5za
+         63KsFv2hkrE5xeoxXraj7/H8yaatlKfpVpwXpEa8lO/5xsxvVkpmzLlsdLLS3oy5bPsE
+         fjww==
+X-Gm-Message-State: AOAM531m7Fg9uv1a7K5R8CShZCSMHj8Wv73MVlLihKQ0Dem0FYBYYOlq
+        GdCm0n6hiS/VID+xIJo9wDI=
+X-Google-Smtp-Source: ABdhPJxvL4DLGcSfAF1wuY/syeA0ZaxjaTza+5lAGocr9nlRFiFYDsr+n/IOkkgWYU/KED1nKdhRdg==
+X-Received: by 2002:a1c:2109:: with SMTP id h9mr5668923wmh.174.1594032950905;
+        Mon, 06 Jul 2020 03:55:50 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w13sm23182400wrr.67.2020.07.06.03.55.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 03:55:51 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v4 1/4] thermal: core: Add helpers to browse the cdev, tz and governor list
-Date:   Mon,  6 Jul 2020 12:55:35 +0200
-Message-Id: <20200706105538.2159-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 06 Jul 2020 03:55:50 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 10:55:49 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Joseph Salisbury <joseph.salisbury@microsoft.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH][v2] Drivers: hv: Change flag to write log level in panic
+ msg to false
+Message-ID: <20200706105549.xum3y7hmviatil2w@liuwe-devbox-debian-v2>
+References: <1593210497-114310-1-git-send-email-joseph.salisbury@microsoft.com>
+ <20200701193326.12D69214DB@mail.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701193326.12D69214DB@mail.kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cdev, tz and governor list, as well as their respective locks are
-statically defined in the thermal_core.c file.
+On Wed, Jul 01, 2020 at 07:33:25PM +0000, Sasha Levin wrote:
+> Hi
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.7.6, v5.4.49, v4.19.130, v4.14.186, v4.9.228, v4.4.228.
+> 
+> v5.7.6: Build OK!
+> v5.4.49: Failed to apply! Possible dependencies:
+>     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
 
-In order to give a sane access to these list, like browsing all the
-thermal zones or all the cooling devices, let's define a set of
-helpers where we pass a callback as a parameter to be called for each
-thermal entity.
+Unrelated, shouldn't be backported.
 
-We keep the self-encapsulation and ensure the locks are correctly
-taken when looking at the list.
+> 
+> v4.19.130: Failed to apply! Possible dependencies:
+>     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+> 
 
-Acked-by: Zhang Rui <rui.zhang@intel.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/thermal_core.c | 51 ++++++++++++++++++++++++++++++++++
- drivers/thermal/thermal_core.h |  9 ++++++
- 2 files changed, 60 insertions(+)
+Unrelated, shouldn't be backported.
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index b71196eaf90e..9caaa0b6d662 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -617,6 +617,57 @@ void thermal_zone_device_rebind_exception(struct thermal_zone_device *tz,
- 	mutex_unlock(&thermal_list_lock);
- }
- 
-+int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
-+			      void *data)
-+{
-+	struct thermal_governor *gov;
-+	int ret = 0;
-+
-+	mutex_lock(&thermal_governor_lock);
-+	list_for_each_entry(gov, &thermal_governor_list, governor_list) {
-+		ret = cb(gov, data);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&thermal_governor_lock);
-+
-+	return ret;
-+}
-+
-+int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
-+					      void *), void *data)
-+{
-+	struct thermal_cooling_device *cdev;
-+	int ret = 0;
-+
-+	mutex_lock(&thermal_list_lock);
-+	list_for_each_entry(cdev, &thermal_cdev_list, node) {
-+		ret = cb(cdev, data);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&thermal_list_lock);
-+
-+	return ret;
-+}
-+
-+int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
-+			  void *data)
-+{
-+	struct thermal_zone_device *tz;
-+	int ret = 0;
-+
-+	mutex_lock(&thermal_list_lock);
-+	list_for_each_entry(tz, &thermal_tz_list, node) {
-+		ret = cb(tz, data);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&thermal_list_lock);
-+
-+	return ret;
-+}
-+
- void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
- 					  const char *cdev_type, size_t size)
- {
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index c95689586e19..71d88dac0791 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -41,6 +41,15 @@ extern struct thermal_governor *__governor_thermal_table_end[];
- 	     __governor < __governor_thermal_table_end;	\
- 	     __governor++)
- 
-+int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
-+			  void *);
-+
-+int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
-+					      void *), void *);
-+
-+int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
-+			      void *thermal_governor);
-+
- struct thermal_attr {
- 	struct device_attribute attr;
- 	char name[THERMAL_NAME_LENGTH];
--- 
-2.17.1
+> v4.14.186: Failed to apply! Possible dependencies:
+>     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+>     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+>     7ed4325a44ea5 ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+>     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+>     8afc06dd75c06 ("Drivers: hv: vmbus: Fix the issue with freeing up hv_ctl_table_hdr")
+>     ddcaf3ca4c3c8 ("Drivers: hv: vmus: Fix the check for return value from kmsg get dump buffer")
+> 
+> v4.9.228: Failed to apply! Possible dependencies:
+>     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+>     6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+>     73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+>     76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+>     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+>     8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+>     d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
+> 
+> v4.4.228: Failed to apply! Possible dependencies:
+>     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+>     619848bd07434 ("drivers:hv: Export a function that maps Linux CPU num onto Hyper-V proc num")
+>     6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+>     73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+>     75ff3a8a9168d ("Drivers: hv: vmbus: avoid wait_for_completion() on crash")
+>     76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+>     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+>     8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+>     a108393dbf764 ("drivers:hv: Export the API to invoke a hypercall on Hyper-V")
+>     d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
 
+Just from reading the subject lines it seems to me a lot of the possible
+dependencies aren't really related to this patch functionally. It could
+be that they are touching the same area of code which create some
+contextual dependencies. Some of the listed dependencies should
+definitively _not_ be backported.
+
+Michael and Joseph, how far do you want this to be backported? It may be
+easier for us to provide bespoke versions of this patch to the stable
+trees we care about?
+
+Wei.
+
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
+> -- 
+> Thanks
+> Sasha
