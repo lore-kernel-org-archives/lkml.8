@@ -2,125 +2,119 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3991BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16845206DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q23x4gWk"
+	by mail.kernel.org (Postfix) with ESMTP id 20448206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbgGFSEl (ORCPT
+        id S1729749AbgGFSGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgGFSEk (ORCPT
+        Mon, 6 Jul 2020 14:06:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729589AbgGFSGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:04:40 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69108C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:04:40 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x3so11742761pfo.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mt7RscZq1TJMb1tWvWuPIetOt+Q1/nE1Zx/gXdxvawg=;
-        b=q23x4gWkEKgxG/i1z9YbYrVkvHDm9PQY1dG75p9Cq/6mHNPUrcfflET/MB6PpKClEG
-         nbkV2v9/v5x4Q6IvTO67PADDQYppWAbpP3oqjBUUc/eLhCHVZkTx4APdBzBvfT49KnS1
-         MXoHMXH+BMegcK10pJS4MuRM7B0ybit5zVlcjqkneRyDJU0/7KTQhJ+JXJB43YBOQ9gc
-         p8Hwv+oNtkdlkpLvDz2yask5Vrb9t3aQ6jRrmrCF8A0rYiXekArNovlbNq/GGvMGvAwo
-         4sTSY329v9qgn7X919roRObd1DpAStVWsLbEF3Bl0QJ1sqivhjCKUNN3i6J7D7OXFnwG
-         35UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mt7RscZq1TJMb1tWvWuPIetOt+Q1/nE1Zx/gXdxvawg=;
-        b=kxt43kbVKUsDgm0T2GKPAvBjrWALfSqP4SXIj27WFoY+xDdPU946v7ayVDd3GHICJ6
-         PpMMbnLoOMQ2OlIFz73sm5jVeii4nLb9runMjHOA/LY/Xtcvxo96QYe1Bbd8WhEq525y
-         zfznRCikFrBjbjoNvXwyYEkCeGg5njADMulxZ35u2GjEEEoaL5KpG4ggwZdYM/NQTNWc
-         suaY6HA+Xa723gnqU5Ig6KVFLBYLUhes6OJfvfV7A9cJLG4VN5Nwvq5fmh0Miq+k6NZK
-         gxPV3Dha+tU6uJVX/Dy7EWs5eeJS3+cDchPpmyOGz89eZAoLjYt0eMoRC1CDa7y49+cX
-         VC5Q==
-X-Gm-Message-State: AOAM530nTeSxXhRjq5uTOXZ90O0cFVRsg9HjGGwnxSTYcNhrQFQY0aSw
-        sjCEnh7OscQT69tHCIAwNXDBeQ==
-X-Google-Smtp-Source: ABdhPJyaUf4iyVeVudOQqfvRRfSSiadh+8eBe/LyFvtUQy7eIyw5mrvdsAsQTwxI347UihI7KpSf3A==
-X-Received: by 2002:aa7:952b:: with SMTP id c11mr18629395pfp.186.1594058679877;
-        Mon, 06 Jul 2020 11:04:39 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u74sm20051365pgc.58.2020.07.06.11.04.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 11:04:39 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 12:04:37 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Deepak Kumar Singh <deesin@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, clew@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 0/4] Signaling api support in glink/rpmsg clients
-Message-ID: <20200706180437.GB614737@xps15>
-References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
+        Mon, 6 Jul 2020 14:06:17 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066I2R9g134638;
+        Mon, 6 Jul 2020 14:06:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32482k1nce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 14:06:14 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 066I45H8142786;
+        Mon, 6 Jul 2020 14:06:13 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32482k1nbs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 14:06:13 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066I4ciB002848;
+        Mon, 6 Jul 2020 18:06:12 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma05wdc.us.ibm.com with ESMTP id 322hd8se4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 18:06:12 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066I6Bgq18547158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jul 2020 18:06:11 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 367CF78063;
+        Mon,  6 Jul 2020 18:06:11 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4976978064;
+        Mon,  6 Jul 2020 18:06:10 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Jul 2020 18:06:10 +0000 (GMT)
+Subject: Re: [PATCH] tpm: Define TPM2_SPACE_BUFFER_SIZE to replace the use of
+ PAGE_SIZE
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200702225603.293122-1-jarkko.sakkinen@linux.intel.com>
+ <20200702235544.4o7dbgvlq3br2x7e@cantor>
+ <20200704035615.GA157149@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <4f93bca3-e5c2-1074-f273-628ed603c139@linux.ibm.com>
+Date:   Mon, 6 Jul 2020 14:06:09 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
+In-Reply-To: <20200704035615.GA157149@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_15:2020-07-06,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 clxscore=1015 phishscore=0 suspectscore=0 cotscore=-2147483648
+ mlxlogscore=820 adultscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007060123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Deepak,
-
-On Fri, Jun 26, 2020 at 08:16:55PM +0530, Deepak Kumar Singh wrote:
-> Change from version 5
-> [V5,4/4] rpmsg: char: Add signal callback and POLLPRI support
-> Updated for sparse warning. Replaced POLLPRI => EPOLLPRI to fix
-> warning.
-> 
-> Change from version 4
-> I am taking over these patches from aneela@codeaurora.org
-> Fixed all the trivial review comments.
-> 
-> Signal conversion to and from native signal as done in patch V4,2/4
-> is intentional.
-> 
-> Arun Kumar Neelakantam (3):
->   rpmsg: glink: Add support to handle signals command
->   rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
->   rpmsg: char: Add signal callback and POLLPRI support
-> 
-> Deepak Kumar Singh (1):
->   rpmsg: core: Add signal API support
-
-I'm confused here - V5 (or what I think it is) was sent out on June 24th without
-a cover letter.  This set has a cover letter but it is labeled V5.  So is this
-the cover letter that should have been sent out on the 24th and the content
-herein relevent to that set?  Or is it accurate and the label on the cover
-letter of this set is wrong and should have been V6?
-
-I have little confidence in both sets and as such won't be reviewing them.
-Please send a new revision that is properly labeled.
-
-Thanks,
-Mathieu   
+On 7/3/20 11:56 PM, Jarkko Sakkinen wrote:
+> On Thu, Jul 02, 2020 at 04:55:44PM -0700, Jerry Snitselaar wrote:
+>> On Fri Jul 03 20, Jarkko Sakkinen wrote:
+>>> The size of the buffers for storing context's and sessions can vary from
+>>> arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
+>>> maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
+>>> enough for most use with three handles (that is how many we allow at the
+>>> moment). Parametrize the buffer size while doing this, so that it is easier
+>>> to revisit this later on if required.
+>>>
+>>> Reported-by: Stefan Berger <stefanb@linux.ibm.com>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
+>>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Thank you.
+>
+> Now only needs tested-by from Stefan.
 
 
-> 
->  drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
->  drivers/rpmsg/rpmsg_char.c        |  76 ++++++++++++++++++++++-
->  drivers/rpmsg/rpmsg_core.c        |  40 ++++++++++++
->  drivers/rpmsg/rpmsg_internal.h    |   5 ++
->  include/linux/rpmsg.h             |  27 ++++++++
->  5 files changed, 270 insertions(+), 3 deletions(-)
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Tested-by: Stefan Berger <stefanb@linux.ibm.com>
+
+
+>
+> /Jarkko
+
+
