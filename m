@@ -2,169 +2,108 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA653C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB62C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C90A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5C820715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WzyymKU3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OildahYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgGFLDb (ORCPT
+        id S1728852AbgGFLLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
+        Mon, 6 Jul 2020 07:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbgGFLDa (ORCPT
+        with ESMTP id S1728683AbgGFLLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:03:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842D5C08C5DF
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:03:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e4so44779798ljn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=dJOoGefz57DaQizOn40gSk42uMJzSXdv0XUjOjwso8w=;
-        b=WzyymKU3k9AASoHQcdTZdMnplRPotDs8uxxWJHFc6Flnkbf6NFg78peAyPELWalHn/
-         DHRdfclt7zrfp/UGrA0aJkRrLNcOMd7ty/Eczr8f0cyNJ+Av4ThgsU0cT7PTu3KIdEoH
-         UDfWPkTNjDwvdkPpfxji7nPz+vcWVftHWjgJJXor1n72nli0dWQabzQ/nBWr1gCgi6G1
-         9jDEeIi/lmN1Pd8bvwB6gAgGe9y+lkq9p+UwsSLLR5WiuJIds9Lfq96fweAmoxuAU4PE
-         r9RCeN5JbGgfHoRoYxgb6TMzO8fFGRIvWS6Ls6tZsGbQdkNYbazm/Lrv066LGJX/jEjP
-         nWWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=dJOoGefz57DaQizOn40gSk42uMJzSXdv0XUjOjwso8w=;
-        b=nc2GyZoNRhYc7n3d9bKjUox72inzxOe2Mzox465O81A/UjNq216HqfF+cIEzkWjSOK
-         NDH0nkldJikGYT+fvW3TIycN10w8W6ejesJtpNVM3zDW7u+h/eE306t5xKNH8VJsvmhF
-         XZDYlVIy1RK/n+z6JMYi3PNQefv/f7Do6VFUDJgi+cbGc/UyDSgLJKhPPqSKeWJSIYjU
-         +OtuJkJzl+MzUJ6aUQLiU/d3zhItu+TzyIu/cWSEIxqLvZFJzueOIc1uOrK5pzt/KNMb
-         Bx90fg7omXA8HXctS8ygiL64iIWEX3/1/WZOtIIvqfJ2N8hlprUYgpPV7+mLIHuWc7xp
-         UPzQ==
-X-Gm-Message-State: AOAM531/SzdJTa6seSi0Pjwq3tvRvbnzXpinxybgradJoeihu6G42F2Q
-        6RvNpbJErdc8q5W1ECQW81huFdmk9g7RhXYvxjlanw==
-X-Google-Smtp-Source: ABdhPJz2+jMGpdrgo/15hvPjeNV/XflW/4l5Oov/YAJQSgf3S+7RBZhbsozCARaSvlm1nM3TOIP/KJF0UzJJ/nLVHQA=
-X-Received: by 2002:a2e:7401:: with SMTP id p1mr3554097ljc.366.1594033407701;
- Mon, 06 Jul 2020 04:03:27 -0700 (PDT)
+        Mon, 6 Jul 2020 07:11:15 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD154C061794;
+        Mon,  6 Jul 2020 04:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KlHYEimVGLsKScv6oNv5oiMWJ+UIcIiByEGKOUr0M2k=; b=OildahYhTHa05m+AVwTccdqLCA
+        WoBIL9QsRm2jCvbBJL5sZ/9kZAx3UrTSUBv0uVMIkKahxMVntD+kU5hrDWXvMTN1S6RUPO5h3UErd
+        40rZYGBqzGxj4fQeAGXv8UBrMTOpLJZaoi7lCv5owU90PbB3wBJmLe7yZNmhro7F7hOFTJozWaOJh
+        xK7NXesSvWLY6xXuFr+oI59pd//OImMaxV6paFKLa1pmTnqo2rdUs1L/g6wGs/l7ujNHP63sOteEF
+        IHIKvKUr9l0PvR7AESkLaDb19hoJjIyh4LExHZEAGmTcKlMxiJARr7pI/NuOt56rTA5tbjlugHoWS
+        fk8x+FOA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsP1j-00049i-UK; Mon, 06 Jul 2020 11:11:12 +0000
+Date:   Mon, 6 Jul 2020 12:11:11 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-man@vger.kernel.org,
+        mtk.manpages@gmail.com, shuah@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
+ faster
+Message-ID: <20200706111111.GX25523@casper.infradead.org>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705021631.GR25523@casper.infradead.org>
+ <CAODFU0qwtPTaBRbA3_ufA6N7fajhi61Sp5iE75Shdk25NSOTLA@mail.gmail.com>
+ <20200705031208.GS25523@casper.infradead.org>
+ <CAODFU0q=nDdx7D1NUxTQshBjqgTCYPpKzog78XZLjoPqnZqXvw@mail.gmail.com>
+ <20200705032732.GT25523@casper.infradead.org>
+ <CAODFU0rSqQsO9rSiA8Ke=+mk_NgEdFDHPMfmXGSmzmkqQh1KYw@mail.gmail.com>
+ <20200705115851.GB1227929@kroah.com>
+ <CAODFU0ovM-i=4fNKSzp9SgO_FjPcAOZ0R8S4iRXyGm+QL53C1A@mail.gmail.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 6 Jul 2020 16:33:16 +0530
-Message-ID: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
-Subject: [qemu] boot failed: Unable to handle kernel NULL pointer dereference
- at virtual address 0000000000000000
-To:     linux-serial@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     vkoul@kernel.org, jslaby@suse.com, linux-arm-msm@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ldewangan@nvidia.com, thierry.reding@gmail.com,
-        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAODFU0ovM-i=4fNKSzp9SgO_FjPcAOZ0R8S4iRXyGm+QL53C1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While booting qemu_arm64 and qemu_arm with Linux version 5.8.0-rc3-next-20200706
-the kernel panic noticed due to kernel NULL pointer dereference.
+On Mon, Jul 06, 2020 at 08:07:46AM +0200, Jan Ziak wrote:
+> On Sun, Jul 5, 2020 at 1:58 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > It also is a measurable increase over reading just a single file.
+> > Here's my really really fast AMD system doing just one call to readfile
+> > vs. one call sequence to open/read/close:
+> >
+> >         $ ./readfile_speed -l 1
+> >         Running readfile test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
+> >         Took 3410 ns
+> >         Running open/read/close test on file /sys/devices/system/cpu/vulnerabilities/meltdown for 1 loops...
+> >         Took 3780 ns
+> >
+> > 370ns isn't all that much, yes, but it is 370ns that could have been
+> > used for something else :)
+> 
+> I am curious as to how you amortized or accounted for the fact that
+> readfile() first needs to open the dirfd and then close it later.
+> 
+> >From performance viewpoint, only codes where readfile() is called
+> multiple times from within a loop make sense:
+> 
+> dirfd = open();
+> for(...) {
+>   readfile(dirfd, ...);
+> }
+> close(dirfd);
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 5680d14d59bddc8bcbc5badf00dbbd4374858497
-  git describe: next-20200706
-  make_kernelversion: 5.8.0-rc3
-  kernel-config:
-https://builds.tuxbuild.com/Glr-Ql1wbp3qN3cnHogyNA/kernel.config
+dirfd can be AT_FDCWD or if the path is absolute, dirfd will be ignored,
+so one does not have to open anything.  It would be an optimisation
+if one wanted to read several files relating to the same process:
 
-qemu arm64 boot crash log,
+char dir[50];
+sprintf(dir, "/proc/%d", pid);
+dirfd = open(dir);
+readfile(dirfd, "maps", ...);
+readfile(dirfd, "stack", ...);
+readfile(dirfd, "comm", ...);
+readfile(dirfd, "environ", ...);
+close(dirfd);
 
-[    0.972053] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000000
-[    0.975301] Mem abort info:
-[    0.976316]   ESR = 0x96000004
-[    0.977378]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.979363]   SET = 0, FnV = 0
-[    0.980458]   EA = 0, S1PTW = 0
-[    0.981583] Data abort info:
-[    0.982634]   ISV = 0, ISS = 0x00000004
-[    0.984213]   CM = 0, WnR = 0
-[    0.985260] [0000000000000000] user address but active_mm is swapper
-[    0.987600] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    0.989557] Modules linked in:
-[    0.990671] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
-5.8.0-rc3-next-20200706 #1
-[    0.993711] Hardware name: linux,dummy-virt (DT)
-[    0.995708] pstate: 00000005 (nzcv daif -PAN -UAO BTYPE=--)
-[    0.998168] pc : pl011_dma_probe+0x90/0x360
-[    1.000015] lr : pl011_dma_probe+0x84/0x360
-[    1.001827] sp : ffff800011f4b880
-[    1.003294] x29: ffff800011f4b880 x28: ffff0000fada5800
-[    1.005562] x27: ffff800011e057d8 x26: 0000000000020002
-[    1.007884] x25: ffff8000110c0ed0 x24: ffff8000110c0b70
-[    1.010164] x23: 0000000000000000 x22: ffff0000faca8000
-[    1.012438] x21: ffff0000faee6000 x20: 0000000000000000
-[    1.014724] x19: ffff0000faee7480 x18: 0000000000000002
-[    1.016977] x17: 0000000000001400 x16: 0000000000001c00
-[    1.019270] x15: 0000000000000001 x14: 000000000003a051
-[    1.021544] x13: ffff000000000000 x12: 0000000000000010
-[    1.023805] x11: 0000000000000004 x10: 0101010101010101
-[    1.026091] x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
-[    1.028354] x7 : fefefeff646c606d x6 : 0a0c0c1680808080
-[    1.030645] x5 : 00000000160c0c0a x4 : 0000000000000000
-[    1.032887] x3 : ffff800011de1878 x2 : 0000000000000000
-[    1.035179] x1 : 5d22d5f0b315de00 x0 : 0000000000000000
-[    1.037439] Call trace:
-[    1.038640]  pl011_dma_probe+0x90/0x360
-[    1.040281]  pl011_startup+0x268/0x2f0
-[    1.041935]  uart_startup.part.0+0x124/0x2d8
-[    1.043777]  uart_port_activate+0x60/0x98
-[    1.045483]  tty_port_open+0x90/0x248
-[    1.047163]  uart_open+0x1c/0x30
-[    1.048568]  tty_open+0xf4/0x478
-[    1.049973]  chrdev_open+0xa4/0x1a0
-[    1.051491]  do_dentry_open+0x12c/0x398
-[    1.053156]  vfs_open+0x2c/0x38
-[    1.054551]  path_openat+0x86c/0xdf0
-[    1.056103]  do_filp_open+0x78/0x100
-[    1.057651]  do_sys_openat2+0x1e4/0x2a0
-[    1.059410]  do_sys_open+0x58/0xa0
-[    1.060866]  console_on_rootfs+0x24/0x68
-[    1.062577]  kernel_init_freeable+0x1f4/0x254
-[    1.064450]  kernel_init+0x14/0x110
-[    1.065972]  ret_from_fork+0x10/0x34
-[    1.067504] Code: 97fcf14c aa0003f4 b140041f 54000488 (f9400280)
-[    1.070107] ---[ end trace 8001204d6659f3e5 ]---
-[    1.072104] Kernel panic - not syncing: Attempted to kill init!
-exitcode=0x0000000b
-[    1.074875] SMP: stopping secondary CPUs
-[    1.076613] Kernel Offset: disabled
-[    1.078123] CPU features: 0x240002,20002004
-[    1.079916] Memory Limit: none
-[    1.081255] ---[ end Kernel panic - not syncing: Attempted to kill
-init! exitcode=0x0000000b ]---
+but one would not have to do that.
 
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/1542193#L510
-
-qemu command,
-/usr/bin/qemu-system-aarch64 -cpu host -machine virt-2.10,accel=kvm
--nographic -net nic,model=virtio,macaddr=BA:DD:AD:CC:09:05 -net tap -m
-2048 -monitor none -kernel /kernel/Image --append "console=ttyAMA0
-root=/dev/vda rw" -hda
-/rootfs/rpb-console-image-lkft-juno-20200521172852-2689.rootfs.ext4 -m
-4096 -smp 4 -nographic -drive
-format=qcow2,file=lava-guest.qcow2,media=disk,if=virtio,id=lavatest
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
