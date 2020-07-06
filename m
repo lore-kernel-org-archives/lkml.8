@@ -2,166 +2,148 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C84BE20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B71206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LFgPoaQY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ql6Xa+1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgGFHbK (ORCPT
+        id S1728915AbgGFHbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 03:31:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43653 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728079AbgGFHbJ (ORCPT
+        Mon, 6 Jul 2020 03:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbgGFHbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 03:31:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594020667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=L48yYsjP85sq+t+X3o8o6Sd+hCLCoILUSdbW4CrDBVI=;
-        b=LFgPoaQY+cFEdcuth4BEdYojTwjWkgPVCBNSrHcxUlpYK+PLDRSwNJegB4yJ97SwvLqGd4
-        eDWrineJ8eI0zr8XxXxYnwSSjsNcQpdaxpp4wt9RqCBWmPjhRZlDTGMUJR3vnIH18cAZT6
-        eBwFHAu+BW01hXYpl8V9wWkgvrtLcmk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-jo-3_bV9PZSi3b6Ks1Dysw-1; Mon, 06 Jul 2020 03:31:01 -0400
-X-MC-Unique: jo-3_bV9PZSi3b6Ks1Dysw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E066F800406;
-        Mon,  6 Jul 2020 07:30:59 +0000 (UTC)
-Received: from [10.36.114.3] (ovpn-114-3.ams2.redhat.com [10.36.114.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8F217B402;
-        Mon,  6 Jul 2020 07:30:57 +0000 (UTC)
-Subject: Re: [PATCH v1 4/9] s390/vmemmap: cleanup when vmemmap_populate()
- fails
-To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-References: <20200703133917.39045-5-david@redhat.com>
- <202007040129.TlExXvvF%lkp@intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <03e828a4-a363-0977-c49f-d9b424ec27d1@redhat.com>
-Date:   Mon, 6 Jul 2020 09:30:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 03:31:15 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D1DC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 00:31:15 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so38130096wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 00:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ij0JRwK8ga/rncVIV9YKY5BwGhFS/NPZFYIdNVKTzqc=;
+        b=ql6Xa+1gVBCsxErRijzq8GkAk+NPNDVoSojqePD/z4CAU26jaa/7uB5xGq/72Cjxdf
+         3d24hdR93nqxIx0LJ7NrYnAFtEUlSM90YsNpILMJ11Qe1CkaQtzv/3rQvZmBLK+SEKqO
+         FA/4Vwg0DOIpRQipFZrVoTuAI4RpxpnELJ2+OWEmwEHDSf/jUIcbWAo77Kz/Dk93DZK2
+         +nhzkHcv2jonehE8ZN8EwinoOoRqZsBcrWXBnUryeCk4bqHWZOviXdU/2XAxXwdE060w
+         jOeqJSbimEDQmTpIpruMkKOSp3fSbAO0AaGrWfwlrSUWWeX8q2XZDnW5hFFu/xSAc4vs
+         fKmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ij0JRwK8ga/rncVIV9YKY5BwGhFS/NPZFYIdNVKTzqc=;
+        b=qj2e50uO7MmuPsN4EBHvOcO+/gJkCQ2DnUesCo+l2lf4HrQGM5N27AyySoESdIvxhr
+         3zvYn3KD/xvY5MFDZjNLkYqWAZryRYNZRi8msCB3z8chAviQoFo/sXKlG0yFODhh+3mr
+         lgBQbK5KnuXrh0UUC62kWmkDuIgx2xKlW390VI75u2krsZjUHbCUaBjJ9TRyVUFtqiEm
+         1BYPUNFsQx+h/7AHt595E26ZjaAII+82Y+AUko9fZLK3blNBoYhR338qIcg1aS56Zn2P
+         GEdAb4KC5eLyXZbI9zTSErrUU+GPmoXmeP1CBU0VLLi8n3XSmNXuWQHM1yhAQydrXjpP
+         scOA==
+X-Gm-Message-State: AOAM532ZfYGUARU7bRNlYe/flNLTCOiGUSYXCKhHGK0Nibd4EQg50m4Q
+        FibSpJyTDBsXDglZZEjtdTr+0bgsQuE=
+X-Google-Smtp-Source: ABdhPJwFe74liwklMNgNlDDfUptR2TDgiF8T0WWjCvFSkv/sy8CiCpkIoPKmbqGh9O9/kku8SGb+Dw==
+X-Received: by 2002:a1c:bb44:: with SMTP id l65mr50526517wmf.51.1594020673878;
+        Mon, 06 Jul 2020 00:31:13 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id c15sm12304424wme.23.2020.07.06.00.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 00:31:12 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 08:31:11 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH 5/5] mfd: axp20x-i2c: Do not define 'struct
+ acpi_device_id' when !CONFIG_ACPI
+Message-ID: <20200706073111.GD2821869@dell>
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
+ <20200629123215.1014747-6-lee.jones@linaro.org>
+ <CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <202007040129.TlExXvvF%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.20 19:09, kernel test robot wrote:
-> Hi David,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on s390/features]
-> [also build test ERROR on next-20200703]
-> [cannot apply to linux/master kvms390/next linus/master v5.8-rc3]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/David-Hildenbrand/s390-implement-and-optimize-vmemmap_free/20200703-214348
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
-> config: s390-alldefconfig (attached as .config)
-> compiler: s390-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    arch/s390/mm/vmem.c: In function 'vmemmap_populate':
->>> arch/s390/mm/vmem.c:368:3: error: implicit declaration of function 'vmemmap_free'; did you mean 'vmem_altmap_free'? [-Werror=implicit-function-declaration]
->      368 |   vmemmap_free(start, end, altmap);
->          |   ^~~~~~~~~~~~
->          |   vmem_altmap_free
->    arch/s390/mm/vmem.c: At top level:
->    arch/s390/mm/vmem.c:372:6: warning: no previous prototype for 'vmemmap_free' [-Wmissing-prototypes]
->      372 | void vmemmap_free(unsigned long start, unsigned long end,
->          |      ^~~~~~~~~~~~
->>> arch/s390/mm/vmem.c:372:6: warning: conflicting types for 'vmemmap_free'
->    arch/s390/mm/vmem.c:368:3: note: previous implicit declaration of 'vmemmap_free' was here
->      368 |   vmemmap_free(start, end, altmap);
->          |   ^~~~~~~~~~~~
->    cc1: some warnings being treated as errors
+On Mon, 29 Jun 2020, Chen-Yu Tsai wrote:
 
-Ah, vmemmap_free() is only defined with CONFIG_MEMORY_HOTPLUG. Easy to fix.
+> Adding Hans to the list as he's the one that deals with all the x86
+> platforms that use this series of chips.
+> 
+> On Mon, Jun 29, 2020 at 8:32 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > Since ACPI_PTR() is used to NULLify the value when !CONFIG_ACPI,
+> > struct axp20x_i2c_acpi_match becomes defined by unused.
+> >
+> > This squashes the current W=1 kernel builds warning:
+> >
+> >  drivers/mfd/axp20x-i2c.c:82:36: warning: ‘axp20x_i2c_acpi_match’ defined but not used [-Wunused-const-variable=]
+> >
+> > Cc: Chen-Yu Tsai <wens@csie.org>
+> > Cc: Carlo Caione <carlo@caione.org>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/mfd/axp20x-i2c.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
+> > index 14f9df74f855c..3dd650125c239 100644
+> > --- a/drivers/mfd/axp20x-i2c.c
+> > +++ b/drivers/mfd/axp20x-i2c.c
+> > @@ -79,6 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+> >
+> > +#if IS_ENABLED(CONFIG_ACPI)
+> >  static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
+> 
+> I'd rather use "__maybe_unused" if possible to at least get a compile
+> check, and also because "ACPI_PTR NULLifies the value" might not be
+> well known to people not working on ACPI-based platforms.
 
+FYI, I've gone back to this patch, as it seems to be the common
+census across the rest of the kernel, due to the extra space saving.
+
+The code will get compile checks when compiled with different
+architectures, and I'm not sure I understand the last point you made.
+
+> Either way,
+> 
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+
+I've applied this to the patch.  Thanks.
+
+> >         {
+> >                 .id = "INT33F4",
+> > @@ -87,6 +88,7 @@ static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
+> >         { },
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, axp20x_i2c_acpi_match);
+> > +#endif
+> >
+> >  static struct i2c_driver axp20x_i2c_driver = {
+> >         .driver = {
+> >
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
