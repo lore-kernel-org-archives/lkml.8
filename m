@@ -2,166 +2,131 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97193C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2692AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7193A2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi/1u86p"
+	by mail.kernel.org (Postfix) with ESMTP id 0C25B2070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgGFNvZ (ORCPT
+        id S1729190AbgGFNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgGFNvY (ORCPT
+        Mon, 6 Jul 2020 09:53:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729109AbgGFNxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:51:24 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A2FC061755;
-        Mon,  6 Jul 2020 06:51:24 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id o22so11997719pjw.2;
-        Mon, 06 Jul 2020 06:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z6poFi9+zWbY1L4gWrKF8A7RpLC+zqPqyhWKFm2NtEY=;
-        b=bi/1u86pOYCzm383ZnOKrlUK7mPZGkPQ42EF/iISNegNEdBvpIM7ihIeKQX6jV6oRV
-         MpjS7eq9yI1fZKgc+FOF5e6Lc6U5GjYK+3OWOHHxvwXcMHvL2YiWtGsU3kpQNjx8Xcni
-         z+Q8zqg/zRJTCDDGB5SnnDf1XBZAsKzoojKHloLsOzEApycYe/rkCIYbQ/ubLfunWtaW
-         VrcuydUb2d21UrpBTmtvtZenBWJ3iYYDMOVeoMU/Izaz8k4paeXra+r7hU8Z7+/aMm/3
-         B8RlBmxFixnbqve2S3afviAFd6CLblpqlXteRJcG3MyWxZ6q5G6tM06maGMRC6RGrIQ0
-         ijhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z6poFi9+zWbY1L4gWrKF8A7RpLC+zqPqyhWKFm2NtEY=;
-        b=P72mJIQunyoSbEXoUyJIo6lgsmsknX1JLFUQX/5K+NOg6XLQW4jMh5Klo7kG2bmWwL
-         5+AWntvOiryOaQlK8se/SdJBdM0BOdXhXPAuvslyOzl5/h8QY6sBTj2Mzy+MWgBYXUbJ
-         xv22Tplb/ReWUXyl4t6UvU2M0OgVApR7Bz0UN7FAYJXXKuuOb14AkGIZ+xBwuZTl/B+u
-         MisGNoX6+b8vVi/9BP9ktaXnWVucwnRLNmYCdNqYX+FcDpl58c8eUjYATvM2QSJ3uIVa
-         c6sUp1RLMzZ3n5dVS7naXZV7V8mdfuF9d3i7GnDLv2FxvRXNE33hhus6YP1nkv1hBbNp
-         m+Nw==
-X-Gm-Message-State: AOAM5310CVUTbnUU2K4aYei98DxANmsJCHhvvO/0NoJzg3X3krKNkGIr
-        vtYbUy7AQUsVXfb7w9d5eVqKEY3gXv8=
-X-Google-Smtp-Source: ABdhPJypJYrz0xeNjuylMgkjURdVfAuAbuXUUsahd8hCWmARlHuhrS+/gja/3CQojCFUOARO5eXDnQ==
-X-Received: by 2002:a17:902:bccc:: with SMTP id o12mr43490783pls.29.1594043483881;
-        Mon, 06 Jul 2020 06:51:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k7sm20008166pgh.46.2020.07.06.06.51.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 06:51:22 -0700 (PDT)
-Subject: Re: [PATCH 1/1] watchdog: Add common nowayout parameter to booke_wdt
- driver
-To:     Timothy Myers <timothy.myers@adtran.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Boike <david.boike@adtran.com>
-References: <CH2PR19MB35903F8A6A46864C47A720029D930@CH2PR19MB3590.namprd19.prod.outlook.com>
- <20200626215133.GB254814@roeck-us.net>
- <CH2PR19MB359071AAD5258D75F7255CA99D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <3e45acc4-3986-4172-36c6-758dcf1f0c60@roeck-us.net>
-Date:   Mon, 6 Jul 2020 06:51:12 -0700
+        Mon, 6 Jul 2020 09:53:11 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066DX6QQ063588;
+        Mon, 6 Jul 2020 09:53:07 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 322nxxcgkd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 09:53:07 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 066DXPsO065281;
+        Mon, 6 Jul 2020 09:53:07 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 322nxxcgk5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 09:53:07 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066DisRY009392;
+        Mon, 6 Jul 2020 13:53:06 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04wdc.us.ibm.com with ESMTP id 322hd8quaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 13:53:06 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066Dr60r34341128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jul 2020 13:53:06 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37223112064;
+        Mon,  6 Jul 2020 13:53:06 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AAFBF112061;
+        Mon,  6 Jul 2020 13:53:05 +0000 (GMT)
+Received: from [9.211.88.162] (unknown [9.211.88.162])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Jul 2020 13:53:05 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] i2c: fsi: Prevent adding adapters for ports
+ without dts nodes
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, joel@jms.id.au
+References: <20200609201555.11401-1-eajames@linux.ibm.com>
+ <20200609201555.11401-3-eajames@linux.ibm.com> <20200704063918.GH1041@kunai>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <4c1aee77-c544-9688-f679-5cd8b5405fb7@linux.ibm.com>
+Date:   Mon, 6 Jul 2020 08:53:05 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CH2PR19MB359071AAD5258D75F7255CA99D690@CH2PR19MB3590.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200704063918.GH1041@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: base64
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_11:2020-07-06,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ clxscore=1015 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007060101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy82LzIwIDQ6NTQgQU0sIFRpbW90aHkgTXllcnMgd3JvdGU6DQo+IA0KPiANCj4gLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+ICpGcm9tOiogR3VlbnRlciBSb2VjayA8Z3JvZWNrN0BnbWFp
-bC5jb20+IG9uIGJlaGFsZiBvZiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+
-DQo+ICpTZW50OiogRnJpZGF5LCBKdW5lIDI2LCAyMDIwIDQ6NTEgUE0NCj4gKlRvOiogVGlt
-b3RoeSBNeWVycyA8dGltb3RoeS5teWVyc0BhZHRyYW4uY29tPg0KPiAqQ2M6KiBXaW0gVmFu
-IFNlYnJvZWNrIDx3aW1AbGludXgtd2F0Y2hkb2cub3JnPjsgbGludXgtd2F0Y2hkb2dAdmdl
-ci5rZXJuZWwub3JnIDxsaW51eC13YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsg
-RGF2aWQgQm9pa2UgPGRhdmlkLmJvaWtlQGFkdHJhbi5jb20+DQo+ICpTdWJqZWN0OiogUmU6
-IFtQQVRDSCAxLzFdIHdhdGNoZG9nOiBBZGQgY29tbW9uIG5vd2F5b3V0IHBhcmFtZXRlciB0
-byBib29rZV93ZHQgZHJpdmVyDQo+IKANCj4gT24gRnJpLCBKdW4gMjYsIDIwMjAgYXQgMDE6
-Mzk6NDNQTSArMDAwMCwgVGltb3RoeSBNeWVycyB3cm90ZToNCj4+IEFkZCB0aGUgY29tbW9u
-ICJub3dheW91dCIgcGFyYW1ldGVyIHRvIGJvb2tlX3dkdCB0byBtYWtlIHRoaXMgYmVoYXZp
-b3INCj4+IHNlbGVjdGFibGUgYXQgcnVudGltZSBhbmQgdG8gbWFrZSB0aGUgaW1wbGVtZW50
-YXRpb24gbW9yZSBjb25zaXN0ZW50IHdpdGgNCj4+IG1hbnkgb3RoZXIgd2F0Y2hkb2cgZHJp
-dmVycy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBUaW1vdGh5IE15ZXJzIDx0aW1vdGh5Lm15
-ZXJzQGFkdHJhbi5jb20+DQo+IA0KPiBSZXZpZXdlZC1ieTogR3VlbnRlciBSb2VjayA8bGlu
-dXhAcm9lY2stdXMubmV0Pg0KPiANCj4gSGVsbG8sDQo+IKAgoCBJIGFsc28gaGF2ZSBhIHNp
-bWlsYXIgcXVlc3Rpb24gYXOgVGllemh1IHJlY2VudGx5LiBOb3cgdGhhdCB0aGlzIHBhdGNo
-IGhhcyBiZWVuIHJldmlld2VkLCB3aGF0IGlzIHRoZSBuZXh0IHN0ZXA/DQo+IFRoYW5rIHlv
-dSwNCj4gVGltIE15ZXJzDQoNCkludGVyZXN0aW5nLiBUaGUgb3RoZXIgcGF0Y2ggaXMgaW4g
-bXkgLW5leHQgdHJlZSwgYW5kIEkgcGxhbiB0byBzZW5kIGEgcHVsbA0KcmVxdWVzdCB0byBX
-aW0gc2hvcnRseS4gSG93ZXZlciwgcGF0Y2h3b3JrIGhhcyBubyByZWNvcmQgb2YgeW91ciBw
-YXRjaC4NClNpbmNlIEkgYXBwbHkgcGF0Y2hlcyBmcm9tIHBhdGNod29yaywgaXQgZWZmZWN0
-aXZlbHkgZ290IGxvc3QuIFBsZWFzZSByZXNlbmQsDQpwcmVmZXJhYmx5IHdpdGggbXkgUmV2
-aWV3ZWQtYnk6IHRhZy4NCg0KR3VlbnRlcg0KDQo+IA0KPj4gLS0tDQo+PiBkcml2ZXJzL3dh
-dGNoZG9nL2Jvb2tlX3dkdC5jIHwgNiArKysrKy0NCj4+IDEgZmlsZSBjaGFuZ2VkLCA1IGlu
-c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy93YXRjaGRvZy9ib29rZV93ZHQuYyBiL2RyaXZlcnMvd2F0Y2hkb2cvYm9va2Vfd2R0LmMN
-Cj4+IGluZGV4IDlkMDliYmZkZWYyMC4uNzgxN2ZiOTc2ZjljIDEwMDY0NA0KPj4gLS0tIGEv
-ZHJpdmVycy93YXRjaGRvZy9ib29rZV93ZHQuYw0KPj4gKysrIGIvZHJpdmVycy93YXRjaGRv
-Zy9ib29rZV93ZHQuYw0KPj4gQEAgLTM5LDYgKzM5LDExIEBAIHN0YXRpYyBib29sIGJvb2tl
-X3dkdF9lbmFibGVkOw0KPj4gbW9kdWxlX3BhcmFtKGJvb2tlX3dkdF9lbmFibGVkLCBib29s
-LCAwKTsNCj4+IHN0YXRpYyBpbnQgYm9va2Vfd2R0X3BlcmlvZCA9IENPTkZJR19CT09LRV9X
-RFRfREVGQVVMVF9USU1FT1VUOw0KPj4gbW9kdWxlX3BhcmFtKGJvb2tlX3dkdF9wZXJpb2Qs
-IGludCwgMCk7DQo+PiArc3RhdGljIGJvb2wgbm93YXlvdXQgPSBXQVRDSERPR19OT1dBWU9V
-VDsNCj4+ICttb2R1bGVfcGFyYW0obm93YXlvdXQsIGJvb2wsIDApOw0KPj4gK01PRFVMRV9Q
-QVJNX0RFU0Mobm93YXlvdXQsDQo+PiArICJXYXRjaGRvZyBjYW5ub3QgYmUgc3RvcHBlZCBv
-bmNlIHN0YXJ0ZWQgKGRlZmF1bHQ9Ig0KPj4gKyBfX01PRFVMRV9TVFJJTkcoV0FUQ0hET0df
-Tk9XQVlPVVQpICIpIik7DQo+Pg0KPj4gI2lmZGVmIENPTkZJR19QUENfRlNMX0JPT0szRQ0K
-Pj4NCj4+IEBAIC0yMTUsNyArMjIwLDYgQEAgc3RhdGljIHZvaWQgX19leGl0IGJvb2tlX3dk
-dF9leGl0KHZvaWQpDQo+PiBzdGF0aWMgaW50IF9faW5pdCBib29rZV93ZHRfaW5pdCh2b2lk
-KQ0KPj4gew0KPj4gaW50IHJldCA9IDA7DQo+PiAtIGJvb2wgbm93YXlvdXQgPSBXQVRDSERP
-R19OT1dBWU9VVDsNCj4+DQo+PiBwcl9pbmZvKCJwb3dlcnBjIGJvb2stZSB3YXRjaGRvZyBk
-cml2ZXIgbG9hZGVkXG4iKTsNCj4+IGJvb2tlX3dkdF9pbmZvLmZpcm13YXJlX3ZlcnNpb24g
-PSBjdXJfY3B1X3NwZWMtPnB2cl92YWx1ZTsNCj4+DQo+PiBiYXNlLWNvbW1pdDogZGQwZDcx
-ODE1MmU0YzY1YjE3MzA3MGQ0OGVhOWRmYzA2ODk0YzNlNQ0KPj4gLS0NCj4+IDIuMjAuMQ0K
-Pj4NCj4+DQo+Pg0KPj4gVGltb3RoeSBNeWVycw0KPj4gU29mdHdhcmUgRGVzaWduIEVuZ2lu
-ZWVyDQo+Pg0KPj4gT2ZmaWNlOiAyNTYuOTYzLjg4NDQNCj4+IEVtYWlsOiB0aW1vdGh5Lm15
-ZXJzQGFkdHJhbi5jb208aHR0cHM6Ly9vd2EuYWR0cmFuLmNvbS9vd2EvcmVkaXIuYXNweD9D
-PUxOSU5SRVJqMVZRZ0FLRTlVTml1LWIySjUweWJfbUt1SzlPWDhKNHNwalFxTXptQUtselVD
-QS4uJlVSTD1tYWlsdG8lM2F0b20ucGF0dGVyc29uJTQwYWR0cmFuLmNvbSA8aHR0cHM6Ly9w
-cm90ZWN0LXVzLm1pbWVjYXN0LmNvbS9zL2hoY29DNzNWa0JoRTNMNm5GTjRJMDY/ZG9tYWlu
-PW93YS5hZHRyYW4uY29tPj4NCj4+IFdlYjogd3d3LmFkdHJhbi5jb20gPGh0dHBzOi8vcHJv
-dGVjdC11cy5taW1lY2FzdC5jb20vcy9GZTM4QzgyS2xERk9uOU1CRm9iT3JIP2RvbWFpbj1h
-ZHRyYW4uY29tPjxodHRwczovL293YS5hZHRyYW4uY29tL293YS9yZWRpci5hc3B4P0M9QU80
-XzBmcGdONEdteXk0YlBlMHNUeExLZlJKcnk1UXJzZTNhSlN3MDF6RXFNem1BS2x6VUNBLi4m
-VVJMPWh0dHAlM2ElMmYlMmZzLmJsLTEuY29tJTJmaCUyZkNvWTFtejklM2Z1cmwlM2RodHRw
-JTNhJTJmJTJmd3d3LmFkdHJhbi5jb20gPGh0dHBzOi8vcHJvdGVjdC11cy5taW1lY2FzdC5j
-b20vcy9wWGd5QzlyWW1FdVJvOEtyVTF1elNoP2RvbWFpbj1vd2EuYWR0cmFuLmNvbT4+DQo+
-Pg0KPj4gQURUUkFODQo+PiA5MDEgRXhwbG9yZXIgQm91bGV2YXJkDQo+PiBIdW50c3ZpbGxl
-LCBBTCAzNTgwNiAtIFVTQQ0KDQo=
+
+On 7/4/20 1:39 AM, Wolfram Sang wrote:
+> On Tue, Jun 09, 2020 at 03:15:55PM -0500, Eddie James wrote:
+>> Ports should be defined in the devicetree if they are to be enabled on
+>> the system.
+> The patch description does not really fit anymore, does it? There is no
+> change in behaviour, we just remove a redundant check.
+
+
+Hi, it does change the behavior actually. By checking for the device 
+node pointer, it would proceed and create the port for a NULL device 
+node, which is not the desired behavior.
+
+
+Thanks,
+
+Eddie
+
+
+>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> ---
+>> Changes since v1:
+>>   - Remove the check for null device node since that is checked in
+>>     of_device_is_available
+>>
+>>   drivers/i2c/busses/i2c-fsi.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+>> index 977d6f524649..10332693edf0 100644
+>> --- a/drivers/i2c/busses/i2c-fsi.c
+>> +++ b/drivers/i2c/busses/i2c-fsi.c
+>> @@ -703,7 +703,7 @@ static int fsi_i2c_probe(struct device *dev)
+>>   
+>>   	for (port_no = 0; port_no < ports; port_no++) {
+>>   		np = fsi_i2c_find_port_of_node(dev->of_node, port_no);
+>> -		if (np && !of_device_is_available(np))
+>> +		if (!of_device_is_available(np))
+>>   			continue;
+>>   
+>>   		port = kzalloc(sizeof(*port), GFP_KERNEL);
+>> -- 
+>> 2.24.0
+>>
