@@ -2,148 +2,155 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01736C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D509C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D437720715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2BD20708
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RqgFFIuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgGFGJS (ORCPT
+        id S1728868AbgGFGPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:09:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:45791 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbgGFGJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:09:17 -0400
-Received: by mail-il1-f199.google.com with SMTP id c1so27027613ilk.12
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:09:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=UqvjFR3XJzzrT7GERHVDePnddnot7kGWpGScSc1TFoU=;
-        b=iyES8dIvHvfzqSwEjb0zIdLJHmKvAothgn3XXs8AEGgttGLIG2K3rR/SKlVq5S5kux
-         tshN+/GkT2bZA8DqhSZxKCiroesPZnGreuIVXoGJ2/G+h/zs2sbKfRjSNyAkc+gbtQVK
-         YLyr+KAUbmuY5QamhirvTizZ48jsX4hCUh/0Y0Q4hpLKGuokbafg/n4HzzqHvXCfgOY0
-         ANgG0XItUqtv0wjEd4yTURFXZSius+XuZDPp3yJGOiVmfIYdnh1PO/Ft5g5AuZCEZgJ8
-         zsO7q+bZwSEe6XYUoTzK0xyVA6n8C1K3+TTE2eIRuSN/vgN+7rXMNABzbS5+GuFXfPac
-         UmMw==
-X-Gm-Message-State: AOAM531NdL463cSGw4FJLNjqyaEKBlvaRpte4xms+LYHwodnIedUNGHl
-        XWHrxTwMBTpsh8LWr2uuCd4VTN5EW9HkPdtFPB3i1xDWkq7K
-X-Google-Smtp-Source: ABdhPJx251hwN52q29K91QSmP7hrhFqSgXlaxem49CU0V8deoQtdx2eiH8FLpun4hZFL6m8kYO96Z7mQaxKFCJCvPbiBsttEIbNZ
+        Mon, 6 Jul 2020 02:15:46 -0400
+Received: from mout.web.de ([212.227.17.11]:46553 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728804AbgGFGPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 02:15:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1594016110;
+        bh=GnXk+Khqcb9KVAHtOYkeaYBiriaNRUM1boZT8Oubj6w=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=RqgFFIuQMN/dCQaIsEGTvHWiO84SAc9QB//7hKQJibFWqsnJ+s0zryg2pFxuOVLpg
+         lB5KwJJEyzOIH4xi40M1a2EVDQtkI4OMhs5lLEDKH/8Mkk3HVJHwgkvFV1RGUO8R4J
+         f+x6hOXsNV2pZ8YnEuS4gk6ip9jjt0Nr8njHxRPc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.113.119]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lpezi-1kWMWW2n3e-00fRX7; Mon, 06
+ Jul 2020 08:15:10 +0200
+Subject: Re: [PATCH v5 03/14] irqchip/csky-mpintc: Fix potential resource
+ leaks
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        linux-csky@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Denis Efremov <efremov@linux.com>,
+        "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593998365-25910-4-git-send-email-yangtiezhu@loongson.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3cdb3f12-0862-6985-2236-a724267ead81@web.de>
+Date:   Mon, 6 Jul 2020 08:14:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:370b:: with SMTP id r11mr50218967jar.119.1594015755906;
- Sun, 05 Jul 2020 23:09:15 -0700 (PDT)
-Date:   Sun, 05 Jul 2020 23:09:15 -0700
-In-Reply-To: <0000000000000a8e8605a22a1ae0@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e5b5bb05a9bfb63c@google.com>
-Subject: Re: INFO: rcu detected stall in netlink_sendmsg (4)
-From:   syzbot <syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593998365-25910-4-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dWklsLbtcH8+/xjKLRaQjV0eW+fJ88gQ0wL1vmljj+NkrBh7pJ1
+ j8LMrpRBwENtVNY5WI4toUq50KXy1sj9PyLEqyIV0ZQpw0Xp+3fHsqKuwo/BvlRH0BZWo4G
+ B5lMAMQuYyaEhTtMFmmW1Dr7RTbJkgcvOtuFyx1k+y9UmK4EaTlYpv+dKJRIllU4d/HF+tg
+ /d8ThdQnKiqKkqHIhSWxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g4Wi0FAAJtY=:9JZJavhOuhLEeuxGrwJxU6
+ Z0YQEIwBGmhf90BA5xrCbefqNRe8uieLj2t36jd/hkSOI4rTK0LX0XOZC8ZfOJCA/3gREUG0K
+ 7GU5Dbe0/om3sQQcdJcDL6Jc8GjPQWMgVwSi5LbJblW0fw0tKP6tcbkDi3oawlQeeQBA7/Mw0
+ UMq+VH1qjwKvp2PmlfQgG/SnYWiLi706EZrCfxBXq36TGWO3gLmNYiipj1ClS8MBeDol65v3X
+ OC3PbcjFQ1guQQUp7XWTR7ZKSl9Cbp//6O+bjuCozQ+VUKkbhNtVsG6YVKSXNkFbxHsw7i0pp
+ VdWvO7+/uiOs7vsZmHe3DGcgJ6D0xRE5fTr7vKPizslpKeJ80Creo3W8bU+ryXHmPtnzeCjbp
+ EVyhdabnFKBRyI6BR3RWQ2UYe7nGxNOz3eecj0lKGrvwLYuA5nB79awAaElIeZGHF/4maDUDO
+ bkLfRW0Bjeq5EuDLLkIpkFywAoxQU3jLiwfHEcQmfI2TKs5lAvT1pUL5pncaD61fDufquNnsF
+ voHrLOn2AL9TyXdKSkbEMGtWBPugddOToaDx7iZSkDT3hyOVFjUEBlg5ftuIPqtv1xfe+V4xs
+ STz6vgY4X9EsI0IGdZ6SZf/IaVgpwwI7L6pcG99uweum7nkhO/xAj3K6mWk92elRXUQcG5+p8
+ 0NB7uHx3Qcq2E1r8dj0Hcs6L1TIGEdeAqRiOAn8hvL83RyAz/FDFlZYilalH5AWP/0kJLI1k9
+ TZuyRHM4K7WMh14YwPOPHN6EKryI+bMJgh3Nb7jWN94BX8WMJDs2xZBT4s1A+yjjOLDu7Cg2T
+ d1/dv1GQwyetX6R83DXFp5cqQL2WVYujfL6OzCo4JEihL+uZd0cG9+I7Ysf5Gf1b9cKf2GxZM
+ TBBvFMDQrTxXbpNaXqrBs0jUmKP99XynWL8y2GU5JfuNXcgd8fbku5gHceDHk5Pqx0D8fHpSl
+ JtSZIDkfvmj4YVBTMIARV8wRBditjgJgBAMlHZ4Gpnw3RrSYk4gf06L6A+uW4v+gj1lWMotd0
+ +egJQliQF5bhLcqoxGowVCYF9izdRbDGPyCX8PKgwH6rcoR5xdQZVtoASPMN7HOXRsVQCb+8O
+ Cnum1hkHh0pIG+u/BhZegDQZrYGWdFqOMgRewChHigpBLnS/Sgx6kG3Kfc2yf7FnKm35/AD+C
+ NXbfZmbdX9RsJZWXD+EovA2O5NZW/X7Ogo7j2J0VxeOgLLHGSqTQb7ARD96/T6SvOC0vbf1xE
+ Pr/ZWKO+I+5994Iy+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+> =E2=80=A6 Thus add jump targets for the completion of the desired
+> exception handling. By the way, do some coding-style cleanups
+> suggested by Markus.
 
-HEAD commit:    9e50b94b Add linux-next specific files for 20200703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e6ec33100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
-dashboard link: https://syzkaller.appspot.com/bug?extid=0fb70e87d8e0ac278fe9
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168ab5d5100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1771c5d5100000
+I propose to split these changes.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3Ddcb7fd82c75ee2d6e6f9d8cc71=
+c52519ed52e258#n138
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com
+Would you like to support easier back-porting of a fix
+besides another bit of possible source code beautification?
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	0-...0: (3 ticks this GP) idle=ff2/1/0x4000000000000000 softirq=8592/8593 fqs=5250 
-	(detected by 1, t=10502 jiffies, g=8273, q=66)
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 6802 Comm: syz-executor688 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__preempt_count_dec_and_test arch/x86/include/asm/preempt.h:94 [inline]
-RIP: 0010:rcu_lockdep_current_cpu_online kernel/rcu/tree.c:1144 [inline]
-RIP: 0010:rcu_lockdep_current_cpu_online+0xc8/0x110 kernel/rcu/tree.c:1131
-Code: 59 48 8d 7d 70 48 8b 5b 20 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 41 48 8b 45 70 48 85 c3 0f 95 c0 <65> ff 0d d1 18 a1 7e 74 07 48 83 c4 08 5b 5d c3 e8 52 93 9f ff eb
-RSP: 0018:ffffc90000007db8 EFLAGS: 00000002
-RAX: 0000000000000001 RBX: 0000000000000001 RCX: 1ffffffff1303b28
-RDX: 1ffffffff1378c1e RSI: 0000000000010204 RDI: ffffffff89bc60f0
-RBP: ffffffff89bc6080 R08: 0000000000000000 R09: ffffffff8aaf028f
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8880ae627840 R14: ffff888094512340 R15: dffffc0000000000
-FS:  00000000017fe880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000610 CR3: 000000009aba2000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- rcu_read_lock_held_common kernel/rcu/update.c:110 [inline]
- rcu_read_lock_held_common kernel/rcu/update.c:100 [inline]
- rcu_read_lock_sched_held+0x25/0xb0 kernel/rcu/update.c:121
- trace_hrtimer_expire_exit include/trace/events/timer.h:279 [inline]
- __run_hrtimer kernel/time/hrtimer.c:1523 [inline]
- __hrtimer_run_queues+0xd13/0xfc0 kernel/time/hrtimer.c:1584
- hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
- __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:765 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x8c/0xe0 kernel/locking/spinlock.c:191
-Code: 48 c7 c0 00 ff b4 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 37 48 83 3d 9b 74 c8 01 00 74 22 48 89 df 57 9d <0f> 1f 44 00 00 bf 01 00 00 00 e8 95 fb 62 f9 65 8b 05 fe 73 15 78
-RSP: 0018:ffffc900010872c0 EFLAGS: 00000282
-RAX: 1ffffffff1369fe0 RBX: 0000000000000282 RCX: 0000000000000002
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000282
-RBP: ffff8880945122e8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000282
-R13: 161f14abb88be58f R14: ffff888094512000 R15: 0000000000000000
- spin_unlock_irqrestore include/linux/spinlock.h:409 [inline]
- taprio_change+0x1fdc/0x2960 net/sched/sch_taprio.c:1556
- taprio_init+0x52e/0x670 net/sched/sch_taprio.c:1669
- qdisc_create+0x4b6/0x12e0 net/sched/sch_api.c:1245
- tc_modify_qdisc+0x4c8/0x1990 net/sched/sch_api.c:1661
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5460
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:367
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443799
-Code: Bad RIP value.
-RSP: 002b:00007ffceabd28c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443799
-RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
-RBP: 00007ffceabd28d0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffceabd28e0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
 
+=E2=80=A6
++++ b/drivers/irqchip/irq-csky-mpintc.c
+@@ -241,14 +241,16 @@ csky_mpintc_init(struct device_node *node, struct de=
+vice_node *parent)
+=E2=80=A6
+ 		INTCG_base =3D ioremap(mfcr("cr<31, 14>"),
+-				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
+=E2=80=A6
++				     INTCL_SIZE * nr_cpu_ids + INTCG_SIZE);
+
+Can any macro (or function) be helpful for such a size computation?
+
+Regards,
+Markus
