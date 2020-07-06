@@ -2,111 +2,143 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6353EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF422073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29992073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="jbZOEYwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgGFJoY (ORCPT
+        id S1728575AbgGFJpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:44:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726326AbgGFJoX (ORCPT
+        Mon, 6 Jul 2020 05:45:47 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:11862 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGFJpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:44:23 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0669VvlI071107;
-        Mon, 6 Jul 2020 05:44:23 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 322p984t1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 05:44:23 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0669aCHE009890;
-        Mon, 6 Jul 2020 09:44:20 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 322hd825g2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 09:44:20 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0669h37Y63897726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jul 2020 09:43:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2766452051;
-        Mon,  6 Jul 2020 09:43:03 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.151.4])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D0A1E5204F;
-        Mon,  6 Jul 2020 09:43:02 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH 3/3] perf bench numa: fix wrong benchmark configuration
-Date:   Mon,  6 Jul 2020 11:42:54 +0200
-Message-Id: <ec0af179404329c21923f6da3f490ae4418efc1f.1594028311.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1594028310.git.agordeev@linux.ibm.com>
-References: <cover.1594028310.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_07:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 suspectscore=1 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007060072
+        Mon, 6 Jul 2020 05:45:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=rvLDHxfrHlo3Otfv/kTs7QJwT/t3WC4PX7Ybs44eM+I=;
+        b=jbZOEYwz91P6/LEMqcDKxkPB8I3dcATl6ZugqIrh0HXQdYpdDkSLR9RIO/P7d5hI5OgK
+        3L8L2Nms/CDlJjQ4qfxPp3ETZWJpAWQFb9xnr65ppX3qs0oJh/nTLBKSk/iHbAS5xy3nQ0
+        vqmaCbFKoKvkiEdJkeK1yHqMYD/LOmvR0=
+Received: by filterdrecv-p3mdw1-75c584b9c6-4xwkm with SMTP id filterdrecv-p3mdw1-75c584b9c6-4xwkm-18-5F02F2CA-A
+        2020-07-06 09:45:46.161499776 +0000 UTC m=+837368.642959845
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP
+        id ZYAMUW8kRXGzWA_jlRz-5g
+        Mon, 06 Jul 2020 09:45:45.891 +0000 (UTC)
+Subject: Re: [PATCH 1/2] rkvdec: h264: Refuse to decode unsupported bitstream
+References: <20200626171130.27346-1-ezequiel@collabora.com>
+ <20200626171130.27346-2-ezequiel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <551304f5-88bd-a673-a0ef-47af65700fe7@kwiboo.se>
+Date:   Mon, 06 Jul 2020 09:45:46 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200626171130.27346-2-ezequiel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h2vJGzwXeGW+hCLrj?=
+ =?us-ascii?Q?dhOVvE6NWrUK6wFWeiUTqhwTnvLUFyzDIZaB8lm?=
+ =?us-ascii?Q?aJqcyCVh4Z8Bl772YUAcGAX576Qsb5pwEyYM87G?=
+ =?us-ascii?Q?gDKKE=2FkLe9E4lW8yaPFAn9+C+jicCcPkWjUbDGC?=
+ =?us-ascii?Q?VN=2Fhi=2FLElBR1gjlOaQ1batyBkoB66AVdjJeXvPz?=
+ =?us-ascii?Q?n2r17P2oNKFPmxF=2FPPZVg=3D=3D?=
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        kernel@collabora.com
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This update fixes a wrong number of processes for one
-benchmark and consolidates two others in a unified way.
+On 2020-06-26 19:11, Ezequiel Garcia wrote:
+> The hardware only supports 4:2:2, 4:2:0 or 4:0:0 (monochrome),
+> 8-bit or 10-bit depth content.
+> 
+> Verify that the PPS refers to a supported bitstream, and refuse
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- tools/perf/bench/numa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+This should be SPS not PPS, same for hantro patch.
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 6574004..c4b24d8 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -1753,7 +1753,7 @@ static int run_bench_numa(const char *name, const char **argv)
-    { " 1x3-convergence,", "mem",  "-p",  "1", "-t",  "3", "-P",  "512", OPT_CONV },
-    { " 1x4-convergence,", "mem",  "-p",  "1", "-t",  "4", "-P",  "512", OPT_CONV },
-    { " 1x6-convergence,", "mem",  "-p",  "1", "-t",  "6", "-P", "1020", OPT_CONV },
--   { " 2x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-+   { " 2x3-convergence,", "mem",  "-p",  "2", "-t",  "3", "-P", "1020", OPT_CONV },
-    { " 3x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-    { " 4x4-convergence,", "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_CONV },
-    { " 4x4-convergence-NOTHP,",
-@@ -1782,6 +1782,8 @@ static int run_bench_numa(const char *name, const char **argv)
-    { " 1x8-bw-thread,",   "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
-    { "1x16-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
-    { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
-+   { "1x32-bw-thread-NOTHP,",
-+			  "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW_NOTHP },
- 
-    { " 2x3-bw-process,",  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
-    { " 4x4-bw-process,",  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
-@@ -1795,9 +1797,6 @@ static int run_bench_numa(const char *name, const char **argv)
-    { "2x16-bw-process,",  "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
-    { "1x32-bw-process,",  "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
- 
--   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
--   { "1x32-bw-thread-NOTHP,",
--			  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
-    { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
-    { "2x16-bw-thread-NOTHP,",
- 			  "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW_NOTHP },
--- 
-1.8.3.1
+> unsupported bitstreams by failing at TRY_EXT_CTRLS time.
+> 
+> The driver is currently broken on 10-bit and 4:2:2
+> so disallow those as well.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  drivers/staging/media/rkvdec/rkvdec.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> index 225eeca73356..0f81b47792f6 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> @@ -27,6 +27,32 @@
+>  #include "rkvdec.h"
+>  #include "rkvdec-regs.h"
+>  
+> +static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	if (ctrl->id == V4L2_CID_MPEG_VIDEO_H264_SPS) {
+> +		const struct v4l2_ctrl_h264_sps *sps = ctrl->p_cur.p;
 
+This should be p_new and not p_cur to validate the new ctrl value, same for hantro patch.
+
+With both fixed this and the hantro patch is,
+
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+
+Regards,
+Jonas
+
+> +		/*
+> +		 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
+> +		 * but it's currently broken in the driver.
+> +		 * Reject them for now, until it's fixed.
+> +		 */
+> +		if (sps->chroma_format_idc > 1)
+> +			/* Only 4:0:0 and 4:2:0 are supported */
+> +			return -EINVAL;
+> +		if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
+> +			/* Luma and chroma bit depth mismatch */
+> +			return -EINVAL;
+> +		if (sps->bit_depth_luma_minus8 != 0)
+> +			/* Only 8-bit is supported */
+> +			return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+> +	.try_ctrl = rkvdec_try_ctrl,
+> +};
+> +
+>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>  	{
+>  		.per_request = true,
+> @@ -42,6 +68,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>  		.per_request = true,
+>  		.mandatory = true,
+>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
+> +		.cfg.ops = &rkvdec_ctrl_ops,
+>  	},
+>  	{
+>  		.per_request = true,
+> 
