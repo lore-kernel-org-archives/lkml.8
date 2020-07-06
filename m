@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F228C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2583C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E96E2065F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5E6206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594061911;
-	bh=mRtJy6hWcFCHZFtQ0REyrob/q9186YV1MfbQ8PaimZA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=tqt/vyT56JHhhAcjZ05uLjXpEgiN4YnT5MFUymLkGEBv6EMf2s5MZPBqHHraWEBLF
-	 Op6+XQO9Ot+B8rBhYID467YKhzKfNP07xyfM+gEVMhzt7eoTHHvjMlLdjqgrQ4znhw
-	 P9TC/wHo8jsp0xJ+KMGOFw8YaoridsEKFcKk/WFw=
+	s=default; t=1594061921;
+	bh=wssddPuL31XQDJMewSNqQXrDJWg5KawhzVnLM4X29wQ=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=TlZMUBwWVGoz3GvR4UicoBqt/A4eyCITjC4+CBxIaMdgPiO4NhUSW8ofJHZLLjI7/
+	 sTtnWRCHI58GxBdcrIJi/f05nYlSZxSvty1xVjsu+T3J1LgDg0w8e+4BfM2/fd8uCE
+	 /QPeKM9fob6jtmVuShGogYVt4EgqPxxaeSLmr+ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgGFS6a (ORCPT
+        id S1729851AbgGFS6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 14:58:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729569AbgGFS63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:58:29 -0400
+        id S1729569AbgGFS6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:58:40 -0400
 Received: from [192.168.1.26] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 534002065F;
-        Mon,  6 Jul 2020 18:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00340206B6;
+        Mon,  6 Jul 2020 18:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594061908;
-        bh=mRtJy6hWcFCHZFtQ0REyrob/q9186YV1MfbQ8PaimZA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xKAZs1UNIxuCrEgIE28yqDOlQqSUl7rh3ItGV9+CALges+mYOXGjdA3uCpU/dRwzr
-         yjqfwMiR0PI7cH8ZcV1LTjd6EWZ2IBGiVl95Pc6W3CoiWCBw72j/IDZc2Ki7cmrcMt
-         1ch3HwrNRxdxdkj80REsIDJ4ELDmgrn4ch0ttt8I=
-Subject: Re: [PATCH] ARM: dts: socfpga: Align L2 cache-controller nodename
+        s=default; t=1594061919;
+        bh=wssddPuL31XQDJMewSNqQXrDJWg5KawhzVnLM4X29wQ=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=GrsmmpamXK9KU6qNO3weSBJXnmxS15BR+EpYLkKCQoEUwqDVQXeUTTpK5/qOXxq9/
+         zta/rH1AAAtY/jeCthwuWknG9M07lqGjghWYAdM8E4Vn6LQme9hgCUxC5EJx5NmAHG
+         Loo3rdPB3T1R7inCgT1ko3S/gavvAaGF7HCkU9sk=
+Subject: Re: [PATCH] arm64: dts: spcfpga: Align GIC, NAND and UART nodenames
  with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20200626080602.3733-1-krzk@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200629081629.13653-1-krzk@kernel.org>
 From:   Dinh Nguyen <dinguyen@kernel.org>
 Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
  xsFNBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
@@ -87,12 +88,12 @@ Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
  cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
  Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
  JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <041512aa-f143-baa5-765d-07a6d9781019@kernel.org>
-Date:   Mon, 6 Jul 2020 13:58:27 -0500
+Message-ID: <eaf63c21-5e90-84ad-6c93-ea3dd1c4196e@kernel.org>
+Date:   Mon, 6 Jul 2020 13:58:38 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200626080602.3733-1-krzk@kernel.org>
+In-Reply-To: <20200629081629.13653-1-krzk@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -103,45 +104,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/26/20 3:06 AM, Krzysztof Kozlowski wrote:
+On 6/29/20 3:16 AM, Krzysztof Kozlowski wrote:
 > Fix dtschema validator warnings like:
->     l2-cache@fffff000: $nodename:0:
->         'l2-cache@fffff000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+>     intc@fffc1000: $nodename:0:
+>         'intc@fffc1000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  arch/arm/boot/dts/socfpga.dtsi         | 2 +-
->  arch/arm/boot/dts/socfpga_arria10.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index c2b54af417a2..78f3267d9cbf 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -726,7 +726,7 @@
->  			};
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index d1fc9c2055f4..9498d1de730c 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -77,7 +77,7 @@
+>  		method = "smc";
+>  	};
+>  
+> -	intc: intc@fffc1000 {
+> +	intc: interrupt-controller@fffc1000 {
+>  		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+>  		#interrupt-cells = <3>;
+>  		interrupt-controller;
+> @@ -302,7 +302,7 @@
+>  			status = "disabled";
 >  		};
 >  
-> -		L2: l2-cache@fffef000 {
-> +		L2: cache-controller@fffef000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0xfffef000 0x1000>;
->  			interrupts = <0 38 0x04>;
-> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> index 3b8571b8b412..8f614c4b0e3e 100644
-> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> @@ -636,7 +636,7 @@
->  			reg = <0xffcfb100 0x80>;
+> -		nand: nand@ffb90000 {
+> +		nand: nand-controller@ffb90000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			compatible = "altr,socfpga-denali-nand";
+> @@ -445,7 +445,7 @@
+>  			clock-names = "timer";
 >  		};
 >  
-> -		L2: l2-cache@fffff000 {
-> +		L2: cache-controller@fffff000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0xfffff000 0x1000>;
->  			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
+> -		uart0: serial0@ffc02000 {
+> +		uart0: serial@ffc02000 {
+>  			compatible = "snps,dw-apb-uart";
+>  			reg = <0xffc02000 0x100>;
+>  			interrupts = <0 108 4>;
+> @@ -456,7 +456,7 @@
+>  			status = "disabled";
+>  		};
+>  
+> -		uart1: serial1@ffc02100 {
+> +		uart1: serial@ffc02100 {
+>  			compatible = "snps,dw-apb-uart";
+>  			reg = <0xffc02100 0x100>;
+>  			interrupts = <0 109 4>;
 > 
-
 
 Added the correct Fixes annotation and applied, thanks!
 Dinh
