@@ -2,83 +2,123 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E17C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49A9720723
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PCh8WtzL"
+	by mail.kernel.org (Postfix) with ESMTP id ADEFE20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgGFP6V (ORCPT
+        id S1729494AbgGFP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgGFP6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:58:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE43C08C5E0
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 08:58:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id k27so2495054pgm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9RVtaJ0LNajH8tL25qGstAaY61Hw21/Gz13XlQLJwww=;
-        b=PCh8WtzLeJQMoqoq3/Tnrt0CuSDAQ+DIzFonqrKtoRZjJfr/tEk3HFHYPM3L5tm25y
-         weOqF5kOYlu+N1df0SXec2EjHElqO5xLSDH+fJUI63HbaqCYOq/vER3IGmw6JvwyglFR
-         tJbWSgFgLoQrJhXMDcvjoIO3XCGagDxbLerDs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9RVtaJ0LNajH8tL25qGstAaY61Hw21/Gz13XlQLJwww=;
-        b=I6BbkyKoKbf8uqqIhwWiSejBWmHKpnKxxb73mYv1MCOhhEDB7IpW11j7gr4ucl1eNJ
-         s7NTiVldzMCFbe9gcRtlNMIQI1VDU362oBeB1sOs+JBBNsPq2FS8hKfSvHNzPzlln+gI
-         NWKD+7UyqwnAhlcr+Wh/F5p8/iAadAdE6s48GPcLFsC82+fCSQxWkTUSm3BzyniCVCx+
-         Tge0HYHaVnz6rLAvR3AfEkHVh6FA0stZoZ6nyxwXKh13WU4Ktau0zuwrmlsCEGnrUwAH
-         OIEGResEuRJ3lVm1Pse7tkY38n2o9miyO7VYvsQtgmkai2YmkmGuup+Sus/9kjBWLo5T
-         tm9Q==
-X-Gm-Message-State: AOAM532Jl7UyGKHsE7flhObK/lrMrsT6dbXCn9XixPM7d26N2zcoNNsE
-        lLVvk0ha5sKiDykm7+0gr4KGFg==
-X-Google-Smtp-Source: ABdhPJwwxnF0fvOInGc/EtJiOlVFU1DmGn20sGPRjobjVNUcDMlD6m90eL/Rxz6px65Z3jOvRna5Ng==
-X-Received: by 2002:aa7:8090:: with SMTP id v16mr5665995pff.199.1594051098637;
-        Mon, 06 Jul 2020 08:58:18 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id cl17sm19008565pjb.50.2020.07.06.08.58.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 08:58:18 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 08:58:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, broonie@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add qspi opps and power-domains
-Message-ID: <20200706155816.GF3191083@google.com>
-References: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
- <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
+        Mon, 6 Jul 2020 11:58:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:51924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbgGFP6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:58:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78281FB;
+        Mon,  6 Jul 2020 08:58:53 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B293C3F68F;
+        Mon,  6 Jul 2020 08:58:52 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 16:58:47 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tjoseph@cadence.com" <tjoseph@cadence.com>
+Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
+Message-ID: <20200706155847.GA32050@e121166-lin.cambridge.arm.com>
+References: <20200526150954.4729-1-zhengdejin5@gmail.com>
+ <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
+ <20200527132005.GA7143@nuc8i5>
+ <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
+ <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:11:33PM +0530, Rajendra Nayak wrote:
-> Add the power domain supporting performance state and the corresponding
-> OPP tables for the qspi device on sc7180
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+On Tue, Jun 02, 2020 at 09:01:13AM -0600, Rob Herring wrote:
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+[...]
+
+> > > In fact, I think its error handling is clear enough, It just goes
+> > > wrong
+> > > in three places, as follows:
+> > >
+> > > void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
+> > >                                           struct resource *res)
+> > > {
+> > >         resource_size_t size;
+> > >         const char *name;
+> > >         void __iomem *dest_ptr;
+> > >
+> > >         BUG_ON(!dev);
+> > >
+> > >         if (!res || resource_type(res) != IORESOURCE_MEM) {
+> > >                 dev_err(dev, "invalid resource\n");
+> > >                 return IOMEM_ERR_PTR(-EINVAL);
+> > >         }
+> > >
+> > In the above error case there is no indication of which resource failed
+> > (mainly relevant if the resource name is missing in the devicetree,
+> > since in the drivers you are changing platform_get_resource_byname() is
+> > mostly used). In the existing drivers' code, on return from this
+> > function in this case, the name would be printed by the caller.
+> 
+> A driver should only have one call to devm_pci_remap_cfg_resource() as
+> there's only 1 config space. However, it looks like this function is
+> frequently used on what is not config space which is a bigger issue.
+
+That certainly is and should be fixed.
+
+> If this error happens, it's almost always going to be a NULL ptr as
+> platform_get_resource_byname() would have set IORESOURCE_MEM. Perhaps
+> a WARN here so you get a backtrace to the caller location.
+
++1
+
+> > >         size = resource_size(res);
+> > >         name = res->name ?: dev_name(dev);
+> > >
+> > >         if (!devm_request_mem_region(dev, res->start, size, name)) {
+> > >                 dev_err(dev, "can't request region for resource
+> > > %pR\n", res);
+> > >                 return IOMEM_ERR_PTR(-EBUSY);
+> > >         }
+> > >
+> > >         dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
+> > >         if (!dest_ptr) {
+> > >                 dev_err(dev, "ioremap failed for resource %pR\n",
+> > > res);
+> > >                 devm_release_mem_region(dev, res->start, size);
+> > >                 dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
+> > >         }
+> > >
+> > The other 2 error cases as well don't print the resource name as far as
+> > I recall (they will at least print the resource start/end).
+> 
+> Start/end are what are important for why either of these functions
+> failed.
+> 
+> But sure, we could add 'name' here. That's a separate patch IMO.
+
+I agree. In sum, I think it is OK to proceed with this patch, provided
+we send follow-ups as discussed here, are we in agreement ?
+
+Lorenzo
