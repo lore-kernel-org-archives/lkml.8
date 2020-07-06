@@ -2,139 +2,118 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5512206DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECAD206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B+iKfZUJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JMDq9eXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgGFRPb (ORCPT
+        id S1729668AbgGFRQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:15:31 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42629 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729658AbgGFRPa (ORCPT
+        Mon, 6 Jul 2020 13:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729568AbgGFRQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:15:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594055729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=WIAp4BksQMI/icBTHgBCKYMTMos5fdTsYz6Un13kkXc=;
-        b=B+iKfZUJivhv5sCUJPBqkVi6tu4pZkPoHsUZs+Y1ZJrK/Ot3/CiJo7rl7aj+FZI0etnnFa
-        nS5vGNzyfbfhxYC2iiiSBozQhrgwML2XmuDWZD+Q5IuH8VvCmiyvQvjD+CHjo+B8M7QLmL
-        ctieDxawDKvBUzamXlx8cR2HuWEXxis=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-Hr9AEiglOwy8YY02x3x5rg-1; Mon, 06 Jul 2020 13:15:25 -0400
-X-MC-Unique: Hr9AEiglOwy8YY02x3x5rg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44E78804001;
-        Mon,  6 Jul 2020 17:15:24 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E39955C1B2;
-        Mon,  6 Jul 2020 17:15:23 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for Linux 5.8-rc5
-Date:   Mon,  6 Jul 2020 13:15:23 -0400
-Message-Id: <20200706171523.12441-1-pbonzini@redhat.com>
+        Mon, 6 Jul 2020 13:16:12 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EFFC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 10:16:11 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x62so29545547qtd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=45tIWdm+dVxESjLr3PMmxKwleOkKwq9BzEXHEaJCoao=;
+        b=JMDq9eXgXHSz9XSGQQAFTayjYJyh/tUQl1//Q4SkgSjvcQN/7UUCIntCwRNQVTaFQY
+         sCCXXuilBV9Tv6o/mG+3Gs1hC3f4BRXmR1pSXMhK5BQGI4VXuqDSKW8dRkt2GEav9JZw
+         QzhyGUa8yyPyHGv/5tqIFV1mJ+b2J8Dvb9Kgj3zNuF2GflY6G7LyEq9lRczsYAjg/3+/
+         0qdkOLT2W639EfXwFIJBqYn+2WcY1BlcWhngpTd1oHh9BPaX1UPFmc/2fyXvDqF1+E8N
+         MIJbH5tMcJA0avlrJV+MTID4JbeNr3+ksEItenYFf9G2jqy5RA7tkBx83MWTCnbpWxgt
+         Rsxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=45tIWdm+dVxESjLr3PMmxKwleOkKwq9BzEXHEaJCoao=;
+        b=mYFKzNE+PSlgCmKNObPkJMDEHDLvMW46RQH8+MWQ9Bn5MODZLmoR3C6hWyv++DjZ5c
+         IBNMvB3fFiUP53aPKAx7hJGueYe73mgLrggiyMcxKSn0ELBKocxLvbecnLq6QhPzMSy6
+         YP2cPRpbuBpn9c3M6JqUEGwIC+VkQThQx1v3mpdMPaVPaTyyKm9CPN8tIvieg+/u9t8c
+         8AKjTuDc0X6kzw0dk/iBch4+zr2tIKuhFPBfyo6Lbq2Nb0wtVLuKcT2TCR8BPq1/Gq9r
+         4sStm0+rVmmCSaUgGY7UM2KvNmX1BqilVpMBdCiRXElfvTLs0JGZPoVpQ6PKk//3niKL
+         hK3Q==
+X-Gm-Message-State: AOAM532X3qA+j7xPBejb6fojSgB23iqUDUtctzKofZJirok9/zQeGcaN
+        JA8zoYqp7zUPj2H3PxJ+gY0Nn8QdqVyExDa4xjsqXA==
+X-Google-Smtp-Source: ABdhPJyO73KvUDsn/Tc1RQWALC7DpTQJfJo+SXyquB51RqmZRw6Pyb4IInF6wxz/MkxuF3xyg0XayJvSgCNmnp6HDWQ=
+X-Received: by 2002:aed:2684:: with SMTP id q4mr49474415qtd.208.1594055771190;
+ Mon, 06 Jul 2020 10:16:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200701083118.45744-1-lee.jones@linaro.org> <20200701083118.45744-27-lee.jones@linaro.org>
+ <20200701093616.GX1179328@dell>
+In-Reply-To: <20200701093616.GX1179328@dell>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 6 Jul 2020 19:16:00 +0200
+Message-ID: <CAMpxmJW0q5nHtz=Td_8EiLnnO3H-+047bVE1aCByqj8J2Ldm8g@mail.gmail.com>
+Subject: Re: [PATCH v2 26/30] misc: eeprom: at24: Tell the compiler that ACPI
+ functions may not be used
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, Jul 1, 2020 at 11:36 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> ... as is the case when !CONFIG_ACPI.
+>
+> Fixes the following W=3D1 kernel build warning:
+>
+>  drivers/misc/eeprom/at24.c:228:36: warning: =E2=80=98at24_acpi_ids=E2=80=
+=99 defined but not used [-Wunused-const-variable=3D]
+>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> - Resending to add the I2C ML and Bartosz to the conversation
+>   - Looks like I missed them when running get_maintainer.pl
+> - This patch, like all the others in the set, should go in via Misc
+>   - Although the patches are orthogonal, this makes life easier for Greg
+>
+>  drivers/misc/eeprom/at24.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 9ff18d4961ceb..2591c21b2b5d8 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -225,7 +225,7 @@ static const struct of_device_id at24_of_match[] =3D =
+{
+>  };
+>  MODULE_DEVICE_TABLE(of, at24_of_match);
+>
+> -static const struct acpi_device_id at24_acpi_ids[] =3D {
+> +static const struct acpi_device_id __maybe_unused at24_acpi_ids[] =3D {
+>         { "INT3499",    (kernel_ulong_t)&at24_data_INT3499 },
+>         { "TPF0001",    (kernel_ulong_t)&at24_data_24c1024 },
+>         { /* END OF LIST */ }
 
-The following changes since commit e4553b4976d1178c13da295cb5c7b21f55baf8f9:
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-  KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru (2020-06-23 06:01:29 -0400)
+Please, drop the "Re:" prefix from the subject next time, I nearly
+missed this in my inbox.
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 8038a922cf9af5266eaff29ce996a0d1b788fc0d:
-
-  Merge tag 'kvmarm-fixes-5.8-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into kvm-master (2020-07-06 13:05:38 -0400)
-
-----------------------------------------------------------------
-Bugfixes and a one-liner patch to silence sparse.
-
-----------------------------------------------------------------
-
-I'm going on vacation so my next pull request should be for rc8
-or 5.8-final.  If something really bad comes up, you might get
-KVM changes straight from architecture maintainers, but things
-seems calm on both the 5.7 and 5.8 fronts so that should not
-happen.
-
-Thanks,
-
-Paolo
-
-Alexandru Elisei (1):
-      KVM: arm64: Annotate hyp NMI-related functions as __always_inline
-
-Andrew Jones (1):
-      KVM: arm64: pvtime: Ensure task delay accounting is enabled
-
-Andrew Scull (1):
-      KVM: arm64: Stop clobbering x0 for HVC_SOFT_RESTART
-
-Christian Borntraeger (1):
-      KVM: s390: reduce number of IO pins to 1
-
-Marc Zyngier (2):
-      KVM: arm64: vgic-v4: Plug race between non-residency and v4.1 doorbell
-      KVM: arm64: PMU: Fix per-CPU access in preemptible context
-
-Paolo Bonzini (5):
-      Merge tag 'kvm-s390-master-5.8-3' of git://git.kernel.org/.../kvms390/linux into kvm-master
-      KVM: x86: bit 8 of non-leaf PDPEs is not reserved
-      Merge tag 'kvmarm-fixes-5.8-2' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-      kvm: use more precise cast and do not drop __user
-      Merge tag 'kvmarm-fixes-5.8-3' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-
-Sean Christopherson (3):
-      KVM: x86: Inject #GP if guest attempts to toggle CR4.LA57 in 64-bit mode
-      KVM: x86: Mark CR4.TSD as being possibly owned by the guest
-      KVM: VMX: Use KVM_POSSIBLE_CR*_GUEST_BITS to initialize guest/host masks
-
-Steven Price (1):
-      KVM: arm64: Fix kvm_reset_vcpu() return code being incorrect with SVE
-
-Wanpeng Li (1):
-      KVM: X86: Fix async pf caused null-ptr-deref
-
- arch/arm64/include/asm/arch_gicv3.h |  2 +-
- arch/arm64/include/asm/cpufeature.h |  2 +-
- arch/arm64/kvm/hyp-init.S           | 11 +++++++----
- arch/arm64/kvm/pmu.c                |  7 ++++++-
- arch/arm64/kvm/pvtime.c             | 15 ++++++++++++---
- arch/arm64/kvm/reset.c              | 10 +++++++---
- arch/arm64/kvm/vgic/vgic-v4.c       |  8 ++++++++
- arch/s390/include/asm/kvm_host.h    |  8 ++++----
- arch/x86/kvm/kvm_cache_regs.h       |  2 +-
- arch/x86/kvm/mmu/mmu.c              |  2 +-
- arch/x86/kvm/vmx/nested.c           |  4 ++--
- arch/x86/kvm/vmx/vmx.c              | 13 +++++--------
- arch/x86/kvm/x86.c                  |  5 +++++
- drivers/irqchip/irq-gic-v3-its.c    |  8 ++++++++
- virt/kvm/kvm_main.c                 |  3 ++-
- 15 files changed, 70 insertions(+), 30 deletions(-)
-
+Thanks!
+Bartosz
