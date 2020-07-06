@@ -2,68 +2,79 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C25F20708
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594054682;
-	bh=GEufiPLHL4Nbly1lFuGDh/rrlW5QF5QlEhBoJCGKZFQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JiRN/NcFDrngAzWRLv0THYz5Yo14JFyrEgCts86JOiYXEgwmSeb5R2l8vQfi+Wdjw
-	 YxG+lvEoxpemkSLhF1f+QKt5rFGehvYGteLv8dzxvxi902hB730bPUastmoK8ITAxq
-	 UfnuLV2a5KDl4Vw6nh+uObLbfaqLtLG+937xyObM=
+	by mail.kernel.org (Postfix) with ESMTP id 1B8EC20702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="phHD9sZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgGFQ6B (ORCPT
+        id S1729616AbgGFQ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgGFQ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:58:00 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD0220702;
-        Mon,  6 Jul 2020 16:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594054680;
-        bh=GEufiPLHL4Nbly1lFuGDh/rrlW5QF5QlEhBoJCGKZFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BeiZPfbQ50ORdx2w+4fNMZwRFQlWzivGquRkh1WpaxX14+4JQikNxziZ0wPFoyhoe
-         UBoN3Mu8WqrowhpyX7jSiI2hFM52I+iza44p5eeAlEPc8WGQMwqjx7EIjBYNEC3KvX
-         2j5rhZwDy7rdkylpjlqiWIPr2uRNWq3WsUX7+VUo=
-Date:   Mon, 6 Jul 2020 09:57:58 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-Subject: Re: [PATCH net-next] hinic: add firmware update support
-Message-ID: <20200706095758.713a069a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200706145406.7742-1-luobin9@huawei.com>
-References: <20200706145406.7742-1-luobin9@huawei.com>
+        Mon, 6 Jul 2020 12:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgGFQ7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:59:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA79EC061755;
+        Mon,  6 Jul 2020 09:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=C53Wi7QFgG4SXyckPFgiwxQN0pndUxQvzd6BzkrXp4o=; b=phHD9sZ89ifS6lP8nTLgg+42+K
+        eIQuBwFxqgO8oo1MV5LVm4+88D7RF6CkHQ6v2JdIC8EmSN2djGjrc9J/IxW24frvostP/6rWB2w/U
+        uZTrudIkBlJc3pnO8oGUctxx13tbPMBYuKCr6btOzBe6won9+eJIVAN6YIa4+6PaslvcB16CEkVhj
+        ihtYHJgq9j0qT9LOE3y5hKS+Ya2gDwa19xtFT+q6JL7CP4EFnZvliA8wMVSvIybdbH/hI05IxYk/e
+        Rz/Lnw/WekvjYkfbb7LQyvT/N8ULJAVR+g8UQt36MXGF7Y/pesaQFdBf2ruWWcqqjFA6ydeX7XubN
+        hd9Sz1lw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsUSS-0003Mj-Rl; Mon, 06 Jul 2020 16:59:09 +0000
+Subject: Re: linux-next: Tree for Jul 6 (mm/memory_failure.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200706174001.2d316826@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d458c18d-9c5e-9c45-0d65-e317571b6d56@infradead.org>
+Date:   Mon, 6 Jul 2020 09:59:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200706174001.2d316826@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 22:54:06 +0800 Luo bin wrote:
-> add support to update firmware with with "ethtool -f" cmd
+On 7/6/20 12:40 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+> Changes since 20200703:
+> 
 
-drivers/net/ethernet/huawei/hinic/hinic_ethtool.c:1996:44: warning: missing braces around initializer
-drivers/net/ethernet/huawei/hinic/hinic_ethtool.c:1996:44: warning: missing braces around initializer
+on i386:
 
-But really - please try to implement the devlink flashing API, using
-ethtool for this is deprecated.
+when CONFIG_MIGRATION is not set/enabled:
+
+../mm/memory-failure.c: In function ‘new_page’:
+../mm/memory-failure.c:1688:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
+  return alloc_migration_target(p, (unsigned long)&mtc);
+         ^~~~~~~~~~~~~~~~~~~~~~
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
