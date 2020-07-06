@@ -2,188 +2,117 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0778C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45441C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9025B20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6F92073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqPmldYz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIaPJSHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgGFWEt (ORCPT
+        id S1726729AbgGFWGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:04:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40848 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726134AbgGFWEs (ORCPT
+        Mon, 6 Jul 2020 18:06:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgGFWGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:04:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594073087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MSaKePDZle72IIsbb8OTU+Jf3IEEa87RrzjMduxWjDA=;
-        b=NqPmldYz8UUG7uoK/ROx6z54IKlGLZuf93fQ2eyslTBg9+nGBykJa08ZMCkeLRDlqmyYFw
-        1luFgCmpRmcQmWrdj9oKP1mGk4rcujCfmOCOACyU8GRSTUl5vC5Lsudf2Z2nPBnKVrYxRj
-        UWGrlLyfSv2LV7Nt0HHe+kUSASkxY98=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-kPWDvyu7P2uFavuMSBCC5w-1; Mon, 06 Jul 2020 18:04:43 -0400
-X-MC-Unique: kPWDvyu7P2uFavuMSBCC5w-1
-Received: by mail-qt1-f200.google.com with SMTP id y5so29222628qto.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:04:43 -0700 (PDT)
+        Mon, 6 Jul 2020 18:06:51 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E70C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:06:50 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id dg28so36609539edb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:06:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fwnfFNKEwONS9Ri0ifGYnWjmFaXQolYJkOcnSn5GMT4=;
+        b=SIaPJSHnhLmRrF0rL4Tr0mXNu4GbzdhL3inGoTmLraRHhU3ATbV69UucigCeM0UyY6
+         wlweqZLaKFDDtt+cP2LRGqc5mhJRVEAhnK3qUNIkVR1pYyeatZ47GMd6iGs+4g44xSyG
+         kf6FTNTzvq3zYHJybpri/2HgNuyJ3ScAvqy/rQ7ilMlWpDs2/ZYkPAUy9URQHqMouPbl
+         uMZ3LdFj4DKdmPm3ulptAEIxsL3CGQ7j0WU4+hwc0AD+qTJhC8iN1GQVTRMltUTCy7OO
+         kyT1sLuI/7DpfP4L+nyShUkAHd4aFC2dWZvXlhCv44JwSM4KFAc23YCDpsRNJNAps5cz
+         rFSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=MSaKePDZle72IIsbb8OTU+Jf3IEEa87RrzjMduxWjDA=;
-        b=sKifNJ87913hsMdaj/cNXlcEjviaHqiNgGkxLOirodDu24rz3a+7KqbeDia9i7Lfu+
-         kOYO/5sWvWhj0Yvl3YkW82kHF2rLTPXPdlFZ3XYWkFsEkoI+OLzst785rXpdZ+bucn2q
-         X7qaLOTewJNtlfbhG1m9OuITLqqHXpjJt20Xa6Nsj21peC6ombsg+BvirKxMisGHBbOu
-         WbzJ83NtbKRtZR+susf3I54omZDwWPf/C4plP8a3fMnkguejPj1HDqSyNrPCxIwjhkKY
-         6qv1VcsV4CUCCWzjwpXxmKzIlor5LEW+KWdYmVC7TSe+ijiwueQNHIuQ5aHbf1x7srLy
-         Wbzg==
-X-Gm-Message-State: AOAM531f5jocHZAf3reHmmKyDn2Ep914UIflD/JvFw6OWVGZj719rBtn
-        C6ikzHup8rXmjzvs4SWV6RLFAJKBndFfNh1hU+VHqho2pG0Fwh6BWpeEHKOGQW9dcLbnZFOTWgo
-        jLDD439TMU99JkUbKOwvOKrR4
-X-Received: by 2002:ac8:1654:: with SMTP id x20mr37876343qtk.83.1594073082947;
-        Mon, 06 Jul 2020 15:04:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvOU43xLsFZyXwqGMfGhqw/yW2xje7LPDpb4qxzz0sU5xjanrS4P3Dk5VdzPvK36hOokI7wg==
-X-Received: by 2002:ac8:1654:: with SMTP id x20mr37876323qtk.83.1594073082687;
-        Mon, 06 Jul 2020 15:04:42 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id l202sm20315146qke.109.2020.07.06.15.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 15:04:42 -0700 (PDT)
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com> <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in TPM2 ACPI table
-In-reply-to: <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
-Date:   Mon, 06 Jul 2020 15:04:40 -0700
-Message-ID: <87eepowb9j.fsf@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fwnfFNKEwONS9Ri0ifGYnWjmFaXQolYJkOcnSn5GMT4=;
+        b=TsjXqRMo+AZjC0hEdPGwK0lmkGXwh3G/UV3LirjInYaE887JhKQ2w1i48rslxk26Id
+         BpJJQJv88qA0c4myPYOzCecez3TB4FUuMgph/jPcK1jBW/27WVSCjvgBoLBY548CvTzf
+         7RsaZuqir5QwzJqDut4SfST/3jCA4UtGK9IxEuF/1fo9X6oPw082X6CzfoEwNcrNBWUx
+         DFhSaYjClMY/bP300o3cFK9uZAozntG9hEETggOBPPi/I/Ok2dl5nLPZt+dNYfYV0mcy
+         rsInHSGV2g3+97vankjKz+5E0eg50AXtHFPhDmwL3OW57hoZL9Jb9nI8Fn4yqbTpK+cF
+         6YfA==
+X-Gm-Message-State: AOAM5315HzxzuWb6Y4HlQHDAuNd9dEJxPcngsPbtk1Evssu1J2naZEHy
+        qKh0ZRx61/IrvWpM42z55Ho=
+X-Google-Smtp-Source: ABdhPJyJdyThAtQC3fBNxE1km/rQtK/mxUilIUsQu7tW8CAiI8COtMImlxBjU9UMeUXefvLXkFJ0lg==
+X-Received: by 2002:a05:6402:16db:: with SMTP id r27mr59239987edx.139.1594073209736;
+        Mon, 06 Jul 2020 15:06:49 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id x64sm27379026edc.95.2020.07.06.15.06.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jul 2020 15:06:49 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 22:06:48 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com, vbabka@suse.cz, willy@infradead.org,
+        thomas_os@shipmail.org, thellstrom@vmware.com,
+        anshuman.khandual@arm.com, sean.j.christopherson@intel.com,
+        aneesh.kumar@linux.ibm.com, peterx@redhat.com, walken@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, digetx@gmail.com
+Subject: Re: [RESEND Patch v2 0/4] mm/mremap: cleanup move_page_tables() a
+ little
+Message-ID: <20200706220648.qfzwnitoswbbkdnw@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200626135216.24314-1-richard.weiyang@linux.alibaba.com>
+ <20200706100819.flwgozlstn3zl66u@box>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706100819.flwgozlstn3zl66u@box>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Stefan Berger @ 2020-07-06 11:19 MST:
-
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On Mon, Jul 06, 2020 at 01:08:19PM +0300, Kirill A. Shutemov wrote:
+>On Fri, Jun 26, 2020 at 09:52:12PM +0800, Wei Yang wrote:
+>> move_page_tables() tries to move page table by PMD or PTE.
+>> 
+>> The root reason is if it tries to move PMD, both old and new range should be
+>> PMD aligned. But current code calculate old range and new range separately.
+>> This leads to some redundant check and calculation.
+>> 
+>> This cleanup tries to consolidate the range check in one place to reduce some
+>> extra range handling.
 >
-> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-> to get the event log from ACPI. If one is found, use it to get the
-> start and length of the log area. This allows non-UEFI systems, such
-> as SeaBIOS, to pass an event log when using a TPM2.
+>The patchet looks good to me. I have few nits, but nothing substantial.
 >
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-
-> ---
->  drivers/char/tpm/eventlog/acpi.c | 63 +++++++++++++++++++++-----------
->  1 file changed, 42 insertions(+), 21 deletions(-)
+>Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 >
-> diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-> index 63ada5e53f13..3633ed70f48f 100644
-> --- a/drivers/char/tpm/eventlog/acpi.c
-> +++ b/drivers/char/tpm/eventlog/acpi.c
-> @@ -49,9 +49,9 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	void __iomem *virt;
->  	u64 len, start;
->  	struct tpm_bios_log *log;
-> -
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> -		return -ENODEV;
-> +	struct acpi_table_tpm2 *tbl;
-> +	struct acpi_tpm2_phy *tpm2_phy;
-> +	int format;
->  
->  	log = &chip->log;
->  
-> @@ -61,23 +61,44 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	if (!chip->acpi_dev_handle)
->  		return -ENODEV;
->  
-> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> -				(struct acpi_table_header **)&buff);
-> -
-> -	if (ACPI_FAILURE(status))
-> -		return -ENODEV;
-> -
-> -	switch(buff->platform_class) {
-> -	case BIOS_SERVER:
-> -		len = buff->server.log_max_len;
-> -		start = buff->server.log_start_addr;
-> -		break;
-> -	case BIOS_CLIENT:
-> -	default:
-> -		len = buff->client.log_max_len;
-> -		start = buff->client.log_start_addr;
-> -		break;
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +		status = acpi_get_table("TPM2", 1,
-> +					(struct acpi_table_header **)&tbl);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +
-> +		if (tbl->header.length <
-> +				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
-> +			return -ENODEV;
-> +
-> +		tpm2_phy = (void *)tbl + sizeof(*tbl);
-> +		len = tpm2_phy->log_area_minimum_length;
-> +
-> +		start = tpm2_phy->log_area_start_address;
-> +		if (!start || !len)
-> +			return -ENODEV;
-> +
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-> +	} else {
-> +		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> +		status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> +					(struct acpi_table_header **)&buff);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +
-> +		switch (buff->platform_class) {
-> +		case BIOS_SERVER:
-> +			len = buff->server.log_max_len;
-> +			start = buff->server.log_start_addr;
-> +			break;
-> +		case BIOS_CLIENT:
-> +		default:
-> +			len = buff->client.log_max_len;
-> +			start = buff->client.log_start_addr;
-> +			break;
-> +		}
-> +
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
->  	}
->  	if (!len) {
->  		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-> @@ -98,7 +119,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	memcpy_fromio(log->bios_event_log, virt, len);
->  
->  	acpi_os_unmap_iomem(virt, len);
-> -	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +	return format;
->  
->  err:
->  	kfree(log->bios_event_log);
 
+Hi, Kirill
+
+Thanks for your review.
+
+Andrew,
+
+Do you want me to send another version or you would like to adjust it
+directly?
+
+>-- 
+> Kirill A. Shutemov
+
+-- 
+Wei Yang
+Help you, Help me
