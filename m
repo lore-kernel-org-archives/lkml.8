@@ -2,158 +2,194 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11EBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA051C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAB420722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nbQzoPKj"
+	by mail.kernel.org (Postfix) with ESMTP id 9F03420708
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgGFQLB (ORCPT
+        id S1729522AbgGFQMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:11:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729412AbgGFQLA (ORCPT
+        Mon, 6 Jul 2020 12:12:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33646 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbgGFQMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:11:00 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B69C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 09:11:00 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e18so18594596pgn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 09:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Kxpgn+GnVhnInuZTEY3U3K5Tk71jPK8wC7nu0ga4/fw=;
-        b=nbQzoPKjqjnIrUMrKu30HI3Eg6a1eMk6dbCMfw3HJK42SAQc8CthBadwHpAxjtlmGk
-         8d5mSe0Ao+f2/bee7mjRqi80i6P9/+hXYCVq54kbbEYcdoK5ErXfsACQPK+XAXCtZuod
-         JCZZbAF6fmr+o2n6HILhJNTP1XA+2Uf7BFvy4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Kxpgn+GnVhnInuZTEY3U3K5Tk71jPK8wC7nu0ga4/fw=;
-        b=X1xJp3/Otkoef+0GhjONCn/Ivln6+iGUZypoO9a3e3aByTDg1G18VK5CoJ79wVWbqU
-         pcHKbkZeSJHcqbH86fiwJu9WkIdi48nTFzPfJKvr157BYq8b9GQcRW4SBoWrgcZ1+YTZ
-         +URsvHAMAX4gNEnapHa7erXEHBwufvKG/ArhHuzi4y1P5zSD1/JtzGm0i7gxh60yFFnR
-         /9YZPpH9gbE4r3GncHrqIw9IE+XiV+bVdppYjeGNi9nLCvnozH4QkIFPaeq1l+hIRQws
-         9QoIgyMTEzaBdFEdSKnu3Q5S7/Skcz90Yv/XMvHu9dAQEm3tPj/M1ucYRT4Me4uICu1Z
-         Ve+g==
-X-Gm-Message-State: AOAM532QM2NDQOWiNKgenUNFsH8DImQic7SMj/NBAGdVZIFyOHO+GQ30
-        M9XnbYQK4iLAQrlF6b0rn7Wpcg==
-X-Google-Smtp-Source: ABdhPJyVjLtzWbo0ncj4kmd2UIN+BR2sv4gkUn6dDJQBKy2XGcmw+t0N4jFQ6LQD+nxLoORhXh6e8Q==
-X-Received: by 2002:a62:8688:: with SMTP id x130mr45549675pfd.280.1594051859580;
-        Mon, 06 Jul 2020 09:10:59 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id o42sm20120289pje.10.2020.07.06.09.10.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 09:10:58 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 09:10:57 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
-Message-ID: <20200706161057.GG3191083@google.com>
-References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
- <1593688151-22616-3-git-send-email-rnayak@codeaurora.org>
+        Mon, 6 Jul 2020 12:12:51 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jsTjb-0007M8-5k; Mon, 06 Jul 2020 16:12:47 +0000
+Date:   Mon, 6 Jul 2020 18:12:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] pidfd: Replace open-coded partial
+ fd_install_received()
+Message-ID: <20200706161245.hjat2rsikt3linbm@wittgenstein>
+References: <20200617220327.3731559-1-keescook@chromium.org>
+ <20200617220327.3731559-5-keescook@chromium.org>
+ <20200706130713.n6r3vhn4hn2lodex@wittgenstein>
+ <202007060830.0FE753B@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1593688151-22616-3-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <202007060830.0FE753B@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 04:39:09PM +0530, Rajendra Nayak wrote:
-> On SDM845 and SC7180 DSI needs to express a performance state
-> requirement on a power domain depending on the clock rates.
-> Use OPP table from DT to register with OPP framework and use
-> dev_pm_opp_set_rate() to set the clk/perf state.
+On Mon, Jul 06, 2020 at 08:34:06AM -0700, Kees Cook wrote:
+> On Mon, Jul 06, 2020 at 03:07:13PM +0200, Christian Brauner wrote:
+> > On Wed, Jun 17, 2020 at 03:03:24PM -0700, Kees Cook wrote:
+> > > The sock counting (sock_update_netprioidx() and sock_update_classid()) was
+> > > missing from pidfd's implementation of received fd installation. Replace
+> > > the open-coded version with a call to the new fd_install_received()
+> > > helper.
+> > > 
+> > > Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  kernel/pid.c | 11 +----------
+> > >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > > 
+> > > diff --git a/kernel/pid.c b/kernel/pid.c
+> > > index f1496b757162..24924ec5df0e 100644
+> > > --- a/kernel/pid.c
+> > > +++ b/kernel/pid.c
+> > > @@ -635,18 +635,9 @@ static int pidfd_getfd(struct pid *pid, int fd)
+> > >  	if (IS_ERR(file))
+> > >  		return PTR_ERR(file);
+> > >  
+> > > -	ret = security_file_receive(file);
+> > > -	if (ret) {
+> > > -		fput(file);
+> > > -		return ret;
+> > > -	}
+> > > -
+> > > -	ret = get_unused_fd_flags(O_CLOEXEC);
+> > > +	ret = fd_install_received(file, O_CLOEXEC);
+> > >  	if (ret < 0)
+> > >  		fput(file);
+> > > -	else
+> > > -		fd_install(ret, file);
+> > 
+> > So someone just sent a fix for pidfd_getfd() that was based on the
+> > changes done here.
 > 
-> dev_pm_opp_set_rate() is designed to be equivalent to clk_set_rate()
-> for devices without an OPP table, hence the change works fine
-> on devices/platforms which only need to set a clock rate.
+> Hi! Ah yes, that didn't get CCed to me. I'll go reply.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/dsi/dsi_host.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
+> > I've been on vacation so didn't have a change to review this series and
+> > I see it's already in linux-next. This introduces a memory leak and
+> > actually proves a point I tried to stress when adding this helper:
+> > fd_install_received() in contrast to fd_install() does _not_ consume a
+> > reference because it takes one before it calls into fd_install(). That
+> > means, you need an unconditional fput() here both in the failure and
+> > error path.
 > 
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> index 11ae5b8..09e16b8 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -14,6 +14,7 @@
->  #include <linux/of_graph.h>
->  #include <linux/of_irq.h>
->  #include <linux/pinctrl/consumer.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/spinlock.h>
-> @@ -111,6 +112,9 @@ struct msm_dsi_host {
->  	struct clk *pixel_clk_src;
->  	struct clk *byte_intf_clk;
->  
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
-> +
->  	u32 byte_clk_rate;
->  	u32 pixel_clk_rate;
->  	u32 esc_clk_rate;
-> @@ -512,9 +516,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
->  	DBG("Set clk rates: pclk=%d, byteclk=%d",
->  		msm_host->mode->clock, msm_host->byte_clk_rate);
->  
-> -	ret = clk_set_rate(msm_host->byte_clk, msm_host->byte_clk_rate);
-> +	ret = dev_pm_opp_set_rate(&msm_host->pdev->dev,
-> +				  msm_host->byte_clk_rate);
->  	if (ret) {
-> -		pr_err("%s: Failed to set rate byte clk, %d\n", __func__, ret);
-> +		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
->  		return ret;
->  	}
->  
-> @@ -658,6 +663,8 @@ int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host)
->  
->  void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
->  {
-> +	/* Drop the performance state vote */
-> +	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
->  	clk_disable_unprepare(msm_host->esc_clk);
->  	clk_disable_unprepare(msm_host->pixel_clk);
->  	if (msm_host->byte_intf_clk)
-> @@ -1879,6 +1886,18 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
->  		goto fail;
->  	}
->  
-> +	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
-> +	if (IS_ERR(msm_host->opp_table))
-> +		return PTR_ERR(msm_host->opp_table);
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		msm_host->has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
+> Yup, this was a mistake in my refactoring of the pidfs changes.
 
-  		dev_pm_opp_put_clkname(msm_host->opp_table);
+I already did.
 
-> +		return ret;
-> +	}
+> 
+> > I strongly suggest though that we simply align the behavior between
+> > fd_install() and fd_install_received() and have the latter simply
+> > consume a reference when it succeeds! Imho, this bug proves that I was
+> > right to insist on this before. ;)
+> 
+> I still don't agree: it radically complicates the SCM_RIGHTS and seccomp
 
-With the missing _put_clkname() fixed:
+I'm sorry, I don't buy it yet, though I might've missed something in the
+discussions: :)
+After applying the patches in your series this literally is just (which
+is hardly radical ;):
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+diff --git a/fs/file.c b/fs/file.c
+index 9568bcfd1f44..26930b2ea39d 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -974,7 +974,7 @@ int __fd_install_received(int fd, struct file *file, int __user *ufd,
+        }
+
+        if (fd < 0)
+-               fd_install(new_fd, get_file(file));
++               fd_install(new_fd, file);
+        else {
+                new_fd = fd;
+                error = replace_fd(new_fd, file, o_flags);
+diff --git a/net/compat.c b/net/compat.c
+index 71494337cca7..605a5a67200c 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -298,9 +298,11 @@ void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
+        int err = 0, i;
+
+        for (i = 0; i < fdmax; i++) {
+-               err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
+-               if (err < 0)
++               err = fd_install_received_user(get_file(scm->fp->fp[i]), cmsg_data + i, o_flags);
++               if (err < 0) {
++                       fput(scm->fp->fp[i]);
+                        break;
++               }
+        }
+
+        if (i > 0) {
+diff --git a/net/core/scm.c b/net/core/scm.c
+index b9a0442ebd26..0d06446ae598 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -306,9 +306,11 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+        }
+
+        for (i = 0; i < fdmax; i++) {
+-               err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
+-               if (err < 0)
++               err = fd_install_received_user(get_file(scm->fp->fp[i]), cmsg_data + i, o_flags);
++               if (err < 0) {
++                       fput(scm->fp->fp[i]);
+                        break;
++               }
+        }
+
+        if (i > 0) {
+
+> cases. The primary difference is that fd_install() cannot fail, and it
+> was optimized for this situation. The other file-related helpers that
+> can fail do not consume the reference, so this is in keeping with those
+> as well.
+
+That's not a real problem. Any function that can fail and which consumes
+a reference on success is assumed to not mutate the reference if it
+fails anywhere. So I don't see that as an issue.
+
+The problem here is that the current patch invites bugs and has already
+produced one because fd_install() and fd_install_*() have the same
+naming scheme but different behavior when dealing with references.
+That's just not a good idea.
+
+Christian
