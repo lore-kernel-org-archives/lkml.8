@@ -2,425 +2,129 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F15C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DF520715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD2420715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgGFPNQ (ORCPT
+        id S1729420AbgGFPOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:13:16 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39011 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbgGFPMY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:12:24 -0400
-Received: by mail-il1-f197.google.com with SMTP id f66so22440527ilh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:12:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=U+a/7dG+Jm649g4Q7s1bTBlfdKiN+DjRc+s0w5ipG5w=;
-        b=f/Fm7nEttqC6zlXdIDA5NTu4ho4Pl0z0v7ZoR/EaErqc289SRJU/Fu8lGW5G3K+eyA
-         g0a1260VKiXty+SFskVMU7mpTUFLVk5j0+3a7IFH7uUmL73gkQFipSo6w1xuels+CGeN
-         sMrX1Yui2/jCdoTc0C9OQF9y3kW0JU/OIfS8BBKbQ9YBZdluF1Ra4vnSdCUGS/Rg6pTf
-         lJhTdvXQ1cWRVXhoACOcdfaAmh1r6W5oFszAkQOGENkV1JyzH81Z0R0Q/YLfsBOaX+IY
-         9TyrC0zP4JEPs1S7hEUC0c5iMKHbDKARkHpGY4sPdZ5g+AZfZdDPyePppohnmJhR0qvA
-         r9xA==
-X-Gm-Message-State: AOAM530TmSB/krRavfIT7pOMEmDqiaAz0AFXPaLKyCD3kQ6iJzh8qxV5
-        97C0RUASGal/AfRYSYSIQzi6bqZNvC8SZ3nymWLg69RFBpf3
-X-Google-Smtp-Source: ABdhPJyjsxk8AZywl0NzsgSUN9e5JtN8xMaRid4jPezb+sCR8yOWHcNFyz89YMXJn7Iq4YnXiGjmgRti8+K0LiL5gh7ouQORXEi5
+        Mon, 6 Jul 2020 11:14:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3412 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729297AbgGFPOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:14:33 -0400
+IronPort-SDR: o/zzohaCYpA3NA6mwkD2M/k0PY8sp6m/QedYcf4XyK7Hnh+e9z00OE8GERqmADzqSFQx6yVsEZ
+ yfo2F8boO3eA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="146506828"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="146506828"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:14:32 -0700
+IronPort-SDR: jp+xSpM0hz4RXPelb813+eh1Xv2NFOLsPZD+jeKCERs+hs6W1K7rsAx5C6G9hslF567dRAI2gk
+ RMVTXLTYELsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="313989791"
+Received: from aislam-mobl1.amr.corp.intel.com ([10.212.167.133])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 08:14:31 -0700
+Subject: Re: [RFC PATCH] ALSA: compress: add support to change codec profile
+ in gapless playback
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
+        plai@codeaurora.org
+Cc:     alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        vathota@codeaurora.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, broonie@kernel.org,
+        ckeepax@opensource.cirrus.com
+References: <20200702111114.32217-1-srinivas.kandagatla@linaro.org>
+ <90ed95e0-8b01-6c87-b86b-dfa463181527@linux.intel.com>
+ <2444711a-319e-1f9b-1289-7744bb1a2987@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <ee34dac9-715c-6e6c-aa33-bb46f0c8261a@linux.intel.com>
+Date:   Mon, 6 Jul 2020 10:14:30 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:961:: with SMTP id q1mr28424101ilt.94.1594048342301;
- Mon, 06 Jul 2020 08:12:22 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 08:12:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000032a1a405a9c74d19@google.com>
-Subject: INFO: task hung in rtnl_lock
-From:   syzbot <syzbot+634e86850449c71ddeb1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2444711a-319e-1f9b-1289-7744bb1a2987@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 7/3/20 4:47 AM, Srinivas Kandagatla wrote:
+> Thanks Pierre for the comments,
+> 
+> +Adding Patric Lai into loop,
+> 
+> 
+> 
+> On 02/07/2020 16:00, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 7/2/20 6:11 AM, Srinivas Kandagatla wrote:
+>>> For gapless playback its possible that each track can have different
+>>> codec profile with same decoder, for example we have WMA album,
+>>> we may have different tracks as WMA v9, WMA v10 and so on
+>>>
+>>> Existing code does not allow to change this profile while doing gapless
+>>> playback.
+>>>
+>>> This patch adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL to allow
+>>> userspace to set this new parameters required for new codec profile.
+>>
+>> That does not seem fully correct to me. WMA profiles are actually 
+>> different encoding schemes - specifically the WMA 10 LBR.
+>>
+>> The premise for gapless playback was that the same codec and profile 
+>> be used between tracks, so that the same internal delay was used. If 
+>> you look at the output data, it's made of zeroes for N samples, and 
+>> then you see decoded data. When you change tracks, the first N samples 
+>> actually come from the previous track.
+>>
+>> If you change coding schemes between tracks, you cannot call this 
+>> gapless playback. You will both remove the last N samples of the 
+>> previous track and insert M zeroes (for the new decoder).
+>>
+>> If you wanted to support such a mode, you would need to provide an 
+>> indication of the delay difference, e.g. by looking at the ID3 tags 
+>> and let firmware realign. Unfortunately, you don't send this 
+>> information with the new IOCTL? You would also need firmware tricks 
+>> for the first decoder to flush out its output and the new decoder to 
+>> realign.
+>>
+>> I also don't see how one might end-up with different profiles for an 
+>> album in the first place. The gapless use came mostly from ripping 
+>> live music recorded on audio CDs in different tracks, and it would 
+>> have taken a twisted mind to select different encodings between tracks.
+>>
+>> If the 'album' is really a playlist, then the gapless playback as 
+>> supported by the ASoC compressed layer is nearly useless. What you 
+>> would really want is cross-fade but that's a different use case and 
+>> implementation that would be needed.
+> 
+> Patrick seems to have discussed this topic in detail at one of the audio 
+> conf!
+> 
+> He might want to add more to this discussion.
 
-syzbot found the following crash on:
-
-HEAD commit:    24085f70 Merge tag 'trace-v5.7-rc4' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1436b178100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=efdde85c3af536b5
-dashboard link: https://syzkaller.appspot.com/bug?extid=634e86850449c71ddeb1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+634e86850449c71ddeb1@syzkaller.appspotmail.com
-
-INFO: task syz-executor.2:1813 blocked for more than 143 seconds.
-      Not tainted 5.7.0-rc5-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.2  D29600  1813   7229 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
- __sched_text_start+0x8/0x8
- schedule+0xd0/0x2a0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x11f/0x1d0 mm/memory.c:4799
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x190/0x1d0 mm/memory.c:4799
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- rtnl_lock+0x5/0x20 net/core/rtnetlink.c:72
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- compat_ifr_data_ioctl+0x160/0x160 net/socket.c:3295
- __sanitizer_cov_trace_switch+0x45/0x70 kernel/kcov.c:310
- ioctl_fioasync fs/ioctl.c:601 [inline]
- do_vfs_ioctl+0x50c/0x1360 fs/ioctl.c:704
- ioctl_file_clone+0x180/0x180 fs/ioctl.c:253
- sock_ioctl+0x3ec/0x790 net/socket.c:1204
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- ksys_dup3+0x3c0/0x3c0 include/linux/compiler.h:199
- __do_sys_futex kernel/futex.c:3869 [inline]
- __se_sys_futex kernel/futex.c:3837 [inline]
- __x64_sys_futex+0x380/0x4f0 kernel/futex.c:3837
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
- __do_sys_ioctl fs/ioctl.c:780 [inline]
- __se_sys_ioctl fs/ioctl.c:778 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-INFO: task syz-executor.2:1820 blocked for more than 144 seconds.
-      Not tainted 5.7.0-rc5-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.2  D28408  1820   7229 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
- __sched_text_start+0x8/0x8
- schedule+0xd0/0x2a0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- rtnl_lock net/core/rtnetlink.c:72 [inline]
- rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5451
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- find_held_lock+0x2d/0x110 kernel/locking/lockdep.c:4458
- rcu_read_unlock include/linux/rcupdate.h:651 [inline]
- rtnetlink_rcv_msg+0x3c3/0xad0 net/core/rtnetlink.c:5449
- rtnl_lock net/core/rtnetlink.c:72 [inline]
- rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5451
- rtnl_lock net/core/rtnetlink.c:72 [inline]
- rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5451
- rtnl_bridge_getlink+0x870/0x870 net/core/rtnetlink.c:4654
- netdev_core_pick_tx+0x2e0/0x2e0 net/core/dev.c:3939
- __copy_skb_header+0x270/0x5b0 net/core/skbuff.c:941
- skb_splice_bits+0x1a0/0x1a0 net/core/skbuff.c:2445
- set_track mm/kasan/common.c:57 [inline]
- __kasan_kmalloc mm/kasan/common.c:495 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
- slab_alloc mm/slab.c:3313 [inline]
- kmem_cache_alloc+0x261/0x740 mm/slab.c:3484
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- rtnl_bridge_getlink+0x870/0x870 net/core/rtnetlink.c:4654
- netlink_ack+0xa10/0xa10 net/netlink/af_netlink.c:2426
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_attachskb+0x810/0x810 net/netlink/af_netlink.c:1235
- _copy_from_iter_full+0x25c/0x870 lib/iov_iter.c:800
- __phys_addr_symbol+0x2c/0x70 arch/x86/mm/physaddr.c:42
- overlaps mm/usercopy.c:110 [inline]
- check_kernel_text_object mm/usercopy.c:142 [inline]
- __check_object_size mm/usercopy.c:289 [inline]
- __check_object_size+0x171/0x437 mm/usercopy.c:256
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- aa_af_perm+0x260/0x260 security/apparmor/net.c:141
- netlink_unicast+0x740/0x740 net/netlink/af_netlink.c:82
- netlink_unicast+0x740/0x740 net/netlink/af_netlink.c:82
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- kernel_sendmsg+0x50/0x50 net/socket.c:692
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- sendmsg_copy_msghdr+0x70/0x70 net/socket.c:2391
- rcu_lock_release include/linux/rcupdate.h:213 [inline]
- rcu_read_unlock include/linux/rcupdate.h:655 [inline]
- __fget_files+0x32f/0x500 fs/file.c:734
- ksys_dup3+0x3c0/0x3c0 include/linux/compiler.h:199
- __fget_light fs/file.c:804 [inline]
- __fget_light+0x20e/0x270 fs/file.c:790
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- __sys_sendmsg_sock+0xb0/0xb0 net/socket.c:2429
- __do_sys_futex kernel/futex.c:3869 [inline]
- __se_sys_futex kernel/futex.c:3837 [inline]
- __x64_sys_futex+0x380/0x4f0 kernel/futex.c:3837
- trace_hardirqs_off_caller+0x55/0x230 kernel/trace/trace_preemptirq.c:73
- do_syscall_64+0x21/0x7d0 arch/x86/entry/common.c:288
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-INFO: task syz-executor.2:1821 blocked for more than 145 seconds.
-      Not tainted 5.7.0-rc5-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.2  D29600  1821   7229 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
- __sched_text_start+0x8/0x8
- schedule+0xd0/0x2a0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x11f/0x1d0 mm/memory.c:4799
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x190/0x1d0 mm/memory.c:4799
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- rtnl_lock+0x5/0x20 net/core/rtnetlink.c:72
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- compat_ifr_data_ioctl+0x160/0x160 net/socket.c:3295
- __sanitizer_cov_trace_switch+0x45/0x70 kernel/kcov.c:310
- ioctl_fioasync fs/ioctl.c:601 [inline]
- do_vfs_ioctl+0x50c/0x1360 fs/ioctl.c:704
- ioctl_file_clone+0x180/0x180 fs/ioctl.c:253
- sock_ioctl+0x3ec/0x790 net/socket.c:1204
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- ksys_dup3+0x3c0/0x3c0 include/linux/compiler.h:199
- __do_sys_futex kernel/futex.c:3869 [inline]
- __se_sys_futex kernel/futex.c:3837 [inline]
- __x64_sys_futex+0x380/0x4f0 kernel/futex.c:3837
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
- __do_sys_ioctl fs/ioctl.c:780 [inline]
- __se_sys_ioctl fs/ioctl.c:778 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-INFO: task syz-executor.3:1811 blocked for more than 145 seconds.
-      Not tainted 5.7.0-rc5-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D29304  1811   7322 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
- __sched_text_start+0x8/0x8
- schedule+0xd0/0x2a0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x190/0x1d0 mm/memory.c:4799
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- rtnl_lock+0x5/0x20 net/core/rtnetlink.c:72
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- compat_ifr_data_ioctl+0x160/0x160 net/socket.c:3295
- __sanitizer_cov_trace_switch+0x45/0x70 kernel/kcov.c:310
- ioctl_fioasync fs/ioctl.c:601 [inline]
- do_vfs_ioctl+0x50c/0x1360 fs/ioctl.c:704
- ioctl_file_clone+0x180/0x180 fs/ioctl.c:253
- sock_ioctl+0x3ec/0x790 net/socket.c:1204
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- ksys_dup3+0x3c0/0x3c0 include/linux/compiler.h:199
- __do_sys_futex kernel/futex.c:3869 [inline]
- __se_sys_futex kernel/futex.c:3837 [inline]
- __x64_sys_futex+0x380/0x4f0 kernel/futex.c:3837
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
- __do_sys_ioctl fs/ioctl.c:780 [inline]
- __se_sys_ioctl fs/ioctl.c:778 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-INFO: task syz-executor.3:1819 blocked for more than 146 seconds.
-      Not tainted 5.7.0-rc5-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D29600  1819   7322 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x937/0x1ff0 kernel/sched/core.c:4083
- __sched_text_start+0x8/0x8
- schedule+0xd0/0x2a0 kernel/sched/core.c:4158
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4217
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x11f/0x1d0 mm/memory.c:4799
- mutex_trylock+0x2c0/0x2c0 kernel/locking/mutex.c:126
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- __might_fault mm/memory.c:4814 [inline]
- __might_fault+0x190/0x1d0 mm/memory.c:4799
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- rtnl_lock+0x5/0x20 net/core/rtnetlink.c:72
- sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
- compat_ifr_data_ioctl+0x160/0x160 net/socket.c:3295
- __sanitizer_cov_trace_switch+0x45/0x70 kernel/kcov.c:310
- ioctl_fioasync fs/ioctl.c:601 [inline]
- do_vfs_ioctl+0x50c/0x1360 fs/ioctl.c:704
- ioctl_file_clone+0x180/0x180 fs/ioctl.c:253
- sock_ioctl+0x3ec/0x790 net/socket.c:1204
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- ksys_dup3+0x3c0/0x3c0 include/linux/compiler.h:199
- dlci_ioctl_set+0x30/0x30 net/socket.c:1043
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
- __do_sys_ioctl fs/ioctl.c:780 [inline]
- __se_sys_ioctl fs/ioctl.c:778 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
- __trace_hardirqs_on_caller kernel/locking/lockdep.c:3657 [inline]
- lockdep_hardirqs_on+0x463/0x620 kernel/locking/lockdep.c:3702
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1142:
- #0: ffffffff899bea80 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5754
-1 lock held by in:imklog/6733:
- #0: ffff8880a847c670 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-3 locks held by kworker/0:16/28541:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
- #1: ffffc90008ecfdc0 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
- #2: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: linkwatch_event+0xb/0x60 net/core/link_watch.c:242
-3 locks held by kworker/0:18/28543:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
- #1: ffffc90008edfdc0 (deferred_process_work){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
- #2: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: switchdev_deferred_process_work+0xa/0x20 net/switchdev/switchdev.c:74
-2 locks held by syz-executor.2/1810:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5451
- #1: ffffffff899c2ae0 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:290 [inline]
- #1: ffffffff899c2ae0 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x501/0x620 kernel/rcu/tree_exp.h:856
-1 lock held by syz-executor.2/1813:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
-1 lock held by syz-executor.2/1820:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5451
-1 lock held by syz-executor.2/1821:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
-1 lock held by syz-executor.3/1811:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
-1 lock held by syz-executor.3/1819:
- #0: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: sock_do_ioctl+0x24e/0x2f0 net/socket.c:1066
-3 locks held by kworker/0:0/1861:
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff8880a8c20d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
- #1: ffffc90016dcfdc0 ((addr_chk_work).work){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
- #2: ffffffff8a582e68 (rtnl_mutex){+.+.}-{3:3}, at: addrconf_verify_work+0xa/0x20 net/ipv6/addrconf.c:4584
-3 locks held by (d-rfkill)/1923:
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1142 Comm: khungtaskd Not tainted 5.7.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- lapic_can_unplug_cpu.cold+0x3b/0x3b
- nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0xa8c/0x1010 kernel/hung_task.c:289
- reset_hung_task_detector+0x30/0x30 kernel/hung_task.c:243
- kthread+0x388/0x470 kernel/kthread.c:268
- kthread_mod_delayed_work+0x1a0/0x1a0 kernel/kthread.c:1090
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 161 Comm: kworker/u4:4 Not tainted 5.7.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bat_events batadv_nc_worker
-RIP: 0010:debug_lockdep_rcu_enabled.part.0+0x26/0x50 kernel/rcu/update.c:276
-Code: 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 53 65 48 8b 1c 25 00 1f 02 00 48 8d bb c4 08 00 00 48 89 fa 48 c1 ea 03 0f b6 14 02 <48> 89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 0f 8b 93 c4 08 00
-RSP: 0018:ffffc900015a7bf0 EFLAGS: 00000807
-RAX: dffffc0000000000 RBX: ffff8880a88203c0 RCX: 1ffffffff1513102
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8880a8820c84
-RBP: 0000000000000000 R08: ffff8880a88203c0 R09: fffffbfff1512ac1
-R10: ffffffff8a895607 R11: fffffbfff1512ac0 R12: ffffffff899bea80
-R13: ffffffff87b5f976 R14: dffffc0000000000 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000028e10ac0 CR3: 000000009fff9000 CR4: 00000000001406f0
-DR0: 0000000020000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-Call Trace:
- trace_lock_release include/trace/events/lock.h:58 [inline]
- lock_release+0x59e/0x800 kernel/locking/lockdep.c:4951
- process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
- lock_downgrade+0x840/0x840 kernel/locking/lockdep.c:4579
- rcu_lock_release include/linux/rcupdate.h:213 [inline]
- rcu_read_unlock include/linux/rcupdate.h:655 [inline]
- batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
- batadv_nc_worker+0x21c/0x760 net/batman-adv/network-coding.c:718
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- lock_release+0x800/0x800 kernel/locking/lockdep.c:4689
- pwq_dec_nr_in_flight+0x310/0x310 kernel/workqueue.c:1198
- rwlock_bug.part.0+0x90/0x90 include/linux/sched.h:1329
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- process_one_work+0x16a0/0x16a0 kernel/workqueue.c:2273
- kthread+0x388/0x470 kernel/kthread.c:268
- kthread_mod_delayed_work+0x1a0/0x1a0 kernel/kthread.c:1090
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+One more counter-argument I thought of after sending my response. If the 
+samples for the previous track and the next track are not generated by 
+the *same* filterbank, then you would lose the implicit averaging 
+between tracks performed by the filterbank (usually an inverse MDCT), 
+which will likely result in sample discontinuities and pop noise on 
+transitions. If we have different filterbanks we should really look into 
+explicit cross-fading which is a much larger change than what this patch 
+suggests.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
