@@ -2,111 +2,165 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD483C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB90120720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE3C20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="pt6KGDZP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CoLuSu+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgGFLwb (ORCPT
+        id S1729049AbgGFLxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:52:31 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:41455 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728414AbgGFLwa (ORCPT
+        Mon, 6 Jul 2020 07:53:25 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:54675 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgGFLxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:52:30 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id sPd3j8eCUBncFsPd6jvGUZ; Mon, 06 Jul 2020 13:52:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594036348; bh=wPbqN09DUqoq1F6TV85LI76gqa+lhk27jZ43aOotfmw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=pt6KGDZPMi8JHPbVsMr0qe2IlMQlR/cGG9kI0wp2jVT5AGFe3FW280LMEP5HVUxkr
-         sOv7a2KzWpKuZ3wgkY2mX8qBc9ZNPPyXU+ZnR0UNyDXL/MSxVGWhNcSORItQpxGIoV
-         tXtHxZq2XaSXILwyTSFuCwsi8EDyE5HgazW7H+MKfdmUYyS1I33zMcHrjns22+STCx
-         CrqKSfQxljDD58PIfKKNkM6Pp/FOORSjzKO4wIo7U91cWfd3nrcOjYTJ4CeD4DP5+9
-         qbUrEuUVphbrpP5YJ2U1eBSFbYkfQ2z07LyeOs/ZxXzo5eJDqoSZUWsHkwwrcEt7DA
-         5gfh8nQsrNYww==
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <0e25a523-c911-0973-65ba-49883d2383fd@xs4all.nl>
-Date:   Mon, 6 Jul 2020 13:49:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 6 Jul 2020 07:53:25 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200706115321epoutp031b11f6797596bb9140452bfaeea91262~fJ6l66Gef1566215662epoutp03e
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:53:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200706115321epoutp031b11f6797596bb9140452bfaeea91262~fJ6l66Gef1566215662epoutp03e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594036402;
+        bh=YWg4luROLP4xBfYG4qczq7X6qEYCnDiWFsPOOppQygw=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=CoLuSu+Iat8YGHYQl9Z7e8HOUhi39FwXRvzXs+ldki0N8IgxaVmD2ck7SX2i3+CKa
+         XFFTM9c3JafdNcrSDkgU+RXP3T7OQTXpyeT/0bXaHWzT043U/dc7WfpEDfVLsk7sdy
+         Zw3G/33/0PmSJXiVKfnSWoeRHE6RagWJdYZDdWwQ=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200706115321epcas5p491b6d727c6a794a976ed928f07e07263~fJ6lBgaDw2065120651epcas5p4F;
+        Mon,  6 Jul 2020 11:53:21 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-ba-5f0310b00d30
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D5.18.09703.0B0130F5; Mon,  6 Jul 2020 20:53:20 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH] fs: fat: add check for dir size in fat_calc_dir_size
+Reply-To: anupam.al@samsung.com
+From:   Anupam Aggarwal <anupam.al@samsung.com>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+CC:     AMIT SAHRAWAT <a.sahrawat@samsung.com>,
+        VIVEK TRIVEDI <t.vivek@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <87zh8gct29.fsf@mail.parknet.co.jp>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20200706115303epcms5p262a630cd1517632c48e4f72a68d98b0c@epcms5p2>
+Date:   Mon, 06 Jul 2020 17:23:03 +0530
+X-CMS-MailID: 20200706115303epcms5p262a630cd1517632c48e4f72a68d98b0c
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMhGvfNQdbbFSvkix5vSPRd+I8BouJ5k7sjraltxZCW/i73BR+XvWsWG+LK/vagCGbnhHotLMqr7F12wUckqW2dDCYLI1WjfHwU6T8z58+I7/c5DSW5r
- GsZmRBk42bFNWH4byB0XAEw258h1xft3GbFKph8J+gb/EvKy3BgizZLARAEMNkSSO+1RL9vyT137dmsk+pdPontXZVNdRYfzWfhgFNAvRNz9vUJ0OLgjkBiL
- G0nA+IBDdLhdfZjysqQRJHZ0/VXWEc4ph+3wVmVOw5Xsi169OoU03m77VXdcA1nL5rMee0ZglYEHGYXmHuJMSPraRPPWel1PqshRUNzFaKJcqumHFbIZNuez
- IuXF1Crcj5rQyLzirwWZu41R4AlAD70ccmumPb3K+DQeYeuABYWJXk0cmb3G0QzEG5rMVHM600wWN7jYbxFIOgsCjSmdMCR2w9IjDf5CKS4n4kN8w1xUsH/g
- otxL1TDD7cKOw2YG9SJ+3Li/lquKUK9TWYRceMo3Kx54gzk66kIhHkb2qRPbbkV20lfzOy1+AvWCvkR5Ikf7DMjjSmGUX+dPSxwnZYtSqHNR0SsTOq6N6I8O
- /MpQJ31ZAAYlUsE0B2t2UMHZgqWPcS1uSk/qC/P6krIqArn+P2yPxq8zG2SdxS+r2mLGG37xf4+iJrFer+yVVUDG
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7bCmhu4GAeZ4g3dTLC0u7k61mD53A4vF
+        5V1z2Cxe9m1kc2DxuP820aNvyypGj8+b5AKYo7hsUlJzMstSi/TtErgytv96zlSwUbziSfNi
+        pgbGFuEuRk4OCQETia1r5jJ3MXJxCAnsZpR492whkMPBwSsgKPF3B1iNsICnxL9T+1hAbCEB
+        eYnvCz4xQ8T1JRac7mEDsdkEdCXmvpjNCmKLCBhIPFx+hA1kJrPAJEaJndMfskEs45WY0f6U
+        BcKWlti+fCsjiM0J1HBhzweoGlGJm6vfssPY74/NZ4SwRSRa751lhrAFJR783A0Vl5E4sW4N
+        I8gyCYF+RolnH1uZIJwZjBJX1zyG2mYusXvDPDCbV8BXYtb9ZjCbRUBVYsPWJqhJLhL3Zk0D
+        izMDvbn97RxwSDALaEqs36UPUSIrMfXUOiaIEj6J3t9PmGAe2zEPxlaWmHrtNSuELSnxuLMV
+        6mgPicmbp7JDQvoks8Siux8YJzAqzEIE9iwkm2chbF7AyLyKUTK1oDg3PbXYtMAoL7Vcrzgx
+        t7g0L10vOT93EyM4bWh57WB8+OCD3iFGJg7GQ4wSHMxKIry92ozxQrwpiZVVqUX58UWlOanF
+        hxilOViUxHmVfpyJExJITyxJzU5NLUgtgskycXBKNTBNUmxd/SVEZP1BnZNfuhmmSLaK6Hon
+        8rPK3/MT33D4ArOIZPe1c7s3+Z9ZZavqzxTwbBGv/9sbal19OeeP5MZVzyu/fqbxfFuAmtGM
+        oy6xzzTfxHMbHBHJ8EzZfnHHPfelfME7fpbkqzx4eWmuAAPb0Z4rhuL7+L1+xq59dWvdJv6J
+        Ugb59Q+WqHu/Ka9KmdnjXjRh+/ry7h/rprD59/I5GMcf4tn8v2ifx7ZNZqxdkt9/rPBP+CsQ
+        e1ThtZS7qL/nPFf/t48ede4vm7flbO59l11Ppny1/rl0NwPDLRvPXbFTdsV/m7jBSIqJI/5q
+        MPe0GX0h9eve7Wyawrhuaa51Xvy8otdO04v/8b3x12BUYinOSDTUYi4qTgQAXp0twooDAAA=
+X-CMS-RootMailID: 20200629110320epcas5p34ccccc7c293f077b34b350935c328215
+References: <87zh8gct29.fsf@mail.parknet.co.jp>
+        <20200630170748epcms5p87fa9b4348c1448d2d5a5f6cdddbc021e@epcms5p8>
+        <875zb8o6zh.fsf@mail.parknet.co.jp> <87ftacolpf.fsf@mail.parknet.co.jp>
+        <1593428559-13920-1-git-send-email-anupam.al@samsung.com>
+        <20200630123355epcms5p602efe0e4ceedcfe11eae2153c8466678@epcms5p6>
+        <20200703142939epcms5p1440ec65f7e8a3e4741ade2496135d747@epcms5p1>
+        <CGME20200629110320epcas5p34ccccc7c293f077b34b350935c328215@epcms5p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 03:41, Sowjanya Komatineni wrote:
-> This patch adds support to capture from the external sensor
-> based on device graph in the device tree.
-> 
-> Driver walks through the device graph to create media links
-> between the entities and registers and unregisters video devices
-> when the corresponding sub-devices are bound and unbound.
-> 
-> Channel formats are enumerated based on available formats from
-> the sensor and the corresponding matched formats from the Tegra
-> supported video formats list.
-> 
-> Each Tegra CSI instance can be configured as 4-lane or 2-lane
-> based on supported lane configuration from the sensor through
-> the device tree.
-> 
-> Currently this driver supports V4L2 video node centric only.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/tegra-video/Kconfig    |   1 +
->  drivers/staging/media/tegra-video/csi.c      | 128 +++++-
->  drivers/staging/media/tegra-video/csi.h      |   1 +
->  drivers/staging/media/tegra-video/tegra210.c |   2 +-
->  drivers/staging/media/tegra-video/vi.c       | 623 +++++++++++++++++++++++++--
->  drivers/staging/media/tegra-video/vi.h       |  23 +-
->  6 files changed, 726 insertions(+), 52 deletions(-)
-> 
+Hi Ogawa,
 
-<snip>
+>Anyway, fsck would be main way. And on other hand, if we want to add
+>mitigation for corruption, we would have to see much more details of
+>this corruption.  Can you put somewhere to access the corrupted image
+>(need the only metadata) to reproduce?
 
-> +static int tegra_csi_channels_alloc(struct tegra_csi *csi)
-> +{
-> +	struct device_node *node = csi->dev->of_node;
-> +	struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
+Sorry, uploading of any file not allowed from within.
+So, metadata image is not possible to be shared via. upload.
+Can try to arrange few more logs via. fsck.
 
-A bus_type value of 0 is deprecated, this should be set to a valid
-bus_type (probably V4L2_MBUS_CSI2_DPHY).
+>What happens if you recursively traversed directories on Windows? This
+>issue happens on Windows too?
 
-Regards,
+After connecting USB to windows 10, when corrupted dir(\CorruptedDIR) is browsed,
+it shows 2623 number of files and directories, without delay.
+Name and timestamps of those file/directories are garbage values.
 
-	Hans
+Further if we browse these sub-directories and open files of corrupted dir(\CorruptedDIR)
+following popups are coming on Windows 10:
+1. The filename, directory name, or volume label syntax is incorrect
+2. Specified path does not exist. Check the path and try again
+
+So issue of un-ending browsing(ls -lR) of corrupted USB is not coming on windows 10,
+it lists limited number of files/directories, of corrupted dir(\CorruptedDIR) without delay.
+
+>BTW, if you run fsck, the corrupted directories and issue are gone at
+>least?
+
+Yes, issues are gone, after running "chkdsk /f" on USB, on Windows 10 PC,
+corrupted directory(\CorruptedDIR) is converted to file of 1.06 GB,
+so issues are not coming further.
+Following is the output of chkdsk write only mode.
+
+--------------------------------------------------------------------------------------
+
+chkdsk /f e:
+The type of the file system is FAT32.
+Volume AAA created 12/28/2018 3:15 PM
+Volume Serial Number is 1606-72DC
+Windows is verifying files and folders...
+The \$TXRAJNL.DAT entry contains a nonvalid link.
+The size of the \$TXRAJNL.DAT entry is not valid.
+Unrecoverable error in folder \CorruptedDIR.
+Convert folder to file (Y/N)? Y
+\DDD\file.txt is cross-linked on allocation unit 736512.
+Cross link resolved by copying.
+\BBB\file1.txt is cross-linked on allocation unit 433153.
+Cross link resolved by copying.
+\System Volume Information\LightningSand.CFD is cross-linked on allocation unit 1114114.
+Cross link resolved by copying.
+\CCC\file1.txt is cross-linked on allocation unit 179989.
+Cross link resolved by copying.
+File and folder verification is complete.
+Convert lost chains to files (Y/N)? Y
+3531520 KB in 31 recovered files.
+
+Windows has made corrections to the file system.
+No further action is required.
+   30,015,472 KB total disk space.
+          400 KB in 2 hidden files.
+        2,816 KB in 49 folders.
+   23,470,800 KB in 7,616 files.
+    6,539,408 KB are available.
+
+       16,384 bytes in each allocation unit.
+    1,875,967 total allocation units on disk.
+      408,713 allocation units available on disk.
+
+--------------------------------------------------------------------------------------
+
+Thanks,
+Anupam
