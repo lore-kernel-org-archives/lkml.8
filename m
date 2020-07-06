@@ -2,125 +2,166 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D39C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D0520675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEF120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BeTQRyoG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5VgFNhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgGFTkZ (ORCPT
+        id S1726819AbgGFTlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        Mon, 6 Jul 2020 15:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFTkZ (ORCPT
+        with ESMTP id S1725860AbgGFTlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:40:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E687C061755;
-        Mon,  6 Jul 2020 12:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Fga2epNTXBelXbYkbTxROQdchUloEASZKoCcJ/iKrWw=; b=BeTQRyoGVX7klkBfy71IhIii42
-        JLJVPvYdGVws5AyPO2wATPQh812LcOHjFg8RqbL8QgCaxHK+B103YXboryKFzbnforwfw09tNatE9
-        Ijvwo8PiAqBc+pqw5sDe87w5LOI2SYN6KwrLb1mF4UNVYiAxzyYRJj/nUVEy5N9Th6O/tYCF8VpZV
-        yC2XlC+u2k195dE9l9ZVM2DO+equSQoon5zhP1iEjupkjTXqD4be/tJ9YsR2I1ClBCDJd+yYpIZXF
-        Q6+cIuj+PAzHD6t30ZZbYPyuTxPG3nfJprRPcGf3KxUTK93dlpHy3vdg6mTpTVbfsaduXM8c65F50
-        6jIUEBlQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsWyN-0001u4-QE; Mon, 06 Jul 2020 19:40:16 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D9A28980DD2; Mon,  6 Jul 2020 21:40:12 +0200 (CEST)
-Date:   Mon, 6 Jul 2020 21:40:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200706194012.GA5523@worktop.programming.kicks-ass.net>
-References: <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703144228.GF9247@paulmck-ThinkPad-P72>
- <20200706162633.GA13288@paulmck-ThinkPad-P72>
- <20200706182926.GH4800@hirez.programming.kicks-ass.net>
- <20200706183933.GE9247@paulmck-ThinkPad-P72>
+        Mon, 6 Jul 2020 15:41:22 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D50C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 12:41:22 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so10731455pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 12:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=78gbXC4jpMxACpM+0X+F7N8cUTEI4DO/gKeVwOGZ9qU=;
+        b=V5VgFNhGXqswwi5GR+kyly4RkrsxGKxeDE+n/J7r7r3FRVCoXzf2pnhWJT/D2haUEw
+         VExqaJnlmvnuxe1OkmR8Lq1oaIf2u23x/yDEpIfKpS36r4/slqYsJzSZVhJm7Jg/wbnc
+         TMFFyya8wbFRDa+uTi4TB4Xr4N2NT4wFzZ/kv5GssMwaHrsIRvOnzEQh52o6OQB72lY8
+         sEFBLE4mxjbLgRLSyR3XaaNkkpLZd+dVizhT3lZOZHpzhK+sJtdrkwsJeRWbi9BnxS06
+         QNlkeMHZyu0pjKlC1x6I5EKT4dOSQ2Pcfu9j5NHWM14FnGu5mh8fW9ZN87QbYplPw4R6
+         lgjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=78gbXC4jpMxACpM+0X+F7N8cUTEI4DO/gKeVwOGZ9qU=;
+        b=XClBGYyj5JFYq+gu/RhDSPWNHmumxg7xuE8oqotdJLPVdrksZe3UhiQkS6tUm1IiKx
+         jYAitYsuCxawcKysLXZ9brfrpOCKc/0rpsISwILPmLHebNLoTzxmZepDFrGOWPet4lyD
+         LcKbcXK4IlUbaNRj1/WvxH3gspv0Cg7JmBznbV0osaF0cdtmaY6Q8IhADvhbLANEmVLK
+         twHDuMO7kvMFFdqA29LgH5mPA6Qd6rQY201as/kAABeqQ37IItdc/pNKu1BPXhiyx7L3
+         hnyicMfAi/19wWwxrR1dWXive0ittRG2hZ3qcskU9A0IjuIFRy2jjw5P5h7WiiLsbbEe
+         MCXw==
+X-Gm-Message-State: AOAM533XlQKHpn4pHSB8SOxIj5v3xf2fBinE4PJ2CM1kZp34XE3J62xm
+        cyyA7GiJvNjNAA5vv3OPoKg=
+X-Google-Smtp-Source: ABdhPJztwcMBxWZeBaAvpZQruLixu+OvW+j6IhBkC3mk+YmSSEvgwVjFwvd58Du6wbyJ72ZxjYs/UA==
+X-Received: by 2002:a17:902:b682:: with SMTP id c2mr33488277pls.273.1594064482214;
+        Mon, 06 Jul 2020 12:41:22 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c2sm19613693pgk.77.2020.07.06.12.41.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jul 2020 12:41:21 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:41:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes
+ to Linux error codes
+Message-ID: <20200706194120.GB180826@roeck-us.net>
+References: <20200704142607.171400-1-linux@roeck-us.net>
+ <20200706185230.GA792857@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706183933.GE9247@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200706185230.GA792857@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:39:33AM -0700, Paul E. McKenney wrote:
-> On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
-> > On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
-
-> > If they do not consider their Linux OS running correctly :-)
+On Mon, Jul 06, 2020 at 11:52:30AM -0700, Prashant Malani wrote:
+> Hi Guenter,
 > 
-> Many of them really do not care at all.  In fact, some would consider
-> Linux failing to run as an added bonus.
-
-This I think is why we have compiler people in the thread that care a
-lot more.
-
-> > > Nevertheless, yes, control dependencies also need attention.
+> On Sat, Jul 04, 2020 at 07:26:07AM -0700, Guenter Roeck wrote:
+> > The EC reports a variety of error codes. Most of those, with the exception
+> > of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+> > error code gets lost. Convert all EC errors to Linux error codes to report
+> > a more meaningful error to the caller to aid debugging.
 > > 
-> > Today I added one more \o/
+> > Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> > Cc: Prashant Malani <pmalani@chromium.org>
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > ---
+> >  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
+> >  1 file changed, 29 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> > index 3e745e0fe092..10aa9e483d35 100644
+> > --- a/drivers/platform/chrome/cros_ec_proto.c
+> > +++ b/drivers/platform/chrome/cros_ec_proto.c
+> > @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+> >  }
+> >  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+> >  
+> > +static const int cros_ec_error_map[] = {
+> > +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
+> > +	[EC_RES_ERROR] = -EIO,
+> > +	[EC_RES_INVALID_PARAM] = -EINVAL,
+> > +	[EC_RES_ACCESS_DENIED] = -EACCES,
+> > +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
+> > +	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
+> > +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
+> > +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
+> > +	[EC_RES_UNAVAILABLE] = -ENODATA,
+> > +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
+> > +	[EC_RES_OVERFLOW] = -EOVERFLOW,
+> > +	[EC_RES_INVALID_HEADER] = -EBADR,
+> > +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
+> > +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
+> > +	[EC_RES_BUS_ERROR] = -EFAULT,
+> > +	[EC_RES_BUSY] = -EBUSY,
+> > +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+> > +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
+> > +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
+> > +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
+> > +};
+> > +
+> >  /**
+> >   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+> >   * @ec_dev: EC device.
+> > @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
+> >   *
+> >   * Return:
+> >   * >=0 - The number of bytes transferred
+> > - * -ENOTSUPP - Operation not supported
+> > - * -EPROTO - Protocol error
+> > + * <0 - Linux error code
+> >   */
+> >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >  			    struct cros_ec_command *msg)
+> > @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >  	ret = cros_ec_cmd_xfer(ec_dev, msg);
+> >  	if (ret < 0) {
+> >  		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+> > -	} else if (msg->result == EC_RES_INVALID_VERSION) {
+> > -		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
+> > -			msg->result);
+> > -		return -ENOTSUPP;
+> >  	} else if (msg->result != EC_RES_SUCCESS) {
+> > -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+> > -		return -EPROTO;
+> > +		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
 > 
-> Just make sure you continually check to make sure that compilers
-> don't break it, along with the others you have added.  ;-)
+> Do we expect a case where cros_ec_error_map[msg->result] == 0?
+> 
 
-There's:
+It seemed to be prudent to assume that this code is not going to be
+updated whenever a new EC error code is added. Doing nothing would
+risk returning 0, and addding WARN_ON or dev_warn seemed excessive.
+Having said that, I don't really have a strong opinion one way
+or another, and I'll be happy to change the code to whatever people
+think is appropriate.
 
-kernel/locking/mcs_spinlock.h:  smp_cond_load_acquire(l, VAL);                          \
-kernel/sched/core.c:                    smp_cond_load_acquire(&p->on_cpu, !VAL);
-kernel/smp.c:   smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
-
-arch/x86/kernel/alternative.c:          atomic_cond_read_acquire(&desc.refs, !VAL);
-kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-kernel/locking/qrwlock.c:       atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
-kernel/locking/qrwlock.c:               atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
-kernel/locking/qspinlock.c:             atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_MASK));
-kernel/locking/qspinlock.c:     val = atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK));
-
-include/linux/refcount.h:               smp_acquire__after_ctrl_dep();
-ipc/mqueue.c:                   smp_acquire__after_ctrl_dep();
-ipc/msg.c:                      smp_acquire__after_ctrl_dep();
-ipc/sem.c:                      smp_acquire__after_ctrl_dep();
-kernel/locking/rwsem.c:                 smp_acquire__after_ctrl_dep();
-kernel/sched/core.c:    smp_acquire__after_ctrl_dep();
-
-kernel/events/ring_buffer.c:__perf_output_begin()
-
-And I'm fairly sure I'm forgetting some... One could argue there's too
-many of them to check already.
-
-Both GCC and CLANG had better think about it.
+Thanks,
+Guenter
