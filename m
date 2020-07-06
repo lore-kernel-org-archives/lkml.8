@@ -2,158 +2,98 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F900C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24715C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6271A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E5E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OiPrZ6cj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaJIJFgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgGFSHT (ORCPT
+        id S1729767AbgGFSH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
+        Mon, 6 Jul 2020 14:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgGFSHT (ORCPT
+        with ESMTP id S1729632AbgGFSH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:07:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13890C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:07:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so39146431wrw.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:07:19 -0700 (PDT)
+        Mon, 6 Jul 2020 14:07:58 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74980C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 11:07:58 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id md7so2225383pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 11:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6v9FIWCIeOzcFoSiEjxVT32PHdVCjUSSD17GJl3wu48=;
-        b=OiPrZ6cjcKidg6tXPuhtFQBOdB7fY7SgMHE5cuBBvB3cwbQMCkvHK47FDz/c4SX0Jn
-         paBZsWa0lEt3te/bij/kWz+kg/9jTtw+OqOXGf5xwHjPvpSkK6KVbXEMqxSJF0kPY4hg
-         YvkwuKFXao4a959aH8UrtX1yI2v01oShnKMls=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TtTy8zAxVVVpMKoPB5sObxEUTYAxQ4ESDdw3dI7IOfA=;
+        b=oaJIJFgUBmb7qZXeWwHQwIJgUXFmUxHmjzR/a7ly4+R/L5J6R2D0uaBXx6qjgig7XL
+         IcTfx+7t20+5Z9InaIZohd+NXxgQroM7drjaj2oeyhSmyGQyPuwslXxB08Sr1k/TFIrt
+         3vjcEts6w/HrO1mJ2/Wm0DA4nXEfBdTSDzWhRgorpzUGd6iUTNwuHKtQy8qEvPBNDmEi
+         I8CN9f/N0NnZkCGRw9NQPNyVWTqZX2D6NQEQh6NkVROkIEj8xEOFG1mjUJ9J9t2fTGpK
+         Vs/AuIQZd8mOC96Bsi0mfi8wSoU4KUR+ozHTEGiBwRV2YYf7jrNpWFfYb83DxP4DcZJi
+         NMNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6v9FIWCIeOzcFoSiEjxVT32PHdVCjUSSD17GJl3wu48=;
-        b=AIfSJbY9AJuBD1QmAbQ0tvBxwzUVO2mXPRuVcg+DJ5JnIUbO4pUOkzt4rQZdWQLNa6
-         Ugg5logv3RUZbRt6yqUvFaMihryVnejkf3LSSHs5PGDGXlYvRkFsXzncMpOXvBdQqJ21
-         Vppmhy7LuSpX71htQ2MxJsS7L2+o65Y8DD9OOh3TRJPqy7RNEqUVP55itIk6m67CA0Yd
-         1ASWdjfA/M5Uu9FflRZCKZo0+mVsYNGD2QDyoQH8dWUeqE0G52YVu6FfUt4u0xijujQy
-         5QoEgdQ01oNfOZCaegLkhTLiwGYdO/wO+yZkY62BUtmq+obOuWg49St1u/g6GYpnlNn2
-         BpuQ==
-X-Gm-Message-State: AOAM531u6NMRX2P/ZgaYcMILecLqdof+Px0JQodg8wz/5lJ9LdBxYqN2
-        B0YS5kBfPGA3nErJ/AN6EVwC5O08g33N+GeofNo+1WKW9qYK6I7GOOuFTmBI1yLHCCEfuvw/rok
-        JekyaCHgOQ06OCCfg4EZMaC790PoNfSkdR5sxdfBr5fwT8eS5hAYpgi4keP9YDHBDdfWF/5aHhV
-        NO
-X-Google-Smtp-Source: ABdhPJzFnxPliCsryeT/J807tHklpeb0GWEWo23lO9wsVURKfYEeHbUhT8twrbhf0fyRttn3Jnko0w==
-X-Received: by 2002:a5d:40cf:: with SMTP id b15mr49278068wrq.319.1594058836757;
-        Mon, 06 Jul 2020 11:07:16 -0700 (PDT)
-Received: from [192.168.1.201] (d162-156-48-252.bchsia.telus.net. [162.156.48.252])
-        by smtp.gmail.com with ESMTPSA id v5sm24572554wre.87.2020.07.06.11.07.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 11:07:15 -0700 (PDT)
-Subject: Re: [PATCH v2] pinctrl: nsp: Set irq handler based on trig type
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, sbranden@broadcom.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20200703011830.15655-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <900a32bf-9c8c-eafd-fb04-08b4eeac4428@broadcom.com>
-Date:   Mon, 6 Jul 2020 11:07:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200703011830.15655-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TtTy8zAxVVVpMKoPB5sObxEUTYAxQ4ESDdw3dI7IOfA=;
+        b=oDKQitj8jGJSlN2VVCzuj5TP7l5V015fAy6kAxV3UP6pzz3tuv8Agn7eKbHT6CKHCu
+         qHO8wYaHMkexdjld9XfJ//i0aYG7bKPo9/7DBcszMKRdZTz/Ub5k4hDDmMnKUSG+CzYO
+         IoQPcRHvoBm0dppR2trDP8wDzmJoauFrEYeE/8hbWbB99HiPHFg+awVaMl+UiD1hiBQd
+         8mo50qxISSpBpgOthCzX2fJLqc9OOxQWc7KdyQCh7j+7bg/DlrfndpvCBZlI1CgxxzE2
+         aAQnRPraqT1E6lYqZIqKMUexNLyjFT4cASry2mXVE5hDh+Eb9t+elMLogcTCKfCVBZH8
+         Gvsw==
+X-Gm-Message-State: AOAM531fN2ZcPoHAlN3e45+73xiLwFHVYuczp+begn6dEHsbQzA5AFi+
+        MhhjRqypjClb45aV2VJkSfQ=
+X-Google-Smtp-Source: ABdhPJzylX3osTAYA+Y6HJUZkzAC+UoJPBxpVk5NUh8tucD8BuQqoVsDbrqW5FAUg6C5IOlbZXlbQg==
+X-Received: by 2002:a17:902:c206:: with SMTP id 6mr19932000pll.30.1594058877935;
+        Mon, 06 Jul 2020 11:07:57 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.171.43.125])
+        by smtp.gmail.com with ESMTPSA id 199sm20425544pgc.79.2020.07.06.11.07.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jul 2020 11:07:57 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Paul Durrant <xadimgnik@gmail.com>
+Subject: [PATCH v2 0/3] Few bug fixes and Convert to pin_user_pages*()
+Date:   Mon,  6 Jul 2020 23:46:09 +0530
+Message-Id: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+This series contains few clean up, minor bug fixes and
+Convert get_user_pages() to pin_user_pages().
 
-On 7/2/2020 6:18 PM, Mark Tomlinson wrote:
-> Rather than always using handle_simple_irq() as the gpio_irq_chip
-> handler, set a more appropriate handler based on the IRQ trigger type
-> requested. This is important for level triggered interrupts which need
-> to be masked during handling. Also, fix the interrupt acknowledge so
-> that it clears only one interrupt instead of all interrupts which are
-> currently active. Finally there is no need to clear the interrupt during
-> the interrupt handler, since the edge-triggered handler will do that for
-> us.
-> 
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
-> Changes in v2:
-> - Don't perform unnecessary acks.
-> 
->  drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> index bed0124388c0..a00a42a61a90 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> @@ -154,15 +154,9 @@ static irqreturn_t nsp_gpio_irq_handler(int irq, void *data)
->  		level &= readl(chip->base + NSP_GPIO_INT_MASK);
->  		int_bits = level | event;
->  
-> -		for_each_set_bit(bit, &int_bits, gc->ngpio) {
-> -			/*
-> -			 * Clear the interrupt before invoking the
-> -			 * handler, so we do not leave any window
-> -			 */
-> -			writel(BIT(bit), chip->base + NSP_GPIO_EVENT);
-> +		for_each_set_bit(bit, &int_bits, gc->ngpio)
->  			generic_handle_irq(
->  				irq_linear_revmap(gc->irq.domain, bit));
-> -		}
->  	}
->  
->  	return  int_bits ? IRQ_HANDLED : IRQ_NONE;
-> @@ -178,7 +172,7 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
->  
->  	trigger_type = irq_get_trigger_type(d->irq);
->  	if (trigger_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
-> -		nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
-> +		writel(val, chip->base + NSP_GPIO_EVENT);
->  }
->  
->  /*
-> @@ -262,6 +256,12 @@ static int nsp_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  
->  	nsp_set_bit(chip, REG, NSP_GPIO_EVENT_INT_POLARITY, gpio, falling);
->  	nsp_set_bit(chip, REG, NSP_GPIO_INT_POLARITY, gpio, level_low);
-> +
-> +	if (type & IRQ_TYPE_EDGE_BOTH)
-> +		irq_set_handler_locked(d, handle_edge_irq);
-> +	else
-> +		irq_set_handler_locked(d, handle_level_irq);
-> +
->  	raw_spin_unlock_irqrestore(&chip->lock, flags);
->  
->  	dev_dbg(chip->dev, "gpio:%u level_low:%s falling:%s\n", gpio,
-> @@ -691,7 +691,7 @@ static int nsp_gpio_probe(struct platform_device *pdev)
->  		girq->num_parents = 0;
->  		girq->parents = NULL;
->  		girq->default_type = IRQ_TYPE_NONE;
-> -		girq->handler = handle_simple_irq;
-> +		girq->handler = handle_bad_irq;
->  	}
->  
->  	ret = devm_gpiochip_add_data(dev, gc, chip);
-> 
+I'm compile tested this, but unable to run-time test,
+so any testing help is much appriciated.
 
-This change looks good to me. Thanks!
+v2:
+	Addressed few review comments and compile issue.
+	Patch[1/2] from v1 split into 2 in v2.
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Paul Durrant <xadimgnik@gmail.com>
+
+Souptick Joarder (3):
+  xen/privcmd: Corrected error handling path
+  xen/privcmd: Mark pages as dirty
+  xen/privcmd: Convert get_user_pages*() to      pin_user_pages*()
+
+ drivers/xen/privcmd.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+
+-- 
+1.9.1
+
