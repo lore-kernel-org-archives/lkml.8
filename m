@@ -2,112 +2,121 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F092C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B2C20724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631992070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgGFNHW (ORCPT
+        id S1729228AbgGFNIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:07:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55535 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbgGFNHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:07:19 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jsQq3-0006Z1-3m; Mon, 06 Jul 2020 13:07:15 +0000
-Date:   Mon, 6 Jul 2020 15:07:13 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 4/7] pidfd: Replace open-coded partial
- fd_install_received()
-Message-ID: <20200706130713.n6r3vhn4hn2lodex@wittgenstein>
-References: <20200617220327.3731559-1-keescook@chromium.org>
- <20200617220327.3731559-5-keescook@chromium.org>
+        Mon, 6 Jul 2020 09:08:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60362 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728940AbgGFNIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:08:00 -0400
+IronPort-SDR: PAUZQ4jXmiTfEPef6XXj32r3N08D+GF9xHWioZtT4ElwZNhDKnTx8BkDqe2OJLi0bJnhoEvV/v
+ grjTFT3OZE/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="148907933"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="148907933"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 06:08:00 -0700
+IronPort-SDR: d6CGC1Xspusv/7UecsX08VdaFWTPpZODBPwIKLGeYXPYQVon6+IBZqHzJBbQTN0r3P+5+2I0SK
+ xpkv3X2yCcww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="305291735"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 06:07:59 -0700
+Received: from [10.249.225.12] (abudanko-mobl.ccr.corp.intel.com [10.249.225.12])
+        by linux.intel.com (Postfix) with ESMTP id 67800580378;
+        Mon,  6 Jul 2020 06:07:56 -0700 (PDT)
+Subject: Re: [PATCH v9 09/15] perf stat: factor out event handling loop into
+ dispatch_events()
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+ <e4ccb3e9-5f5e-36bf-4a87-dd9d7098d83b@linux.intel.com>
+ <20200706122717.GC3401866@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <6af18510-0a01-f2a6-bc5c-27ee3283f3ad@linux.intel.com>
+Date:   Mon, 6 Jul 2020 16:07:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200706122717.GC3401866@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200617220327.3731559-5-keescook@chromium.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:03:24PM -0700, Kees Cook wrote:
-> The sock counting (sock_update_netprioidx() and sock_update_classid()) was
-> missing from pidfd's implementation of received fd installation. Replace
-> the open-coded version with a call to the new fd_install_received()
-> helper.
+
+On 06.07.2020 15:27, Jiri Olsa wrote:
+> On Fri, Jul 03, 2020 at 10:46:15AM +0300, Alexey Budankov wrote:
+>>
+>> Consolidate event dispatching loops for fork, attach and system
+>> wide monitoring use cases into common dispatch_events() function.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/builtin-stat.c | 42 +++++++++++++++++++++++++--------------
+>>  1 file changed, 27 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 3e11f854ffc8..723f1fe27d63 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -550,6 +550,30 @@ static bool is_target_alive(struct target *_target,
+>>  	return false;
+>>  }
+>>  
+>> +static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
+>> +{
+>> +	bool stop = false;
+>> +	int child_exited = 0, status = 0;
+>> +
+>> +	while (1) {
+>> +		if (forks)
+>> +			child_exited = waitpid(child_pid, &status, WNOHANG);
+>> +		else
+>> +			child_exited = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
+>> +
+>> +		if (done || stop || child_exited)
+>> +			break;
 > 
-> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/pid.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
+> can (done || stop) be in the while condition and
+> we'd check just child_exited in here?
 > 
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index f1496b757162..24924ec5df0e 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -635,18 +635,9 @@ static int pidfd_getfd(struct pid *pid, int fd)
->  	if (IS_ERR(file))
->  		return PTR_ERR(file);
->  
-> -	ret = security_file_receive(file);
-> -	if (ret) {
-> -		fput(file);
-> -		return ret;
-> -	}
-> -
-> -	ret = get_unused_fd_flags(O_CLOEXEC);
-> +	ret = fd_install_received(file, O_CLOEXEC);
->  	if (ret < 0)
->  		fput(file);
-> -	else
-> -		fd_install(ret, file);
+>> +
+>> +		nanosleep(ts, NULL);
+>> +		if (timeout)
+>> +			stop = true;
+> 
+> can we just break out in here? like the original code?
+> I don't think we need the extra iteration
+> 
+>> +		else
+>> +			stop = handle_interval(interval, times);
+> 
+> same here..?
 
-So someone just sent a fix for pidfd_getfd() that was based on the
-changes done here.
+Accepted. In v10.
 
-I've been on vacation so didn't have a change to review this series and
-I see it's already in linux-next. This introduces a memory leak and
-actually proves a point I tried to stress when adding this helper:
-fd_install_received() in contrast to fd_install() does _not_ consume a
-reference because it takes one before it calls into fd_install(). That
-means, you need an unconditional fput() here both in the failure and
-error path.
-I strongly suggest though that we simply align the behavior between
-fd_install() and fd_install_received() and have the latter simply
-consume a reference when it succeeds! Imho, this bug proves that I was
-right to insist on this before. ;)
-
-Thanks!
-Christian
+Alexey
