@@ -2,150 +2,101 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0227E206DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CB8z185M"
+	by mail.kernel.org (Postfix) with ESMTP id E7DD72074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgGFI7i (ORCPT
+        id S1728816AbgGFJA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbgGFI7i (ORCPT
+        Mon, 6 Jul 2020 05:00:59 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49139 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728183AbgGFJA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:59:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FAAC061794;
-        Mon,  6 Jul 2020 01:59:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k5so7157265pjg.3;
-        Mon, 06 Jul 2020 01:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=It/KCincJ1QGaOO3UJT7U/GTe3VbLriw3afVTbDT6II=;
-        b=CB8z185MxQ6CkLhK0kdmZB3E7Cyhh8QOuACpiO1OpxmyJ0wkeqL67RoQwYbGemDlMu
-         M7AIRJ+gb5Q05PLdon3i/wfbgW2rRuHO+OTu5WGmPKh0qyC5tb0SpOtTMBdb7RLyaqWx
-         zCKTelnHV5b00qyds1fhiBpcuohnKWgNqNUSOgUL8aeYQXaPLgv/gOzJHA9dtdbrSxhu
-         W4iUUhWvbDvgt3dMRE923QYawVRiUzd4O7dBYyX/RF59TisTSLpxmVgdQ/SLMZOFF9JQ
-         GEcs+yYDc/W555OuwkWYm+zyiZL1al7hgUk3L8g+heBOJO4AGY2palhari4fyx/7qf3d
-         fqTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=It/KCincJ1QGaOO3UJT7U/GTe3VbLriw3afVTbDT6II=;
-        b=m3fGbJh3UypJga1BcauBuRNDbdoi6ErVA/h3JmW9TdnMilQKv9zBcmUdEH7c0P3Z+D
-         o5bBF9j/u0WZLEDnzXb7L/lv6CvnI8YHsSMizwu3Sg2SYbIzsBt8B/1c7RPB0WAW4p8g
-         8G6W+gYNFb00hNrQNvjEynQTAzCs8pVA0NnFJTl0zQtDmCwUQFxL1O/5fsAQB4SlmvfB
-         qIG4uCp+DGvr5GFAcxfIatLuUH988nWPG4Flp+dLCucmPqhqh0ew4HNyPozDzdNkNdj7
-         Gl8eltYJvK4p4Eq/H5+eB/dnVf+F1vLCnbfylxpRwIZ5MSdUCnPLOGuUJMKcRgGUjaao
-         M3GQ==
-X-Gm-Message-State: AOAM530gq50x0CTs6ZBS0DCZzGjieW2nlatZStZkGlBbUbVyxpWESIca
-        1+DOFLuMqWCxiE0u7X7zJVM=
-X-Google-Smtp-Source: ABdhPJzdwMBcEoHGFBN8BFYtVx9Mvr6X3ml8KNAOxTdBCKB+cQEsfLXBpCgjAIzQ1rj34+kighSeTA==
-X-Received: by 2002:a17:90a:cc03:: with SMTP id b3mr46644646pju.80.1594025977830;
-        Mon, 06 Jul 2020 01:59:37 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id a19sm10068149pfn.136.2020.07.06.01.59.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 01:59:37 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 3/3] sun/cassini: use generic power management
-Date:   Mon,  6 Jul 2020 14:27:46 +0530
-Message-Id: <20200706085746.221992-4-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200706085746.221992-1-vaibhavgupta40@gmail.com>
-References: <20200706085746.221992-1-vaibhavgupta40@gmail.com>
+        Mon, 6 Jul 2020 05:00:59 -0400
+Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7A35120000D;
+        Mon,  6 Jul 2020 09:00:56 +0000 (UTC)
+Date:   Mon, 6 Jul 2020 11:00:56 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dariusz Marcinkiewicz <darekm@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: cros-ec-cec: disable the device wakeup on remove
+Message-ID: <20200706090056.GI6538@piout.net>
+References: <20200706085240.1979622-1-darekm@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706085240.1979622-1-darekm@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+On 06/07/2020 10:52:38+0200, Dariusz Marcinkiewicz wrote:
+> The device is enabled for wake up while the driver is loaded.
+> For symmetry, disable wakeup when it is removed.
+> 
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+This is not necessary as it is handled by the core properly. There are
+currently 73 calls to device_init_wakeup that are not necessary, this
+would add one more.
 
-Compile-tested only.
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> ---
+>  drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> index 2d95e16cd248..3881ed7bc3d9 100644
+> --- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> +++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> @@ -277,8 +277,6 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, cros_ec_cec);
+>  	cros_ec_cec->cros_ec = cros_ec;
+>  
+> -	device_init_wakeup(&pdev->dev, 1);
+> -
+>  	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
+>  						 DRV_NAME,
+>  						 CEC_CAP_DEFAULTS |
+> @@ -306,6 +304,8 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		goto out_probe_notify;
+>  
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+>  	return 0;
+>  
+>  out_probe_notify:
+> @@ -335,6 +335,8 @@ static int cros_ec_cec_remove(struct platform_device *pdev)
+>  					 cros_ec_cec->adap);
+>  	cec_unregister_adapter(cros_ec_cec->adap);
+>  
+> +	device_init_wakeup(&pdev->dev, 0);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/ethernet/sun/cassini.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/sun/cassini.c b/drivers/net/ethernet/sun/cassini.c
-index debd3c3fa6fb..5b11124450d6 100644
---- a/drivers/net/ethernet/sun/cassini.c
-+++ b/drivers/net/ethernet/sun/cassini.c
-@@ -5172,10 +5172,9 @@ static void cas_remove_one(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
--#ifdef CONFIG_PM
--static int cas_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused cas_suspend(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct cas *cp = netdev_priv(dev);
- 	unsigned long flags;
- 
-@@ -5204,9 +5203,9 @@ static int cas_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return 0;
- }
- 
--static int cas_resume(struct pci_dev *pdev)
-+static int cas_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct cas *cp = netdev_priv(dev);
- 
- 	netdev_info(dev, "resuming\n");
-@@ -5227,17 +5226,15 @@ static int cas_resume(struct pci_dev *pdev)
- 	mutex_unlock(&cp->pm_mutex);
- 	return 0;
- }
--#endif /* CONFIG_PM */
-+
-+static SIMPLE_DEV_PM_OPS(cas_pm_ops, cas_suspend, cas_resume);
- 
- static struct pci_driver cas_driver = {
- 	.name		= DRV_MODULE_NAME,
- 	.id_table	= cas_pci_tbl,
- 	.probe		= cas_init_one,
- 	.remove		= cas_remove_one,
--#ifdef CONFIG_PM
--	.suspend	= cas_suspend,
--	.resume		= cas_resume
--#endif
-+	.driver.pm	= &cas_pm_ops,
- };
- 
- static int __init cas_init(void)
 -- 
-2.27.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
