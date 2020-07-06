@@ -2,359 +2,112 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2114CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930CD206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F158B206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GxOS9neq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG6yNBsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgGFOwl (ORCPT
+        id S1729404AbgGFOxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:52:41 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44522 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729321AbgGFOwl (ORCPT
+        Mon, 6 Jul 2020 10:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729323AbgGFOxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:52:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594047158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SrWWPqSNn3CMvsRvnMIuznCE95Jli+1HF+GU86kTP18=;
-        b=GxOS9neqKhlxvm1aPmTOH2wuEwuzPlO4ltNtfMAE68BE7dVKv0OEKyHkBp5X6C97a+ujuL
-        yonIUBMptDuel33tLF5Z/PA3dA0Ftms1DMdlqVag3S57Q/uifWQ5ivnf+kygaJf0YrcQJC
-        Ew6VJt1F+p8ho9oa0XFgMUVH5wrPteE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-Hcz54taRNeu1kfUNbtkFeA-1; Mon, 06 Jul 2020 10:52:36 -0400
-X-MC-Unique: Hcz54taRNeu1kfUNbtkFeA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B243D18FF660;
-        Mon,  6 Jul 2020 14:52:34 +0000 (UTC)
-Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EAD7461462;
-        Mon,  6 Jul 2020 14:52:25 +0000 (UTC)
-Subject: Re: [PATCH v4 05/15] vfio: Add PASID allocation/free support
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
- <1593861989-35920-6-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0d4ad4ac-ae89-a2ca-d302-94463ee5fc7f@redhat.com>
-Date:   Mon, 6 Jul 2020 16:52:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Jul 2020 10:53:36 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4665DC061755;
+        Mon,  6 Jul 2020 07:53:36 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w17so31503717oie.6;
+        Mon, 06 Jul 2020 07:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
+        b=FG6yNBsdFyaLnOU8mBfBB/Q8Je3J9Eas3f8oj2nCD10CZkPUTBuNVP9U8M+fIaEKb6
+         nhKqT8qm22ivfb9lCGijiCLP+VL+cKM0JfVx9i2ziczDfH3cm8b6w9uguuTaPtDYzTGv
+         5qgwmBhNs223mkQP+r8ujZc27qYWMSJVJE9BEF5sqYKir+CEr+kerUWXpxslq7sEaZiS
+         KNoknGRBZJZz/j7I0NJ7pwrEirrh8rZ3FaRhGRa1hwWSB3pMhyFzZEMXw7LTdHQ6X9Iu
+         6DjHGByAClVQs7vBe4bBr5zImS0HpTYSyROQaeG3naIHVNlCV336B1q/uKOP+DGfn77C
+         rmbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
+        b=iNpxyx9nAKV1kpdbO2cwXcBokOglOXhK3C4Lyh+dnBdRMIw2j/HAdaYiLhJN+Jt3Gl
+         N3+YTM6Kzc8kk6sJsQH50VCn31ViJbrh4Bd2NPfv/cbk0RvKXm/Wl8cSi3jiMLpsKkZV
+         mg/eoI902cYuxqYdNtHBxMkrr+vurS8qkqAz1p+qgiwDxzp/4928GtzSMhodKhd97O5T
+         j3Pn3Yl9GmoawbCfL9IXxg+q7QnwILS9m5vT6UTBDmh7hqWuuDkC4Nr/VoxekapZm0H/
+         /AKGirV+DLwjQRSONJwpUqEjDZkkp7zcWJ+XJe3DBFKOacstJ++QE0mvHuXSjMtFsrgg
+         Zu9Q==
+X-Gm-Message-State: AOAM5301eSXfjHh4q5aCqcrWELD+mFICYTEwhvHxrs963civW1cNwTKX
+        Y6RIpmH1A8U+ym7TUEf6gjFutgFKv+6jOFN6Pl4=
+X-Google-Smtp-Source: ABdhPJzJN6n42s0UuWBiB0DP5cE1wqRwiFpGP9kCvAjBsDOjqYQv6xKtCp/mECIcHLh3snyruyuShOQylIS0S7sSex8=
+X-Received: by 2002:aca:ecc7:: with SMTP id k190mr34028677oih.92.1594047215580;
+ Mon, 06 Jul 2020 07:53:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1593861989-35920-6-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com> <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 6 Jul 2020 10:53:24 -0400
+Message-ID: <CAGngYiXY=0Q3MH+F6+5eeUy8-Wh2yNdUc2=fAQ=dZd3N2YaFow@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+Hi Andy,
 
-On 7/4/20 1:26 PM, Liu Yi L wrote:
-> Shared Virtual Addressing (a.k.a Shared Virtual Memory) allows sharing
-> multiple process virtual address spaces with the device for simplified
-> programming model. PASID is used to tag an virtual address space in DMA
-> requests and to identify the related translation structure in IOMMU. When
-> a PASID-capable device is assigned to a VM, we want the same capability
-> of using PASID to tag guest process virtual address spaces to achieve
-> virtual SVA (vSVA).
-> 
-> PASID management for guest is vendor specific. Some vendors (e.g. Intel
-> VT-d) requires system-wide managed PASIDs cross all devices, regardless
-> of whether a device is used by host or assigned to guest. Other vendors
-> (e.g. ARM SMMU) may allow PASIDs managed per-device thus could be fully
-> delegated to the guest for assigned devices.
-> 
-> For system-wide managed PASIDs, this patch introduces a vfio module to
-> handle explicit PASID alloc/free requests from guest. Allocated PASIDs
-> are associated to a process (or, mm_struct) in IOASID core. A vfio_mm
-> object is introduced to track mm_struct. Multiple VFIO containers within
-> a process share the same vfio_mm object.
-> 
-> A quota mechanism is provided to prevent malicious user from exhausting
-> available PASIDs. Currently the quota is a global parameter applied to
-> all VFIO devices. In the future per-device quota might be supported too.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
-> v3 -> v4:
-> *) fix lock leam in vfio_mm_get_from_task()
-> *) drop pasid_quota field in struct vfio_mm
-> *) vfio_mm_get_from_task() returns ERR_PTR(-ENOTTY) when !CONFIG_VFIO_PASID
-> 
-> v1 -> v2:
-> *) added in v2, split from the pasid alloc/free support of v1
-> ---
->  drivers/vfio/Kconfig      |   5 ++
->  drivers/vfio/Makefile     |   1 +
->  drivers/vfio/vfio_pasid.c | 152 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/vfio.h      |  28 +++++++++
->  4 files changed, 186 insertions(+)
->  create mode 100644 drivers/vfio/vfio_pasid.c
-> 
-> diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-> index fd17db9..3d8a108 100644
-> --- a/drivers/vfio/Kconfig
-> +++ b/drivers/vfio/Kconfig
-> @@ -19,6 +19,11 @@ config VFIO_VIRQFD
->  	depends on VFIO && EVENTFD
->  	default n
->  
-> +config VFIO_PASID
-> +	tristate
-> +	depends on IOASID && VFIO
-> +	default n
-> +
->  menuconfig VFIO
->  	tristate "VFIO Non-Privileged userspace driver framework"
->  	depends on IOMMU_API
-> diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
-> index de67c47..bb836a3 100644
-> --- a/drivers/vfio/Makefile
-> +++ b/drivers/vfio/Makefile
-> @@ -3,6 +3,7 @@ vfio_virqfd-y := virqfd.o
->  
->  obj-$(CONFIG_VFIO) += vfio.o
->  obj-$(CONFIG_VFIO_VIRQFD) += vfio_virqfd.o
-> +obj-$(CONFIG_VFIO_PASID) += vfio_pasid.o
->  obj-$(CONFIG_VFIO_IOMMU_TYPE1) += vfio_iommu_type1.o
->  obj-$(CONFIG_VFIO_IOMMU_SPAPR_TCE) += vfio_iommu_spapr_tce.o
->  obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
-> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-> new file mode 100644
-> index 0000000..c46b870
-> --- /dev/null
-> +++ b/drivers/vfio/vfio_pasid.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2020 Intel Corporation.
-> + *     Author: Liu Yi L <yi.l.liu@intel.com>
-> + *
-> + */
-> +
-> +#include <linux/vfio.h>
-> +#include <linux/eventfd.h>
-> +#include <linux/file.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/sched/mm.h>
-> +
-> +#define DRIVER_VERSION  "0.1"
-> +#define DRIVER_AUTHOR   "Liu Yi L <yi.l.liu@intel.com>"
-> +#define DRIVER_DESC     "PASID management for VFIO bus drivers"
-> +
-> +#define VFIO_DEFAULT_PASID_QUOTA	1000
-> +static int pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-> +module_param_named(pasid_quota, pasid_quota, uint, 0444);
-> +MODULE_PARM_DESC(pasid_quota,
-> +		 " Set the quota for max number of PASIDs that an application is allowed to request (default 1000)");
-> +
-> +struct vfio_mm_token {
-> +	unsigned long long val;
-> +};
-> +
-> +struct vfio_mm {
-> +	struct kref		kref;
-> +	int			ioasid_sid;
-> +	struct list_head	next;
-> +	struct vfio_mm_token	token;
-> +};
-> +
-> +static struct vfio_pasid {
-> +	struct mutex		vfio_mm_lock;
-> +	struct list_head	vfio_mm_list;
-> +} vfio_pasid;
-> +
-> +/* called with vfio.vfio_mm_lock held */
-> +static void vfio_mm_release(struct kref *kref)
-> +{
-> +	struct vfio_mm *vmm = container_of(kref, struct vfio_mm, kref);
-> +
-> +	list_del(&vmm->next);
-> +	mutex_unlock(&vfio_pasid.vfio_mm_lock);
-> +	ioasid_free_set(vmm->ioasid_sid, true);
-> +	kfree(vmm);
-> +}
-> +
-> +void vfio_mm_put(struct vfio_mm *vmm)
-> +{
-> +	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_pasid.vfio_mm_lock);
-> +}
-> +
-> +static void vfio_mm_get(struct vfio_mm *vmm)
-> +{
-> +	kref_get(&vmm->kref);
-> +}
-> +
-> +struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-> +{
-> +	struct mm_struct *mm = get_task_mm(task);
-> +	struct vfio_mm *vmm;
-> +	unsigned long long val = (unsigned long long) mm;
-> +	int ret;
-> +
-> +	mutex_lock(&vfio_pasid.vfio_mm_lock);
-> +	/* Search existing vfio_mm with current mm pointer */
-> +	list_for_each_entry(vmm, &vfio_pasid.vfio_mm_list, next) {
-> +		if (vmm->token.val == val) {
-> +			vfio_mm_get(vmm);
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-> +	if (!vmm) {
-> +		vmm = ERR_PTR(-ENOMEM);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * IOASID core provides a 'IOASID set' concept to track all
-> +	 * PASIDs associated with a token. Here we use mm_struct as
-> +	 * the token and create a IOASID set per mm_struct. All the
-> +	 * containers of the process share the same IOASID set.
-> +	 */
-> +	ret = ioasid_alloc_set((struct ioasid_set *) mm, pasid_quota,
-> +			       &vmm->ioasid_sid);
-> +	if (ret) {
-> +		kfree(vmm);
-> +		vmm = ERR_PTR(ret);
-> +		goto out;
-> +	}
-> +
-> +	kref_init(&vmm->kref);
-> +	vmm->token.val = val;
-> +
-> +	list_add(&vmm->next, &vfio_pasid.vfio_mm_list);
-> +out:
-> +	mutex_unlock(&vfio_pasid.vfio_mm_lock);
-> +	mmput(mm);
-> +	return vmm;
-> +}
-> +
-> +int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> +{
-> +	ioasid_t pasid;
-> +
-> +	pasid = ioasid_alloc(vmm->ioasid_sid, min, max, NULL);
-> +
-> +	return (pasid == INVALID_IOASID) ? -ENOSPC : pasid;
-> +}
-> +
-> +void vfio_pasid_free_range(struct vfio_mm *vmm,
-> +			    ioasid_t min, ioasid_t max)
-> +{
-> +	ioasid_t pasid = min;
-> +
-> +	if (min > max)
-> +		return;
-nit: is that check really useful?
-> +
-> +	/*
-> +	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
-> +	 * teardown necessary structures depending on the to-be-freed
-> +	 * PASID.
-> +	 */
-> +	for (; pasid <= max; pasid++)
-> +		ioasid_free(pasid);
-> +}
-> +
-> +static int __init vfio_pasid_init(void)
-> +{
-> +	mutex_init(&vfio_pasid.vfio_mm_lock);
-> +	INIT_LIST_HEAD(&vfio_pasid.vfio_mm_list);
-> +	return 0;
-> +}
-> +
-> +static void __exit vfio_pasid_exit(void)
-> +{
-> +	WARN_ON(!list_empty(&vfio_pasid.vfio_mm_list));
-Is it acceptable? Don't you need to cleanup everything here instead?
+On Mon, Jul 6, 2020 at 1:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
+>
+> The clock depends on board design, HW refer guide can describe the clk
+> usage in detail and customer select one clk path as their board design.
+>
 
-Thanks
+Yes, I agree. But how does a board designer practically describe this
+in the devicetree?
 
-Eric
-> +}
-> +
-> +module_init(vfio_pasid_init);
-> +module_exit(vfio_pasid_exit);
-> +
-> +MODULE_VERSION(DRIVER_VERSION);
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR(DRIVER_AUTHOR);
-> +MODULE_DESCRIPTION(DRIVER_DESC);
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 38d3c6a..9da6468 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -97,6 +97,34 @@ extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
->  extern void vfio_unregister_iommu_driver(
->  				const struct vfio_iommu_driver_ops *ops);
->  
-> +struct vfio_mm;
-> +#if IS_ENABLED(CONFIG_VFIO_PASID)
-> +extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
-> +extern void vfio_mm_put(struct vfio_mm *vmm);
-> +extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
-> +extern void vfio_pasid_free_range(struct vfio_mm *vmm,
-> +					ioasid_t min, ioasid_t max);
-> +#else
-> +static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-> +{
-> +	return ERR_PTR(-ENOTTY);
-> +}
-> +
-> +static inline void vfio_mm_put(struct vfio_mm *vmm)
-> +{
-> +}
-> +
-> +static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> +{
-> +	return -ENOTTY;
-> +}
-> +
-> +static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
-> +					  ioasid_t min, ioasid_t max)
-> +{
-> +}
-> +#endif /* CONFIG_VFIO_PASID */
-> +
->  /*
->   * External user API
->   */
-> 
-Thanks
+Example: mac_gtx -> clk_pad (the default)
 
-Eric
+Imagine I have a fixed oscillator on the board:
 
+phy_ref_clk: oscillator {
+    compatible = "fixed-clock";
+    #clock-cells = <0>;
+    clock-frequency = <50000000>;
+};
+
+How can I now make <&phy_ref_clk> the parent of
+<&clks CLK_PAD> ?
