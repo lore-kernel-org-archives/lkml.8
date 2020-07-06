@@ -2,128 +2,106 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA83AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80653C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B43F2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:53:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="iz+ZDUgh"
+	by mail.kernel.org (Postfix) with ESMTP id 6590F2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgGFHxU (ORCPT
+        id S1728903AbgGFHyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 03:53:20 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:58574 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgGFHxU (ORCPT
+        Mon, 6 Jul 2020 03:54:09 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33671 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbgGFHyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 03:53:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1594022000; x=1625558000;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=qpdzQXh8yHeKmVHBY0FoswgkSFVUN86DBPAeWg6rgMA=;
-  b=iz+ZDUghPSl+66ynmCqg8L8HWqwaXbjlsVKDcRge9a977BdOXiUOiYEq
-   BVovgTvtNnz9jditd8sBwDwn3Q9x7K+zkYd8GpLkL/CEwdBIKDjk0kN9Q
-   ZbZYjdQiIJxCyO7UapuCwz3AsWARfA4D6corfINlRamLn+sKZvc/ddQxE
-   Y=;
-IronPort-SDR: J4BHAmsCdvtE3uSoEB48J6P7orv5dMMTNv+ZlyN54du0DCBuu9IPh05MFmA9wXjTLqpGNAO20G
- XleOfQzBD9vw==
-X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
-   d="scan'208";a="57534681"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Jul 2020 07:53:14 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 6D8C5A1D86;
-        Mon,  6 Jul 2020 07:53:13 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 07:53:13 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.140) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 07:53:04 +0000
-Subject: Re: [PATCH v4 08/18] nitro_enclaves: Add logic for enclave vm
- creation
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-9-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <906a959e-38c9-02e6-f09e-a83cd5b0b294@amazon.de>
-Date:   Mon, 6 Jul 2020 09:53:00 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 6 Jul 2020 03:54:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id h13so10417603otr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 00:54:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4LD+h1ou7CMJWkRCFX30pCtLbgBWxfUAHgmEH8FmfFc=;
+        b=lRnRnJx0EEbb/5r0Vu+FR1Dq4InzqT3/p6GYupCTE4p9zFpyXabwBtccaMfUe59+R3
+         UPyrlv6ijx5xsGRKvv+gWd1rdmuolRC8810YoPoXVAYGJv2wP6DsxIVootMvZVnmhmDR
+         J3ZZuzDACOEm5MvGSjcsPHCiDrNf9Rw8uhSRfHKcS9A5EZkpGfwouyTc58ymW+Xzg28c
+         NrqVA7CHD3wsBr3z5A7L9gxG9h9IKI3pM+rzPZrOdT/Mls+rnppIwmS8chlrRDG+zd2w
+         4nT3HEFT+5a2yXPvqdUcsorozr99XpOpvQamkEc1DcFttG9gZCzv6MKEtrYpHK7UUxlO
+         jlhg==
+X-Gm-Message-State: AOAM5335hg9aIrvHV59/uBmrU2S89tUjdlhYHq1twS9rK67U/AY6ecie
+        KZXtZAc8gwxWuo12QGHa0So0AMjP6AH9+UUbtn59JEJGiP8=
+X-Google-Smtp-Source: ABdhPJyDOZ21sDaaK43TlEvNWaB21raXUjSfvE1nLN0SOasbrMzZp2l0MTob81KSQ7yvXH6iW8pjFalfbAoIiPAkjrI=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr28084181otp.250.1594022047849;
+ Mon, 06 Jul 2020 00:54:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200622200329.52996-9-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D46UWB004.ant.amazon.com (10.43.161.204) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
+ <87h7ul15le.fsf@notabene.neil.brown.name> <20200706072221.GA1947246@kroah.com>
+In-Reply-To: <20200706072221.GA1947246@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jul 2020 09:53:55 +0200
+Message-ID: <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     NeilBrown <neilb@suse.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 6, 2020 at 9:22 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Mon, Jul 06, 2020 at 05:10:37PM +1000, NeilBrown wrote:
+> > On Sat, Jul 04 2020, Matthew Wilcox wrote:
+> > > Another suggestion for "slave" replacement should be "device". This is in
+> > > the context of the w1 bus which is by far the largest user of the
+> > > master/slave terminology in the kernel.
 
+W1 the largest? Really?
 
-On 22.06.20 22:03, Andra Paraschiv wrote:
-> Add ioctl command logic for enclave VM creation. It triggers a slot
-> allocation. The enclave resources will be associated with this slot and
-> it will be used as an identifier for triggering enclave run.
-> =
+> >
+> > Ugh.  Please, no.  "device" doesn't mean anything, in that you can use
+> > it to refer to any thing.  (i.e. it is almost semantically equivalent to
+> > "thing").
+>
+> Context is everything, you can have a "controller" and a "device" that
+> the controller controls.  These are common terms in many specs today,
 
-> Return a file descriptor, namely enclave fd. This is further used by the
-> associated user space enclave process to set enclave resources and
-> trigger enclave termination.
-> =
+A "controller" is also any block of electronics that performs a function
+involving a state machine.
+So for SPI and I2C, we'll have Linux drivers talking to an "SPI controller
+controller", an "SPI device controller", an "I2C controller controller",
+and an "I2C device controller".
+For W1, Linux is still limited to supporting "W1 controller controllers",
+but supporting "W1 device controllers" might be just beyond the horizon...
 
-> The poll function is implemented in order to notify the enclave process
-> when an enclave exits without a specific enclave termination command
-> trigger e.g. when an enclave crashes.
-> =
+> look at the USB spec for an example of these terms being used in this
+> way for many decades.
 
-> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+And when does the "gadget" enter the show? ;-)
 
-Reviewed-by: Alexander Graf <graf@amazon.com>
+P.S. In Dutch, we just assimilate all English technical words, and
+     they'll only have that specific meaning.  E.g. if someone
+     talks about the "cloud", even lay people know they're not talking
+     about those things that may ruin your holiday outside.
 
+Gr{oetje,eeting}s,
 
-Alex
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
