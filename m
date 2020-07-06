@@ -2,25 +2,25 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7377BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5769C20772
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7197A2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgGFL16 (ORCPT
+        id S1729016AbgGFL17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:27:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7376 "EHLO huawei.com"
+        Mon, 6 Jul 2020 07:27:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59682 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728831AbgGFL15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:27:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63C1AA2961644E9B8A74;
+        id S1728946AbgGFL16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:27:58 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 95ACA980027EC2B21D8E;
         Mon,  6 Jul 2020 19:27:55 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -31,10 +31,12 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 0/4] net: hns3: fixes for -net
-Date:   Mon, 6 Jul 2020 19:25:58 +0800
-Message-ID: <1594034762-6445-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net 2/4] net: hns3: fix for mishandle of asserting VF reset fail
+Date:   Mon, 6 Jul 2020 19:26:00 +0800
+Message-ID: <1594034762-6445-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594034762-6445-1-git-send-email-tanhuazhong@huawei.com>
+References: <1594034762-6445-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,23 +46,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some fixes about reset issue and a use-after-free
-of self-test.
+When asserts VF reset fail, flag HCLGEVF_STATE_CMD_DISABLE
+and handshake status should not set, otherwise the retry will
+fail. So adds a check for asserting VF reset and returns
+directly when fails.
 
-Huazhong Tan (3):
-  net: hns3: check reset pending after FLR prepare
-  net: hns3: fix for mishandle of asserting VF reset fail
-  net: hns3: add a missing uninit debugfs when unload driver
-
-Yonglong Liu (1):
-  net: hns3: fix use-after-free when doing self test
-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c           | 3 +--
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c        | 9 ++++++---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 2 +-
+Fixes: ef5f8e507ec9 ("net: hns3: stop handling command queue while resetting VF")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
  drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 5 +++++
- 4 files changed, 13 insertions(+), 6 deletions(-)
+ 1 file changed, 5 insertions(+)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 1b9578d..a10b022 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1793,6 +1793,11 @@ static int hclgevf_reset_prepare_wait(struct hclgevf_dev *hdev)
+ 	if (hdev->reset_type == HNAE3_VF_FUNC_RESET) {
+ 		hclgevf_build_send_msg(&send_msg, HCLGE_MBX_RESET, 0);
+ 		ret = hclgevf_send_mbx_msg(hdev, &send_msg, true, NULL, 0);
++		if (ret) {
++			dev_err(&hdev->pdev->dev,
++				"failed to assert VF reset, ret = %d\n", ret);
++			return ret;
++		}
+ 		hdev->rst_stats.vf_func_rst_cnt++;
+ 	}
+ 
 -- 
 2.7.4
 
