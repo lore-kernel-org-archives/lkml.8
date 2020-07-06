@@ -2,188 +2,132 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81894C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC0F206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBAE206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:12:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NOOB/lDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgGFPM3 (ORCPT
+        id S1729414AbgGFPMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:12:29 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:35730 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgGFPMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:12:23 -0400
-Received: by mail-il1-f197.google.com with SMTP id v12so6929684ilg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 08:12:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8cjkntt87TGAwu49cqH5L6r37d1iz61filDgkTRY34c=;
-        b=czeKX9teTwdr6XtvQJOpn9ff6w7qzX7FeBLy7e/MyByWgaUkVq5xaOMgOPRwwvlXva
-         yXGHrqGaCqMYsRzZuAmfTJdcX+p0CKyuTVN8RfvBdgdaJVCeUD2yjdZtGQABPtw6bUo3
-         L+OZn7et16CnQQHfJ00oCvLXL3DrKwCYwWRyinz7GahxycmIkVsEkpqC6Ah7mjj2LMfr
-         aQSeMQypmoo3fdpWqz9mDmX57GORS7FWGv4O2zEfX0ALrMtfmSHbAwEW6fItmHF+zJhO
-         9t+4CB8Gow7zAyTg3itYqYdBYCYSNr7+EJrGabxU45Ar+krIxA/NQcSwqH7x5ZPSJ4rd
-         EsCA==
-X-Gm-Message-State: AOAM531mN8QbcLuSFYbGXO/xu4j/yqKmYFxyVQSTkcAohwxvNNY5txT7
-        HE21QweRXGcu2PrapxyqbvK4YKs0tj+DFd733b3H5R3rdvgg
-X-Google-Smtp-Source: ABdhPJyWL1S4sZ9WmGXZ87KaRbRG7mjMC3zW1dSP8H7oKpM6TQ5fTpbpvU0hPuBRWLiKooSg5KjIDPt/lEAQbkdmVd5BdF4ajFMl
+        Mon, 6 Jul 2020 11:12:32 -0400
+Received: from mail-am6eur05on2084.outbound.protection.outlook.com ([40.107.22.84]:6160
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729368AbgGFPM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:12:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n4fVzWYMOij+PbjU/yzyf22ddrTXT605U8yUQSe9KG7tt+37/Es96PHCAlHkB+N5jMTdCrJqwtRx8OqHsWBGlzhAJ4Z0DjvgUidfTUQkm/sH8quw8AhBA7/REdnAb2VWkWYdUXQjQzmwak15tedpmLHXGPJr+/VP+9KR4zBN2CVo+VH4KDZA6QNQFhpcfPM7uv44wRA4gFosN1oL8TI5AJs8t5I0vhaulUfx0u1Y6SbBbpe478xNmEvrCQ458BdSVODni6TbK3wNOElD+Z9MvDmib6jgHzEDIRtuMIPJ3f0PYcieXAdiogUGz48HyVYJlgqu9vm8L3y2Eyjugnid/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0j4C7KquqH7hVhVRtb9Qith75aRopwO/h76ym5yXtM=;
+ b=RRAZfl9UV5/HGMgbw0LCzdGgRJPvLaWmbvV60HHAs91hB0JNma0HJBtNxyXFloWZHutXD/jwcMNogrmaNDlGMVZ3OTd7RZ4noHJp6n+YIoDKjcuSvRxaK8PweaCmi6chZxuNtywPiyaj6jbBcp9SzzWW/Y/3P93oZH0vUo2dQFMyAesv2pvRvFRSl+n4fZf71XLYUTExMVlFzCs6QV90PYuAjy3kdfMRtyXXdcPJEtC+kf+gh8+TprbMpBwAPFrQ6d3UGEQy/sa9mH4bJhQtcI8zcJcxt2F10l6I6YY5gu/xtMNbl4DAUX0ZL/lhArPRRhM48ZPTj60SqDxE1A2LIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0j4C7KquqH7hVhVRtb9Qith75aRopwO/h76ym5yXtM=;
+ b=NOOB/lDxUuJvVLpKYHGq91qBkDry76bZJvGJS8ieWOmzngyr8PIHxAFjLluukNgQtDevTNszERKsUkVq7Z7IQKDlz6iIqfxsJw398QQnWEkT7URWsafGFBumEHqYkbYuE06TGUSbWwYmfi9kN5Ju8BCBVc/e850ZAOzjWFybudQ=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ (2603:10a6:800:2e::19) by VI1PR04MB6799.eurprd04.prod.outlook.com
+ (2603:10a6:803:130::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Mon, 6 Jul
+ 2020 15:12:25 +0000
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 15:12:25 +0000
+Subject: Re: [PATCH] drivers: soc: Fix mailbox suspend/resume no irq for IMX
+ SCU
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+References: <20200706150013.35326-1-vincenzo.frascino@arm.com>
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+Message-ID: <519cf3c2-7b48-5318-3a58-f51202aac6d9@nxp.com>
+Date:   Mon, 6 Jul 2020 18:12:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200706150013.35326-1-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR03CA0051.eurprd03.prod.outlook.com (2603:10a6:208::28)
+ To VI1PR0401MB2287.eurprd04.prod.outlook.com (2603:10a6:800:2e::19)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:cc7:: with SMTP id e7mr52965354jak.87.1594048341704;
- Mon, 06 Jul 2020 08:12:21 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 08:12:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002985c805a9c74d76@google.com>
-Subject: INFO: task hung in ath9k_hif_usb_firmware_cb
-From:   syzbot <syzbot+da8c2bed7fa646ad6fcf@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:2f08:5905:e800:50a7:a613:429b:9846] (2a02:2f08:5905:e800:50a7:a613:429b:9846) by AM0PR03CA0051.eurprd03.prod.outlook.com (2603:10a6:208::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Mon, 6 Jul 2020 15:12:23 +0000
+X-Originating-IP: [2a02:2f08:5905:e800:50a7:a613:429b:9846]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2b3da8ee-9234-4731-5fb2-08d821befd10
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6799:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB6799C85F814D1EAB9291FA1FF9690@VI1PR04MB6799.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:126;
+X-Forefront-PRVS: 04569283F9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h559i7y86vI0koXTGygkXZg84KbD9NzBb4uSGIiFRqT+UO0VCw3f2TnnNpiO3VusqHFrW0gMOOUpwNQcdDnO0nJzOA2j5xD7fm+EJqp96QTs4c6h/0FqHwYOm7EPhyIvVIGuTBACM2w+NR09nMX+rkyjltjr0Ne4Pse6g1q3bqqC7/NpqBxExbgXGOKgLLzs90dgVBLAOB6z7P0ykWciqxCPcogAJPdpKa7wXQd5JHNEzqublkBASW5KZvXWg1GqiMkGEmMEpQunofovy8g6zvM7BfMgAUs8UT0yXVjRPTj1OOTYx1EeGGVUQzZMEozC0sqe5aUlhjSU7e4VkMYNIq6Q0cotq9DYy3IAgvdS8g3y8jGerlMa8VeCoGRNyTYh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(5660300002)(83380400001)(2906002)(66476007)(66946007)(8936002)(66556008)(8676002)(15650500001)(4326008)(31696002)(186003)(16526019)(44832011)(53546011)(316002)(478600001)(52116002)(36756003)(6486002)(31686004)(54906003)(86362001)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: iQpIYC5z0l6sY0lFIGKNz7tBxwS9+p23TCBENCeUukT86tauE45/E2C8/8Hyyle7rd3sRMvwuOrgPJz03KQCBSPVX0yhd9wj64nOO0T2piALSXZgIbdLNTG3UiLvpzqwOZVlUw0HPlwAGuHcT5vRSuIRFGBKAXlOJtE7AOxEMuWUwJGo33qJaKfu60t0p0By7dGYwjTY2WishxBV2SrAsxEfPgGcNHKCdQsT3+/IZAcrh3Eq98wGVild+asxXlxIw4BHR9wg+iLdTUcovPMhB/VmCq0m9kc2nMnYLFnt1qG+BEYTDLpZfW29l2U1E6RVEeeuFGUGG2/Mos2lSAoZ7k82D0t+7r+lKTCFzVB28ZSbadgCG8NTw5d0WaqnKOk012BylQKgREo2EflYHCv6Odzt6PKtQJf6q8mJ6SCqbzYpFWRGwTOkVZyS4ZF78euQ0JAV2IVjGTgnfMfXF7asaRd043tlGigWc+3vmDLxEsF6oDpw6SPaji8n5y3JKSAB+fh9TT9sG0Y9CqhyuIXeqV9u0yGGDfjtEomANhK7dQ7BrgxL2PxMQh8mYTWl97Ur
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b3da8ee-9234-4731-5fb2-08d821befd10
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0401MB2287.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2020 15:12:24.9445
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R5iR0qD4j010EriGilp+9tnWaeAAQpZS8Z+IQNhCA8Fro9YVqljqaMRAtwWG10AE/HLyhhRM4YosOlbHS34JLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On 06.07.2020 18:00, Vincenzo Frascino wrote:
+> imx_mu_suspend_noirq()/imx_mu_resume_noirq() are currently used only
+> when CONFIG_PM_SLEEP configuration options is enabled. Having it
+> disabled triggers the following warning at compile time:
+>
+> drivers/mailbox/imx-mailbox.c:611:12: warning: ‘imx_mu_resume_noirq’
+> defined but not used [-Wunused-function]
+>    static int imx_mu_resume_noirq(struct device *dev)
+>
+> drivers/mailbox/imx-mailbox.c:601:12: warning: ‘imx_mu_suspend_noirq’
+> defined but not used [-Wunused-function]
+>    static int imx_mu_suspend_noirq(struct device *dev)
+>
+> Make imx_mu_suspend_noirq()/imx_mu_resume_noirq() __maybe_unused to
+> address the issue.
+>
+> Cc: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-HEAD commit:    768a0741 usb: dwc2: gadget: Remove assigned but never used..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=111f235b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=999be4eb2478ffa5
-dashboard link: https://syzkaller.appspot.com/bug?extid=da8c2bed7fa646ad6fcf
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+da8c2bed7fa646ad6fcf@syzkaller.appspotmail.com
-
-INFO: task kworker/0:0:5 blocked for more than 143 seconds.
-      Not tainted 5.8.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kworker/0:0     D22168     5      2 0x80004000
-Workqueue: events request_firmware_work_func
-Call Trace:
- context_switch kernel/sched/core.c:3453 [inline]
- __schedule+0x88a/0x1cb0 kernel/sched/core.c:4178
- schedule+0xcd/0x2b0 kernel/sched/core.c:4253
- schedule_preempt_disabled+0xc/0x20 kernel/sched/core.c:4312
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x3e2/0x10a0 kernel/locking/mutex.c:1103
- device_lock include/linux/device.h:768 [inline]
- ath9k_hif_usb_firmware_fail drivers/net/wireless/ath/ath9k/hif_usb.c:1108 [inline]
- ath9k_hif_usb_firmware_cb+0x3ac/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1241
- request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Showing all locks held in the system:
-3 locks held by kworker/0:0/5:
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x15f0 kernel/workqueue.c:2240
- #1: ffff8881da1d7da8 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x15f0 kernel/workqueue.c:2244
- #2: ffff8881d44bb218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d44bb218 (&dev->mutex){....}-{3:3}, at: ath9k_hif_usb_firmware_fail drivers/net/wireless/ath/ath9k/hif_usb.c:1108 [inline]
- #2: ffff8881d44bb218 (&dev->mutex){....}-{3:3}, at: ath9k_hif_usb_firmware_cb+0x3ac/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1241
-1 lock held by khungtaskd/23:
- #0: ffffffff873124a0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x264 kernel/locking/lockdep.c:5779
-3 locks held by kworker/1:2/68:
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8881da028d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x15f0 kernel/workqueue.c:2240
- #1: ffff8881d5ae7da8 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x15f0 kernel/workqueue.c:2244
- #2: ffff8881d440b218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d440b218 (&dev->mutex){....}-{3:3}, at: ath9k_hif_usb_firmware_fail drivers/net/wireless/ath/ath9k/hif_usb.c:1108 [inline]
- #2: ffff8881d440b218 (&dev->mutex){....}-{3:3}, at: ath9k_hif_usb_firmware_cb+0x3ac/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1241
-1 lock held by in:imklog/213:
- #0: ffff8881ca60a370 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-3 locks held by kworker/0:4/3049:
-3 locks held by kworker/0:5/3055:
-5 locks held by kworker/0:6/3096:
-5 locks held by kworker/1:6/3310:
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: process_one_work+0x82b/0x15f0 kernel/workqueue.c:2240
- #1: ffff8881d97f7da8 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: process_one_work+0x85f/0x15f0 kernel/workqueue.c:2244
- #2: ffff8881d44bb218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d44bb218 (&dev->mutex){....}-{3:3}, at: hub_event+0x1c5/0x4390 drivers/usb/core/hub.c:5522
- #3: ffff8881d9414218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #3: ffff8881d9414218 (&dev->mutex){....}-{3:3}, at: __device_attach+0x7a/0x430 drivers/base/dd.c:850
- #4: ffff8881c7a8f1a8 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #4: ffff8881c7a8f1a8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x7a/0x430 drivers/base/dd.c:850
-3 locks held by kworker/1:8/4172:
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8881d880ed38 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: process_one_work+0x82b/0x15f0 kernel/workqueue.c:2240
- #1: ffff8881c746fda8 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: process_one_work+0x85f/0x15f0 kernel/workqueue.c:2244
- #2: ffff8881d440b218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
- #2: ffff8881d440b218 (&dev->mutex){....}-{3:3}, at: hub_event+0x1c5/0x4390 drivers/usb/core/hub.c:5522
-2 locks held by agetty/16081:
- #0: ffff8881cba50098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
- #1: ffffc900102882e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x223/0x1a30 drivers/tty/n_tty.c:2156
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 23 Comm: khungtaskd Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x74/0xb6 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1da/0x1f4 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:209 [inline]
- watchdog+0xd6a/0xfd0 kernel/hung_task.c:295
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 340 Comm: syz-executor.2 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0033:0x45cae4
-Code: Bad RIP value.
-RSP: 002b:00007ffd79517e20 EFLAGS: 00000217
-RAX: 0000000000000000 RBX: 00000000000d7450 RCX: 000000000045b030
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffd79517e20
-RBP: 00000000000002dd R08: 0000000000000001 R09: 0000000000e8b940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffd79517e70 R14: 00000000000d7450 R15: 00007ffd79517e80
-FS:  0000000000e8b940 GS:  0000000000000000
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
