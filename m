@@ -2,331 +2,89 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC04D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4D32070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V4iYw2i4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfCMPwJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgGFKhc (ORCPT
+        id S1728958AbgGFKj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:37:32 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55486 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728929AbgGFKhc (ORCPT
+        Mon, 6 Jul 2020 06:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgGFKj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:37:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594031849;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A2TH0l40UUZw3trZBCC+/hrIk4R1Tqn0kicJMiXyx/I=;
-        b=V4iYw2i4v6UpnNcv05AGXiEapWXtOUnqKxFIwqOw2ZJ/Z9PC8xAGeXP5Fqs2mBGtJBXeQo
-        ovwmD44CyPgoEHvf2N0FI8LS0sfrJXI7TyAQ6VKD2HuJC2edn7jAI+tS5+cu8AGsWwwaF8
-        HXIVLiQlaPvd9/5FJ/VF6/DGCDzpC+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-79-n2jXDVxFO3Od9r5VdJEaVQ-1; Mon, 06 Jul 2020 06:37:25 -0400
-X-MC-Unique: n2jXDVxFO3Od9r5VdJEaVQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BA66EC1A0;
-        Mon,  6 Jul 2020 10:37:23 +0000 (UTC)
-Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D380D10013C2;
-        Mon,  6 Jul 2020 10:37:13 +0000 (UTC)
-Subject: Re: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to
- userspace
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
- <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d434cbcc-d3b1-d11d-0304-df2d2c93efa0@redhat.com>
-Date:   Mon, 6 Jul 2020 12:37:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Jul 2020 06:39:27 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6BFC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:39:26 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id p1so5906486pls.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=puTM9R3OCUah22RUChJJRjd+zkSRZtSw3EsyABHeng8=;
+        b=VfCMPwJFLQ5/ozMboU3NCR6LUp9lThjhLle8XQMRxQV8B4tYMFvbRAkYP25GdIa7f8
+         ZcQ0cPF9bXuvs2NvRpUP7p48zKyYynRilb7Pys90DGroAN1zlQVUa+gBNDvF8nEPILmx
+         R4BQzD1nWiWW9r2pEfHIXUU9sQhAuvwq0HY0+xBEP4t4JfVYwNCEHGvoxHvt2kZnvSqP
+         wbogfdeYStGWzq+VwqW7Zi6iecLTnWHTuniAs2Z42RPD9f65q6GjzayGF5lBl8qd5wGK
+         /jHDyTUdg0T1HjxS2z5MN977yQMkQVJolci3o36Jblajpd/9OLpHSkcNGUny6YEC4RVI
+         i7/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=puTM9R3OCUah22RUChJJRjd+zkSRZtSw3EsyABHeng8=;
+        b=Jm17nf01Zpq+5CmpfU5HyK/5Kf2HvKx9F+zbtCD9sivf62s1yjw0yLzHiC0RtFqKNJ
+         pyqK2FYN5QdwfINa9JFU01lVBD7b7VCJ86eNhHwvJdW5eUBOPMBRe/dR8VfzL5Uu8Q3c
+         PcRqCVqQOuLgLPEMDHJUldlgP+wilH3SqMR/8wg7nFSLYfqjgG+Amhus7kB1ZjBLG1j7
+         6dh9Yxy4PL/BJHmyJDpx78xpFJCSOa7srSPXLNjQsz/yyjT/rQHqCe/UfiD3H2pB2f1c
+         nVswpTNheIJZWEBl0RymtPk0DI6dJtEjggzWVLIW7+3VmMQMTp0NFqShHFf3uJ72TT/G
+         xhuA==
+X-Gm-Message-State: AOAM533Wq5C8SeMh2l+f4w7MrXTHP7tcuBdzwMZdyd/MUNzpz9aWOttg
+        WqTHBCMqtd0XTXHkG0rqNebfewdLSyEV6rlkKf4=
+X-Google-Smtp-Source: ABdhPJzQEGKwwKvWdvmQDbELYbMKvGuUhUlgJ/NROER/RbrYqSnqxvHXNemOSyNJd7M5Ck3HMqAarmf0D7+yZBhDD3M=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr25285213pjb.181.1594031965778;
+ Mon, 06 Jul 2020 03:39:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200706095100.19157-1-geert@linux-m68k.org>
+In-Reply-To: <20200706095100.19157-1-geert@linux-m68k.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Jul 2020 13:39:09 +0300
+Message-ID: <CAHp75Ve49Ucy9nMy1UBYirWX2niJ=6tfEGzmD+DpfRgb=JdZAA@mail.gmail.com>
+Subject: Re: [PATCH] lib/test_bitops: Do the full test during module init
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
+On Mon, Jul 6, 2020 at 12:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Currently, the bitops test consists of two parts: one part is executed
+> during module load, the second part during module unload. This is
+> cumbersome for the user, as he has to perform two steps to execute all
+> tests, and is different from most (all?) other tests.
+>
+> Merge the two parts, so both are executed during module load.
 
-On 7/4/20 1:26 PM, Liu Yi L wrote:
-> This patch exports iommu nesting capability info to user space through
-> VFIO. User space is expected to check this info for supported uAPIs (e.g.
-> PASID alloc/free, bind page table, and cache invalidation) and the vendor
-> specific format information for first level/stage page table that will be
-> bound to.
-> 
-> The nesting info is available only after the nesting iommu type is set
-> for a container. Current implementation imposes one limitation - one
-> nesting container should include at most one group. The philosophy of
-> vfio container is having all groups/devices within the container share
-> the same IOMMU context. When vSVA is enabled, one IOMMU context could
-> include one 2nd-level address space and multiple 1st-level address spaces.
-> While the 2nd-leve address space is reasonably sharable by multiple groups
-level
-> , blindly sharing 1st-level address spaces across all groups within the
-> container might instead break the guest expectation. In the future sub/
-> super container concept might be introduced to allow partial address space
-> sharing within an IOMMU context. But for now let's go with this restriction
-> by requiring singleton container for using nesting iommu features. Below
-> link has the related discussion about this decision.
-> 
-> https://lkml.org/lkml/2020/5/15/1028
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
-> v3 -> v4:
-> *) address comments against v3.
-> 
-> v1 -> v2:
-> *) added in v2
-> ---
-> 
->  drivers/vfio/vfio_iommu_type1.c | 105 +++++++++++++++++++++++++++++++++++-----
->  include/uapi/linux/vfio.h       |  16 ++++++
->  2 files changed, 109 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 7accb59..80623b8 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
->  		 "Maximum number of user DMA mappings per container (65535).");
->  
->  struct vfio_iommu {
-> -	struct list_head	domain_list;
-> -	struct list_head	iova_list;
-> -	struct vfio_domain	*external_domain; /* domain for external user */
-> -	struct mutex		lock;
-> -	struct rb_root		dma_list;
-> -	struct blocking_notifier_head notifier;
-> -	unsigned int		dma_avail;
-> -	uint64_t		pgsize_bitmap;
-> -	bool			v2;
-> -	bool			nesting;
-> -	bool			dirty_page_tracking;
-> -	bool			pinned_page_dirty_scope;
-> +	struct list_head		domain_list;
-> +	struct list_head		iova_list;
-> +	struct vfio_domain		*external_domain; /* domain for
-> +							     external user */
-nit: put the comment before the field?
-> +	struct mutex			lock;
-> +	struct rb_root			dma_list;
-> +	struct blocking_notifier_head	notifier;
-> +	unsigned int			dma_avail;
-> +	uint64_t			pgsize_bitmap;
-> +	bool				v2;
-> +	bool				nesting;
-> +	bool				dirty_page_tracking;
-> +	bool				pinned_page_dirty_scope;
-> +	struct iommu_nesting_info	*nesting_info;
->  };
->  
->  struct vfio_domain {
-> @@ -130,6 +132,9 @@ struct vfio_regions {
->  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->  					(!list_empty(&iommu->domain_list))
->  
-> +#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
-> +					 (!list_empty(&iommu->domain_list)))
-rename into something like CONTAINER_HAS_DOMAIN()?
-> +
->  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
->  
->  /*
-> @@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
->  
->  	list_splice_tail(iova_copy, iova);
->  }
-> +
-> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
-> +{
-> +	kfree(iommu->nesting_info);
-> +	iommu->nesting_info = NULL;
-> +}
-> +
->  static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					 struct iommu_group *iommu_group)
->  {
-> @@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  		}
->  	}
->  
-> +	/* Nesting type container can include only one group */
-> +	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
-> +		mutex_unlock(&iommu->lock);
-> +		return -EINVAL;
-> +	}
-> +
->  	group = kzalloc(sizeof(*group), GFP_KERNEL);
->  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
->  	if (!group || !domain) {
-> @@ -2029,6 +2047,36 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_domain;
->  
-> +	/* Nesting cap info is available only after attaching */
-> +	if (iommu->nesting) {
-> +		struct iommu_nesting_info tmp;
-> +		struct iommu_nesting_info *info;
-> +
-> +		/* First get the size of vendor specific nesting info */
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    &tmp);
-> +		if (ret)
-> +			goto out_detach;
-> +
-> +		info = kzalloc(tmp.size, GFP_KERNEL);
-nit: you may directly use iommu->nesting_info
-> +		if (!info) {
-> +			ret = -ENOMEM;
-> +			goto out_detach;
-> +		}
-> +
-> +		/* Now get the nesting info */
-> +		info->size = tmp.size;
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    info);
-> +		if (ret) {
-> +			kfree(info);
-... and set it back to NULL here if it fails
-> +			goto out_detach;
-> +		}
-> +		iommu->nesting_info = info;
-> +	}
-> +
->  	/* Get aperture info */
->  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
->  
-> @@ -2138,6 +2186,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	return 0;
->  
->  out_detach:
-> +	vfio_iommu_release_nesting_info(iommu);
->  	vfio_iommu_detach_group(domain, group);
->  out_domain:
->  	iommu_domain_free(domain->domain);
-> @@ -2338,6 +2387,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					vfio_iommu_unmap_unpin_all(iommu);
->  				else
->  					vfio_iommu_unmap_unpin_reaccount(iommu);
-> +
-> +				vfio_iommu_release_nesting_info(iommu);
->  			}
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
-> @@ -2546,6 +2597,30 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
->  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
->  }
->  
-> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> +					   struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_info_cap_header *header;
-> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> +	size_t size;
-> +
-> +	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
-> +
-> +	header = vfio_info_cap_add(caps, size,
-> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> +	if (IS_ERR(header))
-> +		return PTR_ERR(header);
-> +
-> +	nesting_cap = container_of(header,
-> +				   struct vfio_iommu_type1_info_cap_nesting,
-> +				   header);
-> +
-> +	memcpy(&nesting_cap->info, iommu->nesting_info,
-> +	       iommu->nesting_info->size);
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  				     unsigned long arg)
->  {
-> @@ -2586,6 +2661,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  	if (ret)
->  		return ret;
->  
-> +	if (iommu->nesting_info) {
-> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	if (caps.size) {
->  		info.flags |= VFIO_IOMMU_INFO_CAPS;
->  
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 9204705..3e3de9c 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
->  	__u64	max_dirty_bitmap_size;		/* in bytes */
->  };
->  
-> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
+Does your change prevent you from unloading the module?
 
-You may improve the documentation by taking examples from the above caps.
-> +
-> +/*
-> + * Reporting nesting info to user space.
-> + *
-> + * @info:	the nesting info provided by IOMMU driver. Today
-> + *		it is expected to be a struct iommu_nesting_info
-> + *		data.
-Is it expected to change?
-> + */
-> +struct vfio_iommu_type1_info_cap_nesting {
-> +	struct	vfio_info_cap_header header;
-> +	__u32	flags;
-You may document flags.
-> +	__u32	padding;
-> +	__u8	info[];
-> +};
-> +
->  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
->  
->  /**
-> 
-Thanks
-
-Eric
-
+-- 
+With Best Regards,
+Andy Shevchenko
