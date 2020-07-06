@@ -2,108 +2,146 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B642BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20ED20724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B2320715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yg1OYRQS"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Rc42P7/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgGFO1J (ORCPT
+        id S1729387AbgGFO1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55410 "EHLO
+        Mon, 6 Jul 2020 10:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgGFO0m (ORCPT
+        with ESMTP id S1729263AbgGFO1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:26:42 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52046C061755;
-        Mon,  6 Jul 2020 07:26:42 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q7so32362007ljm.1;
-        Mon, 06 Jul 2020 07:26:42 -0700 (PDT)
+        Mon, 6 Jul 2020 10:27:20 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13630C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:27:20 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id k6so33031472ili.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LoW8u3CJbGnQcSN5oUo2pqe9I9oHO/HcdF24ejHJjeM=;
-        b=Yg1OYRQSfl8v6osshPWY+WVwi59YSSbzCFF666u1Z195pNZbvy/GUr4IWsy4pqyGwP
-         ILr6bbsolt0IXrVbLzqtMLRyG/RNeMLe/30rRLo0WF7GePwy9kLmMjHeR3j8chHUTG9I
-         Z3Io6lYq51PXUfnvi9UxyGBIUuWd1qKnWMiVDPBqD/VOr8ovqPcgYRI+AFZn0wfDtgNj
-         3oV2/8JtK81TRuOSzhHzvox8WdECtCXzfu+FT1Y3N95VFF4nwoR2C3I/zHIr/RSR7agf
-         K3piCBZQw1Cs/TTpIv6qQiKCUDX5jgRvgltKSAinI+qqhiIPfKWTXmol5YBVSKFPxuVh
-         5eqQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5pd6A1qQMmxK9eO0hxzM1d+CDCdrMgAG1MKgD8BGrbY=;
+        b=Rc42P7/IdLVkITZMFrzCbZkYZ4ZIgvn2LtkG42gtQLhGoZsjoJcXj0BSWaI25x8o8R
+         7itie3dpxY6qcuJnSy8nE8tS8E9MyEUREajrdVW4SYsLSI/7aE5+4pHPiOfgsN7XMsdA
+         G9dk4PCCutn9VfgT+wlNLDcZs1eoiBi29U6hIq/oTNbaMXCdyIODVqHtVQVCsZbVRirr
+         Bd7Mmu+AgPx2jL0ok/xTe+wfcifeYyyHPyFtGq7CtCL4KDq0TwDaSXuXu8CNt6ve4aFY
+         bFm05TkOE/UqeqqENDY8gGCu6Hk5MMGNNZ1fnpT1oxDn+iKT9OWA8Ml1WieaD0HAt2kd
+         fqrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LoW8u3CJbGnQcSN5oUo2pqe9I9oHO/HcdF24ejHJjeM=;
-        b=r9noNW//Rds3qrWvOyyv5WNMDo5YMk81na/cLhzPD2jHa9ZQtHnUzPhKkACBGr4ftB
-         NqihdrI22nNb08U39njlFG6UffOGWeVHvkBVoLyVfdZ/ORGK6yXxawgHJSfUNXdCTkJ8
-         Y8hCiNgqe8OxQOHsQGXKY2AeS1qkQETm1Uu/rYM2UmGfTw+84pKz0gp/vET9Xhm5nhnx
-         zZOcDtJO6dBnLm2H594oE/TuldmuOBWytFfC86Lk+SXFsaWxT6pAJrWcL3YUyqFpuBzK
-         rinWP4X5+DgZ35aef6n4x4sLW7ZzUMPjr8MMHeE7p4de3CrYadue6h+PyKaFTPy8B4LU
-         ho4w==
-X-Gm-Message-State: AOAM5315XHWim+keK9yJdWZmiDmjGv/VldWaM8jfipZBRsZNQexRmZoM
-        R3U4/KnK94EEQxilVW4tFPUC6q+8
-X-Google-Smtp-Source: ABdhPJzYxNACpvF7XyLDUIwU0QYMnL6QZ+LN7M//DxgSNuxPiB3qa6TBK7Ye+P/Zhk2WP/ajC2yDYA==
-X-Received: by 2002:a2e:954c:: with SMTP id t12mr27080619ljh.287.1594045600549;
-        Mon, 06 Jul 2020 07:26:40 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id m14sm11744638lfp.18.2020.07.06.07.26.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 07:26:40 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sergey Organov <sorganov@gmail.com>
-Subject: [PATCH  2/5] net: fec: enable to use PPS feature without time stamping
-Date:   Mon,  6 Jul 2020 17:26:13 +0300
-Message-Id: <20200706142616.25192-3-sorganov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200706142616.25192-1-sorganov@gmail.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5pd6A1qQMmxK9eO0hxzM1d+CDCdrMgAG1MKgD8BGrbY=;
+        b=ZnR6zfbTI+qfQG75JFCdFgSJGdLte/WDrJKpV9+ipJpwPo9BZCZcDg+TguEHm0wcYu
+         AT345+jGm72pNaL98W1CjUeRtCrGqSWcx6bQFj3PDXTZF6zkZS9ctgPE0dTJEZ+e/aXB
+         ZZXaEd0Bk+g+cJMWjLWc1Dtd7da9HWF6vG6B317vfqColuAGvQQcbyLiuraQt9CyE63Z
+         p8D0WRr3EZJ07fMcTrJO/s+QdueaKT58OZ+8w4dDvf1Fgpek14jQ6Pyd7kzb9ZXEyQX9
+         pL/k58azU/qs1HC1U1f6l8wGT1+NS62KnvokWyjLbyf45lXpNR/rI2F1LN/8rKAWV3h7
+         Tl9w==
+X-Gm-Message-State: AOAM5335ZxM3liqJQ2J/k3ByTc4bYYXtLqJaidR7WqNc8hE20Fkh69Yk
+        yn37LRYh34IxVyJNuhb+JvEJ7g==
+X-Google-Smtp-Source: ABdhPJytwi3Jr/FCbXzOMe56zwLXCUJGMaAswEThWlUWh8Rtp741kwbuv/W0FRFpufAvVJHK0JmMjw==
+X-Received: by 2002:a05:6e02:13a9:: with SMTP id h9mr31133265ilo.232.1594045639434;
+        Mon, 06 Jul 2020 07:27:19 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f76sm11518888ilg.62.2020.07.06.07.27.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 07:27:18 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200705210947.GW25523@casper.infradead.org>
+ <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+ <20200706141002.GZ25523@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
+Date:   Mon, 6 Jul 2020 08:27:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200706141002.GZ25523@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPS feature could be useful even when hardware time stamping
-of network packets is not in use, so remove offending check
-for this condition from fec_ptp_enable_pps().
+On 7/6/20 8:10 AM, Matthew Wilcox wrote:
+> On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
+>> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
+>>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+>>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
+>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>>
+>>>>> For zone-append, block-layer will return zone-relative offset via ret2
+>>>>> of ki_complete interface. Make changes to collect it, and send to
+>>>>> user-space using cqe->flags.
+> 
+>>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
+>>> address.
+>>
+>> Yeah, it's not great either, but we have less leeway there in terms of
+>> how much space is available to pass back extra data.
+>>
+>>> What do you think to my idea of interpreting the user_data as being a
+>>> pointer to somewhere to store the address?  Obviously other things
+>>> can be stored after the address in the user_data.
+>>
+>> I don't like that at all, as all other commands just pass user_data
+>> through. This means the application would have to treat this very
+>> differently, and potentially not have a way to store any data for
+>> locating the original command on the user side.
+> 
+> I think you misunderstood me.  You seem to have thought I meant
+> "use the user_data field to return the address" when I actually meant
+> "interpret the user_data field as a pointer to where userspace
+> wants the address stored".
 
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
----
- drivers/net/ethernet/freescale/fec_ptp.c | 5 -----
- 1 file changed, 5 deletions(-)
+It's still somewhat weird to have user_data have special meaning, you're
+now having the kernel interpret it while every other command it's just
+an opaque that is passed through.
 
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index f8a592c..4a12086 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -103,11 +103,6 @@ static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
- 	u64 ns;
- 	val = 0;
- 
--	if (!(fep->hwts_tx_en || fep->hwts_rx_en)) {
--		dev_err(&fep->pdev->dev, "No ptp stack is running\n");
--		return -EINVAL;
--	}
--
- 	if (fep->pps_enable == enable)
- 		return 0;
- 
+But it could of course work, and the app could embed the necessary
+u32/u64 in some other structure that's persistent across IO. If it
+doesn't have that, then it'd need to now have one allocated and freed
+across the lifetime of the IO.
+
+If we're going that route, it'd be better to define the write such that
+you're passing in the necessary information upfront. In syscall terms,
+then that'd be something ala:
+
+ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
+			off_t *offset, int flags);
+
+where *offset is copied out when the write completes. That removes the
+need to abuse user_data, with just providing the storage pointer for the
+offset upfront.
+
 -- 
-2.10.0.1.g57b01a3
+Jens Axboe
 
