@@ -2,70 +2,99 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C4EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E98F2206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1AD206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGFTYd (ORCPT
+        id S1726795AbgGFT02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45154 "EHLO
+        Mon, 6 Jul 2020 15:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgGFTYd (ORCPT
+        with ESMTP id S1725982AbgGFT02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:24:33 -0400
+        Mon, 6 Jul 2020 15:26:28 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF43C061755;
-        Mon,  6 Jul 2020 12:24:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B673C061755;
+        Mon,  6 Jul 2020 12:26:28 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4A3621275893A;
-        Mon,  6 Jul 2020 12:24:32 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 12:24:31 -0700 (PDT)
-Message-Id: <20200706.122431.1990013952872766568.davem@davemloft.net>
-To:     vaibhavgupta40@gmail.com
-Cc:     helgaas@kernel.org, bhelgaas@google.com, bjorn@helgaas.com,
-        vaibhav.varodek@gmail.com, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH v1 0/3] ethernet: sun: use generic power management
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1A8B21277D626;
+        Mon,  6 Jul 2020 12:26:27 -0700 (PDT)
+Date:   Mon, 06 Jul 2020 12:26:26 -0700 (PDT)
+Message-Id: <20200706.122626.2248567362397969247.davem@davemloft.net>
+To:     horatiu.vultur@microchip.com
+Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        kuba@kernel.org, jiri@resnulli.us, ivecera@redhat.com,
+        andrew@lunn.ch, UNGLinuxDriver@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Subject: Re: [PATCH net-next 01/12] switchdev: mrp: Extend switchdev API
+ for MRP Interconnect
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200706085746.221992-1-vaibhavgupta40@gmail.com>
-References: <20200706085746.221992-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200706091842.3324565-2-horatiu.vultur@microchip.com>
+References: <20200706091842.3324565-1-horatiu.vultur@microchip.com>
+        <20200706091842.3324565-2-horatiu.vultur@microchip.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 12:24:32 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 12:26:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Date: Mon,  6 Jul 2020 14:27:43 +0530
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Mon, 6 Jul 2020 11:18:31 +0200
 
-> Linux Kernel Mentee: Remove Legacy Power Management.
-> 
-> The purpose of this patch series is to remove legacy power management callbacks
-> from sun ethernet drivers.
-> 
-> The callbacks performing suspend() and resume() operations are still calling
-> pci_save_state(), pci_set_power_state(), etc. and handling the power management
-> themselves, which is not recommended.
-> 
-> The conversion requires the removal of the those function calls and change the
-> callback definition accordingly and make use of dev_pm_ops structure.
-> 
-> All patches are compile-tested only.
+> +/* SWITCHDEV_OBJ_ID_IN_TEST_MRP */
+> +struct switchdev_obj_in_test_mrp {
+> +	struct switchdev_obj obj;
+> +	/* The value is in us and a value of 0 represents to stop */
+> +	u32 interval;
+> +	u8 max_miss;
+> +	u32 in_id;
+> +	u32 period;
+> +};
+ ...
+> +#define SWITCHDEV_OBJ_IN_TEST_MRP(OBJ) \
+> +	container_of((OBJ), struct switchdev_obj_in_test_mrp, obj)
+> +
+> +/* SWICHDEV_OBJ_ID_IN_ROLE_MRP */
+> +struct switchdev_obj_in_role_mrp {
+> +	struct switchdev_obj obj;
+> +	u16 in_id;
+> +	u32 ring_id;
+> +	u8 in_role;
+> +	struct net_device *i_port;
+> +};
+ ...
+> +#define SWITCHDEV_OBJ_IN_ROLE_MRP(OBJ) \
+> +	container_of((OBJ), struct switchdev_obj_in_role_mrp, obj)
+> +
+> +struct switchdev_obj_in_state_mrp {
+> +	struct switchdev_obj obj;
+> +	u8 in_state;
+> +	u32 in_id;
+> +};
 
-Series applied to net-next, thank you.
+Please arrange these structure members in a more optimal order so that
+the resulting object is denser.  For example, in switchdev_obj_in_role_mrp
+if you order it such that:
+
+> +	u32 ring_id;
+> +	u16 in_id;
+> +	u8 in_role;
+
+You'll have less wasted space from padding.
+
+Use 'pahole' or similar tools to guide you.
