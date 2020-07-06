@@ -2,129 +2,102 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16816C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E820C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02D720771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zu9C20Pw"
+	by mail.kernel.org (Postfix) with ESMTP id 1624C2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgGFM6L (ORCPT
+        id S1729196AbgGFM7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:58:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54527 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729143AbgGFM6H (ORCPT
+        Mon, 6 Jul 2020 08:59:12 -0400
+Received: from smtprelay0048.hostedemail.com ([216.40.44.48]:47396 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729041AbgGFM7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:58:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594040286;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j+KY02i6bUabbwozSGcjhNsCPf+3RwTXSSg6eC05zLE=;
-        b=Zu9C20PwZ+vYXAUk+2rwaJY9xV7XjEahvdYk/FnlZGodufRgkVMZCFBI5zDSxNqT4Q17Eo
-        41tVKq6kPKN4LL2LgHHclfwxjzEU0bV6K9Pq70HQQ6s38WkIbE92ZL2U2NAzzkFU/9RgzG
-        mL5BJ9EWJ3Mbw2MthI9zkBg9Nek/vws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-XPNHzZXzNrij33CwAIhhZA-1; Mon, 06 Jul 2020 08:58:04 -0400
-X-MC-Unique: XPNHzZXzNrij33CwAIhhZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D48878015F3;
-        Mon,  6 Jul 2020 12:58:01 +0000 (UTC)
-Received: from krava (unknown [10.40.193.8])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 54BE57B405;
-        Mon,  6 Jul 2020 12:57:58 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 14:57:57 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [RFC 1/3] perf jevents: Add support for parsing perchip/percore
- events
-Message-ID: <20200706125757.GA3424581@krava>
-References: <20200625114718.229911-1-kjain@linux.ibm.com>
- <20200625114718.229911-2-kjain@linux.ibm.com>
- <CAP-5=fWG9rxObKJ38dQ=VUf3_mQbNDCTzgU1kkyw=9uVfBa+qw@mail.gmail.com>
- <512670c2-bb61-7c2f-68bc-7752499300c6@linux.ibm.com>
+        Mon, 6 Jul 2020 08:59:11 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B6C811AB01;
+        Mon,  6 Jul 2020 12:59:10 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fact03_401811826eac
+X-Filterd-Recvd-Size: 2574
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  6 Jul 2020 12:59:09 +0000 (UTC)
+Message-ID: <d6f56f5f5e0790ee9c7579eb05c7d92e071ee15a.camel@perches.com>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+From:   Joe Perches <joe@perches.com>
+To:     Matthew Wilcox <willy6545@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chris Mason <clm@fb.clm>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 06 Jul 2020 05:59:08 -0700
+In-Reply-To: <CAFhKne9vswg3Q4mTOz4WP6QWJ8tDH+SNx1Pu7LotLagoNURKgw@mail.gmail.com>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
+         <87h7ul15le.fsf@notabene.neil.brown.name>
+         <20200706072221.GA1947246@kroah.com>
+         <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
+         <CAFhKne9vswg3Q4mTOz4WP6QWJ8tDH+SNx1Pu7LotLagoNURKgw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <512670c2-bb61-7c2f-68bc-7752499300c6@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:50:28AM +0530, kajoljain wrote:
+On Mon, 2020-07-06 at 08:51 -0400, Matthew Wilcox wrote:
+[]
+> In terms of number of lines of code using the word, it's only seventh
+> in drivers/:
+> 
+> $ for i in drivers/*; do c=$(find $i -type f |xargs grep slave |wc
+> -l); echo "$c $i"; done |sort -rn |head
+> 5218 drivers/net
+> 1341 drivers/dma
+> 988 drivers/i2c
+> 695 drivers/gpu
+> 666 drivers/soundwire
+> 665 drivers/spi
+> 559 drivers/w1
+> 461 drivers/infiniband
+> 389 drivers/media
+> 301 drivers/scsi
 
-SNIP
+I get rather different and much lower numbers
 
->  ]
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index fa86c5f997cc..dd2b14cc147c 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -53,6 +53,23 @@
->  int verbose;
->  char *prog;
->  
-> +enum event_class {
-> +	PerChip = 0,
-> +	PerPkg = 1,
-> +	PerCore = 2
-> +};
+$ git grep -i -w slave drivers | \
+  cut -f1,2 -d/ | uniq -c | sort -rn | head -20 | cat -n
+     1	   3091 drivers/net
+     2	    654 drivers/i2c
+     3	    595 drivers/soundwire
+     4	    483 drivers/dma
+     5	    284 drivers/infiniband
+     6	    269 drivers/gpu
+     7	    198 drivers/media
+     8	    192 drivers/fsi
+     9	    174 drivers/spi
+    10	    131 drivers/ata
+    11	    111 drivers/w1
+    12	    110 drivers/staging
+    13	     89 drivers/iio
+    14	     71 drivers/usb
+    15	     60 drivers/mfd
+    16	     53 drivers/soc
+    17	     52 drivers/tty
+    18	     32 drivers/vme
+    19	     32 drivers/mtd
+    20	     28 drivers/ide
 
-could you please split this into patch that changes perpkg
-into the class type string and another that adds new PerChip/PerCore?
-
-> +
-> +enum event_class convert(const char* event_class_type) {
-> +
-> +	if (!strcmp(event_class_type, "PerCore"))
-> +		return PerCore;
-> +	else if (!strcmp(event_class_type, "PerChip"))
-> +		return PerChip;
-> +	else if (!strcmp(event_class_type, "PerPkg"))
-> +		return PerPkg;
-> +	return -1;
-> +}
-> +
->  int eprintf(int level, int var, const char *fmt, ...)
->  {
->  
-> @@ -320,7 +337,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
->  
->  static int print_events_table_entry(void *data, char *name, char *event,
->  				    char *desc, char *long_desc,
-> -				    char *pmu, char *unit, char *perpkg,
-> +				    char *pmu, char *unit, char *event_class_type,
-
-maybe 'aggregation' or 'aggr_mode' would be better name than event_class_type?
-
-thanks,
-jirka
 
