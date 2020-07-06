@@ -6,97 +6,145 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B96C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D029C2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C89206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594035850;
-	bh=0H/Ci4Yl7iO19bQj63isObhR+3JKKIzIIzqXWiKHn4Q=;
+	s=default; t=1594035979;
+	bh=+5UDEWKycXLC0gBnM1HfIMvN1ZmbqNtD4Wg6BQxvnOs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7Ea0sEhedTQDhBzBo4t5lJgKHfZLOSzmjeAwFXWeZv1NpB7acanfMNpZFJIewac4
-	 T9tBb4r+ZR2+sLVp72hkHqC1hJu+ICK0DqLRDfloxp9C5kTN5RqRjgqPYlo6BJ9Zz6
-	 fRXmXOD6Pk/NbhFG7kWNGqevgJ4pwNSdoMw+SDcE=
+	b=m0kOCy9I+lrAFRKPcyHxm+vLdI4UGyJ3S1SSnhuHGopsgYwkJprWylEL8sfjeREia
+	 7m4Cc6LLxAQ2ouDOz87xrkPYv2QCt+krQ2s61S1Ww1EK2yWS2HIcRD7Xxirn1r9sQY
+	 rYn/4eIwUn6vzZHp6d9s18SBMJCp5qiEy7q1LtnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgGFLoJ (ORCPT
+        id S1728976AbgGFLqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgGFLoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:44:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2B082075B;
-        Mon,  6 Jul 2020 11:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594035848;
-        bh=0H/Ci4Yl7iO19bQj63isObhR+3JKKIzIIzqXWiKHn4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bax21XBoYtg09OgqEwpKq8jl7FrAnaaM6FUk6WVqXijIL5akmKIvBQhpFh6OQ8sv9
-         y7yCyz/PlxGgpMzQELqP2le84UyWwo1CPdteZTAWGXx5Svg4xuRFwI++SAY5kW/z1a
-         Jv0+FLvidDsrEDJkTMY5BVSVUG1ZDprKMHKNZDII=
-Date:   Mon, 6 Jul 2020 12:44:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit Kumar <rohitkr@codeaurora.org>
-Cc:     Ajit Pandey <ajitp@codeaurora.org>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
-        plai@codeaurora.org, linux-kernel@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Subject: Re: [PATCH v2 1/7] Documentation: device-tree: sound: Update
- lpass-cpu driver binding
-Message-ID: <20200706114403.GA6176@sirena.org.uk>
-References: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
+        Mon, 6 Jul 2020 07:46:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36088 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbgGFLqS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:46:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 17so41539773wmo.1;
+        Mon, 06 Jul 2020 04:46:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/S2mDsygdukG9nVnHYZD+l4K+FkZWd+rRvB4pf5Rk0w=;
+        b=HOaOzycbvPzDYMc+07LRLs59WNxbuBXqdj46p1AQ5kkY/Jk8m54eE290pmVw5dmm8E
+         LDiSsEafdi6rvT6raesBSZyEO8qjHolyg1+bT4W63RBk29yPfBibOQzYK15x4kTYOrZR
+         /+NYSPjNWlmWqC325QunO8xvu058ewRo1pML6Jw6J9yBGlaKLTWHKuGrTUgW2md7yNE+
+         jSt+vVMG6yCanvvhOS0IxXI3b0/vHz78tXBXb3HuKV8nmZ1DpFhQ4S1GlZyH8ePbD6G8
+         i56T3H1HlIEHIpCIswjZkYhGRsIGNngul+rjMRYX/XE7WYFhEca4VcArlw/Qx2u/5UpY
+         Z72A==
+X-Gm-Message-State: AOAM5316NLcRgNBtfmM09iN/Zu7EVI18GZvhDDuV7izqnrfF66oIRC+m
+        duCdREWjB4UFOwulSqfE7eBGB9kN
+X-Google-Smtp-Source: ABdhPJzzwGDjgcW3RLG8unz7NFqmAksiTB0vyeynhnJDW+kaOn3Hk/jDwIRZmndVtHhFRVIp2SjX3g==
+X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr47853606wme.187.1594035975569;
+        Mon, 06 Jul 2020 04:46:15 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v12sm11378778wrt.31.2020.07.06.04.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 04:46:15 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 11:46:13 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Joseph Salisbury <joseph.salisbury@microsoft.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH][v2] Drivers: hv: Change flag to write log level in panic
+ msg to false
+Message-ID: <20200706114613.ikjv53b5zltwupq3@liuwe-devbox-debian-v2>
+References: <1593210497-114310-1-git-send-email-joseph.salisbury@microsoft.com>
+ <20200701193326.12D69214DB@mail.kernel.org>
+ <20200706105549.xum3y7hmviatil2w@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
-X-Cookie: You will be married within a year.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200706105549.xum3y7hmviatil2w@liuwe-devbox-debian-v2>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Forgot to CC Michael.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 06, 2020 at 04:59:39PM +0530, Rohit Kumar wrote:
-
-> @Mark, I was planning to post v3 patchset series for this and keep yaml
-> change as
-
-My name is Mark.
-
-> driver change will have checkpatch errors. Can you please suggest if should
-> make
-
-> first Documentation change in text file itself before driver change and
-> finally have a
-
-> patch to convert it to yaml at the end?
-
-As ever make the YAML conversion the very last thing you do in your
-series so it doesn't hold anything else up.
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8DDoMACgkQJNaLcl1U
-h9BXMgf8DNoFvq0IrXAIU2aU8cf2VGs/LC+PJRHbN66SiyRr5VQSchf5GjLi71k+
-BJ86YKPLly27ab3Xq/sDsHkNZ2nFi0LPQBJIdQxnm/cbY/iAnKYUxi3lj3OiPauA
-NvWjfiWa/qCuixLhj8UOF2zkuEg9bKtboZ986MBvdAmSYzYMuERaSYCwh2rsYsv3
-2/pBPzGieCWfQbTWEd8TTg17sgK0jPCwEePJlYlXZ6Rg2cF4MADj207FikGmS83O
-1baJtYl84UR3aynPIvzNjX9JIkG3Ffks00738Y6PQ/PQfvg48iEQx0kXFfQzgKHo
-2MRtuTCsphZrhghRuKAvOXsO04NkfQ==
-=HNKc
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+On Mon, Jul 06, 2020 at 10:55:49AM +0000, Wei Liu wrote:
+> On Wed, Jul 01, 2020 at 07:33:25PM +0000, Sasha Levin wrote:
+> > Hi
+> > 
+> > [This is an automated email]
+> > 
+> > This commit has been processed because it contains a -stable tag.
+> > The stable tag indicates that it's relevant for the following trees: all
+> > 
+> > The bot has tested the following trees: v5.7.6, v5.4.49, v4.19.130, v4.14.186, v4.9.228, v4.4.228.
+> > 
+> > v5.7.6: Build OK!
+> > v5.4.49: Failed to apply! Possible dependencies:
+> >     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+> 
+> Unrelated, shouldn't be backported.
+> 
+> > 
+> > v4.19.130: Failed to apply! Possible dependencies:
+> >     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+> > 
+> 
+> Unrelated, shouldn't be backported.
+> 
+> > v4.14.186: Failed to apply! Possible dependencies:
+> >     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+> >     53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+> >     7ed4325a44ea5 ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+> >     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+> >     8afc06dd75c06 ("Drivers: hv: vmbus: Fix the issue with freeing up hv_ctl_table_hdr")
+> >     ddcaf3ca4c3c8 ("Drivers: hv: vmus: Fix the check for return value from kmsg get dump buffer")
+> > 
+> > v4.9.228: Failed to apply! Possible dependencies:
+> >     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+> >     6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+> >     73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+> >     76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+> >     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+> >     8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+> >     d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
+> > 
+> > v4.4.228: Failed to apply! Possible dependencies:
+> >     4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+> >     619848bd07434 ("drivers:hv: Export a function that maps Linux CPU num onto Hyper-V proc num")
+> >     6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+> >     73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+> >     75ff3a8a9168d ("Drivers: hv: vmbus: avoid wait_for_completion() on crash")
+> >     76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+> >     81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+> >     8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+> >     a108393dbf764 ("drivers:hv: Export the API to invoke a hypercall on Hyper-V")
+> >     d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
+> 
+> Just from reading the subject lines it seems to me a lot of the possible
+> dependencies aren't really related to this patch functionally. It could
+> be that they are touching the same area of code which create some
+> contextual dependencies. Some of the listed dependencies should
+> definitively _not_ be backported.
+> 
+> Michael and Joseph, how far do you want this to be backported? It may be
+> easier for us to provide bespoke versions of this patch to the stable
+> trees we care about?
+> 
+> Wei.
+> 
+> > 
+> > NOTE: The patch will not be queued to stable trees until it is upstream.
+> > 
+> > How should we proceed with this patch?
+> > 
+> > -- 
+> > Thanks
+> > Sasha
