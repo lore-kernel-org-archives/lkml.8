@@ -2,107 +2,155 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3981C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70260C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D1620BED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5249F20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxqX+oWx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYwaSxlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgGFMhv (ORCPT
+        id S1729134AbgGFMiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:37:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40126 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728414AbgGFMhu (ORCPT
+        Mon, 6 Jul 2020 08:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgGFMiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:37:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594039069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9ZWpvA/NXX8o3Jj9VGVfbg95tVrVpERu9QVTRsBIkCA=;
-        b=BxqX+oWxOoKxZUSU5NxirbHFX2qu7HDOO8x3X0dPyOPdkvsjt0UHfJYBCY38HimK2cGA73
-        HNFO2PAYQ2eCetVw7u9ZnEtUQYwctprO7RXeN46Mem1xFRPq1TAS62AFaRaDYOYwk9zbZf
-        YYEqaj3Zvau47/CadMannf9h3uhnCMk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-PaXIQJN5NWqfW1xocUYseQ-1; Mon, 06 Jul 2020 08:37:47 -0400
-X-MC-Unique: PaXIQJN5NWqfW1xocUYseQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87AC018FF660;
-        Mon,  6 Jul 2020 12:37:46 +0000 (UTC)
-Received: from krava (unknown [10.40.193.8])
-        by smtp.corp.redhat.com (Postfix) with SMTP id BEF11100238E;
-        Mon,  6 Jul 2020 12:37:44 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 14:37:43 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
-Message-ID: <20200706123743.GE3401866@krava>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
+        Mon, 6 Jul 2020 08:38:10 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCB3C061794;
+        Mon,  6 Jul 2020 05:38:09 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so40680784wrs.11;
+        Mon, 06 Jul 2020 05:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:in-reply-to:references:organization
+         :date:mime-version:user-agent;
+        bh=UlxO3hPX8FKOMLmnj0A7S3C/4WvNGuPtDs4m9jeq4vY=;
+        b=RYwaSxlPduOAWSvK50CoX9I1hSnEm6ogaQ+FFcgICmweYSq/0Lvdsa7GZy1rDi/qBa
+         5JAyjnsIyYDBPSYCnsnlimgGpm8streL5rjrTcY+G0jCpX5WF9KpN2LQe2lxSjFBJ6pR
+         w0t7VyJsolZqvI7h2GUSOFcDRH3inst7syNExslZadnWJXvtQQzAc2UIejK41t+4fZvB
+         md9P+hqgXQVCv5NuEIrr5zS6qEeQEqVItjZlJ8XpfePLrI+46q8zo4ulIHhl8HZcFTMd
+         jcZtGDj9BfWBu5XiV1yMEo45rZbi/G98Eq3sl5HBQo5PvRf73gBmUgWSjgUhSxSnUgpy
+         IWrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
+         :references:organization:date:mime-version:user-agent;
+        bh=UlxO3hPX8FKOMLmnj0A7S3C/4WvNGuPtDs4m9jeq4vY=;
+        b=SlTNWkJa+JudH/VvKEtfQHDYWOyU5hp8x0gqUzJ1jV23fgeBbeJu1su0QcRFlT07BI
+         2Cow0x/Yn4BM+Ir8tMGrtab9B35j3p20eARvAQWjbSiT4XhDPB8/GBaN4/efQFMEfd3u
+         JGwG9qRvrCpfuB6gCVImoANHHUS8hlIgkU2xrPa5mSzp8k13VCa4FQSu2S2JEnvQFwr4
+         AOeQDheMCAms5gpYAHo8ur6hdVXAQOR0oo1Gc8lIi2t/7TLQAXK1wolgd7FND2WqU6jo
+         uOpQXk/huVSG3vr1Rsz15lVin6WMBkUvd4kZFdswUNfP7qrWKLhh5Wb8NfbRBbIFvjof
+         bAlg==
+X-Gm-Message-State: AOAM532BsqbGBPNwu48YS3WxE4ktHYJBHu3S2gxHPMF0EWweSXmjS2QZ
+        J2LbXm1ymP0tSIYUTJrLHsStMFmZo0SDYA==
+X-Google-Smtp-Source: ABdhPJzk++snLRL/3Zeg4bNmeyzlYwHvm5wO5AmviL5i6AEwJagIUnDIMAnnl27dbd6WFbaTAidK7g==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr46305862wrm.141.1594039088678;
+        Mon, 06 Jul 2020 05:38:08 -0700 (PDT)
+Received: from genesis ([2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        by smtp.gmail.com with ESMTPSA id e23sm22716650wme.35.2020.07.06.05.38.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 05:38:07 -0700 (PDT)
+Message-ID: <2f76f069f2078b3d51533f772f1094dcc03685a3.camel@gmail.com>
+Subject: Re: [PATCH] HID: logitech-hidpp: avoid repeated "multiplier = "
+ log messages
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <filipe.lains@gmail.com>
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Harry Cutts <hcutts@chromium.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
+References: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-/JbVFOtHolAxXpvgH3yU"
+Date:   Mon, 06 Jul 2020 13:38:04 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+User-Agent: Evolution 3.36.3 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 10:47:22AM +0300, Alexey Budankov wrote:
 
-SNIP
+--=-/JbVFOtHolAxXpvgH3yU
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->  
->  	while (1) {
->  		if (forks)
-> @@ -574,11 +610,22 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times, st
->  		if (done || stop || child_exited)
->  			break;
->  
-> -		nanosleep(ts, NULL);
-> -		if (timeout)
-> -			stop = true;
-> -		else
-> -			stop = handle_interval(interval, times);
-> +		clock_gettime(CLOCK_MONOTONIC, &time_start);
-> +		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
-> +			if (timeout)
-> +				stop = true;
-> +			else
-> +				stop = handle_interval(interval, times);
-> +			time_to_sleep = sleep_time;
-> +		} else { /* fd revent */
-> +			stop = process_evlist(evsel_list, interval, times);
-> +			clock_gettime(CLOCK_MONOTONIC, &time_stop);
-> +			diff_timespec(&time_diff, &time_stop, &time_start);
-> +			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
-> +					 time_diff.tv_nsec / NSEC_PER_MSEC;
-> +			if (time_to_sleep < 0)
-> +				time_to_sleep = 0;
+On Sun, 2020-07-05 at 19:34 +0200, Maciej S. Szmigiero wrote:
+> These messages appear each time the mouse wakes from sleep, in my
+> case
+> (Logitech M705), every minute or so.
+> Let's downgrade them to the "debug" level so they don't fill the
+> kernel log
+> by default.
+>=20
+> While we are at it, let's make clear that this is a wheel multiplier
+> (and
+> not, for example, XY movement multiplier).
+>=20
+> Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling
+> on Logitech mice")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> ---
+> Sending again since the previous message bounced for most recipients.
+>=20
+>  drivers/hid/hid-logitech-hidpp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
+> logitech-hidpp.c
+> index 1e1cf8eae649..b8b53dc95e86 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct
+> hidpp_device *hidpp)
+>  		multiplier =3D 1;
+> =20
+>  	hidpp->vertical_wheel_counter.wheel_multiplier =3D multiplier;
+> -	hid_info(hidpp->hid_dev, "multiplier =3D %d\n", multiplier);
+> +	hid_dbg(hidpp->hid_dev, "wheel multiplier =3D %d\n", multiplier);
+>  	return 0;
+>  }
+> =20
 
-could this computation go to a separate function? something like:
+I have seen this being useful in some cases, however I do not have a
+strong opinion on it. Peter would know better.
 
-time_to_sleep = compute_tts(time_start, time_stop);
+Cheers,
+Filipe La=C3=ADns
 
-thanks,
-jirka
+--=-/JbVFOtHolAxXpvgH3yU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8DGyYACgkQ+JPGdIFq
+qV2X+BAAodOXRsLeK4VZh5PBrDPvqTjUWn7Y1TEFkSZBxAQVzyL1Uv1TvtOjUPIn
+Q65fmafPxfwW+BNNiTeMhqVCUzPNLGjH65aHlVB5ZWYxiTO1k4OKwcCMgpcM6C69
+vdJ2lJjRjWpsmq6gw4QxlmuiaEm1BcAx6IbbIBBXFz2LoypDjT5D6enYLNdLMAdO
+/B+BtUJVhZJFeUV3gNqiUcay6YSKzkHycf+ZgpxFMOJRwnAfPKlVnqKXawzteJAX
+2YVNmyhc+qrNEpAw/t5KrBvoZZJr0XAF/izj021XtJjPPaDde8R1AtmJ1V2Ru6Sv
+Cq8f+AcuBCvykmS3RdWvOAq0BMyI8/hrrlc8iFsaja8GFZqfov+Qk+PnfSk+NAub
+/vbvurzLqV4Di68+8Zb5dvsYmQBIisf+gq7kvuUBd6aKTEdar84wOXCXMjjcdiDp
+zfz20Dpw+f62a5ORVkIJ305PwVugrWK8YR8HikdIdtSoSKkJMRaXn9Cyz1vi1W6D
+vGsuG1q0IjDxdKVkpW863RGC/AXMrQkOB24Mr5H499n8QWgnjqaCSYimoGGbzihU
+vy7YjOr5Ma5Olsq0kLXp3KY8RVcnXpSAcaoqAd0xWIKBwZPw/4cKDo7lD2uCjgKa
+B31lJwUKysIjK1AgQzNY7fKHOvmqxZGtJpSIg1FKg+sDav1j2us=
+=C+AW
+-----END PGP SIGNATURE-----
+
+--=-/JbVFOtHolAxXpvgH3yU--
 
