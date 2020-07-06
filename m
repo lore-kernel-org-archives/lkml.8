@@ -2,131 +2,161 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92217C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18334C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7679A2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQxVWHcj"
+	by mail.kernel.org (Postfix) with ESMTP id 05B002053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgGFSVR (ORCPT
+        id S1729810AbgGFSV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbgGFSVR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:21:17 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3774DC061755;
-        Mon,  6 Jul 2020 11:21:17 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id x9so33782307ila.3;
-        Mon, 06 Jul 2020 11:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V0UyprzGOpJCrvSRMTeiKdKQODoWH/Ul9V8rM2fcjek=;
-        b=NQxVWHcjXotZUs9osvV8QUiCAoR4tgGZHVto/QVWnE0/gvvZ/6BbHfRgDABY5x7aRH
-         wEjq6u56xD5ttDRD+QN8gI96K4JYZ+1bTu6k3KxUAJLKV332WUUOmFkawijGXlCgzffl
-         dWChdPB+z/ZSX+AAVk7SALZYVvlJkdKBlaYOWZPzhcbIFrZ0W3d/mhZGvngoEgbDi5bO
-         1QbHKlFdAsfOeicqSqbieDFyV5R4mUNsaylwX0RbxLVQJa97thInsGJuUxMV8kCck8gb
-         d4vPb6QR+LqA+viO/qYinJH/bc/4tx8y1OMMuWMfbgO3EvKr+Ct5SuStM2TGUulxYHr9
-         3hNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V0UyprzGOpJCrvSRMTeiKdKQODoWH/Ul9V8rM2fcjek=;
-        b=RgYcoUPvXeIgXvaC7wEbtAtNVHeh6zzTiNzPRBxhFI59GGdhlqbHizis7parSl9evI
-         yI7znxlAke+tshstovj9rHBCXXYBqvWRYA3bbv2XnxlhQ38y0UEe3KvuDpjXIlrTrN+l
-         6rCc9nRUBpJHwrtlQ3wG1kxK38KZk/eYbf2iBe8XE2JlkagyyQPhvz3Wvg2WCIO0vfkN
-         Tri9aOpRNyTPowEL4ahGAGwRdCurIGHxparNoGYWwdjjf0vF3uHrqZ0YrQ3dywgtI6/R
-         pFDA4N6jLMD/p96GzgKwFHKGy5zAmTRaEWPandUbVrfh8x+bYQghIBnQE9fVWiIxUGdG
-         G/Eg==
-X-Gm-Message-State: AOAM532xq6cJVvKVa6xJ285Y1wOhBfTbq6AhNsjRJCFiCqP8RtWeU4Br
-        rZZM0x+7fO94T0g7DOoLqZ4B1ko2Do5WZeyeF64jDA==
-X-Google-Smtp-Source: ABdhPJyoUpqQP7ExvgQg6jlWGuD67jd+pPKzAlGa3XPHsroQPCFsp38zhEGfcVb52hJVx5RhRxmhKo1NuYqZ7YP9TJs=
-X-Received: by 2002:a05:6e02:1086:: with SMTP id r6mr29456065ilj.158.1594059676475;
- Mon, 06 Jul 2020 11:21:16 -0700 (PDT)
+        Mon, 6 Jul 2020 14:21:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28389 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbgGFSV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:21:28 -0400
+IronPort-SDR: F0OSj33hXCgrOeqV2rZBzt/C1UxPOoE0Ytfj7fPFv73SDi56mjlbEg0DUFZ76Ae1g853pQ4LOL
+ kmU4hNOywF9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127556108"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="127556108"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:21:27 -0700
+IronPort-SDR: ev0ZP96hyj6TSPU1iQaQWf9863WfkMZYRXDmWmbC817FNQLYu5HwBPuZVt8ybvKtqlr7G8hDZu
+ KRDwRvq9DGMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="427187265"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 11:21:26 -0700
+Subject: [PATCH v3 0/6] Add shared workqueue support for idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
+        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com
+Date:   Mon, 06 Jul 2020 11:21:26 -0700
+Message-ID: <159405827797.19216.15283540319201919054.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20200706180010.29032-1-puranjay12@gmail.com> <20200706121407.6c24f537@lwn.net>
-In-Reply-To: <20200706121407.6c24f537@lwn.net>
-From:   Puranjay Mohan <puranjay12@gmail.com>
-Date:   Mon, 6 Jul 2020 23:51:05 +0530
-Message-ID: <CANk7y0h0p+OjYvtFbGf-C7FeOdgf3HBtd=jVdDTHYP5eKv2uvQ@mail.gmail.com>
-Subject: Re: [PATCH] Security: Documentation: fix: `make htmldocs` warnings
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 11:44 PM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Mon,  6 Jul 2020 23:30:10 +0530
-> Puranjay Mohan <puranjay12@gmail.com> wrote:
->
-> > Remove extra ')' after function name to fix warnings.
-> > It solves following warning :
-> > WARNING: Unparseable C cross-reference: 'groups_sort)'
-> > Invalid C declaration: Expected end of definition. [error at 11]
-> >
-> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> > ---
-> >  Documentation/security/credentials.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
-> > index 282e79feee6a..d51e42b92395 100644
-> > --- a/Documentation/security/credentials.rst
-> > +++ b/Documentation/security/credentials.rst
-> > @@ -455,7 +455,7 @@ When replacing the group list, the new list must be sorted before it
-> >  is added to the credential, as a binary search is used to test for
-> >  membership.  In practice, this means :c:func:`groups_sort` should be
-> >  called before :c:func:`set_groups` or :c:func:`set_current_groups`.
-> > -:c:func:`groups_sort)` must not be called on a ``struct group_list`` which
-> > +:c:func:`groups_sort` must not be called on a ``struct group_list`` which
-> >  is shared as it may permute elements as part of the sorting process
-> >  even if the array is already sorted.
->
-> So this is a great fix, thanks for sending it.  That said, there are a
-> couple of ways in which this fix can be made even better:
->
->  - The simpler of the two is to change the subject line of the patch.
->    "Fix a warning" is almost never a good description of what you're
->    doing; what you are actually doing is fixing a broken cross reference.
->    So the subject line should say that.
->
->  - In this case, though, there is a much better thing to do.  We
->    deprecated the use of :c:func: around a year ago; the docs build system
->    can now do the right thing automatically.  So a fix that would both
->    eliminate the warning and improve the document as a whole would be to
->    replace every instance of:
->
->         :c:func:`function_name`
->
->    with:
->
->         function_name()
->
-> Is there any chance I could get you to send a patch that does that?
-Yes! I have started working on it.
->
-> Thanks,
->
-> jon
-Thanks,
-Puranjay
+V3:
+- Rebased against latest dmaengine/next tree.
+- Updated API doc with new kernel version and dates.
+- Changed to allow driver to load without ENQCMD support.
+- Break out some patches that can be sent ahead of this series for inclusion.
+
+v2:
+- Dropped device feature enabling (GregKH)
+- Dropped PCI device feature enabling (Bjorn)
+	- https://members.pcisig.com/wg/PCI-SIG/document/14237
+- After some internal discussion, we have decided to hold off on the enabling of DMWR due to the
+  following reasons. 1. Most first gen hw will not have the feature bits. 2. First gen hw that
+  support the feature are all Root Complex integrated endpoints. 3. PCI devices that are not
+  RCiEP’s with this capability won’t surface for a few years so we can wait until we can test the
+  full code.
+- Dropped special ioremap (hch)
+- Added proper support for WQ flush (tony, dan)
+- Changed descriptor submission to use sbitmap_queue for blocking. (dan)
+
+Driver stage 1 postings for context: [1]
+
+The patch series has compilation and functional dependency on Fenghua's "Tag application
+address space for devices" patch series for the ENQCMD CPU command enumeration and the PASID MSR
+support. [2] 
+
+First patch in the series is only there to assist with compilation. Can be dropped once Fenghua’s
+series is accepted by the x86 maintainers.
+
+== Background ==
+A typical DMA device requires the driver to translate application buffers to hardware addresses,
+and a kernel-user transition to notify the hardware of new work. Shared Virtual Addressing (SVA)
+allows the processor and device to use the same virtual addresses without requiring software to
+translate between the address spaces. ENQCMD is a new instruction on Intel Platforms that allows
+user applications to directly notify hardware of new work, much like how doorbells are used in
+some hardware, but it carries a payload along with it. ENQCMDS is the supervisor version (ring0)
+of ENQCMD.
+
+== ENQCMDS ==
+Introduce enqcmds(), a helper funciton that copies an input payload to a 64B aligned
+destination and confirms whether the payload was accepted by the device or not.
+enqcmds() wraps the new ENQCMDS CPU instruction. The ENQCMDS is a ring 0 CPU instruction that
+performs similar to the ENQCMD instruction. Descriptor submission must use ENQCMD(S) for shared
+workqueues (swq) on an Intel DSA device. 
+
+== Shared WQ support ==
+Introduce shared workqueue (swq) support for the idxd driver. The current idxd driver contains
+dedicated workqueue (dwq) support only. A dwq accepts descriptors from a MOVDIR64B instruction.
+MOVDIR64B is a posted instruction on the PCIe bus, it does not wait for any response from the
+device. If the wq is full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in
+ring 0, which is a non-posted instruction. The zero flag would be set to 1 if the device rejects
+the descriptor or if the wq is full. A swq can be shared between multiple users
+(kernel or userspace) due to not having to keep track of the wq full condition for submission.
+A swq requires PASID and can only run with SVA support. 
+
+== IDXD SVA support ==
+Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID support,
+the descriptors can be programmed with host virtual address (HVA) rather than IOVA.
+The hardware will work with the IOMMU in fulfilling page requests. With SVA support,
+a user app using the char device interface can now submit descriptors without having to pin the
+virtual memory range it wants to DMA in its own address space. 
+
+The series does not add SVA support for the dmaengine subsystem. That support is coming at a
+later time.
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://lkml.org/lkml/2020/6/30/1266
+[3]: https://software.intel.com/en-us/articles/intel-sdm
+[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[7]: https://intel.github.io/idxd/
+[8]: https://github.com/intel/idxd-driver idxd-stage2
+
+---
+
+Dave Jiang (5):
+      x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+      x86/asm: add enqcmds() to support ENQCMDS instruction
+      dmaengine: idxd: add shared workqueue support
+      dmaengine: idxd: clean up descriptors with fault error
+      dmaengine: idxd: add ABI documentation for shared wq
+
+Fenghua Yu (1):
+      x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
+ arch/x86/include/asm/cpufeatures.h             |    1 
+ arch/x86/include/asm/io.h                      |   45 +++++---
+ arch/x86/include/asm/special_insns.h           |   17 +++
+ arch/x86/kernel/cpu/cpuid-deps.c               |    1 
+ drivers/dma/Kconfig                            |   13 ++
+ drivers/dma/idxd/cdev.c                        |   47 ++++++++
+ drivers/dma/idxd/device.c                      |   91 ++++++++++++++-
+ drivers/dma/idxd/dma.c                         |    9 --
+ drivers/dma/idxd/idxd.h                        |   26 ++++
+ drivers/dma/idxd/init.c                        |   91 ++++++++++++---
+ drivers/dma/idxd/irq.c                         |  143 ++++++++++++++++++++++--
+ drivers/dma/idxd/registers.h                   |   14 ++
+ drivers/dma/idxd/submit.c                      |   33 +++++-
+ drivers/dma/idxd/sysfs.c                       |  127 +++++++++++++++++++++
+ 15 files changed, 602 insertions(+), 70 deletions(-)
+
+--
