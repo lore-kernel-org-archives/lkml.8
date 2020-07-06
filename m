@@ -2,137 +2,171 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A04C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E23C120724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F4920724
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c3hGBkH5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="pitgkhrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgGFJZI (ORCPT
+        id S1728873AbgGFJ0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:25:08 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:20727 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728440AbgGFJZI (ORCPT
+        Mon, 6 Jul 2020 05:26:24 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:3240 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728414AbgGFJ0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:25:08 -0400
-X-UUID: c9905f7431944e508dbbb009edc3e747-20200706
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=nNaLPXZtrGfnJf6M3QSucpG3gM0B0VN8+vf4nIaK9dk=;
-        b=c3hGBkH5SMkPA/6ub3cyadr6E7kdrz6QAVcJJkqIDVSb3isux9uCVzHA9QHZybA7PKSsY45CKqxd4QRb+XHSs2+qfur5JRzhDmFzsD0Z1G+Q0glahqnRRDjUD5kIB8MJfWEG6GWH/4UUinSHeTksBiC6gzYIau8lI3NW8Kvnxr0=;
-X-UUID: c9905f7431944e508dbbb009edc3e747-20200706
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <chinwen.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 935689036; Mon, 06 Jul 2020 17:25:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 6 Jul 2020 17:24:57 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
- (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Jul
- 2020 17:24:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 6 Jul 2020 17:24:58 +0800
-Message-ID: <1594027500.30360.32.camel@mtkswgap22>
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-From:   Chinwen Chang <chinwen.chang@mediatek.com>
-To:     Haiyan Song <haiyanx.song@intel.com>
-CC:     Laurent Dufour <ldufour@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <mhocko@kernel.org>,
-        <peterz@infradead.org>, <kirill@shutemov.name>,
-        <ak@linux.intel.com>, <dave@stgolabs.net>, <jack@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <aneesh.kumar@linux.ibm.com>, <benh@kernel.crashing.org>,
-        <mpe@ellerman.id.au>, <paulus@samba.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        <sergey.senozhatsky.work@gmail.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        <kemi.wang@intel.com>, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        "Balbir Singh" <bsingharora@gmail.com>, <sj38.park@gmail.com>,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <haren@linux.vnet.ibm.com>, <npiggin@gmail.com>,
-        <paulmck@linux.vnet.ibm.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <x86@kernel.org>,
-        <miles.chen@mediatek.com>
-Date:   Mon, 6 Jul 2020 17:25:00 +0800
-In-Reply-To: <20190620081945.hwj6ruqddefnxg6z@haiyan.sh.intel.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
-         <20190606065129.d5s3534p23twksgp@haiyan.sh.intel.com>
-         <3d3cefa2-0ebb-e86d-b060-7ba67c48a59f@linux.ibm.com>
-         <1c412ebe-c213-ee67-d261-c70ddcd34b79@linux.ibm.com>
-         <20190620081945.hwj6ruqddefnxg6z@haiyan.sh.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 6 Jul 2020 05:26:23 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0669AYok025440;
+        Mon, 6 Jul 2020 02:26:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=GL9IQAitceoZ8FNpyr2DBo1MfupJU1Et7ENnXz+T54Q=;
+ b=pitgkhrhT/qjPrV+koJ5snoG78QMnrfA7PFyu5K6UzpmlcJ0yHvMqeQb4fKJLnTic1HG
+ V70vOtAK+1MTOIc3cBAFqeOSJ+zTgI4rPEVMcuhO+GcQi00922RWusELLhBlRhPnPJDc
+ g5qVK3YczQVDWAJ386dtE6WTalzPCDy3LFBOUcid6ZR478RH27zZVRjP7aoYhdLNC05Y
+ ag+LURQwbP748UqKyXqHW5ilYKAYHVp5pFIUxEL0ndBCthF5x5EqsGjC3qX7Sa3RkfMl
+ QAYV15i33csZk1DtDq0Um3c7/6PkKeiaPOEy/O6kLoQUtrY/bS8AVhVMmxQW0CK+8LbB 9w== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 322s9n5s91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 02:26:19 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Jul
+ 2020 02:26:17 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Jul
+ 2020 02:26:17 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 02:26:17 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 335263F703F;
+        Mon,  6 Jul 2020 02:26:13 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net] net: qed: fix buffer overflow on ethtool -d
+Date:   Mon, 6 Jul 2020 12:25:53 +0300
+Message-ID: <20200706092553.3512-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_07:2020-07-06,2020-07-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA2LTIwIGF0IDE2OjE5ICswODAwLCBIYWl5YW4gU29uZyB3cm90ZToNCj4g
-SGkgTGF1cmVudCwNCj4gDQo+IEkgZG93bmxvYWRlZCB5b3VyIHNjcmlwdCBhbmQgcnVuIGl0IG9u
-IEludGVsIDJzIHNreWxha2UgcGxhdGZvcm0gd2l0aCBzcGYtdjEyIHBhdGNoDQo+IHNlcmlhbHMu
-DQo+IA0KPiBIZXJlIGF0dGFjaGVkIHRoZSBvdXRwdXQgcmVzdWx0cyBvZiB0aGlzIHNjcmlwdC4N
-Cj4gDQo+IFRoZSBmb2xsb3dpbmcgY29tcGFyaXNvbiByZXN1bHQgaXMgc3RhdGlzdGljcyBmcm9t
-IHRoZSBzY3JpcHQgb3V0cHV0cy4NCj4gDQo+IGEpLiBFbmFibGUgVEhQDQo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1BGXzAgICAgICAgICAgY2hhbmdlICAg
-ICAgIFNQRl8xDQo+IHdpbGwtaXQtc2NhbGUucGFnZV9mYXVsdDIucGVyX3RocmVhZF9vcHMgICAg
-MjY2NDE5MC44ICAgICAgLTExLjclICAgICAgIDIzNTM2MzcuNiAgICAgIA0KPiB3aWxsLWl0LXNj
-YWxlLnBhZ2VfZmF1bHQzLnBlcl90aHJlYWRfb3BzICAgIDQ0ODAwMjcuMiAgICAgIC0xNC43JSAg
-ICAgICAzODE5MzMxLjkgICAgIA0KPiANCj4gDQo+IGIpLiBEaXNhYmxlIFRIUA0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNQRl8wICAgICAgICAgICBjaGFu
-Z2UgICAgICBTUEZfMQ0KPiB3aWxsLWl0LXNjYWxlLnBhZ2VfZmF1bHQyLnBlcl90aHJlYWRfb3Bz
-ICAgIDI2NTMyNjAuNyAgICAgICAtMTAlICAgICAgICAyMzg1MTY1LjgNCj4gd2lsbC1pdC1zY2Fs
-ZS5wYWdlX2ZhdWx0My5wZXJfdGhyZWFkX29wcyAgICA0NDM2MzMwLjEgICAgICAgLTEyLjQlICAg
-ICAgMzg4NjczNC4yIA0KPiANCj4gDQo+IFRoYW5rcywNCj4gSGFpeWFuIFNvbmcNCj4gDQo+IA0K
-PiBPbiBGcmksIEp1biAxNCwgMjAxOSBhdCAxMDo0NDo0N0FNICswMjAwLCBMYXVyZW50IER1Zm91
-ciB3cm90ZToNCj4gPiBMZSAxNC8wNi8yMDE5IMOgIDEwOjM3LCBMYXVyZW50IER1Zm91ciBhIMOp
-Y3JpdCA6DQo+ID4gPiBQbGVhc2UgZmluZCBhdHRhY2hlZCB0aGUgc2NyaXB0IEkgcnVuIHRvIGdl
-dCB0aGVzZSBudW1iZXJzLg0KPiA+ID4gVGhpcyB3b3VsZCBiZSBuaWNlIGlmIHlvdSBjb3VsZCBn
-aXZlIGl0IGEgdHJ5IG9uIHlvdXIgdmljdGltIG5vZGUgYW5kIHNoYXJlIHRoZSByZXN1bHQuDQo+
-ID4gDQo+ID4gU291bmRzIHRoYXQgdGhlIEludGVsIG1haWwgZml0ZXJpbmcgc3lzdGVtIGRvZXNu
-J3QgbGlrZSB0aGUgYXR0YWNoZWQgc2hlbGwgc2NyaXB0Lg0KPiA+IFBsZWFzZSBmaW5kIGl0IHRo
-ZXJlOiBodHRwczovL2dpc3QuZ2l0aHViLmNvbS9sZHU0L2E1Y2MxYTkzZjI5MzEwOGVhMzg3ZDQz
-ZDVkNWU3ZjQ0DQo+ID4gDQo+ID4gVGhhbmtzLA0KPiA+IExhdXJlbnQuDQo+ID4gDQoNCkhpIExh
-dXJlbnQsDQoNCldlIG1lcmdlZCBTUEYgdjExIGFuZCBzb21lIHBhdGNoZXMgZnJvbSB2MTIgaW50
-byBvdXIgcGxhdGZvcm1zLiBBZnRlcg0Kc2V2ZXJhbCBleHBlcmltZW50cywgd2Ugb2JzZXJ2ZWQg
-U1BGIGhhcyBvYnZpb3VzIGltcHJvdmVtZW50cyBvbiB0aGUNCmxhdW5jaCB0aW1lIG9mIGFwcGxp
-Y2F0aW9ucywgZXNwZWNpYWxseSBmb3IgdGhvc2UgaGlnaC1UTFAgb25lcywNCg0KIyBsYXVuY2gg
-dGltZSBvZiBhcHBsaWNhdGlvbnMocyk6DQoNCnBhY2thZ2UgICAgICAgICAgIHZlcnNpb24gICAg
-ICB3LyBTUEYgICAgICB3L28gU1BGICAgICAgaW1wcm92ZSglKQ0KLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tICAgICAgICAg
-ICAgICAgICAgICAgICAgICANCkJhaWR1IG1hcHMgICAgICAgIDEwLjEzLjMgICAgICAwLjg4NyAg
-ICAgICAwLjk4ICAgICAgICAgOS40OQ0KVGFvYmFvICAgICAgICAgICAgOC40LjAuMzUgICAgIDEu
-MjI3ICAgICAgIDEuMjkzICAgICAgICA1LjEwDQpNZWl0dWFuICAgICAgICAgICA5LjEyLjQwMSAg
-ICAgMS4xMDcgICAgICAgMS41NDMgICAgICAgIDI4LjI2DQpXZUNoYXQgICAgICAgICAgICA3LjAu
-MyAgICAgICAgMi4zNTMgICAgICAgMi42OCAgICAgICAgIDEyLjIwDQpIb25vciBvZiBLaW5ncyAg
-ICAxLjQzLjEuNiAgICAgNi42MyAgICAgICAgNi43MTMgICAgICAgIDEuMjQNCg0KDQpCeSB0aGUg
-d2F5LCB3ZSBoYXZlIHZlcmlmaWVkIG91ciBwbGF0Zm9ybXMgd2l0aCB0aG9zZSBwYXRjaGVzIGFu
-ZA0KYWNoaWV2ZWQgdGhlIGdvYWwgb2YgbWFzcyBwcm9kdWN0aW9uLg0KDQpUaGFua3MuDQpDaGlu
-d2VuIENoYW5nDQo=
+When generating debug dump, driver firstly collects all data in binary
+form, and then performs per-feature formatting to human-readable if it
+is supported.
+
+For ethtool -d, this is roughly incorrect for two reasons. First of all,
+drivers should always provide only original raw dumps to Ethtool without
+any changes.
+The second, and more critical, is that Ethtool's output buffer size is
+strictly determined by ethtool_ops::get_regs_len(), and all data *must*
+fit in it. The current version of driver always returns the size of raw
+data, but the size of the formatted buffer exceeds it in most cases.
+This leads to out-of-bound writes and memory corruption.
+
+Address both issues by adding an option to return original, non-formatted
+debug data, and using it for Ethtool case.
+
+v2:
+ - Expand commit message to make it more clear;
+ - No functional changes.
+
+Fixes: c965db444629 ("qed: Add support for debug data collection")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed.h       |  2 ++
+ drivers/net/ethernet/qlogic/qed/qed_debug.c | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index a49743d56b9c..6c2f9ff4a53e 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -876,6 +876,8 @@ struct qed_dev {
+ 	struct qed_dbg_feature dbg_features[DBG_FEATURE_NUM];
+ 	u8 engine_for_debug;
+ 	bool disable_ilt_dump;
++	bool				dbg_bin_dump;
++
+ 	DECLARE_HASHTABLE(connections, 10);
+ 	const struct firmware		*firmware;
+ 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+index 81e8fbe4a05b..cb80863d5a77 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+@@ -7506,6 +7506,12 @@ static enum dbg_status format_feature(struct qed_hwfn *p_hwfn,
+ 	if (p_hwfn->cdev->print_dbg_data)
+ 		qed_dbg_print_feature(text_buf, text_size_bytes);
+ 
++	/* Just return the original binary buffer if requested */
++	if (p_hwfn->cdev->dbg_bin_dump) {
++		vfree(text_buf);
++		return DBG_STATUS_OK;
++	}
++
+ 	/* Free the old dump_buf and point the dump_buf to the newly allocagted
+ 	 * and formatted text buffer.
+ 	 */
+@@ -7733,7 +7739,9 @@ int qed_dbg_mcp_trace_size(struct qed_dev *cdev)
+ #define REGDUMP_HEADER_SIZE_SHIFT		0
+ #define REGDUMP_HEADER_SIZE_MASK		0xffffff
+ #define REGDUMP_HEADER_FEATURE_SHIFT		24
+-#define REGDUMP_HEADER_FEATURE_MASK		0x3f
++#define REGDUMP_HEADER_FEATURE_MASK		0x1f
++#define REGDUMP_HEADER_BIN_DUMP_SHIFT		29
++#define REGDUMP_HEADER_BIN_DUMP_MASK		0x1
+ #define REGDUMP_HEADER_OMIT_ENGINE_SHIFT	30
+ #define REGDUMP_HEADER_OMIT_ENGINE_MASK		0x1
+ #define REGDUMP_HEADER_ENGINE_SHIFT		31
+@@ -7771,6 +7779,7 @@ static u32 qed_calc_regdump_header(struct qed_dev *cdev,
+ 			  feature, feature_size);
+ 
+ 	SET_FIELD(res, REGDUMP_HEADER_FEATURE, feature);
++	SET_FIELD(res, REGDUMP_HEADER_BIN_DUMP, 1);
+ 	SET_FIELD(res, REGDUMP_HEADER_OMIT_ENGINE, omit_engine);
+ 	SET_FIELD(res, REGDUMP_HEADER_ENGINE, engine);
+ 
+@@ -7794,6 +7803,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
+ 		omit_engine = 1;
+ 
+ 	mutex_lock(&qed_dbg_lock);
++	cdev->dbg_bin_dump = true;
+ 
+ 	org_engine = qed_get_debug_engine(cdev);
+ 	for (cur_engine = 0; cur_engine < cdev->num_hwfns; cur_engine++) {
+@@ -7993,6 +8003,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
+ 		       QED_NVM_IMAGE_MDUMP, "QED_NVM_IMAGE_MDUMP", rc);
+ 	}
+ 
++	cdev->dbg_bin_dump = false;
+ 	mutex_unlock(&qed_dbg_lock);
+ 
+ 	return 0;
+-- 
+2.25.1
 
