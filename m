@@ -2,120 +2,102 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C73BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F481C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6221D20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BB5206CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t6SsoRS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgGFOf2 (ORCPT
+        id S1729452AbgGFOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:35:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:45600 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729227AbgGFOf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:35:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7A7630E;
-        Mon,  6 Jul 2020 07:35:27 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 709E53F71E;
-        Mon,  6 Jul 2020 07:35:26 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] kasan: Remove kasan_unpoison_stack_above_sp_to()
-Date:   Mon,  6 Jul 2020 15:35:05 +0100
-Message-Id: <20200706143505.23299-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 6 Jul 2020 10:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgGFOgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 10:36:12 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330B0C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:36:12 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id o3so15685543ilo.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=i/xoykjZv2MN+inM1xeXmVL7pwP7EjFwORlbboikyJ4=;
+        b=t6SsoRS3SqKZduQ56/9T7prHW41jyK8QOiO5CboDIO3urs7fgWLgoPllCfr9ASvkN3
+         g01IEAh8kbp7d9IxbLoEXYRndfp6uDBwUn2nh3rdnKN93DybHky0l4AcYIzXcnYfFnEh
+         HY8R/2XxLWqsojUsDT52KS6kT7Aeka5feYZ5t6VuaEVxfm3q8LJHsVqU9JONv+RZ8Xzp
+         KF9pfO7BTZIrnV4A1N3QGhpctF7ki94yNFOFuhInduZhWWBFnSEbrYQ5ZPjJcaY3NKI7
+         8dDA9nO5WVCg0d/S64XH87CCZ8Lz8nq68DkfHh6OP0If5hfTOtmEthjXBx4tDof/JDVc
+         nE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=i/xoykjZv2MN+inM1xeXmVL7pwP7EjFwORlbboikyJ4=;
+        b=Z+GLukXaQzjFU3PA4bA9x+F99jcoCwtFscEfza518/hPbLq6qioYkUMBEh081WuSfa
+         FgTpkENjWpk4wx/38Fstzn3TRr+zIussd9LC8EpmSj+HbE1Uyb/ABdQGlw+kxNBa/4Vx
+         XhvQyrf9z6lmYZ+x4MeDMTV8uavlmg6oQR+5zUSTfF81CSaN6JqV7/HF4ZYqMeKzPi0r
+         BGuB0R+r/Azukf8W6EH7JDCzDnblCQqw0m39znFpEjg2lnRF4lV6TkjqEOmVsJ2t31rV
+         cQSP+RRJD8f9HgDKkohs3LSxG18sCvSPUgxa6ZZZpQgjxgqymkwUvS/jkam0G49YDJ5W
+         oo2A==
+X-Gm-Message-State: AOAM532xiGXSG6jya7bGnZEiH8YMZlIWb7g0F3BnrDINvme+pN/l0obO
+        kRR0aCBemMc0CUFXEu4BwaAZfiJbeQDjErbTfM6omg==
+X-Google-Smtp-Source: ABdhPJyMcBpXGp6jUIarBCpemr4jM/nj3SKBI2Q8C/haV5TtYTU7ngu91vYNiqHB7VekbqrfWaqAqQBBJXmH3WFgwGY=
+X-Received: by 2002:a92:a197:: with SMTP id b23mr29571523ill.58.1594046171533;
+ Mon, 06 Jul 2020 07:36:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200703074421epcas2p177b67a55997c00b3b6ad8126a7ce8a6d@epcas2p1.samsung.com>
+ <000001d6510d$c3bfcd00$4b3f6700$@samsung.com>
+In-Reply-To: <000001d6510d$c3bfcd00$4b3f6700$@samsung.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 6 Jul 2020 08:36:00 -0600
+Message-ID: <CANLsYkyZz1cOr-jGqHYr9w5MFbS2+t9+dApn5aBgt-KNERQuMA@mail.gmail.com>
+Subject: Re: Could you support the modules of the coresight drivers?
+To:     =?UTF-8?B?6rmA7LC96riw?= <changki.kim@samsung.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function kasan_unpoison_stack_above_sp_to() is defined in kasan code
-but never used. The function was introduced as part of the commit:
+On Fri, 3 Jul 2020 at 01:44, =EA=B9=80=EC=B0=BD=EA=B8=B0 <changki.kim@samsu=
+ng.com> wrote:
+>
+> Hello.
+>
+> I am software engineer in charge of BSP (Samsung SOC vendor).
+>
+> Recently, Google introduced GKI from Android 11(R) version.
+> So we can't modified kernel code except module drivers.
+>
+> Coresight drivers doesn't support module.
+> I need the module support because our SoC should set value to vendor
+> specific register to run ETMv4.
+> And in GKI, ETM has disabled in recommend defconfig.
+> So if we use ETM in Android 12(S), it should support module.
+>
+> Could you support the modules of the coresight drivers?
 
-   commit 9f7d416c36124667 ("kprobes: Unpoison stack in jprobe_return() for KASAN")
+There have been multiple patchset submitted to do that, the latest one
+last week [1].  I encourage you to review and test the work.
 
-... where it was necessary because x86's jprobe_return() would leave
-stale shadow on the stack, and was an oddity in that regard.
+Thanks,
+Mathieu
 
-Since then, jprobes were removed entirely, and as of commit:
+[1].https://www.spinics.net/lists/arm-kernel/msg818583.html
 
-  commit 80006dbee674f9fa ("kprobes/x86: Remove jprobe implementation")
-
-... there have been no callers of this function.
-
-Remove the declaration and the implementation.
-
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- include/linux/kasan.h |  2 --
- mm/kasan/common.c     | 15 ---------------
- 2 files changed, 17 deletions(-)
-
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index 82522e996c76..0ebf2fab8567 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -38,7 +38,6 @@ extern void kasan_disable_current(void);
- void kasan_unpoison_shadow(const void *address, size_t size);
- 
- void kasan_unpoison_task_stack(struct task_struct *task);
--void kasan_unpoison_stack_above_sp_to(const void *watermark);
- 
- void kasan_alloc_pages(struct page *page, unsigned int order);
- void kasan_free_pages(struct page *page, unsigned int order);
-@@ -101,7 +100,6 @@ void kasan_restore_multi_shot(bool enabled);
- static inline void kasan_unpoison_shadow(const void *address, size_t size) {}
- 
- static inline void kasan_unpoison_task_stack(struct task_struct *task) {}
--static inline void kasan_unpoison_stack_above_sp_to(const void *watermark) {}
- 
- static inline void kasan_enable_current(void) {}
- static inline void kasan_disable_current(void) {}
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 757d4074fe28..6339179badb2 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -180,21 +180,6 @@ asmlinkage void kasan_unpoison_task_stack_below(const void *watermark)
- 	kasan_unpoison_shadow(base, watermark - base);
- }
- 
--/*
-- * Clear all poison for the region between the current SP and a provided
-- * watermark value, as is sometimes required prior to hand-crafted asm function
-- * returns in the middle of functions.
-- */
--void kasan_unpoison_stack_above_sp_to(const void *watermark)
--{
--	const void *sp = __builtin_frame_address(0);
--	size_t size = watermark - sp;
--
--	if (WARN_ON(sp > watermark))
--		return;
--	kasan_unpoison_shadow(sp, size);
--}
--
- void kasan_alloc_pages(struct page *page, unsigned int order)
- {
- 	u8 tag;
--- 
-2.27.0
-
+>
