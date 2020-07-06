@@ -2,159 +2,128 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E09C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 05:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15837C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 05:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A012D2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 05:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E854A206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 05:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Jeh0GA+y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LycLHK9w"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aJ4fbwn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgGFF3m (ORCPT
+        id S1728829AbgGFFa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 01:29:42 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:38967 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726020AbgGFF3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 01:29:41 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6533B580518;
-        Mon,  6 Jul 2020 01:29:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 06 Jul 2020 01:29:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=pwom6EhByiguzZVplfbjBnBP65w
-        atD/Qn4Iq6UPhCSk=; b=Jeh0GA+ypz8EHMTRzL76IUGJl29Rnm+e0X53z/B/7C+
-        WZ5CpKOIR3zzyFU98bkX8gWeghJyXRPCG3l/0+v5y5RVY10rdLVfPB/fP2AwsArW
-        /G6OZuS1vuQlJlGGtfKOJLNlyPnJQ3/lYfMnWgEg5X1+Gk93pRCrhrenKGUTpSMF
-        T5Lc63S05GDs4rnqD10C8fpZDfMNvN1JBuRHA/n9gmRuOjQnn3VwGY8i0jt3TaAO
-        BHbN+SvAlAfTvcDzHFf2/oQZqsHghmWyhFh5yAITDdu+0AdKULZ6z27olBg8Jlpq
-        dK7EcaHH5n46tuRNWxZRbyPvVFF519g2DDkPJ9PexVQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=pwom6E
-        hByiguzZVplfbjBnBP65watD/Qn4Iq6UPhCSk=; b=LycLHK9wRLe6SwSvULlPnX
-        vLHEZUbyZlpky8x2c4hqRFXxThr/VFW67+8QV3oDqOCdSrdBCrWxJT27XSEhPPiI
-        qhchhUD/46dJlK07hX+LjCKmUu6+prtCqAtBy4EsPcqdhS4SIaDBDqCZF+H3pkIj
-        TXt+niEn5v+Nws8b7PeV1O3510JSYSHs38pnQgrkgHcr+gVFAY88g2WPZ/B7LT4e
-        4jr9Qf5AD+bmUZbBKD+jeDZu9VMBxblatZj34BVsd90GMg/GbITnQvoGeEB1M8d9
-        bt+/Bj52XMd3zdLroU1yhDum3WyIu1f6R8gbuM9FRkc4p8ijjNCFId9NX0aZbvCw
-        ==
-X-ME-Sender: <xms:wrYCX2oQdaez2-1MdZQ8RRa-F7XjLuqbwf4q_EWZ9So-qQGjflOXJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgdelfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
-    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:wrYCX0pVRc-oOakKcXYdCzBzdqhSpX0HGfEUrJlwWeMiZL56LooRLA>
-    <xmx:wrYCX7Mkvk7_u-VkWxEjGOLqVZhFhioCNP1LMBuHIZx5S8i2eErSHQ>
-    <xmx:wrYCX17e1a-ZaoRFLR-BCWWBpRT2GXiXP5lt-rku6EP0yLj6-9FrcA>
-    <xmx:xLYCXyzMiC6b5Hgi2yPOxwVvyJzvnkGvIxm1vbl_EE9vq6JTfOaM0A>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7AADD328005E;
-        Mon,  6 Jul 2020 01:29:38 -0400 (EDT)
-Date:   Mon, 6 Jul 2020 07:29:37 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 08/16] arm64: dts: allwinner: h6: Add HDMI audio node
-Message-ID: <20200706052937.ygjjllrsj7rvynkq@gilmour.lan>
-References: <20200704113902.336911-1-peron.clem@gmail.com>
- <20200704113902.336911-9-peron.clem@gmail.com>
+        Mon, 6 Jul 2020 01:30:28 -0400
+Received: from mail-eopbgr80040.outbound.protection.outlook.com ([40.107.8.40]:17796
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728710AbgGFFa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 01:30:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h+jcQet6eowQQ9tmNOqlidDdSyzvEITPHqoyyyYLOyVD/LZgVjfeecQA7knhGicpwmVPLAznEybkRrTCuY5aNgWjnWPcdD+4y159xVHGPT+lgsSTmL9VurqfZBdyqsJ+kE2dytgOuTa1f3flE5sMy0zbm9lyPhwXphJwanQu7gmEDS2L8yMzJOp51BJnO28jgCxVbgMCfXqwfdGuKO3AqntpnbsdUR1YK7pIzmUz6CdYd3QLsxRMgXzmiGzJMPhDr1wdDJpOaPnLUNVp34yU8PJeX2Hc6tHyFFWHTVLYYKWX05a3DxMUjRwf5P6hoCE+gfOae+0H0vmsNR5zufyFdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EPwzg/o4ddIpO3h+b3ivGaKRz20ZwY0TbtZ2rVMiV3k=;
+ b=YvP6kMNdTdLpw/ZB+3aKEoyI+skEVdtp1NcHsP0RjhTEzL7zrDJ0eVDXGBp771SqliOjwM6KErW5SXugE35wiGN4Er4JysVQlky3Xu4a3CEq67m/YX68RC5jSnPeWMZsBScEXnXUpV30eGA+yn6XpCQan3CLEtrlEKXeSZV1/B0rB7FOb8anK8NxoEB8W/BmDDJPDmBggn75TNzmSiMMCEikCoRsgcEIJ7bt+AnUqatzv3UPs6YoeQEHIZxaNsGRfl3kGkzN6WE24+oU9Tqk82A3llGO+ViEFon/5PHv4CU9XE3c/KKsOW9AD6ytcNab877+7fX6/keRE0FI+MGjwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EPwzg/o4ddIpO3h+b3ivGaKRz20ZwY0TbtZ2rVMiV3k=;
+ b=aJ4fbwn0IL1X7toMugJGvn0445XU+NYMIrfCb6pvkzE7guVjb1KQYOel7oibI/14FL6ZNsXzF5aaXvHY9WxgZJM8Q5wnrKnFg9YcW3yI1HNu2FbonY0NuW5Sraf6NeXvFv2BS9XeYE+JLeo8fnBLK9dvqXyldXQiId0GcZaUCLg=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3829.eurprd04.prod.outlook.com
+ (2603:10a6:209:1b::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Mon, 6 Jul
+ 2020 05:30:22 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 05:30:22 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+CC:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+Thread-Topic: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+Thread-Index: AQHWUMBIY0/PmQIJzUKZXhlXPuzWDKj3d74AgAGaMECAABAPAIAA5FDQ
+Date:   Mon, 6 Jul 2020 05:30:22 +0000
+Message-ID: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200702175352.19223-1-TheSven73@gmail.com>
+ <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+In-Reply-To: <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 51b0b5be-97ed-4851-6b2d-08d8216dae15
+x-ms-traffictypediagnostic: AM6PR0402MB3829:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB38290DC8D0EDB407387BDC75FF690@AM6PR0402MB3829.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 04569283F9
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eu55lN1tOW75CEGs7Qa4oHaiCJW5V2rtQy+3rPEqwrfhNBPF/VAtTBXCpEAwNxX+/g6xLoy4T6tdJcAKswUONNhnvfNDuO7WQumEi+aKxA3tr/YOp3Og5WK3XPx89+Tvhtoqnm01gF8w7c8BJ3/8K5juC9Io3TukPh4BAmluef8HHmxMmBpJOom4wVwTnkDf4KQ2OmyZIuWBwbnyAVb0uOatwILkkRKEN5pd4Zi/7jiYuIXl9RGvjvJ3JQ5ilgQanrchD6E1KeusiHn/8RMRSY/6l2qIxtPvGvYPF0dtwpWWVPuZ5t4++CYIKcbMT9zlWwjZVVwkmcVFmbJK/6p+AZv68Ew4T/UxoSF+AWISHsIp6v9ZQ/mBQgpH908PsjLz
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(76116006)(5660300002)(9686003)(26005)(66946007)(83380400001)(6506007)(7696005)(66556008)(54906003)(186003)(316002)(6916009)(478600001)(86362001)(64756008)(66446008)(66476007)(33656002)(52536014)(55016002)(4744005)(8936002)(8676002)(4326008)(2906002)(71200400001)(7416002)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 0g8fhLUplEe5Slb7QBygZR2vTIq3tq6VZqqYnqwKjADMT0tDVt4Uca4Q9xmYGUwkuFom/DPtcRXXO7Xiqzv3zrSBxkw+w0kiuFuMBF8AVrPgkq1Th+SVixNNAFBSYcm5XKr3TfjcEuzk227EMshk4nfuqgQPjGVOmIK1ZeD/BhugHZZB20B5Fs94VmrrhAkj5twk11ws1pR8KZBuquN/7orJciJNOc+18qcfNDRwTpbcXaIBr8aI4O6ev2h2TDs8ZAWHCvcBioXgi19aYJtBtu61zZMjXlDwmjZtlOo0dasppIRWDqiPPNWjG4taWUnsy14nlTxNIpgHNqdcKrDP4c/r7ZdlhYvACmgg9Hvp1a3X8MPsN8WADE/faWTeoxqxAMJk8j9lkWbgvUKwn6gkYonITFeZ6rqQHxzXzj9WD63w8/8DSCBswQn3CUMn6ToZSJm3TbhQkrOi4DxLjUk/BQWHNWmFGjvqXvPxD6quADg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zabvcj3d4ofdrekw"
-Content-Disposition: inline
-In-Reply-To: <20200704113902.336911-9-peron.clem@gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51b0b5be-97ed-4851-6b2d-08d8216dae15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 05:30:22.8196
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t6+eF0YiHoiTjk2Ny30p7pIK0mZtRJ0IMK0oQV33jmfJMIECSOURDu2fDHg4WofQLIAxAtrQCr5RmDGqtxbP1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---zabvcj3d4ofdrekw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sat, Jul 04, 2020 at 01:38:54PM +0200, Cl=E9ment P=E9ron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> Add a simple-soundcard to link audio between HDMI and I2S.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index 78b1361dfbb9..ae169d07b939 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -67,6 +67,25 @@ de: display-engine {
->  		status =3D "disabled";
->  	};
-> =20
-> +	hdmi_sound: hdmi-sound {
-> +		compatible =3D "simple-audio-card";
-> +		simple-audio-card,format =3D "i2s";
-> +		simple-audio-card,name =3D "sun50i-h6-hdmi";
-> +		simple-audio-card,mclk-fs =3D <128>;
-> +		simple-audio-card,frame-inversion;
-
-Have you figured that one out?
-
-> +		status =3D "disabled";
-> +
-> +		simple-audio-card,codec {
-> +			sound-dai =3D <&hdmi>;
-> +		};
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai =3D <&i2s1>;
-> +			dai-tdm-slot-num =3D <2>;
-> +			dai-tdm-slot-width =3D <32>;
-
-I'm not sure why you need to use the TDM stuff here. IIRC the HDMI
-controller can output on up to 6 channels, so how would that work out?
-
-Maxime
-
---zabvcj3d4ofdrekw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXwK2wAAKCRDj7w1vZxhR
-xZM5AP48KiovnrBuDrRSfzXBBjVfHTI9Y+xsX21MeZsf8aYsBQEA8lBvXN/W6RPo
-OtYiNKW1d7/qBWi5EkuPxGrsxT7PYQU=
-=A3Kc
------END PGP SIGNATURE-----
-
---zabvcj3d4ofdrekw--
+RnJvbTogU3ZlbiBWYW4gQXNicm9lY2sgPHRoZXN2ZW43M0BnbWFpbC5jb20+IFNlbnQ6IFN1bmRh
+eSwgSnVseSA1LCAyMDIwIDExOjM0IFBNDQo+IA0KPiAgIGV4dCBwaHktLS0tLS0tLS18IFwNCj4g
+ICAgICAgICAgICAgICAgICAgfCAgfA0KPiAgIGVuZXRfcmVmLW8tLS0tLS18TSB8LS0tLXBhZC0t
+LS0tLXwgXA0KPiAgICAgICAgICAgIHwgICAgICB8Xy8gICAgICAgICAgICAgIHwgIHwNCj4gICAg
+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICB8TSB8LS0tLW1hY19ndHgNCj4gICAgICAg
+ICAgICB8ICAgICAgICAgICAgICAgICAgICAgICB8ICB8DQo+ICAgICAgICAgICAgby0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tfF8vDQo+IA0KPiANCj4gSG93IGRvIHdlIHRlbGwgdGhlIGNsb2NrIGZy
+YW1ld29yayB0aGF0IGNsa19wYWQgaGFzIGEgbXV4IHRoYXQgY2FuIGJlDQo+IGNvbm5lY3RlZCB0
+byBfYW55XyBleHRlcm5hbCBjbG9jaz8gYW5kIGFsc28gZW5ldF9yZWY/DQoNClRoZSBjbG9jayBk
+ZXBlbmRzIG9uIGJvYXJkIGRlc2lnbiwgSFcgcmVmZXIgZ3VpZGUgY2FuIGRlc2NyaWJlIHRoZSBj
+bGsNCnVzYWdlIGluIGRldGFpbCBhbmQgY3VzdG9tZXIgc2VsZWN0IG9uZSBjbGsgcGF0aCBhcyB0
+aGVpciBib2FyZCBkZXNpZ24uDQoNClRvIG1ha2UgdGhpbmcgc2ltcGxlLCB3ZSBjYW4ganVzdCBj
+b250cm9sIHRoZSBzZWNvbmQgIk0iIHRoYXQgaXMgY29udHJvbGxlZA0KYnkgZ3ByIGJpdC4NCg0K
