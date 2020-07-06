@@ -2,119 +2,170 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A34C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFC720739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445B820715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 00:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ofkTYQYR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="wxw3C083"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgGFAeb (ORCPT
+        id S1728321AbgGFAfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 20:34:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38253 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbgGFAeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 20:34:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0RQr2G3Kz9s1x;
-        Mon,  6 Jul 2020 10:34:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593995669;
-        bh=r/SuHCqQ9ReBOmjLyP5++Sq17qcsjIrCCepj9P4e96Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ofkTYQYRvukecFK1LtNWm4PEB142ExEwn2aPGe/OvwDRWCr2W2bb7l06s0CwU+Lhk
-         +ZMfcQNwJ9YeCq1wkdwHyC6/BpAWNQI8rU159kvcVK/vOaRrzVcicf3SOy1vnpuCoS
-         uAfu8KFYege5mAv1B6KCw2AXMp1llRfbVRMBQvaEmNc67caSp7NIc1QlkWph7lpn5I
-         K6d/N8LOnv3slN29LTBg5EuCb+IUHsERWC51p9FMErUKPeUrNuihKV77hNkhx9mc3c
-         j+2whxSE1858GulqDOBzu8InYBlkGdJfm/LNvhpaJXvVdK5mHGLTv+zHDMNOIP4h+H
-         41uniY3o108Xw==
-Date:   Mon, 6 Jul 2020 10:34:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: linux-next: manual merge of the jc_docs tree with the arm64 tree
-Message-ID: <20200706103427.16470171@canb.auug.org.au>
+        Sun, 5 Jul 2020 20:35:38 -0400
+Received: from gateway20.websitewelcome.com ([192.185.59.4]:18270 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728280AbgGFAfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 20:35:37 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 8E5FF400C644F
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 17:49:05 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id sEhzj7hFlBb5dsEhzjD00g; Sun, 05 Jul 2020 19:10:07 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tFT+lYrClbv1RBpt99UCi3E8tbXznUEvjiYn8KUfP58=; b=wxw3C083q8ACLRXCqboryrRsGc
+        AEGoxOm5j7bBK1LOgz3g56ksyQp7sUzNBgA+moz51VRVKNOW1Tr6TzSxV9ZfFt9OE1GMnlmgpoEoE
+        vP0zbdh8UzJeImr3SNlAO5ETGYq7gAHDF+v+gvA4aKVcfy+DFSOqoVe9nbLJH1i0T7Ws21hqPg6Je
+        PLnIcEfwSjys2eu70fl9WD+LQ1JkrzF1IxueldUAYfhkGb/n06RAqJQSzJIRx/i+gNlIOudD5ma9g
+        EU8tsbhyf5gGsZ6F+rvzNPwt43jdlLSdauDZqMqkLRaNazW/WY1MLCpfFVI6YlVs1wTAXjjJ0zMbM
+        76c+luPg==;
+Received: from [189.59.31.158] (port=43104 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jsEhz-000qqT-Dd; Sun, 05 Jul 2020 21:10:07 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v1] power: supply: max17040: Add POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN
+Date:   Sun,  5 Jul 2020 21:10:03 -0300
+Message-Id: <20200706001003.663763-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oWPor8azsUeWgecAz8Ah8Kb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 189.59.31.158
+X-Source-L: No
+X-Exim-ID: 1jsEhz-000qqT-Dd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [189.59.31.158]:43104
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 2
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oWPor8azsUeWgecAz8Ah8Kb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Adds the property POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN to export the
+chip->low_soc_alert and add the property as writeable, implementing
+max17040_prop_writeable and max17040_set_property, so with that the
+user space can readjust the alerts.
 
-Hi all,
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
+ drivers/power/supply/max17040_battery.c | 51 ++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 5 deletions(-)
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 48aa44665e2f..6cb31b9a958d 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -69,6 +69,9 @@ static int max17040_get_property(struct power_supply *psy,
+ 	case POWER_SUPPLY_PROP_CAPACITY:
+ 		val->intval = chip->soc;
+ 		break;
++	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
++		val->intval = chip->low_soc_alert;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -256,19 +259,57 @@ static int max17040_enable_alert_irq(struct max17040_chip *chip)
+ 	return ret;
+ }
 
-  Documentation/arm64/index.rst
++static int max17040_prop_writeable(struct power_supply *psy,
++				   enum power_supply_property psp)
++{
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
++		return 1;
++	default:
++		return 0;
++	}
++}
++
++static int max17040_set_property(struct power_supply *psy,
++			    enum power_supply_property psp,
++			    const union power_supply_propval *val)
++{
++	struct max17040_chip *chip = power_supply_get_drvdata(psy);
++	int ret;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
++		/* alert threshold can be programmed from 1% up to 32% */
++		if ((val->intval < 1) || (val->intval > 32)) {
++			ret = -EINVAL;
++			break;
++		}
++		ret = max17040_set_low_soc_alert(chip->client, val->intval);
++		chip->low_soc_alert = val->intval;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+ 	POWER_SUPPLY_PROP_CAPACITY,
++	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN,
+ };
 
-between commit:
+ static const struct power_supply_desc max17040_battery_desc = {
+-	.name		= "battery",
+-	.type		= POWER_SUPPLY_TYPE_BATTERY,
+-	.get_property	= max17040_get_property,
+-	.properties	= max17040_battery_props,
+-	.num_properties	= ARRAY_SIZE(max17040_battery_props),
++	.name			= "battery",
++	.type			= POWER_SUPPLY_TYPE_BATTERY,
++	.get_property		= max17040_get_property,
++	.set_property		= max17040_set_property,
++	.property_is_writeable  = max17040_prop_writeable,
++	.properties		= max17040_battery_props,
++	.num_properties		= ARRAY_SIZE(max17040_battery_props),
+ };
 
-  5c5a8ac9b27b ("arm64: mte: Add Memory Tagging Extension documentation")
+ static int max17040_probe(struct i2c_client *client,
+--
+2.27.0
 
-from the arm64 tree and commit:
-
-  86de78d2c5f4 ("docs: arm64: convert perf.txt to ReST format")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/arm64/index.rst
-index 4cd0e696f064,d9665d83c53a..000000000000
---- a/Documentation/arm64/index.rst
-+++ b/Documentation/arm64/index.rst
-@@@ -14,7 -14,7 +14,8 @@@ ARM64 Architectur
-      hugetlbpage
-      legacy_instructions
-      memory
- +    memory-tagging-extension
-+     perf
-      pointer-authentication
-      silicon-errata
-      sve
-
---Sig_/oWPor8azsUeWgecAz8Ah8Kb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8CcZMACgkQAVBC80lX
-0Gw2WAf+KSUsvNqgo13T+d0ItcRCPuOR4HuCDxna3lzPAT6zlpCuSFvf+XGuCxgj
-6ExO5vAAQFUR66BbxqRHPJ57HjnkJnp8W4R+TE9wTeEFzfQYfaku5WlTJcWcUsBX
-9jOxVdPw/11Q25b4iCn85SytV1vPEn32uATrGOh2mYl1kaIZFdqP42hsmwp5D/Gy
-FQE7kzRZ4JIJ7qvAwa+KI77Pkpj3sD6qHBBVsBlSeauR2nXNETMtV5fSxE0rLXjR
-1z4G/0o7CtDqF4Gb+VvytceRt0eiN3+hkB3VS0VdEgT3RsJWkjbcSyLDoFU/imrL
-ku0ab6aySvGOKHfnziu117qSUOr5iw==
-=kqCm
------END PGP SIGNATURE-----
-
---Sig_/oWPor8azsUeWgecAz8Ah8Kb--
