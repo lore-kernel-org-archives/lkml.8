@@ -2,69 +2,134 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93988C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79C5B206CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C6E206CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgGFTQn (ORCPT
+        id S1726625AbgGFTTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgGFTQm (ORCPT
+        Mon, 6 Jul 2020 15:19:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51642 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgGFTTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:16:42 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE802C061755;
-        Mon,  6 Jul 2020 12:16:42 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B2F151274B9CD;
-        Mon,  6 Jul 2020 12:16:39 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 12:16:36 -0700 (PDT)
-Message-Id: <20200706.121636.148338846008093922.davem@davemloft.net>
-To:     xie.he.0141@gmail.com
-Cc:     kuba@kernel.org, madhuparnabhowmik04@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-x25@vger.kernel.org
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Fixed the value of
- hard_header_len
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200706004521.78091-1-xie.he.0141@gmail.com>
-References: <20200706004521.78091-1-xie.he.0141@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 6 Jul 2020 15:19:43 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id EA4022A4ECC
+Message-ID: <bcbd94c1fb4eea06e9e6014c10d6993faa3e3d4f.camel@collabora.com>
+Subject: Re: [PATCH 1/2] rkvdec: h264: Refuse to decode unsupported bitstream
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        kernel@collabora.com
+Date:   Mon, 06 Jul 2020 16:19:33 -0300
+In-Reply-To: <551304f5-88bd-a673-a0ef-47af65700fe7@kwiboo.se>
+References: <20200626171130.27346-1-ezequiel@collabora.com>
+         <20200626171130.27346-2-ezequiel@collabora.com>
+         <551304f5-88bd-a673-a0ef-47af65700fe7@kwiboo.se>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Jul 2020 12:16:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
-Date: Sun,  5 Jul 2020 17:45:21 -0700
+On Mon, 2020-07-06 at 09:45 +0000, Jonas Karlman wrote:
+> On 2020-06-26 19:11, Ezequiel Garcia wrote:
+> > The hardware only supports 4:2:2, 4:2:0 or 4:0:0 (monochrome),
+> > 8-bit or 10-bit depth content.
+> > 
+> > Verify that the PPS refers to a supported bitstream, and refuse
+> 
+> This should be SPS not PPS, same for hantro patch.
+> 
 
-> When this driver transmits data,
->   first this driver will remove a pseudo header of 1 byte,
->   then the lapb module will prepend the LAPB header of 2 or 3 bytes,
->   then this driver will prepend a length field of 2 bytes,
->   then the underlying Ethernet device will prepend its own header.
-> 
-> So, the header length required should be:
->   -1 + 3 + 2 + "the header length needed by the underlying device".
-> 
-> This patch fixes kernel panic when this driver is used with AF_PACKET
-> SOCK_DGRAM sockets.
-> 
-> Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Yup.
 
-Applied, thank you.
+> > unsupported bitstreams by failing at TRY_EXT_CTRLS time.
+> > 
+> > The driver is currently broken on 10-bit and 4:2:2
+> > so disallow those as well.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/rkvdec/rkvdec.c | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> > 
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> > index 225eeca73356..0f81b47792f6 100644
+> > --- a/drivers/staging/media/rkvdec/rkvdec.c
+> > +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> > @@ -27,6 +27,32 @@
+> >  #include "rkvdec.h"
+> >  #include "rkvdec-regs.h"
+> >  
+> > +static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+> > +{
+> > +	if (ctrl->id == V4L2_CID_MPEG_VIDEO_H264_SPS) {
+> > +		const struct v4l2_ctrl_h264_sps *sps = ctrl->p_cur.p;
+> 
+> This should be p_new and not p_cur to validate the new ctrl value, same for hantro patch.
+> 
+> With both fixed this and the hantro patch is,
+> 
+> Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+> 
+
+Ah, nice catch. Will fix.
+
+Thanks,
+Ezequiel
+
+> Regards,
+> Jonas
+> 
+> > +		/*
+> > +		 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
+> > +		 * but it's currently broken in the driver.
+> > +		 * Reject them for now, until it's fixed.
+> > +		 */
+> > +		if (sps->chroma_format_idc > 1)
+> > +			/* Only 4:0:0 and 4:2:0 are supported */
+> > +			return -EINVAL;
+> > +		if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
+> > +			/* Luma and chroma bit depth mismatch */
+> > +			return -EINVAL;
+> > +		if (sps->bit_depth_luma_minus8 != 0)
+> > +			/* Only 8-bit is supported */
+> > +			return -EINVAL;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+> > +	.try_ctrl = rkvdec_try_ctrl,
+> > +};
+> > +
+> >  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+> >  	{
+> >  		.per_request = true,
+> > @@ -42,6 +68,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+> >  		.per_request = true,
+> >  		.mandatory = true,
+> >  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
+> > +		.cfg.ops = &rkvdec_ctrl_ops,
+> >  	},
+> >  	{
+> >  		.per_request = true,
+> > 
+
+
