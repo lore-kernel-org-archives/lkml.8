@@ -2,155 +2,316 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D509C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2EBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2BD20708
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A8720772
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RqgFFIuQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kb5GyZA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgGFGPq (ORCPT
+        id S1728878AbgGFGTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:15:46 -0400
-Received: from mout.web.de ([212.227.17.11]:46553 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbgGFGPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:15:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1594016110;
-        bh=GnXk+Khqcb9KVAHtOYkeaYBiriaNRUM1boZT8Oubj6w=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=RqgFFIuQMN/dCQaIsEGTvHWiO84SAc9QB//7hKQJibFWqsnJ+s0zryg2pFxuOVLpg
-         lB5KwJJEyzOIH4xi40M1a2EVDQtkI4OMhs5lLEDKH/8Mkk3HVJHwgkvFV1RGUO8R4J
-         f+x6hOXsNV2pZ8YnEuS4gk6ip9jjt0Nr8njHxRPc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.113.119]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lpezi-1kWMWW2n3e-00fRX7; Mon, 06
- Jul 2020 08:15:10 +0200
-Subject: Re: [PATCH v5 03/14] irqchip/csky-mpintc: Fix potential resource
- leaks
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Denis Efremov <efremov@linux.com>,
-        "Gustavo A. R. Silva" <garsilva@embeddedor.com>
-References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
- <1593998365-25910-4-git-send-email-yangtiezhu@loongson.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3cdb3f12-0862-6985-2236-a724267ead81@web.de>
-Date:   Mon, 6 Jul 2020 08:14:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 6 Jul 2020 02:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbgGFGTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 02:19:46 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA8FC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 23:19:46 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l6so33839670qkc.6
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 23:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p8GSicWISxuLf8SI+byIF+xMxTNvfdYQixlttIglDVo=;
+        b=Kb5GyZA+RJu/iVN8HUtF7SZb/AesZh0MC1s2Up/L6gZO8CAX69QBX/18QLSEWJcaQm
+         bV7234iQyfobwViOUP11+RW17wTqDvAX9lQ/LE2y9YLRWlcKoAPKQW+h3hPzjnGF9F9L
+         VGT8cnzbQIlczAjUu/gpZE6GJbtQ1c9wnxnnXylraSfK67Kz3CRTdLE/6cWI1PJBO2m3
+         0dnqBtOtUuC0f6DT2TRVMuZKkS2IdppDH3Okra7WpEYhKJYB3HuNs0o4Y3Mftwob2M/D
+         T4pZRiMkxbGZ8tMKR9UxafTx4d/K3TR2NsxGH67l2E09lNBJ2FgKwvW0py2Uii2yttD7
+         Uxdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p8GSicWISxuLf8SI+byIF+xMxTNvfdYQixlttIglDVo=;
+        b=qjmXrfMVXM5W243byH6INUkckoiiAxcVwy+MJBiWpjwdbXBneBiqWA5xKY0Jfsk6Pd
+         1+oRYHX2B0MMpkWvwEzWetNVss5shirHTnjG7heqI0GCWEOMOFvXNKUMpg+qB3XFnKBd
+         KVlfJs8aoEcz7SWgRIrnCZP9DmsTExhSBmr+6/0fbsXPTUfi8scORMVrwLV0rRSzQqOs
+         sfKzPMgzX+BBAF51h8bBhxe2wJs2c6UeKXcWFVu73oGHNQZvg78T5GBSf1xZvLuQ1PPV
+         syTTuxT8Y8P7F2TAAirjRJwGftw5TF59ZCvjFnQUFXXlcX5SroymQACZqvWFlMhX9Pla
+         owFg==
+X-Gm-Message-State: AOAM530Iq1SKsk2FCdI/6X2fnnDyS9bM2sll76QQdVGjUxsLgR+lPKFL
+        213yiUXUxCPPKr/j7OacBQxA1/zYhUPlxArks51yJw==
+X-Google-Smtp-Source: ABdhPJxlC97uRvdNje6Yxi/b5Fq8p0PnY4Y6DnkuEjMt/sh0vf2nWbgdvCADjv0hclufOA80J/fDvD6J6xJwxhe0Nqo=
+X-Received: by 2002:a37:67d4:: with SMTP id b203mr19900712qkc.407.1594016385214;
+ Sun, 05 Jul 2020 23:19:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1593998365-25910-4-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dWklsLbtcH8+/xjKLRaQjV0eW+fJ88gQ0wL1vmljj+NkrBh7pJ1
- j8LMrpRBwENtVNY5WI4toUq50KXy1sj9PyLEqyIV0ZQpw0Xp+3fHsqKuwo/BvlRH0BZWo4G
- B5lMAMQuYyaEhTtMFmmW1Dr7RTbJkgcvOtuFyx1k+y9UmK4EaTlYpv+dKJRIllU4d/HF+tg
- /d8ThdQnKiqKkqHIhSWxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g4Wi0FAAJtY=:9JZJavhOuhLEeuxGrwJxU6
- Z0YQEIwBGmhf90BA5xrCbefqNRe8uieLj2t36jd/hkSOI4rTK0LX0XOZC8ZfOJCA/3gREUG0K
- 7GU5Dbe0/om3sQQcdJcDL6Jc8GjPQWMgVwSi5LbJblW0fw0tKP6tcbkDi3oawlQeeQBA7/Mw0
- UMq+VH1qjwKvp2PmlfQgG/SnYWiLi706EZrCfxBXq36TGWO3gLmNYiipj1ClS8MBeDol65v3X
- OC3PbcjFQ1guQQUp7XWTR7ZKSl9Cbp//6O+bjuCozQ+VUKkbhNtVsG6YVKSXNkFbxHsw7i0pp
- VdWvO7+/uiOs7vsZmHe3DGcgJ6D0xRE5fTr7vKPizslpKeJ80Creo3W8bU+ryXHmPtnzeCjbp
- EVyhdabnFKBRyI6BR3RWQ2UYe7nGxNOz3eecj0lKGrvwLYuA5nB79awAaElIeZGHF/4maDUDO
- bkLfRW0Bjeq5EuDLLkIpkFywAoxQU3jLiwfHEcQmfI2TKs5lAvT1pUL5pncaD61fDufquNnsF
- voHrLOn2AL9TyXdKSkbEMGtWBPugddOToaDx7iZSkDT3hyOVFjUEBlg5ftuIPqtv1xfe+V4xs
- STz6vgY4X9EsI0IGdZ6SZf/IaVgpwwI7L6pcG99uweum7nkhO/xAj3K6mWk92elRXUQcG5+p8
- 0NB7uHx3Qcq2E1r8dj0Hcs6L1TIGEdeAqRiOAn8hvL83RyAz/FDFlZYilalH5AWP/0kJLI1k9
- TZuyRHM4K7WMh14YwPOPHN6EKryI+bMJgh3Nb7jWN94BX8WMJDs2xZBT4s1A+yjjOLDu7Cg2T
- d1/dv1GQwyetX6R83DXFp5cqQL2WVYujfL6OzCo4JEihL+uZd0cG9+I7Ysf5Gf1b9cKf2GxZM
- TBBvFMDQrTxXbpNaXqrBs0jUmKP99XynWL8y2GU5JfuNXcgd8fbku5gHceDHk5Pqx0D8fHpSl
- JtSZIDkfvmj4YVBTMIARV8wRBditjgJgBAMlHZ4Gpnw3RrSYk4gf06L6A+uW4v+gj1lWMotd0
- +egJQliQF5bhLcqoxGowVCYF9izdRbDGPyCX8PKgwH6rcoR5xdQZVtoASPMN7HOXRsVQCb+8O
- Cnum1hkHh0pIG+u/BhZegDQZrYGWdFqOMgRewChHigpBLnS/Sgx6kG3Kfc2yf7FnKm35/AD+C
- NXbfZmbdX9RsJZWXD+EovA2O5NZW/X7Ogo7j2J0VxeOgLLHGSqTQb7ARD96/T6SvOC0vbf1xE
- Pr/ZWKO+I+5994Iy+
+References: <20200706022150.20848-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20200706022150.20848-1-walter-zh.wu@mediatek.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 6 Jul 2020 08:19:33 +0200
+Message-ID: <CACT4Y+akZ5iu2ohQhRqiUd8zkew-NmrUPrA=xYtS1xxHWZ60Og@mail.gmail.com>
+Subject: Re: [PATCH v2] kasan: fix KASAN unit tests for tag-based KASAN
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6 Thus add jump targets for the completion of the desired
-> exception handling. By the way, do some coding-style cleanups
-> suggested by Markus.
+On Mon, Jul 6, 2020 at 4:21 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> We use tag-based KASAN, then KASAN unit tests don't detect out-of-bounds
+> memory access. They need to be fixed.
+>
+> With tag-based KASAN, the state of each 16 aligned bytes of memory is
+> encoded in one shadow byte and the shadow value is tag of pointer, so
+> we need to read next shadow byte, the shadow value is not equal to tag
+> value of pointer, so that tag-based KASAN will detect out-of-bounds
+> memory access.
+>
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>
+> changes since v1:
+> - Reduce amount of non-compiled code.
+> - KUnit-KASAN Integration patchset are not merged yet. My patch should
+>   have conflict with it, if needed, we can continue to wait it.
+>
+> ---
+>
+>  lib/test_kasan.c | 81 ++++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 64 insertions(+), 17 deletions(-)
+>
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index e3087d90e00d..660664439d52 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -40,7 +40,11 @@ static noinline void __init kmalloc_oob_right(void)
+>                 return;
+>         }
+>
+> -       ptr[size] = 'x';
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               ptr[size] = 'x';
+> +       else
+> +               ptr[size + 5] = 'x';
+> +
 
-I propose to split these changes.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Ddcb7fd82c75ee2d6e6f9d8cc71=
-c52519ed52e258#n138
+Hi Walter,
 
-Would you like to support easier back-porting of a fix
-besides another bit of possible source code beautification?
+Would if be possible to introduce something like:
 
+#define OOB_TAG_OFF (IS_ENABLED(CONFIG_KASAN_GENERIC) ? 0 : 8)
 
-=E2=80=A6
-+++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -241,14 +241,16 @@ csky_mpintc_init(struct device_node *node, struct de=
-vice_node *parent)
-=E2=80=A6
- 		INTCG_base =3D ioremap(mfcr("cr<31, 14>"),
--				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
-=E2=80=A6
-+				     INTCL_SIZE * nr_cpu_ids + INTCG_SIZE);
+and then add it throughout as
 
-Can any macro (or function) be helpful for such a size computation?
+        ptr[size + OOB_TAG_OFF] = 'x';
 
-Regards,
-Markus
+?
+The current version results in quite some amount of additional code
+that needs to be read, extended  and maintained in the future. So I am
+thinking if it's possible to minimize it somehow...
+
+>         kfree(ptr);
+>  }
+>
+> @@ -92,7 +96,11 @@ static noinline void __init kmalloc_pagealloc_oob_right(void)
+>                 return;
+>         }
+>
+> -       ptr[size] = 0;
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               ptr[size] = 0;
+> +       else
+> +               ptr[size + 6] = 0;
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -162,7 +170,11 @@ static noinline void __init kmalloc_oob_krealloc_more(void)
+>                 return;
+>         }
+>
+> -       ptr2[size2] = 'x';
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               ptr2[size2] = 'x';
+> +       else
+> +               ptr2[size2 + 13] = 'x';
+> +
+>         kfree(ptr2);
+>  }
+>
+> @@ -180,7 +192,12 @@ static noinline void __init kmalloc_oob_krealloc_less(void)
+>                 kfree(ptr1);
+>                 return;
+>         }
+> -       ptr2[size2] = 'x';
+> +
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               ptr2[size2] = 'x';
+> +       else
+> +               ptr2[size2 + 2] = 'x';
+> +
+>         kfree(ptr2);
+>  }
+>
+> @@ -216,7 +233,11 @@ static noinline void __init kmalloc_oob_memset_2(void)
+>                 return;
+>         }
+>
+> -       memset(ptr+7, 0, 2);
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               memset(ptr+7, 0, 2);
+> +       else
+> +               memset(ptr+15, 0, 2);
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -232,7 +253,11 @@ static noinline void __init kmalloc_oob_memset_4(void)
+>                 return;
+>         }
+>
+> -       memset(ptr+5, 0, 4);
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               memset(ptr+5, 0, 4);
+> +       else
+> +               memset(ptr+15, 0, 4);
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -249,7 +274,11 @@ static noinline void __init kmalloc_oob_memset_8(void)
+>                 return;
+>         }
+>
+> -       memset(ptr+1, 0, 8);
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               memset(ptr+1, 0, 8);
+> +       else
+> +               memset(ptr+15, 0, 8);
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -265,7 +294,11 @@ static noinline void __init kmalloc_oob_memset_16(void)
+>                 return;
+>         }
+>
+> -       memset(ptr+1, 0, 16);
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               memset(ptr+1, 0, 16);
+> +       else
+> +               memset(ptr+15, 0, 16);
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -281,7 +314,11 @@ static noinline void __init kmalloc_oob_in_memset(void)
+>                 return;
+>         }
+>
+> -       memset(ptr, 0, size+5);
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               memset(ptr, 0, size+5);
+> +       else
+> +               memset(ptr, 0, size+7);
+> +
+>         kfree(ptr);
+>  }
+>
+> @@ -415,7 +452,11 @@ static noinline void __init kmem_cache_oob(void)
+>                 return;
+>         }
+>
+> -       *p = p[size];
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               *p = p[size];
+> +       else
+> +               *p = p[size + 8];
+> +
+>         kmem_cache_free(cache, p);
+>         kmem_cache_destroy(cache);
+>  }
+> @@ -497,6 +538,7 @@ static noinline void __init copy_user_test(void)
+>         char __user *usermem;
+>         size_t size = 10;
+>         int unused;
+> +       size_t oob_size;
+>
+>         kmem = kmalloc(size, GFP_KERNEL);
+>         if (!kmem)
+> @@ -511,26 +553,31 @@ static noinline void __init copy_user_test(void)
+>                 return;
+>         }
+>
+> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+> +               oob_size = 1;
+> +       else
+> +               oob_size = 7;
+> +
+>         pr_info("out-of-bounds in copy_from_user()\n");
+> -       unused = copy_from_user(kmem, usermem, size + 1);
+> +       unused = copy_from_user(kmem, usermem, size + oob_size);
+>
+>         pr_info("out-of-bounds in copy_to_user()\n");
+> -       unused = copy_to_user(usermem, kmem, size + 1);
+> +       unused = copy_to_user(usermem, kmem, size + oob_size);
+>
+>         pr_info("out-of-bounds in __copy_from_user()\n");
+> -       unused = __copy_from_user(kmem, usermem, size + 1);
+> +       unused = __copy_from_user(kmem, usermem, size + oob_size);
+>
+>         pr_info("out-of-bounds in __copy_to_user()\n");
+> -       unused = __copy_to_user(usermem, kmem, size + 1);
+> +       unused = __copy_to_user(usermem, kmem, size + oob_size);
+>
+>         pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
+> -       unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
+> +       unused = __copy_from_user_inatomic(kmem, usermem, size + oob_size);
+>
+>         pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
+> -       unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
+> +       unused = __copy_to_user_inatomic(usermem, kmem, size + oob_size);
+>
+>         pr_info("out-of-bounds in strncpy_from_user()\n");
+> -       unused = strncpy_from_user(kmem, usermem, size + 1);
+> +       unused = strncpy_from_user(kmem, usermem, size + oob_size);
+>
+>         vm_munmap((unsigned long)usermem, PAGE_SIZE);
+>         kfree(kmem);
+> --
+> 2.18.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200706022150.20848-1-walter-zh.wu%40mediatek.com.
