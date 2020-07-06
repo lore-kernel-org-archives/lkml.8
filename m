@@ -2,113 +2,117 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975872074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECC42073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s4vd8vzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgGFL3I (ORCPT
+        id S1728940AbgGFL3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgGFL3H (ORCPT
+        Mon, 6 Jul 2020 07:29:50 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38740 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728441AbgGFL3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:29:07 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96401C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:29:06 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e012:1552:6e81:c371])
-        by albert.telenet-ops.be with bizsmtp
-        id znV32200Y0tDR5Q06nV3DW; Mon, 06 Jul 2020 13:29:03 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsPJ1-0000Z1-AU; Mon, 06 Jul 2020 13:29:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsPJ1-0001rC-87; Mon, 06 Jul 2020 13:29:03 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Wei Yang <richard.weiyang@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] lib/test_bitops: Do the full test during module init
-Date:   Mon,  6 Jul 2020 13:29:00 +0200
-Message-Id: <20200706112900.7097-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jul 2020 07:29:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594034989; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Date: Message-ID: From: References: Cc: To: Subject:
+ Sender; bh=B4x/MNKnw7dNqtrqeARr2ZbfiWYvHwIO7a3zTHiX2RQ=; b=s4vd8vzZ13Nx8lIkGMHdLz7oVfw6+DAo1aWvp2EqzPdZ+Ale0kHQDX0rTSeV4cSOf+jiD1KS
+ Vg/+ULPwhUXUQ+aA0F97E0n4oVnExQqJOOw8NUfMXGSTwroGz3Bb8Zgy+z5QnPn8z/DOmOyZ
+ ZprV7a/Lj253Bn41g+paA8n17l4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f030b2a86de6ccd44b789fe (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 06 Jul 2020 11:29:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 95BB1C43387; Mon,  6 Jul 2020 11:29:45 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 536EBC433C8;
+        Mon,  6 Jul 2020 11:29:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 536EBC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v2 1/7] Documentation: device-tree: sound: Update
+ lpass-cpu driver binding
+To:     Ajit Pandey <ajitp@codeaurora.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, plai@codeaurora.org,
+        linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+References: 
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
+Date:   Mon, 6 Jul 2020 16:59:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the bitops test consists of two parts: one part is executed
-during module load, the second part during module unload. This is
-cumbersome for the user, as he has to perform two steps to execute all
-tests, and is different from most (all?) other tests.
 
-Merge the two parts, so both are executed during module load.
+On 5/16/2020 11:07 PM, Ajit Pandey wrote:
+> On 5/14/2020 10:14 PM, Mark Brown wrote:
+>> On Thu, May 14, 2020 at 10:08:12PM +0530, Ajit Pandey wrote:
+>>> Done the required cleanups to update lpass-cpu binding with newer
+>>> yaml formats.
+>> Please do YAML conversions as the last thing in any patch series, there
+>> is quite a big backlog of reviews of YAML conversions so they can slow
+>> down the code development.  It's good to do them, just try to make sure
+>> other patches don't depend on them.
+>>
+>> Please submit patches using subject lines reflecting the style for the
+>> subsystem, this makes it easier for people to identify relevant patches.
+>> Look at what existing commits in the area you're changing are doing and
+>> make sure your subject lines visually resemble what they're doing.
+>> There's no need to resubmit to fix this alone.
+>
+> Ok.. we'll do the yaml conversion as a separate patch chain so that it 
+> won't block
+>
+> merging of this feature in ASoC core.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-v2:
-  - Keep a dummy module_exit() function to support module unloading.
----
- lib/test_bitops.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+@Mark, I was planning to post v3 patchset series for this and keep yaml 
+change as
 
-diff --git a/lib/test_bitops.c b/lib/test_bitops.c
-index ced25e3a779baf96..471141ddd6913724 100644
---- a/lib/test_bitops.c
-+++ b/lib/test_bitops.c
-@@ -52,9 +52,9 @@ static unsigned long order_comb_long[][2] = {
- 
- static int __init test_bitops_startup(void)
- {
--	int i;
-+	int i, bit_set;
- 
--	pr_warn("Loaded test module\n");
-+	pr_info("Starting bitops test\n");
- 	set_bit(BITOPS_4, g_bitmap);
- 	set_bit(BITOPS_7, g_bitmap);
- 	set_bit(BITOPS_11, g_bitmap);
-@@ -81,12 +81,8 @@ static int __init test_bitops_startup(void)
- 				       order_comb_long[i][0]);
- 	}
- #endif
--	return 0;
--}
- 
--static void __exit test_bitops_unstartup(void)
--{
--	int bit_set;
-+	barrier();
- 
- 	clear_bit(BITOPS_4, g_bitmap);
- 	clear_bit(BITOPS_7, g_bitmap);
-@@ -98,7 +94,13 @@ static void __exit test_bitops_unstartup(void)
- 	if (bit_set != BITOPS_LAST)
- 		pr_err("ERROR: FOUND SET BIT %d\n", bit_set);
- 
--	pr_warn("Unloaded test module\n");
-+	pr_info("Completed bitops test\n");
-+
-+	return 0;
-+}
-+
-+static void __exit test_bitops_unstartup(void)
-+{
- }
- 
- module_init(test_bitops_startup);
+last patch in the series as suggested. However, we have one update in 
+the driver to
+
+support another compatible string. If we keep Documentation change at 
+the last, the
+
+driver change will have checkpatch errors. Can you please suggest if 
+should make
+
+first Documentation change in text file itself before driver change and 
+finally have a
+
+patch to convert it to yaml at the end?
+
+
+Thanks,
+
+Rohit
+
 -- 
-2.17.1
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
