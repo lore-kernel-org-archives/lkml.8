@@ -2,105 +2,203 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C00FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7370C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B5920720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aufaQjV4"
+	by mail.kernel.org (Postfix) with ESMTP id B621D2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgGFEtN (ORCPT
+        id S1728800AbgGFEui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgGFEtM (ORCPT
+        Mon, 6 Jul 2020 00:50:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726001AbgGFEui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:49:12 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8C3C061794;
-        Sun,  5 Jul 2020 21:49:12 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k15so21799569lfc.4;
-        Sun, 05 Jul 2020 21:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LlRkNitp+HR82fwyqhAOC5T4sKDfW6mx6YbCDa9qCYE=;
-        b=aufaQjV4h3qnwZ+7EL6rWz2Dhq/HR9mgTN9sQ5qKsfkiKr9+Zy+8TOkf9sqLd0vxVy
-         WTTA/IueiLWDyKzx8AD32SCZ6dwIw8vmhW7d6YSDwBgOr7lR7tD0L9nR8FHRuyIrWvUN
-         UEoNrYJHeRI7AqyKhFF6sXMu0cGtD/Q84/gOv1+fsBnjknJf2tJBPqwDxZuU7EQykMVm
-         3Lrg49gUwYBHNR3Cuk3hZsGy3g6LuNhPs9m6llF1s9m6SLHM959JanUY+JGLcDUvqRsQ
-         tqEHOr+oPmOo6tmYqAfHuaDPVNx2XFbdX25YFG3V0BzMcHgm/+Sc6qt5kQN3TEfPsf31
-         ftvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LlRkNitp+HR82fwyqhAOC5T4sKDfW6mx6YbCDa9qCYE=;
-        b=NHDeRWDn7aYkQ8AJr3fdx0KhAZKd+dd7jjFVtXSMqX3oUDCTSgQI/8belUT4HKQYez
-         A5FOvhTHAXl3P8qm7ehX9xld/stV8kAMXc844KY6OcOi8vFDvimPcKhtSYJCSgMVWB2S
-         25Y/IvAqJW3aQgmB2R/qHsMFoOuHEdLfGNrqU1T36/ERMWetDbBpqLwdwraA5hNHNI+f
-         /wYalxa8C8vavoWYjqYiUlfP7O1dDHHD7N/6aFm/t4lwBOWz7j7aAR3q/O6/ZsSLSdFH
-         JmxgdWs4xuOOzH52dG24cvDW3qMPRopYMCPY4hPOx2Ed59uIbUm5nZVkvjgs+joyTNng
-         K32g==
-X-Gm-Message-State: AOAM530DBS6bVEuEPDQGN+BlA1v7nnDZ/22Yysa0qOginyoZ8PLc1imO
-        aI1eb65y06Zvs3ep4n9kfsUpkVxYCtJd1Ggn8P4=
-X-Google-Smtp-Source: ABdhPJyF68jwLrGVh/Y8r4x+Y0KdP1oc5lZnzM1F6z+txlo8c2JMfzJ0PSnAMY2TKFJDWhUpW/Cig4+g9LnOpOaQ9Vw=
-X-Received: by 2002:a19:c389:: with SMTP id t131mr15690870lff.130.1594010949775;
- Sun, 05 Jul 2020 21:49:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629085911.1676554-1-masahiroy@kernel.org>
- <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
- <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
- <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com> <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
-In-Reply-To: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 6 Jul 2020 06:48:58 +0200
-Message-ID: <CANiq72=LOgebNs7kwLGrkgsM2pr=dQG4F1VWskdndAh39jHWcw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jul 2020 00:50:38 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06643puX143928;
+        Mon, 6 Jul 2020 00:50:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322paknbgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 00:50:35 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0664oYHc105610;
+        Mon, 6 Jul 2020 00:50:34 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322paknbft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 00:50:34 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0664nrj2018940;
+        Mon, 6 Jul 2020 04:50:32 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 322hd7svf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 04:50:32 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0664oT7758851572
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jul 2020 04:50:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1B17A405F;
+        Mon,  6 Jul 2020 04:50:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EDCCA4054;
+        Mon,  6 Jul 2020 04:50:28 +0000 (GMT)
+Received: from bostonp9.aus.stglabs.ibm.com (unknown [9.3.23.179])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Jul 2020 04:50:27 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
+        psampat@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC v2 1/2] powerpc/powernv : Add support for pre-entry and post-exit of stop state using OPAL V4 OS services
+Date:   Sun,  5 Jul 2020 23:50:00 -0500
+Message-Id: <20200706045001.77039-1-huntbag@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_02:2020-07-02,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ cotscore=-2147483648 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxlogscore=979 adultscore=0 clxscore=1011 malwarescore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007060032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+This patch provides kernel framework fro opal support of save restore
+of sprs in idle stop loop. Opal support for stop states is needed to
+selectively enable stop states or to introduce a quirk quickly in case
+a buggy stop state is present.
 
-On Sun, Jul 5, 2020 at 5:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hmm, adding '#include <sys/types.h>' did not make any difference.
+We make a opal call from kernel if firmware-stop-support for stop
+states is present and enabled. All the quirks for pre-entry of stop
+state is handled inside opal. A call from opal is made into kernel
+where we execute stop afer saving of NVGPRs.
+After waking up from 0x100 vector in kernel, we enter back into opal.
+All the quirks in post exit path, if any, are then handled in opal,
+from where we return successfully back to kernel.
 
-That should have worked, because POSIX defines it to be there. It
-sounds like you need --sysroot to point it to the proper ones.
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+---
+v1->v2 : Rebased the patch on Nick's Opal V4 OS patchset
 
-> If I add -std=c99, I get a different error.
+ arch/powerpc/include/asm/opal-api.h        |  4 +++-
+ arch/powerpc/include/asm/opal.h            |  1 +
+ arch/powerpc/platforms/powernv/idle.c      | 12 ++++++++++++
+ arch/powerpc/platforms/powernv/opal-call.c |  1 +
+ arch/powerpc/platforms/powernv/opal.c      | 15 +++++++++++++++
+ 5 files changed, 32 insertions(+), 1 deletion(-)
 
-Yeah, that is the expected behavior. C99 does not have the implicit
-int rule anymore (unlike older C) so ssize_t (an unknown type given
-that program) is not being interpreted as int anymore (which is what
-triggers the warning later about the mismatch between size_t and int
-in the format string).
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index 97c5e5423827..437b6937685d 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -219,7 +219,8 @@
+ #define OPAL_REPORT_TRAP			183
+ #define OPAL_FIND_VM_AREA			184
+ #define OPAL_REGISTER_OS_OPS			185
+-#define OPAL_LAST				185
++#define OPAL_CPU_IDLE				186
++#define OPAL_LAST				186
+ 
+ #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+ #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+@@ -1207,6 +1208,7 @@ struct opal_os_ops {
+ 	__be64  os_printf; /* void printf(int32_t level, const char *str) */
+ 	__be64  os_vm_map; /* int64_t os_vm_map(uint64_t ea, uint64_t pa, uint64_t flags) */
+ 	__be64  os_vm_unmap; /* void os_vm_unmap(uint64_t ea) */
++	__be64  os_idle_stop; /* void os_idle_stop(uint64_t srr1_addr, uint64_t psscr) */
+ };
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 09985b7718b3..1774c056acb8 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -407,6 +407,7 @@ void opal_sensor_groups_init(void);
+ 
+ int64_t opal_find_vm_area(uint64_t addr, struct opal_vm_area *opal_vm_area);
+ int64_t opal_register_os_ops(struct opal_os_ops *ops, uint64_t size);
++int64_t opal_cpu_idle(uint64_t srr1_addr, uint64_t psscr);
+ 
+ #endif /* __ASSEMBLY__ */
+ 
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 78599bca66c2..3afd4293f729 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -805,6 +805,18 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	return srr1;
+ }
+ 
++static unsigned long power9_firmware_idle_stop(unsigned long psscr, bool mmu_on)
++{
++	unsigned long srr1;
++	int rc;
++
++	rc = opal_cpu_idle(cpu_to_be64(&srr1), (uint64_t) psscr);
++
++	if (mmu_on)
++		mtmsr(MSR_KERNEL);
++	return srr1;
++}
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static unsigned long power9_offline_stop(unsigned long psscr)
+ {
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 11f419e76059..79076ca2de03 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -351,3 +351,4 @@ OPAL_CALL(opal_sym_to_addr,			OPAL_SYM_TO_ADDR);
+ OPAL_CALL(opal_report_trap,			OPAL_REPORT_TRAP);
+ OPAL_CALL(opal_find_vm_area,			OPAL_FIND_VM_AREA);
+ OPAL_CALL(opal_register_os_ops,			OPAL_REGISTER_OS_OPS);
++OPAL_CALL(opal_cpu_idle,			OPAL_CPU_IDLE);
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index 93b9afaf33b3..1fbf7065f918 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -1150,6 +1150,20 @@ static void os_vm_unmap(uint64_t ea)
+ 	local_flush_tlb_mm(mm);
+ }
+ 
++int64_t os_idle_stop(uint64_t srr1_addr, uint64_t psscr)
++{
++	/*
++	 * For lite state which does not lose even GPRS we call
++	 * idle_stop_noloss while for all other states we call
++	 * idle_stop_mayloss. Saving and restoration of other additional
++	 * SPRs if required is handled in OPAL. All the quirks are also
++	 * handled in OPAL.
++	 */
++	if (!(psscr & (PSSCR_EC|PSSCR_ESL)))
++		return isa300_idle_stop_noloss(psscr);
++	return isa300_idle_stop_mayloss(psscr);
++}
++
+ static int __init opal_init_mm(void)
+ {
+ 	struct mm_struct *mm;
+@@ -1231,6 +1245,7 @@ static int __init opal_init_early(void)
+ 		opal_os_ops.os_printf = cpu_to_be64(&os_printf);
+ 		opal_os_ops.os_vm_map = cpu_to_be64(&os_vm_map);
+ 		opal_os_ops.os_vm_unmap = cpu_to_be64(&os_vm_unmap);
++		opal_os_ops.os_idle_stop = cpu_to_be64(&os_idle_stop);
+ 		if (opal_register_os_ops(&opal_os_ops, sizeof(opal_os_ops))) {
+ 			pr_warn("OPAL register OS ops failed, firmware will run in v3 mode.\n");
+ 		} else {
+-- 
+2.17.1
 
-> In contrast, 'size_t' has no problem.
-
-That is expected too, because size_t is defined via stdio.h (size_t is
-a C standard type, ssize_t is not -- it is a POSIX one).
-
-Hope that helps,
-
-Cheers,
-Miguel
