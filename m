@@ -2,155 +2,110 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10377C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED1120760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TG4pzGRb"
+	by mail.kernel.org (Postfix) with ESMTP id 8F8C92074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594031650;
+	bh=eRbnVjHRSeB9MvkePAFP3JUnL4JKWfqH2XJb7Vj+3ac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TMBtqi2u0pd7CAa5Pohk4wvBKWRhTW84vzFDlJkkqrWMyIwcGSZgbINzt8joSfc8b
+	 Wgsu5yAONrQgUl9uGdCnHDPMjvurEHE7J1mfG6g04LfzE2M1XA2ueQtQ8CIm/k6pS2
+	 QenIbBBo1YfKS2Ycd7vvOmRe++lKsMUJ4j7a1bgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgGFKcP (ORCPT
+        id S1728907AbgGFKeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728929AbgGFKb4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:31:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E09C061794;
-        Mon,  6 Jul 2020 03:31:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q15so38663092wmj.2;
-        Mon, 06 Jul 2020 03:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RPTa/b9ulSr2LIoV7+9N5nhgam/KG2MWD7MpfjJwUI4=;
-        b=TG4pzGRbEwH/BSJarGEyRYf1QP7euiq3ZvuQTcexU3ZoYSD+b8fqCNHTZEOCWFGXWf
-         FfSoXFkDiMaB+pSiKoOy6gl2ISBkzY6SenyTzPtviHoLi+PZSSC3+dbUqBIv64wSLyzm
-         l0L815djwPABf2iKVNWgUMkhl0Yu6//iDVLTkxJiy+M9FZQAt+fa9aGp4nPF3j0dptnL
-         TAmviTKz/G7eCqJ686+bgEzJGbI15po6Pwlk1VRKHHCjT+539hC3LuaA0aynuNXG41u8
-         I/O6EoGxYhVaVdls2XfiIzdklTWKIwJmOhKz9wYHDk5JmkqCw7WUMtJUFLSmRwxrf6su
-         qjog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RPTa/b9ulSr2LIoV7+9N5nhgam/KG2MWD7MpfjJwUI4=;
-        b=n+KjJPvbR3Y9HUPlnadPYwlW5CAdm/JGYqFprFJF06vDny/lmxDXlVEJa1q1Fqm8Xy
-         TKQGItJTnoOW5dnsctah9RKchLz85SddToTVIKHkpLSuPsfZxIpQq1uZAOG97jClWDvL
-         O6ktBo5ZOQ1urBeOpAoIQ6nyHi9d6zqCfxlXj3b9ixyE0ROl44cx3/nG1WZLo2wX8ZI1
-         1AaUCInB1BwoAAzuIjSQZlDfaKETZmtuOjGV/L4nQoy4Z7MJF7Sb5EAq8upJBWQ8lcnc
-         Uw0wtIh0jKXuBYj+kP1vvreZZXe1H7A1yPebbuh3zM9+K43UBnVsy0Bst7QO4PubFphl
-         YU2Q==
-X-Gm-Message-State: AOAM531wmeWobjY296S3Y3r6v9oQ2rasceK6jRIaBD2sumYRpB1XE5Xm
-        f+W4ePgdtDJWTYZQ4YGJ+IA=
-X-Google-Smtp-Source: ABdhPJywhsCbkbFGmRLpYBAbKoNOxH4X7OJZCSZcE5Hy9HRvf3pC50XF2xqZYYR9LVEyfSHQgxlr7A==
-X-Received: by 2002:a1c:9911:: with SMTP id b17mr44258657wme.135.1594031514919;
-        Mon, 06 Jul 2020 03:31:54 -0700 (PDT)
-Received: from net.saheed (51B7C2DF.dsl.pool.telekom.hu. [81.183.194.223])
-        by smtp.gmail.com with ESMTPSA id 22sm24216859wmb.11.2020.07.06.03.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 03:31:54 -0700 (PDT)
-From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-To:     helgaas@kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/11 RFC] PCI: pciehp: Validate with the return value of pcie_capability_read_*()
-Date:   Mon,  6 Jul 2020 11:31:14 +0200
-Message-Id: <20200706093121.9731-5-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200706093121.9731-1-refactormyself@gmail.com>
-References: <20200706093121.9731-1-refactormyself@gmail.com>
+        Mon, 6 Jul 2020 06:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728738AbgGFKeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 06:34:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FCB2073E;
+        Mon,  6 Jul 2020 10:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594031648;
+        bh=eRbnVjHRSeB9MvkePAFP3JUnL4JKWfqH2XJb7Vj+3ac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k8p7wwoCkANyjiRugabz7IKG7oA0yFXXKW9G+fSEy6w/s+eS/nZ/erortAggM+lx3
+         aHo50krHKXp63N0giaPMTwV5FnFhU7oRRLv18CPryjMBGsg0cSV3qt+fLxQqdkGiHN
+         16cWtrgaKNjhN3bNzWsj9Th9ZRPq6/6Za+a2CKbw=
+Date:   Mon, 6 Jul 2020 12:34:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kars Mulder <kerneldev@karsmulder.nl>
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Pavel Machek <pavel@denx.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH] usb: core: fix quirks_param_set() writing to a const
+ pointer
+Message-ID: <20200706103405.GA11622@kroah.com>
+References: <20200704115538.GD16083@amd>
+ <3212-5f024c00-215-220fe080@174542169>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3212-5f024c00-215-220fe080@174542169>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Sun, Jul 05, 2020 at 11:53:27PM +0200, Kars Mulder wrote:
+> The function quirks_param_set() takes as argument a const char* pointer
+> to the new value of the usbcore.quirks parameter. It then casts this
+> pointer to a non-const char* pointer and passes it to the strsep()
+> function, which overwrites the value.
+> 
+> Fix this by copying the value to a local buffer on the stack and 
+> letting that buffer be written to by strsep().
+> 
+> Fixes: 027bd6cafd9a ("usb: core: Add "quirks" parameter for usbcore")
+> Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
+> 
+> ---
+>  drivers/usb/core/quirks.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+> index e0b77674869c..86b1a6739b4e 100644
+> --- a/drivers/usb/core/quirks.c
+> +++ b/drivers/usb/core/quirks.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/usb/hcd.h>
+>  #include "usb.h"
+>  
+> +#define QUIRKS_PARAM_SIZE 128
+> +
+>  struct quirk_entry {
+>  	u16 vid;
+>  	u16 pid;
+> @@ -23,19 +25,21 @@ static DEFINE_MUTEX(quirk_mutex);
+>  static struct quirk_entry *quirk_list;
+>  static unsigned int quirk_count;
+>  
+> -static char quirks_param[128];
+> +static char quirks_param[QUIRKS_PARAM_SIZE];
+>  
+> -static int quirks_param_set(const char *val, const struct kernel_param *kp)
+> +static int quirks_param_set(const char *value, const struct kernel_param *kp)
+>  {
+> +	char val[QUIRKS_PARAM_SIZE];
 
-On failure pcie_capability_read_dword() sets it's last parameter,
-val to 0. 
-However, with Patch 11/11, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+That's a lot of stack space, is it really needed?  Can we just use a
+static variable instead, or dynamically allocate this?
 
-This bug can be avoided if the return value of pcie_capability_read_dword
-is checked to confirm success.
+thanks,
 
-Check the return value of pcie_capability_read_dword() to ensure success.
-Return a value that indicate the result of pcie_capability_read_dword().
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 5af281d97d4f..0b691e37fd04 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -277,10 +277,11 @@ static void pcie_wait_for_presence(struct pci_dev *pdev)
- {
- 	int timeout = 1250;
- 	u16 slot_status;
-+	int ret;
- 
- 	do {
--		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
--		if (slot_status & PCI_EXP_SLTSTA_PDS)
-+		ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-+		if (!ret && (slot_status & PCI_EXP_SLTSTA_PDS))
- 			return;
- 		msleep(10);
- 		timeout -= 10;
-@@ -354,12 +355,13 @@ int pciehp_get_raw_indicator_status(struct hotplug_slot *hotplug_slot,
- 	struct controller *ctrl = to_ctrl(hotplug_slot);
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 slot_ctrl;
-+	int ret;
- 
- 	pci_config_pm_runtime_get(pdev);
--	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
- 	pci_config_pm_runtime_put(pdev);
- 	*status = (slot_ctrl & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
--	return 0;
-+	return pcibios_err_to_errno(ret);
- }
- 
- int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status)
-@@ -367,9 +369,10 @@ int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status)
- 	struct controller *ctrl = to_ctrl(hotplug_slot);
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 slot_ctrl;
-+	int ret;
- 
- 	pci_config_pm_runtime_get(pdev);
--	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
- 	pci_config_pm_runtime_put(pdev);
- 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x, value read %x\n", __func__,
- 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
-@@ -389,7 +392,7 @@ int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status)
- 		break;
- 	}
- 
--	return 0;
-+	return pcibios_err_to_errno(ret);
- }
- 
- void pciehp_get_power_status(struct controller *ctrl, u8 *status)
--- 
-2.18.2
-
+greg k-h
