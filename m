@@ -2,236 +2,232 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C10C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D728C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B6A20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284DB20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcUs7Cn+"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="PH/NZuYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgGFMq5 (ORCPT
+        id S1729198AbgGFMsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgGFMq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:46:56 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA655C061794;
-        Mon,  6 Jul 2020 05:46:56 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e18so18332368pgn.7;
-        Mon, 06 Jul 2020 05:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
-        b=mcUs7Cn+2N0+DolBZjF1mQ9W0RaoemEg9z1dhg5PxlaSZlTmJZWLcVCnOes/jCOx68
-         fR4fCKYoNvCLtGSEaO/+QH3H/M+d8kWtMEFqBbOkaOXcDkndHINCafiDYwlxvoPQ5+d+
-         61TrqLxp4KCW6J3iUugVps9y3hWQnwNKbMt1tnbYODGCz8OmiC/bOWVjFgu1ekejQUs3
-         hMgevpZc+1+1Ky7fUip00QrEa2L2iR7/fnbSgHz+jyDU16teOw6nZJiGCVLx0aD305wK
-         1flD7hUWwNmR/SjwS8dy4r/7By5woZtOd8xVIFQ+vlSQVzMmoGYNu/SlIsM5Jvho6NjV
-         b+aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
-        b=ddF6xQkwHs85Nuul54eFfCvSFyZnsB1kuyvInKsL8Wqxka9haeFGGXzAOPSpPXcrJV
-         pcOU9Wpvc93lUHN+TGGiJU54WUl4wp5Ix+Gglr3yr7zMLDc2G9lnTfmzGrnCvQR19PPn
-         2Wv3WxZcZJGb23qxaba5nV08uPEe6Hb6RI59DShZxWooddXCcxBgZdZmVhLrD+iUi0un
-         nG2iYznLfxDWfUFN4m6JO5yU0smEkoNsh4rAW8t4/37mtckRWCZcHc+26IpOv7DQZqTd
-         kVgjqZt3SWUn1pRClwi+scK/CWRFaZN1epey3iHe49ETpuHdn7gPnhpKVfvPhwBrtKpI
-         TVcg==
-X-Gm-Message-State: AOAM530hiTSZDWcB9p1K6cMm6lBN/kAKC4XxU6cj2d45d1IGJLqLHb8N
-        0leDTBERD3t8XgrlsALihPk=
-X-Google-Smtp-Source: ABdhPJyqV8PExAxba6IkqO2rGw2HCb1TGZFPA7XcQiMO1uMhvLBaIB+Z4fYbbcUGtTwfX4bYXhfu0A==
-X-Received: by 2002:a63:8c5d:: with SMTP id q29mr39122594pgn.249.1594039616345;
-        Mon, 06 Jul 2020 05:46:56 -0700 (PDT)
-Received: from mi-OptiPlex-7050.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id az13sm17248951pjb.34.2020.07.06.05.46.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jul 2020 05:46:55 -0700 (PDT)
-From:   yang che <chey84736@gmail.com>
-To:     willy@infradead.org, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        yang che <chey84736@gmail.com>
-Subject: [PATCH v3] hung_task:add detecting task in D state milliseconds timeout
-Date:   Mon,  6 Jul 2020 20:45:33 +0800
-Message-Id: <1594039533-26240-1-git-send-email-chey84736@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 6 Jul 2020 08:48:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12531 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729016AbgGFMsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 08:48:00 -0400
+IronPort-SDR: rBjzSfHDei3DsWmB+MZlzvpkDHf/ggaw1/1Iv1h98GGklSSmMbirYeT/qvl6qD8X6Ild65ywG3
+ CZbIPi85WdFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="144912050"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="144912050"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 05:47:58 -0700
+IronPort-SDR: SiADBshIJ1U/v9lDc6V7Uuzar9kO05jKjiQYWssqcKf+QRswSOtCfNbPGltf7ivngvVbmNpaoW
+ rD8IrWi473tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="456711916"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jul 2020 05:47:58 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 6 Jul 2020 05:47:57 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Jul 2020 05:47:57 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 6 Jul 2020 05:47:57 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 6 Jul 2020 05:47:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hu9X7CU/ZW75n4voCvt5a1danbn2r6Z1crb/AQezn/XXltrzDINFzsy+2QX17ZVVVGXVG2rPcnpIK7YFjKoMbgqGBc8AqYriBbkQbm1Ax/oq58TkH/SHyom7Nzji9o9hm+B3kj3hC5mR5YXMQ04xiGJAk2nv/udnqAh6emSDM3ztWFJeTLp1sqyrZFuKxdG+rpWfN8K3SvtcKdonQGBQH6CFn53zPKQOSHPaN4hVJ0W4f4Xm9Y6U/jEsijC7kXzMTzwc4pg5iyE4juG2TGJJ1nlsi45GqDB/76CYOJ2xEFhDorImwjCO5Kes9Zr3DkIUc/4Xq+cJAcyGchrRNdlVcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uP6rmP0bFLpktkYaR4+8WjiyZaqwH0MJcvL+sFLWIhQ=;
+ b=ng+wWXdlVR41kIopKj5alEghOrZGA2QEUO65eFaU739GQLiDE7ao+42/DPsadaSO7AXw2MEPismauTJ4aajZgpdKvGOqusk5bSVVupptD3dN7vfSQW/0vSnY4UxUPDkRym+CA8fAP+KlM6j/LayH++MIgM+cN2CyOm2RuytQlFS0MjVJKhOsz7NWnGS37ghfpGHg2ZOLCX5u16Gar3Omla03SflhHyVCyWAbXyGYVxyY6drtyb2lHOQ4RpODuyuI2seNy4Kq5lkmyYMc+loAGJi5YHFG2zHF3kjCz+hIzEOwJxmC56EDw37dD7paaWP69WRIR5df1Lb836K/d7LcwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uP6rmP0bFLpktkYaR4+8WjiyZaqwH0MJcvL+sFLWIhQ=;
+ b=PH/NZuYrRE61ttwZ/I7IysiJ6MLX6r56V7nhcTK8Z3fCOjoiZjeoC4gLjWKr2zH2L4eOq581UaGZYB/6iF/HSD2PBgPAgQQYOYXL04735+UYrtBeI66wBwkVpF6t/OLqTMEFt3u4ij0Jh4FFvOu6aen+LGNRpCdhC/fGAcX6Vh4=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (10.172.35.146) by
+ DM6PR11MB4155.namprd11.prod.outlook.com (20.176.126.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3153.23; Mon, 6 Jul 2020 12:46:53 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3153.029; Mon, 6 Jul 2020
+ 12:46:53 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "stefanha@gmail.com" <stefanha@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: RE: [PATCH v4 03/15] iommu/smmu: Report empty domain nesting info
+Thread-Topic: [PATCH v4 03/15] iommu/smmu: Report empty domain nesting info
+Thread-Index: AQHWUfUaPoulLLqnPkWWSyUjWN1VMaj6XtmAgAAiPXA=
+Date:   Mon, 6 Jul 2020 12:46:53 +0000
+Message-ID: <DM5PR11MB143543A04F5AF15EC7CBEC8BC3690@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
+ <1593861989-35920-4-git-send-email-yi.l.liu@intel.com>
+ <d791bad4-57b9-8e97-acbb-76b13e4154f8@redhat.com>
+In-Reply-To: <d791bad4-57b9-8e97-acbb-76b13e4154f8@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e22a3f58-afbe-4bd5-3674-08d821aaa903
+x-ms-traffictypediagnostic: DM6PR11MB4155:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4155CE19A5A984ECD679EF05C3690@DM6PR11MB4155.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 04569283F9
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: i+zlfz4WDye0BKWoE/F2tRMAIgoGB24OOKAmhyKlbGpx5COMsVC96etDCSgjHTr3nMg9PlcIodetTX58qZVqFNN8yFgsQB1/MztLnwfjeLLjlzjRjNr0ytJngT5kdngmG7tQ1VhBV3jHfaOl8Hz8yFbM/dULH5MzS09/eggBB7ol1kCC0ILDTMKvdPHA5Pr+1tzh9x87CA5n7IOMxRc5mshORQnFNmJwHijLD6+g4w1ItNw0ibhZEvyV+IEIYwqXKjnfjOeGgQ89YaP/cuM8Xo2VUh5vYQkexJRJmYTkDrlgA+Qs3K4FnKvaXgY0EspiOUrUuggLu24qzdOU/L5lKS/SPjAz1vv6wDgWo5WwSSGygJs8p7ry+SXwA8ohlTkQrMonOf1Xg8PgX8CnZFiBvA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(83380400001)(71200400001)(7416002)(478600001)(110136005)(54906003)(316002)(966005)(33656002)(7696005)(8676002)(52536014)(64756008)(66556008)(66476007)(66446008)(66946007)(8936002)(6506007)(4326008)(186003)(86362001)(53546011)(76116006)(2906002)(9686003)(55016002)(26005)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 1Ra8GMbEHyJbPBtXtf7nWCRfeIG32bDC12QUYYiBMoA7Y2a9Qoj7HDV8nWMsHFO2wWaKx0db1XlSUcKEgRoz/+YMJdVQccufH1f7iccOmRSTMD63SyibA2ENviX+espLGqBVQuv+YfCTunPwGOJXXdTjqDNe4HEa+vyneqYSNmBc1qVZUob3fHiGVqVdtSS9LKzhiSN3LTvDV9CJ57/KKgJhoEa+kL8EoZ4WOaOCDIbi/O/ZpfiwKBnXHDJHE4llwG0YYX6AdCS/Rd6GsPh7cp67eEIn9DIEPWT7GAn617Je+V3IC1sxeFBJE45fYZIBBRZoTTiLQP9IqsnIhyW5yOy8cfGTFnfJLoo2zZEzZfZ51qo8H3WaTQYwTQhzHbvF9s3XL23HxNfOyXj4MKdefEdYIT7QRCtn9fM4+l2lC6cMldkCQxI1YtJ4KUcWMR9Q3fH0F9Sug5FK4JZFqmrhG2VDUipVBHLkvd5hGI2QwHt8x9/zAoZhOmWiJVkl/I1a
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e22a3f58-afbe-4bd5-3674-08d821aaa903
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 12:46:53.5552
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HITQbkkx4xjsFRGE/m09A1MLHmnBq2YRN7uxv2cRTOwkojhbUoBxGU3gclv1EFBA3m8YdRO1ZVhy4xQ4/+BuEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4155
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-current hung_task_check_interval_secs and hung_task_timeout_secs
-only supports seconds. In some cases,the TASK_UNINTERRUPTIBLE state
-takes less than 1 second,may need to hung task trigger panic
-get ramdump or print all cpu task.
-
-modify hung_task_check_interval_secs to hung_task_check_interval_msecs,
-check interval use milliseconds. Add hung_task_timeout_msecs file to
-set milliseconds.
-task timeout = hung_task_timeout_secs * 1000 + hung_task_timeout_msecs.
-
-Signed-off-by: yang che <chey84736@gmail.com>
----
-
-v2->v3:
- Fix some format issues.
- add use msecs_to_jiffies,jiffies_to_msec.
- because use timeout = secs * 1000  + msecs,so sysctl_hung_task_timeout_msec
- = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT * MSEC_PER_SEC; will cause timeout is
- CONFIG_DEFAULT_HUNG_TASK_TIMEOUT double.
-
-v1->v2:
- add hung_task_check_interval_millisecs,hung_task_timeout_millisecs.
- fix writing to the millisecond file silently overrides the setting in
- the seconds file.
-
- [1]https://lore.kernel.org/lkml/CAN_w4MWMfoDGfpON-bYHrU=KuJG2vpFj01ZbN4r-iwM4AyyuGw@mail.gmail.com
- [2]https://lore.kernel.org/lkml/20200705171633.GU25523@casper.infradead.org/
-
- include/linux/sched/sysctl.h |  3 ++-
- kernel/hung_task.c           | 31 ++++++++++++++++++++++---------
- kernel/sysctl.c              | 12 ++++++++++--
- 3 files changed, 34 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index 660ac49..41b426e 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -16,8 +16,9 @@ extern unsigned int sysctl_hung_task_all_cpu_backtrace;
- 
- extern int	     sysctl_hung_task_check_count;
- extern unsigned int  sysctl_hung_task_panic;
-+extern unsigned long sysctl_hung_task_timeout_msecs;
- extern unsigned long sysctl_hung_task_timeout_secs;
--extern unsigned long sysctl_hung_task_check_interval_secs;
-+extern unsigned long sysctl_hung_task_check_interval_msecs;
- extern int sysctl_hung_task_warnings;
- int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos);
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index ce76f49..bac6f33 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -37,16 +37,23 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
-  * the RCU grace period. So it needs to be upper-bound.
-  */
- #define HUNG_TASK_LOCK_BREAK (HZ / 10)
-+#define MSEC_PER_SEC 1000L
- 
- /*
-- * Zero means infinite timeout - no checking done:
-+ * Zero and sysctl_hung_task_timeout_msecs zero means infinite timeout - no checking done:
-  */
- unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
- 
- /*
-- * Zero (default value) means use sysctl_hung_task_timeout_secs:
-+ * Zero (default value) means only use sysctl_hung_task_timeout_secs
-  */
--unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
-+unsigned long  __read_mostly sysctl_hung_task_timeout_msecs;
-+
-+/*
-+ * Zero (default value) means use
-+ * sysctl_hung_task_timeout_secs * MSEC_PER_SEC + sysctl_hung_task_timeout_msecs
-+ */
-+unsigned long __read_mostly sysctl_hung_task_check_interval_msecs;
- 
- int __read_mostly sysctl_hung_task_warnings = 10;
- 
-@@ -108,7 +115,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		t->last_switch_time = jiffies;
- 		return;
- 	}
--	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
-+
-+	if (time_is_after_jiffies(t->last_switch_time + msecs_to_jiffies(timeout)))
- 		return;
- 
- 	trace_sched_process_hang(t);
-@@ -126,13 +134,17 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 	if (sysctl_hung_task_warnings) {
- 		if (sysctl_hung_task_warnings > 0)
- 			sysctl_hung_task_warnings--;
--		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
--		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
-+
-+		pr_err("INFO: task %s:%d blocked for more than %ld.%03ld seconds.\n",
-+			t->comm, t->pid,
-+			jiffies_to_msecs(jiffies - t->last_switch_time) / MSEC_PER_SEC,
-+			jiffies_to_msecs(jiffies - t->last_switch_time) % MSEC_PER_SEC);
- 		pr_err("      %s %s %.*s\n",
- 			print_tainted(), init_utsname()->release,
- 			(int)strcspn(init_utsname()->version, " "),
- 			init_utsname()->version);
- 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
-+			"\"echo 0 > /proc/sys/kernel/hung_task_timeout_msecs\""
- 			" disables this message.\n");
- 		sched_show_task(t);
- 		hung_task_show_lock = true;
-@@ -217,7 +229,7 @@ static long hung_timeout_jiffies(unsigned long last_checked,
- 				 unsigned long timeout)
- {
- 	/* timeout of 0 will disable the watchdog */
--	return timeout ? last_checked - jiffies + timeout * HZ :
-+	return timeout ? last_checked - jiffies + msecs_to_jiffies(timeout) :
- 		MAX_SCHEDULE_TIMEOUT;
- }
- 
-@@ -281,8 +293,9 @@ static int watchdog(void *dummy)
- 	set_user_nice(current, 0);
- 
- 	for ( ; ; ) {
--		unsigned long timeout = sysctl_hung_task_timeout_secs;
--		unsigned long interval = sysctl_hung_task_check_interval_secs;
-+		unsigned long timeout = sysctl_hung_task_timeout_secs * MSEC_PER_SEC +
-+					sysctl_hung_task_timeout_msecs;
-+		unsigned long interval = sysctl_hung_task_check_interval_msecs;
- 		long t;
- 
- 		if (interval == 0)
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index db1ce7a..5c52759 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2476,6 +2476,14 @@ static struct ctl_table kern_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 	},
- 	{
-+		.procname       = "hung_task_timeout_msecs",
-+		.data           = &sysctl_hung_task_timeout_msecs,
-+		.maxlen         = sizeof(unsigned long),
-+		.mode           = 0644,
-+		.proc_handler   = proc_dohung_task_timeout_secs,
-+		.extra2         = &hung_task_timeout_max,
-+	},
-+	{
- 		.procname	= "hung_task_timeout_secs",
- 		.data		= &sysctl_hung_task_timeout_secs,
- 		.maxlen		= sizeof(unsigned long),
-@@ -2484,8 +2492,8 @@ static struct ctl_table kern_table[] = {
- 		.extra2		= &hung_task_timeout_max,
- 	},
- 	{
--		.procname	= "hung_task_check_interval_secs",
--		.data		= &sysctl_hung_task_check_interval_secs,
-+		.procname	= "hung_task_check_interval_msecs",
-+		.data		= &sysctl_hung_task_check_interval_msecs,
- 		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dohung_task_timeout_secs,
--- 
-2.7.4
-
+SGkgRXJpYywNCg0KPiBGcm9tOiBBdWdlciBFcmljIDxlcmljLmF1Z2VyQHJlZGhhdC5jb20+DQo+
+IA0KPiBIaSBZaSwNCj4gDQo+IFBsZWFzZSBhZGQgYSBjb21taXQgbWVzc2FnZTogaW5zdGVhZCBv
+ZiByZXR1cm5pbmcgYSBib29sZWFuIGZvcg0KPiBET01BSU5fQVRUUl9ORVNUSU5HLCBhcm1fc21t
+dV9kb21haW5fZ2V0X2F0dHIoKSByZXR1cm5zIGENCj4gaW9tbXVfbmVzdGluZ19pbmZvIGhhbmRs
+ZS4NCg0Kd2lsbCBkby4gdGhhbmtzIGZvciB0aGUgc3VnZ2VzdGlvbi4NCg0KPiANCj4gT24gNy80
+LzIwIDE6MjYgUE0sIExpdSBZaSBMIHdyb3RlOg0KPiA+IENjOiBXaWxsIERlYWNvbiA8d2lsbEBr
+ZXJuZWwub3JnPg0KPiA+IENjOiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPg0K
+PiA+IENjOiBFcmljIEF1Z2VyIDxlcmljLmF1Z2VyQHJlZGhhdC5jb20+DQo+ID4gQ2M6IEplYW4t
+UGhpbGlwcGUgQnJ1Y2tlciA8amVhbi1waGlsaXBwZUBsaW5hcm8ub3JnPg0KPiA+IFN1Z2dlc3Rl
+ZC1ieTogSmVhbi1QaGlsaXBwZSBCcnVja2VyIDxqZWFuLXBoaWxpcHBlQGxpbmFyby5vcmc+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogTGl1IFlpIEwgPHlpLmwubGl1QGludGVsLmNvbT4NCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBKYWNvYiBQYW4gPGphY29iLmp1bi5wYW5AbGludXguaW50ZWwuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBkcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMgfCAyOSArKysrKysrKysrKysr
+KysrKysrKysrKysrKystLQ0KPiA+ICBkcml2ZXJzL2lvbW11L2FybS1zbW11LmMgICAgfCAyOSAr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDU0IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9pb21tdS9hcm0tc21tdS12My5jIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS12My5jDQo+ID4g
+aW5kZXggZjU3ODY3Ny4uMGM0NWQ0ZCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lvbW11L2Fy
+bS1zbW11LXYzLmMNCj4gPiArKysgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMNCj4gPiBA
+QCAtMzAxOSw2ICszMDE5LDMyIEBAIHN0YXRpYyBzdHJ1Y3QgaW9tbXVfZ3JvdXANCj4gKmFybV9z
+bW11X2RldmljZV9ncm91cChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gIAlyZXR1cm4gZ3JvdXA7
+DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IGFybV9zbW11X2RvbWFpbl9uZXN0aW5nX2lu
+Zm8oc3RydWN0IGFybV9zbW11X2RvbWFpbg0KPiAqc21tdV9kb21haW4sDQo+ID4gKwkJCQkJdm9p
+ZCAqZGF0YSkNCj4gPiArew0KPiA+ICsJc3RydWN0IGlvbW11X25lc3RpbmdfaW5mbyAqaW5mbyA9
+IChzdHJ1Y3QgaW9tbXVfbmVzdGluZ19pbmZvICopIGRhdGE7DQo+ID4gKwl1MzIgc2l6ZTsNCj4g
+PiArDQo+ID4gKwlpZiAoIWluZm8gfHwgc21tdV9kb21haW4tPnN0YWdlICE9IEFSTV9TTU1VX0RP
+TUFJTl9ORVNURUQpDQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gKw0KPiA+ICsJc2l6ZSA9
+IHNpemVvZihzdHJ1Y3QgaW9tbXVfbmVzdGluZ19pbmZvKTsNCj4gPiArDQo+ID4gKwkvKg0KPiA+
+ICsJICogaWYgcHJvdmlkZWQgYnVmZmVyIHNpemUgaXMgbm90IGVxdWFsIHRvIHRoZSBzaXplLCBz
+aG91bGQNCj4gPiArCSAqIHJldHVybiAwIGFuZCBhbHNvIHRoZSBleHBlY3RlZCBidWZmZXIgc2l6
+ZSB0byBjYWxsZXIuDQo+ID4gKwkgKi8NCj4gPiArCWlmIChpbmZvLT5zaXplICE9IHNpemUpIHsN
+Cj4gPCBzaXplPw0KDQo8IHNpemUgbWF5IHdvcmsgYXMgd2VsbC4gYnV0IEknZCBsaWtlIHRoZSBj
+YWxsZXIgcHJvdmlkZSBleGFjdCBidWZmZXIgc2l6ZS4gbm90IHN1cmUNCmlmIGl0IGlzIGRlbWFu
+ZCBpbiBrZXJuZWwuIGRvIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9uPw0KDQo+ID4gKwkJaW5mby0+
+c2l6ZSA9IHNpemU7DQo+ID4gKwkJcmV0dXJuIDA7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJLyog
+cmVwb3J0IGFuIGVtcHR5IGlvbW11X25lc3RpbmdfaW5mbyBmb3Igbm93ICovDQo+ID4gKwltZW1z
+ZXQoaW5mbywgMHgwLCBzaXplKTsNCj4gPiArCWluZm8tPnNpemUgPSBzaXplOw0KPiBGb3IgaW5m
+bywgdGhlIGN1cnJlbnQgU01NVSBORVNURUQgbW9kZSBpcyBub3QgZW5hYmxpbmcgYW55IG5lc3Rp
+bmcuIEl0IGp1c3QgZm9yY2VzDQo+IHRoZSB1c2FnZSBvZiB0aGUgMnN0IHN0YWdlIGluc3RlYWQg
+b2Ygc3RhZ2UxIGZvciBzaW5nbGUgc3RhZ2UgdHJhbnNsYXRpb24uDQoNCnllcC4gVGhlIGludGVu
+dGlvbiBpcyBhcyBiZWxvdzoNCg0KIiBIb3dldmVyIGl0IHJlcXVpcmVzIGNoYW5naW5nIHRoZSBn
+ZXRfYXR0cihORVNUSU5HKSBpbXBsZW1lbnRhdGlvbnMgaW4gYm90aA0KU01NVSBkcml2ZXJzIGFz
+IGEgcHJlY3Vyc29yIG9mIHRoaXMgc2VyaWVzLCB0byBhdm9pZCBicmVha2luZw0KVkZJT19UWVBF
+MV9ORVNUSU5HX0lPTU1VIG9uIEFybS4gU2luY2Ugd2UgaGF2ZW4ndCB5ZXQgZGVmaW5lZCB0aGUN
+Cm5lc3RpbmdfaW5mbyBzdHJ1Y3RzIGZvciBTTU1VdjIgYW5kIHYzLCBJIHN1cHBvc2Ugd2UgY291
+bGQgcmV0dXJuIGFuIGVtcHR5DQpzdHJ1Y3QgaW9tbXVfbmVzdGluZ19pbmZvIGZvciBub3c/Ig0K
+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtaW9tbXUvMjAyMDA2MTcxNDM5MDkuR0E4ODY1
+OTBAbXlyaWNhLw0KDQpkbyB5b3UgdGhpbmsgYW55IG90aGVyIG5lZWRzIHRvIGJlIGRvbmUgZm9y
+IG5vdz8NCg0KUmVnYXJkcywNCllpIExpdQ0KDQo+IFRoYW5rcw0KPiANCj4gRXJpYw0KPiA+ICsJ
+cmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBpbnQgYXJtX3NtbXVfZG9tYWlu
+X2dldF9hdHRyKHN0cnVjdCBpb21tdV9kb21haW4gKmRvbWFpbiwNCj4gPiAgCQkJCSAgICBlbnVt
+IGlvbW11X2F0dHIgYXR0ciwgdm9pZCAqZGF0YSkgIHsgQEAgLQ0KPiAzMDI4LDggKzMwNTQsNyBA
+QA0KPiA+IHN0YXRpYyBpbnQgYXJtX3NtbXVfZG9tYWluX2dldF9hdHRyKHN0cnVjdCBpb21tdV9k
+b21haW4gKmRvbWFpbiwNCj4gPiAgCWNhc2UgSU9NTVVfRE9NQUlOX1VOTUFOQUdFRDoNCj4gPiAg
+CQlzd2l0Y2ggKGF0dHIpIHsNCj4gPiAgCQljYXNlIERPTUFJTl9BVFRSX05FU1RJTkc6DQo+ID4g
+LQkJCSooaW50ICopZGF0YSA9IChzbW11X2RvbWFpbi0+c3RhZ2UgPT0NCj4gQVJNX1NNTVVfRE9N
+QUlOX05FU1RFRCk7DQo+ID4gLQkJCXJldHVybiAwOw0KPiA+ICsJCQlyZXR1cm4gYXJtX3NtbXVf
+ZG9tYWluX25lc3RpbmdfaW5mbyhzbW11X2RvbWFpbiwNCj4gZGF0YSk7DQo+ID4gIAkJZGVmYXVs
+dDoNCj4gPiAgCQkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gIAkJfQ0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2lvbW11L2FybS1zbW11LmMgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMgaW5kZXgN
+Cj4gPiAyNDNiYzRjLi45MDg2MDdkIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW9tbXUvYXJt
+LXNtbXUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYw0KPiA+IEBAIC0xNTA2
+LDYgKzE1MDYsMzIgQEAgc3RhdGljIHN0cnVjdCBpb21tdV9ncm91cA0KPiAqYXJtX3NtbXVfZGV2
+aWNlX2dyb3VwKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgCXJldHVybiBncm91cDsNCj4gPiAg
+fQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgYXJtX3NtbXVfZG9tYWluX25lc3RpbmdfaW5mbyhzdHJ1
+Y3QgYXJtX3NtbXVfZG9tYWluDQo+ICpzbW11X2RvbWFpbiwNCj4gPiArCQkJCQl2b2lkICpkYXRh
+KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaW9tbXVfbmVzdGluZ19pbmZvICppbmZvID0gKHN0cnVj
+dCBpb21tdV9uZXN0aW5nX2luZm8gKikgZGF0YTsNCj4gPiArCXUzMiBzaXplOw0KPiA+ICsNCj4g
+PiArCWlmICghaW5mbyB8fCBzbW11X2RvbWFpbi0+c3RhZ2UgIT0gQVJNX1NNTVVfRE9NQUlOX05F
+U1RFRCkNCj4gPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gPiArDQo+ID4gKwlzaXplID0gc2l6ZW9m
+KHN0cnVjdCBpb21tdV9uZXN0aW5nX2luZm8pOw0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwkgKiBp
+ZiBwcm92aWRlZCBidWZmZXIgc2l6ZSBpcyBub3QgZXF1YWwgdG8gdGhlIHNpemUsIHNob3VsZA0K
+PiA+ICsJICogcmV0dXJuIDAgYW5kIGFsc28gdGhlIGV4cGVjdGVkIGJ1ZmZlciBzaXplIHRvIGNh
+bGxlci4NCj4gPiArCSAqLw0KPiA+ICsJaWYgKGluZm8tPnNpemUgIT0gc2l6ZSkgew0KPiA+ICsJ
+CWluZm8tPnNpemUgPSBzaXplOw0KPiA+ICsJCXJldHVybiAwOw0KPiA+ICsJfQ0KPiA+ICsNCj4g
+PiArCS8qIHJlcG9ydCBhbiBlbXB0eSBpb21tdV9uZXN0aW5nX2luZm8gZm9yIG5vdyAqLw0KPiA+
+ICsJbWVtc2V0KGluZm8sIDB4MCwgc2l6ZSk7DQo+ID4gKwlpbmZvLT5zaXplID0gc2l6ZTsNCj4g
+PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50IGFybV9zbW11X2Rv
+bWFpbl9nZXRfYXR0cihzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4sDQo+ID4gIAkJCQkgICAg
+ZW51bSBpb21tdV9hdHRyIGF0dHIsIHZvaWQgKmRhdGEpICB7IEBAIC0NCj4gMTUxNSw4ICsxNTQx
+LDcgQEANCj4gPiBzdGF0aWMgaW50IGFybV9zbW11X2RvbWFpbl9nZXRfYXR0cihzdHJ1Y3QgaW9t
+bXVfZG9tYWluICpkb21haW4sDQo+ID4gIAljYXNlIElPTU1VX0RPTUFJTl9VTk1BTkFHRUQ6DQo+
+ID4gIAkJc3dpdGNoIChhdHRyKSB7DQo+ID4gIAkJY2FzZSBET01BSU5fQVRUUl9ORVNUSU5HOg0K
+PiA+IC0JCQkqKGludCAqKWRhdGEgPSAoc21tdV9kb21haW4tPnN0YWdlID09DQo+IEFSTV9TTU1V
+X0RPTUFJTl9ORVNURUQpOw0KPiA+IC0JCQlyZXR1cm4gMDsNCj4gPiArCQkJcmV0dXJuIGFybV9z
+bW11X2RvbWFpbl9uZXN0aW5nX2luZm8oc21tdV9kb21haW4sDQo+IGRhdGEpOw0KPiA+ICAJCWRl
+ZmF1bHQ6DQo+ID4gIAkJCXJldHVybiAtRU5PREVWOw0KPiA+ICAJCX0NCj4gPg0KDQo=
