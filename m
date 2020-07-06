@@ -2,89 +2,125 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2695BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4D32070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfCMPwJF"
+	by mail.kernel.org (Postfix) with ESMTP id EF6E52070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594032059;
+	bh=u/VokkyrXOkfDl6vX7N/i4GaNLlmne5E7vZQ4+W8KSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ifkKY7UlCrEm9ng4KAcpgAiQO5y24uedUQRIj82DfFppiBSZEsyatUs005BFwaR4e
+	 c6KNDNyyQ3LWP1VOxdvP2B7gakhFymROSmIT1j/L5q1K3hYurBBFGrP2cXQsr/O4ck
+	 AoUT48fLuD1QdAxMH1vXFaTAkOroKEMtL+kvN8xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgGFKj2 (ORCPT
+        id S1728738AbgGFKk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgGFKj1 (ORCPT
+        Mon, 6 Jul 2020 06:40:57 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35482 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgGFKk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:39:27 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6BFC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:39:26 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so5906486pls.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=puTM9R3OCUah22RUChJJRjd+zkSRZtSw3EsyABHeng8=;
-        b=VfCMPwJFLQ5/ozMboU3NCR6LUp9lThjhLle8XQMRxQV8B4tYMFvbRAkYP25GdIa7f8
-         ZcQ0cPF9bXuvs2NvRpUP7p48zKyYynRilb7Pys90DGroAN1zlQVUa+gBNDvF8nEPILmx
-         R4BQzD1nWiWW9r2pEfHIXUU9sQhAuvwq0HY0+xBEP4t4JfVYwNCEHGvoxHvt2kZnvSqP
-         wbogfdeYStGWzq+VwqW7Zi6iecLTnWHTuniAs2Z42RPD9f65q6GjzayGF5lBl8qd5wGK
-         /jHDyTUdg0T1HjxS2z5MN977yQMkQVJolci3o36Jblajpd/9OLpHSkcNGUny6YEC4RVI
-         i7/A==
+        Mon, 6 Jul 2020 06:40:57 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z2so17992945wrp.2;
+        Mon, 06 Jul 2020 03:40:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=puTM9R3OCUah22RUChJJRjd+zkSRZtSw3EsyABHeng8=;
-        b=Jm17nf01Zpq+5CmpfU5HyK/5Kf2HvKx9F+zbtCD9sivf62s1yjw0yLzHiC0RtFqKNJ
-         pyqK2FYN5QdwfINa9JFU01lVBD7b7VCJ86eNhHwvJdW5eUBOPMBRe/dR8VfzL5Uu8Q3c
-         PcRqCVqQOuLgLPEMDHJUldlgP+wilH3SqMR/8wg7nFSLYfqjgG+Amhus7kB1ZjBLG1j7
-         6dh9Yxy4PL/BJHmyJDpx78xpFJCSOa7srSPXLNjQsz/yyjT/rQHqCe/UfiD3H2pB2f1c
-         nVswpTNheIJZWEBl0RymtPk0DI6dJtEjggzWVLIW7+3VmMQMTp0NFqShHFf3uJ72TT/G
-         xhuA==
-X-Gm-Message-State: AOAM533Wq5C8SeMh2l+f4w7MrXTHP7tcuBdzwMZdyd/MUNzpz9aWOttg
-        WqTHBCMqtd0XTXHkG0rqNebfewdLSyEV6rlkKf4=
-X-Google-Smtp-Source: ABdhPJzQEGKwwKvWdvmQDbELYbMKvGuUhUlgJ/NROER/RbrYqSnqxvHXNemOSyNJd7M5Ck3HMqAarmf0D7+yZBhDD3M=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr25285213pjb.181.1594031965778;
- Mon, 06 Jul 2020 03:39:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nXbYME0w6wo1ywRbD8zJP/dk/w6azoTUgUnE1Fm/WOQ=;
+        b=a0VlsCfgKwfQbx+VwilhOVGRli4MKVKbJ6d11QRiXqVElNuYSZShW9p1KO+p2sySG0
+         skFAtxkr6m3cTqATklDlQLQlyzQgjELxT6CBT8WLEVbm3BXtW8OqChlPGAtLOhKtQ6Zj
+         la/vTdHODq7BLPR9Rw6g3RVDZ7nXTVugRjwxUoUgdtGkOyZYU7QnFGkPuox609DGPpTv
+         b+/nsiN0U4FpuusT++qpNBME7Mzc1KXSU2456MAgRAUJmJ64gzNz8Hp5dEqnmiW7qbIZ
+         oPPmRXHy6xg2IwJnZ46XlF6kp3024LHAALy+G7/5G+H7kL89qAMx5kJzv6LTBaGxjf7W
+         Mbtw==
+X-Gm-Message-State: AOAM533vDl/qlGuTlMxhyjRYWdFSJMpwHtjHIsRX2TFnhFs3Hi3e3YrP
+        5dTC0n08gSMF5UCq9V8U2UVlRF/+
+X-Google-Smtp-Source: ABdhPJyaTTacfY19alYylsAPF//5GC76pvTVNMe9CH3/3gACJygP1MuC39DqHbYUHYnn1WQUK+yU/g==
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr47123552wrw.405.1594032055439;
+        Mon, 06 Jul 2020 03:40:55 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id e5sm24067935wrs.33.2020.07.06.03.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 03:40:54 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 10:40:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Hyper-V core and
+ drivers
+Message-ID: <20200706104053.3kx6dg76n3bw4jro@liuwe-devbox-debian-v2>
+References: <20200705214457.28433-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200706095100.19157-1-geert@linux-m68k.org>
-In-Reply-To: <20200706095100.19157-1-geert@linux-m68k.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 Jul 2020 13:39:09 +0300
-Message-ID: <CAHp75Ve49Ucy9nMy1UBYirWX2niJ=6tfEGzmD+DpfRgb=JdZAA@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_bitops: Do the full test during module init
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200705214457.28433-1-grandmaster@al2klimov.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 12:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Currently, the bitops test consists of two parts: one part is executed
-> during module load, the second part during module unload. This is
-> cumbersome for the user, as he has to perform two steps to execute all
-> tests, and is different from most (all?) other tests.
->
-> Merge the two parts, so both are executed during module load.
+On Sun, Jul 05, 2020 at 11:44:57PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Does your change prevent you from unloading the module?
+Thanks for the patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I will reword the subject line to be more specific to:
+
+ tools: hv: change http to https in hv_kvp_daemon.c
+
+.
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  tools/hv/hv_kvp_daemon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index ee9c1bb2293e..1e6fd6ca513b 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -437,7 +437,7 @@ void kvp_get_os_info(void)
+>  
+>  	/*
+>  	 * Parse the /etc/os-release file if present:
+> -	 * http://www.freedesktop.org/software/systemd/man/os-release.html
+> +	 * https://www.freedesktop.org/software/systemd/man/os-release.html
+>  	 */
+>  	file = fopen("/etc/os-release", "r");
+>  	if (file != NULL) {
+> -- 
+> 2.27.0
+> 
