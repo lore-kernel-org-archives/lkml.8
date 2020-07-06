@@ -2,120 +2,193 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62FA420739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F0220715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwSit3Gf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LehTXMZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgGFKvx (ORCPT
+        id S1728764AbgGFKzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50238 "EHLO
+        Mon, 6 Jul 2020 06:55:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbgGFKvx (ORCPT
+        with ESMTP id S1728595AbgGFKy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:51:53 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E53C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:51:53 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id g67so17309057pgc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:51:53 -0700 (PDT)
+        Mon, 6 Jul 2020 06:54:59 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4196CC08C5DF
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:54:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so44669356ljm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:54:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=R/RUPCaSPqzoFwBjt5s1qtV4yHRYyUYf0BU1jozcpBU=;
-        b=AwSit3Gf5PYGY93Tmt+Kj7h2kTByWoVXR81moWArdR2ge4xAna+YOKUPxH+tLQb9bR
-         jyqAuOnY7kjQvo+HZJG3RZnt5NLWZEKwBYoctlk2WLLnWOv5mlQ8yf2gmu+YcYIgVICE
-         5Y6f4RN015nD7DvyubGQt+dKlb6K9vnCjaFvz8EBFg+jHWDDbR95ZZTEhvSc1x5MKRaS
-         2wK7ouj/aNaZ4wQGaoN/D1ThobsjB8kSrAIcjyYxlux6AACrOi5ftT417K+xRdVAfb7h
-         QNrSRnC4yJxZwkqkwhKI7tWguUjJwpmI3TinyGmrFLwAuEG3yo+IjbhRHifFTHuSPMRo
-         kUZA==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=zX6V4Sju87ElYyPYAneZhyxDZsItYI/pSUWLHM5qsf0=;
+        b=LehTXMZxIobef2KvJEW6RKLlUYhqCkaJ34566TZ0a3hutg6wBe5Og6Y41N8jsFNxfq
+         WRFPS0XZS4IJeFjye19fx+vDVlpTwOQE0Kv00rPO2Ne4L1ITqhRKmgzlYmpS6ZT6IO+7
+         gSHg2WOxp9ZKnPUC8nm4A573QAeauhtpVzAV3T7PxDTX6pNzZG0npQF0WbREd+OXBIyl
+         MxAtWwcSXHBR5/MXKsb1nCjdRjs6mZVYQYZpgL4YB51dkRDSEN5RKCbkGmy6ep1X0h7o
+         6VdoG6/qtNe71FffUAohTg5KC2huSPF40nk6crtMThJZZZDBj/tzzko+JTEKK1WGh1Nd
+         VQag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=R/RUPCaSPqzoFwBjt5s1qtV4yHRYyUYf0BU1jozcpBU=;
-        b=i0XJrOQT+QsrOmDxHwbKeKz6jq8foCX9AT7s03pi07sTX74UfFVkWrXiqA8ByHr7RL
-         yQq0TdXqw9DtYMPGQMvb+5xu10LY7N/KWDipPNmUdGddBfyQbTvzAnvMvsyZzx/TVYm+
-         jY5zdfVO7kDY3TZ5/3qME1obvjbyDUaqPPOqEMq9hNULYERPKT04TEmMg78CWvCtNrMi
-         zGRcl7EYf9XUa7W0zZUYDLGLA3PCVeAXxop6Z0tD8GS/aXxQLSbllQ7HhdTaG6OgUtw5
-         9Y9Osj/4OpoNEBiP2ahz8YR3/wr1oQ35J1jeJgp9QSM3DNNJCqTXu2zsi/SRhGaGy4ZQ
-         PCrQ==
-X-Gm-Message-State: AOAM530zEglmD7Avtnvwbwq744E+Fq8RDd6u3KnxkGMc7v4TePzIC+jE
-        KEcEKrp+78AgvhAvDkCWtYA=
-X-Google-Smtp-Source: ABdhPJzo2KxljopNGnnYYgVtn6J6oNotuUUuKIWxrB4m4Qan2wouJie6csZ3xM0wnNm954jMLKNnNg==
-X-Received: by 2002:aa7:96d1:: with SMTP id h17mr15164848pfq.141.1594032712827;
-        Mon, 06 Jul 2020 03:51:52 -0700 (PDT)
-Received: from blackclown ([103.88.82.87])
-        by smtp.gmail.com with ESMTPSA id a16sm19112710pgj.27.2020.07.06.03.51.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jul 2020 03:51:52 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 16:21:38 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org
-Subject: [Proposal] drm: amd: Convert logging to drm_* functions with
- drm_device parameter
-Message-ID: <20200706105138.GA10722@blackclown>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=zX6V4Sju87ElYyPYAneZhyxDZsItYI/pSUWLHM5qsf0=;
+        b=QRs35CJBsAtc6HWSbVFd3bnVFG5v+QuSEs/hGGdqBDlhgF+mCRVVtCNUYpLZDuGzQi
+         /v9D/RWONtBegu1d/h3c9Q0j8ceXkZfAHbjeP/r+A51O5ab7p3iqyPCKsgnhr49wdTf2
+         l3wvBYMNEGdpKduSftBZAiWNFPW4ZTrDVJs20+zKLVlyzJNZdafwVXKMWuo1Q7kswTOn
+         8pdcwAssYrwfCVZHvQgvVaeBJlJXkGKDY6aH0KhMk/owlWW37ARZx9chA4J09kgNDc4n
+         YAIAar7Ryb7ZuzngjDHKq6dd2FzcOq+pav7gdPyoawqNRf/QkGSgC/SYYfxvkmTrZ9gj
+         TZpA==
+X-Gm-Message-State: AOAM530wwO4inVQbcv/zHL+r3ZCVI/pz6nOBfGmPetCVBr9teXG+g/OV
+        /TY/JTOa5dJuhydfTO6J3XjFeTf+tQE56OG/QO8MbA==
+X-Google-Smtp-Source: ABdhPJzNkmxdAUg4NK4lEuXQ7FnCnuSXDBPQzKbUIK3agei3/h3BmRXcqxE5LBnjc40f3eOSq4dlRAMBrsq2i1BaF+A=
+X-Received: by 2002:a2e:7401:: with SMTP id p1mr3536094ljc.366.1594032897325;
+ Mon, 06 Jul 2020 03:54:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 6 Jul 2020 16:24:45 +0530
+Message-ID: <CA+G9fYsrGXd5survaX27kkfam1ZcJdMnzowvGdfy1xT4bGcfcA@mail.gmail.com>
+Subject: WARNING: at kernel/kthread.c:819 kthread_queue_work - spi_start_queue
+To:     linux-spi@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Peng Ma <peng.ma@nxp.com>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While booting arm64 device dragonboard 410c the following kernel
+warning noticed on
+Linux version 5.8.0-rc3-next-20200706.
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 5680d14d59bddc8bcbc5badf00dbbd4374858497
+  git describe: next-20200706
+  kernel-config:
+https://builds.tuxbuild.com/Glr-Ql1wbp3qN3cnHogyNA/kernel.config
 
-Hii Maintainers,
-	I recently came across this list of janatorial tasks
-for starters on DRM subsystem [1]. One of the tasks is replacing
-conventional dmesg macros (like dev_info(), dev_warn() and dev_err())
-with DRM dmesg macros [2]. And I need your input whether the
-conversions to DRM dmesg macros are worth it or not.
-I would like to start working on this task if this needs the change.
+Crash log while booting,
 
-Thank you,
-Suraj Upadhyay.
+[    1.203300] loop: module loaded
+[    1.204599] megasas: 07.714.04.00-rc1
+[    1.211124] spi_qup 78b7000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
+[    1.211509] ------------[ cut here ]------------
+[    1.217238] WARNING: CPU: 0 PID: 1 at kernel/kthread.c:819
+kthread_queue_work+0x90/0xa0
+[    1.221832] Modules linked in:
+[    1.229554] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+5.8.0-rc3-next-20200706 #1
+[    1.232683] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    1.240237] pstate: 40000085 (nZcv daIf -PAN -UAO BTYPE=--)
+[    1.246918] pc : kthread_queue_work+0x90/0xa0
+[    1.252211] lr : kthread_queue_work+0x2c/0xa0
+[    1.256722] sp : ffff80001002ba50
+[    1.261061] x29: ffff80001002ba50 x28: ffff00003b868000
+[    1.264363] x27: ffff00003fcf63c0 x26: ffff00003b868680
+[    1.269744] x25: ffff00003b868400 x24: ffff00003d116810
+[    1.275039] x23: ffff800012025304 x22: ffff00003b8683bc
+[    1.280335] x21: 0000000000000000 x20: ffff00003b8683f8
+[    1.285630] x19: ffff00003b8683b8 x18: 0000000000000000
+[    1.290925] x17: 0000000000000000 x16: ffff800011167420
+[    1.296220] x15: ffff00000eb90480 x14: 0000000000000267
+[    1.301515] x13: 0000000000000004 x12: 0000000000000000
+[    1.306810] x11: 0000000000000000 x10: 0000000000000003
+[    1.312105] x9 : ffff00003fcbac10 x8 : ffff00003fcba240
+[    1.317400] x7 : ffff00003bc3c800 x6 : 0000000000000003
+[    1.322696] x5 : 0000000000000000 x4 : 0000000000000000
+[    1.327991] x3 : ffff00003b8683bc x2 : 0000000000000001
+[    1.333285] x1 : 0000000000000000 x0 : 0000000000000000
+[    1.338583] Call trace:
+[    1.343875]  kthread_queue_work+0x90/0xa0
+[    1.346050]  spi_start_queue+0x50/0x78
+[    1.350213]  spi_register_controller+0x458/0x820
+[    1.353860]  devm_spi_register_controller+0x44/0xa0
+[    1.358638]  spi_qup_probe+0x5d8/0x638
+[    1.363235]  platform_drv_probe+0x54/0xa8
+[    1.367053]  really_probe+0xd8/0x320
+[    1.371133]  driver_probe_device+0x58/0xb8
+[    1.374779]  device_driver_attach+0x74/0x80
+[    1.378685]  __driver_attach+0x58/0xe0
+[    1.382766]  bus_for_each_dev+0x70/0xc0
+[    1.386583]  driver_attach+0x24/0x30
+[    1.390317]  bus_add_driver+0x14c/0x1f0
+[    1.394137]  driver_register+0x64/0x120
+[    1.397696]  __platform_driver_register+0x48/0x58
+[    1.401519]  spi_qup_driver_init+0x1c/0x28
+[    1.406378]  do_one_initcall+0x54/0x1a0
+[    1.410372]  kernel_init_freeable+0x1d4/0x254
+[    1.414106]  kernel_init+0x14/0x110
+[    1.418616]  ret_from_fork+0x10/0x34
+[    1.421918] ---[ end trace 4b59f327623c9e10 ]---
+[    1.426526] spi_qup 78b9000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
+[    1.430721] ------------[ cut here ]------------
+[    1.437374] WARNING: CPU: 0 PID: 1 at kernel/kthread.c:819
+kthread_queue_work+0x90/0xa0
+[    1.441971] Modules linked in:
+[    1.449694] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W
+  5.8.0-rc3-next-20200706 #1
+[    1.452823] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    1.461765] pstate: 40000085 (nZcv daIf -PAN -UAO BTYPE=--)
+[    1.468444] pc : kthread_queue_work+0x90/0xa0
+[    1.473738] lr : kthread_queue_work+0x2c/0xa0
+[    1.478250] sp : ffff80001002ba50
+[    1.482588] x29: ffff80001002ba50 x28: ffff00003b868800
+[    1.485889] x27: ffff00003fcf7020 x26: ffff00003b868e80
+[    1.491273] x25: ffff00003b868c00 x24: ffff00003d116c10
+[    1.496566] x23: ffff80001202d304 x22: ffff00003b868bbc
+[    1.501862] x21: 0000000000000000 x20: ffff00003b868bf8
+[    1.507157] x19: ffff00003b868bb8 x18: 0000000000000000
+[    1.512452] x17: 0000000000000000 x16: ffff800011167420
+[    1.517748] x15: 00000000b123f581 x14: 0000000000000287
+[    1.523043] x13: 0000000000000004 x12: 0000000000000000
+[    1.528337] x11: 0000000000000000 x10: 0000000000000003
+[    1.533634] x9 : ffff00003fcbac10 x8 : ffff00003fcba240
+[    1.538928] x7 : ffff00003bc3d640 x6 : 0000000000000003
+[    1.544223] x5 : 0000000000000000 x4 : 0000000000000000
+[    1.549519] x3 : ffff00003b868bbc x2 : 0000000000000001
+[    1.554813] x1 : 0000000000000000 x0 : 0000000000000000
+[    1.560109] Call trace:
+[    1.565403]  kthread_queue_work+0x90/0xa0
+[    1.567577]  spi_start_queue+0x50/0x78
+[    1.571742]  spi_register_controller+0x458/0x820
+[    1.575387]  devm_spi_register_controller+0x44/0xa0
+[    1.580165]  spi_qup_probe+0x5d8/0x638
+[    1.584762]  platform_drv_probe+0x54/0xa8
+[    1.588581]  really_probe+0xd8/0x320
+[    1.592660]  driver_probe_device+0x58/0xb8
+[    1.596306]  device_driver_attach+0x74/0x80
+[    1.600212]  __driver_attach+0x58/0xe0
+[    1.604294]  bus_for_each_dev+0x70/0xc0
+[    1.608112]  driver_attach+0x24/0x30
+[    1.611845]  bus_add_driver+0x14c/0x1f0
+[    1.615665]  driver_register+0x64/0x120
+[    1.619224]  __platform_driver_register+0x48/0x58
+[    1.623046]  spi_qup_driver_init+0x1c/0x28
+[    1.627905]  do_one_initcall+0x54/0x1a0
+[    1.631899]  kernel_init_freeable+0x1d4/0x254
+[    1.635632]  kernel_init+0x14/0x110
+[    1.640144]  ret_from_fork+0x10/0x34
+[    1.643442] ---[ end trace 4b59f327623c9e11 ]---
 
-[1] https://dri.freedesktop.org/docs/drm/gpu/todo.html.
-[2] https://dri.freedesktop.org/docs/drm/gpu/todo.html#convert-logging-to-drm-functions-with-drm-device-paramater
+https://lkft.validation.linaro.org/scheduler/job/1542222#L3733
 
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8DAjEACgkQ+gRsbIfe
-745WZw//YOzOBQIp/VcMTmvfWL5OMXrDiO1HUDdlbKkXY9udgjpKya2Wd2KOaZ8y
-bzONIfbS8u4uizmAUXktdrZRpCIkOAGQuCReHUzzfDNHWyTBlQHkXn5gSFyIq+Er
-qprmLOVEgXNRRvniO6iQ41RqmdgihzMqPW5XGR3NuVeG8bw3DC56C/7W/kKjK4kL
-jOLc3DDzH2G+n0gxFCSV5uCSk2XIese21nvCx+xS3ohsOTtCCggM0SH/xZ9WTaPi
-zCuXJKN3ItLqseba/4b5kB23oWFM/nZPzvPkeEv1xzN8u3QFJgVKh7Rc06+mKvWp
-DD6V4d+YYTspxnVsyga/uB+LWCB2JA/o4Wa9SZl49vy4R32lZJKilMdGcOrjNIUQ
-m/YPeu6rpFUluPMnxGB+Shlrn3iHjBC6NQdV52lTFAoExt5pCZN1v/35QZWFrCPN
-RlFxDHjMffSstnwdKHua6nGfxe+MPscvlp3B9NAVrTlBPBNckLU3hzzTCgRxg4Wo
-a1FvlCO90AvZ5BVllnZQUhjiz5lvwlphvjnpuuD6ziYZeKrqOO0r1Tvqd1HipE6F
-ovvf6fHhnQleMHumiy1g9uChAHkS9oxvrKqBVjYEBhaN4bjUUf9huSEXaoP2y7qb
-5Ql8JdkqzhK2cxUbnvnZMya9dsiZPhG8e7rkR2TTsq8B5FxfYqc=
-=fw+t
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+-- 
+Linaro LKFT
+https://lkft.linaro.org
