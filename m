@@ -2,81 +2,72 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_24_48,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31181C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D12B20739
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194AB20739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 03:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgGFDTx (ORCPT
+        id S1728712AbgGFDXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 23:19:53 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:53030 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728634AbgGFDTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 23:19:53 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0663GhXp022250
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Sun, 5 Jul 2020 20:16:54 -0700
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 5 Jul 2020 20:16:32 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <ben.dooks@codethink.co.uk>, <bfields@redhat.com>,
-        <cl@rock-chips.com>, <peterz@infradead.org>, <pmladek@suse.com>,
-        <tj@kernel.org>
-CC:     <akpm@linux-foundation.org>, <mm-commits@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] kthread: Work could not be queued when worker being destroyed
-Date:   Sun, 5 Jul 2020 09:30:18 +0800
-Message-ID: <20200705013018.7375-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Sun, 5 Jul 2020 23:23:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36499 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgGFDXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 23:23:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d17so28876644ljl.3;
+        Sun, 05 Jul 2020 20:23:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=06dnrLwNeASbZqIhPWDJn9BWobfr2FTpZ2gA7IVxI1E=;
+        b=l7/gW2DxxYUMemRBB4pswPj+w+Xcnywp5hMY1PUthqF4e3rVIuquT+uFBe/Gl6qNhR
+         T6iPHZS56DNFNL6XxJ0kgQJX9RU3GvF3d7tfDvZk7VUhr9GVri5l8Gsd9ArrOUV8sry0
+         JadBtBN3Z7dE0p2X49USNrwuqI4ZWAYTCYB/Z48lmRLsthDrxKHW4sUQLoLT/ws4UqqW
+         /341NA/APJHdNzpW1DtEnpkTSHKIks/0S54o99C1p9OtpGYyfO7R0FHDPq5uSbZ/dHSy
+         yzLnCBEQ83xwU1s4pUs2U60xlhBia8l8UcJ17cgchZuthxrNPYxC/wI2oJKudY2hHUkC
+         Hopg==
+X-Gm-Message-State: AOAM530qCIWqqD8OCucl7bpO4V07Mz/n9s4WCZDI9igG6UZZbmjMnRDE
+        2HImkkl2nN9f9S5X/FCMK9FtWDiJK4w=
+X-Google-Smtp-Source: ABdhPJy72ichrmFDKGa3kQroE76QnN+NBbhUWBRGUClj1SCVBESnvfNIZwB+Y5ZgyKSE81eNNRfkDg==
+X-Received: by 2002:a2e:541b:: with SMTP id i27mr24289162ljb.118.1594005792103;
+        Sun, 05 Jul 2020 20:23:12 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id f4sm8183049lfh.38.2020.07.05.20.23.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jul 2020 20:23:11 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id g139so21747201lfd.10;
+        Sun, 05 Jul 2020 20:23:11 -0700 (PDT)
+X-Received: by 2002:a05:6512:d0:: with SMTP id c16mr15566442lfp.85.1594005791715;
+ Sun, 05 Jul 2020 20:23:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+References: <20200624083629.9507-1-f.suligoi@asem.it>
+In-Reply-To: <20200624083629.9507-1-f.suligoi@asem.it>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 6 Jul 2020 11:23:01 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65M9m3ttvcmcnkzdByNJVG0rs8dEPLtVoyr_VyO5XWC+g@mail.gmail.com>
+Message-ID: <CAGb2v65M9m3ttvcmcnkzdByNJVG0rs8dEPLtVoyr_VyO5XWC+g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] power: supply: axp20x_usb_power: fix spelling mistake
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+On Wed, Jun 24, 2020 at 4:41 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
+>
+> Fix typo: "triger" --> "trigger"
+>
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 
-Before the work is put into the queue of the worker thread,
-the state of the worker thread needs to be detected,because
-the worker thread may be in the destruction state at this time.
-
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
-Suggested-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
----
- v1->v2:
- Add warning information for condition "!worker->task".
- v2->v3:
- Modify submission information and add "Reviewed-by" tags. 
-
- kernel/kthread.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa481be3a..cac5184ffd86 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -791,6 +791,9 @@ static inline bool queuing_blocked(struct kthread_worker *worker,
- {
- 	lockdep_assert_held(&worker->lock);
- 
-+	if (WARN_ON(!worker->task))
-+		return true;
-+
- 	return !list_empty(&work->node) || work->canceling;
- }
- 
--- 
-2.24.1
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
