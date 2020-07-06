@@ -2,98 +2,136 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B3320724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amobd3Uu"
+	by mail.kernel.org (Postfix) with ESMTP id 0DE392073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgGFIWw (ORCPT
+        id S1728357AbgGFIZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgGFIWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:22:52 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB44C061794;
-        Mon,  6 Jul 2020 01:22:52 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id v1so20130831vsb.10;
-        Mon, 06 Jul 2020 01:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TcfPy5BeGetjZcZtg49AHnHlYlMY923EHh58Yx8xPwY=;
-        b=amobd3UufJOQ2LwSgoh8z8cDtk2XkOXjE3WqYKXlXU36cNs4cSbMFborVOQpGRVwAx
-         UstxxLR0+FD6IcJZ8l6ARjrlVJKXc5AHqiYulfJW1p6MSM5cx0J6NoiWcKst22Ta5ANR
-         MZY9wDpT10XbkRmiAJ+QcOPhuc/E7AtjN2+4znh8+84CkJMxlscFmTR5AUBIP/2YGCRG
-         c9FfHfgVEwlI6mvrctkbwD///f2K0JDmzXdg5HAhjwy18Z47ROl3D3U5EIij5TQwBI62
-         l1B+NzZd3fdW9JsJB3L0QG6jkjeMZV7Ea55FCnBgMzHpZviXx93P3VvAqSooUI3b10jG
-         BPPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TcfPy5BeGetjZcZtg49AHnHlYlMY923EHh58Yx8xPwY=;
-        b=nMBgMP0vV71ajyszCOnj9p/G2CdulgYIIpDebqF7lyfJ0qwmilmn5RVVWpRBQxlNka
-         +jEZLymdOgPidQiELy1tkuSgW3HxS26B7cCZ2AiAF92GIUlrGqiSxRe78xNY+vpHQRNy
-         SOdimXhncGkKACtDsxgcixLWJ71/U9S4+ya4dXyzz5VBYS9wHgHjwuktrQkdV0cNs3sZ
-         m2qtXuGBt27lj1rC0K38q+5ev3Bqq6o/7aNO1s0Kv/MUTh02HvX35fhQapJTs8GTe+OG
-         wFn9SE9MzfB588V3HxGJKWos81E8TAUyfhDoJrgR3S9+UfZU+fmeU1chbqqSq7T3EiKc
-         soaw==
-X-Gm-Message-State: AOAM533IoVZ3c1gL86A7DGPCj5WmoZcTGDhTzpwYr6ov4StzlGKdYnEl
-        VSYyuIDGPbGY7hZ53xQPCJabZxX/IClKL2V/p6Q=
-X-Google-Smtp-Source: ABdhPJwgvZ4oHoUCtn9VtIbwa5Hbr8RpwTI0uj+TB7B0R+ZfDc8KZgjpgNFeatpMagMcoQIWxeV5YUSEo9iZoI6aqhU=
-X-Received: by 2002:a67:cb03:: with SMTP id b3mr35827339vsl.214.1594023771334;
- Mon, 06 Jul 2020 01:22:51 -0700 (PDT)
+        Mon, 6 Jul 2020 04:25:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7373 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726277AbgGFIZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 04:25:58 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4FA6BC70C4CE2936EBA5;
+        Mon,  6 Jul 2020 16:25:53 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 6 Jul 2020
+ 16:25:49 +0800
+Subject: Re: [PATCH RFC 5/5] f2fs: support age threshold based garbage
+ collection
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200630100428.19105-1-yuchao0@huawei.com>
+ <20200630100428.19105-5-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <84332ea5-f7b2-f996-31de-b6189c09f27d@huawei.com>
+Date:   Mon, 6 Jul 2020 16:25:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CGME20200627125605epcas1p175ba4ecfbdea3426cc7b0a8fc1750cd0@epcas1p1.samsung.com>
- <20200627125509.142393-1-qkrwngud825@gmail.com> <003801d6502f$f40101c0$dc030540$@samsung.com>
-In-Reply-To: <003801d6502f$f40101c0$dc030540$@samsung.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Mon, 6 Jul 2020 17:22:40 +0900
-Message-ID: <CAD14+f0QUgXbDY8vK4HHKcWAh90Jp8DCMb-SRoFmmGrZ3cBhdw@mail.gmail.com>
-Subject: Re: [PATCH] exfat: implement "quiet" option for setattr
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Sungjong Seo <sj1557.seo@samsung.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200630100428.19105-5-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Namjae.
+Jaegeuk,
 
-Looks like I ported this incorrectly from the previous sdFAT base.
+This is a commercialized feature in huawei products for years, I think
+it's time to try to upstream it, could you please take a look at this
+idea, to see whether it could be a formal feature of f2fs?
 
-I'll fix, test again and send v2.
-
-Thanks.
-
-On Thu, Jul 2, 2020 at 2:16 PM Namjae Jeon <namjae.jeon@samsung.com> wrote:
->
-> >
-> >       if (((attr->ia_valid & ATTR_UID) &&
-> >            !uid_eq(attr->ia_uid, sbi->options.fs_uid)) || @@ -322,6 +325,12 @@ int
-> > exfat_setattr(struct dentry *dentry, struct iattr *attr)
-> >               goto out;
-> You should remove goto statement and curly braces here to reach if error condition.
-> >       }
-> >
-> > +     if (error) {
-> > +             if (sbi->options.quiet)
-> > +                     error = 0;
-> > +             goto out;
-> > +     }
->
+On 2020/6/30 18:04, Chao Yu wrote:
+> There are several issues in current background GC algorithm:
+> - valid blocks is one of key factors during cost overhead calculation,
+> so if segment has less valid block, however even its age is young or
+> it locates hot segment, CB algorithm will still choose the segment as
+> victim, it's not appropriate.
+> - GCed data/node will go to existing logs, no matter in-there datas'
+> update frequency is the same or not, it may mix hot and cold data
+> again.
+> - GC alloctor mainly use LFS type segment, it will cost free segment
+> more quickly.
+> 
+> This patch introduces a new algorithm named age threshold based
+> garbage collection to solve above issues, there are three steps
+> mainly:
+> 
+> 1. select a source victim:
+> - set an age threshold, and select candidates beased threshold:
+> e.g.
+>  0 means youngest, 100 means oldest, if we set age threshold to 80
+>  then select dirty segments which has age in range of [80, 100] as
+>  candiddates;
+> - set candidate_ratio threshold, and select candidates based the
+> ratio, so that we can shrink candidates to those oldest segments;
+> - select target segment with fewest valid blocks in order to
+> migrate blocks with minimum cost;
+> 
+> 2. select a target victim:
+> - select candidates beased age threshold;
+> - set candidate_radius threshold, search candidates whose age is
+> around source victims, searching radius should less than the
+> radius threshold.
+> - select target segment with most valid blocks in order to avoid
+> migrating current target segment.
+> 
+> 3. merge valid blocks from source victim into target victim with
+> SSR alloctor.
+> 
+> Test steps:
+> - create 160 dirty segments:
+>  * half of them have 128 valid blocks per segment
+>  * left of them have 384 valid blocks per segment
+> - run background GC
+> 
+> Benefit: GC count and block movement count both decrease obviously:
+> 
+> - Before:
+>   - Valid: 86
+>   - Dirty: 1
+>   - Prefree: 11
+>   - Free: 6001 (6001)
+> 
+> GC calls: 162 (BG: 220)
+>   - data segments : 160 (160)
+>   - node segments : 2 (2)
+> Try to move 41454 blocks (BG: 41454)
+>   - data blocks : 40960 (40960)
+>   - node blocks : 494 (494)
+> 
+> IPU: 0 blocks
+> SSR: 0 blocks in 0 segments
+> LFS: 41364 blocks in 81 segments
+> 
+> - After:
+> 
+>   - Valid: 87
+>   - Dirty: 0
+>   - Prefree: 4
+>   - Free: 6008 (6008)
+> 
+> GC calls: 75 (BG: 76)
+>   - data segments : 74 (74)
+>   - node segments : 1 (1)
+> Try to move 12813 blocks (BG: 12813)
+>   - data blocks : 12544 (12544)
+>   - node blocks : 269 (269)
+> 
+> IPU: 0 blocks
+> SSR: 12032 blocks in 77 segments
+> LFS: 855 blocks in 2 segments
