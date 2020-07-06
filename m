@@ -2,250 +2,331 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64512C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ED2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB292070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC04D2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDeyBdFr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V4iYw2i4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgGFKhV (ORCPT
+        id S1728957AbgGFKhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgGFKhV (ORCPT
+        Mon, 6 Jul 2020 06:37:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55486 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728929AbgGFKhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:37:21 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE984C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:37:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q8so38774759iow.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=ldq871DYUjfCutFINwf0OWVTOZ4q2KSgzJKbSP2ijjE=;
-        b=VDeyBdFrxB55bqEKHah7hduH/Db1c1CdcSU+hwDxZDfAtZbNsD0HXwc3UNwFAOppQw
-         e576XtZLlu171qa/A2Un2vwEsMF7PwCCiZiniUvct1Srx8+3aYxt1Emlznk/1Yj2aMOU
-         CzLd+rg8PmasNIZb30d1Fs/PTVnsdBK+14OY59LMt8LLyQOcRpoulcGEWJi0jFRC48Cx
-         ZWzjGR7zAgLdNkf8qRFlzPupT/22c4wiG3B514nDRLYxaifBbBgxHJ7c51vWI0kc7jTJ
-         5chTOq6ZedEcB63ju6OSu5HZJXw2NeXV8sQtuaaoVl+mlO+ZTYsOfjWZxJtzWltBvQcf
-         Yr8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=ldq871DYUjfCutFINwf0OWVTOZ4q2KSgzJKbSP2ijjE=;
-        b=SXJomdidbZgGXMzjzhUY0hsyd1thOqVMZpf4NgeSHPupbEGjNnsl4BwF6da0fipqhK
-         moFYcS6xMsLC/SiY9fbQ3D/Hjc8ogzMKpmNlqjzG0c6OUoUwJ4dEVlrvZ+7T4fYg6p3N
-         IMDzAFN0OAWRJT9VF8SZSR0Jk2AMcWsX5zzV2TQecNsurq8CVZpLHQHaPgqkywNP9cRD
-         KIzGNGzlCPvXMYEyg5EuUGrd9BlgldlOKY+qRc2t2t+qF+SU7+4hFPmyyJUqF9Xw4w3r
-         d8/pFfsJzb8i6ft/4ucI8gSfAp0kBG9M/6Rc9qEC/wD87Wifg8w5xiPkDpfmkykI3BJz
-         xmWg==
-X-Gm-Message-State: AOAM530qlrYXYwvg0H5FgCZnYcKV64ipghgturcExIFwE7meOHE9DYQb
-        5mcMYvOOx9PX/NbzDwZBbl3YnU0mj5GzPAtwG3I=
-X-Google-Smtp-Source: ABdhPJwOscehIMGDzDU8B+iwYuJcSOoLVl/U9C0zKqAT0qIrPLL3v33r6QjMoxv1UQqwx0bKvodYbeEHY+SGZWQSh0Q=
-X-Received: by 2002:a05:6638:1409:: with SMTP id k9mr54068396jad.125.1594031840060;
- Mon, 06 Jul 2020 03:37:20 -0700 (PDT)
+        Mon, 6 Jul 2020 06:37:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594031849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A2TH0l40UUZw3trZBCC+/hrIk4R1Tqn0kicJMiXyx/I=;
+        b=V4iYw2i4v6UpnNcv05AGXiEapWXtOUnqKxFIwqOw2ZJ/Z9PC8xAGeXP5Fqs2mBGtJBXeQo
+        ovwmD44CyPgoEHvf2N0FI8LS0sfrJXI7TyAQ6VKD2HuJC2edn7jAI+tS5+cu8AGsWwwaF8
+        HXIVLiQlaPvd9/5FJ/VF6/DGCDzpC+I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-n2jXDVxFO3Od9r5VdJEaVQ-1; Mon, 06 Jul 2020 06:37:25 -0400
+X-MC-Unique: n2jXDVxFO3Od9r5VdJEaVQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BA66EC1A0;
+        Mon,  6 Jul 2020 10:37:23 +0000 (UTC)
+Received: from [10.36.113.241] (ovpn-113-241.ams2.redhat.com [10.36.113.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D380D10013C2;
+        Mon,  6 Jul 2020 10:37:13 +0000 (UTC)
+Subject: Re: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to
+ userspace
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
+ <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d434cbcc-d3b1-d11d-0304-df2d2c93efa0@redhat.com>
+Date:   Mon, 6 Jul 2020 12:37:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CA+icZUVgJFXJ3C_iYK8HrsuhAy3R9U1RDB6mPkOS52JcnU4mDQ@mail.gmail.com>
- <20200706083900.GC4800@hirez.programming.kicks-ass.net> <CA+icZUV=VVpy=R5_bq0N4TvPg+SfzyCXuWW9-QCnKk8-WnZLLg@mail.gmail.com>
- <CA+icZUWevq9qidK8K1v0GV-FOyyhn2hp4DTrsUSz-oeXCNp+1A@mail.gmail.com>
-In-Reply-To: <CA+icZUWevq9qidK8K1v0GV-FOyyhn2hp4DTrsUSz-oeXCNp+1A@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 6 Jul 2020 12:37:08 +0200
-Message-ID: <CA+icZUU+HO7BuSdCtFu=4pH-sTq2Qi7aJNM5Fvsqi+Cdza58bQ@mail.gmail.com>
-Subject: Re: [Linux v5.8-rc4] objtool warnings with gcc-10
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mbenes@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 11:02 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Mon, Jul 6, 2020 at 10:43 AM Sedat Dilek <sedat.dilek@gmail.com> wrote=
-:
-> >
-> > On Mon, Jul 6, 2020 at 10:39 AM Peter Zijlstra <peterz@infradead.org> w=
-rote:
-> > >
-> > > On Mon, Jul 06, 2020 at 09:09:55AM +0200, Sedat Dilek wrote:
-> > > > [ Please CC me I am not subscribed to this mailing-list ]
-> > > >
-> > > > Hi Josh and Peter,
-> > > >
-> > > > today I switched over from Linux v5.7.y to Linux v5.8-rc4 and built
-> > > > the first time with GCC version 10 on Debian/testing AMD64.
-> > > >
-> > > > $ cat /proc/version
-> > > > Linux version 5.8.0-rc4-1-amd64-gcc10 (sedat.dilek@gmail.com@iniza)
-> > > > (gcc-10 (Debian 10.1.0-4) 10.1.0, GNU ld (GNU Binutils for Debian)
-> > > > 2.34) #1~bullseye+dileks1 SMP 2020-07-06
-> > > >
-> > > > I see these objtool warnings (which are new to me):
-> > > >
-> > > > $ grep warning: build-log_5.8.0-rc4-1-amd64-gcc10.txt | sort
-> > > > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x118=
-: unreachable instruction
-> > > > drivers/atm/horizon.o: warning: objtool: interrupt_handler()+0x19f:=
- unreachable instruction
-> > > > drivers/message/fusion/mptbase.o: warning: objtool: mpt_Soft_Hard_R=
-esetHandler()+0x33a: unreachable instruction
-> > > > drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr.par=
-t.0()+0x10f: unreachable instruction
-> > > > drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: run()+0x4c0: =
-unreachable instruction
-> > > > fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_li=
-nks()+0x309: unreachable instruction
-> > > > fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0xc=
-: unreachable instruction
-> > > > fs/btrfs/relocation.o: warning: objtool: update_backref_cache.part.=
-0()+0x1de: unreachable instruction
-> > > > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unrea=
-chable instruction
-> > > > net/core/skbuff.o: warning: objtool: skb_push.cold()+0x15: unreacha=
-ble instruction
-> > >
-> > > That's more CONFIG_LIVEPATCH=3Dy wreckage I expect. The problem is th=
-at
-> > > GCC -flive-patching=3D thing wreck the propagation of the noreturn.
-> > >
-> > > This really is a compiler issue and we've not managed a sensible
-> > > work-around in objtool.
-> >
-> > Thanks for the quick response.
-> >
-> > I have...
-> >
-> > CONFIG_LIVEPATCH=3Dy
-> >
-> > ...and see in my build-log:
-> >
-> > -flive-patching=3Dinline-clone
-> >
-> > - Sedat -
->
-> OK, I found some discussions in "Re: linux-next: Tree for May 21
-> (objtool warnings)" [1].
->
-> GCC docs say [2]:
-> - BOQ (Begin Of Quote) -
-> [ -flive-patching=3Dlevel ]
->
-> The level argument should be one of the following:
->
-> [ =E2=80=98inline-clone=E2=80=99 ]
->
-> Only enable inlining and cloning optimizations, which includes
-> inlining, cloning, interprocedural scalar replacement of aggregates
-> and partial inlining. As a result, when patching a function, all its
-> callers and its clones=E2=80=99 callers are impacted, therefore need to b=
-e
-> patched as well.
->
-> -flive-patching=3Dinline-clone disables the following optimization flags:
->
-> -fwhole-program  -fipa-pta  -fipa-reference  -fipa-ra
-> -fipa-icf  -fipa-icf-functions  -fipa-icf-variables
-> -fipa-bit-cp  -fipa-vrp  -fipa-pure-const  -fipa-reference-addressable
-> -fipa-stack-alignment
->
-> [ =E2=80=98inline-only-static=E2=80=99 ]
->
-> Only enable inlining of static functions. As a result, when patching a
-> static function, all its callers are impacted and so need to be
-> patched as well.
->
-> In addition to all the flags that -flive-patching=3Dinline-clone
-> disables, -flive-patching=3Dinline-only-static disables the following
-> additional optimization flags:
->
-> -fipa-cp-clone  -fipa-sra  -fpartial-inlining  -fipa-cp
->
-> When -flive-patching is specified without any value, the default value
-> is inline-clone.
->
-> This flag is disabled by default.
->
-> Note that -flive-patching is not supported with link-time optimization (-=
-flto).
->  - EOQ (End of Quote) -
->
-> Josh says in [3]:
->
-> > The issue here is that with -fno-ipa-pure-const, GCC no longer
-> > automatically detects that the static inline function is noreturn, so i=
-t
-> > emits unreachable instructions after a call to it.
->
-> - Sedat -
->
-> [1] https://marc.info/?t=3D159011496400002&r=3D1&w=3D2
-> [2] https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-> [3] https://marc.info/?l=3Dlinux-next&m=3D159059217601108&w=3D2
+Yi,
 
-[ arch/x86/kernel/cpu/mce/core.o ]
+On 7/4/20 1:26 PM, Liu Yi L wrote:
+> This patch exports iommu nesting capability info to user space through
+> VFIO. User space is expected to check this info for supported uAPIs (e.g.
+> PASID alloc/free, bind page table, and cache invalidation) and the vendor
+> specific format information for first level/stage page table that will be
+> bound to.
+> 
+> The nesting info is available only after the nesting iommu type is set
+> for a container. Current implementation imposes one limitation - one
+> nesting container should include at most one group. The philosophy of
+> vfio container is having all groups/devices within the container share
+> the same IOMMU context. When vSVA is enabled, one IOMMU context could
+> include one 2nd-level address space and multiple 1st-level address spaces.
+> While the 2nd-leve address space is reasonably sharable by multiple groups
+level
+> , blindly sharing 1st-level address spaces across all groups within the
+> container might instead break the guest expectation. In the future sub/
+> super container concept might be introduced to allow partial address space
+> sharing within an IOMMU context. But for now let's go with this restriction
+> by requiring singleton container for using nesting iommu features. Below
+> link has the related discussion about this decision.
+> 
+> https://lkml.org/lkml/2020/5/15/1028
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+> v3 -> v4:
+> *) address comments against v3.
+> 
+> v1 -> v2:
+> *) added in v2
+> ---
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 105 +++++++++++++++++++++++++++++++++++-----
+>  include/uapi/linux/vfio.h       |  16 ++++++
+>  2 files changed, 109 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 7accb59..80623b8 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
+>  		 "Maximum number of user DMA mappings per container (65535).");
+>  
+>  struct vfio_iommu {
+> -	struct list_head	domain_list;
+> -	struct list_head	iova_list;
+> -	struct vfio_domain	*external_domain; /* domain for external user */
+> -	struct mutex		lock;
+> -	struct rb_root		dma_list;
+> -	struct blocking_notifier_head notifier;
+> -	unsigned int		dma_avail;
+> -	uint64_t		pgsize_bitmap;
+> -	bool			v2;
+> -	bool			nesting;
+> -	bool			dirty_page_tracking;
+> -	bool			pinned_page_dirty_scope;
+> +	struct list_head		domain_list;
+> +	struct list_head		iova_list;
+> +	struct vfio_domain		*external_domain; /* domain for
+> +							     external user */
+nit: put the comment before the field?
+> +	struct mutex			lock;
+> +	struct rb_root			dma_list;
+> +	struct blocking_notifier_head	notifier;
+> +	unsigned int			dma_avail;
+> +	uint64_t			pgsize_bitmap;
+> +	bool				v2;
+> +	bool				nesting;
+> +	bool				dirty_page_tracking;
+> +	bool				pinned_page_dirty_scope;
+> +	struct iommu_nesting_info	*nesting_info;
+>  };
+>  
+>  struct vfio_domain {
+> @@ -130,6 +132,9 @@ struct vfio_regions {
+>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
+>  					(!list_empty(&iommu->domain_list))
+>  
+> +#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
+> +					 (!list_empty(&iommu->domain_list)))
+rename into something like CONTAINER_HAS_DOMAIN()?
+> +
+>  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
+>  
+>  /*
+> @@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
+>  
+>  	list_splice_tail(iova_copy, iova);
+>  }
+> +
+> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
+> +{
+> +	kfree(iommu->nesting_info);
+> +	iommu->nesting_info = NULL;
+> +}
+> +
+>  static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  					 struct iommu_group *iommu_group)
+>  {
+> @@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  		}
+>  	}
+>  
+> +	/* Nesting type container can include only one group */
+> +	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
+> +		mutex_unlock(&iommu->lock);
+> +		return -EINVAL;
+> +	}
+> +
+>  	group = kzalloc(sizeof(*group), GFP_KERNEL);
+>  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
+>  	if (!group || !domain) {
+> @@ -2029,6 +2047,36 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	if (ret)
+>  		goto out_domain;
+>  
+> +	/* Nesting cap info is available only after attaching */
+> +	if (iommu->nesting) {
+> +		struct iommu_nesting_info tmp;
+> +		struct iommu_nesting_info *info;
+> +
+> +		/* First get the size of vendor specific nesting info */
+> +		ret = iommu_domain_get_attr(domain->domain,
+> +					    DOMAIN_ATTR_NESTING,
+> +					    &tmp);
+> +		if (ret)
+> +			goto out_detach;
+> +
+> +		info = kzalloc(tmp.size, GFP_KERNEL);
+nit: you may directly use iommu->nesting_info
+> +		if (!info) {
+> +			ret = -ENOMEM;
+> +			goto out_detach;
+> +		}
+> +
+> +		/* Now get the nesting info */
+> +		info->size = tmp.size;
+> +		ret = iommu_domain_get_attr(domain->domain,
+> +					    DOMAIN_ATTR_NESTING,
+> +					    info);
+> +		if (ret) {
+> +			kfree(info);
+... and set it back to NULL here if it fails
+> +			goto out_detach;
+> +		}
+> +		iommu->nesting_info = info;
+> +	}
+> +
+>  	/* Get aperture info */
+>  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
+>  
+> @@ -2138,6 +2186,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	return 0;
+>  
+>  out_detach:
+> +	vfio_iommu_release_nesting_info(iommu);
+>  	vfio_iommu_detach_group(domain, group);
+>  out_domain:
+>  	iommu_domain_free(domain->domain);
+> @@ -2338,6 +2387,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>  					vfio_iommu_unmap_unpin_all(iommu);
+>  				else
+>  					vfio_iommu_unmap_unpin_reaccount(iommu);
+> +
+> +				vfio_iommu_release_nesting_info(iommu);
+>  			}
+>  			iommu_domain_free(domain->domain);
+>  			list_del(&domain->next);
+> @@ -2546,6 +2597,30 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
+>  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
+>  }
+>  
+> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> +					   struct vfio_info_cap *caps)
+> +{
+> +	struct vfio_info_cap_header *header;
+> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> +	size_t size;
+> +
+> +	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
+> +
+> +	header = vfio_info_cap_add(caps, size,
+> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> +	if (IS_ERR(header))
+> +		return PTR_ERR(header);
+> +
+> +	nesting_cap = container_of(header,
+> +				   struct vfio_iommu_type1_info_cap_nesting,
+> +				   header);
+> +
+> +	memcpy(&nesting_cap->info, iommu->nesting_info,
+> +	       iommu->nesting_info->size);
+> +
+> +	return 0;
+> +}
+> +
+>  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+>  				     unsigned long arg)
+>  {
+> @@ -2586,6 +2661,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (iommu->nesting_info) {
+> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	if (caps.size) {
+>  		info.flags |= VFIO_IOMMU_INFO_CAPS;
+>  
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 9204705..3e3de9c 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
+>  	__u64	max_dirty_bitmap_size;		/* in bytes */
+>  };
+>  
+> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
 
-After "-flive-patching=3Dinline-clone" I manually added in the make line:
+You may improve the documentation by taking examples from the above caps.
+> +
+> +/*
+> + * Reporting nesting info to user space.
+> + *
+> + * @info:	the nesting info provided by IOMMU driver. Today
+> + *		it is expected to be a struct iommu_nesting_info
+> + *		data.
+Is it expected to change?
+> + */
+> +struct vfio_iommu_type1_info_cap_nesting {
+> +	struct	vfio_info_cap_header header;
+> +	__u32	flags;
+You may document flags.
+> +	__u32	padding;
+> +	__u8	info[];
+> +};
+> +
+>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+>  
+>  /**
+> 
+Thanks
 
-#1: -fno-ipa-pure-const
+Eric
 
-$ ./tools/objtool/objtool orc generate  --no-fp --retpoline --uaccess
-arch/x86/kernel/cpu/mce/core.o
-arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x118:
-unreachable instruction
-
-#2: -fipa-pure-const
-
-$ gcc-10 -Wp,-MMD,arch/x86/kernel/cpu/mce/.core.o.d -nostdinc -isystem
-/usr/lib/gcc/x86_64-linux-gnu/10/include -I./arch/x86/include
--I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi
--I./arch/x86/include/generated/uapi -I./include/uapi
--I./include/generated/uapi -include ./include/linux/kconfig.h -include
-./include/linux/compiler_types.h -D__KERNEL__ -Wall -Wundef
--Werror=3Dstrict-prototypes -Wno-trigraphs -fno-strict-aliasing
--fno-common -fshort-wchar -fno-PIE
--Werror=3Dimplicit-function-declaration -Werror=3Dimplicit-int
--Wno-format-security -std=3Dgnu89 -mno-sse -mno-mmx -mno-sse2 -mno-3dnow
--mno-avx -m64 -falign-jumps=3D1 -falign-loops=3D1 -mno-80387
--mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup
--mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -Wno-sign-compare
--fno-asynchronous-unwind-tables -mindirect-branch=3Dthunk-extern
--mindirect-branch-register -fno-jump-tables
--fno-delete-null-pointer-checks -Wno-frame-address
--Wno-format-truncation -Wno-format-overflow
--Wno-address-of-packed-member -O2 -fno-allow-store-data-races
--Wframe-larger-than=3D2048 -fstack-protector-strong
--Wno-unused-but-set-variable -Wimplicit-fallthrough
--Wno-unused-const-variable -fno-var-tracking-assignments -g -gdwarf-4
--gz=3Dzlib -pg -mrecord-mcount -mfentry -DCC_USING_FENTRY
--flive-patching=3Dinline-clone -fipa-pure-const
--Wdeclaration-after-statement -Wvla -Wno-pointer-sign
--Wno-stringop-truncation -Wno-zero-length-bounds -Wno-array-bounds
--Wno-stringop-overflow -Wno-restrict -Wno-maybe-uninitialized
--fno-strict-overflow -fno-merge-all-constants -fmerge-constants
--fno-stack-check -fconserve-stack -Werror=3Ddate-time
--Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init
--fmacro-prefix-map=3D./=3D -fcf-protection=3Dnone -Wno-packed-not-aligned
--DKBUILD_MODFILE=3D'"arch/x86/kernel/cpu/mce/core"'
--DKBUILD_BASENAME=3D'"core"' -DKBUILD_MODNAME=3D'"core"' -c -o
-arch/x86/kernel/cpu/mce/core.o arch/x86/kernel/cpu/mce/core.c
-
-cc1: error: =E2=80=98-fipa-pure-const=E2=80=99 is incompatible with
-=E2=80=98-flive-patching=3Dinline-only-static|inline-clone=E2=80=99
-
-- Sedat -
