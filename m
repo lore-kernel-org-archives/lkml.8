@@ -2,214 +2,305 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8969C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E61C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EA4206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C0C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 22:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHUr0UIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgGFWax convert rfc822-to-8bit (ORCPT
+        id S1727951AbgGFWc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 18:30:53 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2627 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726933AbgGFWaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 18:30:52 -0400
-Received: from dggemi406-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 259266D2363FBDF97714;
-        Tue,  7 Jul 2020 06:30:50 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
- dggemi406-hub.china.huawei.com ([10.3.17.144]) with mapi id 14.03.0487.000;
- Tue, 7 Jul 2020 06:30:41 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Roman Gushchin <guro@fb.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: RE: [PATCH] mm/hugetlb: avoid hardcoding while checking if cma is
- reserved
-Thread-Topic: [PATCH] mm/hugetlb: avoid hardcoding while checking if cma is
- reserved
-Thread-Index: AQHWU3HjjsPjy1jnSk6RkQtfiUWhe6j6kUUAgACKkECAAATWcA==
-Date:   Mon, 6 Jul 2020 22:30:40 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2559717@DGGEMI525-MBS.china.huawei.com>
-References: <20200706084405.14236-1-song.bao.hua@hisilicon.com>
- <20200706214808.GB152560@carbon.lan> 
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.98]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 6 Jul 2020 18:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbgGFWc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 18:32:26 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B4BC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 15:32:26 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so31690434ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 15:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7jWD5vHooiaDqnTbtnYwVQHOG6k2FU8e2JhUtfDscDY=;
+        b=PHUr0UIPdkWgLSJepxSrub2FtIg2X2XWPcXgvp5CWfRhIf0zvVCVAlmLPDlfRGfjWV
+         ZydzybHf4FhrtbyDwGy0pM3rTAg6xRmq5dFmZ/8/Q157z6DJlScHF92HL2p1Af2ThFwL
+         X08QczssEp3vy1f0JcKXWpHtWn5TQeJewcttuw3P0jnnd/2viQRlDytRJSa0c0+KSrGw
+         5lLYlDaiK0VF79m0s+BT2kYwJ3RepZZe9PMNgm0Cc8o3TqLuUZz7zlYxxJpE78n5GkUC
+         BkkmVbwVdsduUk9ax/y1RWZ2Lu0dk0zZDF/1Sp4oZSatL2vfgewmEsCuw8egv+yiBUps
+         7Lkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7jWD5vHooiaDqnTbtnYwVQHOG6k2FU8e2JhUtfDscDY=;
+        b=Km/RfHe/m/MbW+wfMm0wCJNmoI3tIXm0vA3tPYfHs2XkBAUX/Ky3T/zgep9PuUPXuq
+         L+XDzIMtLwSsfEVyas8auEbDmD5K5WwqMD1twRU6XAgLeHR45XwDKO4u93Q4SW2AIcjq
+         /bxORvOnHXh+NiKNzXeeVkvrqKuAiAoWEBw6X0gPGxwdiKH92g/Oja/6oIqrZTH8bZa6
+         nLzH8I1X/ZfOQ0kBbSTQdmzw4A2IGz88gB4pKno3wCTxLiLmwls7BvMcFppiuauRqcHl
+         ZH4C3fuwgdn/efZRZJ8uAmibkaBkTwjibHMJiJe0g5JexTnfSQ8HB8qJtVTOiB/doPjo
+         xTJA==
+X-Gm-Message-State: AOAM530pb3CGmwtz0gU2q+5Ep9JPyV2UQVSVrpto5CENs69Qe+ew5jay
+        EdxRW6H5yf2O/8TtzBPzj2qsUbjeUNARLxrf1OVP9YDs8Hw=
+X-Google-Smtp-Source: ABdhPJzB21KJ4LK/FE4YW6ebuBjyCZjP1YIA1Wom+fxwjuhACfVBKSC4uOygcHbB8iMIMSJngmUbQ633jaaJQ+KyCc0=
+X-Received: by 2002:a05:651c:550:: with SMTP id q16mr28254147ljp.188.1594074744364;
+ Mon, 06 Jul 2020 15:32:24 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200630044943.3425049-3-rajatja@google.com> <20200706163805.GA120024@bjorn-Precision-5520>
+In-Reply-To: <20200706163805.GA120024@bjorn-Precision-5520>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 6 Jul 2020 15:31:47 -0700
+Message-ID: <CACK8Z6FhWyZOJvkrPcHacyvJucGMupOpL=Jm8BpyO7wPrZ_DQA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
+ devices only
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-
-> -----Original Message-----
-> From: Song Bao Hua (Barry Song)
-> Sent: Tuesday, July 7, 2020 10:12 AM
-> To: 'Roman Gushchin' <guro@fb.com>
-> Cc: akpm@linux-foundation.org; linux-mm@kvack.org;
-> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Mike
-> Kravetz <mike.kravetz@oracle.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>
-> Subject: RE: [PATCH] mm/hugetlb: avoid hardcoding while checking if cma is
-> reserved
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Roman Gushchin [mailto:guro@fb.com]
-> > Sent: Tuesday, July 7, 2020 9:48 AM
-> > To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> > Cc: akpm@linux-foundation.org; linux-mm@kvack.org;
-> > linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Mike
-> > Kravetz <mike.kravetz@oracle.com>; Jonathan Cameron
-> > <jonathan.cameron@huawei.com>
-> > Subject: Re: [PATCH] mm/hugetlb: avoid hardcoding while checking if
-> > cma is reserved
+On Mon, Jul 6, 2020 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
+> > The "ExternalFacing" devices (root ports) are still internal devices that
+> > sit on the internal system fabric and thus trusted. Currently they were
+> > being marked untrusted.
 > >
-> > On Mon, Jul 06, 2020 at 08:44:05PM +1200, Barry Song wrote:
+> > This patch uses the platform flag to identify the external facing devices
+> > and then use it to mark any downstream devices as "untrusted". The
+> > external-facing devices themselves are left as "trusted". This was
+> > discussed here: https://lkml.org/lkml/2020/6/10/1049
+>
+> Use the imperative mood in the commit log, as you did for 1/7.  E.g.,
+> instead of "This patch uses ...", say "Use the platform flag ...".
+> That helps all the commit logs read nicely together.
+>
+> I think this patch makes two changes that should be separated:
+>
+>   - Treat "external-facing" devices as internal.
+>
+>   - Look for the "external-facing" or "ExternalFacing" property on
+>     Switch Downstream Ports as well as Root Ports.
+>
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> > v2: cosmetic changes in commit log
 > >
-> > Hello, Barry!
+> >  drivers/iommu/intel/iommu.c |  2 +-
+> >  drivers/pci/of.c            |  2 +-
+> >  drivers/pci/pci-acpi.c      | 13 +++++++------
+> >  drivers/pci/probe.c         |  2 +-
+> >  include/linux/pci.h         |  8 ++++++++
+> >  5 files changed, 18 insertions(+), 9 deletions(-)
 > >
-> > > hugetlb_cma[0] can be NULL due to various reasons, for example,
-> > > node0 has no memory. Thus, NULL hugetlb_cma[0] doesn't necessarily
-> > > mean cma is not enabled. gigantic pages might have been reserved on
-> other nodes.
+> > diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> > index d759e7234e982..1ccb224f82496 100644
+> > --- a/drivers/iommu/intel/iommu.c
+> > +++ b/drivers/iommu/intel/iommu.c
+> > @@ -4743,7 +4743,7 @@ static inline bool has_untrusted_dev(void)
+> >       struct pci_dev *pdev = NULL;
 > >
-> > Just curious, is it a real-life problem you've seen? If so, I wonder
-> > how you're using the hugetlb_cma option, and what's the outcome?
-> 
-> Yes. It is kind of stupid but I once got a board on which node0 has no DDR
-> though node1 and node3 have memory.
-> 
-> I actually prefer we get cma size of per node by:
-> cma size of one node = hugetlb_cma/ (nodes with memory) rather than:
-> cma size of one node = hugetlb_cma/ (all online nodes)
-> 
-> but unfortunately, or the N_MEMORY infrastructures are not ready yet. I
-> mean:
-> 
-> for_each_node_state(nid, N_MEMORY) {
-> 		int res;
-> 
-> 		size = min(per_node, hugetlb_cma_size - reserved);
-> 		size = round_up(size, PAGE_SIZE << order);
-> 
-> 		res = cma_declare_contiguous_nid(0, size, 0, PAGE_SIZE << order,
-> 						 0, false, "hugetlb",
-> 						 &hugetlb_cma[nid], nid);
-> 		...
-> 	}
-> 
+> >       for_each_pci_dev(pdev)
+> > -             if (pdev->untrusted)
+> > +             if (pdev->untrusted || pdev->external_facing)
+>
+> I think checking pdev->external_facing is enough for this case,
+> because it's impossible to have pdev->untrusted unless a parent has
+> pdev->external_facing.
 
-And for a server, there are many memory slots. The best config would be
-making every node have at least one DDR. But it isn't necessarily true, it
-is totally up to the users.
+Agree.
 
-If we move hugetlb_cma_reserve() a bit later, we probably make hugetlb_cma size
-completely consistent by splitting it to nodes with memory rather than nodes 
-which are online:
+>
+> IIUC, this usage is asking "might we ever have an external device?"
+> as opposed to the "pdev->untrusted" uses, which are asking "is *this*
+> device an external device?"
 
-void __init bootmem_init(void)
-{
-	...
+Agree.
 
-	arm64_numa_init();
-
-	/*
-	 * must be done after arm64_numa_init() which calls numa_init() to
-	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
-	 * while allocating required CMA size across online nodes.
-	 */
-- #ifdef CONFIG_ARM64_4K_PAGES
--	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-- #endif
-
-	...
-
-	sparse_init();
-	zone_sizes_init(min, max);
-
-+ #ifdef CONFIG_ARM64_4K_PAGES
-+	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-+ #endif
-	memblock_dump_all();
-}
-
-For x86, it could be done in similar way. Do you think it is worth to try?
-
+>
+> >                       return true;
 > >
-> > >
-> > > Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic
-> > > hugepages
-> > using cma")
-> > > Cc: Roman Gushchin <guro@fb.com>
-> > > Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> > > Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> > > ---
-> > >  mm/hugetlb.c | 18 +++++++++++++++---
-> > >  1 file changed, 15 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/mm/hugetlb.c b/mm/hugetlb.c index
-> > > 57ece74e3aae..603aa854aa89 100644
-> > > --- a/mm/hugetlb.c
-> > > +++ b/mm/hugetlb.c
-> > > @@ -2571,9 +2571,21 @@ static void __init
-> > hugetlb_hstate_alloc_pages(struct hstate *h)
-> > >
-> > >  	for (i = 0; i < h->max_huge_pages; ++i) {
-> > >  		if (hstate_is_gigantic(h)) {
-> > > -			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
-> > > -				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip
-> > boot time allocation\n");
-> > > -				break;
-> > > +			if (IS_ENABLED(CONFIG_CMA)) {
-> > > +				int nid;
-> > > +				bool cma_reserved = false;
-> > > +
-> > > +				for_each_node_state(nid, N_ONLINE) {
-> > > +					if (hugetlb_cma[nid]) {
-> > > +						pr_warn_once("HugeTLB: hugetlb_cma is
-> > reserved,"
-> > > +								"skip boot time allocation\n");
-> > > +						cma_reserved = true;
-> > > +						break;
-> > > +					}
-> > > +				}
-> > > +
-> > > +				if (cma_reserved)
-> > > +					break;
+> >       return false;
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 27839cd2459f6..22727fc9558df 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+> >       } else {
+> >               node = of_node_get(bus->self->dev.of_node);
+> >               if (node && of_property_read_bool(node, "external-facing"))
+> > -                     bus->self->untrusted = true;
+> > +                     bus->self->external_facing = true;
+> >       }
 > >
-> > It's a valid problem, and I like to see it fixed. But I wonder if it
-> > would be better to introduce a new helper bool hugetlb_cma_enabled()?
-> > And move both
-> > IS_ENABLED(CONFIG_CMA)
-> > and hugetlb_cma[nid] checks there?
-> 
-> Yep. that would be more readable.
-> 
+> >       bus->dev.of_node = node;
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index 7224b1e5f2a83..492c07805caf8 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1213,22 +1213,23 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+> >       ACPI_FREE(obj);
+> >  }
 > >
-> > Thank you!
-> 
-> Thanks
-> Barry
+> > -static void pci_acpi_set_untrusted(struct pci_dev *dev)
+> > +static void pci_acpi_set_external_facing(struct pci_dev *dev)
+> >  {
+> >       u8 val;
+> >
+> > -     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > +     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> > +         pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+>
+> This looks like a change worthy of its own patch.  We used to look for
+> "ExternalFacingPort" only on Root Ports; now we'll also do it for
+> Switch Downstream Ports.
 
-Thanks
-Barry
+Can do. (please see below)
 
+>
+> Can you include DT and ACPI spec references if they exist?  I found
+> this mention:
+> https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
+> which actually says it should only be implemented for Root Ports.
+
+I actually have no references. It seems to me that the microsoft spec
+assumes that all external ports must be implemented on root ports, but
+I think it would be equally fair for systems with PCIe switches to
+implement one on one of their switch downstream ports. I don't have an
+immediate use of this anyway, so if you think this should rather wait
+unless someone really has this case, this can wait. Let me know.
+
+>
+> It also mentions a "DmaProperty" that looks related.  Maybe Linux
+> should also pay attention to this?
+
+Interesting. Since this is not in use currently by the kernel as well
+as not exposed by (our) BIOS, I don't have an immediate use case for
+this. I'd like to defer this for later (as-the-need-arises).
+
+>
+> If we do change this, should we use pcie_downstream_port(), which
+> includes PCI-to-PCIe bridges as well?
+
+Sure, can do that.
+
+>
+> >               return;
+> >       if (device_property_read_u8(&dev->dev, "ExternalFacingPort", &val))
+> >               return;
+> >
+> >       /*
+> > -      * These root ports expose PCIe (including DMA) outside of the
+> > -      * system so make sure we treat them and everything behind as
+> > +      * These root/down ports expose PCIe (including DMA) outside of the
+> > +      * system so make sure we treat everything behind them as
+> >        * untrusted.
+> >        */
+> >       if (val)
+> > -             dev->untrusted = 1;
+> > +             dev->external_facing = 1;
+> >  }
+> >
+> >  static void pci_acpi_setup(struct device *dev)
+> > @@ -1240,7 +1241,7 @@ static void pci_acpi_setup(struct device *dev)
+> >               return;
+> >
+> >       pci_acpi_optimize_delay(pci_dev, adev->handle);
+> > -     pci_acpi_set_untrusted(pci_dev);
+> > +     pci_acpi_set_external_facing(pci_dev);
+> >       pci_acpi_add_edr_notifier(pci_dev);
+> >
+> >       pci_acpi_add_pm_notifier(adev, pci_dev);
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 6d87066a5ecc5..8c40c00413e74 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+> >        * untrusted as well.
+> >        */
+> >       parent = pci_upstream_bridge(dev);
+> > -     if (parent && parent->untrusted)
+> > +     if (parent && (parent->untrusted || parent->external_facing))
+> >               dev->untrusted = true;
+> >  }
+> >
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index a26be5332bba6..fe1bc603fda40 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -432,6 +432,14 @@ struct pci_dev {
+> >        * mappings to make sure they cannot access arbitrary memory.
+> >        */
+> >       unsigned int    untrusted:1;
+> > +     /*
+> > +      * Devices are marked as external-facing using info from platform
+> > +      * (ACPI / devicetree). An external-facing device is still an internal
+> > +      * trusted device, but it faces external untrusted devices. Thus any
+> > +      * devices enumerated downstream an external-facing device is marked
+> > +      * as untrusted.
+>
+> This comment has a subject/verb agreement problem.
+
+I assume you meant s/is/are/ in last sentence. Will do.
+
+Thanks,
+
+Rajat
+
+
+>
+> > +      */
+> > +     unsigned int    external_facing:1;
+> >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be used */
+> >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O windows */
+> >       unsigned int    irq_managed:1;
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
