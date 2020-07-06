@@ -2,143 +2,197 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69190C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F8120715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8224206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhsQDGS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgGFK7R (ORCPT
+        id S1728953AbgGFLAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:59:17 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39045 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgGFK7Q (ORCPT
+        Mon, 6 Jul 2020 07:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728646AbgGFLAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:59:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id r19so23325818iod.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:59:15 -0700 (PDT)
+        Mon, 6 Jul 2020 07:00:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE02FC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:00:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q5so40303819wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DROFpnBFrE4AtjKVynyf3d8aaP4nTs4hoGNau1puBxU=;
+        b=IhsQDGS9YQ/3aNt+HywQjsJPSy6KwEooCmzK+h9GGokiS/sS6Yq0Pjn/4DFqT65AdJ
+         gVvOJtlb2mEtDmE2xgLkHVkaltXmZMrGGRMJpzomazmum6rqrGtYJiU7tOyJ4suRgznf
+         cYIQVtRD/p17h2HGMHtglJI5a/DZGmy35Jl8p6fkigtHknxjmmWPf3hRDrTOF8yqzKj6
+         M0t6pCTo0MYfFfTZVdwNlW/EHtUjM9FrNXUbOqyX9j1WccQxCoMsES8SfWsdNG9wluyd
+         eJrOrUa5lRA603NIayCnD42yYJbxsUBHCE8E7rrCUZk1zN7QIaueCaNtCAUdDwOk0r0s
+         96Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=T4RpfvTzhxjKATtZUtnzpG2blvqRzQy3JNJvC30eupo=;
-        b=Jt36K42metTYArjQuj/f1OoRhGOGPfQBVvnfR6Kkjn2FhozAPd4BBEYfoC7S4IC92H
-         Cht/NvIwFVoseP+THJfIM6kK4PihY6lc/sGjK0DS0CQwknFbiiFsqRtHkVzypHmU9bAN
-         2PbuFti3cqa57izKN6aBK0m/piQdm8jaJ5mER7dJaYZ5l/TbPXaBK0jAh0GwYPSgdlRy
-         Y0S4XhHQXw8SmrBwMXEPFiFmzDtUbm6v1gVbM9qCV5BHgIk5mFXViMl5u8oQIzpeQZq/
-         mgTaJpFvUVyQCNFsznEph13hFxkUCt2etu3iT84cgjJQ/T5snHBNI7LhBbo4GynbUmcm
-         S72Q==
-X-Gm-Message-State: AOAM532te+f5OnnDvWcc+RI1qDDc0US7j4glKNCr3+6+pM84EyUNiCiJ
-        /JrXbhDca0TYR5G+atunolOC2aAvSvKs7/K8u6EOU9v3DuHF
-X-Google-Smtp-Source: ABdhPJz9bxB5JTkD1JA24MtdSVUbGWLRSgS863neUybfKjrmznz/FD+obvjwhRnuPJO1m8dmR3K+/FdW7wtxD+N7RUbvsYeYOWQS
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DROFpnBFrE4AtjKVynyf3d8aaP4nTs4hoGNau1puBxU=;
+        b=iqfAB7uGbNoAD6FttjpXWMFSFDi+t9yN+OPJpuJwgPmn87gi8TyV0rtNpisgH2gYfW
+         SnICOr7bGvUW1FhA0KWj72M0Rtb8byEtklG8r92KIiESapmCKeit/3j5eX8t4fkRfWu1
+         2A9hABglMA7D1Y5JY9FoRxdy4csTn3BS5L6wqyJcJ/GhSyLaVS47ikCN+r5sbnTBUfrF
+         KWSnZz5O+/cd4z0m+P5S2SKNuB+kr4f7Kx5T/CVQ6cCSrWRSMbAEBZvvbhp3SvrKMh9d
+         yD3tnfOb4DAQlwi5Ln1ucefRhNDBxZWL77+9p/f3zMS9Sp9T2NpqmlWVt90SMLLfVsPJ
+         PW8A==
+X-Gm-Message-State: AOAM530iZ2+vMPYZEi9UH3V/Ub817q7q4AgOc7/MlM5xZPvlFMbx/XMS
+        7jVGt4HHuvfrcKvVnjyvFB7iODF8Diw=
+X-Google-Smtp-Source: ABdhPJzMYgg7aSGG3L5htMIEccPSN0wer6gpmayI8AFXcvfBOx0rrS6HrOLSpiYHQywz2WoXtI86Cw==
+X-Received: by 2002:adf:9525:: with SMTP id 34mr50926244wrs.313.1594033219211;
+        Mon, 06 Jul 2020 04:00:19 -0700 (PDT)
+Received: from maphy.uni-hannover.de ([130.75.75.70])
+        by smtp.gmail.com with ESMTPSA id k126sm23527764wmf.3.2020.07.06.04.00.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 04:00:18 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 13:00:17 +0200
+From:   Tammo Block <tammo.block@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v3 6/6] Documentation: Describe console mouse reporting
+Message-ID: <59a6057afa3b2310384f489b35e15eb624af2774.1594032517.git.tammo.block@gmail.com>
+References: <cover.1594032517.git.tammo.block@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:dd3:: with SMTP id m19mr54095902jaj.106.1594033155348;
- Mon, 06 Jul 2020 03:59:15 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 03:59:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fc1fb505a9c3c319@google.com>
-Subject: general protection fault in perf_tp_event (2)
-From:   syzbot <syzbot+740e88e3bac50daed3e2@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
-        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1594032517.git.tammo.block@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patch adds a description of the kernel interface(s) used for vt
+console mouse reporting and describes the protocols and bitmasks.
 
-syzbot found the following crash on:
-
-HEAD commit:    cd77006e Merge tag 'hyperv-fixes-signed' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ef7755100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
-dashboard link: https://syzkaller.appspot.com/bug?extid=740e88e3bac50daed3e2
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+740e88e3bac50daed3e2@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xe000025d40802049: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x000032ea04010248-0x000032ea0401024f]
-CPU: 0 PID: 13034 Comm: syz-executor.1 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9226 [inline]
-RIP: 0010:perf_tp_event+0x1bf/0xa70 kernel/events/core.c:9277
-Code: 00 00 48 8b 44 24 40 4c 8d b0 88 00 00 00 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 49 8d 9c 24 d8 01 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 0f 85 c2 01 00 00 8b 1b 89 de 83 e6 01 31 ff
-RSP: 0018:ffffc9000dc4f740 EFLAGS: 00010003
-RAX: 0000065d40802049 RBX: 000032ea0401024c RCX: ffffffff8177b911
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88804aa30480
-RBP: ffffc9000dc4f9c8 R08: dffffc0000000000 R09: ffffed1009546091
-R10: ffffed1009546091 R11: 0000000000000000 R12: 000032ea04010074
-R13: ffff8880ae800000 R14: ffff8880ae8317f8 R15: dffffc0000000000
-FS:  00007f5d24ad7700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd68dc03b8 CR3: 00000000a2cbd000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- perf_trace_run_bpf_submit+0x106/0x1a0 kernel/events/core.c:9252
- perf_trace_sched_wakeup_template+0x289/0x3c0 include/trace/events/sched.h:57
- trace_sched_wakeup+0xb2/0x190 include/trace/events/sched.h:96
- ttwu_do_wakeup+0x4e/0x300 kernel/sched/core.c:2204
- ttwu_do_activate kernel/sched/core.c:2248 [inline]
- ttwu_queue kernel/sched/core.c:2412 [inline]
- try_to_wake_up+0x901/0xc10 kernel/sched/core.c:2663
- wake_up_process kernel/sched/core.c:2733 [inline]
- wake_up_q+0x8c/0xe0 kernel/sched/core.c:498
- __mutex_unlock_slowpath+0x565/0x590 kernel/locking/mutex.c:1280
- perf_try_init_event+0x30a/0x3a0 kernel/events/core.c:10797
- perf_init_event kernel/events/core.c:10834 [inline]
- perf_event_alloc+0xdb1/0x2870 kernel/events/core.c:11110
- __do_sys_perf_event_open kernel/events/core.c:11605 [inline]
- __se_sys_perf_event_open+0x6e2/0x3fa0 kernel/events/core.c:11479
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f5d24ad6c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00000000004fa6e0 RCX: 000000000045cb29
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000100
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000003
-R13: 0000000000000842 R14: 00000000004cb34b R15: 00007f5d24ad76d4
-Modules linked in:
----[ end trace 11dff03731370b11 ]---
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9226 [inline]
-RIP: 0010:perf_tp_event+0x1bf/0xa70 kernel/events/core.c:9277
-Code: 00 00 48 8b 44 24 40 4c 8d b0 88 00 00 00 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 49 8d 9c 24 d8 01 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 04 38 84 c0 0f 85 c2 01 00 00 8b 1b 89 de 83 e6 01 31 ff
-RSP: 0018:ffffc9000dc4f740 EFLAGS: 00010003
-RAX: 0000065d40802049 RBX: 000032ea0401024c RCX: ffffffff8177b911
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88804aa30480
-RBP: ffffc9000dc4f9c8 R08: dffffc0000000000 R09: ffffed1009546091
-R10: ffffed1009546091 R11: 0000000000000000 R12: 000032ea04010074
-R13: ffff8880ae800000 R14: ffff8880ae8317f8 R15: dffffc0000000000
-FS:  00007f5d24ad7700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd68dc03b8 CR3: 00000000a2cbd000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Tammo Block <tammo.block@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../admin-guide/console-mouse-reporting.rst   | 88 +++++++++++++++++++
+ Documentation/admin-guide/index.rst           |  1 +
+ 2 files changed, 89 insertions(+)
+ create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
+new file mode 100644
+index 000000000000..a05dfe251daf
+--- /dev/null
++++ b/Documentation/admin-guide/console-mouse-reporting.rst
+@@ -0,0 +1,88 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================
++Console Mouse Reporting
++=======================
++
++A terminal may send escape sequences to enable applications to react to mouse
++input. As the kernel does not know when to emit these events a mouse daemon
++is needed to react to mouse movements and signal the kernel accordingly. The
++kernel will then send an escape sequence to the application. This is called
++mouse reporting and several types and protocols have been developed over time.
++
++See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
++man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
++list and description of the various protocols, their bit layout as well as
++their limitations.
++
++Events and formats
++++++++++++++++++++
++
++A Linux console keeps state about two different aspects of mouse reporting,
++the kind of **events** to be reported and the **format** to send to userspace.
++
++A mouse daemon can check which kind of mouse events a client wants to be
++informed about via the TIOCLINUX ioctl, using the TIOCL_GETMOUSEREPORTING
++subcall. The values of the supported event classes (9, 1000, 1002, 1003) are
++described in tiocl.h. Based on this information the daemon is responsible
++for not sending data packages for unrequested events.
++
++A userspace client may request to be informed by the kernel about one of
++the event classes and choose one of the data formats URXVT (1005), SRG
++(1006) or X10/X11 (default) via console escape sequences. In general all
++of them encode similar information, only the escape sequences differ.
++
++See the xterm [1]_ or terminalguide [2]_ home pages for all details.
++
++Reports from kernel to userspace client
+++++++++++++++++++++++++++++++++++++++++
++
++The requested events are sent by the kernel to userspace encoded in an
++escape sequence; details depend on the chosen format. All of them use one
++based pointer coordinates and a single byte to encode the button status.
++
++Short summary (we call this the SRG button format for the rest of this text):
++
++ - 1,2 : Buttons, lower bits (see notes below)
++ - 3-5 : Modifier keys (Shift, Alt and Ctrl)
++ - 6   : Mouse movement only, no button status change
++ - 7-8 : Buttons, upper bits (for buttons 4-15)
++
++Reports sent from daemon to kernel
++++++++++++++++++++++++++++++++++++
++
++A report is sent by a mouse daemon to the kernel via the TIOCLINUX ioctl,
++using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
++xs and ys, with 0,0 as the upper left corner, but see the note below.
++The format used by the userspace mouse daemon for button encoding is almost
++identical to the SRG button layout described above and is put into the sel_mode
++of the tiocl_selection struct. All bits masked in TIOCL_SELBUTTONMASK are
++unchanged compared to the SRG button format above; the remaining three are
++changed the following way:
++
++- 3,4  : Unused, must be zero. The kernel knows modifier key state anyway.
++- 5    : Always 1, identifies mouse report / TIOCL_SELMOUSEREPORT
++
++Notes
+++++++
++
++Button numbers are encoded like this:
++
++- 0-2  : Left, middle and right button
++- 3    : No button pressed / Button release
++- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
++
++Please note that button releases should only be reported for buttons 0-2.
++
++Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
++syscall but one based for the escape sequences sent by the kernel, so the
++kernel will increase all coordinates by one.
++
++Older kernels only used the lower 4 bits of sel_mode, effectively limiting
++the protocol to 3 buttons and button click only. The meaning of the 4 bits
++is equivalent to the SRG button layout. Note that newer kernels will ignore
++the upper two bits (modifier keys).
++
++.. [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
++.. [2] https://terminalguide.namepad.de/mouse/
++
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 58c7f9fc2396..c535902f3851 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -71,6 +71,7 @@ configure specific aspects of kernel behavior to your liking.
+    cgroup-v2
+    cifs/index
+    clearing-warn-once
++   console-mouse-reporting
+    cpu-load
+    cputopology
+    dell_rbu
+-- 
+2.27.0
+
