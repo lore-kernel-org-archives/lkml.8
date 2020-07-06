@@ -2,143 +2,396 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29992073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF9C2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="jbZOEYwz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lIQqEN+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgGFJpr (ORCPT
+        id S1728620AbgGFJql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:45:47 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:11862 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGFJpr (ORCPT
+        Mon, 6 Jul 2020 05:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728350AbgGFJqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:45:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=rvLDHxfrHlo3Otfv/kTs7QJwT/t3WC4PX7Ybs44eM+I=;
-        b=jbZOEYwz91P6/LEMqcDKxkPB8I3dcATl6ZugqIrh0HXQdYpdDkSLR9RIO/P7d5hI5OgK
-        3L8L2Nms/CDlJjQ4qfxPp3ETZWJpAWQFb9xnr65ppX3qs0oJh/nTLBKSk/iHbAS5xy3nQ0
-        vqmaCbFKoKvkiEdJkeK1yHqMYD/LOmvR0=
-Received: by filterdrecv-p3mdw1-75c584b9c6-4xwkm with SMTP id filterdrecv-p3mdw1-75c584b9c6-4xwkm-18-5F02F2CA-A
-        2020-07-06 09:45:46.161499776 +0000 UTC m=+837368.642959845
-Received: from [192.168.1.14] (unknown)
-        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP
-        id ZYAMUW8kRXGzWA_jlRz-5g
-        Mon, 06 Jul 2020 09:45:45.891 +0000 (UTC)
-Subject: Re: [PATCH 1/2] rkvdec: h264: Refuse to decode unsupported bitstream
-References: <20200626171130.27346-1-ezequiel@collabora.com>
- <20200626171130.27346-2-ezequiel@collabora.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <551304f5-88bd-a673-a0ef-47af65700fe7@kwiboo.se>
-Date:   Mon, 06 Jul 2020 09:45:46 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 6 Jul 2020 05:46:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70822C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 02:46:40 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so41196270wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 02:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=K9WAWrlcNRulKKO2wx4Nu7cqwFD0/LsS+g/zpNhzEgA=;
+        b=lIQqEN+67TNPlFFoWtCmF9Owz7a/HVzMMEFPEhIE1RuzesKYCvHiekdLwg1a65+tcm
+         nSsEACRrmXfUwwJQ2x6zzQ2WKTFrGrztQ4UKVt/5W1CDvIMU0e/vxVX/VonnUnFjoxtz
+         /ZA43ostyq607QaHmfikyW/DQrzJXYOosjIU4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K9WAWrlcNRulKKO2wx4Nu7cqwFD0/LsS+g/zpNhzEgA=;
+        b=ka/MgsYT+E05BtOf5CGmeVoI192irc4Zvc9UahdcuRf5lS2bSB55eADe6nr6yXSGKI
+         3/ZMS8obyKmH8R+tT/X+e3PvnGe+57Iu1ykyO4UwwriiQvIUqzt+jEFMcF6DYfgWUP7Z
+         VsMUnFEBCdVq/o9bLq4vJlnO6SAM8yBGriW8adcpOryejKRddOqExhJmgl5TjR3npJfF
+         nrvogFx8iy0iPNqToSnMmPFm6iAUqHKAjUcGH2hN/bdFhLPY/j9cBnnGOb8jshiCh1Bx
+         EBXzM5zOsBho5XV9X22QTEjVRdaMUUBjVcsTqQRV3ooenTAqlhC7E0Ss1QMLspYJmhTg
+         1XqA==
+X-Gm-Message-State: AOAM531nSWOuEA8er8ZAqxYs9dNn3XcRCtVjlWesYrqYHapUp5ICHnSm
+        QtE5iGBKM9pRnPJCIyxO6hYZxxseUeRt/uRKIt3khw==
+X-Google-Smtp-Source: ABdhPJxRhUpPLkB0+m9CtAHR7OnfdR5JCbHPIhC2WKNfs7ZjXh1OBqmLCXbJwMgs7tvQ47rFLrDUMAJRSI7j7CMShQw=
+X-Received: by 2002:a7b:c4d7:: with SMTP id g23mr6415983wmk.17.1594028799064;
+ Mon, 06 Jul 2020 02:46:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200626171130.27346-2-ezequiel@collabora.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h2vJGzwXeGW+hCLrj?=
- =?us-ascii?Q?dhOVvE6NWrUK6wFWeiUTqhwTnvLUFyzDIZaB8lm?=
- =?us-ascii?Q?aJqcyCVh4Z8Bl772YUAcGAX576Qsb5pwEyYM87G?=
- =?us-ascii?Q?gDKKE=2FkLe9E4lW8yaPFAn9+C+jicCcPkWjUbDGC?=
- =?us-ascii?Q?VN=2Fhi=2FLElBR1gjlOaQ1batyBkoB66AVdjJeXvPz?=
- =?us-ascii?Q?n2r17P2oNKFPmxF=2FPPZVg=3D=3D?=
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        kernel@collabora.com
-Content-Type: text/plain; charset=us-ascii
-Content-Language: sv
-Content-Transfer-Encoding: 7bit
+References: <20200703071913.2358882-1-yuhsuan@chromium.org>
+ <8d21fc0c-b43e-75a0-d5d4-ed4872ec92cb@collabora.com> <CAGvk5Pqx475MOsefchcgs=CnVJiwFJxa+-J6eHcp1VgscVkTeg@mail.gmail.com>
+ <cea2bc7e-035b-2c97-73bf-25dc55ab8801@collabora.com> <CAGvk5PoiWDchYCsaR_tqQ5mE0XA_hBXHy-hS5o3vFtuPzm_JiA@mail.gmail.com>
+ <d5634533-3cf3-b52a-ff24-2bda3230927d@collabora.com> <CABXOdTcP0DagxzUrBh5H_TXzSAZjMAG4UaV++0sW99W4ypC78w@mail.gmail.com>
+ <CAGvk5PpKTHGgp5v3FLGARE7EX7F7nZUJucnpcncbf4epDfZ7jw@mail.gmail.com>
+ <CABXOdTemH2sknDJYmUyazk38+nK2ny+OiD8BaqcS=_t7STEEWg@mail.gmail.com> <CAGvk5PrV2u==ZH38mX1DAUpa8YRiDmCazkxNr1qhFmOaiw2duQ@mail.gmail.com>
+In-Reply-To: <CAGvk5PrV2u==ZH38mX1DAUpa8YRiDmCazkxNr1qhFmOaiw2duQ@mail.gmail.com>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Mon, 6 Jul 2020 17:46:27 +0800
+Message-ID: <CAGvk5PoXmErm9Tn4N65XwRMuxA5QezrMyM9WkrgdXJ9=qhdQHw@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Log results when EC commands fail
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-26 19:11, Ezequiel Garcia wrote:
-> The hardware only supports 4:2:2, 4:2:0 or 4:0:0 (monochrome),
-> 8-bit or 10-bit depth content.
-> 
-> Verify that the PPS refers to a supported bitstream, and refuse
+Yu-Hsuan Hsu <yuhsuan@chromium.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=884=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=887:34=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=884=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:28=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Fri, Jul 3, 2020 at 12:11 PM Yu-Hsuan Hsu <yuhsuan@chromium.org> wro=
+te:
+> > >
+> > > Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=883=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:58=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > >
+> > > > On Fri, Jul 3, 2020 at 3:56 AM Enric Balletbo i Serra
+> > > > <enric.balletbo@collabora.com> wrote:
+> > > > >
+> > > > > Hi Yu-Hsuan,
+> > > > >
+> > > > > On 3/7/20 11:40, Yu-Hsuan Hsu wrote:
+> > > > > > Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC=
+ 2020=E5=B9=B47=E6=9C=883=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:1=
+9=E5=AF=AB=E9=81=93=EF=BC=9A
+> > > > > >>
+> > > > > >> Hi Yu-Hsuan,
+> > > > > >>
+> > > > > >> On 3/7/20 10:48, Yu-Hsuan Hsu wrote:
+> > > > > >>> Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=
+=BC 2020=E5=B9=B47=E6=9C=883=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=88=
+4:38=E5=AF=AB=E9=81=93=EF=BC=9A
+> > > > > >>>>
+> > > > > >>>> Hi Yu-Hsuan,
+> > > > > >>>>
+> > > > > >>>> Thank you for your patch
+> > > > > >>>>
+> > > > > >>>> On 3/7/20 9:19, Yu-Hsuan Hsu wrote:
+> > > > > >>>>> Log results of failed EC commands to identify a problem mor=
+e easily.
+> > > > > >>>>>
+> > > > > >>>>> Replace cros_ec_cmd_xfer_status with cros_ec_cmd_xfer becau=
+se the result
+> > > > > >>>>> has already been checked in this function. The wrapper is n=
+ot needed.
+> > > > > >>>>>
+> > > > > >>>>
+> > > > > >>>> Nack, we did an effort to remove all public users of cros_ec=
+_cmd_xfer() in
+> > > > > >>>> favour of cros_ec_cmd_xfer_status() and you are reintroducin=
+g again. You can do
+> > > > > >>>> the same but using cros_ec_cmd_xfer_status(). In fact, your =
+patch will not build
+> > > > > >>>> on top of the upcoming changes.
+> > > > > >>> Thanks! But I have a question about implementing it. Does it =
+look like
+> > > > > >>> the one below?
+> > > > > >>> ret =3D cros_ec_cmd_xfer_status(ec_dev, msg);
+> > > > > >>> if (ret < 0) {
+> > > > > >>
+> > > > > >> In this case will already print an error.
+> > > > > >>
+> > > > > >> What are you trying to achieve?
+> > > > > >>
+> > > > > >> If the only reason is of this patch is print a message you sho=
+uld either, or
+> > > > > >> enable dynamic printk and enable dev_dbg or event better use t=
+he kernel trace
+> > > > > >> functionality. There is no need to be more verbose.
+> > > > > >>
+> > > > > >> Example:
+> > > > > >>     $ echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
+> > > > > >>     $ cat /sys/kernel/debug/tracing/trace
+> > > > > >>
+> > > > > >>     369.416372: cros_ec_request_start: version: 0, command: EC=
+_CMD_USB_PD_POWER_INFO
+> > > > > >>     369.420528: cros_ec_request_done: version: 0, command:
+> > > > > >> EC_CMD_USB_PD_POWER_INFO, ec result: EC_RES_SUCCESS, retval: 1=
+6
+> > > > > >>
+> > > > > >> Cheers,
+> > > > > >>  Enric
+> > > > > >>
+> > > > > > Thank Enric,
+> > > > > >
+> > > > > > The situation is that some users encountered errors on ChromeBo=
+ok.
+> > > > >
+> > > > > And, aren't you able to reproduce the issue?
+> > > > >
+> > > > >
+> > > > > > From their feedback reports, we only get the message like
+> > > > > > 'cros-ec-codec GOOG0013:00: ASoC: Failed to set DAI format: -71=
+'.
+> > > > > > We know that -71 is -EPROTO but it is not clear enough for us t=
+o find
+> > > > > > out the root cause. That's why we want the detail of the result=
+.
+> > > > >
+> > > > >
+> > > > > If I am not mistaken this ends calling i2s_rx_set_daifmt() into t=
+he EC firmware,
+> > > > > if the result is -EPROTO that means is not returning EC_RES_SUCCE=
+SS, so there
+> > > > > are few options:
+> > > > >
+> > > > >         if (i2s_rx_enabled)
+> > > > >                 return EC_RES_BUSY;
+> > > > >
+> > > > >         if (daifmt >=3D EC_CODEC_I2S_RX_DAIFMT_COUNT)
+> > > > >                 return EC_RES_INVALID_PARAM;
+> > > > >
+> > > > >         if (audio_codec_i2s_rx_set_daifmt(daifmt) !=3D EC_SUCCESS=
+)
+> > > > >                 return EC_RES_ERROR;
+> > > > >
+> > > > > > Because the situation happens on users' side, it is not possibl=
+e for
+> > > > > > them to enable kernel trace (ChromeOS does not allow users to t=
+ouch
+> > > > > > kernel).
+> > > > > >
+> > > > >
+> > > > > Are you sure that when you know the error code you'll find the ro=
+ot cause
+> > > > > (without adding more prints)? There is only three possibilities? =
+You can't start
+> > > > > adding prints just to debug a user issue because you don't allow =
+to be more
+> > > > > verbose. I understand that might help you but is not the way to g=
+o.
+> > >
+> > > Hi Enric and Guenter,
+> > >
+> > > Thanks for your inspiring comments.
+> > > I'm not sure whether we will find the root cause if I know the error
+> > > code. But I think it's not a point.
+> > > We wanted to add this error log because we found that the current one
+> > > is not enough. Since it is a real error, it would be better if we can
+> > > make it more detailed, right?
+> > > In addition, we thought it would be helpful in the future as well.
+> > > That's why we chose to upstream instead of merging into our source
+> > > tree only.
+> > >
+> >
+> > Kernel log messages are almost never useful for actual users. In most
+> > cases, they just clog up the kernel log, making it useless for when it
+> > actually counts (such as when the system crashes). On top of that,
+> > there already is an error message, only the error code doesn't mean
+> > much because it is "universalized". I don't see how adding another
+> > error message would improve that, even more so if that error message
+> > is only added in one place. On the other side, converting EC error
+> > codes to Linux kernel error codes would help every caller of
+> > cros_ec_cmd_xfer_status without adding more logging noise.
+>
+> Thanks for the explanation. If I understand correctly, the mean point
+> is this log is noisy.
+> In this case, the log will only appear one time during the card
+> probing(if it fails). But I do agree that it may create some potential
+> noises.
+> Converting EC error codes to Linux kernel error codes also work for
+> me. Is it possible for you to send the corresponding patch? If not, I
+> can try to work on it.
+> In addition, is it possible that one error code can come from linux or fr=
+om EC?
+>
+> >
+> > > > >
+> > > > > You should really reproduce the issue yourself an use actual debu=
+g
+> > > > > tools/prints./traces
+> > > We are trying but still unable to reproduce this issue.
+> > > However, as I maintained above, it is not a main concern of this chan=
+ge.
+> > > > >
+> > > >
+> > > > Another possibility would be to change cros_ec_cmd_xfer_status() to
+> > > > return a more granular error code, such as -EINVAL for
+> > > > EC_RES_INVALID_PARAM, -EBUSY for EC_RES_BUSY, -EINPROGRESS for
+> > > > EC_RES_IN_PROGRESS,  -ETIMEDOUT for EC_RES_TIMEOUT, -EOVERFLOW for
+> > > > EC_RES_OVERFLOW, -ENODATA for EC_RES_UNAVAILABLE, and so on.
+> > > Since there are many kinds of results from EC, why not just make user=
+s
+> > > able to check on their own?
+> > > For example, users can wait and try again if the result is EC_RES_BUS=
+Y.
+> > >
+> >
+> > That is exactly what -EBUSY is for: It lets the user space application
+> > decide what to do about it. A kernel log message can not and will
+> > never achieve that.
+> >
+> > > >
+> > > > However, it appears that the various low level functions already
+> > > > replace various EC error codes with a blank EC_RES_ERROR. No amount=
+ of
+> > > > logging will tell us what exactly went wrong in those functions. Lu=
+cky
+> > > > for us, audio_codec_i2s_rx_set_daifmt() only ever returns EC_SUCCES=
+S,
+> > > > so we know that the problem is either that i2s_rx_enabled is true o=
+r
+> > > > that daifmt is too large. None of those really warrants more verbos=
+e
+> > > > logging.
+> > > >
+> > > > From the context, my personal bet is that i2s_rx_enabled is true: I
+> > > > don't immediately see how disabling it is enforced before trying to
+> > > > set the DAI format, and I don't see how "daifmt >=3D
+> > > > EC_CODEC_I2S_RX_DAIFMT_COUNT" can ever be true.
+> > > I totally agree. According to the source, it seems that both path are
+> >
+> > You are effectively saying that there is code to ensure that
+> > i2s_rx_enabled is false. Granted, the code is too complex to easily
+> > understand, and I may not have seen that flow. Per the same logic,
+> > though, it might well be possible that _because_ the code is not easy
+> > to understand there may well be a data path where i2s_rx_enabled is
+> > set. One would need to ensure that the sequence of <disable rx> - <set
+> > dai format> - <re-enable rx> is guaranteed, and that it is always
+> > executed under a kernel lock. Maybe you can point me to that code, for
+> > my education.
+> >
+> > On the other side, it is much easier to verify that "daifmt >=3D
+> > EC_CODEC_I2S_RX_DAIFMT_COUNT" is never true.
+> >
+> > Thanks,
+> > Guenter
+> The complete errors are:
+> ERR kernel: [    8.568171]  cros-ec-codec GOOG0013:00: ASoC: error at
+> snd_soc_dai_set_fmt on GOOG0013:00: -71
+> WARNING kernel: [    8.583312] cros-ec-codec GOOG0013:00: ASoC: Failed
+> to set DAI format: -71
+> ERR kernel: [    8.629388] acp3x-alc5682-max98357 AMDI5682:00:
+> devm_snd_soc_register_card(acp3xalc5682m98357) failed: -71
+> WARNING kernel: [    8.645306] acp3x-alc5682-max98357: probe of
+> AMDI5682:00 failed with error -71
+>
+> This issue happened when probing the card while the i2s_rx is only
+> enabled when the device is used. Therefore, the i2s_rx should not be
+> enabled before the card is probed. However, I may miss something. I
+> will check the entire path later.
+I finally found a possible root cause. EC does not restart when we
+reboots kernel. It means if kernel crashes while i2s_rx is enabled, we
+will trigger this issue. In addition, the issue will stay until the
+next time rebooting EC.
 
-This should be SPS not PPS, same for hantro patch.
+I will work on the fix. Thank you for very helpful information.
 
-> unsupported bitstreams by failing at TRY_EXT_CTRLS time.
-> 
-> The driver is currently broken on 10-bit and 4:2:2
-> so disallow those as well.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/rkvdec/rkvdec.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-> index 225eeca73356..0f81b47792f6 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> @@ -27,6 +27,32 @@
->  #include "rkvdec.h"
->  #include "rkvdec-regs.h"
->  
-> +static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	if (ctrl->id == V4L2_CID_MPEG_VIDEO_H264_SPS) {
-> +		const struct v4l2_ctrl_h264_sps *sps = ctrl->p_cur.p;
-
-This should be p_new and not p_cur to validate the new ctrl value, same for hantro patch.
-
-With both fixed this and the hantro patch is,
-
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-
-Regards,
-Jonas
-
-> +		/*
-> +		 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
-> +		 * but it's currently broken in the driver.
-> +		 * Reject them for now, until it's fixed.
-> +		 */
-> +		if (sps->chroma_format_idc > 1)
-> +			/* Only 4:0:0 and 4:2:0 are supported */
-> +			return -EINVAL;
-> +		if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
-> +			/* Luma and chroma bit depth mismatch */
-> +			return -EINVAL;
-> +		if (sps->bit_depth_luma_minus8 != 0)
-> +			/* Only 8-bit is supported */
-> +			return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
-> +	.try_ctrl = rkvdec_try_ctrl,
-> +};
-> +
->  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
->  	{
->  		.per_request = true,
-> @@ -42,6 +68,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
->  		.per_request = true,
->  		.mandatory = true,
->  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
-> +		.cfg.ops = &rkvdec_ctrl_ops,
->  	},
->  	{
->  		.per_request = true,
-> 
+> For "daifmt >=3D EC_CODEC_I2S_RX_DAIFMT_COUNT", it is obviously not to
+> be true by looking into i2s_rx_set_fmt function.
+>
+> Thanks,
+> Yu-Hsuan
+>
+> >
+> > > impossible. I'm not really understand the whole path but is it
+> > > possible for EC to return other results? I will do more tests and loo=
+k
+> > > carefully into the source. Really thanks for your suggestions.
+> > >
+> > > Cheers,
+> > > Yu-Hsuan
+> > > >
+> > > > Guenter
+> > > >
+> > > >
+> > > > Guenter
+> > > >
+> > > > > Cheers,
+> > > > >  Enric
+> > > > >
+> > > > > > The other way we thought is changing dev_dbg to dev_err in
+> > > > > > cros_ec_cmd_xfer_status. But we are not sure whether it is also=
+ an
+> > > > > > error for other usages.
+> > > > > >
+> > > > > >>>   if (ret =3D=3D -EPROTO)
+> > > > > >>>     dev_err(..., msg->result)
+> > > > > >>>   goto error;
+> > > > > >>> }
+> > > > > >>> I'm not sure whether it makes sense to check ret =3D=3D -EPRO=
+TO here.
+> > > > > >>>
+> > > > > >>>>
+> > > > > >>>>> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> > > > > >>>>> ---
+> > > > > >>>>>  sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
+> > > > > >>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > > > >>>>>
+> > > > > >>>>> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/c=
+odecs/cros_ec_codec.c
+> > > > > >>>>> index 8d45c628e988e..a4ab62f59efa6 100644
+> > > > > >>>>> --- a/sound/soc/codecs/cros_ec_codec.c
+> > > > > >>>>> +++ b/sound/soc/codecs/cros_ec_codec.c
+> > > > > >>>>> @@ -90,10 +90,17 @@ static int send_ec_host_command(struct =
+cros_ec_device *ec_dev, uint32_t cmd,
+> > > > > >>>>>       if (outsize)
+> > > > > >>>>>               memcpy(msg->data, out, outsize);
+> > > > > >>>>>
+> > > > > >>>>> -     ret =3D cros_ec_cmd_xfer_status(ec_dev, msg);
+> > > > > >>>>> +     ret =3D cros_ec_cmd_xfer(ec_dev, msg);
+> > > > > >>>>>       if (ret < 0)
+> > > > > >>>>>               goto error;
+> > > > > >>>>>
+> > > > > >>>>> +     if (msg->result !=3D EC_RES_SUCCESS) {
+> > > > > >>>>> +             dev_err(ec_dev->dev, "Command %d failed: %d\n=
+", cmd,
+> > > > > >>>>> +                     msg->result);
+> > > > > >>>>> +             ret =3D -EPROTO;
+> > > > > >>>>> +             goto error;
+> > > > > >>>>> +     }
+> > > > > >>>>> +
+> > > > > >>>>>       if (insize)
+> > > > > >>>>>               memcpy(in, msg->data, insize);
+> > > > > >>>>>
+> > > > > >>>>>
