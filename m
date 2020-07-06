@@ -2,149 +2,126 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7702BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53D06206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxZpHmKZ"
+	by mail.kernel.org (Postfix) with ESMTP id 018DA206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594023194;
+	bh=+J43D10c1do+MqKRehDMJtCNekWCxU9ZJ7/Y3GE2T4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JtVBM6pKcAMwlm16GTllMYbsGLSKhJJJg61jYuz3Zvuq6V1m66uVQB0Bg38DwDHQ0
+	 2nEdeatqT1b3k/vSMkMzdk+FRJP3SywqcRx0IwW/xMIb29zpC5mUeSBOjmJ+QtgOgY
+	 VinWrU6hrgjjkLMZa/losUKPPSkDHIkVZNaJ9jH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgGFIME (ORCPT
+        id S1728529AbgGFINN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 04:12:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21041 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728661AbgGFIME (ORCPT
+        Mon, 6 Jul 2020 04:13:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41496 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgGFINM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 04:12:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594023123;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=KN4hJWebE8IKuSOfeQsnzbA7ZUjl5+bsUwMQzsfmLow=;
-        b=KxZpHmKZZHABsQ3vK8oHjPVb42X0OZYich3INJcRV6JgYM6wYyJsD50iVSYdN0uEAGG4xH
-        ZUG6KBKnPnP1DbXxuBME1WdE6dr/A5kvQmL1xpp05wT/jft871k+yeDL3xkj9JMGw2kOe/
-        WkVVTWREy4mUSAMfAlyyKpfsoBV1+x8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-Ljy0pdY8MNW5XSLbbyZ49Q-1; Mon, 06 Jul 2020 04:11:59 -0400
-X-MC-Unique: Ljy0pdY8MNW5XSLbbyZ49Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18FDB10059A5;
-        Mon,  6 Jul 2020 08:11:57 +0000 (UTC)
-Received: from [10.36.114.3] (ovpn-114-3.ams2.redhat.com [10.36.114.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 18E3A275E25;
-        Mon,  6 Jul 2020 08:11:51 +0000 (UTC)
-Subject: Re: [PATCH v3 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        stable@vger.kernel.org
-References: <20200624094741.9918-2-david@redhat.com>
- <20200701193322.E670F20760@mail.kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <f263571b-8852-02c9-f606-9dc013b8124f@redhat.com>
-Date:   Mon, 6 Jul 2020 10:11:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 04:13:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z15so28501925wrl.8;
+        Mon, 06 Jul 2020 01:13:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TUKUTjO33DX82247t1T1Yew5fhk3nmz220YuXhRhADc=;
+        b=O+fe/A3mpb7/lMfOJzovPrh19ECYGgB/aEMbGQnBoy182VY0hc1SmedElo+QxKi3fb
+         dBzB7oinC7z/J1ErcUrvazxlszIBaN97Wx2TPhmxKsC5Un2XEJR9AiLlOtLYZpD1GNjy
+         /B60pws2N/VXmTEWbTPmkLjaGp0wjhHN4jvHimy1lyFzk8ZeDB4uE71dNNgK4zqjb7oa
+         3jHuJffwsJG0bCf1F6OtcDt6M3CpMsGy4h0YvHVdf4I51MjmuF686gFWcTQ9VZod2mnt
+         fdC/JPG8xnUeDy6pQeRCRTmNbi+1OXTmHlgf4T4l4FsPf6FhQfcheVkRKA2u8NAmSQ4Y
+         Kj5Q==
+X-Gm-Message-State: AOAM533+F24McVPRrcgUGfHn27fHwq6NJRiYRJADHyDpsrNiuxVfg7+0
+        +lLr5izk9qUsCYesPVKiYp0=
+X-Google-Smtp-Source: ABdhPJzyJLT0CQOJhMf7/BN92VF7E6LpQaMaK9rgLW0mqz5ccWXizBMna/VaEldxg5y18H3HXfxLPA==
+X-Received: by 2002:a5d:6045:: with SMTP id j5mr46637840wrt.209.1594023190618;
+        Mon, 06 Jul 2020 01:13:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id f12sm23767680wrj.48.2020.07.06.01.13.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jul 2020 01:13:09 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 10:13:07 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tamseel Shams <m.shams@samsung.com>
+Cc:     kgene@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com
+Subject: Re: [PATCH v3] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Message-ID: <20200706081307.GA13025@kozik-lap>
+References: <CGME20200704142658epcas5p254ae909fedb07dda58cece5d6d5252b4@epcas5p2.samsung.com>
+ <20200704140646.66528-1-m.shams@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701193322.E670F20760@mail.kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Disposition: inline
+In-Reply-To: <20200704140646.66528-1-m.shams@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.07.20 21:33, Sasha Levin wrote:
-> Hi
+On Sat, Jul 04, 2020 at 07:36:46PM +0530, Tamseel Shams wrote:
+> In few older Samsung SoCs like s3c2410, s3c2412
+> and s3c2440, UART IP is having 2 interrupt lines.
+> However, in other SoCs like s3c6400, s5pv210,
+> exynos5433, and exynos4210 UART is having only 1
+> interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+> call in the driver gives the following warning:
+> "IRQ index 1 not found" on recent platforms.
 > 
-> [This is an automated email]
+> This patch re-factors the IRQ resources handling for
+> each platform and hence fixing the above warnings seen
+> on some platforms.
 > 
-> This commit has been processed because it contains a "Fixes:" tag
-> fixing commit: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization").
+> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> ---
+> Removed the logic of irq_cnt and directly using
+> s3c24xx_serial_has_interrupt_mask() to check for
+> number of interrupt lines.
 > 
-> The bot has tested the following trees: v5.7.6, v5.4.49.
+>  drivers/tty/serial/samsung_tty.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> v5.7.6: Build OK!
-> v5.4.49: Failed to apply! Possible dependencies:
->     e03d1f78341e8 ("mm/sparse: rename pfn_present() to pfn_in_present_section()")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-> 
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 6ef614d8648c..8a955f3d8975 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -1908,10 +1908,13 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+>  	else {
+>  		port->irq = ret;
+>  		ourport->rx_irq = ret;
+> -		ourport->tx_irq = ret + 1;
+> +		if (s3c24xx_serial_has_interrupt_mask(port))
+> +			ourport->tx_irq = ret;
 
-It contains
-	Cc: <stable@vger.kernel.org>	[5.2+]
-so a stable backport is desired once upstream. The v5.4.49 backport
-should be fairly easy.
+Hi,
 
--- 
-Thanks,
+I don't understand: Why do you assign here the same interrupt as RX?
 
-David / dhildenb
+Best regards,
+Krzysztof
 
+> +		else
+> +			ourport->tx_irq = ret + 1;
+>  	}
+>  
+> -	ret = platform_get_irq(platdev, 1);
+> +	ret = platform_get_irq_optional(platdev, 1);
+>  	if (ret > 0)
+>  		ourport->tx_irq = ret;
+>  	/*
+> -- 
+> 2.17.1
+> 
