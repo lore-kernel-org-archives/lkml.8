@@ -2,117 +2,118 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3159520715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF97D20724
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d6OFUJ0p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyM9DJYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgGFPQd (ORCPT
+        id S1729364AbgGFPQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:16:33 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8577 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729197AbgGFPQc (ORCPT
+        Mon, 6 Jul 2020 11:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729248AbgGFPQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:16:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f033fe70000>; Mon, 06 Jul 2020 08:14:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Jul 2020 08:16:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Jul 2020 08:16:32 -0700
-Received: from [10.26.72.33] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
- 2020 15:16:20 +0000
-Subject: Re: [PATCH 7/8] ASoC: tegra: tegra20_das: remove always-true
- comparison
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>
-CC:     <tiwai@suse.de>, <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
- <20200702165901.164100-8-pierre-louis.bossart@linux.intel.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1a7c7025-7689-54a0-dbc0-00b5c1fcd0f1@nvidia.com>
-Date:   Mon, 6 Jul 2020 16:16:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 11:16:41 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE383C061755;
+        Mon,  6 Jul 2020 08:16:41 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id h17so32281911oie.3;
+        Mon, 06 Jul 2020 08:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mm0vlTFeGVgW52u5moYgXz2m36p/HxW/iJhsgevmAS4=;
+        b=EyM9DJYgqZsfV1SWVc6/M1TBfo943qBuFXf5P/E6J7iYHMrGfMddh8f16SGETs8O39
+         lIxfxF/rTSfECK/dKFraXWB0ycJ1DgmZXorcjsiBpZ+dNmB2styG078yQA7UYG9ie8vk
+         2UvYS5b3qc4b4u3T0/yQOVqq4RdiPe4/wpFrhDWhkY/chO/7FTDxLOpX/a4pv4R4P2Zr
+         y8QQYxS4QDuI1EtdTKNdBteZzke2Tbt7FYHfaZhVhx75ybd/ugpePj9rojS864P7xGc4
+         a9rEChxFvVl5FM7XpdwJgfrpEqkznVw2fvGYPn01vSO8ZbxKdayeyAeU5tEgMlV7n6SJ
+         SInA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mm0vlTFeGVgW52u5moYgXz2m36p/HxW/iJhsgevmAS4=;
+        b=gSptpDuBUMAXYTkhDJvYo5iGHT2yv1ndq+hvs0c1f1PyYfF7qI/OMamkolWBvNOPj6
+         O84tj6l2Z2JGMD39S5RNsW/VEfi6JX1n1Nf4PrGfezQnUJxu+h0bufBts93EKESLUvhG
+         ph9g+SvUwM3InhfW2oh++uor84jr5nCPdvn1hicsXkPJQsw+ZXtlSQrpI41y8Cx+UnuM
+         xBzXrnnANnA5GCRa2ya8eK0v3HC8uQkUu3SqlubJEi+pq9Ioj3ukCe7rRdXi9BvwyXc8
+         bogTSXaLccCcUa4zmvGkgUdoTvePIKsl/wui+gC8Js6BD1MxKV2Y52TvAq1xhLkkTv0j
+         2W2g==
+X-Gm-Message-State: AOAM532+Dx9OlLA4qIA0BclwMcMiSCQubaB+r8cU6Yg3sw0a0lmHaJpx
+        TjlPHUz4iBMbMsd637dkK8xr7i5EYKKafk7MK/o=
+X-Google-Smtp-Source: ABdhPJz3jFtfs8keb/hU5mf/blBJGfZsbjbw6DrxhYWX14llhEIm6YVIu7lKlcEqAOrV5AJ4qYixrhMaJPm7aonPFCA=
+X-Received: by 2002:aca:4fd3:: with SMTP id d202mr34901622oib.142.1594048601058;
+ Mon, 06 Jul 2020 08:16:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702165901.164100-8-pierre-louis.bossart@linux.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594048487; bh=S3qOsW4jy3ZymnO+RQ9II2XOQKKoroUl5+GuXsnukfU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=d6OFUJ0pQtg6JQNVFCgkn/XX5QvOjZQA7YGkzOh5jeFI1EEr9d+9uXjmZBMHygc7i
-         +fMiz5QaZP2St9MCr/wjAiDsGA3nMwV9kXM12bX28umi38ousxAkAwYFukFs2+qr9m
-         DCXLZZuViVo6JARF8034PM2zUKb1ihpLn+de3tmDU2jrBRyOr0vEwRg86NdPauItf4
-         lMLsoErnsyCo6EWjSVqqgECpya2Upq1awjOuxQRTSbpVVcDhRZ3bb7a3UXdcX1futz
-         EbIQZhihEllFEKDsBgXLOX++Y4glQJTFP9jMsvK+dVkDw0Ou1BJJiDy1U19xd9q99L
-         6MUUXS/P0jwUQ==
+References: <1589494238-2933-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdW8aQyHm7uzOd3cL2kPXc0EZ=DN_MmVa4AVFLqo5PwMKA@mail.gmail.com>
+In-Reply-To: <CAMuHMdW8aQyHm7uzOd3cL2kPXc0EZ=DN_MmVa4AVFLqo5PwMKA@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 6 Jul 2020 16:16:15 +0100
+Message-ID: <CA+V-a8um0M4S2EL0yRvY0TZRZ2vkgEy+Q_nJahHs1KiZX=YRvA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
-On 02/07/2020 17:59, Pierre-Louis Bossart wrote:
-> Fix W=1 warning:
-> 
-> sound/soc//tegra/tegra20_das.c:101:11: warning:
-> comparison of unsigned expression >= 0 is always true [-Wtype-limits]
->   101 |  if ((reg >= TEGRA20_DAS_DAP_CTRL_SEL) &&
->       |           ^~
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  sound/soc/tegra/tegra20_das.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/tegra/tegra20_das.c b/sound/soc/tegra/tegra20_das.c
-> index 1070b2710d5e..79dba878d854 100644
-> --- a/sound/soc/tegra/tegra20_das.c
-> +++ b/sound/soc/tegra/tegra20_das.c
-> @@ -98,8 +98,7 @@ EXPORT_SYMBOL_GPL(tegra20_das_connect_dac_to_dap);
->  
->  static bool tegra20_das_wr_rd_reg(struct device *dev, unsigned int reg)
->  {
-> -	if ((reg >= TEGRA20_DAS_DAP_CTRL_SEL) &&
-> -	    (reg <= LAST_REG(DAP_CTRL_SEL)))
-> +	if (reg <= LAST_REG(DAP_CTRL_SEL))
->  		return true;
->  	if ((reg >= TEGRA20_DAS_DAC_INPUT_DATA_CLK_SEL) &&
->  	    (reg <= LAST_REG(DAC_INPUT_DATA_CLK_SEL)))
-> 
+On Fri, May 15, 2020 at 8:22 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, May 15, 2020 at 12:10 AM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds the
+> > same driver. So this patch renames CONFIG_PCIE_RCAR to
+> > CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfig
+> > file.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> I wrote before:
+>
+>    "I can take patch 2/11 through renesas-devel.
+>     Probably it's best if I submit it to arm-soc as a fix for v5.8, after
+>     the driver part has been merged into v5.8-rc1."
+>
+> so this will have to wait for v5.8-rc1.
+>
+Now that v5.8-rc1 is available can you please queue this patch.
 
-Thanks!
+Cheers,
+--Prabhakar
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
