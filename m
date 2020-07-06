@@ -2,132 +2,128 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C9EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34709C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C954620715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1369420715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tdUENaMx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xms4RpfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgGFK4R (ORCPT
+        id S1728871AbgGFK50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50866 "EHLO
+        Mon, 6 Jul 2020 06:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgGFKz4 (ORCPT
+        with ESMTP id S1728670AbgGFK5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:55:56 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CB6C08C5E1
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:55:54 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so40317270wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:55:54 -0700 (PDT)
+        Mon, 6 Jul 2020 06:57:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83978C061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 03:57:25 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j4so37896848wrp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p8WFiVjLmVPpS5PevlndhZ530MlitNcSeEqWsFmmzog=;
-        b=tdUENaMxbiMgqVZasWVjkRfwQNdqnLloHmBbOr49mJNB+adoIjkDhmGJ7bGy3a60Xg
-         AcpdS0+usLiP2VP/JkKC87xOOZNgcDONdOZWyf0MAh8FoCTx0V+3Hvn31RBNQrylno5F
-         D7U1+PSOVbuq0GNmR3q4qv8R/38bAcnUH3ml6CP+B5Obmx/SxrkDobMIIFb5GHJ8rfJX
-         eFiqyQqpb1HV0MsKe5vLMpMriprgCucbFfxz4ZinRMg/LR3fl6i8US5eSMLPVQrbP11o
-         BDV8+6GxLgLLkjCEo+Rczp8QvGDzKxJNc+4doxpuzwuttUTfICGeJmjLijhcAZ4jHHuO
-         rbwA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=2xHtBHyIdQ09rBCcIyd7tye4mkZ083sSa8R65WPM6ik=;
+        b=Xms4RpfMkjhJc7D8kwKPgwx4G5N19R98AoxpqxGwiBZ6RWbt4d8AnYeGbLZY0iKqJH
+         aBTd+wessxMey0FzXsf5csNYsrNn62EkAJ4lXrRyYYO2C+DSg37EjeY147pRVMA5IrZ/
+         yLAjsWd1MgRwJ6tJLnurROu9H8LMjsJMnc+3ZFGUOB12XFhHHTmQBMW6lgNBB+JTs3RS
+         C9Wd5i62xZ4ztHD2VPXZ3R6UiBOJViaN9ZUySLL8hLm9Ax0bA+kkvpoUFGprjpvlWqpo
+         YK16cFQjxmPu3VwF9azUBucYCAh/t/ZUY3LXgvj7tjOd6mDCQIj25sp/yMgydnEhVUtt
+         4tqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=p8WFiVjLmVPpS5PevlndhZ530MlitNcSeEqWsFmmzog=;
-        b=m+uHoKuBhUUv1imwUJuiLiZXmf71OpUr9GJgIo1FTHXlWPtZ2OkUhWwiVBTHOp9ceh
-         kqlPHmVnFc/JEyXmSPw8zCv2+b+J05xEqxZwZhpXl9w1VCYkyOMhyYKrZqUIRn/ybkZA
-         IZ54ORU5CFS2xR7qPMFu0qwmjP851hdaGhtO30nX9A87iXL/KEOIxOoFoRLFgHu/TlbR
-         xkRavCUdVIQw2GJnORqiBWNekUPayQay5JDzq7exDpQ+d2JEDkH8lrX/C5XjDK3z9H5Y
-         T72zTwFe9dgWRVrJBKtw6/Gfx8D9jhZTBaiGrQAg6v/KihHnroVL4o+x/5dqqnJmzkmg
-         8ORg==
-X-Gm-Message-State: AOAM532/HTLmOmG1hl/8hqvLBQx4olgV0n9a3Vs7A7/I8kQxk06hi90Z
-        7gvIVvW6nXpXbv2oaIYUL5DEBA==
-X-Google-Smtp-Source: ABdhPJx0kiz7FATk9/QGSysaSxTuOpqlkgP56bxqmGPBRnPslVMvQbpUKDhoyhSLBmyuLgcILd/3EQ==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr47091458wrt.174.1594032952963;
-        Mon, 06 Jul 2020 03:55:52 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id a22sm22931481wmj.9.2020.07.06.03.55.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=2xHtBHyIdQ09rBCcIyd7tye4mkZ083sSa8R65WPM6ik=;
+        b=HCmKRPc1OCWHxw+5raf8AVJpideno/Ui/NqE2NnxAQpgYFUtmaIAXyqJJATwQw2tVd
+         L1zfz4SAUdDfXZs4l6nrTrxIksTv+lfg65N2DtGW/0PsaEkDZwdpzXLApdDIJYdLmSJC
+         vjI22uxigQUM1MJXQLBzbIeGE9GssKh96+o7eOuGl8TN1f+7EVnGRrdB96acwcrdQhua
+         WDXZhFRLlmlDmt+quzgScNv7/75PS09ZUX9827ApSzJ99yFNbxVSnnqm5aDxwsCvA16v
+         UHyy6MrwxwsLhwKabWy1sFEvwoCLOoh75iounQTpZL5T14LRMjlnPWEWMQP5xd4aG2yO
+         P9FA==
+X-Gm-Message-State: AOAM530ohUPaSgdHOz1g2Np7dI6ddX3DhTbMflzXqPDYP/IMngsT2hlA
+        QZmDzYI8Ji3Nh2X6Tc+JEFy3Zwr7bQU=
+X-Google-Smtp-Source: ABdhPJzjxTg2X3+vtJvThPO/bnKqtA7sawY2jecA7IDNlXh6vLpq3o7quoiZpmnTLTNKGoCXwiefvQ==
+X-Received: by 2002:a5d:55cf:: with SMTP id i15mr52382081wrw.204.1594033044031;
+        Mon, 06 Jul 2020 03:57:24 -0700 (PDT)
+Received: from maphy.uni-hannover.de ([130.75.75.70])
+        by smtp.gmail.com with ESMTPSA id o21sm5637464wmh.18.2020.07.06.03.57.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 03:55:52 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v4 2/4] thermal: core: Get thermal zone by id
-Date:   Mon,  6 Jul 2020 12:55:36 +0200
-Message-Id: <20200706105538.2159-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706105538.2159-1-daniel.lezcano@linaro.org>
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
+        Mon, 06 Jul 2020 03:57:23 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:57:22 +0200
+From:   Tammo Block <tammo.block@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: [PATCH v3 0/6] vt: Add SRG mouse reporting features
+Message-ID: <cover.1594032517.git.tammo.block@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The next patch will introduce the generic netlink protocol to handle
-events, sampling and command from the thermal framework. In order to
-deal with the thermal zone, it uses its unique identifier to
-characterize it in the message. Passing an integer is more efficient
-than passing an entire string.
+Hi everybody,
 
-This change provides a function returning back a thermal zone pointer
-corresponding to the identifier passed as parameter.
+this patchset adds xterm like mouse reporting features to the console.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- drivers/thermal/thermal_core.c | 14 ++++++++++++++
- drivers/thermal/thermal_core.h |  2 ++
- 2 files changed, 16 insertions(+)
+The linux virtual console has support for mouse reporting since 1994 or so,
+but the kernel only supports the original X10/X11 style standard protocols.
+To support more protocols these patches expand the kernel structures in a
+up- and downwards compatible way, see the last patch for detailed
+documentation and pointers to even more detailed docs.
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 9caaa0b6d662..5fae1621fb01 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -668,6 +668,20 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
- 	return ret;
- }
- 
-+struct thermal_zone_device *thermal_zone_get_by_id(int id)
-+{
-+	struct thermal_zone_device *tz = NULL;
-+
-+	mutex_lock(&thermal_list_lock);
-+	list_for_each_entry(tz, &thermal_tz_list, node) {
-+		if (tz->id == id)
-+			break;
-+	}
-+	mutex_unlock(&thermal_list_lock);
-+
-+	return tz;
-+}
-+
- void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
- 					  const char *cdev_type, size_t size)
- {
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 71d88dac0791..4f8389efaa62 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -50,6 +50,8 @@ int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
- int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
- 			      void *thermal_governor);
- 
-+struct thermal_zone_device *thermal_zone_get_by_id(int id);
-+
- struct thermal_attr {
- 	struct device_attribute attr;
- 	char name[THERMAL_NAME_LENGTH];
+The main goal is to become compatible with xterm, as most TUI software today
+is tested in xterm or another compatible terminal.
+
+Support by the mouse daemons (consolation, gpm) will be needed too.
+
+
+Kind regards,
+Tammo
+
+Changes from v2:
+- Rename enum and and use it as a type for vc_protocol_mouse
+- Correct cding style and new spelling error
+
+Changes from v1:
+- Really fixed the style und spelling errors (Sorry Randy!)
+- Created defines and enums for better readability
+- Made variable to store last pressed button static and moved into
+  mouse_report function  
+
+Changes from v0:
+- Fixed al the style the things mentioned by Jiri and Randy (thanks!)
+- Change datastructure for report (better compatibility)
+- Changed documentation in large parts accordingly
+- Added URXVT protocol
+
+Tammo Block (6):
+  tiocl.h: Change/Add defines for mouse report
+  console_struct.h: Add members for mouse report
+  vt/vt: Enable mode change via escape sequence
+  vt/vt: Add SRG mouse reporting protocol
+  vt/vt: Add URXVT mouse reporting protocol
+  Documentation: Describe console mouse reporting
+
+ .../admin-guide/console-mouse-reporting.rst   | 88 +++++++++++++++++++
+ Documentation/admin-guide/index.rst           |  1 +
+ drivers/tty/vt/vt.c                           | 45 ++++++++--
+ include/linux/console_struct.h                |  9 +-
+ include/uapi/linux/tiocl.h                    |  8 +-
+ 5 files changed, 143 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
+
 -- 
-2.17.1
+2.27.0
 
