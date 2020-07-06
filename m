@@ -2,105 +2,110 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3527EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B011FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9C020656
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949CC20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGFXza (ORCPT
+        id S1727124AbgGFX4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:55:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10104 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726729AbgGFXz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:55:29 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066NWgxB047932;
-        Mon, 6 Jul 2020 19:55:28 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3249rbxdfn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 19:55:28 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066NsRnQ002711;
-        Mon, 6 Jul 2020 23:55:27 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 322hd8bdmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 23:55:27 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066NtQCU38011226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jul 2020 23:55:26 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CACC2AC05E;
-        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9505CAC05F;
-        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Jul 2020 23:55:26 +0000 (GMT)
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
- <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
- <20200706230914.GC20770@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
-Date:   Mon, 6 Jul 2020 19:55:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 6 Jul 2020 19:56:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:57554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgGFX4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:56:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E89B31B;
+        Mon,  6 Jul 2020 16:56:08 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E1913F68F;
+        Mon,  6 Jul 2020 16:56:07 -0700 (PDT)
+References: <20200702171548.GA11813@codemonkey.org.uk> <20200702213627.GF3183@techsingularity.net> <20200703090226.GV4800@hirez.programming.kicks-ass.net> <20200703104033.GK117543@hirez.programming.kicks-ass.net> <20200703205153.GA19901@codemonkey.org.uk> <20200706145952.GB597537@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Jones <davej@codemonkey.org.uk>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        paul.gortmaker@windriver.com
+Subject: Re: weird loadavg on idle machine post 5.7
+In-reply-to: <20200706145952.GB597537@hirez.programming.kicks-ass.net>
+Date:   Tue, 07 Jul 2020 00:56:04 +0100
+Message-ID: <jhj5zb08agb.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200706230914.GC20770@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_20:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
- cotscore=-2147483648 clxscore=1015 phishscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007060163
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 7:09 PM, Jarkko Sakkinen wrote:
-> On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
->> to get the event log from ACPI. If one is found, use it to get the
->> start and length of the log area. This allows non-UEFI systems, such
->> as SeaBIOS, to pass an event log when using a TPM2.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
-> way to test this?
 
-
-Yes.
-
-
+On 06/07/20 15:59, Peter Zijlstra wrote:
+> OK, lots of cursing later, I now have the below...
 >
-> I'm anyway more worried about breaking existing TPM 1.2 functionality
-> and that requires only QEMU without extras.
+> The TL;DR is that while schedule() doesn't change p->state once it
+> starts, it does read it quite a bit, and ttwu() will actually change it
+> to TASK_WAKING. So if ttwu() changes it to WAKING before schedule()
+> reads it to do loadavg accounting, things go sideways.
 >
-> /Jarkko
+> The below is extra complicated by the fact that I've had to scrounge up
+> a bunch of load-store ordering without actually adding barriers. It adds
+> yet another control dependency to ttwu(), so take that C standard :-)
+>
+> I've booted it, and build a few kernels with it and checked loadavg
+> drops to 0 after each build, so from that pov all is well, but since
+> I'm not confident I can reproduce the issue, I can't tell this actually
+> fixes anything, except maybe phantoms of my imagination.
+>
 
+As you said on IRC, the one apparent race would lead into "negative"
+rq->nr_uninterruptible accounting, i.e. we'd skip some increments so would
+end up with more decrements. As for the described issue, I think we were
+both expecting "positive" accounting, i.e. more increments than decrements,
+leading into an artificially inflated loadavg.
 
+In any case, this should get rid of any existing race. I'll need some more
+time (and more aperol spritz) to go through it all though.
+
+> @@ -2605,8 +2596,20 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>        *
+>        * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
+>        * __schedule().  See the comment for smp_mb__after_spinlock().
+> +	 *
+> +	 * Form a control-dep-acquire with p->on_rq == 0 above, to ensure
+> +	 * schedule()'s deactivate_task() has 'happened' and p will no longer
+> +	 * care about it's own p->state. See the comment in __schedule().
+>        */
+> -	smp_rmb();
+> +	smp_acquire__after_ctrl_dep();
+
+Apologies for asking again, but I'm foolishly hopeful I'll someday be able
+to grok those things without half a dozen tabs open with documentation and
+Paul McKenney papers.
+
+Do I get it right that the 'acquire' part hints this is equivalent to
+issuing a load-acquire on whatever was needed to figure out whether or not
+the take the branch (in this case, p->on_rq, amongst other things); IOW
+ensures any memory access appearing later in program order has to happen
+after the load?
+
+That at least explains to me the load->{load,store} wording in
+smp_acquire__after_ctrl_dep().
+
+> +
+> +	/*
+> +	 * We're doing the wakeup (@success == 1), they did a dequeue (p->on_rq
+> +	 * == 0), which means we need to do an enqueue, change p->state to
+> +	 * TASK_WAKING such that we can unlock p->pi_lock before doing the
+> +	 * enqueue, such as ttwu_queue_wakelist().
+> +	 */
+> +	p->state = TASK_WAKING;
+>
+>       /*
+>        * If the owning (remote) CPU is still in the middle of schedule() with
