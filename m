@@ -2,95 +2,88 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4B020715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318F82070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F4CXDtLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgGFBUT (ORCPT
+        id S1728595AbgGFBVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:20:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:45886 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgGFBUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:20:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45B061042;
-        Sun,  5 Jul 2020 18:20:15 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D5CE53F718;
-        Sun,  5 Jul 2020 18:20:11 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Kaly Xin <Kaly.Xin@arm.com>,
-        Jia He <justin.he@arm.com>
-Subject: [PATCH 3/3] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
-Date:   Mon,  6 Jul 2020 09:19:47 +0800
-Message-Id: <20200706011947.184166-4-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706011947.184166-1-justin.he@arm.com>
-References: <20200706011947.184166-1-justin.he@arm.com>
+        Sun, 5 Jul 2020 21:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728459AbgGFBVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 21:21:42 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C60EC061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 18:21:42 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e18so17634366pgn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 18:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8yvQ48jePvSkpNEOiKywOlcwgJYBDKGMGlLh7bQcbxY=;
+        b=F4CXDtLy5SDTAqh+FkUui2v2kyxo6W8b0CK2JM9q/ZhluIHz4NdY3uuU/a39UbCpq9
+         +mGWMUF4RxHkOMVo59KHhJI0O1d3+/IulpLFBNzxLysv74yl/AACzAi7ptOpuBxrIUBS
+         yPa303MHMZuFP0EpmuF1Db9zI3LVAp0BCyIL4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8yvQ48jePvSkpNEOiKywOlcwgJYBDKGMGlLh7bQcbxY=;
+        b=WVzMdRwcZbk31m2c3g+I364f8lfNCCbwxNmDjE4ci5SGbvAQJxPgUM7adM1QZL8wRp
+         8UZxB8Gt6JQvuac9/zrzA6WDKbdyLOdSl6oYFVwgdcZZlZLrJ50zyT9kMeYwNxcigjve
+         RY/Xkzue8mZtGuyd/seRJ/zRMFGJJ8BkFwrq6QTWOWr/adw6KHDcszSmjJPw4KkPBxxz
+         Jd5iJngR9XY1YFDFCm2Gm0JgLPpMD66SwLv9E1EEPRZCJAFIYsyBw5i32vrwlWDtQjh7
+         qoOvSDhrZwUKShvR+KdFp8SkTi5cO+TXitUuV2Jv8ncZm092vtZ2AlFm0BiYUWrJicqO
+         a1Eg==
+X-Gm-Message-State: AOAM53371JOdBHk/rNR/y+DTZiTbwI9Nc/f1je7BT7S+obDl31M9sEal
+        nipNvMSlLXtOJQiDP/pJ6Vg+ug==
+X-Google-Smtp-Source: ABdhPJw2aS5EG4tZqSfuBN9OitoGgrKm2rWv1SK6aPwvfZgPjFkoOEENMcwFcvlj4KcxXQ5msr5oNg==
+X-Received: by 2002:a62:7f55:: with SMTP id a82mr33627421pfd.61.1593998501873;
+        Sun, 05 Jul 2020 18:21:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c15sm17344475pgb.4.2020.07.05.18.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 18:21:41 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 18:21:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>
+Subject: Re: [RFC PATCH] riscv: enable per-task stack canaries
+Message-ID: <202007051820.DABE7F87D7@keescook>
+References: <1593958397-62466-1-git-send-email-guoren@kernel.org>
+ <202007051336.C9EA0ECF65@keescook>
+ <CAJF2gTR5Fc1wpjr1ZYZikS=hCP9rbjJVsH9b-z2nBxbBcfBoCA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJF2gTR5Fc1wpjr1ZYZikS=hCP9rbjJVsH9b-z2nBxbBcfBoCA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
-online at that time), mem_hotplug_begin/done is unpaired in such case.
+On Mon, Jul 06, 2020 at 09:01:51AM +0800, Guo Ren wrote:
+> Yeah! :) I just want to show you, how about the format: use tp in gpr
+> to do that. The format is similar to arm64.
+> 
+> tp is the task_struct point in riscv.
 
-Therefore a warning:
- Call Trace:
-  percpu_up_write+0x33/0x40
-  try_remove_memory+0x66/0x120
-  ? _cond_resched+0x19/0x30
-  remove_memory+0x2b/0x40
-  dev_dax_kmem_remove+0x36/0x72 [kmem]
-  device_release_driver_internal+0xf0/0x1c0
-  device_release_driver+0x12/0x20
-  bus_remove_device+0xe1/0x150
-  device_del+0x17b/0x3e0
-  unregister_dev_dax+0x29/0x60
-  devm_action_release+0x15/0x20
-  release_nodes+0x19a/0x1e0
-  devres_release_all+0x3f/0x50
-  device_release_driver_internal+0x100/0x1c0
-  driver_detach+0x4c/0x8f
-  bus_remove_driver+0x5c/0xd0
-  driver_unregister+0x31/0x50
-  dax_pmem_exit+0x10/0xfe0 [dax_pmem]
+Sounds good to me, yes. Thanks! Is there anyone looking at the GCC and
+Clang sides of this?
 
-This fixes it by moving mem_hotplug_done ahead of "done"
-
-Signed-off-by: Jia He <justin.he@arm.com>
----
- mm/memory_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e1e290577b45..86b36714342b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1769,8 +1769,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 
- 	try_offline_node(nid);
- 
--done:
- 	mem_hotplug_done();
-+done:
- 	return rc;
- }
- 
 -- 
-2.17.1
-
+Kees Cook
