@@ -2,122 +2,99 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1906C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C43C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06BB2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637492074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594010513;
-	bh=XFHh1XLSHxw6exKMmpoX1QibbtNX9sqkNgN86cPVUxQ=;
+	s=default; t=1594010912;
+	bh=saajXkjFZV5Ysay/V5yS2+LctG2zyPPXgCNYyixmBgI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P3dmx+fYWkZ35gdmRRh7sFtU7FtOF1gRfTifo6O+2iyXslOPd65qwXIuJBR2ORmUJ
-	 vzZ//ByoKM2uJnlqTi/dZRVizf22fV5h4B2h7GT5Io97D5szuVu8QENXc6MUjg65U/
-	 BYj2w/Liu74jiI5ffLHVW0TDH7p/Rqnaz2A3T5f8=
+	b=g/N9FX0dQTwuDIqh9sxdDXNc9fV8aSwGJ4OqvqAL4D3kvYzT249mvRYdnR0N2If7S
+	 QN7txbW+5FiLhQkRGgnsePw0FFqsjMa26MOjeiMpChEeWQKilZHTZEj5GS4St2j3cu
+	 z+goAJPqNSEP4wkwdl5pFcJWZaph5Fy/S5Ltnxq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgGFElv (ORCPT
+        id S1728750AbgGFEsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42526 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 00:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgGFElv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:41:51 -0400
+        id S1726001AbgGFEsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 00:48:30 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BDA20720;
-        Mon,  6 Jul 2020 04:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0A420720;
+        Mon,  6 Jul 2020 04:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594010510;
-        bh=XFHh1XLSHxw6exKMmpoX1QibbtNX9sqkNgN86cPVUxQ=;
+        s=default; t=1594010910;
+        bh=saajXkjFZV5Ysay/V5yS2+LctG2zyPPXgCNYyixmBgI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yw23tyuhbeV4s2nuIqfAkStmR0VifUO3SIxMfddxWaW3Pp7I0kxOqgqLNH3EhS50H
-         zWrhFw1+gg/Wsn7LZ8XaUPNzuIq5Fsac2PgJJQXf/zq3mKiGmQQ0pvpOEaRo7Cz6LZ
-         +e6ahY1AyY6mvOG9OtLRolC2i4mAqloNQauJDQNE=
-Date:   Mon, 6 Jul 2020 10:11:46 +0530
+        b=A8QMvTN/gVISdfC7gmwMxMOxgudEVlVFrB9e4xhjcdL6RTBc/mgQM7pZj72Gtycmv
+         ohIo6GAY8xfkvM0ae8iHztQNqQL9SJopoEchCTMXAx+6NrAxmWhxIHuEb3w7k8MNZl
+         ObXOA/9Fe0bv3YA6Qd3KXpJCm1Yzo6/moH2aUJ+k=
+Date:   Mon, 6 Jul 2020 10:18:24 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the dmaengine tree with the
- dmaengine-fixes tree
-Message-ID: <20200706044146.GA633187@vkoul-mobl>
-References: <20200706135621.0113ebf9@canb.auug.org.au>
- <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, dmaengine@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
+Subject: Re: [PATCH 01/17] Documentation/driver-api: dmaengine/provider: drop
+ doubled word
+Message-ID: <20200706044824.GB633187@vkoul-mobl>
+References: <20200704034502.17199-1-rdunlap@infradead.org>
+ <20200704034502.17199-2-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
+In-Reply-To: <20200704034502.17199-2-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-07-20, 21:23, Dave Jiang wrote:
-> 
-> 
-> On 7/5/2020 8:56 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Today's linux-next merge of the dmaengine tree got a conflict in:
-> > 
-> >    drivers/dma/idxd/sysfs.c
-> > 
-> > between commit:
-> > 
-> >    da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
-> > 
-> > from the dmaengine-fixes tree and commit:
-> > 
-> >    f50b150e315e ("dmaengine: idxd: add work queue drain support")
-> > 
-> > from the dmaengine tree.
-> > 
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> > 
-> 
-> Hi Stephen. Thanks for the fixup. I think there are two more bits that are
-> needed from f50b150e315e if you don't mind adding:
+On 03-07-20, 20:44, Randy Dunlap wrote:
+> Drop the doubled word "has".
 
-I will merge the fixes into next so it should be resolved for tomorrow,
-thanks
+Applied, thanks
 
 > 
-> diff --cc drivers/dma/idxd/sysfs.c
-> index 2e2c5082f322,6f0711a822a1..000000000000
-> --- a/drivers/dma/idxd/sysfs.c
-> +++ b/drivers/dma/idxd/sysfs.c
-> @@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
->   		}
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
+> ---
+>  Documentation/driver-api/dmaengine/provider.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   		idxd_unregister_dma_device(idxd);
-> - 		spin_lock_irqsave(&idxd->dev_lock, flags);
->   		rc = idxd_device_disable(idxd);
->  +		for (i = 0; i < idxd->max_wqs; i++) {
->  +			struct idxd_wq *wq = &idxd->wqs[i];
->  +
-> 
-> >			mutex_lock(&wq->wq_lock);
-> 
->  +			idxd_wq_disable_cleanup(wq);
-> 
-> >			mutex_unlock(&wq->wq_lock);
-> 
->  +		}
-> - 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
->   		module_put(THIS_MODULE);
->   		if (rc < 0)
->   			dev_warn(dev, "Device disable failed\n");
+> --- linux-next-20200701.orig/Documentation/driver-api/dmaengine/provider.rst
+> +++ linux-next-20200701/Documentation/driver-api/dmaengine/provider.rst
+> @@ -507,7 +507,7 @@ dma_cookie_t
+>  DMA_CTRL_ACK
+>  
+>  - If clear, the descriptor cannot be reused by provider until the
+> -  client acknowledges receipt, i.e. has has a chance to establish any
+> +  client acknowledges receipt, i.e. has a chance to establish any
+>    dependency chains
+>  
+>  - This can be acked by invoking async_tx_ack()
 
 -- 
 ~Vinod
