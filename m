@@ -2,110 +2,129 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6120BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAFFB2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA1320771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RemhuDYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgGFXCT (ORCPT
+        id S1727831AbgGFXDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:02:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27680 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbgGFXCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:02:18 -0400
-IronPort-SDR: Ou2+eXuvVi4PnlWBsuqNquQmVXdQ7PBfRLAMCq1Vh4H7BCCO2dzVrJ0b65/76vMIbz8BFIAkX9
- tJfguW6zD5Sg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232374470"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="232374470"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 16:02:08 -0700
-IronPort-SDR: 6EpaLHvyY3yPKhkEUc5MeAGc/5ImTTKZ0mF93rFTewhFAZftU3aUXZhFFs9EOYOGzxfPhUBTmc
- YvdsEBE942wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="427258016"
-Received: from hartmaxe-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.53.13])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 16:02:04 -0700
-Date:   Tue, 7 Jul 2020 02:02:03 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Pengfei Xu <pengfei.xu@intel.com>, Shuah Khan <shuah@kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Heng Su <heng.su@intel.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai Svahn <kai.svahn@intel.com>
-Subject: Re: [PATCH v4] selftests: tpm: upgrade TPM2 tests from Python 2 to
- Python 3
-Message-ID: <20200706230203.GB20770@linux.intel.com>
-References: <20200626034052.25263-1-pengfei.xu@intel.com>
- <20200702194435.GA28988@linux.intel.com>
- <52f0d32d-d63a-ae1e-cdd9-1ed7bd4edbc0@linuxfoundation.org>
- <20200703012005.GA23276@xpf-desktop.sh.intel.com>
- <02c7dda4-3a05-b118-1edf-ec020eb08193@linuxfoundation.org>
- <444c90ba-3ad3-6ce1-d83e-bb918856079f@linuxfoundation.org>
+        Mon, 6 Jul 2020 19:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgGFXDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:03:17 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D3CC061755;
+        Mon,  6 Jul 2020 16:03:17 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f23so41207070iof.6;
+        Mon, 06 Jul 2020 16:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UGk5VMo7016wWm4hFuTU503NGuLqOJi9iG46lhgQ9kQ=;
+        b=RemhuDYAtzErC73fTdjuGrfZBTVuPaoW7+b2ZdoqwRXfLLcS0Lp9m1CuvKqY2+w2+r
+         zdJQJbXoEzA0gnLtrq3SKi1HD6hGzRqTGFm9FmeiCPmYd3zqZ99Wuwg3ZJjI2EU+uqJT
+         Dl0vJ3JyBS0nmbxb4++9vqPSamdIYSLzM53KvkL9FUH/HOoxPM8RY6/88Vr8LQpJlgdd
+         Zs7B5d0/UYvcY5IP1QlOufzVDwmqDAZvO9I5zV/aZBaeCBnKP1S7Gx0jiseaEfbxEjT4
+         c3ZbPMbYgpAgN2LfEFS+L6PiIpayX7e0/DFFiJZXQAm3DCOU3wwjrKO9mb3Ufpp5nsvc
+         nSKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UGk5VMo7016wWm4hFuTU503NGuLqOJi9iG46lhgQ9kQ=;
+        b=BvMlAYcCNz94zdbIuPwG2XILxB0xDdz7YGkpjD2zic10CI1v6EjH55Fmt+lTMqL5mh
+         2m/Tnbu4hHVotQkGB6qxb6ksflq+8GMHwuDQ2UXcucll7NX8YsyaTrcDSfAJ5ri9TKQw
+         tqRQRZ2Y6lVbCme8tZTNbErjphr43r4j3Hrov2NcgSNi546e0rnCGauvk17h+HIcMRAB
+         cg6pHoJk7oZy0UJlCF80ew3CHG+w/vfEjc7Jy7FaxgcMbJL82WLiXlv1X6jSlvdCgmVM
+         TZo2aHCm8VN+vzPqT5SzNttOJO1CmNXXgDGAtyWS2abDALVZ+P5O6UmpjAI2tSm1KyTx
+         85aQ==
+X-Gm-Message-State: AOAM531QAxzkDxZdnffpflUMbRZqozrxeDnvcOZfI9jcysMYLB1e0qDA
+        SVFrcrgHbCQ8jdXADZJToxbK2Ib7KM3MrUqc80o=
+X-Google-Smtp-Source: ABdhPJyiuEgtO2IBSNzAk1rEWbTOkOpvaAcTTnOI2B2dT7nVtxVzq5J350MZR297Oo1WNu/zCIdGX5dxoqpN4DfZGNo=
+X-Received: by 2002:a05:6602:2c0a:: with SMTP id w10mr27688990iov.46.1594076596792;
+ Mon, 06 Jul 2020 16:03:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <444c90ba-3ad3-6ce1-d83e-bb918856079f@linuxfoundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAFXsbZp5A7FHoXPA6Rg8XqZPD9NXmSeZZb-RsEGXnktbo04GOw@mail.gmail.com>
+ <20200706200742.GB893522@lunn.ch>
+In-Reply-To: <20200706200742.GB893522@lunn.ch>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Mon, 6 Jul 2020 16:03:05 -0700
+Message-ID: <CAFXsbZrNgqqOCke=iZrX_fD8N2H6YecA-8JbJkxVh-KJLjENcw@mail.gmail.com>
+Subject: Re: [PATCH] net: sfp: Unique GPIO interrupt names
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 02:32:13PM -0600, Shuah Khan wrote:
-> On 7/6/20 2:12 PM, Shuah Khan wrote:
-> > On 7/2/20 7:20 PM, Pengfei Xu wrote:
-> > > Thanks a lot Jarkko and Shuah!
-> > > 
-> > > BR.
-> > > Thanks!
-> > > 
-> > > On 2020-07-02 at 15:32:49 -0600, Shuah Khan wrote:
-> > > > On 7/2/20 1:44 PM, Jarkko Sakkinen wrote:
-> > > > > On Fri, Jun 26, 2020 at 11:40:52AM +0800, Pengfei Xu wrote:
-> > > > > > Python 2 is no longer supported by the Python upstream project, so
-> > > > > > upgrade TPM2 tests to Python 3.
-> > > > > > 
-> > > > > > Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
-> > > > > 
-> > > > > I think that it's perfect now. Thank you.
-> > > > > 
-> > > > > Also
-> > > > > 
-> > > > > 1. I checked that scripts/checkpatch.pl did not report any errors.
-> > > > > 2. sudo python3 -m unittest -v tpm2_tests.SmokeTest
-> > > > > 3. sudo python3 -m unittest -v tpm2_tests.SpaceTest
-> > > > > 
-> > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > 
-> > > > > Shuah, I could pick this up after your PR (with my earlier fixes) lands
-> > > > > to mainline, and sort out possible merge conflicts if they uprise. Is
-> > > > > this fine by you?
-> > > > > 
-> > > > 
-> > 
-> > I started applying this and then passed.
-> > 
-> > Doesn't this test fail if python3 isn't installed? Do you have to
-> > support both versions?
-> > 
-> 
-> Never mind. Tested it on with python2. All is well. Applied to
-> linux-kselftest fixes for Linux 5.8-rc5
-> 
-> thanks,
-> -- Shuah
+On Mon, Jul 6, 2020 at 1:07 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Mon, Jul 06, 2020 at 12:38:37PM -0700, Chris Healy wrote:
+> > Dynamically generate a unique GPIO interrupt name, based on the
+> > device name and the GPIO name.  For example:
+> >
+> > 103:          0   sx1503q  12 Edge      sff2-los
+> > 104:          0   sx1503q  13 Edge      sff3-los
+> >
+> > The sffX indicates the SFP the loss of signal GPIO is associated with.
+>
+> Hi Chris
+>
+> For netdev, please put inside the [PATCH] part of the subject, which
+> tree this is for, i.e. net-next.
 
-OK, great, thanks a lot!
+Will do.
+>
+> > Signed-off-by: Chris Healy <cphealy@gmail.com>
+> > ---
+> >  drivers/net/phy/sfp.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> > index 73c2969f11a4..9b03c7229320 100644
+> > --- a/drivers/net/phy/sfp.c
+> > +++ b/drivers/net/phy/sfp.c
+> > @@ -220,6 +220,7 @@ struct sfp {
+> >      struct phy_device *mod_phy;
+> >      const struct sff_data *type;
+> >      u32 max_power_mW;
+> > +    char sfp_irq_name[32];
+> >
+> >      unsigned int (*get_state)(struct sfp *);
+> >      void (*set_state)(struct sfp *, unsigned int);
+> > @@ -2349,12 +2350,15 @@ static int sfp_probe(struct platform_device *pdev)
+> >              continue;
+> >          }
+> >
+> > +        snprintf(sfp->sfp_irq_name, sizeof(sfp->sfp_irq_name),
+> > +             "%s-%s", dev_name(sfp->dev), gpio_of_names[i]);
+> > +
+>
+> This is perfectly O.K, but you could consider using
+> devm_kasprintf(). That will allocate as much memory as needed for the
+> string, and hence avoid truncation issues, which we have seen before
+> with other interrupt names.
 
-/Jarkko
+I'll give this a try for the next version of this patch.
+
+>
+>      Andrew
