@@ -2,115 +2,87 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C21DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D115206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ABE20760
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="j+GBsSFf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwrb8q1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgGFLr5 (ORCPT
+        id S1728940AbgGFLuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58928 "EHLO
+        Mon, 6 Jul 2020 07:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgGFLr4 (ORCPT
+        with ESMTP id S1728264AbgGFLuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:47:56 -0400
-X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 06 Jul 2020 04:47:55 PDT
-Received: from smtp11.infineon.com (smtp11.infineon.com [IPv6:2a00:18f0:1e00:4::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20277C061794;
-        Mon,  6 Jul 2020 04:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1594036075; x=1625572075;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=EQDXlk7XMaqXKin66vyJ0DXTGrbiOpBMELrFtZOLmJE=;
-  b=j+GBsSFf+hTQnRrI6PCFaYKYWLBeKJjozxQo5TQ71HjfJqaKqLBL9H1m
-   MCXmglVpqs5T+QLfL5aW1pnFNzFBQu+xWD3RE4ougbF2QzWwc4Ne2G+P4
-   vW5DkvDziJ0ki49foQbY/PaLZMDpiUcOZhDqoyrr50Zk/99RS9AAdNzn5
-   U=;
-IronPort-SDR: wIJhBVfJYbOXelU5nPj89WSh/xhvR86Dvg1D5r1IiYHBH2ZmUWU+YQyHEb0r7PD8QPj3zy7ruZ
- ZSBwymnCYficWCaCkLyc4tX543fHM1LasHZUC+GXxXFvOERbXTibFZVyOB95JixfPosA+YT+OR
- hH8yYY/R9ukADSZjpyhkndoHExwhUa3yY20j+Yg9csCuLit1dx2Fk6lsXXZh2Me01b+G6ioewG
- u2w9F6U6zVDquM6Fl30UCe7ByYp5mf3CzJUs3z7GoG+rjrwJQHvFJ7r/i+AklFHEdkusclp45e
- xZo=
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="168624440"
-X-IronPort-AV: E=Sophos;i="5.75,318,1589234400"; 
-   d="scan'208";a="168624440"
-Received: from unknown (HELO mucxv002.muc.infineon.com) ([172.23.11.17])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 13:46:47 +0200
-Received: from MUCSE717.infineon.com (MUCSE717.infineon.com [172.23.7.74])
-        by mucxv002.muc.infineon.com (Postfix) with ESMTPS;
-        Mon,  6 Jul 2020 13:46:46 +0200 (CEST)
-Received: from MUCSE711.infineon.com (172.23.7.83) by MUCSE717.infineon.com
- (172.23.7.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1913.5; Mon, 6 Jul
- 2020 13:46:46 +0200
-Received: from MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5]) by
- MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5%20]) with mapi id
- 15.01.1913.010; Mon, 6 Jul 2020 13:46:46 +0200
-From:   <Peter.Huewe@infineon.com>
-To:     <jarkko.sakkinen@linux.intel.com>,
-        <linux-integrity@vger.kernel.org>
-CC:     <kjhall@us.ibm.com>, <ferry.toth@elsinga.info>,
-        <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <akpm@osdl.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] tpm_tis: Remove the HID IFX0102
-Thread-Topic: [PATCH v2] tpm_tis: Remove the HID IFX0102
-Thread-Index: AQHWSpi7zu+k2ZgGwES2mspmWAztdKj6fvXg
-Date:   Mon, 6 Jul 2020 11:46:46 +0000
-Message-ID: <e9caad58aba44bb3abeac8569a6bd8ed@infineon.com>
-References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.23.8.247]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 6 Jul 2020 07:50:12 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F11AC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 04:50:12 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id p7so17009069qvl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 04:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HJPS9i68AMwe08ob266SMGfaNOxK2LzyyRESTVDvAq8=;
+        b=gwrb8q1fpMTbIIY+b98bPBgNhHC9YXFytB4yndrISbMQrXTdynTfT3rTtMJrliss9x
+         erJD+p3yZxRqXXvy6ytWhvzyRPXafkIQ1DgcxO7PNK7Jdpc69H7TWhU/j11tArTdwfGo
+         aXF6HcW5XBkKo0Zf0o9W8iSnrTGiSyrphmjbPmec/KIfQgEhg5i+KtkhCSHxs6XOawqI
+         PRp4Gr9thqc+rEYeLoWK4Bu/pGXceBTFR/y0eLu/dsRBjPuOqkE0lEE+4/IhK10q6g5P
+         JGVi/SSTbRtWI9eAeRX+yBvyCldrbTU2z8giLdxKHyYKTa+zplEHvc1kkX9CbJn1f3mN
+         ZxUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HJPS9i68AMwe08ob266SMGfaNOxK2LzyyRESTVDvAq8=;
+        b=cgaivGvs5aBQHiNKoUin4cnl2rH2VKamibyqKEsgKJZInaDmfDkpPB4EKRUTHiRht8
+         KynBdFQnEsOCwKw3wJftfpRH+r6jZlZ8LgSRYDm7fDuPXJ+KtBYUx786OByrhXhUeOy4
+         +dj+UKWJ9jumcY5iSOv18h5hkzggYv4WosJxHHSKRmrQb9ls1wH1xux/kOCwI6wDDFIR
+         iOBrn2F25t5g33GIQtg8iN/q3twJEjqbUILBmIgV0qExCDMOzFCpOAroWY8FiFWaQ1La
+         u0xmSX/NKESpvEPY6ZROYdycKq6Gr5UIDyU8kyr2AhCGUgwWg0O3iltDVENpmYAcjya2
+         IlCQ==
+X-Gm-Message-State: AOAM533ds4kRhzm0ZywxzJAWIGkHLO/fXFpL3RodcMY8+HWM2v0wILjy
+        U2U9SnDt3/9/xpc2wVswvK0zF18YTbR/B5Yk+VU=
+X-Google-Smtp-Source: ABdhPJwzhKnIeBJyg6Hdvrq0O2HRc6A2LQH4oD4siELH9amza/RljlZvEd4qxDGulKPGQ9WRBSHHijY40XERUUjP8r8=
+X-Received: by 2002:a0c:e78b:: with SMTP id x11mr41855150qvn.103.1594036211296;
+ Mon, 06 Jul 2020 04:50:11 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200706025921.53683-1-songmuchun@bytedance.com>
+In-Reply-To: <20200706025921.53683-1-songmuchun@bytedance.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Mon, 6 Jul 2020 14:49:55 +0300
+Message-ID: <CAOJsxLEgRvkganmNNmeBsHdgHTgJ5tbK=b8Pnrc4LB3tvTzbMA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/page_alloc: skip setting nodemask when we are in interrupt
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-NACK
+On Mon, Jul 6, 2020 at 5:59 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> When we are in the interrupt context, it is irrelevant to the
+> current task context. If we use current task's mems_allowed, we
+> can fair to alloc pages in the fast path and fall back to slow
+> path memory allocation when the current node(which is the current
+> task mems_allowed) does not have enough memory to allocate. In
+> this case, it slows down the memory allocation speed of interrupt
+> context. So we can skip setting the nodemask to allow any node
+> to allocate memory, so that fast path allocation can success.
+>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-> % git --no-pager grep IFX0102 drivers/char/tpm
-> drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
-> drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
-> Obviously IFX0102 was added to the HID table for the TCG TIS driver by mi=
-stake.
-
-The HID IFX0102 was NOT added by mistake.
-Let me explain the history a bit:
-
-Old SLB 9635 / 9630 TPMs had two ways to interface them
-- proprietary 'io' mapped protocol (tpm_infineon)
-- tis protocol  (tpm_tis)
-
-Both match the same HID.
-However with the emerging of the tis protocol, the io protocol eventually w=
-ent away for newer products.
-So all TPM1.2 by IFX match the HID0102 and the TCG generic ones PNP0C31
-
-So basically you break TPM1.2 support for all (newer) Infineon chips if the=
- platform vendor used the IFX0102 HID as they would speak via tpm_infineon =
-driver.
-The bug must be something different, especially as it only seems to happen =
-after suspend resume.
-
-
-Thanks,
-Peter
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
