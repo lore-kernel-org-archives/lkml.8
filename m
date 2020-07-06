@@ -2,123 +2,131 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E17C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13549C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADEFE20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70A7206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgGFP6z (ORCPT
+        id S1729429AbgGFQAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:58:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:51924 "EHLO foss.arm.com"
+        Mon, 6 Jul 2020 12:00:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:52050 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgGFP6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:58:54 -0400
+        id S1729297AbgGFQA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:00:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78281FB;
-        Mon,  6 Jul 2020 08:58:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B293C3F68F;
-        Mon,  6 Jul 2020 08:58:52 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 16:58:47 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Message-ID: <20200706155847.GA32050@e121166-lin.cambridge.arm.com>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
- <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
- <20200527132005.GA7143@nuc8i5>
- <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
- <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 659CB1FB;
+        Mon,  6 Jul 2020 09:00:28 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A61A23F68F;
+        Mon,  6 Jul 2020 09:00:25 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 17:00:23 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matt Turner <mattst88@gmail.com>, kernel-team@android.com,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
+ CLANG_LTO=y
+Message-ID: <20200706160023.GB10992@arm.com>
+References: <20200630173734.14057-1-will@kernel.org>
+ <20200630173734.14057-19-will@kernel.org>
+ <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
+ <20200702072301.GA15963@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200702072301.GA15963@willie-the-truck>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 09:01:13AM -0600, Rob Herring wrote:
-
-[...]
-
-> > > In fact, I think its error handling is clear enough, It just goes
-> > > wrong
-> > > in three places, as follows:
-> > >
-> > > void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
-> > >                                           struct resource *res)
-> > > {
-> > >         resource_size_t size;
-> > >         const char *name;
-> > >         void __iomem *dest_ptr;
-> > >
-> > >         BUG_ON(!dev);
-> > >
-> > >         if (!res || resource_type(res) != IORESOURCE_MEM) {
-> > >                 dev_err(dev, "invalid resource\n");
-> > >                 return IOMEM_ERR_PTR(-EINVAL);
-> > >         }
-> > >
-> > In the above error case there is no indication of which resource failed
-> > (mainly relevant if the resource name is missing in the devicetree,
-> > since in the drivers you are changing platform_get_resource_byname() is
-> > mostly used). In the existing drivers' code, on return from this
-> > function in this case, the name would be printed by the caller.
+On Thu, Jul 02, 2020 at 08:23:02AM +0100, Will Deacon wrote:
+> On Wed, Jul 01, 2020 at 06:07:25PM +0100, Dave P Martin wrote:
+> > On Tue, Jun 30, 2020 at 06:37:34PM +0100, Will Deacon wrote:
+> > > When building with LTO, there is an increased risk of the compiler
+> > > converting an address dependency headed by a READ_ONCE() invocation
+> > > into a control dependency and consequently allowing for harmful
+> > > reordering by the CPU.
+> > > 
+> > > Ensure that such transformations are harmless by overriding the generic
+> > > READ_ONCE() definition with one that provides acquire semantics when
+> > > building with LTO.
+> > > 
+> > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > ---
+> > >  arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
+> > >  arch/arm64/kernel/vdso/Makefile   |  2 +-
+> > >  arch/arm64/kernel/vdso32/Makefile |  2 +-
+> > >  3 files changed, 65 insertions(+), 2 deletions(-)
+> > >  create mode 100644 arch/arm64/include/asm/rwonce.h
+> > > 
+> > > diff --git a/arch/arm64/include/asm/rwonce.h b/arch/arm64/include/asm/rwonce.h
+> > > new file mode 100644
+> > > index 000000000000..515e360b01a1
+> > > --- /dev/null
+> > > +++ b/arch/arm64/include/asm/rwonce.h
+> > > @@ -0,0 +1,63 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * Copyright (C) 2020 Google LLC.
+> > > + */
+> > > +#ifndef __ASM_RWONCE_H
+> > > +#define __ASM_RWONCE_H
+> > > +
+> > > +#ifdef CONFIG_CLANG_LTO
+> > 
+> > Don't we have a generic option for LTO that's not specific to Clang.
 > 
-> A driver should only have one call to devm_pci_remap_cfg_resource() as
-> there's only 1 config space. However, it looks like this function is
-> frequently used on what is not config space which is a bigger issue.
-
-That certainly is and should be fixed.
-
-> If this error happens, it's almost always going to be a NULL ptr as
-> platform_get_resource_byname() would have set IORESOURCE_MEM. Perhaps
-> a WARN here so you get a backtrace to the caller location.
-
-+1
-
-> > >         size = resource_size(res);
-> > >         name = res->name ?: dev_name(dev);
-> > >
-> > >         if (!devm_request_mem_region(dev, res->start, size, name)) {
-> > >                 dev_err(dev, "can't request region for resource
-> > > %pR\n", res);
-> > >                 return IOMEM_ERR_PTR(-EBUSY);
-> > >         }
-> > >
-> > >         dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
-> > >         if (!dest_ptr) {
-> > >                 dev_err(dev, "ioremap failed for resource %pR\n",
-> > > res);
-> > >                 devm_release_mem_region(dev, res->start, size);
-> > >                 dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
-> > >         }
-> > >
-> > The other 2 error cases as well don't print the resource name as far as
-> > I recall (they will at least print the resource start/end).
+> /me looks at the LTO series some more
 > 
-> Start/end are what are important for why either of these functions
-> failed.
+> Oh yeah, there's CONFIG_LTO which is selected by CONFIG_LTO_CLANG, which is
+> the non-typoed version of the above. I can switch this to CONFIG_LTO.
 > 
-> But sure, we could add 'name' here. That's a separate patch IMO.
+> > Also, can you illustrate code that can only be unsafe with Clang LTO?
+> 
+> I don't have a concrete example, but it's an ongoing concern over on the LTO
+> thread [1], so I cooked this to show one way we could deal with it. The main
+> concern is that the whole-program optimisations enabled by LTO may allow the
+> compiler to enumerate possible values for a pointer at link time and replace
+> an address dependency between two loads with a control dependency instead,
+> defeating the dependency ordering within the CPU.
 
-I agree. In sum, I think it is OK to proceed with this patch, provided
-we send follow-ups as discussed here, are we in agreement ?
+Why can't that happen without LTO?
 
-Lorenzo
+> We likely won't realise if/when this goes wrong, other than impossible to
+> debug, subtle breakage that crops up seemingly randomly. Ideally, we'd be
+> able to detect this sort of thing happening at build time, and perhaps
+> even prevent it with compiler options or annotations, but none of that is
+> close to being available and I'm keen to progress the LTO patches in the
+> meantime because they are a requirement for CFI.
+
+My concern was not so much why LTO makes things dangerous, as why !LTO
+makes things safe...
+
+Cheers
+---Dave
