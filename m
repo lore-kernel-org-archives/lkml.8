@@ -2,376 +2,162 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A833FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D68C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 707E120737
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBC12070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="D37rkd4v"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jouIo6bW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgGFCNB (ORCPT
+        id S1728654AbgGFCWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 22:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbgGFCNB (ORCPT
+        Sun, 5 Jul 2020 22:22:02 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:47386 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728579AbgGFCWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 22:13:01 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26ADC08C5DE
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:12:59 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gc9so9631485pjb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 19:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=veY7e8MhQbVJmGp0VryBoJeWwwVHOxjlznZ7MrAlILU=;
-        b=D37rkd4vyTnAIChk4j8HUOxzfWgQ6LYHM8+cC0bNEDKAAmKVCMYQvouGUWhT0N7d4D
-         RxL+aWDLprLyFw7xb/XhcVROWRBk9CmR862DedUXHmhzcBBOe/yXx7GJ4Tv1BLfNECbd
-         3dE9CkedoAx2ob7UYc0dwjoIxMh+bcd3yq+nMRG8eot6fOGGFW6nfPYOnkHtkq/Cbwvm
-         vOx7SUwUTqnqHgkDwwTuHM/yb2H/t8a3hh/Ws6HEh+6VB4ewR18EaoYUXGC+GjspRccI
-         Af6ARjcYCSSlDVfgysbiZ3f4hDF0IRF7LeHDrvGu+JbH3E6CWUe7o3AEOLc4Xm8CXk9j
-         ay6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=veY7e8MhQbVJmGp0VryBoJeWwwVHOxjlznZ7MrAlILU=;
-        b=iMq25DvtJNvlZto/dp3imjea4OTxq0rLC+iB6Ml5h2f2cBST8v2dmqrBmCEgkXYad+
-         MbotxRsU3qXwWG4JkqGhK8nfH2Uf3KraCVOQJfyOfKoIsVah7tVsFrwMw1nDlq+As7Wd
-         U6Ok7zrcHIadquAgiNitEL3OBHuxf1+z+eeuAOx1YYh3SZEqAKre/foxYWYVaPxel8MQ
-         jTZV4g+RmFY+7SZCPK5LRRLQ5pemicfRjoBaouWmcwFmDAyvtmnaBIfrf9oKeCQMKD3f
-         BBQUAT4ytP3Dt2VMYpsMJdxA1QQtTTJkfUNYH0vH1wtvqoBLrVhI6h+v0PxH9FrhTqJ9
-         tF6g==
-X-Gm-Message-State: AOAM532P2Srg6T6ISo38NUPimq/gS4QpOBCNAKD7oTdrooYO7eAw7bX1
-        tnUDmY62gyFjJMa6bQP4mEuoDw==
-X-Google-Smtp-Source: ABdhPJy/IdLJjynfkZnC7wj8/PbTGJljVqSj6Q2ack+0VIM4iwONGOONjeXkccXqH27dxG/ivd7F0g==
-X-Received: by 2002:a17:90a:930b:: with SMTP id p11mr49239264pjo.230.1594001579254;
-        Sun, 05 Jul 2020 19:12:59 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id l191sm18103068pfd.149.2020.07.05.19.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 19:12:58 -0700 (PDT)
-Message-ID: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
-Date:   Sun, 05 Jul 2020 19:12:58 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 5 Jul 2020 22:22:02 -0400
+X-UUID: 728303f5350049de813bb76e59e979b3-20200706
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=SiWDphWYGnavflkljTLom2j3mHnFMDqK/JoyQBPF1o4=;
+        b=jouIo6bW2xrjquA3OK2ZX/C1mn8AeTPPLzt6GGIDaMA4oOrwEWe7GkQBbNOy2FP/WfG6VJsdWL+PGX3Ns6q62k34ZNRLUBPWv0bxtjMUAlyGnfNQJNnT6F4qx5b4/zaiJd+80Z621aFhcRKhpi67HrCNmDMk3xMPZxWTxPAVh7Q=;
+X-UUID: 728303f5350049de813bb76e59e979b3-20200706
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2007695977; Mon, 06 Jul 2020 10:21:53 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 6 Jul 2020 10:21:50 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 10:21:52 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2] kasan: fix KASAN unit tests for tag-based KASAN
+Date:   Mon, 6 Jul 2020 10:21:50 +0800
+Message-ID: <20200706022150.20848-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.8-rc3-225-gbb5a93aaf252
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-cip
-Subject: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     gtucker@collabora.com, Sudeep Holla <sudeep.holla@arm.com>,
-        kernelci-results@groups.io, Andre Przywara <andre.przywara@arm.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+V2UgdXNlIHRhZy1iYXNlZCBLQVNBTiwgdGhlbiBLQVNBTiB1bml0IHRlc3RzIGRvbid0IGRldGVj
+dCBvdXQtb2YtYm91bmRzDQptZW1vcnkgYWNjZXNzLiBUaGV5IG5lZWQgdG8gYmUgZml4ZWQuDQoN
+CldpdGggdGFnLWJhc2VkIEtBU0FOLCB0aGUgc3RhdGUgb2YgZWFjaCAxNiBhbGlnbmVkIGJ5dGVz
+IG9mIG1lbW9yeSBpcw0KZW5jb2RlZCBpbiBvbmUgc2hhZG93IGJ5dGUgYW5kIHRoZSBzaGFkb3cg
+dmFsdWUgaXMgdGFnIG9mIHBvaW50ZXIsIHNvDQp3ZSBuZWVkIHRvIHJlYWQgbmV4dCBzaGFkb3cg
+Ynl0ZSwgdGhlIHNoYWRvdyB2YWx1ZSBpcyBub3QgZXF1YWwgdG8gdGFnDQp2YWx1ZSBvZiBwb2lu
+dGVyLCBzbyB0aGF0IHRhZy1iYXNlZCBLQVNBTiB3aWxsIGRldGVjdCBvdXQtb2YtYm91bmRzDQpt
+ZW1vcnkgYWNjZXNzLg0KDQpTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBt
+ZWRpYXRlay5jb20+DQpDYzogQW5kcmV5IFJ5YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNv
+bT4NCkNjOiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpDYzogQWxleGFuZGVy
+IFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0
+dGhpYXMuYmdnQGdtYWlsLmNvbT4NCkNjOiBBbmRyZXkgS29ub3ZhbG92IDxhbmRyZXlrbnZsQGdv
+b2dsZS5jb20+DQpDYzogQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4N
+Ci0tLQ0KDQpjaGFuZ2VzIHNpbmNlIHYxOg0KLSBSZWR1Y2UgYW1vdW50IG9mIG5vbi1jb21waWxl
+ZCBjb2RlLg0KLSBLVW5pdC1LQVNBTiBJbnRlZ3JhdGlvbiBwYXRjaHNldCBhcmUgbm90IG1lcmdl
+ZCB5ZXQuIE15IHBhdGNoIHNob3VsZA0KICBoYXZlIGNvbmZsaWN0IHdpdGggaXQsIGlmIG5lZWRl
+ZCwgd2UgY2FuIGNvbnRpbnVlIHRvIHdhaXQgaXQuDQoNCi0tLQ0KDQogbGliL3Rlc3Rfa2FzYW4u
+YyB8IDgxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0K
+IDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkNCg0KZGlm
+ZiAtLWdpdCBhL2xpYi90ZXN0X2thc2FuLmMgYi9saWIvdGVzdF9rYXNhbi5jDQppbmRleCBlMzA4
+N2Q5MGUwMGQuLjY2MDY2NDQzOWQ1MiAxMDA2NDQNCi0tLSBhL2xpYi90ZXN0X2thc2FuLmMNCisr
+KyBiL2xpYi90ZXN0X2thc2FuLmMNCkBAIC00MCw3ICs0MCwxMSBAQCBzdGF0aWMgbm9pbmxpbmUg
+dm9pZCBfX2luaXQga21hbGxvY19vb2JfcmlnaHQodm9pZCkNCiAJCXJldHVybjsNCiAJfQ0KIA0K
+LQlwdHJbc2l6ZV0gPSAneCc7DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklD
+KSkNCisJCXB0cltzaXplXSA9ICd4JzsNCisJZWxzZQ0KKwkJcHRyW3NpemUgKyA1XSA9ICd4JzsN
+CisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtOTIsNyArOTYsMTEgQEAgc3RhdGljIG5vaW5s
+aW5lIHZvaWQgX19pbml0IGttYWxsb2NfcGFnZWFsbG9jX29vYl9yaWdodCh2b2lkKQ0KIAkJcmV0
+dXJuOw0KIAl9DQogDQotCXB0cltzaXplXSA9IDA7DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19L
+QVNBTl9HRU5FUklDKSkNCisJCXB0cltzaXplXSA9IDA7DQorCWVsc2UNCisJCXB0cltzaXplICsg
+Nl0gPSAwOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0NCiANCkBAIC0xNjIsNyArMTcwLDExIEBAIHN0
+YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9rcmVhbGxvY19tb3JlKHZvaWQp
+DQogCQlyZXR1cm47DQogCX0NCiANCi0JcHRyMltzaXplMl0gPSAneCc7DQorCWlmIChJU19FTkFC
+TEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkNCisJCXB0cjJbc2l6ZTJdID0gJ3gnOw0KKwllbHNl
+DQorCQlwdHIyW3NpemUyICsgMTNdID0gJ3gnOw0KKw0KIAlrZnJlZShwdHIyKTsNCiB9DQogDQpA
+QCAtMTgwLDcgKzE5MiwxMiBAQCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19v
+b2Jfa3JlYWxsb2NfbGVzcyh2b2lkKQ0KIAkJa2ZyZWUocHRyMSk7DQogCQlyZXR1cm47DQogCX0N
+Ci0JcHRyMltzaXplMl0gPSAneCc7DQorDQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9H
+RU5FUklDKSkNCisJCXB0cjJbc2l6ZTJdID0gJ3gnOw0KKwllbHNlDQorCQlwdHIyW3NpemUyICsg
+Ml0gPSAneCc7DQorDQogCWtmcmVlKHB0cjIpOw0KIH0NCiANCkBAIC0yMTYsNyArMjMzLDExIEBA
+IHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9tZW1zZXRfMih2b2lkKQ0K
+IAkJcmV0dXJuOw0KIAl9DQogDQotCW1lbXNldChwdHIrNywgMCwgMik7DQorCWlmIChJU19FTkFC
+TEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkNCisJCW1lbXNldChwdHIrNywgMCwgMik7DQorCWVs
+c2UNCisJCW1lbXNldChwdHIrMTUsIDAsIDIpOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0NCiANCkBA
+IC0yMzIsNyArMjUzLDExIEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29v
+Yl9tZW1zZXRfNCh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCW1lbXNldChwdHIrNSwgMCwg
+NCk7DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkNCisJCW1lbXNldChw
+dHIrNSwgMCwgNCk7DQorCWVsc2UNCisJCW1lbXNldChwdHIrMTUsIDAsIDQpOw0KKw0KIAlrZnJl
+ZShwdHIpOw0KIH0NCiANCkBAIC0yNDksNyArMjc0LDExIEBAIHN0YXRpYyBub2lubGluZSB2b2lk
+IF9faW5pdCBrbWFsbG9jX29vYl9tZW1zZXRfOCh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQot
+CW1lbXNldChwdHIrMSwgMCwgOCk7DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5F
+UklDKSkNCisJCW1lbXNldChwdHIrMSwgMCwgOCk7DQorCWVsc2UNCisJCW1lbXNldChwdHIrMTUs
+IDAsIDgpOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0NCiANCkBAIC0yNjUsNyArMjk0LDExIEBAIHN0
+YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9tZW1zZXRfMTYodm9pZCkNCiAJ
+CXJldHVybjsNCiAJfQ0KIA0KLQltZW1zZXQocHRyKzEsIDAsIDE2KTsNCisJaWYgKElTX0VOQUJM
+RUQoQ09ORklHX0tBU0FOX0dFTkVSSUMpKQ0KKwkJbWVtc2V0KHB0cisxLCAwLCAxNik7DQorCWVs
+c2UNCisJCW1lbXNldChwdHIrMTUsIDAsIDE2KTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpA
+QCAtMjgxLDcgKzMxNCwxMSBAQCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19v
+b2JfaW5fbWVtc2V0KHZvaWQpDQogCQlyZXR1cm47DQogCX0NCiANCi0JbWVtc2V0KHB0ciwgMCwg
+c2l6ZSs1KTsNCisJaWYgKElTX0VOQUJMRUQoQ09ORklHX0tBU0FOX0dFTkVSSUMpKQ0KKwkJbWVt
+c2V0KHB0ciwgMCwgc2l6ZSs1KTsNCisJZWxzZQ0KKwkJbWVtc2V0KHB0ciwgMCwgc2l6ZSs3KTsN
+CisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtNDE1LDcgKzQ1MiwxMSBAQCBzdGF0aWMgbm9p
+bmxpbmUgdm9pZCBfX2luaXQga21lbV9jYWNoZV9vb2Iodm9pZCkNCiAJCXJldHVybjsNCiAJfQ0K
+IA0KLQkqcCA9IHBbc2l6ZV07DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklD
+KSkNCisJCSpwID0gcFtzaXplXTsNCisJZWxzZQ0KKwkJKnAgPSBwW3NpemUgKyA4XTsNCisNCiAJ
+a21lbV9jYWNoZV9mcmVlKGNhY2hlLCBwKTsNCiAJa21lbV9jYWNoZV9kZXN0cm95KGNhY2hlKTsN
+CiB9DQpAQCAtNDk3LDYgKzUzOCw3IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBjb3B5
+X3VzZXJfdGVzdCh2b2lkKQ0KIAljaGFyIF9fdXNlciAqdXNlcm1lbTsNCiAJc2l6ZV90IHNpemUg
+PSAxMDsNCiAJaW50IHVudXNlZDsNCisJc2l6ZV90IG9vYl9zaXplOw0KIA0KIAlrbWVtID0ga21h
+bGxvYyhzaXplLCBHRlBfS0VSTkVMKTsNCiAJaWYgKCFrbWVtKQ0KQEAgLTUxMSwyNiArNTUzLDMx
+IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBjb3B5X3VzZXJfdGVzdCh2b2lkKQ0KIAkJ
+cmV0dXJuOw0KIAl9DQogDQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkN
+CisJCW9vYl9zaXplID0gMTsNCisJZWxzZQ0KKwkJb29iX3NpemUgPSA3Ow0KKw0KIAlwcl9pbmZv
+KCJvdXQtb2YtYm91bmRzIGluIGNvcHlfZnJvbV91c2VyKClcbiIpOw0KLQl1bnVzZWQgPSBjb3B5
+X2Zyb21fdXNlcihrbWVtLCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IGNvcHlfZnJv
+bV91c2VyKGttZW0sIHVzZXJtZW0sIHNpemUgKyBvb2Jfc2l6ZSk7DQogDQogCXByX2luZm8oIm91
+dC1vZi1ib3VuZHMgaW4gY29weV90b191c2VyKClcbiIpOw0KLQl1bnVzZWQgPSBjb3B5X3RvX3Vz
+ZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEpOw0KKwl1bnVzZWQgPSBjb3B5X3RvX3VzZXIodXNl
+cm1lbSwga21lbSwgc2l6ZSArIG9vYl9zaXplKTsNCiANCiAJcHJfaW5mbygib3V0LW9mLWJvdW5k
+cyBpbiBfX2NvcHlfZnJvbV91c2VyKClcbiIpOw0KLQl1bnVzZWQgPSBfX2NvcHlfZnJvbV91c2Vy
+KGttZW0sIHVzZXJtZW0sIHNpemUgKyAxKTsNCisJdW51c2VkID0gX19jb3B5X2Zyb21fdXNlcihr
+bWVtLCB1c2VybWVtLCBzaXplICsgb29iX3NpemUpOw0KIA0KIAlwcl9pbmZvKCJvdXQtb2YtYm91
+bmRzIGluIF9fY29weV90b191c2VyKClcbiIpOw0KLQl1bnVzZWQgPSBfX2NvcHlfdG9fdXNlcih1
+c2VybWVtLCBrbWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IF9fY29weV90b191c2VyKHVzZXJt
+ZW0sIGttZW0sIHNpemUgKyBvb2Jfc2l6ZSk7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMg
+aW4gX19jb3B5X2Zyb21fdXNlcl9pbmF0b21pYygpXG4iKTsNCi0JdW51c2VkID0gX19jb3B5X2Zy
+b21fdXNlcl9pbmF0b21pYyhrbWVtLCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IF9f
+Y29weV9mcm9tX3VzZXJfaW5hdG9taWMoa21lbSwgdXNlcm1lbSwgc2l6ZSArIG9vYl9zaXplKTsN
+CiANCiAJcHJfaW5mbygib3V0LW9mLWJvdW5kcyBpbiBfX2NvcHlfdG9fdXNlcl9pbmF0b21pYygp
+XG4iKTsNCi0JdW51c2VkID0gX19jb3B5X3RvX3VzZXJfaW5hdG9taWModXNlcm1lbSwga21lbSwg
+c2l6ZSArIDEpOw0KKwl1bnVzZWQgPSBfX2NvcHlfdG9fdXNlcl9pbmF0b21pYyh1c2VybWVtLCBr
+bWVtLCBzaXplICsgb29iX3NpemUpOw0KIA0KIAlwcl9pbmZvKCJvdXQtb2YtYm91bmRzIGluIHN0
+cm5jcHlfZnJvbV91c2VyKClcbiIpOw0KLQl1bnVzZWQgPSBzdHJuY3B5X2Zyb21fdXNlcihrbWVt
+LCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IHN0cm5jcHlfZnJvbV91c2VyKGttZW0s
+IHVzZXJtZW0sIHNpemUgKyBvb2Jfc2l6ZSk7DQogDQogCXZtX211bm1hcCgodW5zaWduZWQgbG9u
+Zyl1c2VybWVtLCBQQUdFX1NJWkUpOw0KIAlrZnJlZShrbWVtKTsNCi0tIA0KMi4xOC4wDQo=
 
-mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
-
-Summary:
-  Start:      bb5a93aaf252 x86/ldt: use "pr_info_once()" instead of open-co=
-ding it badly
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-225-gbb=
-5a93aaf252/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
-tc1.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-225-gbb=
-5a93aaf252/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-=
-tc1.html
-  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
-erboard node
-
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-  Branch:     master
-  Target:     qemu_arm-vexpress-a15
-  CPU arch:   arm
-  Lab:        lab-cip
-  Compiler:   gcc-8
-  Config:     vexpress_defconfig
-  Test case:  baseline.dmesg.crit
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 38ac46002d1df5707566a73486452851341028d2
-Author: Andre Przywara <andre.przywara@arm.com>
-Date:   Wed Jun 3 17:22:37 2020 +0100
-
-    arm: dts: vexpress: Move mcc node back into motherboard node
-    =
-
-    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
-    out of bus node") moved the "mcc" DT node into the root node, because
-    it does not have any children using "reg" properties, so does violate
-    some dtc checks about "simple-bus" nodes.
-    =
-
-    However this broke the vexpress config-bus code, which walks up the
-    device tree to find the first node with an "arm,vexpress,site" property.
-    This gave the wrong result (matching the root node instead of the
-    motherboard node), so broke the clocks and some other devices for
-    VExpress boards.
-    =
-
-    Move the whole node back into its original position. This re-introduces
-    the dtc warning, but is conceptually the right thing to do. The dtc
-    warning seems to be overzealous here, there are discussions on fixing or
-    relaxing this check instead.
-    =
-
-    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
-rm.com
-    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
-us node")
-    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
-xpress-v2m-rs1.dtsi
-index e6308fb76183..a88ee5294d35 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -100,79 +100,6 @@
- 		};
- 	};
- =
-
--	mcc {
--		compatible =3D "arm,vexpress,config-bus";
--		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
--
--		oscclk0 {
--			/* MCC static memory clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 0>;
--			freq-range =3D <25000000 60000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk0";
--		};
--
--		v2m_oscclk1: oscclk1 {
--			/* CLCD clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 1>;
--			freq-range =3D <23750000 65000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk1";
--		};
--
--		v2m_oscclk2: oscclk2 {
--			/* IO FPGA peripheral clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 2>;
--			freq-range =3D <24000000 24000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk2";
--		};
--
--		volt-vio {
--			/* Logic level voltage */
--			compatible =3D "arm,vexpress-volt";
--			arm,vexpress-sysreg,func =3D <2 0>;
--			regulator-name =3D "VIO";
--			regulator-always-on;
--			label =3D "VIO";
--		};
--
--		temp-mcc {
--			/* MCC internal operating temperature */
--			compatible =3D "arm,vexpress-temp";
--			arm,vexpress-sysreg,func =3D <4 0>;
--			label =3D "MCC";
--		};
--
--		reset {
--			compatible =3D "arm,vexpress-reset";
--			arm,vexpress-sysreg,func =3D <5 0>;
--		};
--
--		muxfpga {
--			compatible =3D "arm,vexpress-muxfpga";
--			arm,vexpress-sysreg,func =3D <7 0>;
--		};
--
--		shutdown {
--			compatible =3D "arm,vexpress-shutdown";
--			arm,vexpress-sysreg,func =3D <8 0>;
--		};
--
--		reboot {
--			compatible =3D "arm,vexpress-reboot";
--			arm,vexpress-sysreg,func =3D <9 0>;
--		};
--
--		dvimode {
--			compatible =3D "arm,vexpress-dvimode";
--			arm,vexpress-sysreg,func =3D <11 0>;
--		};
--	};
--
- 	bus@8000000 {
- 		motherboard-bus {
- 			model =3D "V2M-P1";
-@@ -435,6 +362,79 @@
- 						};
- 					};
- 				};
-+
-+				mcc {
-+					compatible =3D "arm,vexpress,config-bus";
-+					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
-+
-+					oscclk0 {
-+						/* MCC static memory clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 0>;
-+						freq-range =3D <25000000 60000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk0";
-+					};
-+
-+					v2m_oscclk1: oscclk1 {
-+						/* CLCD clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 1>;
-+						freq-range =3D <23750000 65000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk1";
-+					};
-+
-+					v2m_oscclk2: oscclk2 {
-+						/* IO FPGA peripheral clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 2>;
-+						freq-range =3D <24000000 24000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk2";
-+					};
-+
-+					volt-vio {
-+						/* Logic level voltage */
-+						compatible =3D "arm,vexpress-volt";
-+						arm,vexpress-sysreg,func =3D <2 0>;
-+						regulator-name =3D "VIO";
-+						regulator-always-on;
-+						label =3D "VIO";
-+					};
-+
-+					temp-mcc {
-+						/* MCC internal operating temperature */
-+						compatible =3D "arm,vexpress-temp";
-+						arm,vexpress-sysreg,func =3D <4 0>;
-+						label =3D "MCC";
-+					};
-+
-+					reset {
-+						compatible =3D "arm,vexpress-reset";
-+						arm,vexpress-sysreg,func =3D <5 0>;
-+					};
-+
-+					muxfpga {
-+						compatible =3D "arm,vexpress-muxfpga";
-+						arm,vexpress-sysreg,func =3D <7 0>;
-+					};
-+
-+					shutdown {
-+						compatible =3D "arm,vexpress-shutdown";
-+						arm,vexpress-sysreg,func =3D <8 0>;
-+					};
-+
-+					reboot {
-+						compatible =3D "arm,vexpress-reboot";
-+						arm,vexpress-sysreg,func =3D <9 0>;
-+					};
-+
-+					dvimode {
-+						compatible =3D "arm,vexpress-dvimode";
-+						arm,vexpress-sysreg,func =3D <11 0>;
-+					};
-+				};
- 			};
- 		};
- 	};
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
- names
-git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
-# bad: [bb5a93aaf25261321db0c499cde7da6ee9d8b164] x86/ldt: use "pr_info_onc=
-e()" instead of open-coding it badly
-git bisect bad bb5a93aaf25261321db0c499cde7da6ee9d8b164
-# bad: [0c7415c31ea9482c4377287af5f459778bf64d2a] Merge tag 'tpmdd-next-v5.=
-8-rc4' of git://git.infradead.org/users/jjs/linux-tpmdd
-git bisect bad 0c7415c31ea9482c4377287af5f459778bf64d2a
-# bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-=
-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
-# good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_=
-for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
-# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
- of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
-ixes
-git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
-# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
-8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
-# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
-nt dummy L2 cache's write_sec"
-git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
-# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
-m/fixes
-git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
-# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
-mcc node back into motherboard node
-git bisect bad 38ac46002d1df5707566a73486452851341028d2
-# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
-xpress: Move mcc node back into motherboard node
----------------------------------------------------------------------------=
-----
