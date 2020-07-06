@@ -2,83 +2,80 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F9A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E615820708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGGG7F (ORCPT
+        id S1728135AbgGGHBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:59:05 -0400
-Received: from gentwo.org ([3.19.106.255]:51566 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgGGG7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:59:04 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 3CA403FD78; Tue,  7 Jul 2020 06:59:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 3976D3FD77;
-        Tue,  7 Jul 2020 06:59:04 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 06:59:04 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
- objects
-In-Reply-To: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.22.394.2007070656120.1587@www.lameter.com>
-References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 7 Jul 2020 03:01:35 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:53650 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgGGHBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 03:01:35 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 06771Mct012838
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Tue, 7 Jul 2020 00:01:23 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Jul 2020 00:01:07 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <balbi@kernel.org>
+CC:     <colin.king@canonical.com>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v4] usb: gadget: function: fix missing spinlock in f_uac1_legacy
+Date:   Mon, 6 Jul 2020 13:14:55 +0800
+Message-ID: <20200706051455.33198-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020, Xunlei Pang wrote:
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-> This patch introduces two counters to maintain the actual number
-> of partial objects dynamically instead of iterating the partial
-> page lists with list_lock held.
->
-> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
-> The main operations are under list_lock in slow path, its performance
-> impact is minimal.
+Add a missing spinlock protection for play_queue, because
+the play_queue may be destroyed when the "playback_work"
+work func and "f_audio_out_ep_complete" callback func
+operate this paly_queue at the same time.
 
+Fixes: c6994e6f067cf ("USB: gadget: add USB Audio Gadget driver")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ v1->v2->v3->v4:
+ Add changelog text and Cc tags, Fixes tags.
 
-If at all then these counters need to be under CONFIG_SLUB_DEBUG.
+ drivers/usb/gadget/function/f_uac1_legacy.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -616,6 +616,8 @@ struct kmem_cache_node {
->  #ifdef CONFIG_SLUB
->  	unsigned long nr_partial;
->  	struct list_head partial;
-> +	atomic_long_t pfree_objects; /* partial free objects */
-> +	atomic_long_t ptotal_objects; /* partial total objects */
-
-Please in the CONFIG_SLUB_DEBUG. Without CONFIG_SLUB_DEBUG we need to
-build with minimal memory footprint.
-
->  #ifdef CONFIG_SLUB_DEBUG
->  	atomic_long_t nr_slabs;
->  	atomic_long_t total_objects;
-> diff --git a/mm/slub.c b/mm/slub.c
-
-
-
-Also this looks to be quite heavy on the cache and on execution time. Note
-that the list_lock could be taken frequently in the performance sensitive
-case of freeing an object that is not in the partial lists.
+diff --git a/drivers/usb/gadget/function/f_uac1_legacy.c b/drivers/usb/gadget/function/f_uac1_legacy.c
+index 349deae7cabd..e2d7f69128a0 100644
+--- a/drivers/usb/gadget/function/f_uac1_legacy.c
++++ b/drivers/usb/gadget/function/f_uac1_legacy.c
+@@ -336,7 +336,9 @@ static int f_audio_out_ep_complete(struct usb_ep *ep, struct usb_request *req)
+ 
+ 	/* Copy buffer is full, add it to the play_queue */
+ 	if (audio_buf_size - copy_buf->actual < req->actual) {
++		spin_lock_irq(&audio->lock);
+ 		list_add_tail(&copy_buf->list, &audio->play_queue);
++		spin_unlock_irq(&audio->lock);
+ 		schedule_work(&audio->playback_work);
+ 		copy_buf = f_audio_buffer_alloc(audio_buf_size);
+ 		if (IS_ERR(copy_buf))
+-- 
+2.24.1
 
