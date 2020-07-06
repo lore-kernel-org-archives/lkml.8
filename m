@@ -2,200 +2,126 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3439C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB45B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FD820720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594079187;
-	bh=lYWewh87S6iH9k7zGUREHZUS5ol9uho3JTnBeQHhE58=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D2N/vaYfhDSGc3iw/UsGJqXCd5MFn/kCQDBA21vJ2z+2PqedOdLK+pFZLZ0WtZZEr
-	 YMXFXeLkJe8TIHdiZU8wJC4OLV9skNP76KBebkVC7JTtddUSysu5QlinggHlb3NCgA
-	 oKGbFePmXhx3WQMOos0uS5kbS6CLxYPtcr0zUh2g=
+	s=default; t=1594079389;
+	bh=rcSfzqKMqTAG4cZgVNbjNYrKd7WW6S5TsXMAfz2WtHw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0sKsMaJJ+1z5vxyDI1vTB2IIzWwiIFK2Lz2NCYoRxPWs+ASygbC9Qie5KdR3Whh75
+	 KrdUzcF0AFUCNVftGniBzIn/rDYYNmHOX3uz9c/bJHjkAKZipEFHc1M9t2aRUM8j4B
+	 XYdOhSQVSUnsM9LEGeJr94maF/L1lNuEcHTXlDxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGFXq0 (ORCPT
+        id S1727869AbgGFXts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 19:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbgGFXqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:46:25 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726280AbgGFXts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:49:48 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9842620760
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E448206E9;
+        Mon,  6 Jul 2020 23:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594079184;
-        bh=lYWewh87S6iH9k7zGUREHZUS5ol9uho3JTnBeQHhE58=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NARFzwOm3YVKZH09KaLqpfEeS2eC8rMGgFftP3bgk+g3SBS8iHhqEHgHLVxVUyuMJ
-         wfI50V4h8I1RJzuggmkSLZjm5n26cZ3XfQoy8KFkCqaZVNinHHaspgFXigDN86xrKP
-         TOom6C9OqO6tSK2hdgUtTFhfiBf4kkbTOgGTn19c=
-Received: by mail-ej1-f54.google.com with SMTP id w6so44702337ejq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 16:46:24 -0700 (PDT)
-X-Gm-Message-State: AOAM531im4dTTdL8NBm6wreQ3IDPHlwSZDRn7pDQ0asa7+uT9kikhend
-        HAvsta0bDh4VpR54v2aVUtUd/JvmfaxxtAfgxA==
-X-Google-Smtp-Source: ABdhPJyY/xIkGPmPXd57FlHxva/9PVuURne2hf7iyK2dKHds7uxq2Q26oYLqSaBaS7NAKp66WlYlOteC/nvWbHayRsg=
-X-Received: by 2002:a17:906:404e:: with SMTP id y14mr44259469ejj.260.1594079183128;
- Mon, 06 Jul 2020 16:46:23 -0700 (PDT)
+        s=default; t=1594079387;
+        bh=rcSfzqKMqTAG4cZgVNbjNYrKd7WW6S5TsXMAfz2WtHw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OAk1XCEw69JFMDD5mSVljMjA3rJmzjhckHDUt8Howp5kh3Q2cnjFGujMp0Mzf+1BC
+         wGBhKk5ONavqe465bLIanMAJmPWgNLe8cfQR/cLQJXK0mZG7n/176obN0Rt+FBMoQq
+         AsxoAbxA0sLkGyDy6r70vGsM2xTUBmBmaVo1aXh8=
+Date:   Mon, 6 Jul 2020 18:49:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, svarbanov@mm-sol.com,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, smuthayy@codeaurora.org,
+        varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH 0/9] Add PCIe support for IPQ8074
+Message-ID: <20200706234945.GA171874@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <1593931715-32761-1-git-send-email-dennis-yc.hsieh@mediatek.com> <1593931715-32761-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-In-Reply-To: <1593931715-32761-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 7 Jul 2020 07:46:12 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
-Message-ID: <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] soc: mediatek: cmdq: add clear option in
- cmdq_pkt_wfe api
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        HS Liao <hs.liao@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dennis:
+On Sun, Jul 05, 2020 at 02:47:51PM +0530, Sivaprakash Murugesan wrote:
+> IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
+> controller. while it was assumed that PCIe support for IPQ8074 was already
+> available. PCIe was not functional until now.
+> 
+> This patch series adds support for PCIe ports on IPQ8074.
+> 
+> First PCIe port is of gen2 synposis version is 2_3_2 which has already been
+> enabled. But it had some problems on phy init and needed dt updates.
+> 
+> Second PCIe port is gen3 synopsis version is 2_9_0. This series adds
+> support for this PCIe port while fixing dt nodes.
+> 
+> Patch 1 on this series depends on qcom pcie bindings patch
+> https://lkml.org/lkml/2020/6/24/162
+> 
+> Sivaprakash Murugesan (9):
+>   dt-bindings: pci: Add ipq8074 gen3 pci compatible
+>   dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
+>   clk: qcom: ipq8074: Add missing bindings for pcie
+>   clk: qcom: ipq8074: Add missing clocks for pcie
+>   phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+>   phy: qcom-qmp: Add compatible for ipq8074 pcie gen3 qmp phy
+>   pci: dwc: qcom: do phy power on before pcie init
+>   pci: qcom: Add support for ipq8074 pci controller
+>   arm64: dts: ipq8074: Fixup pcie dts nodes
 
-Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=
-=9C=886=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:20=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> Add clear parameter to let client decide if
-> event should be clear to 0 after GCE receive it.
->
-> Fixes: 2f965be7f9008 ("drm/mediatek: apply CMDQ control flow")
+No comment on the patches themselves, but please update the subject
+lines so they follow the conventions:
 
-I think this patch include two things, one is bug fix, another is
-changing interface.
-below is the bug fix part.
+  dt-bindings: PCI: qcom: Add ipq8074 PCIe Gen3 support
+  dt-bindings: phy: qcom,qmp: Add ipq8074 PCIe Gen3 phy
+  clk: qcom: ipq8074: Add missing bindings for PCIe
+  clk: qcom: ipq8074: Add missing clocks for PCIe
+  phy: qcom-qmp: Use correct values for ipq8074 PCIe Gen2 PHY init
+  PCI: qcom: Do PHY power on before PCIe init
+  PCI: qcom: Add ipq8074 PCIe controller support
+  arm64: dts: ipq8074: Fixup PCIe DTS nodes
 
--#define CMDQ_WFE_OPTION                        (CMDQ_WFE_UPDATE |
-CMDQ_WFE_WAIT | \
--                                       CMDQ_WFE_WAIT_VALUE)
-+#define CMDQ_WFE_OPTION                        (CMDQ_WFE_WAIT |
-CMDQ_WFE_WAIT_VALUE)
+Also fix the same things in the commit logs, e.g., consistently use
+"PCIe" instead of "pcie", "Gen2" instead of "gen2", etc.  For example:
 
-the other is changing interface part. So this patch should be broken
-into two patches.
+  ipq8074 has two PCIe ports while the support for gen2 pcie port ...
 
-Regards,
-Chun-Kuang.
+What's the point of using "PCIe" for the first and "pcie" for the
+second?
 
-> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c  |    2 +-
->  drivers/soc/mediatek/mtk-cmdq-helper.c   |    5 +++--
->  include/linux/mailbox/mtk-cmdq-mailbox.h |    3 +--
->  include/linux/soc/mediatek/mtk-cmdq.h    |    5 +++--
->  4 files changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/me=
-diatek/mtk_drm_crtc.c
-> index ec6c9ffbf35e..ba6cf956b239 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -490,7 +490,7 @@ static void mtk_drm_crtc_hw_config(struct mtk_drm_crt=
-c *mtk_crtc)
->                 mbox_flush(mtk_crtc->cmdq_client->chan, 2000);
->                 cmdq_handle =3D cmdq_pkt_create(mtk_crtc->cmdq_client, PA=
-GE_SIZE);
->                 cmdq_pkt_clear_event(cmdq_handle, mtk_crtc->cmdq_event);
-> -               cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event);
-> +               cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event, false);
->                 mtk_crtc_ddp_config(crtc, cmdq_handle);
->                 cmdq_pkt_finalize(cmdq_handle);
->                 cmdq_pkt_flush_async(cmdq_handle, ddp_cmdq_cb, cmdq_handl=
-e);
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediate=
-k/mtk-cmdq-helper.c
-> index d55dc3296105..505651b0d715 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -316,15 +316,16 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pk=
-t, u8 high_addr_reg_idx,
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write_s_mask_value);
->
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear)
->  {
->         struct cmdq_instruction inst =3D { {0} };
-> +       u32 clear_option =3D clear ? CMDQ_WFE_UPDATE : 0;
->
->         if (event >=3D CMDQ_MAX_EVENT)
->                 return -EINVAL;
->
->         inst.op =3D CMDQ_CODE_WFE;
-> -       inst.value =3D CMDQ_WFE_OPTION;
-> +       inst.value =3D CMDQ_WFE_OPTION | clear_option;
->         inst.event =3D event;
->
->         return cmdq_pkt_append_command(pkt, inst);
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mai=
-lbox/mtk-cmdq-mailbox.h
-> index efbd8a9eb2d1..d5a983d65f05 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -28,8 +28,7 @@
->   * bit 16-27: update value
->   * bit 31: 1 - update, 0 - no update
->   */
-> -#define CMDQ_WFE_OPTION                        (CMDQ_WFE_UPDATE | CMDQ_W=
-FE_WAIT | \
-> -                                       CMDQ_WFE_WAIT_VALUE)
-> +#define CMDQ_WFE_OPTION                        (CMDQ_WFE_WAIT | CMDQ_WFE=
-_WAIT_VALUE)
->
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT                 0x3ff
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/me=
-diatek/mtk-cmdq.h
-> index 34354e952f60..960704d75994 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -182,11 +182,12 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pk=
-t, u8 high_addr_reg_idx,
->  /**
->   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
->   * @pkt:       the CMDQ packet
-> - * @event:     the desired event type to "wait and CLEAR"
-> + * @event:     the desired event type to wait
-> + * @clear:     clear event or not after event arrive
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear);
->
->  /**
->   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packe=
-t
-> --
-> 1.7.9.5
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+You can learn all this by using "git log" and "git log --online".
+
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 ++++++
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
+>  arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
+>  drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++++++
+>  drivers/pci/controller/dwc/pcie-qcom.c             | 187 +++++++++++++++++++-
+>  drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 132 +++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                | 188 ++++++++++++++++++++-
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
+>  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
+>  10 files changed, 683 insertions(+), 55 deletions(-)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+> 
+> -- 
+> 2.7.4
+> 
