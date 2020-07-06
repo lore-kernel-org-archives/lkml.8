@@ -2,168 +2,200 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3439C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B2920723
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB45B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594079113;
-	bh=5Y1zS7sOzTCIQkIflLi1Pc2LBhHJ510ftzMkErnN0qo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wlq4EUTM+9fdhkDrda6QwgZ7plBCNo+pzsmcOkOC4tDWZcYAgxGFEiY/YBqhBpyBo
-	 nY/4SCoRGCKBuj0M/9Y410NAqfaYEYymm/rn+Ahh+Mn7NLylJEx0+MqCFY29AhUebu
-	 4G7QihYftDxh5bcAbjSioAjT4Vd+JeWJvjBYqFoo=
+	s=default; t=1594079187;
+	bh=lYWewh87S6iH9k7zGUREHZUS5ol9uho3JTnBeQHhE58=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D2N/vaYfhDSGc3iw/UsGJqXCd5MFn/kCQDBA21vJ2z+2PqedOdLK+pFZLZ0WtZZEr
+	 YMXFXeLkJe8TIHdiZU8wJC4OLV9skNP76KBebkVC7JTtddUSysu5QlinggHlb3NCgA
+	 oKGbFePmXhx3WQMOos0uS5kbS6CLxYPtcr0zUh2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGFXpM (ORCPT
+        id S1727871AbgGFXq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 19:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726799AbgGFXpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:45:12 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726280AbgGFXqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 19:46:25 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC34206E9;
-        Mon,  6 Jul 2020 23:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9842620760
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594079111;
-        bh=5Y1zS7sOzTCIQkIflLi1Pc2LBhHJ510ftzMkErnN0qo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=MSK20KXaatpfMbWRYcv/Av068aBBezFshyGbQ5e1Tfpm29rAAHtYOWvoESiv4zc7H
-         Dfbbkc7YUXKmapIPDD9TDjq1UCRZJ3CuHXfoQ5P8BApvWGMWueyfO/duli63tdFTsk
-         NR0xvbcMQRqPrHH0wTXU3xX592gvq1eiyVjjm8Zc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 054F93522637; Mon,  6 Jul 2020 16:45:11 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 16:45:11 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] kcsan: Add atomic builtin test case
-Message-ID: <20200706234510.GA20540@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200703134031.3298135-1-elver@google.com>
- <20200703134031.3298135-3-elver@google.com>
+        s=default; t=1594079184;
+        bh=lYWewh87S6iH9k7zGUREHZUS5ol9uho3JTnBeQHhE58=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NARFzwOm3YVKZH09KaLqpfEeS2eC8rMGgFftP3bgk+g3SBS8iHhqEHgHLVxVUyuMJ
+         wfI50V4h8I1RJzuggmkSLZjm5n26cZ3XfQoy8KFkCqaZVNinHHaspgFXigDN86xrKP
+         TOom6C9OqO6tSK2hdgUtTFhfiBf4kkbTOgGTn19c=
+Received: by mail-ej1-f54.google.com with SMTP id w6so44702337ejq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 16:46:24 -0700 (PDT)
+X-Gm-Message-State: AOAM531im4dTTdL8NBm6wreQ3IDPHlwSZDRn7pDQ0asa7+uT9kikhend
+        HAvsta0bDh4VpR54v2aVUtUd/JvmfaxxtAfgxA==
+X-Google-Smtp-Source: ABdhPJyY/xIkGPmPXd57FlHxva/9PVuURne2hf7iyK2dKHds7uxq2Q26oYLqSaBaS7NAKp66WlYlOteC/nvWbHayRsg=
+X-Received: by 2002:a17:906:404e:: with SMTP id y14mr44259469ejj.260.1594079183128;
+ Mon, 06 Jul 2020 16:46:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703134031.3298135-3-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1593931715-32761-1-git-send-email-dennis-yc.hsieh@mediatek.com> <1593931715-32761-9-git-send-email-dennis-yc.hsieh@mediatek.com>
+In-Reply-To: <1593931715-32761-9-git-send-email-dennis-yc.hsieh@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 7 Jul 2020 07:46:12 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
+Message-ID: <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] soc: mediatek: cmdq: add clear option in
+ cmdq_pkt_wfe api
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        HS Liao <hs.liao@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:40:31PM +0200, Marco Elver wrote:
-> Adds test case to kcsan-test module, to test atomic builtin
-> instrumentation works.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
+Hi, Dennis:
 
-Applied all three, thank you!!!
+Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=
+=9C=886=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:20=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> Add clear parameter to let client decide if
+> event should be clear to 0 after GCE receive it.
+>
+> Fixes: 2f965be7f9008 ("drm/mediatek: apply CMDQ control flow")
 
-							Thanx, Paul
+I think this patch include two things, one is bug fix, another is
+changing interface.
+below is the bug fix part.
 
+-#define CMDQ_WFE_OPTION                        (CMDQ_WFE_UPDATE |
+CMDQ_WFE_WAIT | \
+-                                       CMDQ_WFE_WAIT_VALUE)
++#define CMDQ_WFE_OPTION                        (CMDQ_WFE_WAIT |
+CMDQ_WFE_WAIT_VALUE)
+
+the other is changing interface part. So this patch should be broken
+into two patches.
+
+Regards,
+Chun-Kuang.
+
+> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 > ---
->  kernel/kcsan/kcsan-test.c | 63 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
-> index fed6fcb5768c..721180cbbab1 100644
-> --- a/kernel/kcsan/kcsan-test.c
-> +++ b/kernel/kcsan/kcsan-test.c
-> @@ -390,6 +390,15 @@ static noinline void test_kernel_seqlock_writer(void)
->  	write_sequnlock_irqrestore(&test_seqlock, flags);
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c  |    2 +-
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   |    5 +++--
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |    3 +--
+>  include/linux/soc/mediatek/mtk-cmdq.h    |    5 +++--
+>  4 files changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/me=
+diatek/mtk_drm_crtc.c
+> index ec6c9ffbf35e..ba6cf956b239 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -490,7 +490,7 @@ static void mtk_drm_crtc_hw_config(struct mtk_drm_crt=
+c *mtk_crtc)
+>                 mbox_flush(mtk_crtc->cmdq_client->chan, 2000);
+>                 cmdq_handle =3D cmdq_pkt_create(mtk_crtc->cmdq_client, PA=
+GE_SIZE);
+>                 cmdq_pkt_clear_event(cmdq_handle, mtk_crtc->cmdq_event);
+> -               cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event);
+> +               cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event, false);
+>                 mtk_crtc_ddp_config(crtc, cmdq_handle);
+>                 cmdq_pkt_finalize(cmdq_handle);
+>                 cmdq_pkt_flush_async(cmdq_handle, ddp_cmdq_cb, cmdq_handl=
+e);
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediate=
+k/mtk-cmdq-helper.c
+> index d55dc3296105..505651b0d715 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -316,15 +316,16 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pk=
+t, u8 high_addr_reg_idx,
 >  }
->  
-> +static noinline void test_kernel_atomic_builtins(void)
-> +{
-> +	/*
-> +	 * Generate concurrent accesses, expecting no reports, ensuring KCSAN
-> +	 * treats builtin atomics as actually atomic.
-> +	 */
-> +	__atomic_load_n(&test_var, __ATOMIC_RELAXED);
-> +}
-> +
->  /* ===== Test cases ===== */
->  
->  /* Simple test with normal data race. */
-> @@ -852,6 +861,59 @@ static void test_seqlock_noreport(struct kunit *test)
->  	KUNIT_EXPECT_FALSE(test, match_never);
->  }
->  
-> +/*
-> + * Test atomic builtins work and required instrumentation functions exist. We
-> + * also test that KCSAN understands they're atomic by racing with them via
-> + * test_kernel_atomic_builtins(), and expect no reports.
-> + *
-> + * The atomic builtins _SHOULD NOT_ be used in normal kernel code!
-> + */
-> +static void test_atomic_builtins(struct kunit *test)
-> +{
-> +	bool match_never = false;
-> +
-> +	begin_test_checks(test_kernel_atomic_builtins, test_kernel_atomic_builtins);
-> +	do {
-> +		long tmp;
-> +
-> +		kcsan_enable_current();
-> +
-> +		__atomic_store_n(&test_var, 42L, __ATOMIC_RELAXED);
-> +		KUNIT_EXPECT_EQ(test, 42L, __atomic_load_n(&test_var, __ATOMIC_RELAXED));
-> +
-> +		KUNIT_EXPECT_EQ(test, 42L, __atomic_exchange_n(&test_var, 20, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 20L, test_var);
-> +
-> +		tmp = 20L;
-> +		KUNIT_EXPECT_TRUE(test, __atomic_compare_exchange_n(&test_var, &tmp, 30L,
-> +								    0, __ATOMIC_RELAXED,
-> +								    __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, tmp, 20L);
-> +		KUNIT_EXPECT_EQ(test, test_var, 30L);
-> +		KUNIT_EXPECT_FALSE(test, __atomic_compare_exchange_n(&test_var, &tmp, 40L,
-> +								     1, __ATOMIC_RELAXED,
-> +								     __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, tmp, 30L);
-> +		KUNIT_EXPECT_EQ(test, test_var, 30L);
-> +
-> +		KUNIT_EXPECT_EQ(test, 30L, __atomic_fetch_add(&test_var, 1, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 31L, __atomic_fetch_sub(&test_var, 1, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 30L, __atomic_fetch_and(&test_var, 0xf, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 14L, __atomic_fetch_xor(&test_var, 0xf, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 1L, __atomic_fetch_or(&test_var, 0xf0, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, 241L, __atomic_fetch_nand(&test_var, 0xf, __ATOMIC_RELAXED));
-> +		KUNIT_EXPECT_EQ(test, -2L, test_var);
-> +
-> +		__atomic_thread_fence(__ATOMIC_SEQ_CST);
-> +		__atomic_signal_fence(__ATOMIC_SEQ_CST);
-> +
-> +		kcsan_disable_current();
-> +
-> +		match_never = report_available();
-> +	} while (!end_test_checks(match_never));
-> +	KUNIT_EXPECT_FALSE(test, match_never);
-> +}
-> +
->  /*
->   * Each test case is run with different numbers of threads. Until KUnit supports
->   * passing arguments for each test case, we encode #threads in the test case
-> @@ -891,6 +953,7 @@ static struct kunit_case kcsan_test_cases[] = {
->  	KCSAN_KUNIT_CASE(test_assert_exclusive_access_scoped),
->  	KCSAN_KUNIT_CASE(test_jiffies_noreport),
->  	KCSAN_KUNIT_CASE(test_seqlock_noreport),
-> +	KCSAN_KUNIT_CASE(test_atomic_builtins),
->  	{},
->  };
->  
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+>  EXPORT_SYMBOL(cmdq_pkt_write_s_mask_value);
+>
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear)
+>  {
+>         struct cmdq_instruction inst =3D { {0} };
+> +       u32 clear_option =3D clear ? CMDQ_WFE_UPDATE : 0;
+>
+>         if (event >=3D CMDQ_MAX_EVENT)
+>                 return -EINVAL;
+>
+>         inst.op =3D CMDQ_CODE_WFE;
+> -       inst.value =3D CMDQ_WFE_OPTION;
+> +       inst.value =3D CMDQ_WFE_OPTION | clear_option;
+>         inst.event =3D event;
+>
+>         return cmdq_pkt_append_command(pkt, inst);
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mai=
+lbox/mtk-cmdq-mailbox.h
+> index efbd8a9eb2d1..d5a983d65f05 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -28,8 +28,7 @@
+>   * bit 16-27: update value
+>   * bit 31: 1 - update, 0 - no update
+>   */
+> -#define CMDQ_WFE_OPTION                        (CMDQ_WFE_UPDATE | CMDQ_W=
+FE_WAIT | \
+> -                                       CMDQ_WFE_WAIT_VALUE)
+> +#define CMDQ_WFE_OPTION                        (CMDQ_WFE_WAIT | CMDQ_WFE=
+_WAIT_VALUE)
+>
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT                 0x3ff
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/me=
+diatek/mtk-cmdq.h
+> index 34354e952f60..960704d75994 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -182,11 +182,12 @@ int cmdq_pkt_write_s_mask_value(struct cmdq_pkt *pk=
+t, u8 high_addr_reg_idx,
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+>   * @pkt:       the CMDQ packet
+> - * @event:     the desired event type to "wait and CLEAR"
+> + * @event:     the desired event type to wait
+> + * @clear:     clear event or not after event arrive
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event, bool clear);
+>
+>  /**
+>   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packe=
+t
+> --
+> 1.7.9.5
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
