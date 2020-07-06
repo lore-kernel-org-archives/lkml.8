@@ -2,163 +2,139 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23294C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA70520702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5512206DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YVom8lFw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B+iKfZUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgGFRPH (ORCPT
+        id S1729665AbgGFRPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:15:07 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19335 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgGFRPG (ORCPT
+        Mon, 6 Jul 2020 13:15:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42629 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729658AbgGFRPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:15:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f035be40001>; Mon, 06 Jul 2020 10:14:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Jul 2020 10:15:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Jul 2020 10:15:05 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
- 2020 17:15:01 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 6 Jul 2020 17:15:01 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f035c110000>; Mon, 06 Jul 2020 10:15:00 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <robh+dt@kernel.org>, <treding@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
-        <bhelgaas@google.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH] arm64: tegra: Re-order PCIe aperture mappings
-Date:   Mon, 6 Jul 2020 22:44:54 +0530
-Message-ID: <20200706171454.11316-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Mon, 6 Jul 2020 13:15:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594055729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WIAp4BksQMI/icBTHgBCKYMTMos5fdTsYz6Un13kkXc=;
+        b=B+iKfZUJivhv5sCUJPBqkVi6tu4pZkPoHsUZs+Y1ZJrK/Ot3/CiJo7rl7aj+FZI0etnnFa
+        nS5vGNzyfbfhxYC2iiiSBozQhrgwML2XmuDWZD+Q5IuH8VvCmiyvQvjD+CHjo+B8M7QLmL
+        ctieDxawDKvBUzamXlx8cR2HuWEXxis=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-Hr9AEiglOwy8YY02x3x5rg-1; Mon, 06 Jul 2020 13:15:25 -0400
+X-MC-Unique: Hr9AEiglOwy8YY02x3x5rg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44E78804001;
+        Mon,  6 Jul 2020 17:15:24 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E39955C1B2;
+        Mon,  6 Jul 2020 17:15:23 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.8-rc5
+Date:   Mon,  6 Jul 2020 13:15:23 -0400
+Message-Id: <20200706171523.12441-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594055652; bh=HXtWj3LVP+XSdF9JsC03QCj7zdWKkGYPzJ5wNbRbP04=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=YVom8lFwRwbSQMNkbudA/cWC5MN/0S7+zdRcwdGJ1OuevF+4RisPUDSC4mRGBCrcV
-         eV+QVDai1UCGXXoes7efkoNEYUMCYlDmlNHwJytSosNfAilui5MFX/I+pSiIn4/vJ6
-         F/XInpd4v6Kmh8RbkVXXZBh8LOPXNTFjCIJ9nZqKuZhmkifxsNyxEuu309ceg43BUh
-         3uN7CXjWaY85UXKc9mfMsIMV9Bs02l9BrseP00Pp94h2i9PyFw7/YuzB2hsmkl7EvO
-         nGngoIJ+n/9xnOM9u1Uex1jsemncSMKtL/4rn5yDBY3faUtyvls7VFsMN8g3uE05va
-         asIr7B4gawhnA==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-order Tegra194's PCIe aperture mappings to have IO window moved to
-64-bit aperture and have the entire 32-bit aperture used for accessing
-the configuration space. This makes it to use the entire 32MB of the 32-bit
-aperture for ECAM purpose while booting through ACPI.
+Linus,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 36 ++++++++++++------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+The following changes since commit e4553b4976d1178c13da295cb5c7b21f55baf8f9:
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 4bc187a4eacd..2b378fa06d19 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1404,9 +1404,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
--			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-+		ranges = <0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0x82000000 0x00 0x40000000 0x12 0x30000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x12 0x3fff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie@14120000 {
-@@ -1449,9 +1449,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
--			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-+		ranges = <0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0x82000000 0x00 0x40000000 0x12 0x70000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x12 0x7fff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie@14140000 {
-@@ -1494,9 +1494,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
--			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-+		ranges = <0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0x82000000 0x00 0x40000000 0x12 0xb0000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x12 0xbfff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie@14160000 {
-@@ -1539,9 +1539,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
--			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-+		ranges = <0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0x82000000 0x00 0x40000000 0x17 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x17 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie@14180000 {
-@@ -1584,9 +1584,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
--			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-+		ranges = <0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0x82000000 0x00 0x40000000 0x1b 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x1b 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie@141a0000 {
-@@ -1633,9 +1633,9 @@
- 		nvidia,aspm-l0s-entrance-latency-us = <3>;
- 
- 		bus-range = <0x0 0xff>;
--		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
--			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-+		ranges = <0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0x82000000 0x00 0x40000000 0x1f 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
-+			  0x81000000 0x00 0x00000000 0x1f 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
- 	};
- 
- 	pcie_ep@14160000 {
--- 
-2.17.1
+  KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru (2020-06-23 06:01:29 -0400)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 8038a922cf9af5266eaff29ce996a0d1b788fc0d:
+
+  Merge tag 'kvmarm-fixes-5.8-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into kvm-master (2020-07-06 13:05:38 -0400)
+
+----------------------------------------------------------------
+Bugfixes and a one-liner patch to silence sparse.
+
+----------------------------------------------------------------
+
+I'm going on vacation so my next pull request should be for rc8
+or 5.8-final.  If something really bad comes up, you might get
+KVM changes straight from architecture maintainers, but things
+seems calm on both the 5.7 and 5.8 fronts so that should not
+happen.
+
+Thanks,
+
+Paolo
+
+Alexandru Elisei (1):
+      KVM: arm64: Annotate hyp NMI-related functions as __always_inline
+
+Andrew Jones (1):
+      KVM: arm64: pvtime: Ensure task delay accounting is enabled
+
+Andrew Scull (1):
+      KVM: arm64: Stop clobbering x0 for HVC_SOFT_RESTART
+
+Christian Borntraeger (1):
+      KVM: s390: reduce number of IO pins to 1
+
+Marc Zyngier (2):
+      KVM: arm64: vgic-v4: Plug race between non-residency and v4.1 doorbell
+      KVM: arm64: PMU: Fix per-CPU access in preemptible context
+
+Paolo Bonzini (5):
+      Merge tag 'kvm-s390-master-5.8-3' of git://git.kernel.org/.../kvms390/linux into kvm-master
+      KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+      Merge tag 'kvmarm-fixes-5.8-2' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
+      kvm: use more precise cast and do not drop __user
+      Merge tag 'kvmarm-fixes-5.8-3' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
+
+Sean Christopherson (3):
+      KVM: x86: Inject #GP if guest attempts to toggle CR4.LA57 in 64-bit mode
+      KVM: x86: Mark CR4.TSD as being possibly owned by the guest
+      KVM: VMX: Use KVM_POSSIBLE_CR*_GUEST_BITS to initialize guest/host masks
+
+Steven Price (1):
+      KVM: arm64: Fix kvm_reset_vcpu() return code being incorrect with SVE
+
+Wanpeng Li (1):
+      KVM: X86: Fix async pf caused null-ptr-deref
+
+ arch/arm64/include/asm/arch_gicv3.h |  2 +-
+ arch/arm64/include/asm/cpufeature.h |  2 +-
+ arch/arm64/kvm/hyp-init.S           | 11 +++++++----
+ arch/arm64/kvm/pmu.c                |  7 ++++++-
+ arch/arm64/kvm/pvtime.c             | 15 ++++++++++++---
+ arch/arm64/kvm/reset.c              | 10 +++++++---
+ arch/arm64/kvm/vgic/vgic-v4.c       |  8 ++++++++
+ arch/s390/include/asm/kvm_host.h    |  8 ++++----
+ arch/x86/kvm/kvm_cache_regs.h       |  2 +-
+ arch/x86/kvm/mmu/mmu.c              |  2 +-
+ arch/x86/kvm/vmx/nested.c           |  4 ++--
+ arch/x86/kvm/vmx/vmx.c              | 13 +++++--------
+ arch/x86/kvm/x86.c                  |  5 +++++
+ drivers/irqchip/irq-gic-v3-its.c    |  8 ++++++++
+ virt/kvm/kvm_main.c                 |  3 ++-
+ 15 files changed, 70 insertions(+), 30 deletions(-)
 
