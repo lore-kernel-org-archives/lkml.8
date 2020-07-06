@@ -2,146 +2,136 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9B6420720
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT60lnrW"
+	by mail.kernel.org (Postfix) with ESMTP id D024A20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgGFMj4 (ORCPT
+        id S1729143AbgGFMkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgGFMjz (ORCPT
+        Mon, 6 Jul 2020 08:40:25 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:46044 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgGFMkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:39:55 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6E2C061794;
-        Mon,  6 Jul 2020 05:39:55 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e15so34696387edr.2;
-        Mon, 06 Jul 2020 05:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NTlfd07fqo6vbcLIkW9eOz07H1uYGq6Yd8TcAIKMezk=;
-        b=jT60lnrWqEs+enEym1/52DmnK/Rv8ejhL51zZlrHoWv72f/rplS+thUb5UzeuPe7p1
-         Q0mCp5xzimOTWR3dap9kc0eH2Tn39RK9iaaNCDUa4sjCgNSXtn3SRbUKCBP8MKdAlM29
-         PUGmF2n2xmSai7dYg+ypxAHHzkXrMP1sKlf++4AxPVgXbSbPUOLJydmMIHoCzM4tUfrg
-         nj9PEUl7Ge5wbfGzTouF7LDyHCp9qgmCxESG0bM/ZLdFik18wh3eS+XXv+6Ue+KrZK5O
-         tOTusnvKnBhlmEY7Qy/XDazQs8ju7CfltGJiKhP0NxcnQgKbfu+7+TXZQSy2nvRNOQVt
-         dufQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NTlfd07fqo6vbcLIkW9eOz07H1uYGq6Yd8TcAIKMezk=;
-        b=dTCrGpsHiSt9On2/uhbnuD/sxR9R21gyCOcqVy7MPK4d7S/+4M6Npumj72AQpIaiER
-         SlFTPF86YUQOHlHqFRfFrcW8e0UGjIqbZ1csBGJ2lsN+yB/fmAC/RgQUAXLf3+fUZv2S
-         DaDteWS+8T85S4DnWLLhGqbP5hHZfEzTmTBmyNh69TmBcVHWQOeArK5UzvH5/HZ5M1iN
-         kgY1syxK+2YtocY4RTBlLFe7gvcUXl0ET+gPiEoLhPNBCjMmBVzWSjslM5j9ZryZbUxo
-         WHKHG/6z2RcI0wh5O0sgYZx54H7nFZDFYzUQr/8oNnfOFd0+HdRJaEuMUaAlPpthAJtE
-         +Eig==
-X-Gm-Message-State: AOAM531sW8GhYCWd+WJaYiNcUnfy9NIalSUyoo0VLxX3P+W3c8xSU81u
-        op4xye9k94Z5oGun8eBUvJs=
-X-Google-Smtp-Source: ABdhPJwhC+LZRRcmLZlHXGO3pfrhBXsF36KDAaHBxKBYcYr3PhC8Ndk7bFDM3/uGasU2nRYbjk14aw==
-X-Received: by 2002:aa7:d802:: with SMTP id v2mr47963009edq.77.1594039193976;
-        Mon, 06 Jul 2020 05:39:53 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.gmail.com with ESMTPSA id bq8sm12968578ejb.103.2020.07.06.05.39.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 05:39:53 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: ufs: change upiu_flags to be u8
-Date:   Mon,  6 Jul 2020 14:39:36 +0200
-Message-Id: <20200706123936.24799-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jul 2020 08:40:25 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 9E11B1D358CA74;
+        Mon,  6 Jul 2020 12:40:21 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Mon,  6 Jul 2020 12:40:20 +0000 (UTC)
+Message-ID: <22e627b3b9ebef768c50ab6519278e61217b8575.camel@archlinux.org>
+Subject: Re: [PATCH] HID: logitech: Use HIDPP_RECEIVER_INDEX instead of 0xff
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Mazin Rezk <mnrzk@protonmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+In-Reply-To: <FW0Ps9vggIuA-9asmWgfQkNKSlcwuAhNfFXxK3QGSu4uJRAEykUGdoL5sbJsAlehWv__Eq4LKejp0QpxQRj5LYn5tOrVRDbjrcn3JVDGLAQ=@protonmail.com>
+References: <FW0Ps9vggIuA-9asmWgfQkNKSlcwuAhNfFXxK3QGSu4uJRAEykUGdoL5sbJsAlehWv__Eq4LKejp0QpxQRj5LYn5tOrVRDbjrcn3JVDGLAQ=@protonmail.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-/WyPnc9eaHFQuRQ9WKqk"
+Date:   Mon, 06 Jul 2020 13:40:09 +0100
+MIME-Version: 1.0
+User-Agent: Evolution 3.36.3 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
 
-According to the UFS Spec, the Flags in the UPIU is one-byte length, not
-4 bytes. change it to be u8.
+--=-/WyPnc9eaHFQuRQ9WKqk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On Sun, 2020-07-05 at 02:48 +0000, Mazin Rezk wrote:
+> Some parts of hid-logitech-dj explicitly referred to 0xff for the
+> receiver index. This patch changes those references to the
+> HIDPP_RECEIVER_INDEX definition.
+>=20
+> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> ---
+>  drivers/hid/hid-logitech-dj.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> logitech-dj.c
+> index 48dff5d6b605..a78c13cc9f47 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1153,7 +1153,7 @@ static int
+> logi_dj_recv_query_paired_devices(struct dj_receiver_dev *djrcv_dev)
+>  	if (!dj_report)
+>  		return -ENOMEM;
+>  	dj_report->report_id =3D REPORT_ID_DJ_SHORT;
+> -	dj_report->device_index =3D 0xFF;
+> +	dj_report->device_index =3D HIDPP_RECEIVER_INDEX;
+>  	dj_report->report_type =3D REPORT_TYPE_CMD_GET_PAIRED_DEVICES;
+>  	retval =3D logi_dj_recv_send_report(djrcv_dev, dj_report);
+>  	kfree(dj_report);
+> @@ -1175,7 +1175,7 @@ static int
+> logi_dj_recv_switch_to_dj_mode(struct dj_receiver_dev *djrcv_dev,
+>=20
+>  	if (djrcv_dev->type =3D=3D recvr_type_dj) {
+>  		dj_report->report_id =3D REPORT_ID_DJ_SHORT;
+> -		dj_report->device_index =3D 0xFF;
+> +		dj_report->device_index =3D HIDPP_RECEIVER_INDEX;
+>  		dj_report->report_type =3D REPORT_TYPE_CMD_SWITCH;
+>  		dj_report->report_params[CMD_SWITCH_PARAM_DEVBITFIELD]
+> =3D 0x3F;
+>  		dj_report-
+> >report_params[CMD_SWITCH_PARAM_TIMEOUT_SECONDS] =3D
+> @@ -1204,7 +1204,7 @@ static int
+> logi_dj_recv_switch_to_dj_mode(struct dj_receiver_dev *djrcv_dev,
+>  	memset(buf, 0, HIDPP_REPORT_SHORT_LENGTH);
+>=20
+>  	buf[0] =3D REPORT_ID_HIDPP_SHORT;
+> -	buf[1] =3D 0xFF;
+> +	buf[1] =3D HIDPP_RECEIVER_INDEX;
+>  	buf[2] =3D 0x80;
+>  	buf[3] =3D 0x00;
+>  	buf[4] =3D 0x00;
+> --
+> 2.27.0
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 96d830bb900f..d7fd5891e81f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2240,7 +2240,7 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
-  * @cmd_dir: requests data direction
-  */
- static void ufshcd_prepare_req_desc_hdr(struct ufshcd_lrb *lrbp,
--			u32 *upiu_flags, enum dma_data_direction cmd_dir)
-+			u8 *upiu_flags, enum dma_data_direction cmd_dir)
- {
- 	struct utp_transfer_req_desc *req_desc = lrbp->utr_descriptor_ptr;
- 	u32 data_direction;
-@@ -2286,7 +2286,7 @@ static void ufshcd_prepare_req_desc_hdr(struct ufshcd_lrb *lrbp,
-  * @upiu_flags: flags
-  */
- static
--void ufshcd_prepare_utp_scsi_cmd_upiu(struct ufshcd_lrb *lrbp, u32 upiu_flags)
-+void ufshcd_prepare_utp_scsi_cmd_upiu(struct ufshcd_lrb *lrbp, u8 upiu_flags)
- {
- 	struct scsi_cmnd *cmd = lrbp->cmd;
- 	struct utp_upiu_req *ucd_req_ptr = lrbp->ucd_req_ptr;
-@@ -2319,7 +2319,7 @@ void ufshcd_prepare_utp_scsi_cmd_upiu(struct ufshcd_lrb *lrbp, u32 upiu_flags)
-  * @upiu_flags: flags
-  */
- static void ufshcd_prepare_utp_query_req_upiu(struct ufs_hba *hba,
--				struct ufshcd_lrb *lrbp, u32 upiu_flags)
-+				struct ufshcd_lrb *lrbp, u8 upiu_flags)
- {
- 	struct utp_upiu_req *ucd_req_ptr = lrbp->ucd_req_ptr;
- 	struct ufs_query *query = &hba->dev_cmd.query;
-@@ -2376,7 +2376,7 @@ static inline void ufshcd_prepare_utp_nop_upiu(struct ufshcd_lrb *lrbp)
- static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
- 				      struct ufshcd_lrb *lrbp)
- {
--	u32 upiu_flags;
-+	u8 upiu_flags;
- 	int ret = 0;
- 
- 	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-@@ -2404,7 +2404,7 @@ static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
-  */
- static int ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- {
--	u32 upiu_flags;
-+	u8 upiu_flags;
- 	int ret = 0;
- 
- 	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-@@ -6124,7 +6124,7 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 	int tag;
- 	struct completion wait;
- 	unsigned long flags;
--	u32 upiu_flags;
-+	u8 upiu_flags;
- 
- 	down_read(&hba->clk_scaling_lock);
- 
--- 
-2.17.1
+This is correct :)
 
+Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
+
+Cheers,
+Filipe La=C3=ADns
+
+--=-/WyPnc9eaHFQuRQ9WKqk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8DG6kACgkQ+JPGdIFq
+qV1UBg//eqSKIXFbyMjShmQQySiGxq0hVM4CoIrhhOm7inq2j5LBiXXAdDOgkCHa
+jIxeN8hjrdkkt1wXNe0jq6jw2nPrhTCmocCuiWrQf0uzSYB3TLanQeoGr6JT05Rc
+Ngu7+PL+ZgdeZrDf69C/0iSwH/OkIsoZXZAUOOHFAkFNHj1Rvfa0aN615Fywusye
+f0DClrShi5P4NTjWbqwU3URCMAaQMg+/GpuuaZ/Txapel4WEX1Ky4EgjyHaYksWp
+wTfxb9HmkuEavhNqhyWnu17x3OTolBFmdGI+4SRo2mqr4ToS3Sdy4V/4RDNrJ37R
+/LS7cmqQyb0H+F4RY32OFLSW4prXURoaTzQDsvRdp1tsDwAykxZj91IgT9pDA2LK
+HPLCcR10RKgs5KLhXM/tpQOj9ebr6ejzX1+yE53tedTb993c6WlKAjlVNRY6GtJf
+gsnMAPBXHYfbBF19Zg+yNj1rMoByCPQ2KT/xing7bu7WkL0MkTLc8OQ1ZWh89yMK
+lA+G9cLXlZytUBCNgiUdIseqX218h8CQ+KNRnAfdzxjk5oVcioJ57Y1gRJWirioo
+hs3o0nXgJxkF2cwsVzhEaY03HVcvlwEpegSqMP+NuZY65hifbQnWuyOiTJHH8FcI
+a4EgqvCh/ScAzn9aeLGCZNA7+bDR/HZi34h1gUyn5K2kuPfRoEw=
+=16ci
+-----END PGP SIGNATURE-----
+
+--=-/WyPnc9eaHFQuRQ9WKqk--
