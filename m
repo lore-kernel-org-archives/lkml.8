@@ -2,150 +2,181 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57582C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB488C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A88206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A14205CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="k03cFx+8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q+7dfF3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgGFT3Y (ORCPT
+        id S1726733AbgGFTah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        Mon, 6 Jul 2020 15:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGFT3X (ORCPT
+        with ESMTP id S1726478AbgGFTag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:29:23 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79AFC061755;
-        Mon,  6 Jul 2020 12:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J+EsQQs1HUBrfOSzhNecD2M81XWwzO+HyRXgroFAxgk=; b=k03cFx+8mx+FJD/tl2s7IMVwiy
-        iNCJlj5ygc2kLSa91DasQzKXl8lSP7IFL+573UsRp13GRB1X0muGUbK5ZvzGrH3uO/yFRzvWTFyXN
-        1ryu+HMVt2tDCXop+i5hPiKFmoHQ2Dk3BHCemJqW7R7IKvGaRrKu1nCh8raJcYNokvW4=;
-Received: from p200300ccff0e48001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:4800:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jsWnN-0003Yy-Tw; Mon, 06 Jul 2020 21:28:54 +0200
-Date:   Mon, 6 Jul 2020 21:28:48 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Mon, 6 Jul 2020 15:30:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC75C08C5E0
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 12:30:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id k27so2759868pgm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 12:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jA71++q3kdwcFkfUU/1at8AL+IZxf2Nnq6lJ3LbUnXg=;
+        b=Q+7dfF3lcRisIsTqM7EGD0tYjWye1O/Gfz50qcw4naOrpboCi2ZmrR6d1RzMnOs7mR
+         Fh1/KCwCGizIS3GVQrZmc4YKPc7/8e4SSalTwfSqP37iQkamNsBrIJtKubGbQxGTlF4L
+         Gxge8avBKJljPA0a7NtRL4/iHOuA13h42MPe0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jA71++q3kdwcFkfUU/1at8AL+IZxf2Nnq6lJ3LbUnXg=;
+        b=CtxXwCEdO9EOwQT22EoVyBuKm2ddtk6ba5hiVk7y8T8vlyLtTsjYcD0Kiiu8pJ05YZ
+         7gk6VE/bebky5EibXwwVCga5OiMXEth7p/tcEHQZpyMXB18kbo0z4tm1Q1ugbf0v0i0q
+         xWikhkGe+12xmy+FX08eNBRGDp8eQQ2g1noaSg/T5g78EHMVoYTjyMo3s43bR1+jQfuC
+         AB801alo4BsF3658gCY9j9cq4v/NZvIx5YbmM0hAxGV83jNnfwYi5GJYT9uE1deit+2w
+         /Q1xFrTwYz1J0zKcJhgZftACwhosnmZwwr+9DDIE+nODNWSBrUdDuA23IXhiHgvadZT3
+         Pdyw==
+X-Gm-Message-State: AOAM531VPVAC/bj2mu+4R3r8/ktiSmx62xVX1Wit2ce/SDLP2QdVeM/C
+        aDU9F740rHD42J2Lo5HLQ/uABg==
+X-Google-Smtp-Source: ABdhPJz7tXd/nnBDS0YQJcB7rwYbSOG0wy8tzeWXjOdUxA5eSWOjt+6q3dGWi3mLABNZOwnfZ4Olmg==
+X-Received: by 2002:a62:fc15:: with SMTP id e21mr46353476pfh.167.1594063835932;
+        Mon, 06 Jul 2020 12:30:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y8sm225835pju.49.2020.07.06.12.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 12:30:35 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 12:30:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
         "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
- and Tolino ebook readers
-Message-ID: <20200706212848.7e19886b@aktux>
-In-Reply-To: <20200704205808.GD2578@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-        <20200630084051.66feadea@aktux>
-        <20200630071523.GA2983@latitude>
-        <20200630221447.3e03ae28@aktux>
-        <20200704205808.GD2578@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] pidfd: Replace open-coded partial
+ fd_install_received()
+Message-ID: <202007061225.5CBC3CF@keescook>
+References: <20200617220327.3731559-1-keescook@chromium.org>
+ <20200617220327.3731559-5-keescook@chromium.org>
+ <20200706130713.n6r3vhn4hn2lodex@wittgenstein>
+ <202007060830.0FE753B@keescook>
+ <20200706161245.hjat2rsikt3linbm@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706161245.hjat2rsikt3linbm@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 Jul 2020 22:58:08 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+On Mon, Jul 06, 2020 at 06:12:45PM +0200, Christian Brauner wrote:
+> On Mon, Jul 06, 2020 at 08:34:06AM -0700, Kees Cook wrote:
+> > Yup, this was a mistake in my refactoring of the pidfs changes.
+> 
+> I already did.
 
-> On Tue, Jun 30, 2020 at 10:14:47PM +0200, Andreas Kemnade wrote:
-> > On Tue, 30 Jun 2020 09:15:23 +0200
-> > Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
-> >  =20
-> > > On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
-> > > [...] =20
-> > > > got a chance to test it on a Tolino Shine 2 HD.
-> > > > It uses the RTC from the RC5T619 but backlight seems to go via MSP4=
-30
-> > > > EC.
-> > > >=20
-> > > > I got this.
-> > > >=20
-> > > > [    1.453603] ntxec 0-0043: Netronix embedded controller version f=
-110 detected.
-> > > > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: re=
-gistered as rtc0
-> > > > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@=
-43:pwm failed with error -5   =20
-> > >=20
-> > > Hmm, -EIO from the PWM driver.
-> > >  =20
-> > turing debugging on: =20
->=20
-> (edited for compactness:)
-> > [  330.332971] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.334420] i2c i2c-0: write byte: B0=3D0xA3              ACK receiv=
-ed
-> > [  330.334790] i2c i2c-0: write byte: B1=3D0x0               No ACK =20
->=20
-> > [  330.352339] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.362208] i2c i2c-0: write byte: B0=3D0xA1              ACK receiv=
-ed
-> > [  330.362479] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
->=20
-> > [  330.363112] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.363362] i2c i2c-0: write byte: B0=3D0xA2              ACK receiv=
-ed
-> > [  330.363608] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
->=20
-> Hmm, it doesn't ack the writes to 0xA3, 0xA1 and 0xA2, which should
-> disable the PWM output and then disable the auto-off timer (according to
-> the vendor kernel).
->=20
-> And you said in your other mail that you can actually toggle the light
-> with writes to 0xA3, so I suspect a bug in the EC firmware here (which
-> may have gone unnoticed because the vendor kernel doesn't check if the
-> i2c transfers succeed). :/
->=20
-That is a also my theory.
+Er, what? (I had a typo in my quote: s/pidfs/pidfd/.) I was trying to
+say that this was just a mistake in my refactoring of the pidfd usage of
+the new helper.
 
-> IMHO we should get this driver merged first, and perhaps add a quirk to
-> deal with the missing ACKs later (unless a better solution is found).
->=20
-Yes, that can be done separately (after the Tolino Shine 2 HD dtb is
-in, I am polishing it right now).
+> > I still don't agree: it radically complicates the SCM_RIGHTS and seccomp
+> 
+> I'm sorry, I don't buy it yet, though I might've missed something in the
+> discussions: :)
+> After applying the patches in your series this literally is just (which
+> is hardly radical ;):
 
-Regards,
-Andreas
+Agreed, "radical" was too strong.
+
+> diff --git a/fs/file.c b/fs/file.c
+> index 9568bcfd1f44..26930b2ea39d 100644
+> --- a/fs/file.c
+> +++ b/fs/file.c
+> @@ -974,7 +974,7 @@ int __fd_install_received(int fd, struct file *file, int __user *ufd,
+>         }
+> 
+>         if (fd < 0)
+> -               fd_install(new_fd, get_file(file));
+> +               fd_install(new_fd, file);
+>         else {
+>                 new_fd = fd;
+>                 error = replace_fd(new_fd, file, o_flags);
+> diff --git a/net/compat.c b/net/compat.c
+> index 71494337cca7..605a5a67200c 100644
+> --- a/net/compat.c
+> +++ b/net/compat.c
+> @@ -298,9 +298,11 @@ void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
+>         int err = 0, i;
+> 
+>         for (i = 0; i < fdmax; i++) {
+> -               err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
+> -               if (err < 0)
+> +               err = fd_install_received_user(get_file(scm->fp->fp[i]), cmsg_data + i, o_flags);
+> +               if (err < 0) {
+> +                       fput(scm->fp->fp[i]);
+>                         break;
+> +               }
+>         }
+> 
+>         if (i > 0) {
+> diff --git a/net/core/scm.c b/net/core/scm.c
+> index b9a0442ebd26..0d06446ae598 100644
+> --- a/net/core/scm.c
+> +++ b/net/core/scm.c
+> @@ -306,9 +306,11 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+>         }
+> 
+>         for (i = 0; i < fdmax; i++) {
+> -               err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
+> -               if (err < 0)
+> +               err = fd_install_received_user(get_file(scm->fp->fp[i]), cmsg_data + i, o_flags);
+> +               if (err < 0) {
+> +                       fput(scm->fp->fp[i]);
+>                         break;
+> +               }
+>         }
+> 
+>         if (i > 0) {
+
+But my point stands: I really dislike this; suddenly the caller needs to
+manage this when it should be an entirely internal detail to the
+function. It was only pidfd doing it wrong, and that was entirely my
+fault in the conversion.
+
+> The problem here is that the current patch invites bugs and has already
+> produced one because fd_install() and fd_install_*() have the same
+> naming scheme but different behavior when dealing with references.
+> That's just not a good idea.
+
+I will rename the helper and add explicit documentation, but I really
+don't think callers should have to deal with managing the helper's split
+ref lifetime.
+
+-- 
+Kees Cook
