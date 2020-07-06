@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E74C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B619AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA6EB20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E8D20674
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 21:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="YhYy5chJ"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dv2HPvdD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGFVyw (ORCPT
+        id S1727969AbgGFVy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 17:54:52 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:21135 "EHLO
+        Mon, 6 Jul 2020 17:54:57 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:26499 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGFVyj (ORCPT
+        with ESMTP id S1726802AbgGFVyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 17:54:39 -0400
+        Mon, 6 Jul 2020 17:54:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=from:subject:in-reply-to:references:to:cc:content-type:
+        h=from:subject:in-reply-to:references:mime-version:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=3J91EmTF5OcN7m3vDKl6Rjiu026EUSnJD5AzCjIGOG8=;
-        b=YhYy5chJSocG6eniupnaylgEcjEdI83n6ieim4g31wWdZYhp0g+7BoESXr5eYcYxMDG4
-        IRSbLeFN32P97k/+Q0FpnS2e2YVRMjxnY7SZFK+6zFi24sjpJCtrt1NDE2v7/BParEVZ4I
-        eamt6gmNiFKkl3Sm+ZsXeeOGvM6KAkfVg=
-Received: by filterdrecv-p3iad2-5b55dcd864-v6r54 with SMTP id filterdrecv-p3iad2-5b55dcd864-v6r54-19-5F039D9D-2F
-        2020-07-06 21:54:37.447138052 +0000 UTC m=+881111.294147889
+        s=001; bh=YoXiEJGtZe0e7X5GwX7ycoiC6AsWzUaJUSnHJI7q4k8=;
+        b=dv2HPvdDZVTAlgJZMaQHJulOWjoTNOr+HwhYhrMsYt15lNSk3Es+IUgUFOT+bjplpNbJ
+        9a4kcAgjJaXxXnpzA8gcYsTq3RfaScoxecrWS/hBoxIVRB0LhTG4N4dxBT9EN9DaAv+wTL
+        WCb9pBCC+OCG+dpNyvUNxF5jUiiCxNxDk=
+Received: by filterdrecv-p3iad2-5b55dcd864-m99xc with SMTP id filterdrecv-p3iad2-5b55dcd864-m99xc-18-5F039D9C-C
+        2020-07-06 21:54:36.217052106 +0000 UTC m=+881110.822000320
 Received: from bionic.localdomain (unknown)
         by ismtpd0008p1lon1.sendgrid.net (SG) with ESMTP
-        id Dz87MUcKQ8qbnGWsGSIFHg
-        Mon, 06 Jul 2020 21:54:37.197 +0000 (UTC)
+        id 3XDDoPchSpu615aeBNfrVQ
+        Mon, 06 Jul 2020 21:54:35.967 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 10/12] media: rkvdec: Lock capture pixel format in s_ctrl
- and s_fmt
-Date:   Mon, 06 Jul 2020 21:54:37 +0000 (UTC)
-Message-Id: <20200706215430.22859-11-jonas@kwiboo.se>
+Subject: [PATCH v2 07/12] media: v4l2: Add NV15 and NV20 pixel formats
+Date:   Mon, 06 Jul 2020 21:54:36 +0000 (UTC)
+Message-Id: <20200706215430.22859-8-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200706215430.22859-1-jonas@kwiboo.se>
 References: <20200701215616.30874-1-jonas@kwiboo.se>
  <20200706215430.22859-1-jonas@kwiboo.se>
+MIME-Version: 1.0
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h0i3HAJ5P855+2MmH?=
- =?us-ascii?Q?PYyDRJwSFB674zB7UomfNLPdwR8Qrr2woWvwvrS?=
- =?us-ascii?Q?ny51hdKo9SN0lZ7AGR1S425aXw+20SdsmK7J8t2?=
- =?us-ascii?Q?osnSeKSund0GXGTDsR+jr9ZDmjfc3lWr4ZDqpQu?=
- =?us-ascii?Q?BzViGDGyD3QeOCwwY0fxkWWusbNCg6h5Ti+=2FOnz?=
- =?us-ascii?Q?SuIesdhho+uWL3RzIHk4A=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hxCdMn1E=2Fszv+Qbpq?=
+ =?us-ascii?Q?h40sX18D23R7F+1AriqcTnttXyDVUnNOtMcFGom?=
+ =?us-ascii?Q?DQge966iQXmD1rtNAfmZU8StJOiHx7XNOsP7dQY?=
+ =?us-ascii?Q?xXii22X9mN=2FdekJ1ebt=2F9mwYcW9Pr0eOCvnGW2C?=
+ =?us-ascii?Q?Ij6kQIegjccFrvtEp8urgHjFdwaE=2Fjb8moqQQ82?=
+ =?us-ascii?Q?wGxq2wdlVgnJ91=2FOYofkg=3D=3D?=
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
@@ -60,197 +60,303 @@ Cc:     Jonas Karlman <jonas@kwiboo.se>,
         Nicolas Dufresne <nicolas.dufresne@collabora.com>,
         Tomasz Figa <tfiga@chromium.org>,
         Alexandre Courbot <acourbot@chromium.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an optional valid_fmt operation that should return the valid
-pixelformat of CAPTURE buffers.
+Add NV15 and NV20 pixel formats used by the Rockchip Video Decoder for
+10-bit buffers.
 
-This is used in next patch to ensure correct pixelformat is used for 10-bit
-and 4:2:2 content.
+NV15 and NV20 is a packed 10-bit 4:2:0/4:2:2 semi-planar Y/CbCr format
+similar to P010 and P210 but has no padding between components. Instead,
+luminance and chrominance samples are grouped into 4s so that each group is
+packed into an integer number of bytes:
+
+YYYY = UVUV = 4 * 10 bits = 40 bits = 5 bytes
+
+The '15' and '20' suffix refers to the optimum effective bits per pixel
+which is achieved when the total number of luminance samples is a multiple
+of 8 for NV15 and 4 for NV20.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
-Changes in v2:
-- Reworked validation of pixelformat
+ .../userspace-api/media/v4l/pixfmt-nv15.rst   | 101 ++++++++++++++++++
+ .../userspace-api/media/v4l/pixfmt-nv20.rst   |  99 +++++++++++++++++
+ .../userspace-api/media/v4l/yuv-formats.rst   |   2 +
+ drivers/media/v4l2-core/v4l2-common.c         |   3 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
+ include/uapi/linux/videodev2.h                |   3 +
+ 6 files changed, 210 insertions(+)
+ create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
 
-Limitations:
-- Only a single valid format is supported, technically both CbCr and CrCb
-  format variants could be supported by HW.
-
-Example call order using ffmpeg for a 10-bit H.264 608x480 video:
-
-0) Open /dev/video node
-rkvdec_reset_decoded_fmt: current valid_fmt= new valid_fmt=
-rkvdec_fill_decoded_pixfmt: pixelformat=NV12 width=64 height=48
-rkvdec_s_ctrl: current valid_fmt= new valid_fmt=NV12
-rkvdec_fill_decoded_pixfmt: pixelformat=NV12 width=64 height=48
-
-1) Set the coded format on the OUTPUT queue via VIDIOC_S_FMT()
-rkvdec_enum_output_fmt: index=0 pixelformat=S264
-rkvdec_s_output_fmt: pixelformat=S264 width=608 height=480 valid_fmt=NV12
-rkvdec_reset_decoded_fmt: current valid_fmt=NV12 new valid_fmt=
-rkvdec_fill_decoded_pixfmt: pixelformat=NV12 width=640 height=480
-
-2) Call VIDIOC_S_EXT_CTRLS() to set all the controls
-rkvdec_try_ctrl: current valid_fmt=
-rkvdec_s_ctrl: current valid_fmt= new valid_fmt=NV15
-rkvdec_fill_decoded_pixfmt: pixelformat=NV15 width=640 height=480
-
-3) Call VIDIOC_G_FMT() for CAPTURE queue
-rkvdec_g_capture_fmt: pixelformat=NV15 width=640 height=480
-
-4) Enumerate CAPTURE formats via VIDIOC_ENUM_FMT() on the CAPTURE queue
-rkvdec_enum_capture_fmt: index=0 pixelformat=NV15 valid_fmt=NV15
-
-5) Choose a different CAPTURE format than suggested via VIDIOC_G_FMT()
-rkvdec_s_capture_fmt: pixelformat=NV15 width=608 height=480 valid_fmt=NV15
-rkvdec_fill_decoded_pixfmt: pixelformat=NV15 width=640 height=480
-rkvdec_g_capture_fmt: pixelformat=NV15 width=640 height=480
----
- drivers/staging/media/rkvdec/rkvdec.c | 59 ++++++++++++++++++++++++---
- drivers/staging/media/rkvdec/rkvdec.h |  2 +
- 2 files changed, 55 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 911132be6d50..11a88cb6407d 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -38,6 +38,16 @@ static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
- 	pix_mp->field = V4L2_FIELD_NONE;
- }
- 
-+static u32 rkvdec_valid_fmt(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl)
-+{
-+	const struct rkvdec_coded_fmt_desc *coded_desc = ctx->coded_fmt_desc;
+diff --git a/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst b/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
+new file mode 100644
+index 000000000000..d059db58c6e0
+--- /dev/null
++++ b/Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
+@@ -0,0 +1,101 @@
++.. Permission is granted to copy, distribute and/or modify this
++.. document under the terms of the GNU Free Documentation License,
++.. Version 1.1 or any later version published by the Free Software
++.. Foundation, with no Invariant Sections, no Front-Cover Texts
++.. and no Back-Cover Texts. A copy of the license is included at
++.. Documentation/userspace-api/media/fdl-appendix.rst.
++..
++.. TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
 +
-+	if (coded_desc->ops->valid_fmt)
-+		return coded_desc->ops->valid_fmt(ctx, ctrl);
++.. _V4L2-PIX-FMT-NV15:
 +
-+	return ctx->valid_fmt;
-+}
++**************************
++V4L2_PIX_FMT_NV15 ('NV15')
++**************************
 +
- static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-@@ -60,6 +70,10 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- 			/* Only 8-bit is supported */
- 			return -EINVAL;
- 
-+		if (ctx->valid_fmt && ctx->valid_fmt != rkvdec_valid_fmt(ctx, ctrl))
-+			/* Only current valid format */
-+			return -EINVAL;
++Format with ½ horizontal and vertical chroma resolution, also known as
++YUV 4:2:0. One luminance and one chrominance plane with alternating
++chroma samples similar to ``V4L2_PIX_FMT_NV12`` but with 10-bit samples
++that are grouped into four and packed into five bytes.
 +
- 		width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
- 		height = (sps->pic_height_in_map_units_minus1 + 1) * 16;
- 
-@@ -70,8 +84,27 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- 	return 0;
- }
- 
-+static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
++The '15' suffix refers to the optimum effective bits per pixel which is
++achieved when the total number of luminance samples is a multiple of 8.
 +
-+	if (ctrl->id == V4L2_CID_MPEG_VIDEO_H264_SPS && !ctx->valid_fmt) {
-+		ctx->valid_fmt = rkvdec_valid_fmt(ctx, ctrl);
-+		if (ctx->valid_fmt) {
-+			struct v4l2_pix_format_mplane *pix_mp;
 +
-+			pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
-+			pix_mp->pixelformat = ctx->valid_fmt;
-+			rkvdec_fill_decoded_pixfmt(ctx, pix_mp);
-+		}
-+	}
++Description
++===========
 +
-+	return 0;
-+}
++This is a packed 10-bit two-plane version of the YUV 4:2:0 format. The
++three components are separated into two sub-images or planes. The Y plane
++is first. The Y plane has five bytes per each group of four pixels. A
++combined CbCr plane immediately follows the Y plane in memory. The CbCr
++plane is the same width, in bytes, as the Y plane (and of the image), but
++is half as tall in pixels. Each CbCr pair belongs to four pixels. For
++example, Cb\ :sub:`00`/Cr\ :sub:`00` belongs to Y'\ :sub:`00`,
++Y'\ :sub:`01`, Y'\ :sub:`10`, Y'\ :sub:`11`.
 +
- static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
- 	.try_ctrl = rkvdec_try_ctrl,
-+	.s_ctrl = rkvdec_s_ctrl,
- };
- 
- static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
-@@ -188,6 +221,7 @@ static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
- {
- 	struct v4l2_format *f = &ctx->decoded_fmt;
- 
-+	ctx->valid_fmt = 0;
- 	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
- 	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
- 	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
-@@ -243,13 +277,17 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
- 	if (WARN_ON(!coded_desc))
- 		return -EINVAL;
- 
--	for (i = 0; i < coded_desc->num_decoded_fmts; i++) {
--		if (coded_desc->decoded_fmts[i] == pix_mp->pixelformat)
--			break;
--	}
-+	if (ctx->valid_fmt) {
-+		pix_mp->pixelformat = ctx->valid_fmt;
-+	} else {
-+		for (i = 0; i < coded_desc->num_decoded_fmts; i++) {
-+			if (coded_desc->decoded_fmts[i] == pix_mp->pixelformat)
-+				break;
-+		}
- 
--	if (i == coded_desc->num_decoded_fmts)
--		pix_mp->pixelformat = coded_desc->decoded_fmts[0];
-+		if (i == coded_desc->num_decoded_fmts)
-+			pix_mp->pixelformat = coded_desc->decoded_fmts[0];
-+	}
- 
- 	/* Always apply the frmsize constraint of the coded end. */
- 	pix_mp->width = max(pix_mp->width, ctx->coded_fmt.fmt.pix_mp.width);
-@@ -324,6 +362,7 @@ static int rkvdec_s_capture_fmt(struct file *file, void *priv,
- 		return ret;
- 
- 	ctx->decoded_fmt = *f;
-+	ctx->valid_fmt = f->fmt.pix_mp.pixelformat;
- 	return 0;
- }
- 
-@@ -413,6 +452,14 @@ static int rkvdec_enum_capture_fmt(struct file *file, void *priv,
- 	if (WARN_ON(!ctx->coded_fmt_desc))
- 		return -EINVAL;
- 
-+	if (ctx->valid_fmt) {
-+		if (f->index)
-+			return -EINVAL;
++If the Y plane has pad bytes after each row, then the CbCr plane has as
++many pad bytes after its rows.
 +
-+		f->pixelformat = ctx->valid_fmt;
-+		return 0;
-+	}
++**Byte Order.**
++Little endian. Each cell is one byte. Pixels cross the byte boundary.
 +
- 	if (f->index >= ctx->coded_fmt_desc->num_decoded_fmts)
- 		return -EINVAL;
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - Y'\ :sub:`00[7:0]`
++      - Y'\ :sub:`01[5:0]`\ Y'\ :sub:`00[9:8]`
++      - Y'\ :sub:`02[3:0]`\ Y'\ :sub:`01[9:6]`
++      - Y'\ :sub:`03[1:0]`\ Y'\ :sub:`02[9:4]`
++      - Y'\ :sub:`03[9:2]`
++    * - start + 5:
++      - Y'\ :sub:`10[7:0]`
++      - Y'\ :sub:`11[5:0]`\ Y'\ :sub:`10[9:8]`
++      - Y'\ :sub:`12[3:0]`\ Y'\ :sub:`11[9:6]`
++      - Y'\ :sub:`13[1:0]`\ Y'\ :sub:`12[9:4]`
++      - Y'\ :sub:`13[9:2]`
++    * - start + 10:
++      - Cb'\ :sub:`00[7:0]`
++      - Cr'\ :sub:`00[5:0]`\ Cb'\ :sub:`00[9:8]`
++      - Cb'\ :sub:`01[3:0]`\ Cr'\ :sub:`00[9:6]`
++      - Cr'\ :sub:`01[1:0]`\ Cb'\ :sub:`01[9:4]`
++      - Cr'\ :sub:`01[9:2]`
++
++
++**Color Sample Location:**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * -
++      - 0
++      -
++      - 1
++      - 2
++      -
++      - 3
++    * - 0
++      - Y
++      -
++      - Y
++      - Y
++      -
++      - Y
++    * -
++      -
++      - C
++      -
++      -
++      - C
++      -
++    * - 1
++      - Y
++      -
++      - Y
++      - Y
++      -
++      - Y
+diff --git a/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst b/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
+new file mode 100644
+index 000000000000..a8123be0baa3
+--- /dev/null
++++ b/Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
+@@ -0,0 +1,99 @@
++.. Permission is granted to copy, distribute and/or modify this
++.. document under the terms of the GNU Free Documentation License,
++.. Version 1.1 or any later version published by the Free Software
++.. Foundation, with no Invariant Sections, no Front-Cover Texts
++.. and no Back-Cover Texts. A copy of the license is included at
++.. Documentation/userspace-api/media/fdl-appendix.rst.
++..
++.. TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
++
++.. _V4L2-PIX-FMT-NV20:
++
++**************************
++V4L2_PIX_FMT_NV20 ('NV20')
++**************************
++
++Format with ½ horizontal chroma resolution, also known as YUV 4:2:2.
++One luminance and one chrominance plane with alternating chroma samples
++similar to ``V4L2_PIX_FMT_NV16`` but with 10-bit samples
++that are grouped into four and packed into five bytes.
++
++The '20' suffix refers to the optimum effective bits per pixel which is
++achieved when the total number of luminance samples is a multiple of 4.
++
++
++Description
++===========
++
++This is a packed 10-bit two-plane version of the YUV 4:2:2 format. The
++three components are separated into two sub-images or planes. The Y plane
++is first. The Y plane has five bytes per each group of four pixels. A
++combined CbCr plane immediately follows the Y plane in memory. The CbCr
++plane is the same width and height, in bytes, as the Y plane (and of the
++image). Each CbCr pair belongs to two pixels. For example,
++Cb\ :sub:`00`/Cr\ :sub:`00` belongs to Y'\ :sub:`00`, Y'\ :sub:`01`.
++
++If the Y plane has pad bytes after each row, then the CbCr plane has as
++many pad bytes after its rows.
++
++**Byte Order.**
++Little endian. Each cell is one byte. Pixels cross the byte boundary.
++
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - Y'\ :sub:`00[7:0]`
++      - Y'\ :sub:`01[5:0]`\ Y'\ :sub:`00[9:8]`
++      - Y'\ :sub:`02[3:0]`\ Y'\ :sub:`01[9:6]`
++      - Y'\ :sub:`03[1:0]`\ Y'\ :sub:`02[9:4]`
++      - Y'\ :sub:`03[9:2]`
++    * - start + 5:
++      - Y'\ :sub:`10[7:0]`
++      - Y'\ :sub:`11[5:0]`\ Y'\ :sub:`10[9:8]`
++      - Y'\ :sub:`12[3:0]`\ Y'\ :sub:`11[9:6]`
++      - Y'\ :sub:`13[1:0]`\ Y'\ :sub:`12[9:4]`
++      - Y'\ :sub:`13[9:2]`
++    * - start + 10:
++      - Cb'\ :sub:`00[7:0]`
++      - Cr'\ :sub:`00[5:0]`\ Cb'\ :sub:`00[9:8]`
++      - Cb'\ :sub:`01[3:0]`\ Cr'\ :sub:`00[9:6]`
++      - Cr'\ :sub:`01[1:0]`\ Cb'\ :sub:`01[9:4]`
++      - Cr'\ :sub:`01[9:2]`
++    * - start + 15:
++      - Cb'\ :sub:`10[7:0]`
++      - Cr'\ :sub:`10[5:0]`\ Cb'\ :sub:`10[9:8]`
++      - Cb'\ :sub:`11[3:0]`\ Cr'\ :sub:`10[9:6]`
++      - Cr'\ :sub:`11[1:0]`\ Cb'\ :sub:`11[9:4]`
++      - Cr'\ :sub:`11[9:2]`
++
++
++**Color Sample Location:**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * -
++      - 0
++      -
++      - 1
++      - 2
++      -
++      - 3
++    * - 0
++      - Y
++      - C
++      - Y
++      - Y
++      - C
++      - Y
++    * - 1
++      - Y
++      - C
++      - Y
++      - Y
++      - C
++      - Y
+diff --git a/Documentation/userspace-api/media/v4l/yuv-formats.rst b/Documentation/userspace-api/media/v4l/yuv-formats.rst
+index 8ee92d0cd769..7cca883f178a 100644
+--- a/Documentation/userspace-api/media/v4l/yuv-formats.rst
++++ b/Documentation/userspace-api/media/v4l/yuv-formats.rst
+@@ -61,4 +61,6 @@ to brightness information.
+     pixfmt-nv16
+     pixfmt-nv16m
+     pixfmt-nv24
++    pixfmt-nv15
++    pixfmt-nv20
+     pixfmt-m420
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index 4102c373b48a..0caac755d303 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -267,6 +267,9 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
+ 		{ .format = V4L2_PIX_FMT_NV24,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
+ 		{ .format = V4L2_PIX_FMT_NV42,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
  
-diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-index 2fc9f46b6910..50e67401fdbe 100644
---- a/drivers/staging/media/rkvdec/rkvdec.h
-+++ b/drivers/staging/media/rkvdec/rkvdec.h
-@@ -64,6 +64,7 @@ vb2_to_rkvdec_decoded_buf(struct vb2_buffer *buf)
- struct rkvdec_coded_fmt_ops {
- 	int (*adjust_fmt)(struct rkvdec_ctx *ctx,
- 			  struct v4l2_format *f);
-+	u32 (*valid_fmt)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
- 	int (*start)(struct rkvdec_ctx *ctx);
- 	void (*stop)(struct rkvdec_ctx *ctx);
- 	int (*run)(struct rkvdec_ctx *ctx);
-@@ -97,6 +98,7 @@ struct rkvdec_ctx {
- 	struct v4l2_fh fh;
- 	struct v4l2_format coded_fmt;
- 	struct v4l2_format decoded_fmt;
-+	u32 valid_fmt;
- 	const struct rkvdec_coded_fmt_desc *coded_fmt_desc;
- 	struct v4l2_ctrl_handler ctrl_hdl;
- 	struct rkvdec_dev *dev;
++		{ .format = V4L2_PIX_FMT_NV15,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 5, 5, 0, 0 }, .hdiv = 2, .vdiv = 2, .block_w = { 4, 2, 0, 0 }, .block_h = { 1, 1, 0, 0 } },
++		{ .format = V4L2_PIX_FMT_NV20,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 5, 5, 0, 0 }, .hdiv = 2, .vdiv = 1, .block_w = { 4, 2, 0, 0 }, .block_h = { 1, 1, 0, 0 } },
++
+ 		{ .format = V4L2_PIX_FMT_YUV410,  .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
+ 		{ .format = V4L2_PIX_FMT_YVU410,  .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
+ 		{ .format = V4L2_PIX_FMT_YUV411P, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 1 },
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 02bfef0da76d..4657274bb37a 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1315,6 +1315,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_NV61:		descr = "Y/CrCb 4:2:2"; break;
+ 	case V4L2_PIX_FMT_NV24:		descr = "Y/CbCr 4:4:4"; break;
+ 	case V4L2_PIX_FMT_NV42:		descr = "Y/CrCb 4:4:4"; break;
++	case V4L2_PIX_FMT_NV15:		descr = "10-bit Y/CbCr 4:2:0 (Packed)"; break;
++	case V4L2_PIX_FMT_NV20:		descr = "10-bit Y/CbCr 4:2:2 (Packed)"; break;
+ 	case V4L2_PIX_FMT_NV12M:	descr = "Y/CbCr 4:2:0 (N-C)"; break;
+ 	case V4L2_PIX_FMT_NV21M:	descr = "Y/CrCb 4:2:0 (N-C)"; break;
+ 	case V4L2_PIX_FMT_NV16M:	descr = "Y/CbCr 4:2:2 (N-C)"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 303805438814..bd23aeaf0706 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -610,6 +610,9 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_NV24    v4l2_fourcc('N', 'V', '2', '4') /* 24  Y/CbCr 4:4:4  */
+ #define V4L2_PIX_FMT_NV42    v4l2_fourcc('N', 'V', '4', '2') /* 24  Y/CrCb 4:4:4  */
+ 
++#define V4L2_PIX_FMT_NV15    v4l2_fourcc('N', 'V', '1', '5') /* 15  Y/CbCr 4:2:0 10-bit packed */
++#define V4L2_PIX_FMT_NV20    v4l2_fourcc('N', 'V', '2', '0') /* 20  Y/CbCr 4:2:2 10-bit packed */
++
+ /* two non contiguous planes - one Y, one Cr + Cb interleaved  */
+ #define V4L2_PIX_FMT_NV12M   v4l2_fourcc('N', 'M', '1', '2') /* 12  Y/CbCr 4:2:0  */
+ #define V4L2_PIX_FMT_NV21M   v4l2_fourcc('N', 'M', '2', '1') /* 21  Y/CrCb 4:2:0  */
 -- 
 2.17.1
 
