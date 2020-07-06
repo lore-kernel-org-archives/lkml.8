@@ -2,104 +2,189 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E425C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7517CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9AD0206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4907320720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 23:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e4ZoJPfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgGFXk4 (ORCPT
+        id S1727817AbgGFXlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:40:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35665 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGFXk4 (ORCPT
+        Mon, 6 Jul 2020 19:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGFXlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 19:40:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id l2so42337570wmf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 16:40:55 -0700 (PDT)
+        Mon, 6 Jul 2020 19:41:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79ABC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 16:41:18 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q7so34465157ljm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 16:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qj0obXfHw+PyCzXxfPBrAWthmmsaPQNxN4o0aIsqBxY=;
+        b=e4ZoJPfJCzUv6JiW/ZtKDNwoYQa+BkxY90CNz+S6LE9+7RRt6w4/OAJaTtKXSYhbbF
+         oYS0eHWn6OMcxWzbDErcbfbew+X7a6zOBBM6D7f3BIbOaa3bo7kz7TEWGRTKU+1SMROJ
+         Uwh+5IvhJYVUsrx3MhOx+3bLdeW7f6pDZsALQBMQiwWMlGokj2qDJ33L/f/aRPXd/Yec
+         r7GUTyQDIUkMC7W5jzQUw97nbmg4R/8kNhWAmD/VgGQab7U+hMRgK/zmuD6xQSw28Ovt
+         /77UzmwH9JzQPTeu0U2tUJjGo+FYeTGxCf8Ec8gnCy1loG1SpwudA757MIn0qLMe6X2I
+         O63w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8f1d2vneWPYG6cNHDIYxhbTZtuTn4U5ltxye0jZNYhY=;
-        b=l8tPDeT/4KU2AlxyobfTn24M1RG92kMFXHwejD0hpJjrMFzXekku6ozq6QM7e5XGp1
-         5/7xFejJBCiEf3g0NcojjHLO3DqrYECpx8eggZ3IyOJZfoay4w2euDU4sZVG1yH/CaDj
-         wN32+gNFKt7EXzvxRVfEEJpZP+3Ia+oBwTQ26VILDplxXRY/nuV1z8lKEA/giD8F+mhp
-         67TsBXukx1ZbzICUn3baM9IRw3tGb0G1y/m+kF2htb3BH3jT187Qdtmx1xwFLtIGhDbi
-         XMrunEdVlfug/nvje3Pw5HjBXMO3G2zQ7oexqmn/e0cy+5HG+ZxaBB5aQSe4hreNN4T8
-         E9lQ==
-X-Gm-Message-State: AOAM5334LJrK8dpEkYF96vHmmNI4NI5/SP3VS6jtLwtQ3vVUyVkcL46u
-        5DkGX/b9d9uKh5MwBsv1FJ0=
-X-Google-Smtp-Source: ABdhPJwNJf56q8o6pxHITt3B3DjKyWyHc7q/3uEAooDIQh77MI6A/hBSGihn61cqeLFIwtCUzZXEnw==
-X-Received: by 2002:a7b:c007:: with SMTP id c7mr1417009wmb.165.1594078854626;
-        Mon, 06 Jul 2020 16:40:54 -0700 (PDT)
-Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
-        by smtp.gmail.com with ESMTPSA id 138sm1827541wmb.1.2020.07.06.16.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 16:40:53 -0700 (PDT)
-From:   Matteo Croce <mcroce@linux.microsoft.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] pstore/platform: build fix when crypto API are disabled
-Date:   Tue,  7 Jul 2020 01:40:45 +0200
-Message-Id: <20200706234045.9516-1-mcroce@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qj0obXfHw+PyCzXxfPBrAWthmmsaPQNxN4o0aIsqBxY=;
+        b=WS34xXlsmbkoRybZvXkLs/tvUMX82I/+zmc6vUw5jNoTkk8j9//ND8F/w8pNNMMxQP
+         OSQz5/x0aUmLNQnxKqc5a54g57gmQhK8P6wNQdzLKHw3D/xacDpWAzNmauyTGoS7OMhp
+         vk4C4oLFD1ixMcU84a6rICxZkiHu+jp60lsOf4VKgC/5cHCUIH3Nm7DZvQ3lW5Jybhni
+         +tAJJmcgonAYhgCxuG56jF05BbGsZpEgOHYnO4pz7DOV5mxKSuvKZuEs/lQad6gU/BZO
+         JEmr1VoMO42r624g3QbL/jq9lAXrPJYV7coYgA2PqbW7YnYbDHOCFQmdEoQFD1Dml9Fi
+         Fxng==
+X-Gm-Message-State: AOAM533E6yf7qg/eyD4XpSS5fJtzbRBZgPwnu/1K6UBgJWn5n+W0ECW/
+        feYr04O049oVTwLqvApnjqQjOgjXUnCDoEjwDvjn6A==
+X-Google-Smtp-Source: ABdhPJyJE3f+I6Cf0x7ChQa/hx1i7/Jjwak0JpIGwoSbWZNYPbEKzMKAPHJY1Bta2Hsh06yLSlYqq3OVhVwzS1hDg9w=
+X-Received: by 2002:a2e:858e:: with SMTP id b14mr30029014lji.301.1594078876784;
+ Mon, 06 Jul 2020 16:41:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACK8Z6FhWyZOJvkrPcHacyvJucGMupOpL=Jm8BpyO7wPrZ_DQA@mail.gmail.com>
+ <20200706233040.GA169334@bjorn-Precision-5520>
+In-Reply-To: <20200706233040.GA169334@bjorn-Precision-5520>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 6 Jul 2020 16:40:40 -0700
+Message-ID: <CACK8Z6F9zGrOAQ9QQ0Wjt9zbPk3cPnjSTvoZsS_i_Rd0H6Uiiw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external
+ devices only
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@microsoft.com>
+Hello Bjorn,
 
-When building a kernel with CONFIG_PSTORE=y and CONFIG_CRYPTO not set,
-a build error happens:
+On Mon, Jul 6, 2020 at 4:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Jul 06, 2020 at 03:31:47PM -0700, Rajat Jain wrote:
+> > On Mon, Jul 6, 2020 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Mon, Jun 29, 2020 at 09:49:38PM -0700, Rajat Jain wrote:
+>
+> > > > -static void pci_acpi_set_untrusted(struct pci_dev *dev)
+> > > > +static void pci_acpi_set_external_facing(struct pci_dev *dev)
+> > > >  {
+> > > >       u8 val;
+> > > >
+> > > > -     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > > +     if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> > > > +         pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+> > >
+> > > This looks like a change worthy of its own patch.  We used to look for
+> > > "ExternalFacingPort" only on Root Ports; now we'll also do it for
+> > > Switch Downstream Ports.
+> >
+> > Can do. (please see below)
+> >
+> > > Can you include DT and ACPI spec references if they exist?  I found
+> > > this mention:
+> > > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
+> > > which actually says it should only be implemented for Root Ports.
+> >
+> > I actually have no references. It seems to me that the microsoft spec
+> > assumes that all external ports must be implemented on root ports, but
+> > I think it would be equally fair for systems with PCIe switches to
+> > implement one on one of their switch downstream ports. I don't have an
+> > immediate use of this anyway, so if you think this should rather wait
+> > unless someone really has this case, this can wait. Let me know.
+>
+> I agree that it "makes sense" to pay attention to this property no
+> matter where it appears, but since that Microsoft doc went to the
+> trouble to restrict it to Root Ports, I think we should leave this
+> as-is and only look for it in the Root Port.  Otherwise Linux will
+> accept something Windows will reject, and that seems like a needless
+> difference.
+>
+> We can at least include the above link to the Microsoft doc in the
+> commit log.
 
-    ld: fs/pstore/platform.o: in function `pstore_dump':
-    platform.c:(.text+0x3f9): undefined reference to `crypto_comp_compress'
-    ld: fs/pstore/platform.o: in function `pstore_get_backend_records':
-    platform.c:(.text+0x784): undefined reference to `crypto_comp_decompress'
+Will do.
 
-This because some pstore code uses crypto_comp_(de)compress
-regardless of the CONFIG_CRYPTO status.
-Fix it by wrapping the (de)compress usage by IS_ENABLED(CONFIG_PSTORE_COMPRESS)
+>
+> > > It also mentions a "DmaProperty" that looks related.  Maybe Linux
+> > > should also pay attention to this?
+> >
+> > Interesting. Since this is not in use currently by the kernel as well
+> > as not exposed by (our) BIOS, I don't have an immediate use case for
+> > this. I'd like to defer this for later (as-the-need-arises).
+>
+> I agree, you can defer this until you see a need for it.  I just
+> pointed it out in case it would be useful to you.
+>
+> > > > +     /*
+> > > > +      * Devices are marked as external-facing using info from platform
+> > > > +      * (ACPI / devicetree). An external-facing device is still an internal
+> > > > +      * trusted device, but it faces external untrusted devices. Thus any
+> > > > +      * devices enumerated downstream an external-facing device is marked
+> > > > +      * as untrusted.
+> > >
+> > > This comment has a subject/verb agreement problem.
+> >
+> > I assume you meant s/is/are/ in last sentence. Will do.
+>
+> Right.  There's also something wrong with "enumerated downstream an".
 
-Signed-off-by: Matteo Croce <mcroce@microsoft.com>
----
- fs/pstore/platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm apparently really bad at English :-). This is what I have in my
+latest patch I am about to send out:
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index a9e297eefdff..6022d8359f96 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -436,7 +436,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 					  dst_size, &dump_size))
- 			break;
- 
--		if (big_oops_buf) {
-+		if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && big_oops_buf) {
- 			zipped_len = pstore_compress(dst, psinfo->buf,
- 						header_size + dump_size,
- 						psinfo->bufsize);
-@@ -668,7 +668,7 @@ static void decompress_record(struct pstore_record *record)
- 	int unzipped_len;
- 	char *unzipped, *workspace;
- 
--	if (!record->compressed)
-+	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !record->compressed)
- 		return;
- 
- 	/* Only PSTORE_TYPE_DMESG support compression. */
--- 
-2.26.2
+"Thus any device enumerated downstream an external-facing device, is
+marked as untrusted."
 
+Are you suggesting s/an/a/ ? Please let me know what you would like to
+see and I'd copy it as-is :-)
+
+Thanks!
+
+Rajat
