@@ -2,84 +2,57 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE24DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2020760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOw+T1jX"
+	by mail.kernel.org (Postfix) with ESMTP id 5988420773
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgGFSpo (ORCPT
+        id S1729752AbgGFSsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbgGFSpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:45:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99941C061755;
-        Mon,  6 Jul 2020 11:45:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so40361364wmi.3;
-        Mon, 06 Jul 2020 11:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sB+M5xN2q4aSHO4ImD3f9WDwtbdfsUY52yLNYBoRoMk=;
-        b=sOw+T1jXnmcOBApPeHZG3ZXckOn+qWGRfSFB/+A6Ssg5pNiiuu/Uy5xZJNt0DeRQei
-         KLFmMx8fKdNYYcreXPfjn8d/XX+ndO4PsoaYYr3ziKynahHxS0gc8cO7IAKvXPMAzcZc
-         j8kgKHF72bXfaw37A50fR5BZ7HovOHpDtVAsNGpQ+6Gu5klU1FbFnVhrQzXu7oM7zZVX
-         q2fv/u/jO/U0JU1Ja+AA/Zc8grG1mozSe/RTqa6tijd5zgO+Vw2LjiIPUTPnMq5Wyw7w
-         uf7ZVwamP+cD0ragN3/2JUI8b+gDDoMwNKrmPkyfUcFuz+tZd9zdUohX/RXov1gmPtxh
-         NQaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sB+M5xN2q4aSHO4ImD3f9WDwtbdfsUY52yLNYBoRoMk=;
-        b=Qm0rb2sixucqhxCkkD3WQaMSz7m0o7KBAbsZeCIgJ1Tknef8hjn7GN2J7PFRWaXqtU
-         MRtXdb2akauQ3Rz+Gc6ATmjvxZloOetH0UkCaBwnfBfFZ2K5w91ptp6/MSK7gx4ILV1Z
-         2XC2D2Vw4VfHJgm9dG9ck85LtPj5U2ntRs3jv9S9GWbm+gFnN/f4TCfKFbHT/i8ML54W
-         0G+Ut6mbtPZhJxI7Gsr4+hLryfBuqpYTl96HTbEu4+tfKop1SttvviDojGdWI0/UG8lH
-         TRFU8Nu5iGQg7ccBPrpdRvDR6nwARg8PDk1hYqhVgT/Kgg4sMKcI9TgyZKcgby3BURBA
-         y3xA==
-X-Gm-Message-State: AOAM530aDC8swvAD0S4qom5Ehc6KbmHTG8rXc4W7TWE2mAAe6Q4qBGBq
-        wUPEdmD+U4j2mM7/XzybZwSWT8Q+
-X-Google-Smtp-Source: ABdhPJzkLw9HjsK+77mKDWHEKufH4k9ZKlgtwrVIspUS2QmWsD1KW1YQSRx5MF7CQ1AAt0/9j9ti9g==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr518917wmj.136.1594061142041;
-        Mon, 06 Jul 2020 11:45:42 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 12sm393621wmg.6.2020.07.06.11.45.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 11:45:41 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/3] net: ethtool: Remove PHYLIB direct
- dependency
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200706042758.168819-1-f.fainelli@gmail.com>
- <20200706042758.168819-4-f.fainelli@gmail.com>
- <20200706114000.223e27eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <262dbde0-2a0e-6820-fd69-157b7f05a8c4@gmail.com>
-Date:   Mon, 6 Jul 2020 11:45:38 -0700
+        Mon, 6 Jul 2020 14:48:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49907 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729569AbgGFSsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:48:02 -0400
+IronPort-SDR: s+we0hs7npyXQsbX5Qk6/t4HpI049QBYH6Y1XGai/fe1HisXHbncf3kA0nMpEt8phmRA82JwrQ
+ DNO6+oniMwIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="144980520"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="144980520"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:47:58 -0700
+IronPort-SDR: 68nKHoO+/jn5zpi8BLo6t1b1CThbr+Sma4IkCNsEaXB2m/248YD+VcFgwwO578IhnQF9z1nY5G
+ 1rq4wiLkd49Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="314042249"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.168.148]) ([10.212.168.148])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 11:47:54 -0700
+Subject: Re: next/master bisection: baseline.login on qemu_arm64-virt-gicv3
+To:     "kernelci.org bot" <bot@kernelci.org>,
+        Swathi Kovvuri <swathi.kovvuri@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, kernelci-results@groups.io,
+        gtucker@collabora.com
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org
+References: <5f036d83.1c69fb81.10199.06d0@mx.google.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <64f1ab9a-2390-5b42-4e57-2a4f78db94c4@intel.com>
+Date:   Mon, 6 Jul 2020 11:47:52 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200706114000.223e27eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <5f036d83.1c69fb81.10199.06d0@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,82 +62,349 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/6/2020 11:40 AM, Jakub Kicinski wrote:
-> On Sun,  5 Jul 2020 21:27:58 -0700 Florian Fainelli wrote:
->> +	ops = ethtool_phy_ops;
->> +	if (!ops || !ops->start_cable_test) {
+On 7/6/2020 11:29 AM, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > 
-> nit: don't think member-by-member checking is necessary. We don't
-> expect there to be any alternative versions of the ops, right?
+> next/master bisection: baseline.login on qemu_arm64-virt-gicv3
+> 
+> Summary:
+>    Start:      5680d14d59bd Add linux-next specific files for 20200706
+>    Plain log:  https://storage.kernelci.org/next/master/next-20200706/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-qemu_arm64-virt-gicv3.txt
+>    HTML log:   https://storage.kernelci.org/next/master/next-20200706/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-qemu_arm64-virt-gicv3.html
+>    Result:     deb9541f5052 dmaengine: check device and channel list for empty
+> 
+> Checks:
+>    revert:     PASS
+>    verify:     PASS
+> 
+> Parameters:
+>    Tree:       next
+>    URL:        https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>    Branch:     master
+>    Target:     qemu_arm64-virt-gicv3
+>    CPU arch:   arm64
+>    Lab:        lab-collabora
+>    Compiler:   gcc-8
+>    Config:     defconfig+CONFIG_RANDOMIZE_BASE=y
+>    Test case:  baseline.login
 
-There could be, a network device driver not using PHYLIB could register
-its own operations and only implement a subset of these operations.
+
+This should be already fixed. Same issue that Naresh reported and Arnd bisected.
+https://www.spinics.net/lists/dmaengine/msg22787.html
 
 > 
->> +		ret = -EOPNOTSUPP;
->> +		goto out_rtnl;
->> +	}
->> +
->>  	ret = ethnl_ops_begin(dev);
->>  	if (ret < 0)
->>  		goto out_rtnl;
->>  
->> -	ret = phy_start_cable_test(dev->phydev, info->extack);
->> +	ret = ops->start_cable_test(dev->phydev, info->extack);
+> Breaking commit found:
 > 
-> nit: my personal preference would be to hide checking the ops and
-> calling the member in a static inline helper.
+> -------------------------------------------------------------------------------
+> commit deb9541f5052b2f93bd51cb263d9035bfd89fa96
+> Author: Dave Jiang <dave.jiang@intel.com>
+> Date:   Fri Jun 26 11:09:41 2020 -0700
 > 
-> Note that we should be able to remove this from phy.h now:
-
-I would prefer to keep thsose around in case a network device driver
-cannot punt entirely onto PHYLIB and instead needs to wrap those calls
-around.
-
+>      dmaengine: check device and channel list for empty
+>      
+>      Check dma device list and channel list for empty before iterate as the
+>      iteration function assume the list to be not empty. With devices and
+>      channels now being hot pluggable this is a condition that needs to be
+>      checked. Otherwise it can cause the iterator to spin forever.
+>      
+>      Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
+>      Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>      Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>      Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>      Link: https://lore.kernel.org/r/159319496403.69045.16298280729899651363.stgit@djiang5-desk3.ch.intel.com
+>      Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > 
-> #if IS_ENABLED(CONFIG_PHYLIB)
-> int phy_start_cable_test(struct phy_device *phydev,
-> 			 struct netlink_ext_ack *extack);
-> int phy_start_cable_test_tdr(struct phy_device *phydev,
-> 			     struct netlink_ext_ack *extack,
-> 			     const struct phy_tdr_config *config);
-> #else
-> static inline
-> int phy_start_cable_test(struct phy_device *phydev,
-> 			 struct netlink_ext_ack *extack)
-> {
-> 	NL_SET_ERR_MSG(extack, "Kernel not compiled with PHYLIB support");
-> 	return -EOPNOTSUPP;
-> }
-> static inline
-> int phy_start_cable_test_tdr(struct phy_device *phydev,
-> 			     struct netlink_ext_ack *extack,
-> 			     const struct phy_tdr_config *config)
-> {
-> 	NL_SET_ERR_MSG(extack, "Kernel not compiled with PHYLIB support");
-> 	return -EOPNOTSUPP;
-> }
-> #endif
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 2b06a7a8629d..0d6529eff66f 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -85,6 +85,9 @@ static void dmaengine_dbg_summary_show(struct seq_file *s,
+>   {
+>   	struct dma_chan *chan;
+>   
+> +	if (list_empty(&dma_dev->channels))
+> +		return;
+> +
+>   	list_for_each_entry(chan, &dma_dev->channels, device_node) {
+>   		if (chan->client_count) {
+>   			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
+> @@ -104,6 +107,11 @@ static int dmaengine_summary_show(struct seq_file *s, void *data)
+>   	struct dma_device *dma_dev = NULL;
+>   
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return 0;
+> +	}
+> +
+>   	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
+>   		seq_printf(s, "dma%d (%s): number of channels: %u\n",
+>   			   dma_dev->dev_id, dev_name(dma_dev->dev),
+> @@ -324,10 +332,15 @@ static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
+>   	struct dma_chan *min = NULL;
+>   	struct dma_chan *localmin = NULL;
+>   
+> +	if (list_empty(&dma_device_list))
+> +		return NULL;
+> +
+>   	list_for_each_entry(device, &dma_device_list, global_node) {
+>   		if (!dma_has_cap(cap, device->cap_mask) ||
+>   		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node) {
+>   			if (!chan->client_count)
+>   				continue;
+> @@ -365,6 +378,9 @@ static void dma_channel_rebalance(void)
+>   	int cpu;
+>   	int cap;
+>   
+> +	if (list_empty(&dma_device_list))
+> +		return;
+> +
+>   	/* undo the last distribution */
+>   	for_each_dma_cap_mask(cap, dma_cap_mask_all)
+>   		for_each_possible_cpu(cpu)
+> @@ -373,6 +389,8 @@ static void dma_channel_rebalance(void)
+>   	list_for_each_entry(device, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node)
+>   			chan->table_count = 0;
+>   	}
+> @@ -556,6 +574,10 @@ void dma_issue_pending_all(void)
+>   	struct dma_chan *chan;
+>   
+>   	rcu_read_lock();
+> +	if (list_empty(&dma_device_list)) {
+> +		rcu_read_unlock();
+> +		return;
+> +	}
+>   	list_for_each_entry_rcu(device, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> @@ -613,6 +635,10 @@ static struct dma_chan *private_candidate(const dma_cap_mask_t *mask,
+>   		dev_dbg(dev->dev, "%s: wrong capabilities\n", __func__);
+>   		return NULL;
+>   	}
+> +
+> +	if (list_empty(&dev->channels))
+> +		return NULL;
+> +
+>   	/* devices with multiple channels need special handling as we need to
+>   	 * ensure that all channels are either private or public.
+>   	 */
+> @@ -749,6 +775,11 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>   
+>   	/* Find a channel */
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return NULL;
+> +	}
+> +
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		/* Finds a DMA controller with matching device node */
+>   		if (np && device->dev->of_node && np != device->dev->of_node)
+> @@ -819,6 +850,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>   
+>   	/* Try to find the channel via the DMA filter map(s) */
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return NULL;
+> +	}
+> +
+>   	list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
+>   		dma_cap_mask_t mask;
+>   		const struct dma_slave_map *map = dma_filter_match(d, name, dev);
+> @@ -942,10 +978,17 @@ void dmaengine_get(void)
+>   	mutex_lock(&dma_list_mutex);
+>   	dmaengine_ref_count++;
+>   
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return;
+> +	}
+> +
+>   	/* try to grab channels */
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node) {
+>   			err = dma_chan_get(chan);
+>   			if (err == -ENODEV) {
+> @@ -980,10 +1023,17 @@ void dmaengine_put(void)
+>   	mutex_lock(&dma_list_mutex);
+>   	dmaengine_ref_count--;
+>   	BUG_ON(dmaengine_ref_count < 0);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return;
+> +	}
+> +
+>   	/* drop channel references */
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node)
+>   			dma_chan_put(chan);
+>   	}
+> @@ -1132,6 +1182,39 @@ void dma_async_device_channel_unregister(struct dma_device *device,
+>   }
+>   EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
+>   
+> +static int dma_channel_enumeration(struct dma_device *device)
+> +{
+> +	struct dma_chan *chan;
+> +	int rc;
+> +
+> +	if (list_empty(&device->channels))
+> +		return 0;
+> +
+> +	/* represent channels in sysfs. Probably want devs too */
+> +	list_for_each_entry(chan, &device->channels, device_node) {
+> +		rc = __dma_async_device_channel_register(device, chan);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	/* take references on public channels */
+> +	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+> +		list_for_each_entry(chan, &device->channels, device_node) {
+> +			/* if clients are already waiting for channels we need
+> +			 * to take references on their behalf
+> +			 */
+> +			if (dma_chan_get(chan) == -ENODEV) {
+> +				/* note we can only get here for the first
+> +				 * channel as the remaining channels are
+> +				 * guaranteed to get a reference
+> +				 */
+> +				return -ENODEV;
+> +			}
+> +		}
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * dma_async_device_register - registers DMA devices found
+>    * @device:	pointer to &struct dma_device
+> @@ -1247,33 +1330,15 @@ int dma_async_device_register(struct dma_device *device)
+>   	if (rc != 0)
+>   		return rc;
+>   
+> +	mutex_lock(&dma_list_mutex);
+>   	mutex_init(&device->chan_mutex);
+>   	ida_init(&device->chan_ida);
+> -
+> -	/* represent channels in sysfs. Probably want devs too */
+> -	list_for_each_entry(chan, &device->channels, device_node) {
+> -		rc = __dma_async_device_channel_register(device, chan);
+> -		if (rc < 0)
+> -			goto err_out;
+> +	rc = dma_channel_enumeration(device);
+> +	if (rc < 0) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		goto err_out;
+>   	}
+>   
+> -	mutex_lock(&dma_list_mutex);
+> -	/* take references on public channels */
+> -	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+> -		list_for_each_entry(chan, &device->channels, device_node) {
+> -			/* if clients are already waiting for channels we need
+> -			 * to take references on their behalf
+> -			 */
+> -			if (dma_chan_get(chan) == -ENODEV) {
+> -				/* note we can only get here for the first
+> -				 * channel as the remaining channels are
+> -				 * guaranteed to get a reference
+> -				 */
+> -				rc = -ENODEV;
+> -				mutex_unlock(&dma_list_mutex);
+> -				goto err_out;
+> -			}
+> -		}
+>   	list_add_tail_rcu(&device->global_node, &dma_device_list);
+>   	if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   		device->privatecnt++;	/* Always private */
+> @@ -1291,6 +1356,9 @@ int dma_async_device_register(struct dma_device *device)
+>   		return rc;
+>   	}
+>   
+> +	if (list_empty(&device->channels))
+> +		return rc;
+> +
+>   	list_for_each_entry(chan, &device->channels, device_node) {
+>   		if (chan->local == NULL)
+>   			continue;
+> @@ -1317,8 +1385,9 @@ void dma_async_device_unregister(struct dma_device *device)
+>   
+>   	dmaengine_debug_unregister(device);
+>   
+> -	list_for_each_entry_safe(chan, n, &device->channels, device_node)
+> -		__dma_async_device_channel_unregister(device, chan);
+> +	if (!list_empty(&device->channels))
+> +		list_for_each_entry_safe(chan, n, &device->channels, device_node)
+> +			__dma_async_device_channel_unregister(device, chan);
+>   
+>   	mutex_lock(&dma_list_mutex);
+>   	/*
+> -------------------------------------------------------------------------------
 > 
 > 
-> We could even risk a direct call:
+> Git bisection log:
 > 
-> #if IS_REACHABLE(CONFIG_PHYLIB)
-> static inline int do_x()
-> {
-> 	return __do_x();
-> }
-> #else
-> static inline int do_x()
-> {
-> 	if (!ops)
-> 		return -EOPNOTSUPP;
-> 	return ops->do_x();
-> }
-> #endif
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [bb5a93aaf25261321db0c499cde7da6ee9d8b164] x86/ldt: use "pr_info_once()" instead of open-coding it badly
+> git bisect good bb5a93aaf25261321db0c499cde7da6ee9d8b164
+> # bad: [5680d14d59bddc8bcbc5badf00dbbd4374858497] Add linux-next specific files for 20200706
+> git bisect bad 5680d14d59bddc8bcbc5badf00dbbd4374858497
+> # good: [2549a884c8373a109a93521bf806cc523c92340b] Merge remote-tracking branch 'crypto/master'
+> git bisect good 2549a884c8373a109a93521bf806cc523c92340b
+> # good: [f94ee8e6645aadfc1e80c2a5fe5fb07841526610] Merge remote-tracking branch 'selinux/next'
+> git bisect good f94ee8e6645aadfc1e80c2a5fe5fb07841526610
+> # good: [16d4f454c697a796cfac0af2b5ab39bedf71f4fe] Merge remote-tracking branch 'thunderbolt/next'
+> git bisect good 16d4f454c697a796cfac0af2b5ab39bedf71f4fe
+> # bad: [2c43abadd30bab02d2a94b5aa72a7eb6edbe6b96] Merge remote-tracking branch 'nvdimm/libnvdimm-for-next'
+> git bisect bad 2c43abadd30bab02d2a94b5aa72a7eb6edbe6b96
+> # bad: [d5a942e3894462eb44f6bb51dde5b5b481ba355a] Merge remote-tracking branch 'scsi/for-next'
+> git bisect bad d5a942e3894462eb44f6bb51dde5b5b481ba355a
+> # good: [bd7a168a024dcfbc4db7fb79a51c8b574f55b527] staging: rtl8712: use common ieee80211 constants
+> git bisect good bd7a168a024dcfbc4db7fb79a51c8b574f55b527
+> # good: [28ed7374401b20915bf980fdf2d3ac80f8c2945d] scsi: lpfc: Fix language in 0373 message to reflect non-error message
+> git bisect good 28ed7374401b20915bf980fdf2d3ac80f8c2945d
+> # good: [198d6cb9263bb25156132d87babfe6e6506a4c88] Merge remote-tracking branch 'icc/icc-next'
+> git bisect good 198d6cb9263bb25156132d87babfe6e6506a4c88
+> # good: [7244068998c8266300c48f1a3af7b237446de885] Merge branch 'misc' into for-next
+> git bisect good 7244068998c8266300c48f1a3af7b237446de885
+> # good: [999a32efed09d724c426568731c5691233d3a680] dmaengine: hisilicon: Use struct_size() in devm_kzalloc()
+> git bisect good 999a32efed09d724c426568731c5691233d3a680
+> # good: [d12ea5591eddf625b7707c018b72e46e8674c3c2] dmaengine: pl330: Make sure the debug is idle before doing DMAGO
+> git bisect good d12ea5591eddf625b7707c018b72e46e8674c3c2
+> # bad: [f50b150e315ed133b74a75e3c71864fb2cd4cece] dmaengine: idxd: add work queue drain support
+> git bisect bad f50b150e315ed133b74a75e3c71864fb2cd4cece
+> # bad: [deb9541f5052b2f93bd51cb263d9035bfd89fa96] dmaengine: check device and channel list for empty
+> git bisect bad deb9541f5052b2f93bd51cb263d9035bfd89fa96
+> # first bad commit: [deb9541f5052b2f93bd51cb263d9035bfd89fa96] dmaengine: check device and channel list for empty
+> -------------------------------------------------------------------------------
 > 
-> But that's perhaps doing too much...
-
-Fine either way with me, let us see what Michal and Andrew think about that.
--- 
-Florian
