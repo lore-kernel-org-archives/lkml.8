@@ -2,148 +2,89 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D75AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29259C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E3420702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:06:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD+dZMWy"
+	by mail.kernel.org (Postfix) with ESMTP id 0355A206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgGFUGo (ORCPT
+        id S1726886AbgGFUHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGFUGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:06:44 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63FAC061755;
-        Mon,  6 Jul 2020 13:06:43 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so43378373wml.3;
-        Mon, 06 Jul 2020 13:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sGGmqyzxuGskSDvJyw873qW0Q+lOOBiCQeQelByiYkA=;
-        b=bD+dZMWyuei2FnxFA1Q6IkE8CDRLznPd/I0WivrCOr7VySxWITV42YRooGVzhC0IRs
-         WSrOPBbgJS6WAcw0jaJMS23boj9E+7bJMR0/PTw+1+0yrGpXN9IhEYu5c8OnmxgWVrVg
-         OOxgTfrpRTYGdm//2kkqObFIMzLjM1MrJg4d76L1bQ3shHDa68ZALmSF2HdjWGud5S0W
-         Tb+ZLh8pBAl0nFmie7XpdUCp0Kbb3UT89NbT4xAqC3usY01ahmLFfI3Aqbwli/S6Mrdq
-         akev28RdThTdF2RblLHMeMiEyxUs9UcW/Sve2ctBalMIA01vW22j0RKgOrswWKpaa5v7
-         o6Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=sGGmqyzxuGskSDvJyw873qW0Q+lOOBiCQeQelByiYkA=;
-        b=DzlZ1EZns/90CuwDhR1dTqpEcRCauR5YJYUChIsMw6tLiP+ATOVjuJqpuXk4q5yCNq
-         umyM/CXp8xSTex6yueViejVFTIDQ1Hke7xhJGlp+XEYGsA1vOSQzZNPn4x1JbyFWS4wu
-         m6vBt2RRwUVsU1MoBOP0m+iw2W0hAQiYeGHkV5Fr87wyvmd60iP6x5UGSxz2CNHrUkOj
-         4hLdDNAPCdp84B+fBsf5EPVpXLlelJz89+GxevGPgz0vDkmiMYgp6ck9cXeCtjlrMpH8
-         hYe/hG//6Snayvxq+NfwD7jRiCl4FrDrkEvBvhGe/+WQfJmMkWnYRG2Vr82sRLbtc5kb
-         sHKQ==
-X-Gm-Message-State: AOAM530j1labFmD3icZ6d6FFPZPqcUC6STmX1c936jDQXeW/ryglVp0L
-        i1MObjX4g0yBAzKrLmC5//c=
-X-Google-Smtp-Source: ABdhPJxm3bkgcMSKbfFeKdMYBwulZYFl/cbleEVnFxk7HN83k3M783xqIDl6YRw/CF0fNzxgCH5A5A==
-X-Received: by 2002:a1c:9cd0:: with SMTP id f199mr780519wme.94.1594066002080;
-        Mon, 06 Jul 2020 13:06:42 -0700 (PDT)
-Received: from localhost ([95.236.72.230])
-        by smtp.gmail.com with ESMTPSA id k126sm661699wme.17.2020.07.06.13.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 13:06:41 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 22:06:40 +0200
-From:   Lorenzo Fontana <fontanalorenz@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCH] bpf: lsm: Disable or enable BPF LSM at boot time
-Message-ID: <20200706200640.GA234619@gallifrey>
-Mail-Followup-To: Lorenzo Fontana <fontanalorenz@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        open list <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Linux Security Module list <linux-security-module@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-References: <20200706165710.GA208695@gallifrey>
- <9268bd47-93db-1591-e224-8d3da333636e@iogearbox.net>
- <CACYkzJ78HOP8SZ3jU0DnH0b4f8580AuP4fdG5K3xgaHa8VYaZw@mail.gmail.com>
+        Mon, 6 Jul 2020 16:07:47 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49832 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgGFUHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 16:07:47 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jsXOw-003uVe-Gw; Mon, 06 Jul 2020 22:07:42 +0200
+Date:   Mon, 6 Jul 2020 22:07:42 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: sfp: Unique GPIO interrupt names
+Message-ID: <20200706200742.GB893522@lunn.ch>
+References: <CAFXsbZp5A7FHoXPA6Rg8XqZPD9NXmSeZZb-RsEGXnktbo04GOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACYkzJ78HOP8SZ3jU0DnH0b4f8580AuP4fdG5K3xgaHa8VYaZw@mail.gmail.com>
+In-Reply-To: <CAFXsbZp5A7FHoXPA6Rg8XqZPD9NXmSeZZb-RsEGXnktbo04GOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:59:13PM +0200, KP Singh wrote:
-> On Mon, Jul 6, 2020 at 8:51 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> >
-> > On 7/6/20 6:57 PM, Lorenzo Fontana wrote:
-> > > This option adds a kernel parameter 'bpf_lsm',
-> > > which allows the BPF LSM to be disabled at boot.
-> > > The purpose of this option is to allow a single kernel
-> > > image to be distributed with the BPF LSM built in,
-> > > but not necessarily enabled.
-> > >
-> > > Signed-off-by: Lorenzo Fontana <fontanalorenz@gmail.com>
-> >
-> > Well, this explains what the patch is doing but not *why* you need it exactly.
-> > Please explain your concrete use-case for this patch.
+On Mon, Jul 06, 2020 at 12:38:37PM -0700, Chris Healy wrote:
+> Dynamically generate a unique GPIO interrupt name, based on the
+> device name and the GPIO name.  For example:
 > 
-> Also, this patch is not really needed as it can already be done with the current
-> kernel parameters.
+> 103:          0   sx1503q  12 Edge      sff2-los
+> 104:          0   sx1503q  13 Edge      sff3-los
 > 
-> LSMs can be enabled on the command line
-> with the lsm= parameter. So you can just pass lsm="selinux,capabilities" etc
-> and not pass "bpf" and it will disable the BPF_LSM.
+> The sffX indicates the SFP the loss of signal GPIO is associated with.
+
+Hi Chris
+
+For netdev, please put inside the [PATCH] part of the subject, which
+tree this is for, i.e. net-next.
+
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
+> ---
+>  drivers/net/phy/sfp.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> - KP
+> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> index 73c2969f11a4..9b03c7229320 100644
+> --- a/drivers/net/phy/sfp.c
+> +++ b/drivers/net/phy/sfp.c
+> @@ -220,6 +220,7 @@ struct sfp {
+>      struct phy_device *mod_phy;
+>      const struct sff_data *type;
+>      u32 max_power_mW;
+> +    char sfp_irq_name[32];
 > 
-> >
-> > Thanks,
-> > Daniel
+>      unsigned int (*get_state)(struct sfp *);
+>      void (*set_state)(struct sfp *, unsigned int);
+> @@ -2349,12 +2350,15 @@ static int sfp_probe(struct platform_device *pdev)
+>              continue;
+>          }
+> 
+> +        snprintf(sfp->sfp_irq_name, sizeof(sfp->sfp_irq_name),
+> +             "%s-%s", dev_name(sfp->dev), gpio_of_names[i]);
+> +
 
-Hi,
-Thanks Daniel and KP for looking into this, I really appreciate it!
+This is perfectly O.K, but you could consider using
+devm_kasprintf(). That will allocate as much memory as needed for the
+string, and hence avoid truncation issues, which we have seen before
+with other interrupt names.
 
-The *why* I need it is because I need to ship the kernel with BPF LSM
-disabled at boot time.
-
-The use case is exactly the same as the one described by KP, however
-for a personal preference I prefer to pass specifically bpf_lsm=1 or
-bpf_lsm=0 - It's easier to change programmatically in my scripts
-with a simple sprintf("bpf_lsm=%d", value). I do the same
-with "selinux=1" and "selinux=0" in my systems.
-From what I can see by reading the code and testing, the two ways
-bot act on 'lsm_info.enabled' defined in 'lsm_hooks.h'.
-So it's not just  a personal preference, I just want the same set
-of options available to me as I do with selinux.
-
-Thanks a lot,
-Lore
+     Andrew
