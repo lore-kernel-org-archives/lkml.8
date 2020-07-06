@@ -2,114 +2,163 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57904C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23294C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCF1206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA70520702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YVom8lFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgGFRNi (ORCPT
+        id S1729656AbgGFRPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:13:38 -0400
-Received: from mxo1.nje.dmz.twosigma.com ([208.77.214.160]:45967 "EHLO
-        mxo1.nje.dmz.twosigma.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729478AbgGFRNh (ORCPT
+        Mon, 6 Jul 2020 13:15:07 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19335 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbgGFRPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:13:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mxo1.nje.dmz.twosigma.com (Postfix) with ESMTP id 4B0sbh0618z7t8v;
-        Mon,  6 Jul 2020 17:13:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at twosigma.com
-Received: from mxo1.nje.dmz.twosigma.com ([127.0.0.1])
-        by localhost (mxo1.nje.dmz.twosigma.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qZ-uHme1hea8; Mon,  6 Jul 2020 17:13:35 +0000 (UTC)
-Received: from exmbdft8.ad.twosigma.com (exmbdft8.ad.twosigma.com [172.22.2.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxo1.nje.dmz.twosigma.com (Postfix) with ESMTPS id 4B0sbg6bfhz3wZ6;
-        Mon,  6 Jul 2020 17:13:35 +0000 (UTC)
-Received: from EXMBDFT11.ad.twosigma.com (172.23.162.14) by
- exmbdft8.ad.twosigma.com (172.22.2.84) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 6 Jul 2020 17:13:35 +0000
-Received: from EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9]) by
- EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9%19]) with mapi id
- 15.00.1497.000; Mon, 6 Jul 2020 17:13:35 +0000
-From:   Nicolas Viennot <Nicolas.Viennot@twosigma.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-CC:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Dmitry Safonov" <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        "Kamil Yurtsever" <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH v4 3/3] prctl: Allow ptrace capable processes to change
- /proc/self/exe
-Thread-Topic: [PATCH v4 3/3] prctl: Allow ptrace capable processes to change
- /proc/self/exe
-Thread-Index: AQHWT3Pec4M4ip1q2kWWALZu7qCiaaj0zUiAgAAMHwCABfYCYA==
-Date:   Mon, 6 Jul 2020 17:13:35 +0000
-Message-ID: <a2b4deacfc7541e3adea2f36a6f44262@EXMBDFT11.ad.twosigma.com>
-References: <20200701064906.323185-1-areber@redhat.com>
- <20200701064906.323185-4-areber@redhat.com>
- <20200702211647.GB3283@mail.hallyn.com>
- <CAHC9VhQZ=cwiOay6OMMdM1UHm69wDaga9HBkyTbx8-1OU=aBvA@mail.gmail.com>
-In-Reply-To: <CAHC9VhQZ=cwiOay6OMMdM1UHm69wDaga9HBkyTbx8-1OU=aBvA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.20.189.128]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 Jul 2020 13:15:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f035be40001>; Mon, 06 Jul 2020 10:14:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 Jul 2020 10:15:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 06 Jul 2020 10:15:05 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jul
+ 2020 17:15:01 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 6 Jul 2020 17:15:01 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f035c110000>; Mon, 06 Jul 2020 10:15:00 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <robh+dt@kernel.org>, <treding@nvidia.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH] arm64: tegra: Re-order PCIe aperture mappings
+Date:   Mon, 6 Jul 2020 22:44:54 +0530
+Message-ID: <20200706171454.11316-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594055652; bh=HXtWj3LVP+XSdF9JsC03QCj7zdWKkGYPzJ5wNbRbP04=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=YVom8lFwRwbSQMNkbudA/cWC5MN/0S7+zdRcwdGJ1OuevF+4RisPUDSC4mRGBCrcV
+         eV+QVDai1UCGXXoes7efkoNEYUMCYlDmlNHwJytSosNfAilui5MFX/I+pSiIn4/vJ6
+         F/XInpd4v6Kmh8RbkVXXZBh8LOPXNTFjCIJ9nZqKuZhmkifxsNyxEuu309ceg43BUh
+         3uN7CXjWaY85UXKc9mfMsIMV9Bs02l9BrseP00Pp94h2i9PyFw7/YuzB2hsmkl7EvO
+         nGngoIJ+n/9xnOM9u1Uex1jsemncSMKtL/4rn5yDBY3faUtyvls7VFsMN8g3uE05va
+         asIr7B4gawhnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IFRoaXMgaXMgc2NhcnkuICBCdXQgSSBiZWxpZXZlIGl0IGlzIHNhZmUuDQo+ID4NCj4gPiBS
-ZXZpZXdlZC1ieTogU2VyZ2UgSGFsbHluIDxzZXJnZUBoYWxseW4uY29tPg0KPiA+DQo+ID4gSSBh
-bSBhIGJpdCBjdXJpb3VzIGFib3V0IHRoZSBpbXBsaWNhdGlvbnMgb2YgdGhlIHNlbGludXggcGF0
-Y2guDQo+ID4gSUlVQyB5b3UgYXJlIHVzaW5nIHRoZSBwZXJtaXNzaW9uIG9mIHRoZSB0cmFjaW5n
-IHByb2Nlc3MgdG8gZXhlY3V0ZQ0KPiA+IHRoZSBmaWxlIHdpdGhvdXQgdHJhbnNpdGlvbiwgc28g
-dGhpcyBpcyBhIHdheSB0byB3b3JrIGFyb3VuZCB0aGUNCj4gPiBwb2xpY3kgd2hpY2ggbWlnaHQg
-cHJldmVudCB0aGUgdHJhY2VlIGZyb20gZG9pbmcgc28uDQo+ID4gR2l2ZW4gdGhhdCBTRUxpbnV4
-IHdhbnRzIHRvIGJlIE1BQywgSSdtIG5vdCAqcXVpdGUqIHN1cmUgdGhhdCdzDQo+ID4gY29uc2lk
-ZXJlZCBrb3NoZXIuICBZb3UgYWxzbyBhcmUgc2tpcHBpbmcgdGhlIFBST0NFU1NfX1BUUkFDRSB0
-bw0KPiA+IFNFQ0NMQVNTX1BST0NFU1MgY2hlY2sgd2hpY2ggc2VsaW51eF9icHJtX3NldF9jcmVk
-cyBkb2VzIGxhdGVyIG9uLg0KPiA+IEFnYWluIEknbSBqdXN0IG5vdCBxdWl0ZSBzdXJlIHdoYXQn
-cyBjb25zaWRlcmVkIG5vcm1hbCB0aGVyZSB0aGVzZQ0KPiA+IGRheXMuDQo+ID4NCj4gPiBQYXVs
-LCBkbyB5b3UgaGF2ZSBpbnB1dCB0aGVyZT8NCj4NCj4gSSBhZ3JlZSwgdGhlIFNFTGludXggaG9v
-ayBsb29rcyB3cm9uZy4gIEJ1aWxkaW5nIG9uIHdoYXQgQ2hyaXN0aWFuIHNhaWQsIHRoaXMgbG9v
-a3MgbW9yZSBsaWtlIGEgcHRyYWNlIG9wZXJhdGlvbiB0aGFuIGFuIGV4ZWMgb3BlcmF0aW9uLg0K
-DQpTZXJnZSwgUGF1bCwgQ2hyaXN0aWFuLA0KDQpJIG1hZGUgYSBQb0MgdG8gZGVtb25zdHJhdGUg
-dGhlIGNoYW5nZSBvZiAvcHJvYy9zZWxmL2V4ZSB3aXRob3V0IENBUF9TWVNfQURNSU4gdXNpbmcg
-b25seSBwdHJhY2UgYW5kIGV4ZWN2ZS4NCllvdSBtYXkgZmluZCBpdCBoZXJlOiBodHRwczovL2dp
-dGh1Yi5jb20vbnZpZW5ub3QvcnVuX2FzX2V4ZQ0KDQpXaGF0IGRvIHlvdSByZWNvbW1lbmQgdG8g
-cmVsYXggdGhlIHNlY3VyaXR5IGNoZWNrcyBpbiB0aGUga2VybmVsIHdoZW4gaXQgY29tZXMgdG8g
-Y2hhbmdpbmcgdGhlIGV4ZSBsaW5rPw0KDQogICAgTmljbw0K
+Re-order Tegra194's PCIe aperture mappings to have IO window moved to
+64-bit aperture and have the entire 32-bit aperture used for accessing
+the configuration space. This makes it to use the entire 32MB of the 32-bit
+aperture for ECAM purpose while booting through ACPI.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 36 ++++++++++++------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 4bc187a4eacd..2b378fa06d19 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1404,9 +1404,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+-			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
++		ranges = <0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0x82000000 0x00 0x40000000 0x12 0x30000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x12 0x3fff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie@14120000 {
+@@ -1449,9 +1449,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+-			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
++		ranges = <0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0x82000000 0x00 0x40000000 0x12 0x70000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x12 0x7fff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie@14140000 {
+@@ -1494,9 +1494,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+-			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
++		ranges = <0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0x82000000 0x00 0x40000000 0x12 0xb0000000 0x0 0x0fff0000   /* non-prefetchable memory (256MB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x12 0xbfff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie@14160000 {
+@@ -1539,9 +1539,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+-			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
++		ranges = <0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0x82000000 0x00 0x40000000 0x17 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x17 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie@14180000 {
+@@ -1584,9 +1584,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+-			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
++		ranges = <0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0x82000000 0x00 0x40000000 0x1b 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x1b 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie@141a0000 {
+@@ -1633,9 +1633,9 @@
+ 		nvidia,aspm-l0s-entrance-latency-us = <3>;
+ 
+ 		bus-range = <0x0 0xff>;
+-		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+-			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
++		ranges = <0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0x82000000 0x00 0x40000000 0x1f 0x40000000 0x0 0xbfff0000   /* non-prefetchable memory (3GB - 64KB) */
++			  0x81000000 0x00 0x00000000 0x1f 0xffff0000 0x0 0x00010000>; /* downstream I/O (64KB) */
+ 	};
+ 
+ 	pcie_ep@14160000 {
+-- 
+2.17.1
+
