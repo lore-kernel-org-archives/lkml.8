@@ -2,135 +2,187 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D9C20702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223B320702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="V+H7t3vX"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="WZP86zFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgGFQ3D (ORCPT
+        id S1729596AbgGFQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:29:03 -0400
-Received: from mail-dm6nam11on2102.outbound.protection.outlook.com ([40.107.223.102]:12197
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729293AbgGFQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:29:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X8jLMV4RZrUdpK0ftDdYg9Xmsnglr0CN9i0iyGNZ/Hh1BeYVoMZcGJhE2ZBy7ezAFHqMsgquLYUth9cCBoBz11z0q/Fo+mCtIhG5uQLbA5ygP6y+n65AQLS5aA7oN56w7HafginmnjP9XoHF/brayU3JkF/GW9o+/iwdqnCe9QvJu2LH8rZzbFyWstrKHserFAJ1X2j+FXs+n0OW+fL6YGFFWjBHywng0RBMu42s4CArHh607J5ke2q+bJFZm+grRHrUfT9ntCgKH6sbVtuLiNbJoNyXXPYJfBHrqt+WBg6ABUqORlHBz87Cer+xxwLwinTIRR1EdDNuCzzr4r/MMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYD2IzQVsS2Idbz/UWXy0nLMTBDhj3FAUKyGBw8p20w=;
- b=BSraldyCS/zOLqex76T7hppHTsFUg74EcGqJDbATpQbukEGAUDydRCdH3EMhB3i6VqtRmP9UAzrqett8qV0K72rGCalBn3zPQOnNDTYcG97LySYsrCSLGf1B8cRnrSlge3x1C/H+bDsi09P3uNI7le60xfRgReQdvSL8fV9sKGLtugTbOPOE3isEsCGz1A4lu6R39aobiA+3fXi22o6IQtKWx6OGoWhq3PnSlsi0D6KF3cGonSVrBMO4QxdDuRmG628LReiVXcqAdoukt9o/QQE6qNwlSyCBTJHlqQLOmPap6b83j/ig3pVz/xpl1iFZ8Uxf6STKk3qA0PcCi0CtZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYD2IzQVsS2Idbz/UWXy0nLMTBDhj3FAUKyGBw8p20w=;
- b=V+H7t3vXCMAC1G36qAgeaeZwH3c0k7mVInKBUJgUUaQAI5EErv0lxoBoRPEUqEGpvI//a53JKIiqc2n7xFkOGiHNcHa7/se4FHk/CajBEiYHUQrTuKUFoCA58eEZB+cngU4FGz8eIxcc4HhjwmM/M0fScxWcPmzid6z473OxKWo=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1804.namprd21.prod.outlook.com (2603:10b6:302:6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.4; Mon, 6 Jul
- 2020 16:28:59 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3174.001; Mon, 6 Jul 2020
- 16:28:59 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH] scsi: storvsc: Add validation for untrusted Hyper-V
- values
-Thread-Topic: [PATCH] scsi: storvsc: Add validation for untrusted Hyper-V
- values
-Thread-Index: AQHWU6/XqVhPqUAuZ0O9lX6z7JjJtqj6vZAg
-Date:   Mon, 6 Jul 2020 16:28:59 +0000
-Message-ID: <MW2PR2101MB1052B40160D7AB1A266C2630D7690@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200706160928.53049-1-lkmlabelt@gmail.com>
-In-Reply-To: <20200706160928.53049-1-lkmlabelt@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-06T16:28:58Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6d9c2576-b1c2-491a-99d5-69158a4895aa;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 76d189fb-220a-47a8-4e44-08d821c9afff
-x-ms-traffictypediagnostic: MW2PR2101MB1804:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1804BD64CEBE2380DF050198D7690@MW2PR2101MB1804.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yO1xl/f4FQCP1Ko7dnrNDsFLyK3p/r3vU2xjVMxYx1+6Pa9VnrqF5agkPkTGkoEWIVY+IvHDRW0ihLnf3Ki4ZFoLk+T9z4AmPCGqJ7jKj654vUtMma86TWGjvQG1ImkNIuvXXEbmAwdHFtB0OyflGttufaVZLej/ke48wWkkRZMN9AR7TfWYBeJ721W/VvyTNkW562AM4skXeAQNPBhIm5vwWML4rvoXJS7/GnUH/486uUtQIwTBMzBiYRbYfpA6rs8GBiCUSpn3NM0ur36I4a0vVW0goUKn7L2FauDErgJ196ZjFYH5ozxw+1/fu+yd
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(33656002)(26005)(6506007)(82950400001)(52536014)(110136005)(316002)(82960400001)(54906003)(478600001)(2906002)(4326008)(10290500003)(9686003)(55016002)(186003)(71200400001)(66476007)(66946007)(64756008)(76116006)(66446008)(66556008)(4744005)(5660300002)(7696005)(8990500004)(86362001)(8676002)(83380400001)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: keYt6P9NtCZYr3cK8CtYOaDRu5mozTxoOA9kROwhTA3SJtM8AmURCA3NTl+wRD7u1UdMRk7RdfrRJoVV4JEjJwexmcjRYOH4Lbwt8JqNMHbE40ySdscUpwpH0pcUUtZlt/Y6n1nePnSAHhwKQZJwlCRY6yL6eABF3UigekH4LHmfWx0VdbIYxI8LVrGIHk79UdLh/I0bfanyp6YRKGaqKsHBIQwY4f4Gp7OgL+/HWGSIleQ1JW9mvBx68agnPc46pU/7JugpN9QYNitG7ZeEzxoqraulvkveQlHmfFZDquJKZHeDGq3iSnjzwG9Str3TyV4nxdDoSPw3eGNZLhVdr4NzvWFaOZ4Gra+Rm2QsgznDq/6BXWv1LnUrpDklbO8joNC52XIUnjnDIp4D5UD8OjHA9DPvKGLD/sNLSNbppPXeDIh/N+JIEM9pum0jbjpUuHOEEJjCm8fiA4r9XfdBsVyjPez2gzHhsGnEvd6UphKlr0hhe0hqZCZI7q6b29Yx
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 6 Jul 2020 12:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbgGFQaA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:30:00 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC2BC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 09:29:59 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q15so40012459wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 09:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WXAuiOj+J7ih7guaxWlWZz3Hon8m2pdL85sec3nqONA=;
+        b=WZP86zFB0F2LWpOr41M/TYwTLKw2Rf/hcqX2mxebHFq24vAAoO+FTeenU8Ls1o6pTs
+         yYBzhl90q3qkTa/QzsDhv+Uy0/tfCAYb8XWTfXbLRZ7USGsvBjT94ywcpgsVL7K0If1B
+         AKCZFAcx7If8HMYf4ZstxuUj1xYAdTLl5hbU6nbSgCzlbDlN6AV3+KAAPdCrnzPOtBHq
+         PdLqz0ETSM/pLsREZC2ko67Fm68JQ/a1Lk9vQq8NoxMU25i2HD4YmBJGeSMYxRMrfoTU
+         N7CaPWR6RV/h7+9AmNt6JDx76ntlwaa9uuVvfGbolhLJQ+4JsSpqxOxi7bJH4uHDYR8C
+         SsWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WXAuiOj+J7ih7guaxWlWZz3Hon8m2pdL85sec3nqONA=;
+        b=V1ugqVWgCZvAUA8P1kQ5pNpyIrOsuMTjOf8jHOQOpjaj/8Z2s2eEOSoRv1VDSiJcm6
+         rT6lIVP5zI/znwZ5UQjOn29JYax0MkcDb9m4Dk7myEaB4wT/CXAQbWvP5G6DXqGlWuBT
+         9vqT6YigLYjJW09kV2FRB6SM96TPUdG3v2ZIvHW8EpBRhIursc3XblxQu6T85z5edR+4
+         nx2yMc83FGvx/+rRpKjEDDxIeAGE7o76HY6/UKQAW7y7dXBUmVyfpBC02xcAeGkSy39m
+         yIPFWSmeya5GHjl1wMjr6AU8qRcv/YZqnNYwkkWsu0lOegMer7yEeivCt/dsSnbXnqDC
+         K4DQ==
+X-Gm-Message-State: AOAM532j/fdurB3zDJe36mJ5g+u5yW5VD1iNBIn+WlcRW6FXVMDmByFg
+        dAAy+GUWHOiwH9Wns8jjOb8HCOkC9XDKU8nIf3OCTA==
+X-Google-Smtp-Source: ABdhPJzk8k9ooYv1kWukndt8CMnG1n+NKLbCfqNP+yN4xkeFEb5Podrt5l48C6eWdZitlQgeIkLNwJfZgg3L6agz0ok=
+X-Received: by 2002:a1c:2402:: with SMTP id k2mr11313wmk.138.1594052998297;
+ Mon, 06 Jul 2020 09:29:58 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76d189fb-220a-47a8-4e44-08d821c9afff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2020 16:28:59.6053
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6grvdq091/jBEw3FXvfSkXUUAP2W8n+EaInGTyDAhrqAseGEeHKxBXC57sHj7I+9OhgYjiC/v0HPKBnFhr/mTeGeh/s5nvpBOvOtbH8I/wM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1804
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Mon, 6 Jul 2020 09:29:46 -0700
+Message-ID: <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Beltran <lkmlabelt@gmail.com> Sent: Monday, July 6, 2020 9:09 =
-AM
->=20
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that
-> Hyper-V has sent to the guest. Ensure that invalid values cannot
-> cause data being copied out of the bounds of the source buffer
-> when calling memcpy. Ensure that outgoing packets do not have any
-> leftover guest memory that has not been zeroed out.
->=20
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+On Sat, Jul 4, 2020 at 1:19 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Recent events have prompted a Linux position statement on inclusive
+> terminology. Given that Linux maintains a coding-style and its own
+> idiomatic set of terminology here is a proposal to answer the call to
+> replace non-inclusive terminology.
+>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Chris Mason <clm@fb.clm>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/scsi/storvsc_drv.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
+>  Documentation/process/coding-style.rst          |   12 ++++
+>  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
+>  Documentation/process/index.rst                 |    1
+>  3 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/process/inclusive-terminology.rst
+>
+> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> index 2657a55c6f12..4b15ab671089 100644
+> --- a/Documentation/process/coding-style.rst
+> +++ b/Documentation/process/coding-style.rst
+> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
+>  problem, which is called the function-growth-hormone-imbalance syndrome.
+>  See chapter 6 (Functions).
+>
+> +For symbol names, avoid introducing new usage of the words 'slave' and
+> +'blacklist'
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Can you put whitelist in the list, too?
+
+>. Recommended replacements for 'slave' are: 'secondary',
+> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
+> +'performer'.
+
+Should 'target' be in this list?
+
+Should there be some mention of "master" to go along with "slave"?
+This could be complicated -- as has been noted in this thread, the
+word "master" has quite a few meanings, several of which are not
+related to slavery or to any form of control, and that the meanings
+associated with "master" and its cognates in other languages vary.
+
+>  Recommended replacements for blacklist are: 'blocklist' or
+> +'denylist'.
+
+As someone who has written seccomp code and described the result as a
+"whitelist" or "blacklist" in the past, I have a couple of comments.
+
+First, shouldn't whitelist be in the list?  I find it surprising to
+put 'blacklist' in the blocklist but to omit whitelist.
+
+Second, I realize that I grew up thinking that 'whitelist' and
+'blacklist' are the common terms for lists of things to be accepted
+and rejected and that this biases my perception of what sounds good,
+but writing a seccomp "denylist" or "blocklist" doesn't seem to roll
+off the tongue.  Perhaps this language would be better:
+
+Is most contexts where 'whitelist' or 'blacklist' might be used, a
+descriptive phrase could be used instead.  For example, a seccomp
+filter could have a 'list of allowed syscalls' or a 'list of
+disallowed syscalls', and just lists could be the 'allowed' or
+'accepted' lists and the 'disallowed', 'rejected', or 'blocked' lists.
+If a single word replacement for 'whitelist' or 'blacklist' is needed,
+'allowlist', 'blocklist', or 'denylist' could be used.
+
+
+> @@ -0,0 +1,64 @@
+> +.. _inclusiveterminology:
+> +
+> +Linux kernel inclusive terminology
+> +==================================
+> +
+> +The Linux kernel is a global software project, and in 2020 there was a
+> +global reckoning on race relations that caused many organizations to
+> +re-evaluate their policies and practices relative to the inclusion of
+> +people of African descent. This document describes why the 'Naming'
+> +section in :ref:`process/coding-style.rst <codingstyle>` recommends
+> +avoiding usage of 'slave' and 'blacklist' in new additions to the Linux
+> +kernel.
+> +
+> +On the triviality of replacing words
+> +====================================
+> +
+> +The African slave trade was a brutal system of human misery deployed at
+> +global scale. Some word choice decisions in a modern software project
+> +does next to nothing to compensate for that legacy. So why put any
+> +effort into something so trivial in comparison? Because the goal is not
+> +to repair, or erase the past. The goal is to maximize availability and
+> +efficiency of the global developer community to participate in the Linux
+> +kernel development process.
+
+Should this type of historical note be in the document or in the changelog?
+
+Suppose that we put it in this document and then, in two years,
+someone notices that the very first bit of text in your changelog that
+diff helpfully quoted for you is also mildly offensive to certain
+groups  Now we could end up with:
+
+... in 2020 there was a global reckoning ...
+
+... in 2022, people noticed that comparing peoples' opinions on
+variable names to medical conditions could be seen as inappropriate
+...
+
+etc.  And now this document ends up with a lot of history and also a
+lot of content, and the history part starts to resemble the
+now-frowned-upon lists of copyrights and changes that clutter the tops
+of various kernel C files.  I suppose that changing this could be
+deferred until such time as it might be an actual problem, but perhaps
+this should go in the changelog instead.
