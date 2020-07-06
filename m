@@ -2,112 +2,100 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB84C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E556207C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594060776;
-	bh=C73gOuGPht9dIixGPBoEUXES1WGxsODtcKpLKnFrDqc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2cL/1oSokr4RMrbCrNy69LxmLWbcZWYPt+MsLHEnyDYlL9JecWY9bUZk1e7N7zd1D
-	 iTUKbOgO1+S6GJcjA23yZfmhQFl5/Ae2ysEv058bepdgj3x3exILs5KQxJwL0DQVGj
-	 n21NrpuZ/zVPF59QgYCFNRPAsOaGRFuAYRPXJhkc=
+	by mail.kernel.org (Postfix) with ESMTP id 35953207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 18:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgGFSjf (ORCPT
+        id S1730077AbgGFSjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 14:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 14:39:46 -0400
+Received: from muru.com ([72.249.23.125]:60944 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbgGFSje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:39:34 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC023207BB;
-        Mon,  6 Jul 2020 18:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594060773;
-        bh=C73gOuGPht9dIixGPBoEUXES1WGxsODtcKpLKnFrDqc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=DxcjcPLXo5KKl20GXi3gR8saz6u7T52XB2h7KY4zD+cFOdG6eQqu/eTW1KOIHVTH1
-         wju8yVd1Y7IK4dLVkNpXeViYSln0h7JZ5Y1n9IdBD6jdjIrKMxJo0PG6DWDkUmV68w
-         2PZAalihX+WlZ2m6xkVYthoCCWtQgQAL3RpYBP7s=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C7CAE3522637; Mon,  6 Jul 2020 11:39:33 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 11:39:33 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200706183933.GE9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
- <20200703144228.GF9247@paulmck-ThinkPad-P72>
- <20200706162633.GA13288@paulmck-ThinkPad-P72>
- <20200706182926.GH4800@hirez.programming.kicks-ass.net>
+        id S1729743AbgGFSjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:39:45 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 9BAF680FE;
+        Mon,  6 Jul 2020 18:40:37 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH] mfd: motorola-cpcap: Disable interrupt for suspend
+Date:   Mon,  6 Jul 2020 11:39:34 -0700
+Message-Id: <20200706183934.26274-1-tony@atomide.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706182926.GH4800@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:29:26PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 06, 2020 at 09:26:33AM -0700, Paul E. McKenney wrote:
-> 
-> > And perhaps more constructively, we do need to prioritize address and data
-> > dependencies over control dependencies.  For one thing, there are a lot
-> > more address/data dependencies in existing code than there are control
-> > dependencies, and (sadly, perhaps more importantly) there are a lot more
-> > people who are convinced that address/data dependencies are important.
-> 
-> If they do not consider their Linux OS running correctly :-)
+Otherwise we get spammed with errors on resume after rtcwake:
 
-Many of them really do not care at all.  In fact, some would consider
-Linux failing to run as an added bonus.
+cpcap-core spi0.0: Failed to read IRQ status: -108
 
-> > For another (admittedly more theoretical) thing, the OOTA scenarios
-> > stemming from control dependencies are a lot less annoying than those
-> > from address/data dependencies.
-> > 
-> > And address/data dependencies are as far as I know vulnerable to things
-> > like conditional-move instructions that can cause problems for control
-> > dependencies.
-> > 
-> > Nevertheless, yes, control dependencies also need attention.
-> 
-> Today I added one more \o/
+Note that rtcwake is still capable of waking up the system with
+this patch.
 
-Just make sure you continually check to make sure that compilers
-don't break it, along with the others you have added.  ;-)
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
 
-							Thanx, Paul
+This has always been broken so can be merged whenever.
+
+---
+ drivers/mfd/motorola-cpcap.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
+--- a/drivers/mfd/motorola-cpcap.c
++++ b/drivers/mfd/motorola-cpcap.c
+@@ -214,6 +214,28 @@ static const struct regmap_config cpcap_regmap_config = {
+ 	.val_format_endian = REGMAP_ENDIAN_LITTLE,
+ };
+ 
++#ifdef CONFIG_PM_SLEEP
++static int cpcap_suspend(struct device *dev)
++{
++	struct spi_device *spi = to_spi_device(dev);
++
++	disable_irq(spi->irq);
++
++	return 0;
++}
++
++static int cpcap_resume(struct device *dev)
++{
++	struct spi_device *spi = to_spi_device(dev);
++
++	enable_irq(spi->irq);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(cpcap_pm, cpcap_suspend, cpcap_resume);
++
+ static const struct mfd_cell cpcap_mfd_devices[] = {
+ 	{
+ 		.name          = "cpcap_adc",
+@@ -313,6 +335,7 @@ static struct spi_driver cpcap_driver = {
+ 	.driver = {
+ 		.name = "cpcap-core",
+ 		.of_match_table = cpcap_of_match,
++		.pm = &cpcap_pm,
+ 	},
+ 	.probe = cpcap_probe,
+ };
+-- 
+2.27.0
