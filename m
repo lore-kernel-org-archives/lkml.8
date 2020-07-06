@@ -2,174 +2,227 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E326020724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B724206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DtbyC8Oh"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Z2VIGKu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgGFR1P (ORCPT
+        id S1729656AbgGFRdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:27:15 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:41526 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729648AbgGFR0g (ORCPT
+        Mon, 6 Jul 2020 13:33:49 -0400
+Received: from mail.efficios.com ([167.114.26.124]:45952 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729297AbgGFRdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:26:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594056421; x=1625592421;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZPLqLkRmreTTViDZafKeWTDt0ftxitDjgDKfBWiyQY4=;
-  b=DtbyC8OhDAu02Mbeupbror+DSECYI03Y6q6zP5BrjVIQ2mYp27rOzhrC
-   t7T1EsDqFHgO2zuYRJIxCHJi52Pm2aUpGEoRUfC/7h+WXxVLjJhzHcop6
-   BAaFwgryDr56pVRWeJOKpg3twwbqs55Af0evQYmJYWVQVqI79emAT43iR
-   pw6rAlO1IuE325hw+YaDbuUtGonAGGP8l7qN770KK+LxqNqbAMhQAkz7W
-   y8Scvy+i05xkqPnkcO+UfTUFgsvEkDYdUFVjsdkeL/u37j1XJ1S8//wLq
-   H0jlpXX/Mv7DRaAIxeGXEfPiaRf4mP5EK9XIot3y8ERYXXyd48EIAkWP3
-   Q==;
-IronPort-SDR: zuzS76c8cbWqSrIkGzeTNTEIM2hVT38Jfr0PwG+hE4g5WpItxscdrvMtYaI6lha52gF24gxw7v
- XPdF1HrN1q/4IQkmig/ySyBJHLeU32mI7BqyfdOvnSmjarLLO4152Iw6rGs375SeZIkv98tC7W
- 9AcfZEH+dclhHvaSKqdhefsQsaoDjOAPLD+r9CPFfV4mcLo5MAqGI1HhTpH5VruaiYMks/NycQ
- yLl+9ND07BscULYDeQ1znFe93Sh5NJdLH2hXNHf1YE6Qb1ZJYjFqE50cG+lBA94vwA8Pi6ZLWR
- S+A=
-X-IronPort-AV: E=Sophos;i="5.75,320,1589212800"; 
-   d="scan'208";a="244770170"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Jul 2020 01:26:50 +0800
-IronPort-SDR: earXIZJp3BczxZ3B2w9wcUfKuYF7FKw72BvGxwLGpaXh15AdfTlMBiQiofHb2aecwYxzlRUc3x
- +b+X6/m5rkLVaI9EhmkyWrENV0ZxJDbd0=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 10:14:37 -0700
-IronPort-SDR: V8HiVNZoUcDsr9kkXV5f0VaUWHVCf3R8abrkby7eWCdFWxsmdW292u67WeRT3k8PV66FGKa2H2
- pfjT6DtMXfaA==
-WDCIronportException: Internal
-Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.57.161])
-  by uls-op-cesaip01.wdc.com with ESMTP; 06 Jul 2020 10:26:29 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [RFC PATCH v2 00/11] Add UEFI support for RISC-V 
-Date:   Mon,  6 Jul 2020 10:25:58 -0700
-Message-Id: <20200706172609.25965-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 6 Jul 2020 13:33:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 86AF52D9653;
+        Mon,  6 Jul 2020 13:33:47 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id CO8gOEY7BbwQ; Mon,  6 Jul 2020 13:33:47 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 0A6AB2D9892;
+        Mon,  6 Jul 2020 13:33:47 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0A6AB2D9892
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594056827;
+        bh=i/WrZ1DoeGB46B7nkupfX78ZREZcTVGuidBQs5XahH0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Z2VIGKu9D9GtJKRe+EYIk+uLwQpNSpiFLQbr8WBC3/YVuqCmxpDqTjHo3mkSREtlp
+         Oemp6hPw4ReEyjJ4ZkWVIRfO8Ns3S2X4Rn771XJ7l51EDFTuSZrPUbZ3NTzZY18U1r
+         SilcSCirh/UBHxpvKTcFddLxq/xWFik3dJKovTvRAfFp9UEe7WJqVpN+gKGNPtN/eE
+         cB4PStyrgNa52qRES6gvuyK6AU/lL1fTSqzLQWz+iW72gRluWu/sdpipHEDcbpSBHx
+         uMY85Va9RbZuATfI768iz3chBTEubcxaUPf7p9rJBB6HYETaNgMnQUhAB6oKMkvxwf
+         0zniJ6Q5SfbYQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id wjh0mtULVLH2; Mon,  6 Jul 2020 13:33:46 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id E90802D9917;
+        Mon,  6 Jul 2020 13:33:46 -0400 (EDT)
+Date:   Mon, 6 Jul 2020 13:33:46 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Turner <pjt@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1679448037.22891.1594056826859.JavaMail.zimbra@efficios.com>
+In-Reply-To: <942999672.22574.1594046978937.JavaMail.zimbra@efficios.com>
+References: <20200629190036.26982-1-mathieu.desnoyers@efficios.com> <20200629190036.26982-3-mathieu.desnoyers@efficios.com> <877dvg4ud4.fsf@oldenburg2.str.redhat.com> <942999672.22574.1594046978937.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH 2/3] Linux: Use rseq in sched_getcpu if available (v9)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3928)
+Thread-Topic: Linux: Use rseq in sched_getcpu if available (v9)
+Thread-Index: s+lDRWKNxhAkUDtcGJ1GCFO2e2bJllGyoJBw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds UEFI support for RISC-V.
+----- On Jul 6, 2020, at 10:49 AM, Mathieu Desnoyers mathieu.desnoyers@effi=
+cios.com wrote:
 
-Linux kernel: 5.8-rc4
-U-Boot: master
-OpenSBI: master
+> ----- On Jul 6, 2020, at 9:59 AM, Florian Weimer fweimer@redhat.com wrote=
+:
+>=20
+>> * Mathieu Desnoyers:
+>>=20
+>>> When available, use the cpu_id field from __rseq_abi on Linux to
+>>> implement sched_getcpu().  Fall-back on the vgetcpu vDSO if
+>>> unavailable.
+>>=20
+>> I've pushed this to glibc master, but unfortunately it looks like this
+>> exposes a kernel bug related to affinity mask changes.
+>>=20
+>> After building and testing glibc, this
+>>=20
+>>  for x in {1..2000} ; do posix/tst-affinity-static  & done
+>>=20
+>> produces some =E2=80=9Cerror:=E2=80=9D lines for me:
+>>=20
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+>>=20
+>> =E2=80=9Cexpected 0=E2=80=9D is a result of how the test has been writte=
+n, it bails out
+>> on the first failure, which happens with CPU ID 0.
+>>=20
+>> Smaller systems can use a smaller count than 2000 to reproduce this.  It
+>> also happens sporadically when running the glibc test suite itself
+>> (which is why it took further testing to reveal this issue).
+>>=20
+>> I can reproduce this with the Debian 4.19.118-2+deb10u1 kernel, the
+>> Fedora 5.6.19-300.fc32 kernel, and the Red Hat Enterprise Linux kernel
+>> 4.18.0-193.el8 (all x86_64).
+>>=20
+>> As to the cause, I'd guess that the exit path in the sched_setaffinity
+>> system call fails to update the rseq area, so that userspace can observe
+>> the outdated CPU ID there.
+>=20
+> Hi Florian,
+>=20
+> We have a similar test in Linux, see tools/testing/selftests/rseq/basic_t=
+est.c.
+> That test does not trigger this issue, even when executed repeatedly.
+>=20
+> I'll investigate further what is happening within the glibc test.
 
-Patch 1-6 are preparatory patches that fixes some of the geric efi and riscv issues.
+Here are the missing kernel bits. Just adding those in wake_up_new_task() i=
+s
+enough to make the problem go away, but to err on the safe side I'm plannin=
+g to
+add an rseq_migrate within sched_fork:
 
-Patch 7-9 adds the efi stub support for RISC-V which was reviewed few months back.
-https://www.spinics.net/lists/linux-efi/msg19144.html
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1757381cabd4..ff83f790a9b3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3043,6 +3043,7 @@ int sched_fork(unsigned long clone_flags, struct task=
+_struct *p)
+         * so use __set_task_cpu().
+         */
+        __set_task_cpu(p, smp_processor_id());
++       rseq_migrate(p);
+        if (p->sched_class->task_fork)
+                p->sched_class->task_fork(p);
+        raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+@@ -3103,6 +3104,7 @@ void wake_up_new_task(struct task_struct *p)
+         */
+        p->recent_used_cpu =3D task_cpu(p);
+        __set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0=
+));
++       rseq_migrate(p);
+ #endif
+        rq =3D __task_rq_lock(p, &rf);
+        update_rq_clock(rq);
 
-Patch 10 just renames arm-init code so that it can be used across different
-architectures. Patch 11 adds the runtime services for RISC-V.
+I'm not sure why your test catches it fairly quickly but ours does not. Tha=
+t's a good
+catch.
 
-The patches can also be found in following git repo.
-https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v2
+Now we need to discuss how we introduce that fix in a way that will allow u=
+ser-space
+to trust the __rseq_abi.cpu_id field's content.
 
-The patches have been verified on Qemu using bootefi command in U-Boot for both
-RV32 and RV64.
+The usual approach to kernel bug fixing is typically to push the fix, mark =
+it for
+stable kernels, and expect everyone to pick up the fixes. I wonder how comf=
+ortable
+glibc would be to replace its sched_getcpu implementation with a broken-unt=
+il-fixed
+kernel rseq implementation without any mechanism in place to know whether i=
+t can
+trust the value of the cpu_id field. I am extremely reluctant to do so.
 
-For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
-beyond 1G of physical memory for RV32.
+One possible way to introduce this fix would be to use the rseq flags argum=
+ent to allow
+glibc to query whether the kernel implements a rseq with a cpu_id field it =
+can trust.
+So glibc could do, for registration:
 
-EDK2 can boot quite far into Linux with current series. Currently, we are seeing
-some traps from drivers (spi/network). At first glance, they don't seem to be
-caused by efi. I thought it is better to get some early feedback on the series
-while EDK2 issue is being debugged.
+  ret =3D INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
+                               RSEQ_FLAG_REGISTER | RSEQ_FLAG_RELIABLE_CPU_=
+ID,
+                               RSEQ_SIG);
 
-That's why uefi runtime services are not actually well tested in RISC-V.
-Any suggestions to test the efi run time services are appreciated. 
+(I'm open to bike-shedding the actual flag name)
 
-Changes from v1->v2:
-1. Removed patch 1 as it is already taken into efi-tree.
-2. Fixed compilation issues with patch 9.
-3. Moved few function prototype declaration to header file to keep kbuild happy.
+So if the kernel does not implement the fix, the registration would return =
+EINVAL.
+When getting EINVAL like this, we could then re-issue the rseq syscall:
 
-Changes from previous version:
-1. Added full ioremap support. 
-2. Added efi runtime services support. 
-3. Fixes mm issues
+  ret =3D INTERNAL_SYSCALL_CALL (rseq, NULL, 0, RSEQ_FLAG_RELIABLE_CPU_ID, =
+0);
 
-Anup Patel (1):
-RISC-V: Move DT mapping outof fixmap
+to check whether EINVAL has been caused by other invalid system call parame=
+ters,
+or it's really because the RSEQ_FLAG_RELIABLE_CPU_ID flag is unknown. Being=
+ able
+to distinguish between invalid parameters and unknown flags like this would=
+ end
+up requiring one extra system call on failed registration attempt on kernel=
+s which
+implement a broken rseq.
 
-Atish Patra (10):
-efi/libstub: Move the function prototypes to header file
-RISC-V: Setup exception vector early
-RISC-V: Add early ioremap support
-RISC-V: Set maximum number of mapped pages correctly
-riscv: Parse all memory blocks to remove unusable memory
-include: pe.h: Add RISC-V related PE definition
-RISC-V: Add PE/COFF header for EFI stub
-RISC-V: Add EFI stub support.
-efi: Rename arm-init to efi-init common for all arch
-RISC-V: Add EFI runtime services
+This also means glibc would only start really activating rseq on kernels im=
+plementing
+this fix.
 
-arch/riscv/Kconfig                            |  25 ++++
-arch/riscv/Makefile                           |   1 +
-arch/riscv/configs/defconfig                  |   1 +
-arch/riscv/include/asm/Kbuild                 |   1 +
-arch/riscv/include/asm/efi.h                  |  56 +++++++
-arch/riscv/include/asm/fixmap.h               |  16 +-
-arch/riscv/include/asm/io.h                   |   1 +
-arch/riscv/include/asm/mmu.h                  |   2 +
-arch/riscv/include/asm/pgalloc.h              |  12 ++
-arch/riscv/include/asm/pgtable.h              |   4 +
-arch/riscv/include/asm/sections.h             |  13 ++
-arch/riscv/kernel/Makefile                    |   5 +
-arch/riscv/kernel/efi-header.S                | 104 +++++++++++++
-arch/riscv/kernel/efi.c                       | 106 +++++++++++++
-arch/riscv/kernel/head.S                      |  27 +++-
-arch/riscv/kernel/head.h                      |   2 -
-arch/riscv/kernel/image-vars.h                |  51 +++++++
-arch/riscv/kernel/setup.c                     |  16 +-
-arch/riscv/kernel/smpboot.c                   |   1 -
-arch/riscv/kernel/traps.c                     |   8 +-
-arch/riscv/kernel/vmlinux.lds.S               |  22 ++-
-arch/riscv/mm/init.c                          | 104 ++++++++-----
-drivers/firmware/efi/Kconfig                  |   3 +-
-drivers/firmware/efi/Makefile                 |   4 +-
-.../firmware/efi/{arm-init.c => efi-init.c}   |   0
-drivers/firmware/efi/libstub/Makefile         |  10 ++
-drivers/firmware/efi/libstub/efi-stub.c       |  28 ++--
-drivers/firmware/efi/libstub/efistub.h        |  16 ++
-drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++++++
-drivers/firmware/efi/riscv-runtime.c          | 141 ++++++++++++++++++
-include/linux/pe.h                            |   3 +
-31 files changed, 811 insertions(+), 82 deletions(-)
-create mode 100644 arch/riscv/include/asm/efi.h
-create mode 100644 arch/riscv/include/asm/sections.h
-create mode 100644 arch/riscv/kernel/efi-header.S
-create mode 100644 arch/riscv/kernel/efi.c
-create mode 100644 arch/riscv/kernel/image-vars.h
-rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
-create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
-create mode 100644 drivers/firmware/efi/riscv-runtime.c
+Thoughts ?
 
---
-2.24.0
+Thanks,
 
+Mathieu
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
