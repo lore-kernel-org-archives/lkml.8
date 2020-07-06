@@ -2,99 +2,105 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C43C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C00FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637492074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594010912;
-	bh=saajXkjFZV5Ysay/V5yS2+LctG2zyPPXgCNYyixmBgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g/N9FX0dQTwuDIqh9sxdDXNc9fV8aSwGJ4OqvqAL4D3kvYzT249mvRYdnR0N2If7S
-	 QN7txbW+5FiLhQkRGgnsePw0FFqsjMa26MOjeiMpChEeWQKilZHTZEj5GS4St2j3cu
-	 z+goAJPqNSEP4wkwdl5pFcJWZaph5Fy/S5Ltnxq8=
+	by mail.kernel.org (Postfix) with ESMTP id 74B5920720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 04:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aufaQjV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgGFEsb (ORCPT
+        id S1728782AbgGFEtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 00:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgGFEsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 00:48:30 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F0A420720;
-        Mon,  6 Jul 2020 04:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594010910;
-        bh=saajXkjFZV5Ysay/V5yS2+LctG2zyPPXgCNYyixmBgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A8QMvTN/gVISdfC7gmwMxMOxgudEVlVFrB9e4xhjcdL6RTBc/mgQM7pZj72Gtycmv
-         ohIo6GAY8xfkvM0ae8iHztQNqQL9SJopoEchCTMXAx+6NrAxmWhxIHuEb3w7k8MNZl
-         ObXOA/9Fe0bv3YA6Qd3KXpJCm1Yzo6/moH2aUJ+k=
-Date:   Mon, 6 Jul 2020 10:18:24 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, dmaengine@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
-        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
-Subject: Re: [PATCH 01/17] Documentation/driver-api: dmaengine/provider: drop
- doubled word
-Message-ID: <20200706044824.GB633187@vkoul-mobl>
-References: <20200704034502.17199-1-rdunlap@infradead.org>
- <20200704034502.17199-2-rdunlap@infradead.org>
+        Mon, 6 Jul 2020 00:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgGFEtM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 00:49:12 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8C3C061794;
+        Sun,  5 Jul 2020 21:49:12 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id k15so21799569lfc.4;
+        Sun, 05 Jul 2020 21:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LlRkNitp+HR82fwyqhAOC5T4sKDfW6mx6YbCDa9qCYE=;
+        b=aufaQjV4h3qnwZ+7EL6rWz2Dhq/HR9mgTN9sQ5qKsfkiKr9+Zy+8TOkf9sqLd0vxVy
+         WTTA/IueiLWDyKzx8AD32SCZ6dwIw8vmhW7d6YSDwBgOr7lR7tD0L9nR8FHRuyIrWvUN
+         UEoNrYJHeRI7AqyKhFF6sXMu0cGtD/Q84/gOv1+fsBnjknJf2tJBPqwDxZuU7EQykMVm
+         3Lrg49gUwYBHNR3Cuk3hZsGy3g6LuNhPs9m6llF1s9m6SLHM959JanUY+JGLcDUvqRsQ
+         tqEHOr+oPmOo6tmYqAfHuaDPVNx2XFbdX25YFG3V0BzMcHgm/+Sc6qt5kQN3TEfPsf31
+         ftvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LlRkNitp+HR82fwyqhAOC5T4sKDfW6mx6YbCDa9qCYE=;
+        b=NHDeRWDn7aYkQ8AJr3fdx0KhAZKd+dd7jjFVtXSMqX3oUDCTSgQI/8belUT4HKQYez
+         A5FOvhTHAXl3P8qm7ehX9xld/stV8kAMXc844KY6OcOi8vFDvimPcKhtSYJCSgMVWB2S
+         25Y/IvAqJW3aQgmB2R/qHsMFoOuHEdLfGNrqU1T36/ERMWetDbBpqLwdwraA5hNHNI+f
+         /wYalxa8C8vavoWYjqYiUlfP7O1dDHHD7N/6aFm/t4lwBOWz7j7aAR3q/O6/ZsSLSdFH
+         JmxgdWs4xuOOzH52dG24cvDW3qMPRopYMCPY4hPOx2Ed59uIbUm5nZVkvjgs+joyTNng
+         K32g==
+X-Gm-Message-State: AOAM530DBS6bVEuEPDQGN+BlA1v7nnDZ/22Yysa0qOginyoZ8PLc1imO
+        aI1eb65y06Zvs3ep4n9kfsUpkVxYCtJd1Ggn8P4=
+X-Google-Smtp-Source: ABdhPJyF68jwLrGVh/Y8r4x+Y0KdP1oc5lZnzM1F6z+txlo8c2JMfzJ0PSnAMY2TKFJDWhUpW/Cig4+g9LnOpOaQ9Vw=
+X-Received: by 2002:a19:c389:: with SMTP id t131mr15690870lff.130.1594010949775;
+ Sun, 05 Jul 2020 21:49:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200704034502.17199-2-rdunlap@infradead.org>
+References: <20200629085911.1676554-1-masahiroy@kernel.org>
+ <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
+ <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
+ <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com> <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
+In-Reply-To: <CAK7LNATRAuEXp+Wz7f_VUTSFS4jqmdTE4Xugi1MZozimsj6zuA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 6 Jul 2020 06:48:58 +0200
+Message-ID: <CANiq72=LOgebNs7kwLGrkgsM2pr=dQG4F1VWskdndAh39jHWcw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-07-20, 20:44, Randy Dunlap wrote:
-> Drop the doubled word "has".
+Hi Masahiro,
 
-Applied, thanks
+On Sun, Jul 5, 2020 at 5:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hmm, adding '#include <sys/types.h>' did not make any difference.
 
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> ---
->  Documentation/driver-api/dmaengine/provider.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200701.orig/Documentation/driver-api/dmaengine/provider.rst
-> +++ linux-next-20200701/Documentation/driver-api/dmaengine/provider.rst
-> @@ -507,7 +507,7 @@ dma_cookie_t
->  DMA_CTRL_ACK
->  
->  - If clear, the descriptor cannot be reused by provider until the
-> -  client acknowledges receipt, i.e. has has a chance to establish any
-> +  client acknowledges receipt, i.e. has a chance to establish any
->    dependency chains
->  
->  - This can be acked by invoking async_tx_ack()
+That should have worked, because POSIX defines it to be there. It
+sounds like you need --sysroot to point it to the proper ones.
 
--- 
-~Vinod
+> If I add -std=c99, I get a different error.
+
+Yeah, that is the expected behavior. C99 does not have the implicit
+int rule anymore (unlike older C) so ssize_t (an unknown type given
+that program) is not being interpreted as int anymore (which is what
+triggers the warning later about the mismatch between size_t and int
+in the format string).
+
+> In contrast, 'size_t' has no problem.
+
+That is expected too, because size_t is defined via stdio.h (size_t is
+a C standard type, ssize_t is not -- it is a POSIX one).
+
+Hope that helps,
+
+Cheers,
+Miguel
