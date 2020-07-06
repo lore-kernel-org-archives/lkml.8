@@ -2,90 +2,93 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80416C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3E520708
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0fpbMiI"
+	by mail.kernel.org (Postfix) with ESMTP id 5288F20723
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgGFQIB (ORCPT
+        id S1729525AbgGFQIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:08:01 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30879 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729438AbgGFQIB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:08:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594051680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T0Tdrox1piejlTo0hG16l/0bS65uxGbesdx/bv8EYVE=;
-        b=U0fpbMiIs/wtFmRguyuVgj+1QP4Yu8Jv9txA8ng4UiJRBNnMRz9+2LjiGqtvi6S/kPE711
-        gklYA962ZCfKi3OJdhOdd/LCF3qeeucPMQS0fpJGvcd4cvDSrD1CRK+2oM67hIhnF/OgKv
-        /r9lk5j5WVcAiARaqMXxspukyBAk3mc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-wZhBXEiiPPCZUgg7fvEFoA-1; Mon, 06 Jul 2020 12:07:56 -0400
-X-MC-Unique: wZhBXEiiPPCZUgg7fvEFoA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 438A1800D5C;
-        Mon,  6 Jul 2020 16:07:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F188D5D9CC;
-        Mon,  6 Jul 2020 16:07:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200703224115.29769-8-rdunlap@infradead.org>
-References: <20200703224115.29769-8-rdunlap@infradead.org> <20200703224115.29769-1-rdunlap@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>, linux-hams@vger.kernel.org,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        linux-can@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-afs@lists.infradead.org
-Subject: Re: [PATCH 7/7] Documentation: networking: rxrpc: drop doubled word
+        Mon, 6 Jul 2020 12:08:18 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43194 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729367AbgGFQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:08:16 -0400
+IronPort-SDR: Fq0Gl326DhhEvEwNPi7Q9mKiAFlbAcbBL6nVWsoX4GIbcsz1nZcCfVhJl3uNtrSbSltIwig42T
+ 5tQEjryc1iUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="212424256"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="212424256"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 09:08:15 -0700
+IronPort-SDR: hK09vW0VonTkhD7BVOoLSdCW4JvdYOMoUpm0jfintgXtC4zW+ojUN4hpZsl+Osr/7ovFMiRFj8
+ fLSTzBceebiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="279318902"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga003.jf.intel.com with ESMTP; 06 Jul 2020 09:08:15 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 726CF30119A; Mon,  6 Jul 2020 09:08:15 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 09:08:15 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+Message-ID: <20200706160815.GH3448022@tassilo.jf.intel.com>
+References: <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
+ <20200701084200.GN2369@dhcp22.suse.cz>
+ <20200701100442.GB17918@linux.vnet.ibm.com>
+ <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
+ <20200701110145.GC17918@linux.vnet.ibm.com>
+ <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
+ <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
+ <20200701122110.GT2369@dhcp22.suse.cz>
+ <20200703091001.GJ21462@kitsune.suse.cz>
+ <20200703092414.GR18446@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2937967.1594051669.1@warthog.procyon.org.uk>
-Date:   Mon, 06 Jul 2020 17:07:49 +0100
-Message-ID: <2937968.1594051669@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703092414.GR18446@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> Drop the doubled word "have".
+> > What's the point of this indirection other than another way of avoiding
+> > empty node 0?
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-afs@lists.infradead.org
+> Honestly, I do not have any idea. I've traced it down to
+> Author: Andi Kleen <ak@suse.de>
+> Date:   Tue Jan 11 15:35:48 2005 -0800
 
-Acked-by: David Howells <dhowells@redhat.com>
+I don't remember all the details, and I can't even find the commit
+(is it in linux-historic?).
+
+But AFAIK there's no guarantee PXMs are small and continuous, so it
+seemed better to have a clean zero based space.
+
+Back then we had a lot of problems with buggy SRAT tables in BIOS,
+so we really tried to avoid trusting the BIOS as much as possible.
+
+-Andi
 
