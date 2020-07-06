@@ -2,92 +2,88 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E191206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441C520663
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 20:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgGFUtn (ORCPT
+        id S1727891AbgGFUu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 16:49:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
+        Mon, 6 Jul 2020 16:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgGFUtn (ORCPT
+        with ESMTP id S1726915AbgGFUu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 16:49:43 -0400
+        Mon, 6 Jul 2020 16:50:26 -0400
 Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED988C08C5DF
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:49:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7A1C08C5DF;
+        Mon,  6 Jul 2020 13:50:26 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B2F76BC140;
-        Mon,  6 Jul 2020 20:49:39 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: IPv*
-To:     David Miller <davem@davemloft.net>
-References: <20200706173850.19304-1-grandmaster@al2klimov.de>
- <20200706.132319.1942886313658107601.davem@davemloft.net>
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 48E46BC147;
+        Mon,  6 Jul 2020 20:50:24 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <33dfc84d-89ef-c449-2534-a4ba96638ad3@al2klimov.de>
-Date:   Mon, 6 Jul 2020 22:49:39 +0200
+To:     andreas@gaisler.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: GRETH 10/100/1G Ethernet MAC device driver
+Date:   Mon,  6 Jul 2020 22:50:18 +0200
+Message-Id: <20200706205018.21387-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200706.132319.1942886313658107601.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-Am 06.07.20 um 22:23 schrieb David Miller:
-> From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-> Date: Mon,  6 Jul 2020 19:38:50 +0200
-> 
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> 
-> Applied to net-next, thank you very much for doing this. >
-Hi,
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
 
-apropos "doing this": I've stumbled over ...
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
 
-https://lkml.org/lkml/2005/7/11/336
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
 
-... and am wondering:
+ drivers/net/ethernet/aeroflex/greth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-*What exact timespan do you mean with "at once"?*
+diff --git a/drivers/net/ethernet/aeroflex/greth.c b/drivers/net/ethernet/aeroflex/greth.c
+index bf546118dbc6..9c5891bbfe61 100644
+--- a/drivers/net/ethernet/aeroflex/greth.c
++++ b/drivers/net/ethernet/aeroflex/greth.c
+@@ -8,7 +8,7 @@
+  * available in the GRLIB VHDL IP core library.
+  *
+  * Full documentation of both cores can be found here:
+- * http://www.gaisler.com/products/grlib/grip.pdf
++ * https://www.gaisler.com/products/grlib/grip.pdf
+  *
+  * The Gigabit version supports scatter/gather DMA, any alignment of
+  * buffers and checksum offloading.
+-- 
+2.27.0
 
-Srsly, I mean... just look at the last few patches of mine at the (main) 
-mailing list. I'm going to submit (at least) about 120 (!) more[1] of 
-them. How long shall I wait after each one not to kill your 
-infrastructure and not to be locked out?
-
-Best,
-AK
-
-
-[1] Amount of maintainers of only one subsystem which is affected by a 
-such patch of mine. (Easier for me to split by subsystem.)
