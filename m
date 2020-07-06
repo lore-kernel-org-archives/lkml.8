@@ -2,105 +2,147 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69381C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27720206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQBaBonQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4E5072070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgGFNE4 (ORCPT
+        id S1729163AbgGFNGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729173AbgGFNEz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:04:55 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C33C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:04:55 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id a21so8285957otq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hmLqrXXhVU4dEhpiExA430FqmWSncr+dRol/WcQpdPA=;
-        b=DQBaBonQAQTGt198EmZPaGn/UjYlH+cYKBN38YTb53yvhwvC7lKya7ILMRVUbNk+Pv
-         uQSNbW4ToO5M3ISD2ehUAPxzJcKs1s3CKF0E0E5DN5AMKNsOwuuokBwlDf/5BnmSOCcu
-         hLAMXL3vqozL387spk4aw5oN2aycAc2GISl0OD7IXk/Z91zNt9sQOYahganwqDd4T4UI
-         R1p9tsXY9HoUYrNVyHK1ZuMb154HAZBpOY4M4Yv/TcW7TFR1ySbR+MMYilU+xvDNDDiI
-         gH1fxOu2aewmQ09ziNON7PdQPUXV4CUbUvpUeOZJd2FlJPZ8YeJdaNZqTssxU4LCTYJy
-         9hQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hmLqrXXhVU4dEhpiExA430FqmWSncr+dRol/WcQpdPA=;
-        b=qfzTO46cn6FeRCdTGXbeUTb950Gwwi45J1LffaVDfgFv2Zgfrq/F7mgSWU1NW4m+QA
-         /VLdTHfjIVAGBkVyaGj8S66iQafZM1tDPrnFI7ct9XlnivKgB8kAMSabNjQbecTi6077
-         yFqPvVipVPNfA4N+egHfge2OOirrsDsfc+UGU74HYLAly4QVT6X+Kh08U+Akh18dMwx2
-         jtCF7yFhGomzjITz7Dz7DjRF00SM21D0fjo1Q/xqqXS3yLIrphFsSISFPGDyNgaXsj+n
-         c1/zb5HnM4CKA/kBD0g0z6K1ByPo6kVXmveDK1I4DW4g1kGmh9vRf9O43fLn+lAklcZq
-         qHRQ==
-X-Gm-Message-State: AOAM532VDxQEN37VafNcHqoVcuuFB0xNsDCqz44OACOdwmyfZsDEJk07
-        qjiTxCpdRQcMfrFyO9KnNKkJnerB+HcADhDsqHzNOBUl
-X-Google-Smtp-Source: ABdhPJxdi1Sr0McbvvV8tl9DN5sHqNT7r8eLLtsgY9qZMSgz7xaiT6KSI9r8aTgR1lq6vLkRR7bdJQpbqHXUxgsBHn8=
-X-Received: by 2002:a05:6830:18f6:: with SMTP id d22mr24596505otf.243.1594040694747;
- Mon, 06 Jul 2020 06:04:54 -0700 (PDT)
+        Mon, 6 Jul 2020 09:06:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54386 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729072AbgGFNGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:06:00 -0400
+IronPort-SDR: z3jAbM14aDygqBXuqo9dx3mHcbdWco+5nnCV0Pp7LYkSoQn38+OCSUVsJbF0xyYs9nEC6MMo/m
+ 7jK+EutUg3Gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="146488585"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="146488585"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 06:05:57 -0700
+IronPort-SDR: aYS46YDa8awy/eI/dw9Hx3SLOfW/Nqbkc4B3A7/eh8+yYhWw5sZ6z2f6XllRLaxaNHr9FJu4ye
+ XK/Ri+ojY3RA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="313956434"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 06:05:56 -0700
+Received: from [10.249.225.12] (abudanko-mobl.ccr.corp.intel.com [10.249.225.12])
+        by linux.intel.com (Postfix) with ESMTP id 44698580378;
+        Mon,  6 Jul 2020 06:05:49 -0700 (PDT)
+Subject: Re: [PATCH v9 02/15] tools/libperf: add properties to struct pollfd
+ *entries objects
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+ <09bbbc85-7ef9-ff9f-9865-fce6a1a4e903@linux.intel.com>
+ <20200706122413.GB3401866@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <cd132d6b-89ec-1408-f4da-44020e13d4b2@linux.intel.com>
+Date:   Mon, 6 Jul 2020 16:05:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
- <87h7ul15le.fsf@notabene.neil.brown.name> <20200706072221.GA1947246@kroah.com>
- <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
- <CAFhKne9vswg3Q4mTOz4WP6QWJ8tDH+SNx1Pu7LotLagoNURKgw@mail.gmail.com> <d6f56f5f5e0790ee9c7579eb05c7d92e071ee15a.camel@perches.com>
-In-Reply-To: <d6f56f5f5e0790ee9c7579eb05c7d92e071ee15a.camel@perches.com>
-From:   Matthew Wilcox <willy6545@gmail.com>
-Date:   Mon, 6 Jul 2020 09:04:43 -0400
-Message-ID: <CAFhKne_p_rKN4adhsuyUyBfrS0YwCtoNFNn-x4aFajPmnkR6iQ@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chris Mason <clm@fb.clm>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200706122413.GB3401866@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 8:59 AM Joe Perches <joe@perches.com> wrote:
-> On Mon, 2020-07-06 at 08:51 -0400, Matthew Wilcox wrote:
-> > In terms of number of lines of code using the word, it's only seventh
-> > in drivers/:
-> >
-> > $ for i in drivers/*; do c=$(find $i -type f |xargs grep slave |wc
-> > -l); echo "$c $i"; done |sort -rn |head
-> > 5218 drivers/net
-> > 1341 drivers/dma
-> > 988 drivers/i2c
-> > 695 drivers/gpu
-> > 666 drivers/soundwire
-> > 665 drivers/spi
-> > 559 drivers/w1
-> > 461 drivers/infiniband
-> > 389 drivers/media
-> > 301 drivers/scsi
->
-> I get rather different and much lower numbers
->
-> $ git grep -i -w slave drivers | \
->   cut -f1,2 -d/ | uniq -c | sort -rn | head -20 | cat -n
 
-That's because you're using grep -w which excludes, for example,
-slave_configure in drivers/scsi.
+On 06.07.2020 15:24, Jiri Olsa wrote:
+> On Fri, Jul 03, 2020 at 10:41:45AM +0300, Alexey Budankov wrote:
+>>
+>> Store boolean properties per struct pollfd *entries object in a
+>> bitmap of int size. Implement fdarray_prop__nonfilterable property
+>> to skip object from counting by fdarray_filter().
+> 
+> ok, I think can do it like this, few comments below
+> 
+> thanks,
+> jirka
+> 
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/lib/api/fd/array.c                 | 17 +++++++++--------
+>>  tools/lib/api/fd/array.h                 | 18 +++++++++++++-----
+>>  tools/lib/perf/evlist.c                  | 10 +++++-----
+>>  tools/lib/perf/include/internal/evlist.h |  2 +-
+>>  tools/perf/tests/fdarray.c               |  2 +-
+>>  tools/perf/util/evlist.c                 |  2 +-
+>>  6 files changed, 30 insertions(+), 21 deletions(-)
+
+<SNIP>
+
+>>
+>> diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
+>> index b39557d1a88f..19b6a34aeea5 100644
+>> --- a/tools/lib/api/fd/array.h
+>> +++ b/tools/lib/api/fd/array.h
+>> @@ -21,10 +21,18 @@ struct fdarray {
+>>  	int	       nr_alloc;
+>>  	int	       nr_autogrow;
+>>  	struct pollfd *entries;
+>> -	union {
+>> -		int    idx;
+>> -		void   *ptr;
+>> -	} *priv;
+>> +	struct {
+>> +		union {
+>> +			int    idx;
+>> +			void   *ptr;
+>> +		} priv;
+>> +		int bits;
+>> +	} *prop;
+>> +};
+> 
+> why not keeping the 'priv' as a struct, like:
+> 
+> 	struct {
+> 		union {
+> 			int    idx;
+> 			void   *ptr;
+> 		};
+> 		unsigned int flags;
+> 	} *priv;
+> 
+> I think we would have much less changes, also please rename bits
+> to flags and use some unsigned type for that
+
+Well, I supposed that priv is short for private what means the layout
+of struct priv object is opaque to fdarray implementation and it just
+passes the object as a void pointer to external callbacks (e.g in __filter()).
+So I preserved this semantics and wrapped and extended priv object
+with with flags field. It can be implemented with struct priv if you like.
+
+> 
+>> +
+>> +enum fdarray_props {
+>> +	fdarray_prop__default	    = 0x00000000,
+>> +	fdarray_prop__nonfilterable = 0x00000001
+>>  };
+> 
+> s/fdarray_props/fdarray_flag/
+
+Accepted.
+
+Alexey
