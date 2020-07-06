@@ -2,113 +2,115 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F81C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A434205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cox0+52z"
+	by mail.kernel.org (Postfix) with ESMTP id 66FDF205CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgGFRAc (ORCPT
+        id S1729679AbgGFRBM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:00:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40158 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729503AbgGFRAU (ORCPT
+        Mon, 6 Jul 2020 13:01:12 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60400 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgGFRBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:00:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594054819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NRhtPMhqlhqnOe1hdlLHWlYessgAjO4kXt3vnlCbry4=;
-        b=cox0+52zwPNarVWeMfndzhffSvChL3l3ScXpWBjXC5GTqzfvtvmjcyRwBL+Njw8NBMPYKc
-        xrqBEo4NRjHcZ990hYC0hGr3N/HtOxbagbM7b9Iyk2Ld51Wad96NNVvxDmknsA5JrWUAHG
-        7Y05anroDp5TjSfkMrB2pps1onH8XII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-464-d6f8FbxVNtKsh-rbiHNnXQ-1; Mon, 06 Jul 2020 13:00:18 -0400
-X-MC-Unique: d6f8FbxVNtKsh-rbiHNnXQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90D8B107ACCA;
-        Mon,  6 Jul 2020 17:00:16 +0000 (UTC)
-Received: from firesoul.localdomain (unknown [10.40.208.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A541E5C241;
-        Mon,  6 Jul 2020 17:00:12 +0000 (UTC)
-Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 83E743002D737;
-        Mon,  6 Jul 2020 19:00:11 +0200 (CEST)
-Subject: [PATCH bpf-next V2 1/2] selftests/bpf: test_progs use another shell
- exit on non-actions
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Hangbin Liu <haliu@redhat.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        vkabatov@redhat.com, jbenc@redhat.com, yhs@fb.com, kafai@fb.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 06 Jul 2020 19:00:11 +0200
-Message-ID: <159405481147.1091613.18095872509921723823.stgit@firesoul>
-In-Reply-To: <159405478968.1091613.16934652228902650021.stgit@firesoul>
-References: <159405478968.1091613.16934652228902650021.stgit@firesoul>
-User-Agent: StGit/0.19
+        Mon, 6 Jul 2020 13:01:11 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jsUUL-0005pc-ND; Mon, 06 Jul 2020 11:01:05 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jsUUJ-0005CJ-SN; Mon, 06 Jul 2020 11:01:05 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Yinghai Lu <yhlu.kernel@gmail.com>,
+        Jason Wessel <jason.wessel@windriver.com>
+References: <20200706133341.476881-1-lee.jones@linaro.org>
+        <20200706133341.476881-26-lee.jones@linaro.org>
+Date:   Mon, 06 Jul 2020 11:56:24 -0500
+In-Reply-To: <20200706133341.476881-26-lee.jones@linaro.org> (Lee Jones's
+        message of "Mon, 6 Jul 2020 14:33:34 +0100")
+Message-ID: <87imf0mvk7.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1jsUUJ-0005CJ-SN;;;mid=<87imf0mvk7.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18khkDaZc3axoG/t6YW4c9dVrDhOpL38K0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 25/32] usb: early: ehci-dbgp: Remove set but never checked variable 'ret'
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow up adjustment to commit 6c92bd5cd465 ("selftests/bpf:
-Test_progs indicate to shell on non-actions"), that returns shell exit
-indication EXIT_FAILURE (value 1) when user selects a non-existing test.
+Lee Jones <lee.jones@linaro.org> writes:
 
-The problem with using EXIT_FAILURE is that a shell script cannot tell
-the difference between a non-existing test and the test failing.
+> 'ret' hasn't  been checked since the driver's inception in 2009.
 
-This patch uses value 2 as shell exit indication.
-(Aside note unrecognized option parameters use value 64).
+Minor quibble the inception was in 5c05917e7fe3 ("x86: usb debug port
+early console, v4") in July of 2008.
 
-Fixes: 6c92bd5cd465 ("selftests/bpf: Test_progs indicate to shell on non-actions")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- tools/testing/selftests/bpf/test_progs.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 104e833d0087..e8f7cd5dbae4 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -12,6 +12,8 @@
- #include <string.h>
- #include <execinfo.h> /* backtrace */
- 
-+#define EXIT_NO_TEST 2
-+
- /* defined in test_progs.h */
- struct test_env env = {};
- 
-@@ -740,7 +742,7 @@ int main(int argc, char **argv)
- 	close(env.saved_netns_fd);
- 
- 	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
--		return EXIT_FAILURE;
-+		return EXIT_NO_TEST;
- 
- 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
- }
-
-
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/usb/early/ehci-dbgp.c: In function ‘early_dbgp_write’:
+>  drivers/usb/early/ehci-dbgp.c:915:13: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>  915 | int chunk, ret;
+>  | ^~~
+>
+> Cc: Sumit Garg <sumit.garg@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Yinghai Lu <yhlu.kernel@gmail.com>
+> Cc: Jason Wessel <jason.wessel@windriver.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/usb/early/ehci-dbgp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/usb/early/ehci-dbgp.c b/drivers/usb/early/ehci-dbgp.c
+> index 775cf70cfb3ed..b075dbfad730f 100644
+> --- a/drivers/usb/early/ehci-dbgp.c
+> +++ b/drivers/usb/early/ehci-dbgp.c
+> @@ -912,7 +912,7 @@ int __init early_dbgp_init(char *s)
+>  
+>  static void early_dbgp_write(struct console *con, const char *str, u32 n)
+>  {
+> -	int chunk, ret;
+> +	int chunk;
+>  	char buf[DBGP_MAX_PACKET];
+>  	int use_cr = 0;
+>  	u32 cmd, ctrl;
+> @@ -951,8 +951,8 @@ static void early_dbgp_write(struct console *con, const char *str, u32 n)
+>  			buf[chunk] = *str;
+>  		}
+>  		if (chunk > 0) {
+> -			ret = dbgp_bulk_write(USB_DEBUG_DEVNUM,
+> -				      dbgp_endpoint_out, buf, chunk);
+> +			dbgp_bulk_write(USB_DEBUG_DEVNUM,
+> +					dbgp_endpoint_out, buf, chunk);
+>  		}
+>  	}
+>  	if (unlikely(reset_run)) {
