@@ -2,167 +2,224 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04002C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D631420724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymCCcfDd"
+	by mail.kernel.org (Postfix) with ESMTP id 949B7204EA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgGFHEL (ORCPT
+        id S1728611AbgGFHG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 03:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgGFHEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 03:04:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11958C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 00:04:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so28302314wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 00:04:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aZ5WH4krufOutEeuznkFTCLVe0wuUtYABIAu0GNgr3w=;
-        b=ymCCcfDdm3+d0I8S9NxsZ7JBUoWD2LltdFQEtqtuDOrFkYXpDP6P/X3SX3OxWdi8rh
-         DhAspiF/QAt2XGPIsHPqAUVUgh5MYDkz/4JPzXE10R74l9sh6+t2zjKNTrDTwwVbWrtZ
-         0K06oXbzZv2VQ6dJoOsMCTwBccpnIIo7tGnVg+qxvBxn3vA480wOHNN8G53QeaTlOQX9
-         KPLTiEGRS3OG+r4oAj5d8u6UGfOueNPgGL9ycgG02MUgPhVkXYrdQdGZOJjFOcOM9h3E
-         1shn0xsfn03MfQ7Ls9iqFFs0pUzPvNVUloqND0WO5Vj5U/GYQfEPFNFu10dJydmS6a3a
-         7epg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aZ5WH4krufOutEeuznkFTCLVe0wuUtYABIAu0GNgr3w=;
-        b=JEe3iXNIdsDlKdTYBZezHwtPdZ/T+f9Wuqv+tA//crNvy7S3/Fj49IBIND7ChajGCd
-         1z+ou+d6UwHU/FixbxOculO2EBoxMg5jARyUV6+jQCnCtFifshgL7fiaUGqophJbB7QX
-         94apdcaDlHir6qnC2Wp4XPZ54p93pbkPKbC/pdrKux9tCjv7gTpgbKta/GFx4drqW8Hh
-         iqWoLO+Bt6gJrG8OXEA1gKz/cWMhgnqKxnKlj0bqAzY6LFxtSd0e61n1VXBo7MoFaEPy
-         Owbav6zmYzldq8Y5QHTHgHqMlOBsYrR+2sm0E4f+HB0t7FJvEFYRD75nd6lPfus89UdG
-         lalg==
-X-Gm-Message-State: AOAM530Nc06mWcj0qxGmhvBpPTz1wgAoEEDj0/rkpjs7yfK2LutEV42A
-        xAXDtEqnx4aKS5buC5SAidAaYQ==
-X-Google-Smtp-Source: ABdhPJzOHwVlufGdMdyvbO13y8E84JvvMKilovl7Xl9+qhbP3+TmLg4NNYgk3MOQkwcWdbr70GZnTw==
-X-Received: by 2002:adf:f60a:: with SMTP id t10mr39529356wrp.64.1594019048656;
-        Mon, 06 Jul 2020 00:04:08 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865? ([2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865])
-        by smtp.googlemail.com with ESMTPSA id g14sm19944402wrw.83.2020.07.06.00.04.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 00:04:08 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] thermal: core: genetlink support for
- events/cmd/sampling
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200703085309.32166-1-daniel.lezcano@linaro.org>
- <20200703085309.32166-3-daniel.lezcano@linaro.org>
- <191a868fc02f6fca93250240cf6c3f7576c6a2c3.camel@intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <7215d5ab-62a7-5b68-5443-584e1323e82c@linaro.org>
-Date:   Mon, 6 Jul 2020 09:04:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 03:06:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57334 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgGFHG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 03:06:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AEFE1AC9F;
+        Mon,  6 Jul 2020 07:06:54 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Matthew Wilcox <willy6545@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 06 Jul 2020 17:06:45 +1000
+Cc:     ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+In-Reply-To: <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com> <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
+Message-ID: <87imf115ru.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <191a868fc02f6fca93250240cf6c3f7576c6a2c3.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2020 08:03, Zhang Rui wrote:
-> On Fri, 2020-07-03 at 10:53 +0200, Daniel Lezcano wrote:
->> Initially the thermal framework had a very simple notification
->> mechanism to send generic netlink messages to the userspace.
+--=-=-=
+Content-Type: text/plain
+
+On Sat, Jul 04 2020, Matthew Wilcox wrote:
+
+> Another suggestion for "slave" replacement should be "device". This is in
+> the context of the w1 bus which is by far the largest user of the
+> master/slave terminology in the kernel.
+
+Ugh.  Please, no.  "device" doesn't mean anything, in that you can use
+it to refer to any thing.  (i.e. it is almost semantically equivalent to
+"thing").
+Look in /sys/devices.  Everything in there is a device, and (nearly)
+every thing is in there.
+
+NeilBrown
+
+>
+> On Sat., Jul. 4, 2020, 16:19 Dan Williams, <dan.j.williams@intel.com> wrote:
+>
+>> Recent events have prompted a Linux position statement on inclusive
+>> terminology. Given that Linux maintains a coding-style and its own
+>> idiomatic set of terminology here is a proposal to answer the call to
+>> replace non-inclusive terminology.
 >>
->> The notification function was never called from anywhere and the
->> corresponding dead code was removed. It was probably a first attempt
->> to introduce the netlink notification.
->>
->> At LPC2018, the presentation "Linux thermal: User kernel interface",
->> proposed to create the notifications to the userspace via a kfifo.
->>
->> The advantage of the kfifo is the performance. It is usually used
->> from
->> a 1:1 communication channel where a driver captures data and sends it
->> as fast as possible to a userspace process.
->>
->> The drawback is that only one process uses the notification channel
->> exclusively, thus no other process is allowed to use the channel to
->> get temperature or notifications.
->>
->> This patch defines a generic netlink API to discover the current
->> thermal setup and adds event notifications as well as temperature
->> sampling. As any genetlink protocol, it can evolve and the versioning
->> allows to keep the backward compatibility.
->>
->> In order to prevent the user from getting flooded with data on a
->> single channel, there are two multicast channels, one for the
->> temperature sampling when the thermal zone is updated and another one
->> for the events, so the user can get the events only without the
->> thermal zone temperature sampling.
->>
->> Also, a list of commands to discover the thermal setup is added and
->> can be extended when needed.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Chris Mason <clm@fb.clm>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 >> ---
-
-[ ... ]
-
->> +static int thermal_genl_event_cdev_update(struct param *p)
->> +{
->> +	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
->> +			p->cdev_id) ||
->> +	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_CUR_STATE,
->> +			p->cdev_state) ||
->> +	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_MAX_STATE,
->> +			p->cdev_max_state))
->> +		return -EMSGSIZE;
->> +
->> +	return 0;
->> +}
-> 
->> +int thermal_notify_cdev_update(int cdev_id, int cdev_state)
->>> +{
->>> +	struct param p = { .cdev_id = cdev_id, .cdev_state = cdev_state
->>> };
+>>  Documentation/process/coding-style.rst          |   12 ++++
+>>  Documentation/process/inclusive-terminology.rst |   64
+>> +++++++++++++++++++++++
+>>  Documentation/process/index.rst                 |    1
+>>  3 files changed, 77 insertions(+)
+>>  create mode 100644 Documentation/process/inclusive-terminology.rst
 >>
-> 
-> .cdev_max_state is not set here.
-> I think we need to add a second parameter for cdev_max_state when
-> invoking thermal_nofify_cdev_update().
+>> diff --git a/Documentation/process/coding-style.rst
+>> b/Documentation/process/coding-style.rst
+>> index 2657a55c6f12..4b15ab671089 100644
+>> --- a/Documentation/process/coding-style.rst
+>> +++ b/Documentation/process/coding-style.rst
+>> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable
+>> names, you have another
+>>  problem, which is called the function-growth-hormone-imbalance syndrome.
+>>  See chapter 6 (Functions).
+>>
+>> +For symbol names, avoid introducing new usage of the words 'slave' and
+>> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
+>> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
+>> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
+>> +'denylist'.
+>> +
+>> +Exceptions for introducing new usage is to maintain a userspace ABI, or
+>> +when updating code for an existing (as of 2020) hardware or protocol
+>> +specification that mandates those terms. For new specifications consider
+>> +translating specification usage of the terminology to the kernel coding
+>> +standard where possible. See :ref:`process/inclusive-terminology.rst
+>> +<inclusiveterminology>` for details.
+>>
+>>  5) Typedefs
+>>  -----------
+>> diff --git a/Documentation/process/inclusive-terminology.rst
+>> b/Documentation/process/inclusive-terminology.rst
+>> new file mode 100644
+>> index 000000000000..a8eb26690eb4
+>> --- /dev/null
+>> +++ b/Documentation/process/inclusive-terminology.rst
+>> @@ -0,0 +1,64 @@
+>> +.. _inclusiveterminology:
+>> +
+>> +Linux kernel inclusive terminology
+>> +==================================
+>> +
+>> +The Linux kernel is a global software project, and in 2020 there was a
+>> +global reckoning on race relations that caused many organizations to
+>> +re-evaluate their policies and practices relative to the inclusion of
+>> +people of African descent. This document describes why the 'Naming'
+>> +section in :ref:`process/coding-style.rst <codingstyle>` recommends
+>> +avoiding usage of 'slave' and 'blacklist' in new additions to the Linux
+>> +kernel.
+>> +
+>> +On the triviality of replacing words
+>> +====================================
+>> +
+>> +The African slave trade was a brutal system of human misery deployed at
+>> +global scale. Some word choice decisions in a modern software project
+>> +does next to nothing to compensate for that legacy. So why put any
+>> +effort into something so trivial in comparison? Because the goal is not
+>> +to repair, or erase the past. The goal is to maximize availability and
+>> +efficiency of the global developer community to participate in the Linux
+>> +kernel development process.
+>> +
+>> +Word choice and developer efficiency
+>> +====================================
+>> +
+>> +Why does any software project go through the trouble of developing a
+>> +document like :ref:`process/coding-style.rst <codingstyle>`? It does so
+>> +because a common coding style maximizes the efficiency of both
+>> +maintainers and developers. Developers learn common design patterns and
+>> +idiomatic expressions while maintainers can spot deviations from those
+>> +norms. Even non-compliant whitespace is considered a leading indicator
+>> +to deeper problems in a patchset. Coding style violations are known to
+>> +take a maintainer "out of the zone" of reviewing code. Maintainers are
+>> +also sensitive to word choice across specifications and often choose to
+>> +deploy Linux terminology to replace non-idiomatic word-choice in a
+>> +specification.
+>> +
+>> +Non-inclusive terminology has that same distracting effect which is why
+>> +it is a style issue for Linux, it injures developer efficiency.
+>> +
+>> +Of course it is around this point someone jumps in with an etymological
+>> +argument about why people should not be offended. Etymological arguments
+>> +do not scale. The scope and pace of Linux to reach new developers
+>> +exceeds the ability of historical terminology defenders to describe "no,
+>> +not that connotation". The revelation of 2020 was that black voices were
+>> +heard on a global scale and the Linux kernel project has done its small
+>> +part to answer that call as it wants black voices, among all voices, in
+>> +its developer community.
+>> +
+>> +Really, 'blacklist' too?
+>> +========================
+>> +
+>> +While 'slave' has a direct connection to human suffering the etymology
+>> +of 'blacklist' is devoid of a historical racial connection. However, one
+>> +thought exercise is to consider replacing 'blacklist/whitelist' with
+>> +'redlist/greenlist'. Realize that the replacement only makes sense if
+>> +you have been socialized with the concepts that 'red/green' implies
+>> +'stop/go'. Colors to represent a policy requires an indirection. The
+>> +socialization of 'black/white' to have the connotation of
+>> +'impermissible/permissible' does not support inclusion.
+>> +
+>> +Inclusion == global developer community efficiency.
+>> diff --git a/Documentation/process/index.rst
+>> b/Documentation/process/index.rst
+>> index f07c9250c3ac..ed861f6f8d25 100644
+>> --- a/Documentation/process/index.rst
+>> +++ b/Documentation/process/index.rst
+>> @@ -27,6 +27,7 @@ Below are the essential guides that every developer
+>> should read.
+>>     submitting-patches
+>>     programming-language
+>>     coding-style
+>> +   inclusive-terminology
+>>     maintainer-pgp-guide
+>>     email-clients
+>>     kernel-enforcement-statement
+>>
+>> _______________________________________________
+>> Ksummit-discuss mailing list
+>> Ksummit-discuss@lists.linuxfoundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+>>
+> _______________________________________________
+> Ksummit-discuss mailing list
+> Ksummit-discuss@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
 
-I've been trying to figure when the max state is changed and the
-notification for the max state is less straightforward than the current
-state.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Actually merging both changes is not a good idea.
+-----BEGIN PGP SIGNATURE-----
 
-It would be preferable to add later the max state change notification
-and keep set current state as before, except changing the function and
-attributes to cdev_state_update.
-
-Sounds good ?
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8CzYUACgkQOeye3VZi
+gbmscRAAoq9BjgfvwE8+ki/65ILY8dCDmw3GEwtn9KTodi7as+MAhT/i/O7lXG3Z
+FA0UpWB2JoaBijEp0U9Dy8uKfZN8RmYLTf80s0RxVHRN+2pIpKXc97uNUeHuD6SS
+zEfOicQ9OavlZuFVxm4RCFc3gOnuYJ/csVY7eMZm3L+4njSZizfqIRe5B25e9CLX
+AykL6DmEPR5QC9JG22F2BX0FtjelksCIDVjgPxseJqg3c3+iEHp4tqi3nIYnyTy9
+BNAXc/uqtJRtlzI1yfihtnXugEPEvbA1GArCHVgGbcEuziep2OoFljYun6Eeeo8e
+FsFsjtLJ5XSupuB1rGD8IdRrrsGf+wZWm0o9Bntmo3YZWJnVq+3ImbtW0ImSx7mg
+EWbVhA3p3cHA1fQVuQYGe8+00Kcm9JUpRWbl0kHJ3qcMr0LBsLNt+MRD+8eY2oZ9
+OVslkKVlUFHZqPtJmDlkWydeW9mxXh7ktd3KqksRGIM9npGKwfudx/gZzAmS7Gai
+8LovOrVtJSGYGzEPq7W0B3MwXjfA2ck8MEhEEVRbMntDuPRiWN5h+Tuf7yP7Ofee
+h2N0rWHGiOaAG16YzInS4jk6BxDOrT8+02fYvyQQ2FPYiaVqBoNj25YwnCzosCT1
+eJxPvI/gB7JfpWELhV3sXhAyvMEzVHbqV5+owIsgSylRrduK4Mg=
+=eOmT
+-----END PGP SIGNATURE-----
+--=-=-=--
