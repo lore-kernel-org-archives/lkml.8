@@ -2,133 +2,115 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D64EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E23B1206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D115206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 11:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Zzs66ifj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SZ4cYbHK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="j+GBsSFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgGFLrO (ORCPT
+        id S1729021AbgGFLr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:47:14 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50705 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728845AbgGFLrO (ORCPT
+        Mon, 6 Jul 2020 07:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbgGFLr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:47:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 846375803CA;
-        Mon,  6 Jul 2020 07:47:12 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 06 Jul 2020 07:47:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=2
-        j5XHM8eiIAtdQDxQdQP6yCaAAsGGZ2pUNXQED85J7g=; b=Zzs66ifjtoAR5TI2a
-        tCf7OIEx92ai/QD7cSp0uedZvsK8UTWbCHjYxNr/z36PyKgM1pctOeTGulfGFUsM
-        91YgsL7gY0B+On1Rgpc3N+37WpUA6Qb8BZUOCgde0ik0vXiD7kWot0VeEyQ0vknZ
-        wQBIsBuOdBAif9XmzN+JNVaAqe00F+P7q4hBI5BUYwzUfKiKUmBSjKiOGxW3lUEz
-        ArJVteF2X1ifaUbcLS198iDYVvlED8Oln13Ku5h4Qtn8XOJQk/C4LO/YgVIKvqcu
-        bzaxpi7yaFW8NeekoC3vDhgfrd7MlHOuzVLNUE2RctGUgxNcSuDlXO8chLU3JQ0E
-        vgW7A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=2j5XHM8eiIAtdQDxQdQP6yCaAAsGGZ2pUNXQED85J
-        7g=; b=SZ4cYbHKTKhaqeOfZUDYAWuZ6oY6YVQapo04+2pcJsRnP/k+si0WCkSSC
-        HIj1iQeGPdwFH9+0YSSTJ866051WiSWrrCOYau/UQowMy9hk7Ivm+QrVOA59ewiS
-        /xVZDtxhEX1ZwROmgJdrxcKOpT0KfHzwk9O3TTzKyHLDy/jUfgobWRXj6V6VFRc5
-        q1Gh3gUpyi5uj2fdNDrHX2Xp0Xn4Xz+QsPwZXn73Mb4i0NqOvrG0oWHGyMveFOse
-        8sozd7xbl1AZOF5IzHshSB64dyGcMSWO335MduOHKlkKtYk3KzC+PqlnzQTwO5om
-        Mt1Qfwv5SA9rbrIceM76Zo+c7I1CQ==
-X-ME-Sender: <xms:Pg8DX8ACshx8OXih7Tsx8To0gB270QzKuS2_NCU1p5fEf9o2R97m9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgdeghecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
-    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:Pg8DX-jHOXcfJ2sJoTl9jBNLiEym-N_hLdoBzSvpOVY4gudaPo0mBw>
-    <xmx:Pg8DX_nldB4L1GipaM69hGsaqzA7AiKazJRLfHQR_rBGczPC-Ys6Zg>
-    <xmx:Pg8DXywN0zJgmX6ntjFlltpOrwOipOZDa6Em-HoTVms3kpbDSPYJIQ>
-    <xmx:QA8DX-_QtSLuvFTsL3EvWkyB-2jqWDHQRXEhzvRph5PhJiuKwZ_yKA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 774E830653ED;
-        Mon,  6 Jul 2020 07:47:10 -0400 (EDT)
-Date:   Mon, 6 Jul 2020 13:47:09 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        Ondrej Jirman <megous@megous.com>
-Subject: Re: [PATCH 3/3] arm64: allwinner: a64: enable Bluetooth On Pinebook
-Message-ID: <20200706114709.l6poszepqsmg5p5r@gilmour.lan>
-References: <20200705195110.405139-1-anarsoul@gmail.com>
- <20200705195110.405139-4-anarsoul@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Mon, 6 Jul 2020 07:47:56 -0400
+X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 06 Jul 2020 04:47:55 PDT
+Received: from smtp11.infineon.com (smtp11.infineon.com [IPv6:2a00:18f0:1e00:4::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20277C061794;
+        Mon,  6 Jul 2020 04:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1594036075; x=1625572075;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=EQDXlk7XMaqXKin66vyJ0DXTGrbiOpBMELrFtZOLmJE=;
+  b=j+GBsSFf+hTQnRrI6PCFaYKYWLBeKJjozxQo5TQ71HjfJqaKqLBL9H1m
+   MCXmglVpqs5T+QLfL5aW1pnFNzFBQu+xWD3RE4ougbF2QzWwc4Ne2G+P4
+   vW5DkvDziJ0ki49foQbY/PaLZMDpiUcOZhDqoyrr50Zk/99RS9AAdNzn5
+   U=;
+IronPort-SDR: wIJhBVfJYbOXelU5nPj89WSh/xhvR86Dvg1D5r1IiYHBH2ZmUWU+YQyHEb0r7PD8QPj3zy7ruZ
+ ZSBwymnCYficWCaCkLyc4tX543fHM1LasHZUC+GXxXFvOERbXTibFZVyOB95JixfPosA+YT+OR
+ hH8yYY/R9ukADSZjpyhkndoHExwhUa3yY20j+Yg9csCuLit1dx2Fk6lsXXZh2Me01b+G6ioewG
+ u2w9F6U6zVDquM6Fl30UCe7ByYp5mf3CzJUs3z7GoG+rjrwJQHvFJ7r/i+AklFHEdkusclp45e
+ xZo=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="168624440"
+X-IronPort-AV: E=Sophos;i="5.75,318,1589234400"; 
+   d="scan'208";a="168624440"
+Received: from unknown (HELO mucxv002.muc.infineon.com) ([172.23.11.17])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 13:46:47 +0200
+Received: from MUCSE717.infineon.com (MUCSE717.infineon.com [172.23.7.74])
+        by mucxv002.muc.infineon.com (Postfix) with ESMTPS;
+        Mon,  6 Jul 2020 13:46:46 +0200 (CEST)
+Received: from MUCSE711.infineon.com (172.23.7.83) by MUCSE717.infineon.com
+ (172.23.7.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1913.5; Mon, 6 Jul
+ 2020 13:46:46 +0200
+Received: from MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5]) by
+ MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5%20]) with mapi id
+ 15.01.1913.010; Mon, 6 Jul 2020 13:46:46 +0200
+From:   <Peter.Huewe@infineon.com>
+To:     <jarkko.sakkinen@linux.intel.com>,
+        <linux-integrity@vger.kernel.org>
+CC:     <kjhall@us.ibm.com>, <ferry.toth@elsinga.info>,
+        <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <akpm@osdl.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Thread-Topic: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Thread-Index: AQHWSpi7zu+k2ZgGwES2mspmWAztdKj6fvXg
+Date:   Mon, 6 Jul 2020 11:46:46 +0000
+Message-ID: <e9caad58aba44bb3abeac8569a6bd8ed@infineon.com>
+References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.23.8.247]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200705195110.405139-4-anarsoul@gmail.com>
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
+NACK
 
-On Sun, Jul 05, 2020 at 12:51:10PM -0700, Vasily Khoruzhick wrote:
-> Pinebook has an RTL8723CS WiFi + BT chip, BT is connected to UART1
-> and uses PL5 as device wake GPIO, PL6 as host wake GPIO the I2C
-> controlling signals are connected to R_I2C bus.
->=20
-> Enable it in the device tree.
->=20
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> ---
->  .../arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> index 64b1c54f87c0..e63ff271be4e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> @@ -408,6 +408,18 @@ &uart0 {
->  	status =3D "okay";
->  };
-> =20
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +	status =3D "okay";
+> % git --no-pager grep IFX0102 drivers/char/tpm
+> drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+> drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+> Obviously IFX0102 was added to the HID table for the TCG TIS driver by mi=
+stake.
 
-You probably need uart-has-rtscts here
+The HID IFX0102 was NOT added by mistake.
+Let me explain the history a bit:
 
-> +
-> +	bluetooth {
-> +		compatible =3D "realtek,rtl8723cs-bt";
-> +		device-wake-gpios =3D <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
-> +		host-wake-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> +	};
+Old SLB 9635 / 9630 TPMs had two ways to interface them
+- proprietary 'io' mapped protocol (tpm_infineon)
+- tis protocol  (tpm_tis)
 
-And max-speed I guess?
+Both match the same HID.
+However with the emerging of the tis protocol, the io protocol eventually w=
+ent away for newer products.
+So all TPM1.2 by IFX match the HID0102 and the TCG generic ones PNP0C31
 
-Maxime
->
+So basically you break TPM1.2 support for all (newer) Infineon chips if the=
+ platform vendor used the IFX0102 HID as they would speak via tpm_infineon =
+driver.
+The bug must be something different, especially as it only seems to happen =
+after suspend resume.
+
+
+Thanks,
+Peter
