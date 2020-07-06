@@ -2,51 +2,51 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C97C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186A52074D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEF72074D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgGFKrT (ORCPT
+        id S1728970AbgGFKr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:47:19 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54813 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgGFKrQ (ORCPT
+        Mon, 6 Jul 2020 06:47:27 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:54815 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbgGFKrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:47:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id q207so700355iod.21
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:47:15 -0700 (PDT)
+        Mon, 6 Jul 2020 06:47:17 -0400
+Received: by mail-io1-f72.google.com with SMTP id q207so700356iod.21
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 03:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bV1o04mIYzfoK13kKj71WduMIZc/Fisa+x2TYp0LHDo=;
-        b=O1NSYCvZUj/jn5oYFfZCN/WU79M47TLMjB4Ph8FPBuuwOFtCNkWKcgja/eIZ0S0img
-         YusvtUZCT0e6vXbGHq+fBiaKCz7lYFzM0L+SdpMhSHSqkZvWQqeJXIFy4b3Mqe45ZeKC
-         maCCCx6fJVrVi5yG+8MOBvBpGbuxInpU3sOR7+GHxsU42P9c9gu7c94668FTK0cez6Hf
-         hWgaoNeMufpS54Kdp+Tokg35y+4xp33T7g9Rl4KCYyhRzxNwyay3gaCZA6nhfsD4iZoW
-         qi82+wiAQE+tV/m+wxMIMB6eMYv3/eb5vgv1sB6A9Aszt7nzSGPaDaJUETIptYmWKJV2
-         dcYA==
-X-Gm-Message-State: AOAM5325QSkT3IOWP6QzlD3YvLHQFZYrk07qb/DTLu0uDOKjaQXLrBhc
-        eqezGrlZzsFKX502heDuyk/E5XKcJfCBz+hcfRB6CMK6PhV0
-X-Google-Smtp-Source: ABdhPJxGHDXWd93bm5fuKZthng2Z6tzSk1u1TborWWVLClMTLZ309wxlsSsEAZCXltyNJEXWQEs6++aXJsQTmt9K+wyFEVA4j1UH
+        bh=o/+nsIISRaR1UrBUB4a9yq3mmK58VS9sslSGe+mCmmE=;
+        b=WLiwCf+1Yy524aHUcgJ1bB1QDJJXD4PWLtvIqQO7QJ8v+Rjx+xc54nTyfS9IUL3oc7
+         6Hw+MtuexQy1a8o7YeWOnU9fEk6Lx/UE9Pfhp66v5EqqwpN8W0XU5WA3FdgvhYa4nnHr
+         XQ7t2Qr4Tbt9OWOHLENZ+0VDAB/gAwJt75qehdVD5/BipY/SsUbTFjn72zjKMTbdnUP3
+         MUiHiMQ4vECa84MjmRR9QOeaNTo0NMX4Xabb4ODsyFa44B5YMN8BF59VH5WSnbD/xYp3
+         pQ1m67ZUu4PNGJktshwUGU88+Z1kjWhxqbGWMOQZAZ5kb7MRXbDy16fPF+rSrm1ZWav8
+         b8sg==
+X-Gm-Message-State: AOAM531CgDPq09i2LROQo9DZaGqaMEyJWu50f7FXX91HfM4Y/EtVPBrr
+        osSF4RVkCN1icTy1fDsumLDZqC+gGXojtY9UIUVHAyN0OJOb
+X-Google-Smtp-Source: ABdhPJyk+EJS6DncAZ9gMYNkHM+eSchccXnLzjXZJPLRW6EFCALsyjxejwWsDLJN4YPNct78Z7zPBLtVeU7M1lyUHeCk2wLjk3cl
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8d15:: with SMTP id m21mr25229706ioj.60.1594032435591;
- Mon, 06 Jul 2020 03:47:15 -0700 (PDT)
-Date:   Mon, 06 Jul 2020 03:47:15 -0700
+X-Received: by 2002:a92:bf0c:: with SMTP id z12mr28944209ilh.151.1594032436051;
+ Mon, 06 Jul 2020 03:47:16 -0700 (PDT)
+Date:   Mon, 06 Jul 2020 03:47:16 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000157f8105a9c399b9@google.com>
-Subject: WARNING in trace_hardirqs_off_thunk
-From:   syzbot <syzbot+d135d81280f93e6e9d4b@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        will@kernel.org
+Message-ID: <0000000000001c866805a9c3993f@google.com>
+Subject: WARNING in remove_one_compat_dev
+From:   syzbot <syzbot+4e28a66bf14b987f9dee@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,52 +57,61 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14180d35100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
-dashboard link: https://syzkaller.appspot.com/bug?extid=d135d81280f93e6e9d4b
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+HEAD commit:    bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b3ffe2100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
+dashboard link: https://syzkaller.appspot.com/bug?extid=4e28a66bf14b987f9dee
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d135d81280f93e6e9d4b@syzkaller.appspotmail.com
+Reported-by: syzbot+4e28a66bf14b987f9dee@syzkaller.appspotmail.com
 
+infiniband syz1: Port 1 not found
+infiniband syz1: Couldn't close port 1 for agents
+infiniband syz1: Port 1 not found
+infiniband syz1: Couldn't close port 1
 ------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(!irqs_disabled())
-WARNING: CPU: 0 PID: 7117 at kernel/locking/lockdep.c:3745 lockdep_hardirqs_off+0x1ac/0x2f0 kernel/locking/lockdep.c:3745
+sysfs group 'power' not found for kobject 'syz1'
+WARNING: CPU: 1 PID: 3384 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
+WARNING: CPU: 1 PID: 3384 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7117 Comm: syz-executor.3 Not tainted 5.7.0-syzkaller #0
+CPU: 1 PID: 3384 Comm: kworker/u4:2 Not tainted 5.7.0-rc7-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events_unbound ib_unregister_work
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:105 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:197
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:lockdep_hardirqs_off+0x1ac/0x2f0 kernel/locking/lockdep.c:3745
-Code: 42 8a 04 20 84 c0 0f 85 2a 01 00 00 83 3d 0f 9f 56 01 00 75 cd 48 c7 c7 c6 44 e6 88 48 c7 c6 6b d4 e7 88 31 c0 e8 e4 8a 30 f9 <0f> 0b eb b4 48 c7 c1 70 7d 6c 89 80 e1 07 80 c1 03 38 c1 0f 8c 71
-RSP: 0018:ffffc90005587ed0 EFLAGS: 00010246
-RAX: f9f4096c7a9c0100 RBX: ffff8880676c6b4c RCX: ffff8880676c6280
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000286
-RBP: ffffc90005587f48 R08: ffffffff817a4660 R09: fffffbfff125cd89
-R10: fffffbfff125cd89 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffffff81006f10 R15: ffff8880676c6280
- trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
- entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-RIP: 0033:0x45f89a
-Code: 25 18 00 00 00 00 74 01 f0 48 0f b1 3d cf a5 84 00 48 39 c2 75 da f3 c3 0f 1f 84 00 00 00 00 00 48 63 ff b8 e4 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 06 f3 c3 0f 1f 40 00 48 c7 c2 d4 ff ff ff f7
-RSP: 002b:00007fff40af3258 EFLAGS: 00000246 ORIG_RAX: 00000000000000e4
-RAX: ffffffffffffffda RBX: 000000000009eeef RCX: 000000000045f89a
-RDX: 0000000000000000 RSI: 00007fff40af3260 RDI: 0000000000000001
-RBP: 00000000000008bc R08: 0000000000000001 R09: 00000000015d8940
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000a
-R13: 00007fff40af32c0 R14: 000000000009ee34 R15: 00007fff40af32d0
+RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
+RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 20 f2 39 88 e8 03 bb 5e ff <0f> 0b eb 95 e8 32 50 cb ff e9 d2 fe ff ff 48 89 df e8 25 50 cb ff
+RSP: 0018:ffffc90005447b40 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffffffff88931b20 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815cf161 RDI: fffff52000a88f5a
+RBP: 0000000000000000 R08: ffff888066c68280 R09: ffffed1015ce45f1
+R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: ffff88808995c000
+R13: ffffffff889320c0 R14: ffff88808eae8700 R15: ffff8880aa034800
+ dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
+ device_del+0x18b/0xd30 drivers/base/core.c:2711
+ remove_one_compat_dev+0x52/0x70 drivers/infiniband/core/device.c:940
+ remove_compat_devs drivers/infiniband/core/device.c:951 [inline]
+ disable_device+0x1ab/0x230 drivers/infiniband/core/device.c:1282
+ __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
+ ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
 Kernel Offset: disabled
 Rebooting in 86400 seconds..
 
