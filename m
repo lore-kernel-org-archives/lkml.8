@@ -2,139 +2,108 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9820C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93DA206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72D020715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594048248;
+	bh=8C2qAl9kUOeQT9wyLID3MuIDXLXIVzJK6cSedO1jKb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WvWAtE4DUVnfeSsM8AdA1QbuWdDeY/7cq7BKBvteM089XYTWOsm2VA11o9sgwMWiQ
+	 +r5cW8X3ZwD4c5bwm7jzMzqSZwBJVDit0/NcDtgacQGQpSQaLJz2mHSnUXMdD60nKb
+	 z3ZJB5rhmU24gZowbIGKjo/dYx0jVK9DBcivHw6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgGFPKh (ORCPT
+        id S1729348AbgGFPKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:10:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37340 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgGFPKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:10:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 12so25755671oir.4;
-        Mon, 06 Jul 2020 08:10:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tbVQnKX9cGHjz5cAqDI171HAdzuSj/vrkGLAeogFPdQ=;
-        b=mzOQaE6QuADLaN/1JCSS4SsZCDB5RlwOl1q2Pa+KPUGP3l1JjwMo60l8RY+JjmJK1g
-         aGhwNG2tqRbhp8tLvfIrZ9aA1vblkLxTwD3gNeUj6A+O8/OT4ZwRYMwqPih1YEE/yq/+
-         tqoRe703KXTK0S6w+4XgfB3EqbPBIdMmDzy32MbTOSZbefO5plRgtVNAwhKeMBTaz5l7
-         IXvdK3yZxyyInFUBKGU/RrsQQ+iAz2b6YA5d1LTorM6Yi78/8BJ5qel/UFUep/vCroRY
-         wEosdjbkJlUY9NjHjmozi+opsI+GdZeXvPZK0+Dn1VilrpM1vFgAhjuBp5T8Vqiy7sx5
-         1zcA==
-X-Gm-Message-State: AOAM530Uro99IF6zhq4ZBSnwii8M5KIjU3Utxbh8bTUCZxre1IW2A1+L
-        rq5JsFVod96ztkzZkgw5ThLnQjGCS1adBDL4k4jvk9xG
-X-Google-Smtp-Source: ABdhPJy3nPe01DMLHZsnb1XBpPIo+qosBy1RuitQMetKS4QMG/wf/U2JNl6ordfgRwOD6N6B6SRPadNF4BR4bh5oWkk=
-X-Received: by 2002:aca:ac10:: with SMTP id v16mr16991186oie.153.1594048236359;
- Mon, 06 Jul 2020 08:10:36 -0700 (PDT)
+        Mon, 6 Jul 2020 11:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729140AbgGFPKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:10:46 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50663206CD;
+        Mon,  6 Jul 2020 15:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594048246;
+        bh=8C2qAl9kUOeQT9wyLID3MuIDXLXIVzJK6cSedO1jKb8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LNfkzaw+URH7MQyQbhwZp1IRzmusnXAj7S/Ee4WGl5r/jQz2TdZJZq0Fm+yvBin8o
+         vyUw9Rcoqimquebx5PzcsRj5xYNcTAGGN7IcZOkTGfxc7xc1fjW//XfZd7Aw+uRfhH
+         Ox3mUxPuyLlGFUIVJzI/pNRHdDZA9LplQARFNxR8=
+Date:   Mon, 6 Jul 2020 20:40:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-serial@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>, jirislaby@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        ldewangan@nvidia.com, Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, Qian Cai <cai@lca.pw>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [qemu] boot failed: Unable to handle kernel NULL pointer
+ dereference at virtual address 0000000000000000
+Message-ID: <20200706151041.GL633187@vkoul-mobl>
+References: <CA+G9fYvqW-RQxt3kSoNkh5Y2REoe0QQB_dTz_KPzhJzcwiM5OA@mail.gmail.com>
+ <CAK8P3a1Lda8HhsDvDREf-cOgb4RkCgEKK5Q-Zj+UhK8tsAaBLw@mail.gmail.com>
+ <8c50799e-d0ba-626a-5627-5ff4e5825f6a@intel.com>
 MIME-Version: 1.0
-References: <202007040833.xIqR5rAw%lkp@intel.com> <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
-In-Reply-To: <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Jul 2020 17:10:25 +0200
-Message-ID: <CAMuHMdW_aTKtrUnGqf3DB=fr0ZxTsjoEjMmwSpPqhwjs-Tz7ig@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy chain driver.
-To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c50799e-d0ba-626a-5627-5ff4e5825f6a@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On 06-07-20, 07:33, Dave Jiang wrote:
 
-On Mon, Jul 6, 2020 at 11:23 AM Adrian Fiergolski
-<adrian.fiergolski@fastree3d.com> wrote:
-> Add documentation for SPI daisy chain driver.
->
-> Signed-off-by: Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+> > I don't see anything suspicious in dmaengine drivers, but there is a
+> > recent series
+> > from Dave Jiang that might explain it. Could you try reverting  commit
+> > deb9541f5052 ("dmaengine: check device and channel list for empty")?
+> > 
+> > I think the broken change is this one:
+> > 
+> > @@ -819,6 +850,11 @@ struct dma_chan *dma_request_chan(struct device
+> > *dev, const char *name)
+> > 
+> >          /* Try to find the channel via the DMA filter map(s) */
+> >          mutex_lock(&dma_list_mutex);
+> > +       if (list_empty(&dma_device_list)) {
+> > +               mutex_unlock(&dma_list_mutex);
+> > +               return NULL;
+> > +       }
+> > +
+> >          list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
+> >                  dma_cap_mask_t mask;
+> >                  const struct dma_slave_map *map = dma_filter_match(d,
+> > name, dev);
+> > 
+> > which needs to return an error code like -ENODEV instead of NULL. There
+> > may be other changes in the same patch that introduce the same bug
+> > elsewhere.
+> > 
+> >       Arnd
+> > 
+> 
+> Vinod,
+> Do you want a diff fix or a revision of the patch for the fix?
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-> @@ -0,0 +1,56 @@
-> +spi-daisy_chain : The driver handling SPI daisy chains.
-> +-----------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible           : Should be "spi,daisy_chain"
-> +- reg                  : Chip select assigned to the chain
-> +
-> +  For the SPI devices on a common SPI chain - nodes of daisy_chain):
-> +- spi-daisy-chain-len  : Length (in bytes) of the SPI transfer,
-> +                        when the SPI device is part of a device chain.
-> +- spi-daisy-chain-noop : Byte string of no-operation command which should
-> +                        be send when device is not addressed during the
-> +                        given SPI transfer
-
-The above two properties are device-specific, and the same for all
-devices of the same type, thus leading to duplication.
-Hence I think this should not be specified in DT, but instead handled
-by the driver.  I.e. for Linux, you would retrieve this from struct
-spi_device, as filled in by the slave driver.
-
-> +
-> +Optional properties:
-> +  (for the SPI devices on a common SPI chain (nodes of daisy_chain):
-> +- spi-daisy-chain-bits_per_word : no-operation transfers involve
-> +                                  one or more words; word sizes like
-> +                                 eight or 12 bits are common.
-> +                                 In-memory wordsizes are powers of two
-> +                                 bytes (e.g. 20 bit samples use 32 bits).
-> +                                 If not defined, it is assumed to be 8.
-
-Same here.
-
-> +Example:
-> +
-> +       daisy_chain0: daisy_chain@0 {
-> +               compatible = "spi,daisy_chain";
-> +               spi-max-frequency = <10000000>;
-> +               reg = <0>;
-> +
-> +               dac0: ltc2632@0 {
-> +                     compatible = "lltc,ltc2634-l12";
-> +                     spi-daisy-chain-len = <4>;
-> +                     spi-daisy-chain-noop = [00 F0 00 00];
-> +               };
-> +               dac1: ltc2632@1 {
-> +                     compatible = "lltc,ltc2634-l12";
-> +                     spi-daisy-chain-len = <4>;
-> +                     spi-daisy-chain-noop = [00 F0 00 00];
-> +               };
-> +               dac2: ltc2632@2 {
-> +                     compatible = "lltc,ltc2634-l12";
-> +                     spi-daisy-chain-len = <4>;
-> +                     spi-daisy-chain-noop = [00 F0 00 00];
-> +               };
-> +       };
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Diff fix please
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~Vinod
