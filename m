@@ -2,118 +2,84 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51860C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C012070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9D12070C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgGFB07 (ORCPT
+        id S1728670AbgGFB1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:26:59 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:56658 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728616AbgGFB04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 21:26:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 412992016B13;
-        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MbPrCEWsKdKw; Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 1CF5220160D4;
-        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.122])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id D5450C01B74;
-        Mon,  6 Jul 2020 09:26:50 +0800 (HKT)
-Subject: Re: [PATCH v2 1/2] hwmon: shtc1: add support for device tree bindings
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200705142515.GA1975@roeck-us.net>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <0e3cc05b-2ae4-186b-d3b4-fa3ac201b128@gtsys.com.hk>
-Date:   Mon, 6 Jul 2020 09:26:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200705142515.GA1975@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 5 Jul 2020 21:27:05 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48954 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728571AbgGFB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 21:26:52 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oefAJfl2VQAA--.1722S14;
+        Mon, 06 Jul 2020 09:19:32 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH v5 12/14] irqchip/riscv-intc: Fix potential resource leak
+Date:   Mon,  6 Jul 2020 09:19:23 +0800
+Message-Id: <1593998365-25910-13-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxn2oefAJfl2VQAA--.1722S14
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF48KFykAF18CFW7JF1kXwb_yoWfAFc_Cr
+        y2gFn3Gr18trs3JFWIyr45uFy0yws7WFyqgF1Ig3W3K3s8Kw1xCw12yrWSyw10kr48Crsx
+        CFW8Ar4Syr17ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSAYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+        IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
+        c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2
+        IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2
+        jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+        AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
+        Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVWkMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+        xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
+        IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAI
+        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
+        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jbjjDUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+In the function riscv_intc_init(), system resource "intc_domain"
+was not released in an error case. Thus add a call of the function
+"irq_domain_remove" in the if branch.
 
-On 5/7/2020 10:25 pm, Guenter Roeck wrote:
-> On Sun, Jul 05, 2020 at 11:47:25AM +0800, Chris Ruehl wrote:
->> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->>   drivers/hwmon/shtc1.c | 22 ++++++++++++++++++++--
->>   1 file changed, 20 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
->> index a0078ccede03..61e9275eb666 100644
->> --- a/drivers/hwmon/shtc1.c
->> +++ b/drivers/hwmon/shtc1.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/err.h>
->>   #include <linux/delay.h>
->>   #include <linux/platform_data/shtc1.h>
->> +#include <linux/of.h>
->>   
->>   /* commands (high precision mode) */
->>   static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
->> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
->>   	enum shtcx_chips chip = id->driver_data;
->>   	struct i2c_adapter *adap = client->adapter;
->>   	struct device *dev = &client->dev;
->> +	struct device_node *np = dev->of_node;
->>   
->>   	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
->>   		dev_err(dev, "plain i2c transactions not supported\n");
->> @@ -233,8 +235,13 @@ static int shtc1_probe(struct i2c_client *client,
->>   	data->client = client;
->>   	data->chip = chip;
->>   
->> -	if (client->dev.platform_data)
->> +	if (np) {
->> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking_io");
->> +		data->setup.high_precision = of_property_read_bool(np, "sensicon,low_precision");
->> +	}
->> +	else if (client->dev.platform_data)
->>   		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
-> 
-> CHECK: braces {} should be used on all arms of this statement
-> #46: FILE: drivers/hwmon/shtc1.c:238:
-> +	if (np) {
-> [...]
-> +	else if (client->dev.platform_data)
-> [...]
-> 
-> ERROR: else should follow close brace '}'
-> #50: FILE: drivers/hwmon/shtc1.c:242:
-> +	}
-> +	else if (client->dev.platform_data)
-> 
+Fixes: 6b7ce8927b5a ("irqchip: RISC-V per-HART local interrupt controller driver")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+---
+ drivers/irqchip/irq-riscv-intc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-it bites back not using the check-patch script! I _should_ know better! :-(
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index a6f97fa..8d6286c 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -122,6 +122,7 @@ static int __init riscv_intc_init(struct device_node *node,
+ 	rc = set_handle_irq(&riscv_intc_irq);
+ 	if (rc) {
+ 		pr_err("failed to set irq handler\n");
++		irq_domain_remove(intc_domain);
+ 		return rc;
+ 	}
+ 
+-- 
+2.1.0
 
-v3 then.
-
-But i will wait a moment to see if someone else lift a finger.
-
-Chris
