@@ -2,118 +2,93 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F27C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DD7206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6B6206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 14:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="brssue4s"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="I6SLqTjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgGFOPm (ORCPT
+        id S1729231AbgGFOTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:15:42 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:9538 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgGFOPm (ORCPT
+        Mon, 6 Jul 2020 10:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgGFOTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 10:15:42 -0400
+        Mon, 6 Jul 2020 10:19:16 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7159C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 07:19:15 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id f12so16499281eja.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 07:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594044942; x=1625580942;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=d4PtA/PnsPkuQy2jWbwgjkialcWBF3QdJN51/memhrA=;
-  b=brssue4stFDk2QMIh8oi45r0tsjAQXJ7+HHUa4+rqRSNjILlapMTL2Zz
-   JTAOR1Gith/9Gmpdses0yEt2c3OCWFgLFc4nIcX6wHDuTv91WM5TGL4Rn
-   nt9Whnb8q8y8ETlgCkq3PVYQCptt7sScSzsgEH+2TbH6w+Xj+wHOsDTQ7
-   o=;
-IronPort-SDR: kIexPVF4X3xMERMadp+fNVHSJjVaOeB9LwiKWOaOoGF0e48oS7ANsVXeUy4v1TAsnEhVezNfGl
- X83FWLEuQ93w==
-X-IronPort-AV: E=Sophos;i="5.75,320,1589241600"; 
-   d="scan'208";a="40236267"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 14:15:38 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 2C045A05EB;
-        Mon,  6 Jul 2020 14:15:36 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 14:15:35 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 14:15:27 +0000
-Subject: Re: [PATCH v4 13/18] nitro_enclaves: Add logic for enclave
- termination
-To:     Alexander Graf <graf@amazon.com>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-14-andraprs@amazon.com>
- <34a0bee8-aaf4-d221-cd6e-41b5f3d8f335@amazon.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <61c164f7-3849-9c46-b65b-7cd8d4788793@amazon.com>
-Date:   Mon, 6 Jul 2020 17:15:22 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e09p5QITQkKL6gC86n4XecdWjeqGC63TNv+Y/1UsPo4=;
+        b=I6SLqTjXc4TQKrcGYmdV9Jmtx2kHGjwW497n5UNy/hv1EagzZebGWzYd46JJWdCFgD
+         g52mPlvHRBmUmbX57essLeG+q8ABb+0VY0Q/DmWEd+8n7leK/IGhNoAQcqLYNPQb/pOa
+         4VatUMsmV6qrLQa49yKnVnDiksl0fJNk7DQVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e09p5QITQkKL6gC86n4XecdWjeqGC63TNv+Y/1UsPo4=;
+        b=c4JWEtZrSYLBfCxqBC4vguSjBvVMQ/lyinSfZOJZJYm54WuBpvV4xt4oRDeEia18Hv
+         eHJn7fd9zprFhYxn7l2VR/w8HNgfZ8OQUo1DkQQ4NZEq4iKSaMDrx5UL/akf37XzJwq4
+         qnAkO6l1h0KDaCUyMrVbH5R2lUses4zp/kmaBoMVDxYkXzznH71O1JlUqZ5cFF59S8wf
+         U056qvidoNs5X2wIzTPC43Tr4hwj3uOabbFjdeA+YDN7xJ0Vxgdwzw+U3MdyUQoRbkPc
+         euz/qtip+SgDUFjKgJULzsnAfxvJOOBtTEZfG+pOvM/ZToIMLROKlFm4HIhzonNNxEJm
+         1xWA==
+X-Gm-Message-State: AOAM531mIwf7u7AOofV9Cnvpn3KYyoGpJYKXudfN2m9HyrxDcHvpBE0j
+        ExYlRpriIDo9JZ3t+JIA1hYnlx/EQ1bpSvv/8qhZX1mF
+X-Google-Smtp-Source: ABdhPJxcTXKlQm4m3y7T4v8MiTKSUQSagIgY63Mdu9snxAokerZ2rXxpAeKxvXtNLkBSw61jkXJpiM50zda3BR0pylk=
+X-Received: by 2002:a17:906:9244:: with SMTP id c4mr42725139ejx.60.1594045154437;
+ Mon, 06 Jul 2020 07:19:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <34a0bee8-aaf4-d221-cd6e-41b5f3d8f335@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D27UWA003.ant.amazon.com (10.43.160.56) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+References: <20200403140616.19505-1-jagan@amarulasolutions.com>
+In-Reply-To: <20200403140616.19505-1-jagan@amarulasolutions.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 6 Jul 2020 19:49:03 +0530
+Message-ID: <CAMty3ZDBdry965H1VvC8E+cZC07qY-9ZM53BmZSstGhtpxWnEw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable GPIO_SYSCON
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Levin Du <djw@t-chip.com.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heiko,
 
-
-On 06/07/2020 14:26, Alexander Graf wrote:
+On Fri, Apr 3, 2020 at 7:36 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
+> roc-rk3328-cc board has vcc_sdio regulator controlled
+> by a special output only gpio pin. This special pin can
+> now be reference as <&grf_gpio 0> via gpio-syscon driver,
+> as mentioned in below commit.
 >
-> On 22.06.20 22:03, Andra Paraschiv wrote:
->> An enclave is associated with an fd that is returned after the enclave
->> creation logic is completed. This enclave fd is further used to setup
->> enclave resources. Once the enclave needs to be terminated, the enclave
->> fd is closed.
->>
->> Add logic for enclave termination, that is mapped to the enclave fd
->> release callback. Free the internal enclave info used for bookkeeping.
->>
->> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> commit <99165b93dafe4f2a821b5dae106f2ef6b4ceff7e> "arm64: dts: rockchip:
+> add sdmmc UHS support for roc-rk3328-cc"
 >
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+> So, enable bydefault on the defconfig.
+>
+> Cc: Levin Du <djw@t-chip.com.cn>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
 
-Added. Thanks for review.
+Any update on this?
 
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+Jagan.
