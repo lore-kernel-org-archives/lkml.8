@@ -2,140 +2,116 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45CE20773
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D179C20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgGFNDq (ORCPT
+        id S1729166AbgGFNEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:03:46 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:48224 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728973AbgGFNDq (ORCPT
+        Mon, 6 Jul 2020 09:04:23 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:41493 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728973AbgGFNEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:03:46 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id DB3691D358CC76;
-        Mon,  6 Jul 2020 13:03:42 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Mon,  6 Jul 2020 13:03:42 +0000 (UTC)
-Message-ID: <d462f3dc038548b09ced1a42973d767390e29635.camel@archlinux.org>
-Subject: Re: [PATCH] HID: logitech-hidpp: avoid repeated "multiplier = "
- log messages
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Harry Cutts <hcutts@chromium.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <6202799b-f887-a867-94b3-915607956ceb@maciej.szmigiero.name>
-References: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-         <2f76f069f2078b3d51533f772f1094dcc03685a3.camel@gmail.com>
-         <6202799b-f887-a867-94b3-915607956ceb@maciej.szmigiero.name>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-UvB+gZ0CCUHXKiykjcZ8"
-Date:   Mon, 06 Jul 2020 14:03:31 +0100
+        Mon, 6 Jul 2020 09:04:23 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N4i7l-1ksToJ2lTr-011my3 for <linux-kernel@vger.kernel.org>; Mon, 06 Jul
+ 2020 15:04:20 +0200
+Received: by mail-qk1-f172.google.com with SMTP id e11so34652571qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:04:20 -0700 (PDT)
+X-Gm-Message-State: AOAM530ocd6LPdY0CHJulsbFWAF7G+7xiSDyvXcXqircJIwp1pIaBnxH
+        OjZpGcnIo0ImoEHh2ikopN9VgjHiXHva7SKBPsw=
+X-Google-Smtp-Source: ABdhPJwubD2mijyAfUzCDzHL2/dgA6kW43DYxuGhRpvvvgDSjGytYvy9hqqMQ+FmwXaOLzZU6yw4RYKo/ZwuBXK5Kdg=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr46695262qke.286.1594040659501;
+ Mon, 06 Jul 2020 06:04:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.3 
+References: <202007061834.Xh4DF8QN%lkp@intel.com>
+In-Reply-To: <202007061834.Xh4DF8QN%lkp@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Jul 2020 15:04:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2dLDf-gOezrzmp0J1ZtnnZgq5KstUO4RZ0Wnfs9J2H_A@mail.gmail.com>
+Message-ID: <CAK8P3a2dLDf-gOezrzmp0J1ZtnnZgq5KstUO4RZ0Wnfs9J2H_A@mail.gmail.com>
+Subject: Re: file.c:undefined reference to `.dump_emit'
+To:     kernel test robot <lkp@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jeremy Kerr <jk@ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:XzJuH2A7pNUF6aQXkgJawp3fTRkym58/elUuH3QC9kQEv8oydhY
+ JeR0oiuYCdtWEybkGqYLJ1UI1MuterlGaYeAn2KasnSQQtigF/QoP9vQNf1vmMiHhcbTNSl
+ hQTz5hx6InvJnryFcqt+mA9XlnWtzIcTFFioJwqfKbArDp9BzqeM5YM1OBL2sbVlPIi12Bk
+ X8J4nvgVhuQ4WFrFiZQqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U4OBHJOG4YM=:FDSeXJn7a7Juv5DU+y/SwO
+ EKGR8c8lI9k7/lFzNPfJxGrs5eV0fiHYoCuOd0NYopOeB8a2gfgq5i+C3SkJxMs5GfTLS1/t2
+ Moc4VgZmQMBckeFYD2ogjc8tYaw97dgbFqpSHhohCcZveNUY+erAeVLdgcOUN/zVDJf0OSTks
+ 7iGfrVBWqAcGu39zBZ8PmmNW2YuKWL24FkMwPkN+qslNdgb/o1t+ZaWqtmaJvSwHDZSz0ey4H
+ YIka9EnaA3N7oyPaMTkFZOSlrzsuY4VhGxCS8uQQtM0bRny33XFYRYsjcYdYDsSkCRLCAlQVi
+ AcvOruZPWHj6frH+EGENHQKXPEJzyWPnVuh12EF7t/hxmB+JY8BGFm9aiqfJbl/6ss8prkmXA
+ AxhVpEloAb2Cc7KI/gPAALRaqOb6nHVhGnt0VTcjgwyCpT62Gt5fxwmePMyIyB82laxeHO8nD
+ ofLS4f7X5tbJteKHmPn4nHcdRoIo+uL4aUHzFjY/4EiyfX1PiG4lLw0DXSvlkWzH6+ZIo4h98
+ WkPjXfetCQf5LtOBk40xjoM0zKD/ZmIm8GHmxLFh7OTcGSvJlvCAsOmVP0RsKSNb4qLmlnZ19
+ GGcDeEhZuBM34X2oJJ9fQv20fS9kplFNdhnbqlK6kQUfh8cRjdVQ6o2ZJonUhj3E3Fdd1iV3K
+ RNPk+vpbtLg3Sdbzf/npXkjsZT/bs54m0KBsEF2MZx8/IAK2yZxbBA2cKcaGu1N64aJVYAXX8
+ mW82lc9R0Mzkw5hodvastu3UREF9PC1Wix/EUzCMye2nl5+oFZu8y9c6TH8GCQza0cBKiNz2v
+ +BaSqiT0tYH/nVJzEG0epCWC40K+PmElT+zGrDwtVhXCtMcAlzl3Dp2u0Rrkui/t9ttwJvuPi
+ OOqytHPS/5+vKNMG064xaUfTudz/vys2TCLhlwedAMBWKHfTFU1s2ARwR1tb3u0D6jpEhmbkS
+ U+qO7zBMA63ykrS7CXIgfczPEnDoNRPep8LqHaYvXjF2/sTTUvUfz
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 6, 2020 at 12:17 PM kernel test robot <lkp@intel.com> wrote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258
+> commit: 5456ffdee666c66e27ccc1006f9afe83ad55559f powerpc/spufs: simplify spufs core dumping
+> date:   9 weeks ago
+> config: powerpc64-randconfig-c003-20200706 (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    powerpc64-linux-ld: arch/powerpc/platforms/pseries/lpar.o:(.toc+0x0): undefined reference to `mmu_pid_bits'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
+> >> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
+>    file.c:(.text+0x4d70): undefined reference to `.dump_emit'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
+>    file.c:(.text+0x4df4): undefined reference to `.dump_emit'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_ibox_info_dump':
+>    file.c:(.text+0x4e50): undefined reference to `.dump_emit'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_mbox_info_dump':
+>    file.c:(.text+0x4eb0): undefined reference to `.dump_emit'
+>    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o:file.c:(.text+0x4f10): more undefined references to `.dump_emit' follow
 
---=-UvB+gZ0CCUHXKiykjcZ8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I'm sure there is a way to fix this properly with added complexity, either
+making dump_emit() an empty inline function when CONFIG_COREDUMP
+is disabled, or adding a lot of #ifdef checks in spufs itself.
 
-On Mon, 2020-07-06 at 14:41 +0200, Maciej S. Szmigiero wrote:
-> On 06.07.2020 14:38, Filipe La=C3=ADns wrote:
-> > On Sun, 2020-07-05 at 19:34 +0200, Maciej S. Szmigiero wrote:
-> > > These messages appear each time the mouse wakes from sleep, in my
-> > > case
-> > > (Logitech M705), every minute or so.
-> > > Let's downgrade them to the "debug" level so they don't fill the
-> > > kernel log
-> > > by default.
-> > >=20
-> > > While we are at it, let's make clear that this is a wheel multiplier
-> > > (and
-> > > not, for example, XY movement multiplier).
-> > >=20
-> > > Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling
-> > > on Logitech mice")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > > ---
-> > > Sending again since the previous message bounced for most recipients.
-> > >=20
-> > >  drivers/hid/hid-logitech-hidpp.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> > > logitech-hidpp.c
-> > > index 1e1cf8eae649..b8b53dc95e86 100644
-> > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > @@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct
-> > > hidpp_device *hidpp)
-> > >  		multiplier =3D 1;
-> > > =20
-> > >  	hidpp->vertical_wheel_counter.wheel_multiplier =3D multiplier;
-> > > -	hid_info(hidpp->hid_dev, "multiplier =3D %d\n", multiplier);
-> > > +	hid_dbg(hidpp->hid_dev, "wheel multiplier =3D %d\n", multiplier);
-> > >  	return 0;
-> > >  }
-> > > =20
-> >=20
-> > I have seen this being useful in some cases, however I do not have a
-> > strong opinion on it. Peter would know better.
->=20
-> Well, the message is not being removed, only hidden by default, so
-> it doesn't fill the kernel log.
->=20
-> One can still enable it at runtime if wanted.
+In the interest of keeping things simple, I'd suggest doing this one instead:
 
-Of course, but instructing users to do that can be annoying, especially
-when you're handling a considerable volume of reports.
+--- a/arch/powerpc/platforms/cell/Kconfig
++++ b/arch/powerpc/platforms/cell/Kconfig
+@@ -44,6 +44,7 @@ config SPU_FS
+        tristate "SPU file system"
+        default m
+        depends on PPC_CELL
++       depends on COREDUMP
+        select SPU_BASE
+        help
+          The SPU file system is used to access Synergistic Processing
 
-Anyway, I am fine with this patch, I just thought it was pertinent to
-raise this point and maybe get Peter's input on this, as he will likely
-be one most affected by it :)
+I'll send a proper patch if there are no objections.
 
-Filipe La=C3=ADns
-
---=-UvB+gZ0CCUHXKiykjcZ8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8DIR0ACgkQ+JPGdIFq
-qV2UKxAAg8jwkNipXO2c7sfGp894+4Rzavgx98SVkf9l+zDXVaom+geZeh8ZX7Wg
-L5s1aWP1EnVJui7f/FxPQ3S5ETJwdgbxS6ZuR11ke/eMgcjY1nHJ1vgURAfDaEGR
-wdBp5rSwiGSWlNlkYvLaEjEV1ZD4s0LD9MxKKoLMIBp07/N/MxlQnPBJiOpy2nQE
-LtgXpApmChvFWfORNEvOLB+7PZxH84KWn+fAzdJhMpyRb9PBDeYEpI9rYDVlFQxh
-tz1T/mrVZKvWPhuicw250LNCsVP5lWPvGz4m8mEgsDNA0gDJ+L/VTpjDhdXd8b+/
-zfdtQHjP/7GXQL+JbfbpHf7oCTtmnykHQMP5NW7FNTviJMBKXGZrn36+YOTTKu9B
-+uuM1oEZJut4geeotq3DIoqQ8xDOCL0LDtwS6EzysHWKoY9FPjYG1VfeWxnRhKuB
-I43n7L/O/UeF9F4NJHiuiUFXsdUiTriyToE3v5Z6mXtnf9dVoDY2DBH31JndBD0g
-drzOVtadIhnWSOxgMwniKLbU4MxS92a/O7OgOc+A/sj4o1tHII5EhhL9B6KylUSu
-Bu4MEoDpzY/OCId+yOwRJyKbWyaL6WKRpP53MypldPx4oW8wNjLmlk5Vf4FpL29l
-b8ZTmpGdTGlqWpZPVF+2U2uQkaw/SZ+iwj8zI3/R62D9LR7qQsY=
-=r1xm
------END PGP SIGNATURE-----
-
---=-UvB+gZ0CCUHXKiykjcZ8--
+      Arnd
