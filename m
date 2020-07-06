@@ -2,88 +2,99 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B03FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D82EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0AB2084C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594065483;
-	bh=cI/zLzLd3mGGwy05JZSth7UR/fLz9XqwcHwFVQnAahA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ecgwKc2Xgynd4iTcKsEMxmExihAkppXZv2jUmRxi/JCUMju/rp4joqJPEP8XUwx21
-	 e9agjof5Wn+teFSX1ZfQcravhWusF/cOWjXZw38ihcgakMnHNyKJT8bMxrNJP128Su
-	 tPdHgCkw4Z5LlENTJhTEJlztR43/1c58v7bmYvDM=
+	by mail.kernel.org (Postfix) with ESMTP id 80D6321527
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgGFT6B (ORCPT
+        id S1726924AbgGFT6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgGFT6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 15:58:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5619B207D0;
-        Mon,  6 Jul 2020 19:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594065480;
-        bh=cI/zLzLd3mGGwy05JZSth7UR/fLz9XqwcHwFVQnAahA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sIAv2+00Jk5NrCyAwJOs3NsihA64mWr8qUiIUMPhkO6HRaLGuXoLaQ8YgcHLYaspb
-         q3eWsEdXcyI/nBfIIgBX6o5cOewWreVJuVQcNAAbvfJVY5pvpd7fmhxMrQAXKLHYZP
-         AmYx4N5ZbzT7fHayOReaA6yDMF8DMKFkL2v3iA4c=
-Date:   Mon, 6 Jul 2020 21:57:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/2] Small devm helper for devm implementations
-Message-ID: <20200706195758.GA100842@kroah.com>
-References: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
- <69f6f7fc-4fb6-248a-684a-b853ee0836bc@free.fr>
- <3fea884b-05d3-ff67-b9fe-41c9b46cf478@free.fr>
+        Mon, 6 Jul 2020 15:58:06 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:38599 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFT6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 15:58:05 -0400
+Received: by mail-oo1-f67.google.com with SMTP id x2so542943oog.5;
+        Mon, 06 Jul 2020 12:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yYBYeXEBi9fpsYu32+atWlfZWbFyTXeWl6rhYx6hhP0=;
+        b=nAdVwJQYqtZl0gK8YdUqI2xRxgY9AJ4GtrF7e/1K7fsTR3Oy26tHkEJTi9M2DjDEg+
+         4itBeZqR7aRzcwUW/AHxNnpdViEVkOGrrUGgKZ7GFdqvlCKi5wLJKAMx+JjwHwAN1Rsd
+         0RY/F+OunZPgV87KI8yIX/EyzG9ojc214gOYRUrGucf+R6rGP4CxJ2VJP+wN8MtLLZZ4
+         /HrDKEMZChjAnHR84GGvvclWlqBvTzxpPSRkDAax850AV87/RzdsF3YM2irS1pb6PcDN
+         qv2pWv7EbtIBnLokH3/8/F45aoLWvjuGG0xa5GD4S6g8JBXEYVbgb4bgWNQLiUiSKffQ
+         ciTA==
+X-Gm-Message-State: AOAM5319Xtaqf5jJmKd9Bw+aMmSbiGlSDRJVIFBv61gJofzhZjkPjBJz
+        88LFqDU3UZx5XLCRDJDClXBbRhT+Rz0VG20aMeM=
+X-Google-Smtp-Source: ABdhPJzX9ENYMNtWdtWLUsKiUIPey47XkLeKlUt0Fes8kpMgw+ZrL9CvfN/DkVMlEVyogx+972eLPoeQSqQNMaWSID4=
+X-Received: by 2002:a4a:5209:: with SMTP id d9mr26731507oob.40.1594065484626;
+ Mon, 06 Jul 2020 12:58:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fea884b-05d3-ff67-b9fe-41c9b46cf478@free.fr>
+References: <202007040833.xIqR5rAw%lkp@intel.com> <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+ <20200706161810.GB6176@sirena.org.uk>
+In-Reply-To: <20200706161810.GB6176@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jul 2020 21:57:53 +0200
+Message-ID: <CAMuHMdXK92qO8KB6ejc6LLmfFsy=dZY18vNJGh+CKRZBAov-JA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
+To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 05:56:04PM +0200, Marc Gonzalez wrote:
-> Hello Greg,
-> 
-> Would you agree to take this series?
+Hi Adrian,
 
-Given the lack of testing of the patch, it doesn't seem wise to add
-this, right?
+On Mon, Jul 6, 2020 at 6:18 PM Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
+> > The implementation is transparent for the SPI devices and doesn't require
+> > their modifications. It is based on a virtual SPI device (spi-daisy_chain)
+> > and defines two required device tree properties ('spi-daisy-chain-len' and
+> > 'spi-daisy-chain-noop') and one optional
+>
+> It would really help to have an example of how a client device will use
+> this, right now it's a bit hard to follow.  Overall it feels like this
+> should be better abstracted, right now there's lots of ifdefs throughout
+> the code which make things unclear and also seem like they're going to
+> be fragile long term since realistically very few systems will be using
+> this.
 
-Please get some testing, and some more users, and I'll be glad to
-consider it.
+Can't the ifdefs be avoided by implementing this as a new SPI controller?
+I.e. the daisy chain driver will operate as a slave of the parent SPI
+controller,
+but will expose a new SPI bus to the daisy-chained slaves.
 
-thanks,
+> Perhaps this needs to be a library for devices that can daisy
+> chain?  It does feel like the instances should be aware of each other
+> since half the point with building the hardware like this is that it
+> enables operations on multiple devices to happen in sync.
 
-greg k-h
+Indeed. Exposing that functionality is the interesting, but hard part.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
