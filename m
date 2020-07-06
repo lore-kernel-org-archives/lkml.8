@@ -2,197 +2,146 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A718FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFF22070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CC02073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QgG4AqQw"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UUT7vs3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgGFNRk (ORCPT
+        id S1729223AbgGFNSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:17:40 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:23172 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbgGFNRj (ORCPT
+        Mon, 6 Jul 2020 09:18:48 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37354 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbgGFNSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:17:39 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200706131735epoutp018915bdd357d78e8686603b882d5ce85c~fLEIw6FTC1086810868epoutp01_
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 13:17:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200706131735epoutp018915bdd357d78e8686603b882d5ce85c~fLEIw6FTC1086810868epoutp01_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594041455;
-        bh=KjGMvpbBplrRVXqi2JfJREM/WgEwIEVIJcyF61obP1Y=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=QgG4AqQwQvi8a+oN9OF0A/nuqNY7yEQRwbPFj4XSl+tyIJkR/8tvkcaXkNm5LN0gk
-         tfC7cZybhg8eqKKubEZtPdiqv9i8RcznQSOm/aoCIR/SFWqcYj5yWKAHGnadzNQpmZ
-         3sZqjhhLArHtHbdRQPtaq9PZQDVDbG422ngpaq6s=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200706131735epcas5p2c3fa8058bd38441969711444c0d3a646~fLEIV0Mq50184801848epcas5p21;
-        Mon,  6 Jul 2020 13:17:35 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A4.C2.09475.F64230F5; Mon,  6 Jul 2020 22:17:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200706131734epcas5p344bc0069bdf4f82603bcea0412c52b79~fLEHd3mBl0599605996epcas5p3-;
-        Mon,  6 Jul 2020 13:17:34 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200706131734epsmtrp115d12d0616111d95bce7ed0ccc340f27~fLEHdKWBY0199601996epsmtrp1e;
-        Mon,  6 Jul 2020 13:17:34 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-27-5f03246fe947
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        98.BA.08303.E64230F5; Mon,  6 Jul 2020 22:17:34 +0900 (KST)
-Received: from sriramdash03 (unknown [107.108.234.13]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200706131732epsmtip2364b290c8fa6c83414a9953a81cd06bd~fLEFeK6U90960509605epsmtip2T;
-        Mon,  6 Jul 2020 13:17:32 +0000 (GMT)
-From:   "Sriram Dash" <sriram.dash@samsung.com>
-To:     "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>
-Cc:     "'Kishon Vijay Abraham I'" <kishon@ti.com>,
-        "'Shradha Todi'" <shradha.t@samsung.com>, <bhelgaas@google.com>,
-        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200706111708.GF26377@e121166-lin.cambridge.arm.com>
-Subject: RE: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Date:   Mon, 6 Jul 2020 18:47:30 +0530
-Message-ID: <027101d65397$cf7ef760$6e7ce620$@samsung.com>
+        Mon, 6 Jul 2020 09:18:48 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6913520B717A;
+        Mon,  6 Jul 2020 06:18:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6913520B717A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594041528;
+        bh=f6pqwPgURJsUukw0OzBzkWGxCYgCy9yL+9G336sxsg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UUT7vs3OB1AfZN8zireRKfp/s6vIG1eklB2XXox3Un1iQ/71CST+p4YPnh/noPO4s
+         qqjf581qVhqHRsmxe/fwt2L4cVrlo16dwpSWSHGaFXHs5qAcpaszsntJYJRQjVL1/w
+         6dTp9HX986whh3++TYJQTJFAi5oE0c+jZIUsiCu4=
+Date:   Mon, 6 Jul 2020 08:18:45 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
+ conditional into ima_validate_rule()
+Message-ID: <20200706131845.GI4694@sequoia>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+ <1593558449.5057.12.camel@linux.ibm.com>
+ <20200702221656.GH4694@sequoia>
+ <1593785732.23056.16.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQIRa+BXjMtyeVOz/ELce4dgT57WJwIqUA0mAt3aYLECuy3/8gLh+aTgAbYxJMuoIXtK8A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7bCmhm6+CnO8wd59EhZLmjIsLjztYbO4
-        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1Duwea+atYfRYsKnUo2/LKkaP4ze2M3l83iQXwBrF
-        ZZOSmpNZllqkb5fAlTHtxE7mgmeiFWuPfWBpYJwv2MXIwSEhYCLxqNO1i5GLQ0hgN6PE4VcP
-        WSCcT4wS266uZIdwPjNK/HjSwdTFyAnWMe/mdqjELkaJPw0f2UASQgKvGSWm/S0CsdkEdCXO
-        3mgCi4sImEocefURrIFZ4AyjxLxbj5hBdnMKOEts3soJUiMsEC6xYv5NRhCbRUBF4unzq2A2
-        r4ClxP1Z75ghbEGJkzOfsIDYzALyEtvfzmGGOEhB4ufTZawQcXGJoz97wMaLCIRJ/PxfD7JW
-        QmAmh8TxK7dZIOpdJGbtP8YIYQtLvDq+hR3ClpJ42d8GZWdLXO57DjW/RGLGq4VQvfYSB67M
-        YQGZzyygKbF+lz7EWj6J3t9PmCAhyivR0SYEUa0q8er2ZqiJ0hIH1p6GBqGHxNcJF5gmMCrO
-        QvLYLCSPzULyzCyEZQsYWVYxSqYWFOempxabFhjnpZbrFSfmFpfmpesl5+duYgQnHy3vHYyP
-        HnzQO8TIxMF4iFGCg1lJhLdXmzFeiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/SjzNxQgLpiSWp
-        2ampBalFMFkmDk6pBib7ln9q586bJ69XKOZf8+lKmek6BcXnprMTDn57fUEracYRrpuegQ8K
-        Zh+wlDHq/32oIyh+Qav0htoNF++/CLDczqa0iiUh6VZVy7NQLdMzZk6FFxz9xf0Yr7OmWJ94
-        ZfRGT2PnKt21Kz9ZrSmUPbniytTPWbl2zhVv6t+aPV9yM+he8NXwiLJHZQXldxTOZ/ivSJsw
-        eY5AZ9eJ7ztzD6bJ8iS5HzPqy7j9/oxejMdV6U+Cxg6beH9ZflEyF7e5tdL9qJ+axNLdp8RF
-        3i96Mf9PcdAH1nkpIX8Wrb/RV8d57X/QqgenTgted208otVwidf2yrWn/4rbu97l/7KdcKVk
-        ftxR7vYNC/ne7mGbr+KpxFKckWioxVxUnAgAoj8l2q0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLLMWRmVeSWpSXmKPExsWy7bCSvG6eCnO8QeMNKYslTRkWF572sFlc
-        3jWHzeLsvONsFm9+v2C3WLT1C7tF7+FaB3aPNfPWMHos2FTq0bdlFaPH8RvbmTw+b5ILYI3i
-        sklJzcksSy3St0vgyph2YidzwTPRirXHPrA0MM4X7GLk5JAQMJGYd3M7excjF4eQwA5GiW8t
-        xxm7GDmAEtISP+/qQtQIS6z89xyq5iWjxPU551lBEmwCuhJnbzSxgdgiAqYSR159BCtiFrjE
-        KLFpaw8TRMcZJom3E7+zgUzlFHCW2LyVE6RBWCBU4mPbVLBBLAIqEk+fX2UEsXkFLCXuz3rH
-        DGELSpyc+YQFpJVZQE+ibSNYCbOAvMT2t3OYIY5TkPj5dBkrRFxc4ujPHmaQchGBMImf/+sn
-        MArPQjJoFsKgWUgGzULSvICRZRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnAMaWnt
-        YNyz6oPeIUYmDsZDjBIczEoivL3ajPFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb/OWhgnJJCe
-        WJKanZpakFoEk2Xi4JRqYFr+TYyR54200B2F3q/it/yY9+ddeSHybeOVJMtPzpOmNlSEMqS8
-        bjhslNuq8u6n31XXlXd9ZgpwSKraHAoQ3xzu0HyVI5d/74TktrxMi2ubXu7aP6O6U+3pln9z
-        vtXdl7rof2LNB1XpCWXXHz724lWOOta591tJydQv69s4jHQDL97jyWze+XdK9YNdq24t/1O+
-        3W374qxvGUrKMnNNzb5fZnh7l+n77aDPuS7fW7bc/sN1au7WuYvX2x4tPitcz/57j/u11+at
-        x/LZ2/mdeuNvXtpcF/H259THYvwn2IObpjluqf61bcXthW8mLlivcLRh9f1qximdzt0SMxtN
-        Zj2xabx9+u0jBc7vTzbdav49UYmlOCPRUIu5qDgRAELBkFkQAwAA
-X-CMS-MailID: 20200706131734epcas5p344bc0069bdf4f82603bcea0412c52b79
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
-References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
-        <20200311102852.5207-1-shradha.t@samsung.com>
-        <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
-        <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
-        <000001d608fb$7ab39010$701ab030$@samsung.com>
-        <20200706111708.GF26377@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593785732.23056.16.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: 06 July 2020 16:47
-> Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for -
-> >get_features()
+On 2020-07-03 10:15:32, Mimi Zohar wrote:
+> On Thu, 2020-07-02 at 17:16 -0500, Tyler Hicks wrote:
+> > On 2020-06-30 19:07:29, Mimi Zohar wrote:
+> > > On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
+> > > > Use ima_validate_rule() to ensure that the combination of a hook
+> > > > function and the keyrings conditional is valid and that the keyrings
+> > > > conditional is not specified without an explicit KEY_CHECK func
+> > > > conditional. This is a code cleanup and has no user-facing change.
+> > > > 
+> > > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > > > ---
+> > > > 
+> > > > * v2
+> > > >   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
+> > > >     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
+> > > >     present in the rule entry flags for non-buffer hook functions.
+> > > > 
+> > > >  security/integrity/ima/ima_policy.c | 13 +++++++++++--
+> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > > > index 8cdca2399d59..43d49ad958fb 100644
+> > > > --- a/security/integrity/ima/ima_policy.c
+> > > > +++ b/security/integrity/ima/ima_policy.c
+> > > > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> > > >  		case KEXEC_KERNEL_CHECK:
+> > > >  		case KEXEC_INITRAMFS_CHECK:
+> > > >  		case POLICY_CHECK:
+> > > > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> > > > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> > > > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> > > > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
+> > > > +					     IMA_PERMIT_DIRECTIO |
+> > > > +					     IMA_MODSIG_ALLOWED |
+> > > > +					     IMA_CHECK_BLACKLIST))
+> > > 
+> > > Other than KEYRINGS, this patch should continue to behave the same.
+> > >  However, this list gives the impressions that all of these flags are
+> > > permitted on all of the above flags, which isn't true.
+> > > 
+> > > For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
+> > > to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
+> > 
+> > Just to clarify, are both IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST
+> > limited to KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK, and MODULE_CHECK?
+> > That's what ima_hook_supports_modsig() suggests.
 > 
-> On Thu, Apr 02, 2020 at 08:01:59PM +0530, Sriram Dash wrote:
-> 
-> [...]
-> 
-> > > So the patch itself is correct though the commit log has to be
-> > > fixed. You should also check if all the endpoint controller drivers
-> > > existing currently provides epc_features.
-> >
-> > At the moment, there is no issue for existing controller drivers as I
-> > can see almost all drivers are providing epc_features. But, this is
-> > not a mandatory feature and some controller drivers may not have
-> > epc_features implemented, may be in the near future.  But because we
-> > are dealing with the configfs, the application need not bother about
-> > the driver details underneath.
-> >
-> > IMO, the code should be fixed regardless and should not cause panic in
-> > any case.
-> 
-> What's this patch status please ?
->
+> Theoretically that is true, but I have no idea how you would append a
+> signature to the kexec boot command line.  The only users of appended
+> signatures are currently kernel modules and the kexec'ed kernel image.
 
-Its not in the mainline tree as of now. However, we feel its important for
-the drivers not using epc_features.
- 
-> Thanks,
-> Lorenzo
-> 
-> > > Thanks
-> > > Kishon
-> > > >
-> > > >
-> > > >>  drivers/pci/endpoint/functions/pci-epf-test.c | 15
-> > > >> +++++++++------
-> > > >>  1 file changed, 9 insertions(+), 6 deletions(-)
-> > > >>
-> > > >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> index c9121b1b9fa9..af4537a487bf 100644
-> > > >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > >> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf
-*epf)
-> > > >>  		return -EINVAL;
-> > > >>
-> > > >>  	epc_features = pci_epc_get_features(epc, epf->func_no);
-> > > >> -	if (epc_features) {
-> > > >> -		linkup_notifier = epc_features->linkup_notifier;
-> > > >> -		msix_capable = epc_features->msix_capable;
-> > > >> -		msi_capable = epc_features->msi_capable;
-> > > >> -		test_reg_bar =
-pci_epc_get_first_free_bar(epc_features);
-> > > >> -		pci_epf_configure_bar(epf, epc_features);
-> > > >> +	if (!epc_features) {
-> > > >> +		dev_err(dev, "epc_features not implemented\n");
-> > > >> +		return -ENOTSUPP;
-> > > >>  	}
-> > > >>
-> > > >> +	linkup_notifier = epc_features->linkup_notifier;
-> > > >> +	msix_capable = epc_features->msix_capable;
-> > > >> +	msi_capable = epc_features->msi_capable;
-> > > >> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-> > > >> +	pci_epf_configure_bar(epf, epc_features);
-> > > >> +
-> > > >>  	epf_test->test_reg_bar = test_reg_bar;
-> > > >>  	epf_test->epc_features = epc_features;
-> > > >>
-> > > >> --
-> > > >> 2.17.1
-> > > >
-> > > >
-> >
+The discrepancy was with KEXEC_INITRAMFS_CHECK, not KEXEC_CMDLINE. I now
+see that there's no support for initramfs signature verification in the
+kexec code so I'll assume that ima_hook_supports_modsig() is wrong and
+limit IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST to the
+KEXEC_KERNEL_CHECK and MODULE_CHECK actions, as you originally
+suggested.
 
+Tyler
+
+> 
+> > 
+> > >  Both should only be allowed on APPRAISE action rules.
+> > 
+> > For completeness, it looks like DONT_APPRAISE should not be allowed.
+> 
+> Good point.  
+> 
+> > 
+> > > IMA_PCR should be limited to MEASURE action rules.
+> > 
+> > It looks like DONT_MEASURE should not be allowed.
+> 
+> The TPM PCR isn't a file attribute.
+> 
+> > 
+> > > IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
+> > 
+> > It looks like DONT_APPRAISE should not be allowed.
+> 
+> Right, in all of these cases the DONT_XXXX isn't applicable.
+> 
+> Mimi
