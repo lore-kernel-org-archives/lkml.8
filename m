@@ -2,153 +2,84 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A41C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521DB20747
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:41:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IQCrUIbW"
+	by mail.kernel.org (Postfix) with ESMTP id DBBF620739
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594003370;
+	bh=CrR+Ru1vIzVxb/frbja2kDuVOq5rjlaAGt224uq0yAU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q8QNKw4AgW1p3P9F3Nr9Uf36f/SeKPvOy4iV3QUq14avMUaDUg8KmVI+Y9KnfQ0jy
+	 PGbTamJxtbsKLd5Rp0a8jZSxo7bWnG9I4oc7lAxQ/wA8AztCVxyT3kW7j6L5JyAPmS
+	 7+eixRwtNJ7gFmK/sQbaMoGCrCmYDNPUiCFxlnpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgGFCgZ (ORCPT
+        id S1728671AbgGFCmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 22:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728621AbgGFCgZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 22:36:25 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D704C061794
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:36:24 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b4so33525121qkn.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 19:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sP8AeaVoozfO9npWWBtIIZljVBmSXvMUO9iliaOoAg4=;
-        b=IQCrUIbW25djPzc7S+MU49TH4vVH1Vd+pGBli6+6MKgvtNoKYWzRXgRI1G3Gjcrwao
-         EWF5fKDfubLC4QrN/oQF3XEtAB73ewZ7F4L89Lmb4tOgrb/qNTG0sqcNWnieU/d2w8pU
-         wJPv9GtU6aC5RkDLlGleuKdBAd8UH1qgd51F4dQh331buZ2Tae6vFjJB0zVQKBb/AUeR
-         YAdn/3WsrwIDWoI13yr6c38X4KPPzlTS/xCVPlr/xnKlmGZTiMmskjrq92YpsmV0axFF
-         I+lHefcB21xIzAMKIgrUuIuA7w4siFSmOyYi8NzeXBLUK7LU7dnV2ZkPdcrstZ1Dp470
-         qViw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sP8AeaVoozfO9npWWBtIIZljVBmSXvMUO9iliaOoAg4=;
-        b=F6Amsg7WMkWEr4IeKVLXVXlu97a28sKx3gFLVu0jtzR/MWMPL6TomwCf2A1RNoRV83
-         v7vp1fQlpI5ZANHp66BD1fg+BjGYiexrK5oFyTIQ21U5zxZLWQW9HohRgZd2ntMww7Ud
-         DkslGqDOM7IR+DMefVz47D7herOfJm8yFjjSu8zQ91/fRrj7ANQFBTpeMyOAtC2ZE/fO
-         Oalakx/DqnIBAdNjuRmM7FPcQoGUutSWzeoCOIw5NZkPjjkYsww0E/EVDLN6GLdAXAWQ
-         OeLbARwG/jcixbIJwT71dDzKL5Pzrz4yEfcY4rojQm3pUHGGwIlvE8EKVnC+ZxWZbMxP
-         i2aQ==
-X-Gm-Message-State: AOAM532QVbmEMdJ4iz2O0X8QU7tQD7s5Msep6KnKHmp+bBfCVx6oA3Zs
-        x+3vxx/WmkR9RtnOVX/a+5+c8A==
-X-Google-Smtp-Source: ABdhPJwOxYQmUuL7A1CF/7JW/bxVMJULU8q19x6HmjPK1f5a/QoiaK7T4AQo82o4vbVkuplVxQW5pw==
-X-Received: by 2002:a37:9c51:: with SMTP id f78mr8648119qke.60.1594002983385;
-        Sun, 05 Jul 2020 19:36:23 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 16sm18216530qkv.48.2020.07.05.19.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 19:36:22 -0700 (PDT)
-Date:   Sun, 5 Jul 2020 22:36:14 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Message-ID: <20200706023614.GA1231@lca.pw>
-References: <20200705044454.GA90533@shbuild999.sh.intel.com>
- <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
- <20200705125854.GA66252@shbuild999.sh.intel.com>
- <20200705155232.GA608@lca.pw>
- <20200706014313.GB66252@shbuild999.sh.intel.com>
+        Sun, 5 Jul 2020 22:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728641AbgGFCmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jul 2020 22:42:25 -0400
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778B320771;
+        Mon,  6 Jul 2020 02:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594003344;
+        bh=CrR+Ru1vIzVxb/frbja2kDuVOq5rjlaAGt224uq0yAU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Fl9CdV4dcESwGpstxHYpUOY55lRqxa4UjOu1awhEV9wC4YxkzSvqbz5uDDY7S8ete
+         HgJOZqrihBYN2wojiukP3+PUSQ06axqmUyQrE3qK8BZQ/5Vc6PFhAAs7BcKyeugNsX
+         t0SdORRsf+VonJvcbYQ8vHsUaIukvTnWoWX2nxJ0=
+Received: by mail-lf1-f43.google.com with SMTP id u25so21746730lfm.1;
+        Sun, 05 Jul 2020 19:42:24 -0700 (PDT)
+X-Gm-Message-State: AOAM5307stqFu5SxhvGwoGW48fvI+K9TKk/iFReDaH9D1IMzB4EF8HOg
+        Oph4ho2YE3jPZsPKWjNUqIrySOe9Tm2u8cAZhN8=
+X-Google-Smtp-Source: ABdhPJwDZYsA/gr9T0oE6LiNRx4sZr0rPI8qgTnwq0KpGS9PhHzhuLp5VyzNULOhkK89kDCcITnySqynDS/YBCoNrjo=
+X-Received: by 2002:a19:4a4e:: with SMTP id x75mr28674931lfa.70.1594003342600;
+ Sun, 05 Jul 2020 19:42:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706014313.GB66252@shbuild999.sh.intel.com>
+References: <1593958397-62466-1-git-send-email-guoren@kernel.org>
+ <202007051336.C9EA0ECF65@keescook> <CAJF2gTR5Fc1wpjr1ZYZikS=hCP9rbjJVsH9b-z2nBxbBcfBoCA@mail.gmail.com>
+ <202007051820.DABE7F87D7@keescook>
+In-Reply-To: <202007051820.DABE7F87D7@keescook>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 6 Jul 2020 10:42:11 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTr_ENhGRmjqNbGBhEc8y4D3YSqAResvwHuB1ykemKTUw@mail.gmail.com>
+Message-ID: <CAJF2gTTr_ENhGRmjqNbGBhEc8y4D3YSqAResvwHuB1ykemKTUw@mail.gmail.com>
+Subject: Re: [RFC PATCH] riscv: enable per-task stack canaries
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:43:13AM +0800, Feng Tang wrote:
-> On Sun, Jul 05, 2020 at 11:52:32AM -0400, Qian Cai wrote:
-> > On Sun, Jul 05, 2020 at 08:58:54PM +0800, Feng Tang wrote:
-> > > On Sun, Jul 05, 2020 at 08:15:03AM -0400, Qian Cai wrote:
-> > > > 
-> > > > 
-> > > > > On Jul 5, 2020, at 12:45 AM, Feng Tang <feng.tang@intel.com> wrote:
-> > > > > 
-> > > > > I did reproduce the problem, and from the debugging, this should
-> > > > > be the same root cause as lore.kernel.org/lkml/20200526181459.GD991@lca.pw/
-> > > > > that loosing the batch cause some accuracy problem, and the solution of
-> > > > > adding some sync is still needed, which is dicussed in
-> > > > 
-> > > > Well, before taking any of those patches now to fix the regression,
-> > > > we will need some performance data first. If it turned out the
-> > > > original performance gain is no longer relevant anymore due to this
-> > > > regression fix on top, it is best to drop this patchset and restore
-> > > > that VM_WARN_ONCE, so you can retry later once you found a better
-> > > > way to optimize.
-> > > 
-> > > The fix of adding sync only happens when the memory policy is being
-> > > changed to OVERCOMMIT_NEVER, which is not a frequent operation in
-> > > normal cases.
-> > > 
-> > > For the performance improvment data both in commit log and 0day report
-> > > https://lore.kernel.org/lkml/20200622132548.GS5535@shao2-debian/
-> > > it is for the will-it-scale's mmap testcase, which will not runtime
-> > > change memory overcommit policy, so the data should be still valid
-> > > with this fix.
-> > 
-> > Well, I would expect people are perfectly reasonable to use
-> > OVERCOMMIT_NEVER for some workloads making it more frequent operations.
-> 
-> In my last email, I was not saying OVERCOMMIT_NEVER is not a normal case,
-> but I don't think user will too frequently runtime change the overcommit
-> policy. And the fix patch of syncing 'vm_committed_as' is only called when
-> user calls 'sysctl -w vm.overcommit_memory=2'.
-> 
-> > The question is now if any of those regression fixes would now regress
-> > performance of OVERCOMMIT_NEVER workloads or just in-par with the data
-> > before the patchset?
-> 
-> For the original patchset, it keeps vm_committed_as unchanged for
-> OVERCOMMIT_NEVER policy and enlarge it for the other 2 loose policies
-> OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS, and I don't expect the "OVERCOMMIT_NEVER
-> workloads" performance  will be impacted. If you have suggetions for this
-> kind of benchmarks, I can test them to better verify the patchset, thanks!
+On Mon, Jul 6, 2020 at 9:21 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jul 06, 2020 at 09:01:51AM +0800, Guo Ren wrote:
+> > Yeah! :) I just want to show you, how about the format: use tp in gpr
+> > to do that. The format is similar to arm64.
+> >
+> > tp is the task_struct point in riscv.
+>
+> Sounds good to me, yes. Thanks! Is there anyone looking at the GCC and
+> Clang sides of this?
+My colleague is working on gcc's.
 
-Then, please capture those information into a proper commit log when you
-submit the regression fix on top of the patchset, and CC PER-CPU MEMORY
-ALLOCATOR maintainers, so they might be able to review it properly.
+-- 
+Best Regards
+ Guo Ren
 
-> 
-> - Feng
-> 
-> > 
-> > Given now this patchset has had so much churn recently, I would think
-> > "should be still valid" is not really the answer we are looking for.
-> > 
-> > > 
-> > > Thanks,
-> > > Feng
-> > > 
-> > > 
+ML: https://lore.kernel.org/linux-csky/
