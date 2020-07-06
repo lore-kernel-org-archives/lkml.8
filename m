@@ -2,83 +2,126 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7238BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5788420722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80E920720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594052795;
+	bh=ELC0Qf8GBOcW7d74k7xE/syM0cqkEfG1ZwnEhNH0Xwc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=gBIykI8ljH+7RWfMu4TjNmQdHQMPfMus6pWt8obrbAtInqxLzwGvVLIDU0nOldwQ+
+	 skz2D6PiThhzE1VbjKTDrvfcddE6KpbtbJKBgyC54pPSLJaxWpwMXbkf9FGq+Y/3NS
+	 T1iS8iCccsY0iSKzEXz/orR/SdmQUrXhQX9opuk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgGFQW5 (ORCPT
+        id S1729500AbgGFQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:22:57 -0400
-Received: from mailomta13-sa.btinternet.com ([213.120.69.19]:10108 "EHLO
-        sa-prd-fep-042.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729372AbgGFQW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:22:56 -0400
-Received: from sa-prd-rgout-002.btmx-prd.synchronoss.net ([10.2.38.5])
-          by sa-prd-fep-042.btinternet.com with ESMTP
-          id <20200706162254.SQLR2233.sa-prd-fep-042.btinternet.com@sa-prd-rgout-002.btmx-prd.synchronoss.net>;
-          Mon, 6 Jul 2020 17:22:54 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.71.41]
-X-OWM-Source-IP: 31.53.71.41 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgddutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvufffkffosedttdertdertddtnecuhfhrohhmpeflohhhnhcuqfhlughmrghnuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeegfedthfefueeihffgkeefteehuddttdefudetveelveefvdefhfejieejhffggfenucfkphepfedurdehfedrjedurdegudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrheefrdejuddrgedupdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.53.71.41) by sa-prd-rgout-002.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5ED9AA6E0576508D; Mon, 6 Jul 2020 17:22:54 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] staging: rtl8192u: Using comparison to true is error prone
-Date:   Mon,  6 Jul 2020 17:22:40 +0100
-Message-Id: <20200706162240.2770-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jul 2020 12:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbgGFQ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:26:34 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63D220702;
+        Mon,  6 Jul 2020 16:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594052793;
+        bh=ELC0Qf8GBOcW7d74k7xE/syM0cqkEfG1ZwnEhNH0Xwc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=NWnqF8yNh1kmeojBtU/hvJnKQi+pZfEw8tRN6xyWsQTMlbnwqrlnw5lTOXvjlFbT7
+         B5rw2d8haDBAV5oFbA0B0HdNl5tN/Er570PuYfYx1NWaxj3XhsCuq3jsWx3nC14oRK
+         3IoGxJUeXAP3v3i6Usrl18oSx/B8BE0q7l0vU15Q=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B23463521502; Mon,  6 Jul 2020 09:26:33 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 09:26:33 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200706162633.GA13288@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
+ <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+ <20200703144228.GF9247@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703144228.GF9247@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clear below issues reported by checkpatch.pl:
+On Fri, Jul 03, 2020 at 07:42:28AM -0700, Paul E. McKenney wrote:
+> On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
+> > > > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
 
-CHECK: Using comparison to false is error prone
+[ . . . ]
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
- drivers/staging/rtl8192u/r8192U_dm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > Also, if C goes and specifies load dependencies, in any form, is then
+> > not the corrolary that they need to specify control dependencies? How
+> > else can they exclude the transformation.
+> 
+> By requiring that any temporaries generated from variables that are
+> marked _Dependent_ptr also be marked _Dependent_ptr.  This is of course
+> one divergence of _Dependent_ptr from the volatile keyword.
+> 
+> > And of course, once we're there, can we get explicit support for control
+> > dependencies too? :-) :-)
+> 
+> Keep talking like this and I am going to make sure that you attend a
+> standards committee meeting.  If need be, by arranging for you to be
+> physically dragged there.  ;-)
+> 
+> More seriously, for control dependencies, the variable that would need
+> to be marked would be the program counter, which might require some
+> additional syntax.
 
-diff --git a/drivers/staging/rtl8192u/r8192U_dm.c b/drivers/staging/rtl8192u/r8192U_dm.c
-index c23e43b095d9..6b301acb584e 100644
---- a/drivers/staging/rtl8192u/r8192U_dm.c
-+++ b/drivers/staging/rtl8192u/r8192U_dm.c
-@@ -2240,7 +2240,7 @@ static void dm_ctstoself(struct net_device *dev)
- 	unsigned long						curTxOkCnt = 0;
- 	unsigned long						curRxOkCnt = 0;
+And perhaps more constructively, we do need to prioritize address and data
+dependencies over control dependencies.  For one thing, there are a lot
+more address/data dependencies in existing code than there are control
+dependencies, and (sadly, perhaps more importantly) there are a lot more
+people who are convinced that address/data dependencies are important.
 
--	if (priv->ieee80211->bCTSToSelfEnable != true) {
-+	if (!priv->ieee80211->bCTSToSelfEnable) {
- 		pHTInfo->IOTAction &= ~HT_IOT_ACT_FORCED_CTS2SELF;
- 		return;
- 	}
-@@ -2944,7 +2944,7 @@ static void dm_dynamic_txpower(struct net_device *dev)
- 	unsigned int txhipower_threshold = 0;
- 	unsigned int txlowpower_threshold = 0;
+For another (admittedly more theoretical) thing, the OOTA scenarios
+stemming from control dependencies are a lot less annoying than those
+from address/data dependencies.
 
--	if (priv->ieee80211->bdynamic_txpower_enable != true) {
-+	if (!priv->ieee80211->bdynamic_txpower_enable) {
- 		priv->bDynamicTxHighPower = false;
- 		priv->bDynamicTxLowPower = false;
- 		return;
---
-2.17.1
+And address/data dependencies are as far as I know vulnerable to things
+like conditional-move instructions that can cause problems for control
+dependencies.
 
+Nevertheless, yes, control dependencies also need attention.
+
+							Thanx, Paul
