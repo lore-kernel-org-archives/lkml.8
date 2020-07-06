@@ -2,229 +2,211 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DCE20715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uksv0RIA"
+	by mail.kernel.org (Postfix) with ESMTP id AD8BC20715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgGFNXt (ORCPT
+        id S1729198AbgGFNYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgGFNXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:23:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44949C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:23:48 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so32835614wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u3h3wext262E7n1BD957g5v244VzOwxa5GVfjSJ/geM=;
-        b=uksv0RIAMXQoQTap1+LbsoaHNwksYV/iQZD8ux1lmeU9O85VFW8n7kl3i/NDkA4JVA
-         zebixzLSa9+kaTmzRBd426DC3iUypNtbgsxskA3njEdNW5p5MFjFE3JZTLTCe4uCoTa1
-         ZjdIvjDBPvmK5Q0podW8iTUhWGHmwBsmncGeTFCaK9yVlnLT+6x7wSym7bBY8ExPKKoG
-         e22edvozdUOaKi2XubldCE4hJvhaHBvJTqtftT2LQEezOluR6+tLMrzvRkn8GNiFzCBZ
-         cIYT5JDBf2zMlRYhxnOF91/VU0ubd9Sx6PJMe97l17KlLYIcLXImlsyx5hWLIlukaXMr
-         7DLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u3h3wext262E7n1BD957g5v244VzOwxa5GVfjSJ/geM=;
-        b=A/JwLwnqwoErgmsscba9swSdWAwhqYxuprzGZWDnSnk2tom36O2U6NiRNUGBZXuR0Z
-         /Ol2rpGPFilUzPtsW/EjXeLzPhN8I/SKaX/biAtsMK9xakotuSy0y8e7r/7lgKzBUPCI
-         IyU9MU9KCjZ3+jPeP81rocwandfhrlH2i1jorYBohfkCmhVYzQLGXmHsN0R0UAdiSlku
-         iIJR3VB7u87Vc6Nf5GGm146Ii1KnNmP/xg8d0sKoC9HtQdIGKO1jztD0uW9XDG3smhIP
-         UdpvEDH+4OTTN+xd0LuNM74/pKv6DhCCiM9Ky4yXwiOFA9Y4MfPeBx90DQrpPC68qb07
-         LH2g==
-X-Gm-Message-State: AOAM5328EBBYIOhv4YjldMu+42EDw0Jt0cyb88WvF7WPcFGegaRmICzA
-        AWiXei0rxVuWeENVRjB8KZfY3ZlW1/Q=
-X-Google-Smtp-Source: ABdhPJynUMChBoPXZsaBUtlvF5PfwvvAXzjTta7pkSZW/T+8cY+XqI/yf/64XJ2bsoRhmLQyTIz/eA==
-X-Received: by 2002:adf:f311:: with SMTP id i17mr50841740wro.237.1594041826875;
-        Mon, 06 Jul 2020 06:23:46 -0700 (PDT)
-Received: from ?IPv6:2a01:36d:103:236:99d9:83af:85e2:5437? (2a01-036d-0103-0236-99d9-83af-85e2-5437.pool6.digikabel.hu. [2a01:36d:103:236:99d9:83af:85e2:5437])
-        by smtp.gmail.com with ESMTPSA id d81sm11472wmc.0.2020.07.06.06.23.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 06:23:46 -0700 (PDT)
-From:   Tibor Raschko <tibrasch@gmail.com>
-Subject: Re: [PATCH] CodingStyle: Inclusive Terminology
-To:     linux-kernel@vger.kernel.org
-Cc:     ksummit-discuss@lists.linuxfoundation.org,
-        tech-board-discuss@lists.linuxfound
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
-Message-ID: <810c098a-9920-3468-733e-4abb13bfbe6d@gmail.com>
-Date:   Mon, 6 Jul 2020 15:23:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 6 Jul 2020 09:24:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16603 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728961AbgGFNYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 09:24:49 -0400
+IronPort-SDR: lB89liWWwkN814oEeuhv6zBNacmRMZZ/XL70cD00Q8ADLGVJ9CNQquHp3Bi8Z1KlpVNDgk3R4m
+ ylpQniMcPQfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="144918206"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="144918206"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 06:24:49 -0700
+IronPort-SDR: VtAff5RJSenNvMwUXkuX67xorxffKXouwfSuKikUJp/5UWIiFsB3nu6KiKJLO/Y9lDucA5nFnE
+ lIPcOPsGlaBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="279275212"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga003.jf.intel.com with ESMTP; 06 Jul 2020 06:24:44 -0700
+Date:   Mon, 6 Jul 2020 21:24:43 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-ID: <20200706132443.GA34488@shbuild999.sh.intel.com>
+References: <20200705044454.GA90533@shbuild999.sh.intel.com>
+ <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
+ <20200705125854.GA66252@shbuild999.sh.intel.com>
+ <20200705155232.GA608@lca.pw>
+ <20200706014313.GB66252@shbuild999.sh.intel.com>
+ <20200706023614.GA1231@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706023614.GA1231@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sending the wrong message
-===========================
+Hi All,
 
-I'm pretty sure everybody agrees that being inclusive is more than just
-using the right words. Being truly inclusive means not caring about the
-origin, birth, age, sex, skin color (amongst other things) at all. This
-means not judging people based on these factors, and being friendly,
-inviting and supportive with everybody in everyday life by default. On
-the street, in hallways and rooms, and on the internet. This behavior
-also includes using words and phrases that are non-offensive. So as a
-result, the proposed patch advocates avoiding words such as "slave" and
-"blacklist".
+Please help to review this fix patch, thanks!
 
-However, as it was already said in this discussion by other parties,
-"context is everything". Quite ironically, this was said in a slightly
-different context, but it doesn't change the importance and general
-truth of these words. I'll go out on a limb and claim that nobody who
-wrote "master-slave" during development of a device driver, or used the
-word "blacklist" was actually thinking of African people or human
-slavery.  In the context of the Linux kernel (and in computing in
-general), these words have a long history and have zero bad connotation,
-no racism, and absolutely null offense.  One could argue that
-recommending to retroactively remove such references (which the original
-proposal does) assumes that these were offensive, hence suggesting to a
-certain degree that past developers who have used these words were
-possibly racists. Retroactively removing those occurrences from code is
-thus, I honestly think, disrespecting and insulting to the original
-authors. Because why remove them if they didn't mean anything bad? And
-before you say "because those instances could still be interpreted as
-offensive", I'll get to that soon.
+It is against today's linux-mm tree. For easy review, I put the fix
+into one patch, and I could split it to 2 parts for percpu-counter
+and mm/util.c if it's preferred.
 
-The proposal is just a surface treatment
-===========================
+From 593f9dc139181a7c3bb1705aacd1f625f400e458 Mon Sep 17 00:00:00 2001
+From: Feng Tang <feng.tang@intel.com>
+Date: Mon, 6 Jul 2020 14:48:29 +0800
+Subject: [PATCH] mm/util.c: sync vm_committed_as when changing memory policy
+ to OVERCOMMIT_NEVER
 
-... and a bad one at that. The "black" in "blacklist" has nothing to do
-with African or Afro-American people. No matter how many occurrences of
-"black" we eradicate from our dictionary, the word "black" will always
-have bad connotations. This connotation stems from darkness, the absence
-of beautiful colors, and historically from the coldness, darkness and
-insecurity of the night. Dan W. dismisses this by saying this is an
-etymological argument, but we cannot dismiss arguments just because they
-are unbeneficial (is that even a word?) to our cause. The true problem
-is not that the word "black" has bad connotations, but that people with
-dark skin color have been labeled with a word that has a bad
-connotation. If we don't want to be offensive, (as a small step) we must
-stop thinking of African and Afro-American people as "black" and ban
-this labeling of them. Note the big difference: Instead of banning the
-use of a simple color in some contexts which have nothing to do with
-oppression, hate or slavery, we should instead stop referring to groups
-of people with a word that incites bad feelings. For this reason, I
-argue that banning "blacklist" is just a surface treatment that doesn't
-recognize the true problem behind it, and even if implemented will stay
-ineffective. Accepting this proposal is like fixing an error message in
-the kernel logs by simply removing the error message instead of fixing
-the underlying bug. To fix the bug in our language, we must stop
-referring to "black" people as black people. A measure where proponents
-of the patch fail at most.
+With the patch to improve scalability of vm_committed_as [1], 0day reported
+the ltp overcommit_memory test case could fail (fail rate is about 5/50) [2].
+The root cause is when system is running with loose memory overcommit policy
+like OVERCOMMIT_GUESS/ALWAYS, the deviation of vm_committed_as could be big,
+and once the policy is runtime changed to OVERCOMMIT_NEVER, vm_committed_as's 
+batch is decreased to 1/64 of original one, but the deviation is not
+compensated accordingly, and following __vm_enough_memory() check for vm
+overcommit could be wrong due to this deviation, which breaks the ltp
+overcommit_memory case.
 
-Being respectful
-===========================
+Fix it by forcing a sync for percpu counter vm_committed_as when overcommit
+policy is changed to OVERCOMMIT_NEVER (sysctl -w vm.overcommit_memory=2).
+The sync itself is not a fast operation, and is toleratable given user is
+not expected to frequently changing policy to OVERCOMMIT_NEVER.
 
-The case for "slave" is a bit different, obviously, because the
-etymology here does link to actual human slavery. Again, it is important
-to note the context however. In computing, this means something
-completely different, end of sentence. Supporters of the patch will come
-and say, "it doesn't need to be meant offensively to be taken
-offensively". That's true, of course, but only if it is a
-misunderstanding, which in the computing context has zero chance. If you
-know and understand what the other party *really* meant, then something
-that wasn't meant offensively cannot be taken offensively. The right
-word here is not "offensive", but one or more of "uncomfortable",
-"disturbing", or "upsetting". Now *that* is understandable. If you have
-a history of you or your ancestors been oppressed, then talking about
-slavery understandably generates unwelcome emotional reactions. But this
-has nothing to do with inclusion, racism, or hate. However, because we
-don't want to emotionally upset people, I actually support avoiding
-references to "slave" in the future. Importantly though, this support is
-out of respect, and not because it has anything to do with being
-offensive. In this context, we should, and for correctness sake must,
-stop referring to "offensiveness".
+[1] https://lore.kernel.org/lkml/1592725000-73486-1-git-send-email-feng.tang@intel.com/
+[2] https://marc.info/?l=linux-mm&m=159367156428286 (can't find a link in lore.kernel.org)
 
-Though even this logic is borderline: just recently, half a million
-people have fallen victim to COVID-19 in over just a couple of months.
-The number of affected relatives are probably 2-3x of that, who are now
-emotionally shaken and uncomfortable about talking about the virus.
-Imagine where we would be now (or where we will be in half a year) if we
-stopped referring to COVID to avoid emotionally upsetting these people.
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+ include/linux/percpu_counter.h |  4 ++++
+ lib/percpu_counter.c           | 14 ++++++++++++++
+ mm/util.c                      | 11 ++++++++++-
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
-About that argument with efficiency
-===========================
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 0a4f54d..01861ee 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -44,6 +44,7 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount,
+ 			      s32 batch);
+ s64 __percpu_counter_sum(struct percpu_counter *fbc);
+ int __percpu_counter_compare(struct percpu_counter *fbc, s64 rhs, s32 batch);
++void percpu_counter_sync(struct percpu_counter *fbc);
+ 
+ static inline int percpu_counter_compare(struct percpu_counter *fbc, s64 rhs)
+ {
+@@ -172,6 +173,9 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
+ 	return true;
+ }
+ 
++static inline void percpu_counter_sync(struct percpu_counter *fbc)
++{
++}
+ #endif	/* CONFIG_SMP */
+ 
+ static inline void percpu_counter_inc(struct percpu_counter *fbc)
+diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+index a66595b..02d87fc 100644
+--- a/lib/percpu_counter.c
++++ b/lib/percpu_counter.c
+@@ -98,6 +98,20 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+ }
+ EXPORT_SYMBOL(percpu_counter_add_batch);
+ 
++void percpu_counter_sync(struct percpu_counter *fbc)
++{
++	unsigned long flags;
++	s64 count;
++
++	raw_spin_lock_irqsave(&fbc->lock, flags);
++	count = __this_cpu_read(*fbc->counters);
++	fbc->count += count;
++	__this_cpu_sub(*fbc->counters, count);
++	raw_spin_unlock_irqrestore(&fbc->lock, flags);
++}
++EXPORT_SYMBOL(percpu_counter_sync);
++
++
+ /*
+  * Add up all the per-cpu counts, return the result.  This is a more accurate
+  * but much slower version of percpu_counter_read_positive()
+diff --git a/mm/util.c b/mm/util.c
+index 52ed9c1..5fb62c0 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -746,14 +746,23 @@ int overcommit_ratio_handler(struct ctl_table *table, int write, void *buffer,
+ 	return ret;
+ }
+ 
++static void sync_overcommit_as(struct work_struct *dummy)
++{
++	percpu_counter_sync(&vm_committed_as);
++}
++
+ int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos)
+ {
+ 	int ret;
+ 
+ 	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+-	if (ret == 0 && write)
++	if (ret == 0 && write) {
++		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
++			schedule_on_each_cpu(sync_overcommit_as);
++
+ 		mm_compute_batch();
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.7.4
+     
 
-The patch author goes into detail to "illustrate" how avoiding these
-words will improve efficiency. I'm sorry to call this out, but this is
-utterly bogus and distracting from the issue at hand. First of all, not
-any maintainer has been slowed done or has worked less efficiently
-because they saw the word "blacklist" or "slave" in the kernel sources.
-These *technical* phrases are not like bad code formatting where
-disconformity leads to worse readability or makes the coding intent
-harder to follow or understand. Quite the contrary, if anybody read the
-proposed "denylist" instead of "blacklist", they will stop for a second,
-think "what an odd choice of words...", and if it wasn't for the current
-black-lives-matter movement, would have a year ago probably even
-refactored the code (or requested a v2-patch) with the usual terminology
-of "blacklist". In other words, this argument has zero real-life basis
-and will, if implemented, achieve the opposite effect of what it is
-claiming.
+On Sun, Jul 05, 2020 at 10:36:14PM -0400, Qian Cai wrote:
+> > In my last email, I was not saying OVERCOMMIT_NEVER is not a normal case,
+> > but I don't think user will too frequently runtime change the overcommit
+> > policy. And the fix patch of syncing 'vm_committed_as' is only called when
+> > user calls 'sysctl -w vm.overcommit_memory=2'.
+> > 
+> > > The question is now if any of those regression fixes would now regress
+> > > performance of OVERCOMMIT_NEVER workloads or just in-par with the data
+> > > before the patchset?
+> > 
+> > For the original patchset, it keeps vm_committed_as unchanged for
+> > OVERCOMMIT_NEVER policy and enlarge it for the other 2 loose policies
+> > OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS, and I don't expect the "OVERCOMMIT_NEVER
+> > workloads" performance  will be impacted. If you have suggetions for this
+> > kind of benchmarks, I can test them to better verify the patchset, thanks!
+> 
+> Then, please capture those information into a proper commit log when you
+> submit the regression fix on top of the patchset, and CC PER-CPU MEMORY
+> ALLOCATOR maintainers, so they might be able to review it properly.
 
-If we do this, there is no end to politics
-===========================
-
-Let me start with an example. The patch author neglectfully forgets
-about proposing to ban "whitelist", not just "blacklist". If we agree
-that "blacklist" is wrong because it assumes that everything "black" is
-always bad (and thus black people'd be bad), then obviously we *have to*
-remove whitelist too. Because "whitelist" then assumes that everything
-"white" is always good, and now since we're unable to ignore the
-reference to skin-color, so this is just as racist (actually even
-worse), suggesting white supremacy. It is obvious that whoever thought
-out the exclusion of "blacklist" didn't think this through. But we all
-know, these words to be replaced all stem from outside our community,
-and the current patch is not the result of careful consideration, but
-the result of giving-in to external pressure, and to political and media
-waves. The Linux community should stand strong and be inclusive by
-*being* welcoming, friendly and helpful to everybody irrespective of
-skin color, not by *saying* what current political activists expect us
-to say. It might even be better to stop talking about skin color in the
-context of kernel development altogether, because skin color doesn't
-matter here. Here people judge others by technical competency. Any
-discussions otherwise are fueled by external factors and are a
-distraction. Note this does *not* mean we turn our backs to racism or
-offensive behavior. If we see any such poisonous activity among our
-circles now or in the future, we must and will single them out and teach
-them better, and for incorrigible cases we distance ourselves from them.
-But these will be one-off cases that will be handled appropriately.
-Unless it becomes a common problem among Linux developers, it is not our
-responsibility to write down each and every desirable human behavior
-(again, see top about "sending the wrong message"). We've successfully
-avoided pests from infecting our circles in the past and we'll continue
-to do so. Avoiding the word "blacklist" makes no difference here. How do
-I know? Because let's be real: The use of the word "blacklist" has not
-deterred a developer from joining our community yet... for about 25
-years now. On the other hand this discussion is now wasting everybody's
-time. With that last sentence in mind, sorry for this mail turning out
-so long.
-
-Raschko T.
 
 
