@@ -2,115 +2,123 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89451C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF98206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560152070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgGFJyU (ORCPT
+        id S1728580AbgGFJ5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:54:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:47945 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgGFJyU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:54:20 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MGzDv-1k5G8n2R3T-00E1bd for <linux-kernel@vger.kernel.org>; Mon, 06 Jul
- 2020 11:54:18 +0200
-Received: by mail-qk1-f172.google.com with SMTP id b185so23571340qkg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 02:54:18 -0700 (PDT)
-X-Gm-Message-State: AOAM5308NGPfl05De0IDhrJYkS8+WPNTfOHTrNmpxYM0sfHRL8isZUwX
-        KIzD9MreFfQ9BKTQC7rBMSRxfxc0cvbY+W0sEuw=
-X-Google-Smtp-Source: ABdhPJyI+T0XwLNN+frxQL1BscXmAJg7nv/4NCAKtRRhcWmBGieWiHxBlU3HK4v/EGx8e/2Vj/78baWXJ4QgU6Zm3Xc=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr45967200qke.286.1594029257459;
- Mon, 06 Jul 2020 02:54:17 -0700 (PDT)
+        Mon, 6 Jul 2020 05:57:23 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:58812 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727973AbgGFJ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 05:57:22 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0669tDiw002399
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 6 Jul 2020 02:55:34 -0700
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 6 Jul 2020 02:55:12 -0700
+From:   <zhe.he@windriver.com>
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <zhe.he@windriver.com>
+Subject: [PATCH] freezer: Add unsafe versions of freezable_schedule_timeout_interruptible for NFS
+Date:   Mon, 6 Jul 2020 17:52:24 +0800
+Message-ID: <20200706095224.2285480-1-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
- <CAK8P3a2zzXHNB7CX8efpKeQF2gJkF2J4FwafU58wT2RGvjjTxw@mail.gmail.com>
- <CAFmMkTHrQ4LZk4+-3kdJ+dc47MXR1Jd76AXbO-ceT2zsfDRFGQ@mail.gmail.com>
- <CAK8P3a1bbpmD0wJkhkjqW9YttBpMmdn8Z5oTLm0cr-0gjyU2zA@mail.gmail.com>
- <CAFmMkTE3z6OZQ_v3jx-4MzMr8v+4qcF2uLn0ASGydj5oqDnfjg@mail.gmail.com> <CAK8P3a2G_UzKv5HmQk1gyaHXY+YzVedknwof+9fmCjQuF+hu2A@mail.gmail.com>
-In-Reply-To: <CAK8P3a2G_UzKv5HmQk1gyaHXY+YzVedknwof+9fmCjQuF+hu2A@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 6 Jul 2020 11:54:01 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2TUAfhdoAL7u2fun7ZztrjGLxAGAX-WWDqsyNqP2=gZA@mail.gmail.com>
-Message-ID: <CAK8P3a2TUAfhdoAL7u2fun7ZztrjGLxAGAX-WWDqsyNqP2=gZA@mail.gmail.com>
-Subject: Re: [PATCH] SPI LPC information kernel module
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:LX/ZL4RL97tfg5BTf5fkFx/XD/SJ9nQeZ3mhU+HpDDffkkVefQA
- g7jaIcSW7M4xwyDveoAyWgCTiWAQPMsKDnw8BI54zMf5s1Wk/9iu/fERvE1KM+Bp2s9la0+
- D5Hpyp/MPgoXCYdSbLbdo2AO6RqnEzj0c59kEc+g0OAajORvrL85IASRHNOJBK6x0FJ0VL0
- qOrsa4eETYeQdpHXLm+HA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BIqU10ElbOo=:mTMzrlXygrGqlIziKIBWwo
- SW1D9bdfuqXNsZjC+T/rM7bGdD/8l5HHEoGoMHQv213fYNM1PgE7I6HtfTjvaeHT7M4PJ+jzl
- ibVHcLx+0B02LXvqWjYFsIBve70ZrMBwKpj2sNs1U++2PqGPhA4dT45K4nvj3PL7lnwKMqE/s
- qZ5Ri591lUoRs02DOPrzGwnjoSVdgOSPsGk0Uw+dH9/g+SSyU8hTbG2ctQY8nBZOR9M9I+1jx
- 5byU5sWfiIRh+RS3bUOlvQRR5ILSnTwEJ3qvPi8BljRZQP0nYo0eaq+QkqRsWmlNZljPQRHnh
- eyTx2CzYitq9FZWzr5DPj3QmGZmG9c0Pppt7NpZTlvQkvXP9wB+Z3MDR5+4L2MhBtzZeBkRRX
- 7lzxOepvMKyfkeNHAwuEv9OWZFpjuGez8o9KRSKEWew3wbjlr+e65neGm0sPMVcOcs7ii/Mv1
- QUjBHvQ3gql3qXcTVSOWB4saCtnVsXVm7VTsyjjHXpi7+PiW1295eNdzXoBRIc9JW6wh0dVg3
- sQXqhyXCnm/HiFerJPzgDXCTO/uY/nPTdLr5DhdrLMCnILLBQWoc0fzahxEUtPb6L8lXdFsVe
- /vBDW9FwOGp9mCoVO5QQgfYMxmJ2mNLrcSFOySxhu22Kj9qVN1LvGFQGxTi8THU8TzBpE/Pol
- RkMOuJZglbamvFKFywvuXkHN9cFuJiqo/09eRsYSC94En4nP4tGwrsAuZ5FbreIoiXswTOUlJ
- fWzmg2O5JJSVHg9sOlijGgS4OH91XrDXPX15xDB8JxfpDY4oMor4TNMOeVedOUTbgvwH1AZKT
- bNyrw11IYIeLMClyzWcRE2sZb4ck+856R2AOPBY2lePXsH1Fsg=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 11:20 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > Because of these reasons, I'm proposing a misc (not-device) driver that supports
-> > many Intel architectures (and families) to expose the information.
-> > I understand your proposal to first enhance existing _device_ drivers, but I
-> > couldn't find suitable options.
->
-> Maybe try adding an interface to one of the drivers at first, and then extend
-> it to the other hardware after an initial code review. Do not bypass the driver
-> model or try to do everything at once with a single module that knows
-> details of multiple unrelated hardware implementations.
+From: He Zhe <zhe.he@windriver.com>
 
-To clarify further how I think you can have a chance of getting the
-interface you want, here's a step-by-step list:
+commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed operations")
+introduces nfs4_delay_interruptible which also needs an _unsafe version to
+avoid the following call trace for the same reason explained in
+commit 416ad3c9c006 ("freezer: add unsafe versions of freezable helpers for NFS")
 
-1. keep the current securityfs interface (or any other user space
-  ABI if you have already changed it), but put it into a separate loadable
-  module with a pair of exported functions:
-  spi_lpc_register_info(struct spi_lpc_data *info);
-  spi_lpc_unregister_info(struct spi_lpc_data *info);
-  The names will have to change later, but the idea is that any driver
-  can just pass the information you want to export to user space,
-  and the interface module does not care where those values came
-  from.
+CPU: 4 PID: 3968 Comm: rm Tainted: G W 5.8.0-rc4 #1
+Hardware name: Marvell OcteonTX CN96XX board (DT)
+Call trace:
+dump_backtrace+0x0/0x1dc
+show_stack+0x20/0x30
+dump_stack+0xdc/0x150
+debug_check_no_locks_held+0x98/0xa0
+nfs4_delay_interruptible+0xd8/0x120
+nfs4_handle_exception+0x130/0x170
+nfs4_proc_rmdir+0x8c/0x220
+nfs_rmdir+0xa4/0x360
+vfs_rmdir.part.0+0x6c/0x1b0
+do_rmdir+0x18c/0x210
+__arm64_sys_unlinkat+0x64/0x7c
+el0_svc_common.constprop.0+0x7c/0x110
+do_el0_svc+0x24/0xa0
+el0_sync_handler+0x13c/0x1b8
+el0_sync+0x158/0x180
 
-2. For any PCI device ID that is handled by drivers/mtd/spi-nor/intel-spi-pci.c,
-  move the code to call the function from your driver into that file,
-  reading the registers with pci_read_config_dword() or
-  readl(ispi->base + CONSTANT).
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+ fs/nfs/nfs4proc.c       |  2 +-
+ include/linux/freezer.h | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-3. For any PCI device ID that is handled by drivers/mfd/lpc_ich.c,
-  do the same by moving the code to
-  drivers/mtd/spi-nor/controllers/intel-spi-platform.c.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e32717fd1169..15ecfa474e37 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -414,7 +414,7 @@ static int nfs4_delay_interruptible(long *timeout)
+ {
+ 	might_sleep();
+ 
+-	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
++	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
+ 	if (!signal_pending(current))
+ 		return 0;
+ 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
+diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+index 21f5aa0b217f..27828145ca09 100644
+--- a/include/linux/freezer.h
++++ b/include/linux/freezer.h
+@@ -207,6 +207,17 @@ static inline long freezable_schedule_timeout_interruptible(long timeout)
+ 	return __retval;
+ }
+ 
++/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
++static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
++{
++	long __retval;
++
++	freezer_do_not_count();
++	__retval = schedule_timeout_interruptible(timeout);
++	freezer_count_unsafe();
++	return __retval;
++}
++
+ /* Like schedule_timeout_killable(), but should not block the freezer. */
+ static inline long freezable_schedule_timeout_killable(long timeout)
+ {
+@@ -285,6 +296,9 @@ static inline void set_freezable(void) {}
+ #define freezable_schedule_timeout_interruptible(timeout)		\
+ 	schedule_timeout_interruptible(timeout)
+ 
++#define freezable_schedule_timeout_interruptible_unsafe(timeout)	\
++	schedule_timeout_interruptible(timeout)
++
+ #define freezable_schedule_timeout_killable(timeout)			\
+ 	schedule_timeout_killable(timeout)
+ 
+-- 
+2.17.1
 
-4. For any remaining PCI device ID you look at that does not have
-  a driver, create a new PCI driver that binds to those IDs and
-  does the same thing. If you have multiple device IDs that
-  use the same register layout, then handle those with a common
-  driver.
-
-      Arnd
