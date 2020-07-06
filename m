@@ -2,184 +2,89 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C119FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32CED2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 07:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JTW6cXlg"
+	by mail.kernel.org (Postfix) with ESMTP id A25372074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 08:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgGFH6D (ORCPT
+        id S1728283AbgGFIAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 03:58:03 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41605 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728012AbgGFH6C (ORCPT
+        Mon, 6 Jul 2020 04:00:39 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:60586 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbgGFIAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 03:58:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594022280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=aiyyZNnzmjyOXOXAANpJdAmpWx0W34g2hYBqWsfjM4g=;
-        b=JTW6cXlg3J/W9QXCMmjBZg/8zFlKrFnWqqd5iiLHulEzq+BlAB8NKY7r78dZUeNPScp6Ca
-        jBik1Z9O5DhbOA3TARk7p53jc2Qeoo91cNyN2M1yWAlaW7N+kXXn9/EHb5RcUWGjqdWzw+
-        TV1246+XNlSLM4lUTVpNyTv8PR7F5bU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-kasC5dELNYGpGcX6SOJh6A-1; Mon, 06 Jul 2020 03:57:57 -0400
-X-MC-Unique: kasC5dELNYGpGcX6SOJh6A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6317F800C64;
-        Mon,  6 Jul 2020 07:57:55 +0000 (UTC)
-Received: from [10.36.114.3] (ovpn-114-3.ams2.redhat.com [10.36.114.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EDB571669;
-        Mon,  6 Jul 2020 07:57:51 +0000 (UTC)
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: harden try_offline_node against
- bogus nid
-To:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Kaly Xin <Kaly.Xin@arm.com>
-References: <20200706011947.184166-1-justin.he@arm.com>
- <20200706011947.184166-3-justin.he@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <4b864877-1147-8336-5e9a-e89ac5c99be3@redhat.com>
-Date:   Mon, 6 Jul 2020 09:57:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200706011947.184166-3-justin.he@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Mon, 6 Jul 2020 04:00:39 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 3E97FB05EE;
+        Mon,  6 Jul 2020 16:00:32 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P14850T139810951177984S1594022430112946_;
+        Mon, 06 Jul 2020 16:00:31 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <b5073015f233c5bae0bb8de4d53a18fa>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Sandy Huang <hjc@rock-chips.com>
+To:     heiko@sntech.de,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     huangtao@rock-chips.com, andy.yan@rock-chips.com,
+        kever.yang@rock-chips.com, Sandy Huang <hjc@rock-chips.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/of: Consider the state in which the ep is disabled
+Date:   Mon,  6 Jul 2020 15:59:44 +0800
+Message-Id: <20200706075944.11558-1-hjc@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.07.20 03:19, Jia He wrote:
-> When testing the remove_memory path of dax pmem, there will be a panic with
-> call trace:
->   try_remove_memory+0x84/0x170
->   remove_memory+0x38/0x58
->   dev_dax_kmem_remove+0x3c/0x84 [kmem]
->   device_release_driver_internal+0xfc/0x1c8
->   device_release_driver+0x28/0x38
->   bus_remove_device+0xd4/0x158
->   device_del+0x160/0x3a0
->   unregister_dev_dax+0x30/0x68
->   devm_action_release+0x20/0x30
->   release_nodes+0x150/0x240
->   devres_release_all+0x6c/0x1d0
->   device_release_driver_internal+0x10c/0x1c8
->   driver_detach+0xac/0x170
->   bus_remove_driver+0x64/0x130
->   driver_unregister+0x34/0x60
->   dax_pmem_exit+0x14/0xffc4 [dax_pmem]
->   __arm64_sys_delete_module+0x18c/0x2d0
->   el0_svc_common.constprop.2+0x78/0x168
->   do_el0_svc+0x34/0xa0
->   el0_sync_handler+0xe0/0x188
->   el0_sync+0x164/0x180
-> 
-> It is caused by the bogus nid (-1). Although the root cause is pmem dax
-> translates from pxm to node_id incorrectly due to numa_off, it is worth
-> hardening the codes in try_offline_node(), quiting if !pgdat.
-> 
-> Signed-off-by: Jia He <justin.he@arm.com>
-> ---
->  mm/memory_hotplug.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index da374cd3d45b..e1e290577b45 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1680,6 +1680,9 @@ void try_offline_node(int nid)
->  	pg_data_t *pgdat = NODE_DATA(nid);
->  	int rc;
->  
-> +	if (WARN_ON(!pgdat))
-> +		return;
-> +
->  	/*
->  	 * If the node still spans pages (especially ZONE_DEVICE), don't
->  	 * offline it. A node spans memory after move_pfn_range_to_zone(),
-> 
+don't mask possible_crtcs if remote-point is disabled.
 
-Hm. If I am not wrong, somebody used add_memory() with another nid than
-try_remove_memory()?
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+---
+ drivers/gpu/drm/drm_of.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Or did we pass the node_possible(nid) check in add_memory_resource(),
-and succeeded to add to nid==-1?
-
-Having that said, this feels somewhat wrong, especially checking against
-pgdat down in try_offline_node(). It really has to be the same nid as
-used when adding - and that nid has to be sane.
-
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index fdb05fbf72a0..f5f250435add 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -66,6 +66,11 @@ uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
+ 	uint32_t possible_crtcs = 0;
+ 
+ 	for_each_endpoint_of_node(port, ep) {
++		if (!of_device_is_available(ep)) {
++			of_node_put(ep);
++			continue;
++		}
++
+ 		remote_port = of_graph_get_remote_port(ep);
+ 		if (!remote_port) {
+ 			of_node_put(ep);
 -- 
-Thanks,
+2.17.1
 
-David / dhildenb
+
 
