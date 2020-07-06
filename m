@@ -2,155 +2,160 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70260C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5249F20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYwaSxlP"
+	by mail.kernel.org (Postfix) with ESMTP id 5F09820720
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 12:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594039141;
+	bh=PlU8BSY+wNjEY5nGeiVNmxET7zLtMpSGhLtSKa5lOgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YrR2Bkh+es9jtBZyvLUnMDle7ispqzD3hN6tqqCCIzdxDlat0o8IRQkZhWUoxFSHC
+	 jOujDFoP27WDEkrTlagYOK6+sJN+pNUjMoYntZJnHYNjeXZ4th+D9n3wDf1VHrRJXs
+	 lGVn2KplE9zof5rOby6TC5XgyCDZ0iQpCcoYQAec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgGFMiL (ORCPT
+        id S1729105AbgGFMjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgGFMiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:38:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCB3C061794;
-        Mon,  6 Jul 2020 05:38:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so40680784wrs.11;
-        Mon, 06 Jul 2020 05:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:in-reply-to:references:organization
-         :date:mime-version:user-agent;
-        bh=UlxO3hPX8FKOMLmnj0A7S3C/4WvNGuPtDs4m9jeq4vY=;
-        b=RYwaSxlPduOAWSvK50CoX9I1hSnEm6ogaQ+FFcgICmweYSq/0Lvdsa7GZy1rDi/qBa
-         5JAyjnsIyYDBPSYCnsnlimgGpm8streL5rjrTcY+G0jCpX5WF9KpN2LQe2lxSjFBJ6pR
-         w0t7VyJsolZqvI7h2GUSOFcDRH3inst7syNExslZadnWJXvtQQzAc2UIejK41t+4fZvB
-         md9P+hqgXQVCv5NuEIrr5zS6qEeQEqVItjZlJ8XpfePLrI+46q8zo4ulIHhl8HZcFTMd
-         jcZtGDj9BfWBu5XiV1yMEo45rZbi/G98Eq3sl5HBQo5PvRf73gBmUgWSjgUhSxSnUgpy
-         IWrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
-         :references:organization:date:mime-version:user-agent;
-        bh=UlxO3hPX8FKOMLmnj0A7S3C/4WvNGuPtDs4m9jeq4vY=;
-        b=SlTNWkJa+JudH/VvKEtfQHDYWOyU5hp8x0gqUzJ1jV23fgeBbeJu1su0QcRFlT07BI
-         2Cow0x/Yn4BM+Ir8tMGrtab9B35j3p20eARvAQWjbSiT4XhDPB8/GBaN4/efQFMEfd3u
-         JGwG9qRvrCpfuB6gCVImoANHHUS8hlIgkU2xrPa5mSzp8k13VCa4FQSu2S2JEnvQFwr4
-         AOeQDheMCAms5gpYAHo8ur6hdVXAQOR0oo1Gc8lIi2t/7TLQAXK1wolgd7FND2WqU6jo
-         uOpQXk/huVSG3vr1Rsz15lVin6WMBkUvd4kZFdswUNfP7qrWKLhh5Wb8NfbRBbIFvjof
-         bAlg==
-X-Gm-Message-State: AOAM532BsqbGBPNwu48YS3WxE4ktHYJBHu3S2gxHPMF0EWweSXmjS2QZ
-        J2LbXm1ymP0tSIYUTJrLHsStMFmZo0SDYA==
-X-Google-Smtp-Source: ABdhPJzk++snLRL/3Zeg4bNmeyzlYwHvm5wO5AmviL5i6AEwJagIUnDIMAnnl27dbd6WFbaTAidK7g==
-X-Received: by 2002:adf:e68d:: with SMTP id r13mr46305862wrm.141.1594039088678;
-        Mon, 06 Jul 2020 05:38:08 -0700 (PDT)
-Received: from genesis ([2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        by smtp.gmail.com with ESMTPSA id e23sm22716650wme.35.2020.07.06.05.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 05:38:07 -0700 (PDT)
-Message-ID: <2f76f069f2078b3d51533f772f1094dcc03685a3.camel@gmail.com>
-Subject: Re: [PATCH] HID: logitech-hidpp: avoid repeated "multiplier = "
- log messages
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <filipe.lains@gmail.com>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Harry Cutts <hcutts@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-References: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/JbVFOtHolAxXpvgH3yU"
-Date:   Mon, 06 Jul 2020 13:38:04 +0100
+        Mon, 6 Jul 2020 08:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgGFMi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 08:38:59 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.162.135.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1988320715;
+        Mon,  6 Jul 2020 12:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594039138;
+        bh=PlU8BSY+wNjEY5nGeiVNmxET7zLtMpSGhLtSKa5lOgY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vhKgZZI6c77XupfGu8sQOpUMh393W7RQsAdyvA4CtqZ3zX0qc/EmEFoSW/XTzcl4B
+         SxfPJ8Fh/kgV0J3ZakoxlIrdQ9l2qx8E7ZlNjc0h6Bxr9s6BbzXbzp5LPtx31LAkm/
+         P7zgDZBv9Dak0VmMqyf3OiLVO4UE6ujI+LHCsRpU=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F2B51405FF; Mon,  6 Jul 2020 09:38:55 -0300 (-03)
+Date:   Mon, 6 Jul 2020 09:38:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Kajol Jain <kjain@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Paul Clarke <pc@us.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, nasastry@in.ibm.com
+Subject: Re: [PATCH] perf/tools/pmu-events/powerpc: Added nest imc metric
+ events
+Message-ID: <20200706123855.GI1320@kernel.org>
+References: <20200703065658.377467-1-kjain@linux.ibm.com>
+ <CAP-5=fUraGwGLC79g51eZpcB9e2P=tOmz7U7G=RAu+Hmjjjxzw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.3 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUraGwGLC79g51eZpcB9e2P=tOmz7U7G=RAu+Hmjjjxzw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Sun, Jul 05, 2020 at 06:30:30PM -0700, Ian Rogers escreveu:
+> On Thu, Jul 2, 2020 at 11:57 PM Kajol Jain <kjain@linux.ibm.com> wrote:
+> >
+> > Added nest imc metric events.
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
---=-/JbVFOtHolAxXpvgH3yU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied.
 
-On Sun, 2020-07-05 at 19:34 +0200, Maciej S. Szmigiero wrote:
-> These messages appear each time the mouse wakes from sleep, in my
-> case
-> (Logitech M705), every minute or so.
-> Let's downgrade them to the "debug" level so they don't fill the
-> kernel log
-> by default.
->=20
-> While we are at it, let's make clear that this is a wheel multiplier
-> (and
-> not, for example, XY movement multiplier).
->=20
-> Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling
-> on Logitech mice")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
-> Sending again since the previous message bounced for most recipients.
->=20
->  drivers/hid/hid-logitech-hidpp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> logitech-hidpp.c
-> index 1e1cf8eae649..b8b53dc95e86 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -3146,7 +3146,7 @@ static int hi_res_scroll_enable(struct
-> hidpp_device *hidpp)
->  		multiplier =3D 1;
-> =20
->  	hidpp->vertical_wheel_counter.wheel_multiplier =3D multiplier;
-> -	hid_info(hidpp->hid_dev, "multiplier =3D %d\n", multiplier);
-> +	hid_dbg(hidpp->hid_dev, "wheel multiplier =3D %d\n", multiplier);
->  	return 0;
->  }
-> =20
+- Arnaldo
+ 
+> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> > ---
+> >  .../arch/powerpc/power9/nest_metrics.json     | 35 +++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > index c121e526442a..8383a37647ad 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> > @@ -15,5 +15,40 @@
+> >         "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
+> >          "MetricName": "PowerBUS_Frequency",
+> >          "ScaleUnit": "2.5e-7GHz"
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
+> > +       "MetricName" : "mcs01-read",
+> > +       "MetricGroup" : "memory_bw",
+> > +       "ScaleUnit": "6.1e-5MB"
+> 
+> nit: I'm guessing this is from:
+> 64.0/(1024.0*1024.0) = 6.103515625e-05
+> and for reference:
+> 64.0/(1000.0*1000.0) = 6.3999999999999997e-05
+> should the unit be MiB?
+> https://en.wikipedia.org/wiki/Kibibyte
+> 
+> Searching around I only see knightslanding using MiB but it seems to
+> be using it in the 1000^2 case which probably means it should be MB:
+> knightslanding/uncore-memory.json:        "ScaleUnit": "6.4e-05MiB"
+> 
+> Given there is some confusion I wonder if it makes sense to just make
+> this 0.015625B and then we have a utility function that selects the
+> best unit for "bytes" with config options similar to --big-num?
+> 
+> Thanks,
+> Ian
+> 
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
+> > +       "MetricName" : "mcs23-read",
+> > +       "MetricGroup" : "memory_bw",
+> > +       "ScaleUnit": "6.1e-5MB"
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
+> > +       "MetricName" : "mcs01-write",
+> > +       "MetricGroup" : "memory_bw",
+> > +       "ScaleUnit": "6.1e-5MB"
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
+> > +       "MetricName" : "mcs23-write",
+> > +       "MetricGroup" : "memory-bandwidth",
+> > +       "ScaleUnit": "6.1e-5MB"
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
+> > +       "MetricName" : "powerbus_freq",
+> > +       "ScaleUnit": "1e-9GHz"
+> > +    },
+> > +    {
+> > +       "MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
+> > +       "MetricName" : "Memory-bandwidth-MCS",
+> > +       "MetricGroup" : "memory_bw",
+> > +       "ScaleUnit": "6.1e-5MB"
+> >      }
+> >  ]
+> > --
+> > 2.17.1
+> >
 
-I have seen this being useful in some cases, however I do not have a
-strong opinion on it. Peter would know better.
+-- 
 
-Cheers,
-Filipe La=C3=ADns
-
---=-/JbVFOtHolAxXpvgH3yU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl8DGyYACgkQ+JPGdIFq
-qV2X+BAAodOXRsLeK4VZh5PBrDPvqTjUWn7Y1TEFkSZBxAQVzyL1Uv1TvtOjUPIn
-Q65fmafPxfwW+BNNiTeMhqVCUzPNLGjH65aHlVB5ZWYxiTO1k4OKwcCMgpcM6C69
-vdJ2lJjRjWpsmq6gw4QxlmuiaEm1BcAx6IbbIBBXFz2LoypDjT5D6enYLNdLMAdO
-/B+BtUJVhZJFeUV3gNqiUcay6YSKzkHycf+ZgpxFMOJRwnAfPKlVnqKXawzteJAX
-2YVNmyhc+qrNEpAw/t5KrBvoZZJr0XAF/izj021XtJjPPaDde8R1AtmJ1V2Ru6Sv
-Cq8f+AcuBCvykmS3RdWvOAq0BMyI8/hrrlc8iFsaja8GFZqfov+Qk+PnfSk+NAub
-/vbvurzLqV4Di68+8Zb5dvsYmQBIisf+gq7kvuUBd6aKTEdar84wOXCXMjjcdiDp
-zfz20Dpw+f62a5ORVkIJ305PwVugrWK8YR8HikdIdtSoSKkJMRaXn9Cyz1vi1W6D
-vGsuG1q0IjDxdKVkpW863RGC/AXMrQkOB24Mr5H499n8QWgnjqaCSYimoGGbzihU
-vy7YjOr5Ma5Olsq0kLXp3KY8RVcnXpSAcaoqAd0xWIKBwZPw/4cKDo7lD2uCjgKa
-B31lJwUKysIjK1AgQzNY7fKHOvmqxZGtJpSIg1FKg+sDav1j2us=
-=C+AW
------END PGP SIGNATURE-----
-
---=-/JbVFOtHolAxXpvgH3yU--
-
+- Arnaldo
