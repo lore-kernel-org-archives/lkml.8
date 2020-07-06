@@ -2,115 +2,162 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA798C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FDF205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BF22082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgGFRBM convert rfc822-to-8bit (ORCPT
+        id S1729603AbgGFRDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:01:12 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:60400 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgGFRBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:01:11 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jsUUL-0005pc-ND; Mon, 06 Jul 2020 11:01:05 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jsUUJ-0005CJ-SN; Mon, 06 Jul 2020 11:01:05 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Yinghai Lu <yhlu.kernel@gmail.com>,
-        Jason Wessel <jason.wessel@windriver.com>
-References: <20200706133341.476881-1-lee.jones@linaro.org>
-        <20200706133341.476881-26-lee.jones@linaro.org>
-Date:   Mon, 06 Jul 2020 11:56:24 -0500
-In-Reply-To: <20200706133341.476881-26-lee.jones@linaro.org> (Lee Jones's
-        message of "Mon, 6 Jul 2020 14:33:34 +0100")
-Message-ID: <87imf0mvk7.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 6 Jul 2020 13:03:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57134 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729537AbgGFRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:03:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 53FC5ADBB;
+        Mon,  6 Jul 2020 17:03:47 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon/hibmc: Move drm_fbdev_generic_setup() down
+ to avoid the splat
+To:     Zenghui Yu <yuzenghui@huawei.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     xinliang.liu@linaro.org, zourongrong@gmail.com,
+        john.stultz@linaro.org, kong.kongxinwei@hisilicon.com,
+        puck.chen@hisilicon.com, airlied@linux.ie, daniel@ffwll.ch,
+        sam@ravnborg.org, wanghaibin.wang@huawei.com
+References: <20200706144713.1123-1-yuzenghui@huawei.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <aa244201-9b43-2d35-c236-21391e7af7d0@suse.de>
+Date:   Mon, 6 Jul 2020 19:03:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1jsUUJ-0005CJ-SN;;;mid=<87imf0mvk7.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18khkDaZc3axoG/t6YW4c9dVrDhOpL38K0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 25/32] usb: early: ehci-dbgp: Remove set but never checked variable 'ret'
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20200706144713.1123-1-yuzenghui@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="psdtDZbLPzNtKiLFO86PfXRfZN7ZR5WeQ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--psdtDZbLPzNtKiLFO86PfXRfZN7ZR5WeQ
+Content-Type: multipart/mixed; boundary="GppCVzr4jNWe7h8V8yOrotUUhX0kAb6Bw";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Zenghui Yu <yuzenghui@huawei.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: xinliang.liu@linaro.org, zourongrong@gmail.com, john.stultz@linaro.org,
+ kong.kongxinwei@hisilicon.com, puck.chen@hisilicon.com, airlied@linux.ie,
+ daniel@ffwll.ch, sam@ravnborg.org, wanghaibin.wang@huawei.com
+Message-ID: <aa244201-9b43-2d35-c236-21391e7af7d0@suse.de>
+Subject: Re: [PATCH] drm/hisilicon/hibmc: Move drm_fbdev_generic_setup() down
+ to avoid the splat
+References: <20200706144713.1123-1-yuzenghui@huawei.com>
+In-Reply-To: <20200706144713.1123-1-yuzenghui@huawei.com>
 
-> 'ret' hasn't  been checked since the driver's inception in 2009.
+--GppCVzr4jNWe7h8V8yOrotUUhX0kAb6Bw
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Minor quibble the inception was in 5c05917e7fe3 ("x86: usb debug port
-early console, v4") in July of 2008.
+Hi
 
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Am 06.07.20 um 16:47 schrieb Zenghui Yu:
+> The HiSilicon hibmc driver triggers a splat at boot time as below
+>=20
+> [   14.137806] ------------[ cut here ]------------
+> [   14.142405] hibmc-drm 0000:0a:00.0: Device has not been registered.
+> [   14.148661] WARNING: CPU: 0 PID: 496 at drivers/gpu/drm/drm_fb_helpe=
+r.c:2233 drm_fbdev_generic_setup+0x15c/0x1b8
+> [   14.158787] [...]
+> [   14.278307] Call trace:
+> [   14.280742]  drm_fbdev_generic_setup+0x15c/0x1b8
+> [   14.285337]  hibmc_pci_probe+0x354/0x418
+> [   14.289242]  local_pci_probe+0x44/0x98
+> [   14.292974]  work_for_cpu_fn+0x20/0x30
+> [   14.296708]  process_one_work+0x1c4/0x4e0
+> [   14.300698]  worker_thread+0x2c8/0x528
+> [   14.304431]  kthread+0x138/0x140
+> [   14.307646]  ret_from_fork+0x10/0x18
+> [   14.311205] ---[ end trace a2000ec2d838af4d ]---
+>=20
+> This turned out to be due to the fbdev device hasn't been registered wh=
+en
+> drm_fbdev_generic_setup() is invoked. Let's fix the splat by moving it =
+down
+> after drm_dev_register() which will follow the "Display driver example"=
 
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/usb/early/ehci-dbgp.c: In function ‘early_dbgp_write’:
->  drivers/usb/early/ehci-dbgp.c:915:13: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->  915 | int chunk, ret;
->  | ^~~
->
-> Cc: Sumit Garg <sumit.garg@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: Yinghai Lu <yhlu.kernel@gmail.com>
-> Cc: Jason Wessel <jason.wessel@windriver.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> documented by commit de99f0600a79 ("drm/drv: DOC: Add driver example
+> code").
+>=20
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  drivers/usb/early/ehci-dbgp.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/usb/early/ehci-dbgp.c b/drivers/usb/early/ehci-dbgp.c
-> index 775cf70cfb3ed..b075dbfad730f 100644
-> --- a/drivers/usb/early/ehci-dbgp.c
-> +++ b/drivers/usb/early/ehci-dbgp.c
-> @@ -912,7 +912,7 @@ int __init early_dbgp_init(char *s)
->  
->  static void early_dbgp_write(struct console *con, const char *str, u32 n)
->  {
-> -	int chunk, ret;
-> +	int chunk;
->  	char buf[DBGP_MAX_PACKET];
->  	int use_cr = 0;
->  	u32 cmd, ctrl;
-> @@ -951,8 +951,8 @@ static void early_dbgp_write(struct console *con, const char *str, u32 n)
->  			buf[chunk] = *str;
->  		}
->  		if (chunk > 0) {
-> -			ret = dbgp_bulk_write(USB_DEBUG_DEVNUM,
-> -				      dbgp_endpoint_out, buf, chunk);
-> +			dbgp_bulk_write(USB_DEBUG_DEVNUM,
-> +					dbgp_endpoint_out, buf, chunk);
->  		}
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
+gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index a6fd0c29e5b8..544b9993c99e 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -307,8 +307,6 @@ static int hibmc_load(struct drm_device *dev)
+>  	/* reset all the states of crtc/plane/encoder/connector */
+>  	drm_mode_config_reset(dev);
+> =20
+> -	drm_fbdev_generic_setup(dev, dev->mode_config.preferred_depth);
+> -
+>  	return 0;
+> =20
+>  err:
+> @@ -355,6 +353,9 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>  			  ret);
+>  		goto err_unload;
 >  	}
->  	if (unlikely(reset_run)) {
+> +
+> +	drm_fbdev_generic_setup(dev, dev->mode_config.preferred_depth);
+> +
+>  	return 0;
+> =20
+>  err_unload:
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--GppCVzr4jNWe7h8V8yOrotUUhX0kAb6Bw--
+
+--psdtDZbLPzNtKiLFO86PfXRfZN7ZR5WeQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8DWWwUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiNuXQgAu2j4csMKFEV7y/0lj0/L9VLa/Sgm
+w45pdN0fodDKl7UiBUrohv0LBWrHfEO6ID5ym2ClmUZ/3ATsTdpT9qdQ6X487s4M
+E/te3KziwlC+lN8+nmvTiypJIqW2buzw61QaZHmGpWufriKPRifON5GN2RyFWq9K
+tJZnsHTR5c027ZwX8Ye76pU/plYrHtyMLbIzNXsWriRnhcAqk2ytdwE65Qd+LGSq
+Q9jX4cc8QzIxCX0r9ZCbEngXKF1Q9a13IiQ5HHc0CCb3UnkUdAHRsAWVo3njW4xj
+7GU1rlMX6hCQeqoEYPcy4jaMF689RO8O++5Tse8KFKt55TvxZWRGp45jjA==
+=Jjj6
+-----END PGP SIGNATURE-----
+
+--psdtDZbLPzNtKiLFO86PfXRfZN7ZR5WeQ--
