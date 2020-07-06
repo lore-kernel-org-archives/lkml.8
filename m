@@ -2,131 +2,95 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD85C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A26C20702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UEvqepdT"
+	by mail.kernel.org (Postfix) with ESMTP id DA02F20702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 16:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgGFQyY (ORCPT
+        id S1729645AbgGFQz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729521AbgGFQyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 12:54:23 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41C7C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 09:54:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so40073911wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 09:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xne7vGpOLGVeZi1RzsYuJY7kP006PU447//pazbnL/8=;
-        b=UEvqepdTWsEazyNyqDFLHWyFasioIb58H3Ax5VAXf9sR/mpp/WR3L1ghP3K3Mx78ez
-         EHqQvwgr5FA12jUBNWe/8k3ZdP3I+cnx3fUoS0aJOTk0TmsULpbBi9fuaAjZ5tIfhcFz
-         /43uuB0C+XpM1umBZrUir5clRWeTFo30UE7yn3EDEcba+DAUu42Il6fbk8vMKwEeMaPr
-         YDDGYTj3TqsEBYWh58ghEVN/GeWzobDjcJHT1gJC7phxiTp9Y0y5fX11H5Ynz/SRXl1E
-         SgZuMyqOS9HbyCQgcGMTDx2WxH9sPaX4F55h+67iKU9SejsMgherhSQGL/vt8+mytJIl
-         vGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xne7vGpOLGVeZi1RzsYuJY7kP006PU447//pazbnL/8=;
-        b=P5NLc/K1ZK85iWpu8dWFdpZoTwMcsEpA7YrxxfzUFk6nokPQpHa+/HKueqdDnu18Y7
-         JL/MKaMy2FDO51IFIaB5jay6kke0cdi1RIDFx6iY7JgWogDpijlNpDa9HBfKKViUhbAc
-         X+8wsnGHGkmFl2ID5EwuWed43heFzC+YKZyUnoOzMDZ9EiTJM0GOz4duRmuy7LBqj1GQ
-         RRcgSBUp1scb+h9+XFppkkaBImAnbn8YGQTTxvVtKbhmU/z0O46hMkOjlPWeHpYmylgN
-         Acug3gzacptKF13OWC8Rd1d+YklEmMNxBFTG61X7ljoe2sm4mgZLvyO+jT8WYIIulBNG
-         YXrA==
-X-Gm-Message-State: AOAM533moOCVtI9bSiLTARYdldiLuNZXjsnsOa6qzLW4kBBgXzfLgNEj
-        CqIhhhtxavMkUkkzl7/eG0jsPtug5k4=
-X-Google-Smtp-Source: ABdhPJxExmQmKbAkk+w/FTJsLGuqOHLlDJckmvf+a6xqgrNkO3sW24epd0O9t/fk4BURnw+rdGk1mQ==
-X-Received: by 2002:a1c:804c:: with SMTP id b73mr106243wmd.59.1594054461512;
-        Mon, 06 Jul 2020 09:54:21 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865? ([2a01:e34:ed2f:f020:f9e8:8c05:eb6f:1865])
-        by smtp.googlemail.com with ESMTPSA id 51sm20025871wrc.44.2020.07.06.09.54.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 09:54:20 -0700 (PDT)
-Subject: Re: linux-next: Tree for Jul 6 (thermal/thermal_netlink.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-References: <20200706174001.2d316826@canb.auug.org.au>
- <b0348556-065d-f8fa-fc1d-0f084147deb5@infradead.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <af95ed8a-577b-d029-ac27-9fbd142e9ffa@linaro.org>
-Date:   Mon, 6 Jul 2020 18:54:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 12:55:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:56062 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729495AbgGFQz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:55:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AAC41FB;
+        Mon,  6 Jul 2020 09:55:56 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.13.106])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2529F3F68F;
+        Mon,  6 Jul 2020 09:55:53 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 17:55:44 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] arm64: arch_timer: Allow an workaround descriptor
+ to disable compat vdso
+Message-ID: <20200706165534.GA61340@C02TD0UTHF1T.local>
+References: <20200706163802.1836732-1-maz@kernel.org>
+ <20200706163802.1836732-3-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b0348556-065d-f8fa-fc1d-0f084147deb5@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706163802.1836732-3-maz@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-thanks for reporting that, I'll fix it.
-
-On 06/07/2020 18:53, Randy Dunlap wrote:
-> On 7/6/20 12:40 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200703:
->>
+On Mon, Jul 06, 2020 at 05:38:00PM +0100, Marc Zyngier wrote:
+> As we are about to disable the vdso for compat tasks in some circumstances,
+> let's allow a workaround descriptor to express exactly that.
 > 
-> on i386 or x86_64:
-> 
-> when CONFIG_NET is not set/enabled:
-> 
-> thermal_netlink.c:(.text+0x34): undefined reference to `nla_put'
-> thermal_netlink.c:(.text+0x76): undefined reference to `nla_put'
-> thermal_netlink.c:(.text+0x87f): undefined reference to `init_net'
-> ld: thermal_netlink.c:(.text+0x89d): undefined reference to `netlink_broadcast'
-> thermal_netlink.c:(.text+0xa19): undefined reference to `__alloc_skb'
-> ld: thermal_netlink.c:(.text+0xa59): undefined reference to `genlmsg_put'
-> ld: thermal_netlink.c:(.text+0xad9): undefined reference to `init_net'
-> ld: thermal_netlink.c:(.text+0xade): undefined reference to `netlink_unicast'
-> ld: thermal_netlink.c:(.text+0xb02): undefined reference to `kfree_skb'
-> thermal_netlink.c:(.text+0xb7d): undefined reference to `genlmsg_put'
-> thermal_netlink.c:(.text+0xc29): undefined reference to `__alloc_skb'
-> ld: thermal_netlink.c:(.text+0xc66): undefined reference to `genlmsg_put'
-> ld: thermal_netlink.c:(.text+0xce1): undefined reference to `kfree_skb'
-> thermal_netlink.c:(.text+0xd0e): undefined reference to `__alloc_skb'
-> ld: thermal_netlink.c:(.text+0xd47): undefined reference to `genlmsg_put'
-> ld: thermal_netlink.c:(.text+0xde4): undefined reference to `kfree_skb'
-> thermal_netlink.c:(.text+0x1d): undefined reference to `nla_put'
-> thermal_netlink.c:(.text+0x494): undefined reference to `skb_trim'
-> thermal_netlink.c:(.init.text+0xd): undefined reference to `genl_register_family'
-> 
-> 
-> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Mark.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> ---
+>  arch/arm64/include/asm/arch_timer.h  | 1 +
+>  drivers/clocksource/arm_arch_timer.c | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index 7ae54d7d333a..9f0ec21d6327 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -58,6 +58,7 @@ struct arch_timer_erratum_workaround {
+>  	u64 (*read_cntvct_el0)(void);
+>  	int (*set_next_event_phys)(unsigned long, struct clock_event_device *);
+>  	int (*set_next_event_virt)(unsigned long, struct clock_event_device *);
+> +	bool disable_compat_vdso;
+>  };
+>  
+>  DECLARE_PER_CPU(const struct arch_timer_erratum_workaround *,
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index ecf7b7db2d05..a8e4fb429f52 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -566,6 +566,9 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
+>  	if (wa->read_cntvct_el0) {
+>  		clocksource_counter.vdso_clock_mode = VDSO_CLOCKMODE_NONE;
+>  		vdso_default = VDSO_CLOCKMODE_NONE;
+> +	} else if (wa->disable_compat_vdso && vdso_default != VDSO_CLOCKMODE_NONE) {
+> +		vdso_default = VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT;
+> +		clocksource_counter.vdso_clock_mode = vdso_default;
+>  	}
+>  }
+>  
+> -- 
+> 2.27.0
+> 
