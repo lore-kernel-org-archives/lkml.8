@@ -2,193 +2,149 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80555C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD6C20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="FVZleZOI"
+	by mail.kernel.org (Postfix) with ESMTP id 9132620760
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 10:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594030725;
+	bh=LQCdrf8K4fiKpthxDAGdPxbZ/BncNjdAdIWvbt2wwxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oH51ky8edYvxvoOZpwdBlU6oqgXFnBjibMhysrIwoChvs5BJwOtUh1nXLSlXVzsFy
+	 d+4+h+xWj8uZujgFXDhaU3pJldZBVyKPL85D58nVv2ks5cv4XvcAv4GLp192akv3QI
+	 0kqH5GBCzOYyL1DZeT6QSjICe+lOGPMaS0wcR2rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgGFKQu (ORCPT
+        id S1728806AbgGFKSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:16:50 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:14888 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgGFKQt (ORCPT
+        Mon, 6 Jul 2020 06:18:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40501 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbgGFKSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:16:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1594030609; x=1625566609;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=y00OdWof8B7hX3dUalznp6ro8iF6vV1F6rc05AqrTuo=;
-  b=FVZleZOIqP4m68NM+Hy+GuOBL8/TgVokmGKBl7P7yDQ7Mlp6pZ9l19jF
-   gj767n9GpYqRNbqnBhM81gtsocXj9pfNLiRR3UdfFp884a2GOqKPQW9S5
-   PRhERtMLMYs179LnxCXQ7HmzLAZl7XvaXDA0lsuDqs/WY/1KtnRE1TuIB
-   w=;
-IronPort-SDR: 1kq6ENwe75TG9tIJtksKVDAXdmE/a6qJF4ZtUjVWQ1Cc+NGiwCJji5z2yR4HeYrSZ+J0zJSphh
- IG1N1Qj8jLHw==
-X-IronPort-AV: E=Sophos;i="5.75,318,1589241600"; 
-   d="scan'208";a="40182548"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 06 Jul 2020 10:16:48 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 1CB19A0719;
-        Mon,  6 Jul 2020 10:16:46 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 10:16:45 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.156) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Jul 2020 10:16:40 +0000
-Subject: Re: [PATCH v4 10/18] nitro_enclaves: Add logic for enclave image load
- info
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-11-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <817700cd-1db2-558b-ae62-fdb279bca6ed@amazon.de>
-Date:   Mon, 6 Jul 2020 12:16:31 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 6 Jul 2020 06:18:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n23so44649530ljh.7;
+        Mon, 06 Jul 2020 03:18:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gOp2uyVBG5gwkjiva5Sfw6FnlHzL7jIzLJ/NT02k/uo=;
+        b=a6dCe4S/yJMZtUcFkJObVRlPEpKVilX4e3K8sMmncjgHxP+czLnnGgd2rTDgWRQGtZ
+         EqYfAGEaJR8i/AfJGiD5g1ZLp8Ei9bIC9mmRSNY5MgEBbeccQQmgpIeiC9dMEiDOedUt
+         OdAbJJLd0fyYXp8Rt72xFh6yyPlLqJgrza1l30s0RVIwAcGIcVO1qhhY62PwzdlBPrXy
+         Sltm5VllMucAbAZknCFQloKmYbd2cG4F1ajHNfM5u37PU5+SgEFeghKY3P92y+93mIZ2
+         FB0IsYmPdIGiUkaU/vqcCHVMrMrbNAEvByXLsmWkyCqYAE8s0/mL8wuS+8+xdNxAKFcF
+         HZtg==
+X-Gm-Message-State: AOAM53064T0qVzTSwoTAf0YCLhzG4jUB6362eWEfyjMTtIwBPKdU0Q0R
+        UWq8SFDvOXX3tLaE2q606r4=
+X-Google-Smtp-Source: ABdhPJynA0arFW9wLop6raoNt7g4KPdBmiU32EFC/I++X/OQyfmEqR8nPSQ5XEdGhYRjaSMBrQLI6A==
+X-Received: by 2002:a2e:8199:: with SMTP id e25mr11409062ljg.307.1594030717821;
+        Mon, 06 Jul 2020 03:18:37 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id n7sm7768397lji.97.2020.07.06.03.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 03:18:37 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jsOCo-0006MM-Ju; Mon, 06 Jul 2020 12:18:34 +0200
+Date:   Mon, 6 Jul 2020 12:18:34 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Phu Luu <Phu.Luu@silabs.com>
+Cc:     "johan@kernel.org" <johan@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brant Merryman <Brant.Merryman@silabs.com>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>,
+        =?utf-8?B?UGjDuiBMxrB1?= An <luuanphu@gmail.com>,
+        "hungnd3@fsoft.com.vn" <hungnd3@fsoft.com.vn>
+Subject: Re: [PATCH v3 2/2] USB: serial: cp210x: Proper RTS control when
+ buffers fill
+Message-ID: <20200706101834.GI3453@localhost>
+References: <ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com>
+ <20200626074206.GP3334@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20200622200329.52996-11-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.156]
-X-ClientProxiedBy: EX13D31UWC002.ant.amazon.com (10.43.162.220) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626074206.GP3334@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 09:42:06AM +0200, Johan Hovold wrote:
+> On Fri, Jun 26, 2020 at 04:24:20AM +0000, Phu Luu wrote:
+> > From: Brant Merryman <brant.merryman@silabs.com>
+> > 
+> > CP210x hardware disables auto-RTS but leaves auto-CTS when
+> > in hardware flow control mode and UART on cp210x hardware
+> > is disabled. This allows data to flow out, but new data
+> > will not come into the port. When re-opening the port, if
+> > auto-CTS is enabled on the cp210x, then auto-RTS must be
+> > re-enabled in the driver.
+> > 
+> > Signed-off-by: Phu Luu <phu.luu@silabs.com>
+> > Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+> 
+> Please revisit these tags as well.
+> 
+> > ---
+> > 06/09/2020: Patch v3 2/2 Modified based on feedback from Johan Hovold <johan@kernel.org>
+> > 12/18/2019: Patch v2 Broken into two patches and modified based on feedback from Johan Hovold <johan@kernel.org>
+> > 12/09/2019: Initial submission of patch "Proper RTS control when buffers fill"
+> > 
+> >  drivers/usb/serial/cp210x.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+> > index bcceb4ad8be0..091441b1c5b9 100644
+> > --- a/drivers/usb/serial/cp210x.c
+> > +++ b/drivers/usb/serial/cp210x.c
+> > @@ -917,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+> >  	u32 baud;
+> >  	u16 bits;
+> >  	u32 ctl_hs;
+> > +	u32 flow_repl;
+> >  
+> >  	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+> >  
+> > @@ -1017,6 +1018,23 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+> >  	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+> >  	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+> >  		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
+> > +		/*
+> > +		 * When the port is closed, the CP210x hardware disables
+> > +		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
+> > +		 * in hardware flow control mode. This prevents new data from
+> > +		 * being received by the port. When re-opening the port, if
+> > +		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
+> > +		 * re-enabled in the driver.
+> > +		 */
+> 
+> I already asked this of Brant, but could you please be more specific
+> about which state the RTS-line end up in when disabling the UART (e.g.
+> 0x00: statically inactive)?
+> 
+> The reason I ask is that after open() returns, the tty layer would raise
+> RTS, which should again allow data to flow in in contrast to what the
+> comment and changelog text claims.
 
+I had another reason to look at this driver so I could determine that
+the patch description and comment were indeed incorrect; the tty layer
+asserts RTS when reopening the port just fine and data flows in.
 
-On 22.06.20 22:03, Andra Paraschiv wrote:
-> Before setting the memory regions for the enclave, the enclave image
-> needs to be placed in memory. After the memory regions are set, this
-> memory cannot be used anymore by the VM, being carved out.
-> =
+> We still want to enable auto-RTS of course so the patch is otherwise
+> correct.
 
-> Add ioctl command logic to get the offset in enclave memory where to
-> place the enclave image. Then the user space tooling copies the enclave
-> image in the memory using the given memory offset.
-> =
+I've fixed up the commit message and comment, reordered the SOB tags
+and added your Co-developed-by tag before applying both of these now:
 
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
-> Changelog
-> =
+	https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git/log/?h=usb-next
 
-> v3 -> v4
-> =
-
-> * Use dev_err instead of custom NE log pattern.
-> * Set enclave image load offset based on flags.
-> * Update the naming for the ioctl command from metadata to info.
-> =
-
-> v2 -> v3
-> =
-
-> * No changes.
-> =
-
-> v1 -> v2
-> =
-
-> * New in v2.
-> ---
->   drivers/virt/nitro_enclaves/ne_misc_dev.c | 25 +++++++++++++++++++++++
->   1 file changed, 25 insertions(+)
-> =
-
-> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
-ro_enclaves/ne_misc_dev.c
-> index d6777008f685..cfdefa52ed2a 100644
-> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-> @@ -536,6 +536,31 @@ static long ne_enclave_ioctl(struct file *file, unsi=
-gned int cmd,
->   		return rc;
->   	}
->   =
-
-> +	case NE_GET_IMAGE_LOAD_INFO: {
-> +		struct ne_image_load_info image_load_info =3D {};
-> +
-> +		if (copy_from_user(&image_load_info, (void *)arg,
-> +				   sizeof(image_load_info))) {
-> +			dev_err_ratelimited(ne_misc_dev.this_device,
-> +					    "Error in copy from user\n");
-
-The -EFAULT tells you all you need. Just remove this print.
-
-> +
-> +			return -EFAULT;
-> +		}
-> +
-> +		if (image_load_info.flags =3D=3D NE_EIF_IMAGE)
-> +			image_load_info.memory_offset =3D NE_EIF_LOAD_OFFSET;
-> +
-> +		if (copy_to_user((void *)arg, &image_load_info,
-> +				 sizeof(image_load_info))) {
-> +			dev_err_ratelimited(ne_misc_dev.this_device,
-> +					    "Error in copy to user\n");
-
-Same here.
-
-
-Alex
-
-> +
-> +			return -EFAULT;
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
->   	default:
->   		return -ENOTTY;
->   	}
-> =
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+Johan
