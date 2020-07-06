@@ -6,134 +6,109 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2291C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F871C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89BB206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE84206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 15:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbgGFPBs (ORCPT
+        id S1729321AbgGFPDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 11:01:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1771 "EHLO mga14.intel.com"
+        Mon, 6 Jul 2020 11:03:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26303 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbgGFPBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 11:01:48 -0400
-IronPort-SDR: gdygv/P6C2GNO3sjtMQuOnODrauRvPzyFNlU4WnIsdHsNOnwUPxPiEEOL7xO/YFRybAtHwzMqk
- bMyP+3XNg5xA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="146504673"
+        id S1729121AbgGFPDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 11:03:17 -0400
+IronPort-SDR: nuocK0PEOkFbPxu/yWYn3qwge7vk5jY1lfG5gagcyUs+ldKtKPIY82UHYINflZz8id/lRZ84P2
+ N0m3oI9oIB5Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="144932261"
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="146504673"
+   d="scan'208";a="144932261"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:01:47 -0700
-IronPort-SDR: C8I4Rf7q1jd2VoYzmkyAUPZEW/3Zv9xkokghzFMebXW85QNKgh2gMe+j02eX4umH5PRW8lFkgD
- R/gQwJYiroAQ==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:03:16 -0700
+IronPort-SDR: L2Z3VR5sFl9G4jx008pgy5I4rdrzbvcEZVVZuOT1zJtYIDuouKToK++PVl7NF1i3/4++i90Gb7
+ TBDYFAOfGVFw==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="315191035"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 08:01:46 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 5832C637E;
-        Mon,  6 Jul 2020 08:01:46 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 08:01:46 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Abhishek Bhardwaj <abhishekbh@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-Message-ID: <20200706150146.GA21121@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200702161916.2456342-1-abhishekbh@google.com>
+   d="scan'208";a="313986367"
+Received: from aislam-mobl1.amr.corp.intel.com ([10.212.167.133])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 08:03:15 -0700
+Subject: Re: [PATCH 3/8] ASoC: samsung: pcm: fix kernel-doc
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
+ <CGME20200702165920eucas1p236c3c4c82424ea459ea88ebacf9b8a6e@eucas1p2.samsung.com>
+ <20200702165901.164100-4-pierre-louis.bossart@linux.intel.com>
+ <d6980967-5def-58c9-39a9-239a5c671f3f@samsung.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7b485413-98f1-fb13-2e82-4eeacbfff6dc@linux.intel.com>
+Date:   Mon, 6 Jul 2020 10:03:14 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702161916.2456342-1-abhishekbh@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <d6980967-5def-58c9-39a9-239a5c671f3f@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 09:19:16AM -0700, Abhishek Bhardwaj wrote:
-> This change adds a new kernel configuration that sets the l1d cache
-> flush setting at compile time rather than at run time.
+On 7/3/20 1:47 PM, Sylwester Nawrocki wrote:
+> On 02.07.2020 18:58, Pierre-Louis Bossart wrote:
+>> Fix W=1 warnings - missing fields in structure
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   sound/soc/samsung/pcm.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/sound/soc/samsung/pcm.c b/sound/soc/samsung/pcm.c
+>> index a5b1a12b3496..86eefbc89e9e 100644
+>> --- a/sound/soc/samsung/pcm.c
+>> +++ b/sound/soc/samsung/pcm.c
+>> @@ -104,8 +104,13 @@
+> 
+> Thank you for the patch, I have some suggestions to improve the comments.
+> 
+>>   /**
+>>    * struct s3c_pcm_info - S3C PCM Controller information
+>> + * @lock: Spin lock
+> 
+> @lock: Spin lock to serialize access to the device registers and @idle_clk
+> 
+>>    * @dev: The parent device passed to use from the probe.
+>>    * @regs: The pointer to the device register block.
+>> + * @sclk_per_fs: number of sclk per frame sync
+>> + * @idleclk: Whether to keep PCMSCLK enabled even when idle(no active xfer)
+> 
+> How about adding space before the opening parenthesis?
+> 
+>> + * @pclk: the pclk pointer
+> 
+> @pclk: the PCLK_PCM (pcm) clock pointer
+> 
+>> + * @cclk: the clck pointer
+> 
+> @cclk: the SCLK_AUDIO (audio-bus) clock pointer
+> 
+>>    * @dma_playback: DMA information for playback channel.
+>>    * @dma_capture: DMA information for capture channel.
+>>    */
+>   
+> With above changes feel free to add:
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Why is this desired?
+I wasn't really happy with the lame comments I added for pclk and cclk, 
+thanks for suggesting a better wording. Will fix in a v2.
 
---mark
-
-> 
-> Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
-> ---
-> 
->  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
->  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 0b71970d2d3d2..1dcc875cf5547 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
->  #if IS_ENABLED(CONFIG_KVM_INTEL)
->  EXPORT_SYMBOL_GPL(l1tf_mitigation);
->  #endif
-> +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
-> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
-> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
-> +#else
->  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
-> +#endif
->  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
->  
->  /*
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index b277a2db62676..f82a0c564e931 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
->  	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
->  	 auditing of KVM MMU events at runtime.
->  
-> +config KVM_VMENTRY_L1D_FLUSH
-> +	int "L1D cache flush settings (1-3)"
-> +	range 1 3
-> +	default "2"
-> +	depends on KVM && X86 && X86_64
-> +	help
-> +	 This setting determines the L1D cache flush behavior before a VMENTER.
-> +	 This is similar to setting the option / parameter to
-> +	 kvm-intel.vmentry_l1d_flush.
-> +	 1 - Never flush.
-> +	 2 - Conditinally flush.
-> +	 3 - Always flush.
-> +
-> +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-> +# the virtualization menu.
-> +source "drivers/vhost/Kconfig"
-> +
->  endif # VIRTUALIZATION
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
