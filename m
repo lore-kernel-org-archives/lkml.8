@@ -2,159 +2,73 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A32C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A1C2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13B420715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 06:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d+MXpCRU"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V1g6nGNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgGFGDN (ORCPT
+        id S1728872AbgGFGHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 02:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgGFGDN (ORCPT
+        Mon, 6 Jul 2020 02:07:14 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56214 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728794AbgGFGHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 02:03:13 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323C0C061794;
-        Sun,  5 Jul 2020 23:03:13 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B0Zk73HQjz9sSd;
-        Mon,  6 Jul 2020 16:03:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594015391;
-        bh=0dVbgKA28kBMMBn0W8j637PFOw6QisU9Bne1J5W6tps=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d+MXpCRUAhoHu5HNI1G0Mga9ezKCdIyXG12yoM7HpjftlIGsQBLkCcTKWpVJKC4XJ
-         qDN8AXORH2RBrgh6xvfMrswwhfp0tBBqQ9Sm2R5DfIwp4AsYMU3z8w7WXWINu9Y9Cu
-         ucQi+qnXUOsQQMoTVrpSC+lpPQOz2+6/WI0smLrLq31ouzEXQxr6gqemvrGpIEb5ZZ
-         +DqXNJhtZ3a6bsbdneJ4Aewl6LpqfVOMO/c6S8OL6kfA5phafAIKi42q2nks9XGNac
-         RPB9BHyaE8HK38mB7fshakwGP4qSSKpkQJgjKD/7lcazCGm2F69epBvH5lSGFNFsR5
-         9pIP2FWpB2rEw==
-Date:   Mon, 6 Jul 2020 16:03:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the dmaengine tree with the
- dmaengine-fixes tree
-Message-ID: <20200706160309.5f03bb2e@canb.auug.org.au>
-In-Reply-To: <20200706044146.GA633187@vkoul-mobl>
-References: <20200706135621.0113ebf9@canb.auug.org.au>
-        <d3af0beb-1548-7ad3-fb30-f768303b8701@intel.com>
-        <20200706044146.GA633187@vkoul-mobl>
+        Mon, 6 Jul 2020 02:07:13 -0400
+X-UUID: 75a23e65dc0a434ab1152f8bc8cf7d96-20200706
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=10V6OZvPGw+EU6EjKCj8JSWdQJi/LF2dghOjGFtO6Nc=;
+        b=V1g6nGNHeTUn934t4KNzuvI4t1tW5gn73J8zAboUZjgx7GvlGnmqGBABWVoqyzymsVlJeuJA78qW5XiGft7CXFAAbpBD5EP4/7Ek7ME05m9UDxh4GOE5w+7bz+6UM4yUHv+FBUWeCpAfH3oT/HUtVgMG6M+tqm/XgduVP595498=;
+X-UUID: 75a23e65dc0a434ab1152f8bc8cf7d96-20200706
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1937128836; Mon, 06 Jul 2020 14:07:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 6 Jul 2020 14:07:05 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 14:07:05 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 0/2] scsi: ufs: Fix and simplify setup_xfer_req vop and request's completion timestamp
+Date:   Mon, 6 Jul 2020 14:07:05 +0800
+Message-ID: <20200706060707.32608-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XjV3lD+3dMo0pP=hZje_G/N";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 395A691655FC77A3D96133384BF5BD9B22F22366F969AF146C71BEA70F7985E52000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XjV3lD+3dMo0pP=hZje_G/N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+SGksDQpUaGlzIHNtYWxsIHNlcmllcyBmaXhlcyBhbmQgc2ltcGxpZmllcyBzZXR1cF94ZmVyX3Jl
+cSB2b3AgYW5kIHJlcXVlc3QncyBjb21wbGV0aW9uIHRpbWVzdGFtcC4NCg0KU3RhbmxleSBDaHUg
+KDIpOg0KICBzY3NpOiB1ZnM6IFNpbXBsaWZ5IGNvbXBsZXRpb24gdGltZXN0YW1wIGZvciBTQ1NJ
+IGFuZCBxdWVyeSBjb21tYW5kcw0KICBzY3NpOiB1ZnM6IEZpeCBhbmQgc2ltcGxpZnkgc2V0dXBf
+eGZlcl9yZXEgdmFyaWFudCBvcGVyYXRpb24NCg0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMg
+fCAxMiArKysrKystLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRl
+bGV0aW9ucygtKQ0KDQotLSANCjIuMTguMA0K
 
-Hi all,
-
-On Mon, 6 Jul 2020 10:11:46 +0530 Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 05-07-20, 21:23, Dave Jiang wrote:
-> >=20
-> > On 7/5/2020 8:56 PM, Stephen Rothwell wrote: =20
-> > >=20
-> > > Today's linux-next merge of the dmaengine tree got a conflict in:
-> > >=20
-> > >    drivers/dma/idxd/sysfs.c
-> > >=20
-> > > between commit:
-> > >=20
-> > >    da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after dis=
-abling")
-> > >=20
-> > > from the dmaengine-fixes tree and commit:
-> > >=20
-> > >    f50b150e315e ("dmaengine: idxd: add work queue drain support")
-> > >=20
-> > > from the dmaengine tree.
-> > >=20
-> > > I fixed it up (see below) and can carry the fix as necessary. This
-> > > is now fixed as far as linux-next is concerned, but any non trivial
-> > > conflicts should be mentioned to your upstream maintainer when your t=
-ree
-> > > is submitted for merging.  You may also want to consider cooperating
-> > > with the maintainer of the conflicting tree to minimise any particula=
-rly
-> > > complex conflicts.
-> > >  =20
-> >=20
-> > Hi Stephen. Thanks for the fixup. I think there are two more bits that =
-are
-> > needed from f50b150e315e if you don't mind adding: =20
->=20
-> I will merge the fixes into next so it should be resolved for tomorrow,
-
-Thanks,
-
-> >=20
-> > diff --cc drivers/dma/idxd/sysfs.c
-> > index 2e2c5082f322,6f0711a822a1..000000000000
-> > --- a/drivers/dma/idxd/sysfs.c
-> > +++ b/drivers/dma/idxd/sysfs.c
-> > @@@ -313,14 -303,7 +303,12 @@@ static int idxd_config_bus_remove(struc
-> >   		}
-> >=20
-> >   		idxd_unregister_dma_device(idxd);
-> > - 		spin_lock_irqsave(&idxd->dev_lock, flags);
-> >   		rc =3D idxd_device_disable(idxd);
-> >  +		for (i =3D 0; i < idxd->max_wqs; i++) {
-> >  +			struct idxd_wq *wq =3D &idxd->wqs[i];
-> >  +
-> >  =20
-> > >			mutex_lock(&wq->wq_lock); =20
-> >=20
-> >  +			idxd_wq_disable_cleanup(wq);
-> >  =20
-> > >			mutex_unlock(&wq->wq_lock); =20
-> >=20
-> >  +		}
-> > - 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
-> >   		module_put(THIS_MODULE);
-> >   		if (rc < 0)
-> >   			dev_warn(dev, "Device disable failed\n"); =20
->=20
-
-I added that fix up by hand today just in case it matters for testing.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/XjV3lD+3dMo0pP=hZje_G/N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Cvp0ACgkQAVBC80lX
-0Gwj8wf/ejKWL6zYT0covN4Jt2g7CUOaT1qaCRVWCxFhtNbLLzQ66fPBzftpXepu
-nchyqfs2n+P9SNjCyFPrBEpr3PrHxEwNWc20Hc6sZZ+3EQKmibifZ8m0XiATTaXk
-d3mRhgjZeB6CtH5ioiK/5kXNtfmKPYi7Rve2+xVAywbv999t2Raddpdbiq9d2f3I
-B/mpq6/pFS+vb2c/XNLgb45iEhu7iQog6zQR2mwW6VdBW0ib08w82Jkp9yh6350v
-aDUcX4JVn41hDPHExDfb/fEvagdOeCyoVF4l26OUObXLX32cZGD90UhUOug7uGSb
-AGS4JZfRYsm4ugNotH6hhb0+Ut8ojQ==
-=RUvX
------END PGP SIGNATURE-----
-
---Sig_/XjV3lD+3dMo0pP=hZje_G/N--
