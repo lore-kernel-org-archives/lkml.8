@@ -2,171 +2,85 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18958C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F4920724
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A092074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 09:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="pitgkhrh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ApSbqI2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgGFJ0Y (ORCPT
+        id S1728804AbgGFJ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:26:24 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:3240 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728414AbgGFJ0X (ORCPT
+        Mon, 6 Jul 2020 05:28:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37617 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728381AbgGFJ2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 05:26:23 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0669AYok025440;
-        Mon, 6 Jul 2020 02:26:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=GL9IQAitceoZ8FNpyr2DBo1MfupJU1Et7ENnXz+T54Q=;
- b=pitgkhrhT/qjPrV+koJ5snoG78QMnrfA7PFyu5K6UzpmlcJ0yHvMqeQb4fKJLnTic1HG
- V70vOtAK+1MTOIc3cBAFqeOSJ+zTgI4rPEVMcuhO+GcQi00922RWusELLhBlRhPnPJDc
- g5qVK3YczQVDWAJ386dtE6WTalzPCDy3LFBOUcid6ZR478RH27zZVRjP7aoYhdLNC05Y
- ag+LURQwbP748UqKyXqHW5ilYKAYHVp5pFIUxEL0ndBCthF5x5EqsGjC3qX7Sa3RkfMl
- QAYV15i33csZk1DtDq0Um3c7/6PkKeiaPOEy/O6kLoQUtrY/bS8AVhVMmxQW0CK+8LbB 9w== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 322s9n5s91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 02:26:19 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Jul
- 2020 02:26:17 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Jul
- 2020 02:26:17 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 6 Jul 2020 02:26:17 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 335263F703F;
-        Mon,  6 Jul 2020 02:26:13 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net] net: qed: fix buffer overflow on ethtool -d
-Date:   Mon, 6 Jul 2020 12:25:53 +0300
-Message-ID: <20200706092553.3512-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 6 Jul 2020 05:28:23 -0400
+X-UUID: eaa565ad2c714a31a042ac80f6ec7b01-20200706
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=u2Bkt9DjBrhYa1J0kIELWnKBokVBfauhP1saEFved5M=;
+        b=ApSbqI2ZyV2iX7VDysbEX2K+D1s+cG0yf/C25Nru260/rgVSe/TqGqMMZ7T0Dj1ijkCQUXeAw08wdF6g/Gi1yWuOATrY9r6OffkMFPiEGXT8EID1SkAIYYiFLrhz0UGzTqleb0JjqYIRhaR2YY05IBwsK5AM7NEqsPW4hV66GxU=;
+X-UUID: eaa565ad2c714a31a042ac80f6ec7b01-20200706
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 24518554; Mon, 06 Jul 2020 17:28:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 6 Jul 2020 17:28:11 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 17:28:12 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Add MediaTek MT6779 devapc driver
+Date:   Mon, 6 Jul 2020 17:28:11 +0800
+Message-ID: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_07:2020-07-06,2020-07-06 signatures=0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When generating debug dump, driver firstly collects all data in binary
-form, and then performs per-feature formatting to human-readable if it
-is supported.
-
-For ethtool -d, this is roughly incorrect for two reasons. First of all,
-drivers should always provide only original raw dumps to Ethtool without
-any changes.
-The second, and more critical, is that Ethtool's output buffer size is
-strictly determined by ethtool_ops::get_regs_len(), and all data *must*
-fit in it. The current version of driver always returns the size of raw
-data, but the size of the formatted buffer exceeds it in most cases.
-This leads to out-of-bound writes and memory corruption.
-
-Address both issues by adding an option to return original, non-formatted
-debug data, and using it for Ethtool case.
-
-v2:
- - Expand commit message to make it more clear;
- - No functional changes.
-
-Fixes: c965db444629 ("qed: Add support for debug data collection")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
----
- drivers/net/ethernet/qlogic/qed/qed.h       |  2 ++
- drivers/net/ethernet/qlogic/qed/qed_debug.c | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index a49743d56b9c..6c2f9ff4a53e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -876,6 +876,8 @@ struct qed_dev {
- 	struct qed_dbg_feature dbg_features[DBG_FEATURE_NUM];
- 	u8 engine_for_debug;
- 	bool disable_ilt_dump;
-+	bool				dbg_bin_dump;
-+
- 	DECLARE_HASHTABLE(connections, 10);
- 	const struct firmware		*firmware;
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index 81e8fbe4a05b..cb80863d5a77 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -7506,6 +7506,12 @@ static enum dbg_status format_feature(struct qed_hwfn *p_hwfn,
- 	if (p_hwfn->cdev->print_dbg_data)
- 		qed_dbg_print_feature(text_buf, text_size_bytes);
- 
-+	/* Just return the original binary buffer if requested */
-+	if (p_hwfn->cdev->dbg_bin_dump) {
-+		vfree(text_buf);
-+		return DBG_STATUS_OK;
-+	}
-+
- 	/* Free the old dump_buf and point the dump_buf to the newly allocagted
- 	 * and formatted text buffer.
- 	 */
-@@ -7733,7 +7739,9 @@ int qed_dbg_mcp_trace_size(struct qed_dev *cdev)
- #define REGDUMP_HEADER_SIZE_SHIFT		0
- #define REGDUMP_HEADER_SIZE_MASK		0xffffff
- #define REGDUMP_HEADER_FEATURE_SHIFT		24
--#define REGDUMP_HEADER_FEATURE_MASK		0x3f
-+#define REGDUMP_HEADER_FEATURE_MASK		0x1f
-+#define REGDUMP_HEADER_BIN_DUMP_SHIFT		29
-+#define REGDUMP_HEADER_BIN_DUMP_MASK		0x1
- #define REGDUMP_HEADER_OMIT_ENGINE_SHIFT	30
- #define REGDUMP_HEADER_OMIT_ENGINE_MASK		0x1
- #define REGDUMP_HEADER_ENGINE_SHIFT		31
-@@ -7771,6 +7779,7 @@ static u32 qed_calc_regdump_header(struct qed_dev *cdev,
- 			  feature, feature_size);
- 
- 	SET_FIELD(res, REGDUMP_HEADER_FEATURE, feature);
-+	SET_FIELD(res, REGDUMP_HEADER_BIN_DUMP, 1);
- 	SET_FIELD(res, REGDUMP_HEADER_OMIT_ENGINE, omit_engine);
- 	SET_FIELD(res, REGDUMP_HEADER_ENGINE, engine);
- 
-@@ -7794,6 +7803,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		omit_engine = 1;
- 
- 	mutex_lock(&qed_dbg_lock);
-+	cdev->dbg_bin_dump = true;
- 
- 	org_engine = qed_get_debug_engine(cdev);
- 	for (cur_engine = 0; cur_engine < cdev->num_hwfns; cur_engine++) {
-@@ -7993,6 +8003,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		       QED_NVM_IMAGE_MDUMP, "QED_NVM_IMAGE_MDUMP", rc);
- 	}
- 
-+	cdev->dbg_bin_dump = false;
- 	mutex_unlock(&qed_dbg_lock);
- 
- 	return 0;
--- 
-2.25.1
+VGhlc2UgcGF0Y2ggc2VyaWVzIGludHJvZHVjZSBhIE1lZGlhVGVrIE1UNjc3OSBkZXZhcGMgZHJp
+dmVyLg0KDQpNVDY3NzkgYnVzIGZyYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1
+cHBvcnQgYW5kIGRhdGENCnByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBh
+Y2Nlc3NlZCBieSB1bmV4cGVjdGVkDQptYXN0ZXJzLg0KVGhlIHNlY3VyaXR5IHZpb2xhdGlvbnMg
+YXJlIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KZnVydGhlciBhbmFseXNp
+cyBvciBjb3VudGVybWVhc3VyZXMuDQoNCkFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xh
+dGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1cHQsDQphbmQgaXQgd2lsbCBiZSBoYW5kbGVkIGJ5
+IGRldmFwYy1tdDY3NzkgZHJpdmVyLg0KVGhlIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBpcyBwcmlu
+dGVkIGluIG9yZGVyIHRvIGZpbmQgdGhlIG11cmRlcmVyLg0KDQoNCioqKiBCTFVSQiBIRVJFICoq
+Kg0KDQpOZWFsIExpdSAoMik6DQogIGR0LWJpbmRpbmdzOiBkZXZhcGM6IGFkZCBiaW5kaW5ncyBm
+b3IgZGV2YXBjLW10Njc3OQ0KICBzb2M6IG1lZGlhdGVrOiBkZXZhcGM6IGFkZCBkZXZhcGMtbXQ2
+Nzc5IGRyaXZlcg0KDQogLi4uL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njc3OS55YW1s
+ICAgIHwgICA1OCArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgIHwgICAgNiArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgIHwgICAgMSArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcgICAgICAg
+ICAgIHwgICAxNyArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL01ha2VmaWxlICAgICAg
+ICAgIHwgICAxMCArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1tdDY3Nzku
+YyAgIHwgMTExMSArKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFw
+Yy9kZXZhcGMtbXQ2Nzc5LmggICB8ICAgOTkgKysNCiA3IGZpbGVzIGNoYW5nZWQsIDEzMDIgaW5z
+ZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2Nzc5LnlhbWwNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL01ha2VmaWxlDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2Nzc5LmMN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1t
+dDY3NzkuaA0KDQotLSANCjIuMTguMA0K
 
