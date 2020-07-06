@@ -4,119 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66299C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86130C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F40120702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6309F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 13:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6hRYUO7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X6m4FfX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgGFNf0 (ORCPT
+        id S1729123AbgGFNfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 09:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        Mon, 6 Jul 2020 09:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729337AbgGFNeK (ORCPT
+        with ESMTP id S1729325AbgGFNeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 09:34:10 -0400
+        Mon, 6 Jul 2020 09:34:07 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0470C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:34:09 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so39372787wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:34:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75139C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 06:34:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l2so40630091wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 06:34:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=atQQd6B48grrwp+3FZv95LUICx56wwJRa1SpQXxMQxY=;
-        b=w6hRYUO7YyVcZnrxkVQcL9i+DIcegwSxOpJpusHM7ek+/DIU5QwFI/PAYc6YFHkaCT
-         k8FRF534bpubL0B0OmFF5oq6wY03Rw6yEomh35Tmx6FPDE/waGSczpU5Cgzrn5Uju7Cc
-         bCaXLGQifZRD/R4nbrn64owZsuCBcCb1EC0ImDhAGAXd/cc+WlULEQCijrABf+IpaKDT
-         3EKntJe03seySO6FPX3ZDocV61TFxZ1D1a4x8qhefwdg2zdjfgFY86PiagDVLamwPJy8
-         Cryz85XcxwCCMuv2nwLw+AXH9YXajlbSNY8nVxl/zMp1+gxb+292tL9mvtsS+CABRwnw
-         YPYw==
+        bh=9AX8kUBEDyEZkkrAQRSTc56qB4suyJ5w028cqL1Y9nI=;
+        b=X6m4FfX9HVkIRr8hUC5SaedwmejM6tHKMtWNuYYdOU9/56+ZZC56eTIFTX8DjtS4ei
+         zSEhErkoaN6DfMdi+KsFgHeCmraKSYyUDTDBvwE/NCDhuOL2MzmazL5R1kxb0lRkL57E
+         0VCH1foQu1eLxq00OzM0aq/zolR4GeCqxx9kPmH0iG1YSvxUN+IFUnR+g7vO2/B1H963
+         +qy2O46U+JBmheOcj0HsXB/yrv+qOhS2qFnevyOLLYNtUuzADE+5fNDvPnKj35lP87aG
+         DkkfR99J7Nsi0YY/wEHEgayT1PyA0037NW+/sIVocVBF9dVaHhoNijkk9NzyIV3eTstA
+         gKwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=atQQd6B48grrwp+3FZv95LUICx56wwJRa1SpQXxMQxY=;
-        b=ioGx3tVc9C7j1WFr4Yv0dQWIS9qHj/lFz0IUQYaSj7klyNRF2DUdeRP7yV86Kob69/
-         i8KOxYcI/5S+TDZqQ8/K2DJLKW165vE0geO5CI2tZnhhON3aAtPzld7YjsMZjbuupN/r
-         Pxoz00Nw63SQHlU9IQDt23dQkR4vGyWlUx0/x9yPjKqHvcCK+XQFtMZdCinp4aZnJVxh
-         eA25FJbRCbeIBe8mXR8+YZWOvOXzP/8cnNxD3JwWJwx40R57lnVlRltjY2K30x5RpiEL
-         EJJqBYKinfzR3POAzR4F+mhc/v1ug9dQrWSouT0mRwMdMDD+tSZO4/Ps42jvOgPk46L2
-         zABw==
-X-Gm-Message-State: AOAM531t7QuNA9KNpyU/4seM95W/JHBkrdntRTc64GQxzT5mInWeghhT
-        rCQ1ju3+X5+zmneYDElvhjU8Hg==
-X-Google-Smtp-Source: ABdhPJwn3KSyjv54N4scU2QXm9bSuHZxzD4jVab9Us5MgbW3y2o+Nt2CodWPVpAjqv1powTZgDaF9Q==
-X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr2416931wmh.121.1594042448527;
-        Mon, 06 Jul 2020 06:34:08 -0700 (PDT)
+        bh=9AX8kUBEDyEZkkrAQRSTc56qB4suyJ5w028cqL1Y9nI=;
+        b=K50g+tTzgmVD54yZEkAc+kJTk8jMGw2IETQnzU5zzyiZM9Dsvg62cb9ZdYEZxK064t
+         oU+XzTHCWsGntG14XTFv4+wYa244y2Xq/Ho2iuPYwfgwkC3qM5fVutZdf63gqD+174n9
+         dFcZffs7qq8xeAU69Ltk92S3qxAc9GqP3fJhmqQMymgOrFTpQjXJjjMN16WRAYg9edfV
+         Eo4KRmNylCidgVdRvM41ttNjIa30X6bh6agyc+vC0RJjGABEv4WJITaK0eSvOz13VhFE
+         6CS9sSq7eH88g3lUBK/8s3mHMSnkpkIHtXhX3w6l2fMNN7nOvX3zH8rFMk6kIdYU2Onu
+         sbwQ==
+X-Gm-Message-State: AOAM531Hhb4v7NwMo4rhjeR9zepCGmaEDAFrdd+4Rbv2seTViyZEGbqy
+        H1e59i5HpR9M7Yg123CPFMlNYg==
+X-Google-Smtp-Source: ABdhPJy/vW4eBdtZFwh7RKJcvlKpAd8CeAoqiMJQAacobWRvOb+MQ1KwteySTGzaqMrxvN2XhuOPgg==
+X-Received: by 2002:a1c:7306:: with SMTP id d6mr39594381wmb.113.1594042446244;
+        Mon, 06 Jul 2020 06:34:06 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id v18sm25416082wrv.49.2020.07.06.06.34.07
+        by smtp.gmail.com with ESMTPSA id v18sm25416082wrv.49.2020.07.06.06.34.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 06:34:07 -0700 (PDT)
+        Mon, 06 Jul 2020 06:34:05 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Felix Fietkau <nbd@openwrt.org>, Michael Buesch <m@bues.ch>
-Subject: [PATCH 20/32] usb: host: bcma-hcd: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Mon,  6 Jul 2020 14:33:29 +0100
-Message-Id: <20200706133341.476881-21-lee.jones@linaro.org>
+        Yuan-Hsin Chen <yhchen@faraday-tech.com>,
+        Feng-Hsin Chiang <john453@faraday-tech.com>,
+        Po-Yu Chuang <ratbert.chuang@gmail.com>
+Subject: [PATCH 18/32] usb: host: fotg210-hcd: Remove unused variable 'hcc_params'
+Date:   Mon,  6 Jul 2020 14:33:27 +0100
+Message-Id: <20200706133341.476881-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200706133341.476881-1-lee.jones@linaro.org>
 References: <20200706133341.476881-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document either of the demoted functions here.
+The result is actually read into fotg210->caps->hcc_params.  No
+need to popuate an unused varible with the unchecked return value
+from fotg210_readl().
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/usb/host/bcma-hcd.c:180: warning: Function parameter or member 'usb_dev' not described in 'bcma_hcd_usb20_old_arm_init'
- drivers/usb/host/bcma-hcd.c:268: warning: Function parameter or member 'bcma_hcd' not described in 'bcma_hcd_usb20_ns_init'
+ drivers/usb/host/fotg210-hcd.c: In function ‘fotg210_run’:
+ drivers/usb/host/fotg210-hcd.c:5013:6: warning: variable ‘hcc_params’ set but not used [-Wunused-but-set-variable]
+ 5013 | u32 hcc_params;
+ | ^~~~~~~~~~
 
-Cc: Chuhong Yuan <hslester96@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Felix Fietkau <nbd@openwrt.org>
-Cc: Michael Buesch <m@bues.ch>
+Cc: Yuan-Hsin Chen <yhchen@faraday-tech.com>
+Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
+Cc: Po-Yu Chuang <ratbert.chuang@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/host/bcma-hcd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/fotg210-hcd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/bcma-hcd.c b/drivers/usb/host/bcma-hcd.c
-index 652fa29beb273..b1b777f33521e 100644
---- a/drivers/usb/host/bcma-hcd.c
-+++ b/drivers/usb/host/bcma-hcd.c
-@@ -168,7 +168,7 @@ static void bcma_hcd_init_chip_mips(struct bcma_device *dev)
- 	}
- }
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index f967adf2d8dfc..51dbbb0e768bc 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -5010,7 +5010,6 @@ static int fotg210_run(struct usb_hcd *hcd)
+ {
+ 	struct fotg210_hcd *fotg210 = hcd_to_fotg210(hcd);
+ 	u32 temp;
+-	u32 hcc_params;
  
--/**
-+/*
-  * bcma_hcd_usb20_old_arm_init - Initialize old USB 2.0 controller on ARM
-  *
-  * Old USB 2.0 core is identified as BCMA_CORE_USB20_HOST and was introduced
-@@ -261,7 +261,7 @@ static void bcma_hcd_usb20_ns_init_hc(struct bcma_device *dev)
- 	usleep_range(1000, 2000);
- }
+ 	hcd->uses_new_polling = 1;
  
--/**
-+/*
-  * bcma_hcd_usb20_ns_init - Initialize Northstar USB 2.0 controller
-  */
- static int bcma_hcd_usb20_ns_init(struct bcma_hcd_device *bcma_hcd)
+@@ -5033,7 +5032,7 @@ static int fotg210_run(struct usb_hcd *hcd)
+ 	 * Scsi_Host.highmem_io, and so forth.  It's readonly to all
+ 	 * host side drivers though.
+ 	 */
+-	hcc_params = fotg210_readl(fotg210, &fotg210->caps->hcc_params);
++	fotg210_readl(fotg210, &fotg210->caps->hcc_params);
+ 
+ 	/*
+ 	 * Philips, Intel, and maybe others need CMD_RUN before the
 -- 
 2.25.1
 
