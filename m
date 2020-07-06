@@ -2,395 +2,153 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A12C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A41C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377CE2070C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521DB20747
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 02:41:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IQCrUIbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgGFC2n (ORCPT
+        id S1728662AbgGFCgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jul 2020 22:28:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34844 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgGFC2m (ORCPT
+        Sun, 5 Jul 2020 22:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbgGFCgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jul 2020 22:28:42 -0400
-Received: from 124x35x43x17.ap124.ftth.ucom.ne.jp ([124.35.43.17] helo=[172.16.81.130])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <nobuto.murata@canonical.com>)
-        id 1jsGrr-00048P-5E; Mon, 06 Jul 2020 02:28:27 +0000
-Subject: Re: [dm-devel] [PATCH v2] dm crypt: add flags to optionally bypass
- dm-crypt workqueues
-To:     Ignat Korchagin <ignat@cloudflare.com>, agk@redhat.com,
-        snitzer@redhat.com, dm-devel@redhat.com, dm-crypt@saout.de,
-        linux-kernel@vger.kernel.org
-Cc:     Damien.LeMoal@wdc.com, herbert@gondor.apana.org.au,
-        kernel-team@cloudflare.com, ebiggers@kernel.org,
-        mpatocka@redhat.com, nobuto.murata@canonical.com
-References: <20200626210302.1813-1-ignat@cloudflare.com>
-From:   Nobuto Murata <nobuto.murata@canonical.com>
-Message-ID: <7832ce68-5025-5a70-42e3-c07fc0513f79@canonical.com>
-Date:   Mon, 6 Jul 2020 11:28:22 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 5 Jul 2020 22:36:25 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D704C061794
+        for <linux-kernel@vger.kernel.org>; Sun,  5 Jul 2020 19:36:24 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b4so33525121qkn.11
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jul 2020 19:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sP8AeaVoozfO9npWWBtIIZljVBmSXvMUO9iliaOoAg4=;
+        b=IQCrUIbW25djPzc7S+MU49TH4vVH1Vd+pGBli6+6MKgvtNoKYWzRXgRI1G3Gjcrwao
+         EWF5fKDfubLC4QrN/oQF3XEtAB73ewZ7F4L89Lmb4tOgrb/qNTG0sqcNWnieU/d2w8pU
+         wJPv9GtU6aC5RkDLlGleuKdBAd8UH1qgd51F4dQh331buZ2Tae6vFjJB0zVQKBb/AUeR
+         YAdn/3WsrwIDWoI13yr6c38X4KPPzlTS/xCVPlr/xnKlmGZTiMmskjrq92YpsmV0axFF
+         I+lHefcB21xIzAMKIgrUuIuA7w4siFSmOyYi8NzeXBLUK7LU7dnV2ZkPdcrstZ1Dp470
+         qViw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sP8AeaVoozfO9npWWBtIIZljVBmSXvMUO9iliaOoAg4=;
+        b=F6Amsg7WMkWEr4IeKVLXVXlu97a28sKx3gFLVu0jtzR/MWMPL6TomwCf2A1RNoRV83
+         v7vp1fQlpI5ZANHp66BD1fg+BjGYiexrK5oFyTIQ21U5zxZLWQW9HohRgZd2ntMww7Ud
+         DkslGqDOM7IR+DMefVz47D7herOfJm8yFjjSu8zQ91/fRrj7ANQFBTpeMyOAtC2ZE/fO
+         Oalakx/DqnIBAdNjuRmM7FPcQoGUutSWzeoCOIw5NZkPjjkYsww0E/EVDLN6GLdAXAWQ
+         OeLbARwG/jcixbIJwT71dDzKL5Pzrz4yEfcY4rojQm3pUHGGwIlvE8EKVnC+ZxWZbMxP
+         i2aQ==
+X-Gm-Message-State: AOAM532QVbmEMdJ4iz2O0X8QU7tQD7s5Msep6KnKHmp+bBfCVx6oA3Zs
+        x+3vxx/WmkR9RtnOVX/a+5+c8A==
+X-Google-Smtp-Source: ABdhPJwOxYQmUuL7A1CF/7JW/bxVMJULU8q19x6HmjPK1f5a/QoiaK7T4AQo82o4vbVkuplVxQW5pw==
+X-Received: by 2002:a37:9c51:: with SMTP id f78mr8648119qke.60.1594002983385;
+        Sun, 05 Jul 2020 19:36:23 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 16sm18216530qkv.48.2020.07.05.19.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jul 2020 19:36:22 -0700 (PDT)
+Date:   Sun, 5 Jul 2020 22:36:14 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-ID: <20200706023614.GA1231@lca.pw>
+References: <20200705044454.GA90533@shbuild999.sh.intel.com>
+ <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
+ <20200705125854.GA66252@shbuild999.sh.intel.com>
+ <20200705155232.GA608@lca.pw>
+ <20200706014313.GB66252@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626210302.1813-1-ignat@cloudflare.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706014313.GB66252@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/20 6:03 AM, Ignat Korchagin wrote:
-> This is a follow up from [1]. Consider the following script:
+On Mon, Jul 06, 2020 at 09:43:13AM +0800, Feng Tang wrote:
+> On Sun, Jul 05, 2020 at 11:52:32AM -0400, Qian Cai wrote:
+> > On Sun, Jul 05, 2020 at 08:58:54PM +0800, Feng Tang wrote:
+> > > On Sun, Jul 05, 2020 at 08:15:03AM -0400, Qian Cai wrote:
+> > > > 
+> > > > 
+> > > > > On Jul 5, 2020, at 12:45 AM, Feng Tang <feng.tang@intel.com> wrote:
+> > > > > 
+> > > > > I did reproduce the problem, and from the debugging, this should
+> > > > > be the same root cause as lore.kernel.org/lkml/20200526181459.GD991@lca.pw/
+> > > > > that loosing the batch cause some accuracy problem, and the solution of
+> > > > > adding some sync is still needed, which is dicussed in
+> > > > 
+> > > > Well, before taking any of those patches now to fix the regression,
+> > > > we will need some performance data first. If it turned out the
+> > > > original performance gain is no longer relevant anymore due to this
+> > > > regression fix on top, it is best to drop this patchset and restore
+> > > > that VM_WARN_ONCE, so you can retry later once you found a better
+> > > > way to optimize.
+> > > 
+> > > The fix of adding sync only happens when the memory policy is being
+> > > changed to OVERCOMMIT_NEVER, which is not a frequent operation in
+> > > normal cases.
+> > > 
+> > > For the performance improvment data both in commit log and 0day report
+> > > https://lore.kernel.org/lkml/20200622132548.GS5535@shao2-debian/
+> > > it is for the will-it-scale's mmap testcase, which will not runtime
+> > > change memory overcommit policy, so the data should be still valid
+> > > with this fix.
+> > 
+> > Well, I would expect people are perfectly reasonable to use
+> > OVERCOMMIT_NEVER for some workloads making it more frequent operations.
 > 
-> sudo modprobe brd rd_nr=1 rd_size=4194304
+> In my last email, I was not saying OVERCOMMIT_NEVER is not a normal case,
+> but I don't think user will too frequently runtime change the overcommit
+> policy. And the fix patch of syncing 'vm_committed_as' is only called when
+> user calls 'sysctl -w vm.overcommit_memory=2'.
 > 
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0' | \
-> sudo dmsetup create eram0
+> > The question is now if any of those regression fixes would now regress
+> > performance of OVERCOMMIT_NEVER workloads or just in-par with the data
+> > before the patchset?
 > 
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_write_workqueue' | \
-> sudo dmsetup create eram0-inline-write
-> 
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_read_workqueue' | \
-> sudo dmsetup create eram0-inline-read
-> 
-> devices="/dev/ram0 /dev/mapper/eram0 /dev/mapper/eram0-inline-read "
-> devices+="/dev/mapper/eram0-inline-write"
-> 
-> for dev in $devices; do
->    echo "reading from $dev"
->    sudo fio --filename=$dev --readwrite=read --bs=4k --direct=1 \
->    --loops=1000000 --runtime=3m --name=plain | grep READ
-> done
-> 
-> for dev in $devices; do
->    echo "writing to $dev"
->    sudo fio --filename=$dev --readwrite=write --bs=4k --direct=1 \
->    --loops=1000000 --runtime=3m --name=plain | grep WRITE
-> done
-> 
-> This script creates a ramdisk (to eliminate hardware bias in the benchmark) and
-> three dm-crypt instances on top. All dm-crypt instances use the NULL cipher
-> to eliminate potentially expensive crypto bias (the NULL cipher just uses memcpy
-> for "encyption"). The first instance is the current dm-crypt implementation from
-> 5.8-rc2, the two others have new optional flags enabled, which bypass kcryptd
-> workqueues for reads and writes respectively and write sorting for writes. On
-> my VM (Debian in VirtualBox with 4 cores on 2.8 GHz Quad-Core Intel Core i7) I
-> get the following output (formatted for better readability):
-> 
-> reading from /dev/ram0
->     READ: bw=508MiB/s (533MB/s), 508MiB/s-508MiB/s (533MB/s-533MB/s), io=89.3GiB (95.9GB), run=180000-180000msec
-> 
-> reading from /dev/mapper/eram0
->     READ: bw=80.6MiB/s (84.5MB/s), 80.6MiB/s-80.6MiB/s (84.5MB/s-84.5MB/s), io=14.2GiB (15.2GB), run=180000-180000msec
-> 
-> reading from /dev/mapper/eram0-inline-read
->     READ: bw=295MiB/s (309MB/s), 295MiB/s-295MiB/s (309MB/s-309MB/s), io=51.8GiB (55.6GB), run=180000-180000msec
-> 
-> reading from /dev/mapper/eram0-inline-write
->     READ: bw=114MiB/s (120MB/s), 114MiB/s-114MiB/s (120MB/s-120MB/s), io=20.1GiB (21.5GB), run=180000-180000msec
-> 
-> writing to /dev/ram0
->    WRITE: bw=516MiB/s (541MB/s), 516MiB/s-516MiB/s (541MB/s-541MB/s), io=90.7GiB (97.4GB), run=180001-180001msec
-> 
-> writing to /dev/mapper/eram0
->    WRITE: bw=40.4MiB/s (42.4MB/s), 40.4MiB/s-40.4MiB/s (42.4MB/s-42.4MB/s), io=7271MiB (7624MB), run=180001-180001msec
-> 
-> writing to /dev/mapper/eram0-inline-read
->    WRITE: bw=38.9MiB/s (40.8MB/s), 38.9MiB/s-38.9MiB/s (40.8MB/s-40.8MB/s), io=7000MiB (7340MB), run=180001-180001msec
-> 
-> writing to /dev/mapper/eram0-inline-write
->    WRITE: bw=277MiB/s (290MB/s), 277MiB/s-277MiB/s (290MB/s-290MB/s), io=48.6GiB (52.2GB), run=180000-180000msec
+> For the original patchset, it keeps vm_committed_as unchanged for
+> OVERCOMMIT_NEVER policy and enlarge it for the other 2 loose policies
+> OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS, and I don't expect the "OVERCOMMIT_NEVER
+> workloads" performance  will be impacted. If you have suggetions for this
+> kind of benchmarks, I can test them to better verify the patchset, thanks!
 
-I've applied this v2 patch on top of Ubuntu 5.4 kernel and followed the 
-test case on my personal testbed (bare metal) with AMD Ryzen 7 2700. 
-Indeed it made things faster in general, but I saw mixed results when 
-running it with some scenarios close to the actual workloads. I went 
-back to the test case and ran it with various blocksize, iodepth, and 
-numjobs, then I saw similar and mixed trends. One of the cases where 
-no_(read|write)_workqueue doesn't perform well is as follows:
-
-##################################################
-# 4m ioengine=libaio iodepth=16 numjobs=1
-##################################################
-reading from /dev/ram0
-    READ: bw=6208MiB/s (6510MB/s)
-reading from /dev/mapper/eram0
-    READ: bw=4773MiB/s (5005MB/s)
-reading from /dev/mapper/eram0-inline-read
-    READ: bw=2782MiB/s (2918MB/s)
-reading from /dev/mapper/eram0-inline-write
-    READ: bw=4757MiB/s (4988MB/s)
-writing to /dev/ram0
-   WRITE: bw=5497MiB/s (5764MB/s)
-writing to /dev/mapper/eram0
-   WRITE: bw=3143MiB/s (3296MB/s)
-writing to /dev/mapper/eram0-inline-read
-   WRITE: bw=3144MiB/s (3297MB/s)
-writing to /dev/mapper/eram0-inline-write
-   WRITE: bw=1818MiB/s (1906MB/s)
-
-I've collected the output in:
-https://gist.github.com/nobuto-m/74849fb181d9016ddde17c806dac2421#file-patch-v2-testcase_result-txt
-
-Do you see similar trends when blocksize, iodepth, and numjobs are 
-changed? Wondered if I should test it again with the latest kernel as 
-5.8-rcX properly instead of 5.4.
-
-Thanks,
+Then, please capture those information into a proper commit log when you
+submit the regression fix on top of the patchset, and CC PER-CPU MEMORY
+ALLOCATOR maintainers, so they might be able to review it properly.
 
 > 
-> Current dm-crypt implementation creates a significant IO performance overhead
-> (at least on small IO block sizes) for both latency and throughput. We suspect
-> offloading IO request processing into workqueues and async threads is more
-> harmful these days with the modern fast storage. I also did some digging into
-> the dm-crypt git history and much of this async processing is not needed
-> anymore, because the reasons it was added are mostly gone from the kernel. More
-> details can be found in [2] (see "Git archeology" section).
+> - Feng
 > 
-> This change adds no_(read|write)_workqueue flags separately for read and write
-> BIOs, which direct dm-crypt not to offload crypto operations into kcryptd
-> workqueues and process everything inline. In addition, writes are not buffered
-> to be sorted in the dm-crypt red-black tree, but dispatched immediately. For
-> cases, where crypto operations cannot happen inline (hard interrupt context,
-> for example the read path of some NVME drivers), we offload the work to a
-> tasklet rather than a workqueue.
-> 
-> These flags ensure inline BIO processing in the dm-crypt module only. It is
-> worth noting that some Crypto API implementations may offload encryption into
-> their own workqueues, which are independent of the dm-crypt and its
-> configuration. However upon enabling no_(read|write)_workqueue flags dm-crypt
-> will instruct Crypto API not to backlog crypto requests.
-> 
-> [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
-> [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
-> 
-> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
-> ---
->   drivers/md/dm-crypt.c | 68 +++++++++++++++++++++++++++++++++----------
->   1 file changed, 52 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-> index 000ddfab5ba0..6924eb49b1df 100644
-> --- a/drivers/md/dm-crypt.c
-> +++ b/drivers/md/dm-crypt.c
-> @@ -69,6 +69,7 @@ struct dm_crypt_io {
->   	u8 *integrity_metadata;
->   	bool integrity_metadata_from_pool;
->   	struct work_struct work;
-> +	struct tasklet_struct tasklet;
->   
->   	struct convert_context ctx;
->   
-> @@ -127,7 +128,8 @@ struct iv_elephant_private {
->    * and encrypts / decrypts at the same time.
->    */
->   enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,
-> -	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD };
-> +	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD,
-> +	     DM_CRYPT_NO_READ_WORKQUEUE, DM_CRYPT_NO_WRITE_WORKQUEUE };
->   
->   enum cipher_flags {
->   	CRYPT_MODE_INTEGRITY_AEAD,	/* Use authenticated mode for cihper */
-> @@ -1449,7 +1451,7 @@ static void kcryptd_async_done(struct crypto_async_request *async_req,
->   			       int error);
->   
->   static void crypt_alloc_req_skcipher(struct crypt_config *cc,
-> -				     struct convert_context *ctx)
-> +				     struct convert_context *ctx, bool nobacklog)
->   {
->   	unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
->   
-> @@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
->   	 * requests if driver request queue is full.
->   	 */
->   	skcipher_request_set_callback(ctx->r.req,
-> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,
-> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
->   	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));
->   }
->   
->   static void crypt_alloc_req_aead(struct crypt_config *cc,
-> -				 struct convert_context *ctx)
-> +				 struct convert_context *ctx, bool nobacklog)
->   {
->   	if (!ctx->r.req_aead)
->   		ctx->r.req_aead = mempool_alloc(&cc->req_pool, GFP_NOIO);
-> @@ -1480,17 +1482,17 @@ static void crypt_alloc_req_aead(struct crypt_config *cc,
->   	 * requests if driver request queue is full.
->   	 */
->   	aead_request_set_callback(ctx->r.req_aead,
-> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,
-> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
->   	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req_aead));
->   }
->   
->   static void crypt_alloc_req(struct crypt_config *cc,
-> -			    struct convert_context *ctx)
-> +			    struct convert_context *ctx, bool nobacklog)
->   {
->   	if (crypt_integrity_aead(cc))
-> -		crypt_alloc_req_aead(cc, ctx);
-> +		crypt_alloc_req_aead(cc, ctx, nobacklog);
->   	else
-> -		crypt_alloc_req_skcipher(cc, ctx);
-> +		crypt_alloc_req_skcipher(cc, ctx, nobacklog);
->   }
->   
->   static void crypt_free_req_skcipher(struct crypt_config *cc,
-> @@ -1523,7 +1525,7 @@ static void crypt_free_req(struct crypt_config *cc, void *req, struct bio *base_
->    * Encrypt / decrypt data from one bio to another one (can be the same one)
->    */
->   static blk_status_t crypt_convert(struct crypt_config *cc,
-> -			 struct convert_context *ctx)
-> +			 struct convert_context *ctx, bool noresched)
->   {
->   	unsigned int tag_offset = 0;
->   	unsigned int sector_step = cc->sector_size >> SECTOR_SHIFT;
-> @@ -1533,7 +1535,7 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
->   
->   	while (ctx->iter_in.bi_size && ctx->iter_out.bi_size) {
->   
-> -		crypt_alloc_req(cc, ctx);
-> +		crypt_alloc_req(cc, ctx, noresched);
->   		atomic_inc(&ctx->cc_pending);
->   
->   		if (crypt_integrity_aead(cc))
-> @@ -1566,7 +1568,8 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
->   			atomic_dec(&ctx->cc_pending);
->   			ctx->cc_sector += sector_step;
->   			tag_offset++;
-> -			cond_resched();
-> +			if (!noresched)
-> +				cond_resched();
->   			continue;
->   		/*
->   		 * There was a data integrity error.
-> @@ -1879,6 +1882,9 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
->   	unsigned long flags;
->   	sector_t sector;
->   	struct rb_node **rbp, *parent;
-> +	bool nosort =
-> +			(likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
-> +			test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
->   
->   	if (unlikely(io->error)) {
->   		crypt_free_buffer_pages(cc, clone);
-> @@ -1892,7 +1898,7 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
->   
->   	clone->bi_iter.bi_sector = cc->start + io->sector;
->   
-> -	if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {
-> +	if (nosort) {
->   		generic_make_request(clone);
->   		return;
->   	}
-> @@ -1941,7 +1947,7 @@ static void kcryptd_crypt_write_convert(struct dm_crypt_io *io)
->   	sector += bio_sectors(clone);
->   
->   	crypt_inc_pending(io);
-> -	r = crypt_convert(cc, &io->ctx);
-> +	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
->   	if (r)
->   		io->error = r;
->   	crypt_finished = atomic_dec_and_test(&io->ctx.cc_pending);
-> @@ -1971,7 +1977,7 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
->   	crypt_convert_init(cc, &io->ctx, io->base_bio, io->base_bio,
->   			   io->sector);
->   
-> -	r = crypt_convert(cc, &io->ctx);
-> +	r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags));
->   	if (r)
->   		io->error = r;
->   
-> @@ -2031,9 +2037,29 @@ static void kcryptd_crypt(struct work_struct *work)
->   		kcryptd_crypt_write_convert(io);
->   }
->   
-> +static void kcryptd_crypt_tasklet(unsigned long work)
-> +{
-> +	kcryptd_crypt((struct work_struct *)work);
-> +}
-> +
->   static void kcryptd_queue_crypt(struct dm_crypt_io *io)
->   {
->   	struct crypt_config *cc = io->cc;
-> +	bool noworkqueue =
-> +			(bio_data_dir(io->base_bio) == READ && test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags)) ||
-> +			(bio_data_dir(io->base_bio) == WRITE && test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
-> +
-> +	if (noworkqueue) {
-> +		if (in_irq()) {
-> +			/* Crypto API's "skcipher_walk_first() refuses to work in hard IRQ context */
-> +			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
-> +			tasklet_schedule(&io->tasklet);
-> +			return;
-> +		}
-> +
-> +		kcryptd_crypt(&io->work);
-> +		return;
-> +	}
->   
->   	INIT_WORK(&io->work, kcryptd_crypt);
->   	queue_work(cc->crypt_queue, &io->work);
-> @@ -2838,7 +2864,7 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
->   	struct crypt_config *cc = ti->private;
->   	struct dm_arg_set as;
->   	static const struct dm_arg _args[] = {
-> -		{0, 6, "Invalid number of feature args"},
-> +		{0, 8, "Invalid number of feature args"},
->   	};
->   	unsigned int opt_params, val;
->   	const char *opt_string, *sval;
-> @@ -2868,6 +2894,10 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
->   
->   		else if (!strcasecmp(opt_string, "submit_from_crypt_cpus"))
->   			set_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
-> +		else if (!strcasecmp(opt_string, "no_read_workqueue"))
-> +			set_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
-> +		else if (!strcasecmp(opt_string, "no_write_workqueue"))
-> +			set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
->   		else if (sscanf(opt_string, "integrity:%u:", &val) == 1) {
->   			if (val == 0 || val > MAX_TAG_SIZE) {
->   				ti->error = "Invalid integrity arguments";
-> @@ -3196,6 +3226,8 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
->   		num_feature_args += !!ti->num_discard_bios;
->   		num_feature_args += test_bit(DM_CRYPT_SAME_CPU, &cc->flags);
->   		num_feature_args += test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
-> +		num_feature_args += test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
-> +		num_feature_args += test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
->   		num_feature_args += cc->sector_size != (1 << SECTOR_SHIFT);
->   		num_feature_args += test_bit(CRYPT_IV_LARGE_SECTORS, &cc->cipher_flags);
->   		if (cc->on_disk_tag_size)
-> @@ -3208,6 +3240,10 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
->   				DMEMIT(" same_cpu_crypt");
->   			if (test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags))
->   				DMEMIT(" submit_from_crypt_cpus");
-> +			if (test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags))
-> +				DMEMIT(" no_read_workqueue");
-> +			if (test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags))
-> +				DMEMIT(" no_write_workqueue");
->   			if (cc->on_disk_tag_size)
->   				DMEMIT(" integrity:%u:%s", cc->on_disk_tag_size, cc->cipher_auth);
->   			if (cc->sector_size != (1 << SECTOR_SHIFT))
-> @@ -3320,7 +3356,7 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
->   
->   static struct target_type crypt_target = {
->   	.name   = "crypt",
-> -	.version = {1, 21, 0},
-> +	.version = {1, 22, 0},
->   	.module = THIS_MODULE,
->   	.ctr    = crypt_ctr,
->   	.dtr    = crypt_dtr,
-> 
-
+> > 
+> > Given now this patchset has had so much churn recently, I would think
+> > "should be still valid" is not really the answer we are looking for.
+> > 
+> > > 
+> > > Thanks,
+> > > Feng
+> > > 
+> > > 
