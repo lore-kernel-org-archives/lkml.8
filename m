@@ -2,334 +2,452 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32953C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D83C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E48820702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7942320702
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LN9P2bMi"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="aiYCLxto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgGFRyi (ORCPT
+        id S1729701AbgGFRzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59552 "EHLO
+        Mon, 6 Jul 2020 13:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729569AbgGFRyh (ORCPT
+        with ESMTP id S1729569AbgGFRzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:54:37 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C25CC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 10:54:37 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id j9so26827698pgm.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:54:37 -0700 (PDT)
+        Mon, 6 Jul 2020 13:55:06 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D18DC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 10:55:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so40239078wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 10:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=W0KT7MUBp4ULzA/lrz9MNjkq65gb+iqSXVPHPYHRdns=;
-        b=LN9P2bMipuAjtve6DM+6REHBKjQce98SrGd/0YHWKaOWQfnz8cdLEKTSIyJuG6nrKh
-         Kaq3M6nxCOAoAWbR2uJG+bgFctKsIwe+p/b0Eu/H3mjcg+6nemWh4CR2BHA+cIQqHvRV
-         4DA4rUU5s+s1lAGsCVVpi5FYh1kMJgKR1rBAX2y/zLJfhUjQQPXar2FZBK0hdjKghxac
-         wGugPVv72bFzlzVvRagYTA/xeKqna1XP3jTKJaxuhBI/P6aBb6SQwAeeSihvoanXRmKE
-         jFruNJFa0ebEimxHqgLfHPhP/Dhdg0LUvT5dMkO+/juPFN/3uRn/EYGOjkvNqPLkW7kp
-         39ZQ==
+        bh=I0wDePMqUlubEvhm51OZihpRZv5xJ9683ZNMWzxLgI0=;
+        b=aiYCLxto1uvKHiXfNR+wjMrRWFMp2Fyh9el4H+EedaJL+CBEoefk0diDchArYpCU7T
+         EkzVxWlvC4aW5Ws7kD+rHTad2vszlAMERMe+2btUrJpkCrYL9M0ayP1OoTTIqZ3H/nNf
+         UUTqstBD1uBubF3R/UEyJC/PiRogtyiumkT08=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=W0KT7MUBp4ULzA/lrz9MNjkq65gb+iqSXVPHPYHRdns=;
-        b=n0+xuHFsR7Rzadld6/w7BVfBcHLB27lLkA85Wt/6x0Slf5YAluZ6e65W9vKsY3d4ce
-         jbZz3k6sVMtl+RrUv9ruIgydQkM+jgpH8yfI6RlT1JLH9XxcleGx4ul15OIMWb5SA5mS
-         lKLFBVHSyF/RZkVwG/aBpC2BXtL3XlDd1FLh/Vi6RyjNCakLJF4LndS9b9mGPtLbJ53u
-         FKS+GsHO0ZmM/3XdNCn9JOrnWiUlqPXGIW1UHjzuvWVpqFF7EUnD7rDxDGfdS3Smqliu
-         4OKxwkbO8GxCeUj3tI650QqrViVGMAJL07T7zu1ymcxbfhL037EGG5+JJwYmiFgofPLz
-         Ao5Q==
-X-Gm-Message-State: AOAM532slsWqZ0Xj1NhC4D2ENZOcKNLJOihbR7bpuAO4E/etctWeaP43
-        h/yBFUnazmEWXjKLFZLvKfKS4X/H6vFO3uKG
-X-Google-Smtp-Source: ABdhPJx5xIqXhKVVf4e6pEmntrife0SA3xqyLciFIZhRHxFkyT2tuYJjgnqRhIDVTpQc0tMvrOwXRxqs95QEUj92
-X-Received: by 2002:aa7:8298:: with SMTP id s24mr47519552pfm.21.1594058076399;
- Mon, 06 Jul 2020 10:54:36 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 17:54:33 +0000
-In-Reply-To: <20200703010611.GA100794@roeck-us.net>
-Message-Id: <20200706175433.1948648-1-linchuyuan@google.com>
-Mime-Version: 1.0
-References: <20200703010611.GA100794@roeck-us.net>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] hwmon:max6697: Allow max6581 to create tempX_offset
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net
-Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
-        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhongqil@google.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I0wDePMqUlubEvhm51OZihpRZv5xJ9683ZNMWzxLgI0=;
+        b=kIyNuc5TbY8T4WBK1aYdNk0pvi2e2gIs7mbWDh6IDe5OQZbuhctW3zROzGBNalCVFU
+         BPBTTd0gm/NF3ekkEosloRoffzWTuut/hZAc6XRzASZsg3ya2gjlIykVur/erdLsg3EJ
+         y2eV6olUlEi7HbRm/ilUMT/8umS8jTmjulqALHud0HexF6X60qVZAKAV23IY6sdKA5s1
+         WM8CbKf1YmwwIS+KqFAMzxvQ59fdPhPDbiPMw/wPT4Jl5Tgrx1RXpQmWCOTaPrUe+OlS
+         RjPZcezmLqr5lXrKShUhiXdU9538dkHEyF9VnHT441O5wj7WdWKloK6XOGj3JZ+AnvyL
+         3RXw==
+X-Gm-Message-State: AOAM533VS0FBHuHz3cbwzloY/7MNa6bdSJ9+HaWmWzcs4FcB6zMzcPt4
+        15uglkDoL0WKKYmlONGmkYQ5vqMf4mGmgeFwWC1majo003NQG00t
+X-Google-Smtp-Source: ABdhPJwEpwt3yzmLrvpFBs1BiWVVkoh8u+p84t67/A1zJxqNUGkfz/ktDK3BH8D5HzIJdHCDg8tESaZ4jNcJ5Sv77Fc=
+X-Received: by 2002:a7b:c246:: with SMTP id b6mr364958wmj.161.1594058104692;
+ Mon, 06 Jul 2020 10:55:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200626210302.1813-1-ignat@cloudflare.com> <3f7ba9df-de18-d641-2568-49ac2bc3719e@oracle.com>
+In-Reply-To: <3f7ba9df-de18-d641-2568-49ac2bc3719e@oracle.com>
+From:   Ignat Korchagin <ignat@cloudflare.com>
+Date:   Mon, 6 Jul 2020 18:54:53 +0100
+Message-ID: <CALrw=nHpp0Z-KQg9s=GsWK5+GgmHNWcK7J3drrCTn+kMQUPBTw@mail.gmail.com>
+Subject: Re: [dm-devel] [PATCH v2] dm crypt: add flags to optionally bypass
+ dm-crypt workqueues
+To:     Bob Liu <bob.liu@oracle.com>
+Cc:     agk@redhat.com, Mike Snitzer <snitzer@redhat.com>,
+        dm-devel@redhat.com, dm-crypt@saout.de,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Mikulas Patocka <mpatocka@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per max6581, reg 4d and reg 4e is used for temperature read offset.
-This patch will let the user specify the temperature read offset for
-max6581. This patch is tested on max6581 and only applies to max6581.
+On Mon, Jul 6, 2020 at 3:28 PM Bob Liu <bob.liu@oracle.com> wrote:
+>
+> Hi Ignat,
+>
+> On 6/27/20 5:03 AM, Ignat Korchagin wrote:
+> > This is a follow up from [1]. Consider the following script:
+> >
+> > sudo modprobe brd rd_nr=1 rd_size=4194304
+> >
+>
+> Did you test null_blk device? I didn't get result as expected using null_blk.
 
-Testing:
-echo 16250 > temp2_offset
-cat temp2_offset
-16250
+I've modified the script in the patch description to use a null_blk
+device instead of /dev/ram0, but I created the block device with
+queue_mode=0. My results are as follows:
 
-echo 17500 > temp3_offset
-cat temp3_offset
-17500
-cat temp4_offset
-0
-cat temp2_offset
-17500
+reading from /dev/nullb0
+   READ: bw=527MiB/s (552MB/s), 527MiB/s-527MiB/s (552MB/s-552MB/s),
+io=92.6GiB (99.4GB), run=180000-180000msec
+reading from /dev/mapper/eram0
+   READ: bw=112MiB/s (117MB/s), 112MiB/s-112MiB/s (117MB/s-117MB/s),
+io=19.7GiB (21.1GB), run=180001-180001msec
+reading from /dev/mapper/eram0-inline-read
+   READ: bw=288MiB/s (302MB/s), 288MiB/s-288MiB/s (302MB/s-302MB/s),
+io=50.6GiB (54.3GB), run=180000-180000msec
+reading from /dev/mapper/eram0-inline-write
+   READ: bw=123MiB/s (129MB/s), 123MiB/s-123MiB/s (129MB/s-129MB/s),
+io=21.6GiB (23.1GB), run=180000-180000msec
+writing to /dev/nullb0
+  WRITE: bw=510MiB/s (535MB/s), 510MiB/s-510MiB/s (535MB/s-535MB/s),
+io=89.7GiB (96.3GB), run=180001-180001msec
+writing to /dev/mapper/eram0
+  WRITE: bw=45.9MiB/s (48.1MB/s), 45.9MiB/s-45.9MiB/s
+(48.1MB/s-48.1MB/s), io=8264MiB (8666MB), run=180001-180001msec
+writing to /dev/mapper/eram0-inline-read
+  WRITE: bw=42.5MiB/s (44.6MB/s), 42.5MiB/s-42.5MiB/s
+(44.6MB/s-44.6MB/s), io=7658MiB (8030MB), run=180001-180001msec
+writing to /dev/mapper/eram0-inline-write
+  WRITE: bw=259MiB/s (272MB/s), 259MiB/s-259MiB/s (272MB/s-272MB/s),
+io=45.6GiB (48.0GB), run=180000-180000msec
 
-echo 0 > temp2_offset
-cat temp2_offset
-0
-cat temp3_offset
-17500
+Still see the same improvement. Can you retry your test with a
+queue_mode=0 null_blk device?
 
-echo -0 > temp2_offset
-cat temp2_offset
-0
+Thanks,
+Ignat
 
-echo -100000 > temp2_offset
-cat temp2_input
-4875
-
-echo 10000 > temp2_offset
-cat temp2_input
-47125
-
-echo -2000 > temp2_offset
-cat temp2_input
-34875
-
-echo -0 > temp2_offset
-cat temp2_input
-37000
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/max6697.c | 100 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 96 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index da43f7ae3de1..4b71b3716f22 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -65,6 +65,9 @@ static const u8 MAX6697_REG_CRIT[] = {
- #define MAX6581_REG_IDEALITY_SELECT	0x4c
- #define MAX6581_REG_OFFSET		0x4d
- #define MAX6581_REG_OFFSET_SELECT	0x4e
-+#define MAX6581_OFFSET_MIN		-31750
-+#define MAX6581_OFFSET_MAX		31750
-+
- 
- #define MAX6697_CONV_TIME		156	/* ms per channel, worst case */
- 
-@@ -180,6 +183,11 @@ static const struct max6697_chip_data max6697_chip_data[] = {
- 	},
- };
- 
-+static inline int max6581_offset_to_millic(int val)
-+{
-+	return val & (1 << 7) ? (val | 0xffffff00) * 250 : val * 250;
-+}
-+
- static struct max6697_data *max6697_update_device(struct device *dev)
- {
- 	struct max6697_data *data = dev_get_drvdata(dev);
-@@ -325,6 +333,69 @@ static ssize_t temp_store(struct device *dev,
- 	return ret < 0 ? ret : count;
- }
- 
-+static ssize_t offset_store(struct device *dev,
-+			    struct device_attribute *devattr, const char *buf,
-+			    size_t count)
-+{
-+	long temp;
-+	u8 val, select;
-+	int ret, index;
-+	struct max6697_data *data;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client,
-+					  MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return select;
-+	ret = kstrtol(buf, 10, &temp);
-+	if (ret < 0)
-+		return ret;
-+	/* disable the offset for channel */
-+	if (temp == 0) {
-+		ret = i2c_smbus_write_byte_data(data->client,
-+						MAX6581_REG_OFFSET_SELECT,
-+						select & ~(1 << (index - 1)));
-+		return ret < 0 ? ret : count;
-+	}
-+	temp = clamp_val(temp, MAX6581_OFFSET_MIN, MAX6581_OFFSET_MAX);
-+	val = DIV_ROUND_CLOSEST(temp, 250);
-+	mutex_lock(&data->update_lock);
-+	ret = i2c_smbus_write_byte_data(data->client,
-+					MAX6581_REG_OFFSET_SELECT,
-+					select | (1 << (index - 1)));
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_smbus_write_byte_data(data->client,
-+					MAX6581_REG_OFFSET,
-+					val);
-+	mutex_unlock(&data->update_lock);
-+	return ret < 0 ? ret : count;
-+}
-+
-+static ssize_t offset_show(struct device *dev, struct device_attribute *devattr,
-+			   char *buf)
-+{
-+	int select, ret, index;
-+	struct max6697_data *data;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client,
-+					  MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return select;
-+	if (select & (1 << (index - 1))) {
-+		ret = i2c_smbus_read_byte_data(data->client,
-+					       MAX6581_REG_OFFSET);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		return sprintf(buf, "%d\n", 0);
-+	}
-+	return sprintf(buf, "%d\n", max6581_offset_to_millic(ret));
-+}
-+
- static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_max, temp, 0, MAX6697_TEMP_MAX);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_crit, temp, 0, MAX6697_TEMP_CRIT);
-@@ -383,6 +454,15 @@ static SENSOR_DEVICE_ATTR_RO(temp6_fault, alarm, 5);
- static SENSOR_DEVICE_ATTR_RO(temp7_fault, alarm, 6);
- static SENSOR_DEVICE_ATTR_RO(temp8_fault, alarm, 7);
- 
-+/* There is no offset for local temperature so starting from temp2 */
-+static SENSOR_DEVICE_ATTR_RW(temp2_offset, offset, 1);
-+static SENSOR_DEVICE_ATTR_RW(temp3_offset, offset, 2);
-+static SENSOR_DEVICE_ATTR_RW(temp4_offset, offset, 3);
-+static SENSOR_DEVICE_ATTR_RW(temp5_offset, offset, 4);
-+static SENSOR_DEVICE_ATTR_RW(temp6_offset, offset, 5);
-+static SENSOR_DEVICE_ATTR_RW(temp7_offset, offset, 6);
-+static SENSOR_DEVICE_ATTR_RW(temp8_offset, offset, 7);
-+
- static DEVICE_ATTR(dummy, 0, NULL, NULL);
- 
- static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
-@@ -391,8 +471,8 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct max6697_data *data = dev_get_drvdata(dev);
- 	const struct max6697_chip_data *chip = data->chip;
--	int channel = index / 6;	/* channel number */
--	int nr = index % 6;		/* attribute index within channel */
-+	int channel = index / 8;	/* channel number */
-+	int nr = index % 7;		/* attribute index within channel */
- 
- 	if (channel >= chip->channels)
- 		return 0;
-@@ -401,6 +481,10 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 		return 0;
- 	if (nr == 5 && !(chip->have_fault & (1 << channel)))
- 		return 0;
-+	/* offset reg is only supported on max6581 remote channels */
-+	if (nr == 6)
-+		if (data->type != max6581 || channel == 0)
-+			return 0;
- 
- 	return attr->mode;
- }
-@@ -417,6 +501,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp1_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp1_crit_alarm.dev_attr.attr,
- 	&dev_attr_dummy.attr,
-+	&dev_attr_dummy.attr,
- 
- 	&sensor_dev_attr_temp2_input.dev_attr.attr,
- 	&sensor_dev_attr_temp2_max.dev_attr.attr,
-@@ -424,6 +509,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp2_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp2_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp2_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp2_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp3_input.dev_attr.attr,
- 	&sensor_dev_attr_temp3_max.dev_attr.attr,
-@@ -431,6 +517,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp3_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp3_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp3_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp3_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp4_input.dev_attr.attr,
- 	&sensor_dev_attr_temp4_max.dev_attr.attr,
-@@ -438,6 +525,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp4_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp4_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp4_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp4_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp5_input.dev_attr.attr,
- 	&sensor_dev_attr_temp5_max.dev_attr.attr,
-@@ -445,6 +533,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp5_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp5_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp5_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp5_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp6_input.dev_attr.attr,
- 	&sensor_dev_attr_temp6_max.dev_attr.attr,
-@@ -452,6 +541,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp6_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp6_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp6_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp6_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp7_input.dev_attr.attr,
- 	&sensor_dev_attr_temp7_max.dev_attr.attr,
-@@ -459,6 +549,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp7_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp7_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp7_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp7_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp8_input.dev_attr.attr,
- 	&sensor_dev_attr_temp8_max.dev_attr.attr,
-@@ -466,6 +557,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp8_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp8_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp8_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp8_offset.dev_attr.attr,
- 	NULL
- };
- 
-@@ -502,8 +594,8 @@ static void max6697_get_config_of(struct device_node *node,
- 	}
- 	prop = of_get_property(node, "transistor-ideality", &len);
- 	if (prop && len == 2 * sizeof(u32)) {
--			pdata->ideality_mask = be32_to_cpu(prop[0]);
--			pdata->ideality_value = be32_to_cpu(prop[1]);
-+		pdata->ideality_mask = be32_to_cpu(prop[0]);
-+		pdata->ideality_value = be32_to_cpu(prop[1]);
- 	}
- }
- 
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+> 1.
+> # fio --filename=/dev/nullb0 --readwrite=readwrite --bs=4k --direct=1 --loops    =1000000 --name=plain
+> Run status group 0 (all jobs):
+>   READ: bw=390MiB/s (409MB/s), 390MiB/s-390MiB/s (409MB/s-409MB/s), io=10.6GiB (11.3GB), run=27744-27744msec
+>   WRITE: bw=390MiB/s (409MB/s), 390MiB/s-390MiB/s (409MB/s-409MB/s), io=10.6GiB (11.3GB), run=27744-27744msec
+>
+> 2.
+> Create enctrypted-ram0 based on null_blk(without this patch):
+> # cryptsetup open --header crypthdr.img /dev/nullb0 encrypted-ram0
+> # fio --filename=/dev/mapper/encrypted-ram0 --readwrite=readwrite --bs=4k --direct=1 --loops=1000000 --name=crypt
+> Run status group 0 (all jobs):
+>   READ: bw=180MiB/s (188MB/s), 180MiB/s-180MiB/s (188MB/s-188MB/s), io=4534MiB (4754MB), run=25246-25246msec
+>   WRITE: bw=179MiB/s (188MB/s), 179MiB/s-179MiB/s (188MB/s-188MB/s), io=4528MiB (4748MB), run=25246-25246msec
+>
+> 3.
+> Create enctrypted-ram0 based on null_blk(with this patch):
+> # cryptsetup open --header crypthdr.img /dev/nullb0 encrypted-ram0
+> # fio --filename=/dev/mapper/encrypted-ram0 --readwrite=readwrite --bs=4k  --direct=1 --loops=1000000 --name=crypt.patched
+> Run status group 0 (all jobs):
+>   READ: bw=149MiB/s (156MB/s), 149MiB/s-149MiB/s (156MB/s-156MB/s), io=4128MiB (4329MB), run=27753-27753msec
+>   WRITE: bw=149MiB/s (156MB/s), 149MiB/s-149MiB/s (156MB/s-156MB/s), io=4124MiB (4324MB), run=27753-27753msec
+>
+> Looks like the result is worse after this patch, or I may miss something..
+>
+> Regards,
+> Bob
+>
+>
+> > echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0' | \
+> > sudo dmsetup create eram0
+> >
+> > echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_write_workqueue' | \
+> > sudo dmsetup create eram0-inline-write
+> >
+> > echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_read_workqueue' | \
+> > sudo dmsetup create eram0-inline-read
+> >
+> > devices="/dev/ram0 /dev/mapper/eram0 /dev/mapper/eram0-inline-read "
+> > devices+="/dev/mapper/eram0-inline-write"
+> >
+> > for dev in $devices; do
+> >   echo "reading from $dev"
+> >   sudo fio --filename=$dev --readwrite=read --bs=4k --direct=1 \
+> >   --loops=1000000 --runtime=3m --name=plain | grep READ
+> > done
+> >
+> > for dev in $devices; do
+> >   echo "writing to $dev"
+> >   sudo fio --filename=$dev --readwrite=write --bs=4k --direct=1 \
+> >   --loops=1000000 --runtime=3m --name=plain | grep WRITE
+> > done
+> >
+> > This script creates a ramdisk (to eliminate hardware bias in the benchmark) and
+> > three dm-crypt instances on top. All dm-crypt instances use the NULL cipher
+> > to eliminate potentially expensive crypto bias (the NULL cipher just uses memcpy
+> > for "encyption"). The first instance is the current dm-crypt implementation from
+> > 5.8-rc2, the two others have new optional flags enabled, which bypass kcryptd
+> > workqueues for reads and writes respectively and write sorting for writes. On
+> > my VM (Debian in VirtualBox with 4 cores on 2.8 GHz Quad-Core Intel Core i7) I
+> > get the following output (formatted for better readability):
+> >
+> > reading from /dev/ram0
+> >    READ: bw=508MiB/s (533MB/s), 508MiB/s-508MiB/s (533MB/s-533MB/s), io=89.3GiB (95.9GB), run=180000-180000msec
+> >
+> > reading from /dev/mapper/eram0
+> >    READ: bw=80.6MiB/s (84.5MB/s), 80.6MiB/s-80.6MiB/s (84.5MB/s-84.5MB/s), io=14.2GiB (15.2GB), run=180000-180000msec
+> >
+> > reading from /dev/mapper/eram0-inline-read
+> >    READ: bw=295MiB/s (309MB/s), 295MiB/s-295MiB/s (309MB/s-309MB/s), io=51.8GiB (55.6GB), run=180000-180000msec
+> >
+> > reading from /dev/mapper/eram0-inline-write
+> >    READ: bw=114MiB/s (120MB/s), 114MiB/s-114MiB/s (120MB/s-120MB/s), io=20.1GiB (21.5GB), run=180000-180000msec
+> >
+> > writing to /dev/ram0
+> >   WRITE: bw=516MiB/s (541MB/s), 516MiB/s-516MiB/s (541MB/s-541MB/s), io=90.7GiB (97.4GB), run=180001-180001msec
+> >
+> > writing to /dev/mapper/eram0
+> >   WRITE: bw=40.4MiB/s (42.4MB/s), 40.4MiB/s-40.4MiB/s (42.4MB/s-42.4MB/s), io=7271MiB (7624MB), run=180001-180001msec
+> >
+> > writing to /dev/mapper/eram0-inline-read
+> >   WRITE: bw=38.9MiB/s (40.8MB/s), 38.9MiB/s-38.9MiB/s (40.8MB/s-40.8MB/s), io=7000MiB (7340MB), run=180001-180001msec
+> >
+> > writing to /dev/mapper/eram0-inline-write
+> >   WRITE: bw=277MiB/s (290MB/s), 277MiB/s-277MiB/s (290MB/s-290MB/s), io=48.6GiB (52.2GB), run=180000-180000msec
+> >
+> > Current dm-crypt implementation creates a significant IO performance overhead
+> > (at least on small IO block sizes) for both latency and throughput. We suspect
+> > offloading IO request processing into workqueues and async threads is more
+> > harmful these days with the modern fast storage. I also did some digging into
+> > the dm-crypt git history and much of this async processing is not needed
+> > anymore, because the reasons it was added are mostly gone from the kernel. More
+> > details can be found in [2] (see "Git archeology" section).
+> >
+> > This change adds no_(read|write)_workqueue flags separately for read and write
+> > BIOs, which direct dm-crypt not to offload crypto operations into kcryptd
+> > workqueues and process everything inline. In addition, writes are not buffered
+> > to be sorted in the dm-crypt red-black tree, but dispatched immediately. For
+> > cases, where crypto operations cannot happen inline (hard interrupt context,
+> > for example the read path of some NVME drivers), we offload the work to a
+> > tasklet rather than a workqueue.
+> >
+> > These flags ensure inline BIO processing in the dm-crypt module only. It is
+> > worth noting that some Crypto API implementations may offload encryption into
+> > their own workqueues, which are independent of the dm-crypt and its
+> > configuration. However upon enabling no_(read|write)_workqueue flags dm-crypt
+> > will instruct Crypto API not to backlog crypto requests.
+> >
+> > [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html
+> > [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
+> >
+> > Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+> > ---
+> >  drivers/md/dm-crypt.c | 68 +++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 52 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> > index 000ddfab5ba0..6924eb49b1df 100644
+> > --- a/drivers/md/dm-crypt.c
+> > +++ b/drivers/md/dm-crypt.c
+> > @@ -69,6 +69,7 @@ struct dm_crypt_io {
+> >       u8 *integrity_metadata;
+> >       bool integrity_metadata_from_pool;
+> >       struct work_struct work;
+> > +     struct tasklet_struct tasklet;
+> >
+> >       struct convert_context ctx;
+> >
+> > @@ -127,7 +128,8 @@ struct iv_elephant_private {
+> >   * and encrypts / decrypts at the same time.
+> >   */
+> >  enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,
+> > -          DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD };
+> > +          DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD,
+> > +          DM_CRYPT_NO_READ_WORKQUEUE, DM_CRYPT_NO_WRITE_WORKQUEUE };
+> >
+> >  enum cipher_flags {
+> >       CRYPT_MODE_INTEGRITY_AEAD,      /* Use authenticated mode for cihper */
+> > @@ -1449,7 +1451,7 @@ static void kcryptd_async_done(struct crypto_async_request *async_req,
+> >                              int error);
+> >
+> >  static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+> > -                                  struct convert_context *ctx)
+> > +                                  struct convert_context *ctx, bool nobacklog)
+> >  {
+> >       unsigned key_index = ctx->cc_sector & (cc->tfms_count - 1);
+> >
+> > @@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
+> >        * requests if driver request queue is full.
+> >        */
+> >       skcipher_request_set_callback(ctx->r.req,
+> > -         CRYPTO_TFM_REQ_MAY_BACKLOG,
+> > +         nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+> >           kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));
+> >  }
+> >
+> >  static void crypt_alloc_req_aead(struct crypt_config *cc,
+> > -                              struct convert_context *ctx)
+> > +                              struct convert_context *ctx, bool nobacklog)
+> >  {
+> >       if (!ctx->r.req_aead)
+> >               ctx->r.req_aead = mempool_alloc(&cc->req_pool, GFP_NOIO);
+> > @@ -1480,17 +1482,17 @@ static void crypt_alloc_req_aead(struct crypt_config *cc,
+> >        * requests if driver request queue is full.
+> >        */
+> >       aead_request_set_callback(ctx->r.req_aead,
+> > -         CRYPTO_TFM_REQ_MAY_BACKLOG,
+> > +         nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
+> >           kcryptd_async_done, dmreq_of_req(cc, ctx->r.req_aead));
+> >  }
+> >
+> >  static void crypt_alloc_req(struct crypt_config *cc,
+> > -                         struct convert_context *ctx)
+> > +                         struct convert_context *ctx, bool nobacklog)
+> >  {
+> >       if (crypt_integrity_aead(cc))
+> > -             crypt_alloc_req_aead(cc, ctx);
+> > +             crypt_alloc_req_aead(cc, ctx, nobacklog);
+> >       else
+> > -             crypt_alloc_req_skcipher(cc, ctx);
+> > +             crypt_alloc_req_skcipher(cc, ctx, nobacklog);
+> >  }
+> >
+> >  static void crypt_free_req_skcipher(struct crypt_config *cc,
+> > @@ -1523,7 +1525,7 @@ static void crypt_free_req(struct crypt_config *cc, void *req, struct bio *base_
+> >   * Encrypt / decrypt data from one bio to another one (can be the same one)
+> >   */
+> >  static blk_status_t crypt_convert(struct crypt_config *cc,
+> > -                      struct convert_context *ctx)
+> > +                      struct convert_context *ctx, bool noresched)
+> >  {
+> >       unsigned int tag_offset = 0;
+> >       unsigned int sector_step = cc->sector_size >> SECTOR_SHIFT;
+> > @@ -1533,7 +1535,7 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+> >
+> >       while (ctx->iter_in.bi_size && ctx->iter_out.bi_size) {
+> >
+> > -             crypt_alloc_req(cc, ctx);
+> > +             crypt_alloc_req(cc, ctx, noresched);
+> >               atomic_inc(&ctx->cc_pending);
+> >
+> >               if (crypt_integrity_aead(cc))
+> > @@ -1566,7 +1568,8 @@ static blk_status_t crypt_convert(struct crypt_config *cc,
+> >                       atomic_dec(&ctx->cc_pending);
+> >                       ctx->cc_sector += sector_step;
+> >                       tag_offset++;
+> > -                     cond_resched();
+> > +                     if (!noresched)
+> > +                             cond_resched();
+> >                       continue;
+> >               /*
+> >                * There was a data integrity error.
+> > @@ -1879,6 +1882,9 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+> >       unsigned long flags;
+> >       sector_t sector;
+> >       struct rb_node **rbp, *parent;
+> > +     bool nosort =
+> > +                     (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
+> > +                     test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+> >
+> >       if (unlikely(io->error)) {
+> >               crypt_free_buffer_pages(cc, clone);
+> > @@ -1892,7 +1898,7 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
+> >
+> >       clone->bi_iter.bi_sector = cc->start + io->sector;
+> >
+> > -     if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {
+> > +     if (nosort) {
+> >               generic_make_request(clone);
+> >               return;
+> >       }
+> > @@ -1941,7 +1947,7 @@ static void kcryptd_crypt_write_convert(struct dm_crypt_io *io)
+> >       sector += bio_sectors(clone);
+> >
+> >       crypt_inc_pending(io);
+> > -     r = crypt_convert(cc, &io->ctx);
+> > +     r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
+> >       if (r)
+> >               io->error = r;
+> >       crypt_finished = atomic_dec_and_test(&io->ctx.cc_pending);
+> > @@ -1971,7 +1977,7 @@ static void kcryptd_crypt_read_convert(struct dm_crypt_io *io)
+> >       crypt_convert_init(cc, &io->ctx, io->base_bio, io->base_bio,
+> >                          io->sector);
+> >
+> > -     r = crypt_convert(cc, &io->ctx);
+> > +     r = crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags));
+> >       if (r)
+> >               io->error = r;
+> >
+> > @@ -2031,9 +2037,29 @@ static void kcryptd_crypt(struct work_struct *work)
+> >               kcryptd_crypt_write_convert(io);
+> >  }
+> >
+> > +static void kcryptd_crypt_tasklet(unsigned long work)
+> > +{
+> > +     kcryptd_crypt((struct work_struct *)work);
+> > +}
+> > +
+> >  static void kcryptd_queue_crypt(struct dm_crypt_io *io)
+> >  {
+> >       struct crypt_config *cc = io->cc;
+> > +     bool noworkqueue =
+> > +                     (bio_data_dir(io->base_bio) == READ && test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags)) ||
+> > +                     (bio_data_dir(io->base_bio) == WRITE && test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags));
+> > +
+> > +     if (noworkqueue) {
+> > +             if (in_irq()) {
+> > +                     /* Crypto API's "skcipher_walk_first() refuses to work in hard IRQ context */
+> > +                     tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io->work);
+> > +                     tasklet_schedule(&io->tasklet);
+> > +                     return;
+> > +             }
+> > +
+> > +             kcryptd_crypt(&io->work);
+> > +             return;
+> > +     }
+> >
+> >       INIT_WORK(&io->work, kcryptd_crypt);
+> >       queue_work(cc->crypt_queue, &io->work);
+> > @@ -2838,7 +2864,7 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+> >       struct crypt_config *cc = ti->private;
+> >       struct dm_arg_set as;
+> >       static const struct dm_arg _args[] = {
+> > -             {0, 6, "Invalid number of feature args"},
+> > +             {0, 8, "Invalid number of feature args"},
+> >       };
+> >       unsigned int opt_params, val;
+> >       const char *opt_string, *sval;
+> > @@ -2868,6 +2894,10 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
+> >
+> >               else if (!strcasecmp(opt_string, "submit_from_crypt_cpus"))
+> >                       set_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
+> > +             else if (!strcasecmp(opt_string, "no_read_workqueue"))
+> > +                     set_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
+> > +             else if (!strcasecmp(opt_string, "no_write_workqueue"))
+> > +                     set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+> >               else if (sscanf(opt_string, "integrity:%u:", &val) == 1) {
+> >                       if (val == 0 || val > MAX_TAG_SIZE) {
+> >                               ti->error = "Invalid integrity arguments";
+> > @@ -3196,6 +3226,8 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+> >               num_feature_args += !!ti->num_discard_bios;
+> >               num_feature_args += test_bit(DM_CRYPT_SAME_CPU, &cc->flags);
+> >               num_feature_args += test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);
+> > +             num_feature_args += test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);
+> > +             num_feature_args += test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);
+> >               num_feature_args += cc->sector_size != (1 << SECTOR_SHIFT);
+> >               num_feature_args += test_bit(CRYPT_IV_LARGE_SECTORS, &cc->cipher_flags);
+> >               if (cc->on_disk_tag_size)
+> > @@ -3208,6 +3240,10 @@ static void crypt_status(struct dm_target *ti, status_type_t type,
+> >                               DMEMIT(" same_cpu_crypt");
+> >                       if (test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags))
+> >                               DMEMIT(" submit_from_crypt_cpus");
+> > +                     if (test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags))
+> > +                             DMEMIT(" no_read_workqueue");
+> > +                     if (test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags))
+> > +                             DMEMIT(" no_write_workqueue");
+> >                       if (cc->on_disk_tag_size)
+> >                               DMEMIT(" integrity:%u:%s", cc->on_disk_tag_size, cc->cipher_auth);
+> >                       if (cc->sector_size != (1 << SECTOR_SHIFT))
+> > @@ -3320,7 +3356,7 @@ static void crypt_io_hints(struct dm_target *ti, struct queue_limits *limits)
+> >
+> >  static struct target_type crypt_target = {
+> >       .name   = "crypt",
+> > -     .version = {1, 21, 0},
+> > +     .version = {1, 22, 0},
+> >       .module = THIS_MODULE,
+> >       .ctr    = crypt_ctr,
+> >       .dtr    = crypt_dtr,
+> >
+>
