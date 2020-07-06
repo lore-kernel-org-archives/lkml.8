@@ -2,106 +2,75 @@ Return-Path: <SRS0=eGSO=AR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34125C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5993C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1332A20702
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594055476;
-	bh=OKEXFBUa61CwzJctOxdoT1f/iwqy9U/WDdZTk4ak8Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NUpRd1KsM9iqgK5Cx4dlUn5kIkf3PLjMn9MHr7437CgHHptfP5euHQQWYRkcVr5/I
-	 J2dCGpriwfM1LQSrAFIhmAIFc6IlljVhEZoug/M1ykbZB1YIApYDOzr+PbiVj+KTHt
-	 QAGcYPCKntO8lpcuQbNTkE2NpKcTyH8/5RznkITI=
+	by mail.kernel.org (Postfix) with ESMTP id BADA2206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jul 2020 17:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgGFRLO (ORCPT
+        id S1729644AbgGFRMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 13:11:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39965 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgGFRLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 13:11:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f139so42930579wmf.5;
-        Mon, 06 Jul 2020 10:11:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FxwGWQMcLORFbX3FtYwfpy+gCcGxaQVQcEFoLrnat08=;
-        b=YA1glZ2VIxWv/SwHXrJEvLrNZ1etDoX1wM2leoWlhTB5Ti0Jgo1OZgXa6KHw6lw1wt
-         lNrybA6D9INi7MI+pEe+WZ2GBe/W7bcVCqKhLxs9BTgFPHvbDPxoxWOkWQcrWUNGiVeD
-         66canYWlproHFY8enabVylGWqDhODRweHDc+GO+vhlcLHXpetkHZ5mfgV4R7FbHKBsn5
-         v8b+n82sRFZM+e3XN2FEcETYaEuse145HHz+ZucCz1aeK1cYLunpDMXwH/HOvYpy45U9
-         tUeAfhLI6m4H9yUj203F4FPJ9SyzMKAM9hK1S8WVZzQcXGg+eYirRlQP2bCu8GLIecda
-         /YWw==
-X-Gm-Message-State: AOAM532hbs1/hqjXdl1lCn4ifdCGWFeNM7wDwlsrd3G8iUlDOxfZ7Lk8
-        6aypf/y+Mm/rQMJtl4eDDZk=
-X-Google-Smtp-Source: ABdhPJzXKrdFon+80124TCMwCgNgQMLvdFNCTaVoP4PeQYBGjOmaliZ/ifCvEf2mbU4ivsbJal6eag==
-X-Received: by 2002:a05:600c:4114:: with SMTP id j20mr173369wmi.74.1594055472137;
-        Mon, 06 Jul 2020 10:11:12 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u1sm18079994wrb.78.2020.07.06.10.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 10:11:11 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 17:11:10 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     t-mabelt@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        parri.andrea@gmail.com, Andres Beltran <lkmlabelt@gmail.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/3] Drivers: hv: vmbus: vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200706171110.ti5cfhmaoufi3zt6@liuwe-devbox-debian-v2>
-References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+        Mon, 6 Jul 2020 13:12:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35804 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729569AbgGFRMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 13:12:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 73B2DAEF3;
+        Mon,  6 Jul 2020 17:12:02 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL 1/1] bcm2835-dt-next-2020-07-06
+Date:   Mon,  6 Jul 2020 19:11:40 +0200
+Message-Id: <20200706171140.13514-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701001221.2540-1-lkmlabelt@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:12:18PM -0400, Andres Beltran wrote:
-> Currently, VMbus drivers use pointers into guest memory as request IDs
-> for interactions with Hyper-V. To be more robust in the face of errors
-> or malicious behavior from a compromised Hyper-V, avoid exposing
-> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> bad request ID that is then treated as the address of a guest data
-> structure with no validation. Instead, encapsulate these memory
-> addresses and provide small integers as request IDs.
-> 
-> The first patch creates the definitions for the data structure, provides
-> helper methods to generate new IDs and retrieve data, and
-> allocates/frees the memory needed for vmbus_requestor.
-> 
-> The second and third patches make use of vmbus_requestor to send request
-> IDs to Hyper-V in storvsc and netvsc respectively.
-> 
-> Thanks.
-> Andres Beltran
-> 
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> 
-> Andres Beltran (3):
->   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
->     hardening
->   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
->     VMBus hardening
->   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
->     hardening
+Hi Florian,
 
-Series applied to hyperv-next. Thanks.
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git tags/bcm2835-dt-next-2020-07-06
+
+for you to fetch changes up to 25c6f3960764b266a609281341f889a06d045039:
+
+  ARM: dts: bcm2711: Add HDMI DVP (2020-07-06 18:52:01 +0200)
+
+----------------------------------------------------------------
+Maxime Ripard introduces two new clock providers into RPi4's device-tree:
+
+- The first one based on the enhancements made to clk-raspberrypi, which
+  is now registered trough DT and provides control over the whole range
+  of firmware based clocks.
+
+- The second one based on the new clk-bcm2711-dvp driver, which gates
+  the clocks and reset signals that feed into RPi4's HDMI0/1 blocks.
+
+----------------------------------------------------------------
+Maxime Ripard (2):
+      ARM: dts: bcm2711: Add firmware clocks node
+      ARM: dts: bcm2711: Add HDMI DVP
+
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  5 +++++
+ arch/arm/boot/dts/bcm2711.dtsi        | 15 +++++++++++++++
+ 2 files changed, 20 insertions(+)
