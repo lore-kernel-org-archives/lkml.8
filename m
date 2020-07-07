@@ -2,120 +2,85 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7221C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8920BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F74206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EC12075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594154046;
+	bh=22247wNSUaVMbBxUM4HAY4IX0OgMCfGAtnzOBJT9N5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WHTZi2nsda9nJfHFZdmQGIFoq4x4Dt+3AU6gA0U+55r4/5cn90D0UOnEftorVLdrT
+	 XZ7hcwGjwH1+HcH3x9IY/YDiO/uAmMCFVEMDULzmg7ARr8DN0eqN/CJS+w9vsrRKng
+	 HwJAEvh3rF7rLDSBsxDk2TGOM7jj02ZDrAIk+geU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgGGUc7 (ORCPT
+        id S1728871AbgGGUeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:32:59 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:35514 "EHLO smtp.al2klimov.de"
+        Tue, 7 Jul 2020 16:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGGUc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:32:58 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 375A1BC107;
-        Tue,  7 Jul 2020 20:32:53 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        corbet@lwn.net, johannes.berg@intel.com, brendanhiggins@google.com,
-        erelx.geron@intel.com, linux@roeck-us.net, arnd@arndb.de,
-        linux-um@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: user-mode Linux
-Date:   Tue,  7 Jul 2020 22:32:46 +0200
-Message-Id: <20200707203246.53158-1-grandmaster@al2klimov.de>
+        id S1728347AbgGGUeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:34:04 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA81206E2;
+        Tue,  7 Jul 2020 20:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594154044;
+        bh=22247wNSUaVMbBxUM4HAY4IX0OgMCfGAtnzOBJT9N5c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EvIgD2qRQFfglKXfInCCRBKgY2It04EIB3ttX9LKmCYvkuqpUU8rpL4QlEI4QrVAN
+         vXVo0lvxVpllhYrN0bx4ecHr97N1CMSSE0oB/WfEO0gIhFzvUhgKk3epwL52vbrxHa
+         Eq+SwfiLSPFmuF7hrio/XCB2NnIRZXrG7p1vX20c=
+Date:   Tue, 7 Jul 2020 13:34:02 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
+Subject: Re: [PATCH 1/6] fs/minix: check return value of sb_getblk()
+Message-ID: <20200707203402.GB3426938@gmail.com>
+References: <20200628060846.682158-1-ebiggers@kernel.org>
+ <20200628060846.682158-2-ebiggers@kernel.org>
+ <20200707122612.249699c3f136968dd6782452@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707122612.249699c3f136968dd6782452@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Tue, Jul 07, 2020 at 12:26:12PM -0700, Andrew Morton wrote:
+> On Sat, 27 Jun 2020 23:08:40 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > sb_getblk() can fail, so check its return value.
+> > 
+> > This fixes a NULL pointer dereference.
+> > 
+> > Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
+> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > Cc: stable@vger.kernel.org
+> > Originally-from: Qiujun Huang <anenbupt@gmail.com>
+> 
+> Originally-from: isn't really a thing.  Did the original come with a
+> signed-off-by:?
+> 
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+Yes it did.  Qiujun's patch was
+https://lkml.kernel.org/lkml/20200323125700.7512-1-hqjagain@gmail.com
+But I basically started from scratch anyway and my patch ended up different,
+so I didn't leave the original "Author:".  Feel free to adjust the patch.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
- Rationale:
- I'd like not to submit patches much faster than you maintainers apply them.
-
- Documentation/virt/uml/user_mode_linux.rst | 2 +-
- arch/um/drivers/Kconfig                    | 2 +-
- arch/um/drivers/harddog_kern.c             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/virt/uml/user_mode_linux.rst b/Documentation/virt/uml/user_mode_linux.rst
-index de0f0b2c9d5b..775d3de84331 100644
---- a/Documentation/virt/uml/user_mode_linux.rst
-+++ b/Documentation/virt/uml/user_mode_linux.rst
-@@ -3753,7 +3753,7 @@ Note:
- 
- 
-   Documentation on IP Masquerading, and SNAT, can be found at
--  http://www.netfilter.org.
-+  https://www.netfilter.org.
- 
- 
-   If you can reach the local net, but not the outside Internet, then
-diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
-index 9160ead56e33..85e170149e99 100644
---- a/arch/um/drivers/Kconfig
-+++ b/arch/um/drivers/Kconfig
-@@ -259,7 +259,7 @@ config UML_NET_VDE
- 	To use this form of networking, you will need to run vde_switch
- 	on the host.
- 
--	For more information, see <http://wiki.virtualsquare.org/>
-+	For more information, see <https://wiki.virtualsquare.org/>
- 	That site has a good overview of what VDE is and also examples
- 	of the UML command line to use to enable VDE networking.
- 
-diff --git a/arch/um/drivers/harddog_kern.c b/arch/um/drivers/harddog_kern.c
-index e6d4f43deba8..7a39b8b7ae55 100644
---- a/arch/um/drivers/harddog_kern.c
-+++ b/arch/um/drivers/harddog_kern.c
-@@ -3,7 +3,7 @@
-  *	SoftDog	0.05:	A Software Watchdog Device
-  *
-  *	(c) Copyright 1996 Alan Cox <alan@redhat.com>, All Rights Reserved.
-- *				http://www.redhat.com
-+ *				https://www.redhat.com
-  *
-  *	This program is free software; you can redistribute it and/or
-  *	modify it under the terms of the GNU General Public License
--- 
-2.27.0
-
+- Eric
