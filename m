@@ -2,70 +2,128 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058BF20702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594118280;
-	bh=wLuu9fMADBsEkQLziOcCSEFxMCXIeD1eUn7qdwr+7qE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WDLD9eaviqkuKblonapGNDJVpicvub7jatGPWH3BRU+YcGKqo+y8bHNwKiBWWxr8M
-	 AcHc13/tFxO2t+QKKlDOT3NM5FRgW6hBs3TQ5EpGCdtB1xkRqFoAKy2aN77p8RWlly
-	 FY7iNP2Lf//kEdUTQty8FzQ3Yzcjg9G1Oh5E2iRQ=
+	by mail.kernel.org (Postfix) with ESMTP id AF1772065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="stLo176M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgGGKh6 (ORCPT
+        id S1728256AbgGGKiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgGGKh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:37:58 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134132065F;
-        Tue,  7 Jul 2020 10:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594118277;
-        bh=wLuu9fMADBsEkQLziOcCSEFxMCXIeD1eUn7qdwr+7qE=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=cXd/DaRBt2jebjtodRNmJfxkMgi/ozItSb0B4R8OhWx0633sbSp31glQIJno8cuCo
-         HxdkvF4z+6nGiu8cPAx78iT42Qv2uZUIB9TuhKoaYBMGn8XwCRot3RzXUv2MYCjN4L
-         ORde4yq5LLgbFI4mZHdaDCUsYFS6bObfTM0eS0eY=
-Date:   Tue, 7 Jul 2020 12:37:55 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Mazin Rezk <mnrzk@protonmail.com>
-cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH] HID: logitech: Use HIDPP_RECEIVER_INDEX instead of
- 0xff
-In-Reply-To: <FW0Ps9vggIuA-9asmWgfQkNKSlcwuAhNfFXxK3QGSu4uJRAEykUGdoL5sbJsAlehWv__Eq4LKejp0QpxQRj5LYn5tOrVRDbjrcn3JVDGLAQ=@protonmail.com>
-Message-ID: <nycvar.YFH.7.76.2007071237470.15962@cbobk.fhfr.pm>
-References: <FW0Ps9vggIuA-9asmWgfQkNKSlcwuAhNfFXxK3QGSu4uJRAEykUGdoL5sbJsAlehWv__Eq4LKejp0QpxQRj5LYn5tOrVRDbjrcn3JVDGLAQ=@protonmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 7 Jul 2020 06:38:14 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:11032 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGGKiN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:38:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594118292; x=1625654292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ozbUrXV0dyb5Rt/mvrYVy1sz3akHZYnoBX6bcXtjqo4=;
+  b=stLo176MAU/VNb3iZv8m1pDxp2+Y1dbHd25tp+9SbeALYD3J0I12v4+E
+   Schg4PCUSnlOCSXsM9ruabrTIGQVNWIHChYuzlZtygW2oUdW7RZbm7UWT
+   MYoMOcbKJzmXSgOU29Tbhpu9airRhLjX++cEmp6v/gvsB6W1ZunjGguaq
+   9ifM6EFXnW9Khqcp4xOlN6gAt+I5gzVD9/kjA9MANp9FQdkaGv48LPKl0
+   9iAjr+kleRggO2xLHZAzL07wweHzxAp+SzfcSt3FofQet82MaleZQi3qM
+   oSM0w7yuUFv3NCFb15Sk+bjLzHo1aEWl6+XRHzoZDAjW6OdTq8wij1LFU
+   Q==;
+IronPort-SDR: fkBMoEwKctoC3ZDur5hiyIxKadigUb/M44uhaHsz9VI/9sLnv1n6ne/GBXwhld251q8v9LWXqH
+ J8C3pGnLWdsSyDgqaH9jVPHBJ4j6SFamDQLpH/CySSQogepn/VlI+2nrGOT2cuwLCuwMxM8uM3
+ oE4criLozyDA2LoRe10fI2Uu9HoOYhFVv6hJxR+VahxKRdeIx/zSnh0XLCwWkgcXSIvIzCWYuH
+ T14O7oKmV9u3+NzPuBUYRRQf/lt8FiGoJ3wNJOEhqStO2hDlZN5LhdtfYYL4foUM7suzOu8IJm
+ JYQ=
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="82813728"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Jul 2020 03:38:12 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 7 Jul 2020 03:37:46 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 7 Jul 2020 03:37:47 -0700
+Date:   Tue, 7 Jul 2020 12:38:06 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <kuba@kernel.org>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <andrew@lunn.ch>, <UNGLinuxDriver@microchip.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next 01/12] switchdev: mrp: Extend switchdev API for
+ MRP Interconnect
+Message-ID: <20200707103806.wlocq6aasbaf4pty@soft-dev3.localdomain>
+References: <20200706091842.3324565-1-horatiu.vultur@microchip.com>
+ <20200706091842.3324565-2-horatiu.vultur@microchip.com>
+ <20200706.122626.2248567362397969247.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200706.122626.2248567362397969247.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Jul 2020, Mazin Rezk wrote:
+The 07/06/2020 12:26, David Miller wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> From: Horatiu Vultur <horatiu.vultur@microchip.com>
+> Date: Mon, 6 Jul 2020 11:18:31 +0200
+> 
+> > +/* SWITCHDEV_OBJ_ID_IN_TEST_MRP */
+> > +struct switchdev_obj_in_test_mrp {
+> > +     struct switchdev_obj obj;
+> > +     /* The value is in us and a value of 0 represents to stop */
+> > +     u32 interval;
+> > +     u8 max_miss;
+> > +     u32 in_id;
+> > +     u32 period;
+> > +};
+>  ...
+> > +#define SWITCHDEV_OBJ_IN_TEST_MRP(OBJ) \
+> > +     container_of((OBJ), struct switchdev_obj_in_test_mrp, obj)
+> > +
+> > +/* SWICHDEV_OBJ_ID_IN_ROLE_MRP */
+> > +struct switchdev_obj_in_role_mrp {
+> > +     struct switchdev_obj obj;
+> > +     u16 in_id;
+> > +     u32 ring_id;
+> > +     u8 in_role;
+> > +     struct net_device *i_port;
+> > +};
+>  ...
+> > +#define SWITCHDEV_OBJ_IN_ROLE_MRP(OBJ) \
+> > +     container_of((OBJ), struct switchdev_obj_in_role_mrp, obj)
+> > +
+> > +struct switchdev_obj_in_state_mrp {
+> > +     struct switchdev_obj obj;
+> > +     u8 in_state;
+> > +     u32 in_id;
+> > +};
+> 
+> Please arrange these structure members in a more optimal order so that
+> the resulting object is denser.  For example, in switchdev_obj_in_role_mrp
+> if you order it such that:
+> 
+> > +     u32 ring_id;
+> > +     u16 in_id;
+> > +     u8 in_role;
+> 
+> You'll have less wasted space from padding.
+> 
+> Use 'pahole' or similar tools to guide you.
 
-> Some parts of hid-logitech-dj explicitly referred to 0xff for the
-> receiver index. This patch changes those references to the
-> HIDPP_RECEIVER_INDEX definition.
-
-Applied, thanks.
+Thanks, I will try to use 'pahole' and see how they need to be arranged.
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+/Horatiu
