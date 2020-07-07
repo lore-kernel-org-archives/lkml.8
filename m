@@ -2,83 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E114206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3CB206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vaUinhNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgGGLpE (ORCPT
+        id S1728414AbgGGLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:45:04 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:28696 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgGGLpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:45:03 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 15C503D8B48ABFE1F3AD;
-        Tue,  7 Jul 2020 19:44:59 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 067Bimif058681;
-        Tue, 7 Jul 2020 19:44:48 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020070719450240-4209657 ;
-          Tue, 7 Jul 2020 19:45:02 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     timur@kernel.org
-Cc:     nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] ASoC: fsl: mpc8610_hpcd: Add missing of_node_put()
-Date:   Tue, 7 Jul 2020 19:47:47 +0800
-Message-Id: <1594122467-11615-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-07-07 19:45:02,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-07-07 19:44:51,
-        Serialize complete at 2020-07-07 19:44:51
-X-MAIL: mse-fl1.zte.com.cn 067Bimif058681
+        Tue, 7 Jul 2020 07:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbgGGLpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:45:12 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E42AC08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:45:12 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id m125so7832008yba.23
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LLQSBg64iwWxTtcpWWM6iR9wTgF8QbEH02Vy+2bg9Hg=;
+        b=vaUinhNZkQN3RAVXNuIvu2m9UALKLZu6+nRg7EiTfijttvY5uvU/HlfVTs6MFI3BjD
+         Er2jhbF7pByOmGUAkA0Rwjx6r1yRJYYD9O+cl25wvja83NKdtmmp1zngnkV02lhR5H60
+         b5PjacpY1TP2NcUr9fiYcugKPCAjjR9rmlEhUHB0wiSX4QdOcSpvSGrvsQV0rT/nifCK
+         2ZKi0Cmb2t3TuutVgBjI50QCH9omrBcU2W/h5TS/pS3DnoIpdnsJzSM7wmedPsCcY2wS
+         ytB1vf691KXilc3nIafaO0kmcuwa8X3LA+tSoYg6SrxvtuS6RBnGMpkCLIhuojqhRuKM
+         4b2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LLQSBg64iwWxTtcpWWM6iR9wTgF8QbEH02Vy+2bg9Hg=;
+        b=rL0r/RX6T5o0UqBnA5A4tVLpmvY4vOTJa+zDLsfXFqUz9U/IUk7fvMrLP+6hRjjusq
+         g0vbHRRZqI13xh0rxFSmFjG/T68lQNT/1pOeSHjA4nu5JPuPqi/LnsoZvRwsI9iFBtzZ
+         sNpc/HJCko9vdZB184OkfjjmFYx1Fg4AvLc81Zn91Eobz4Klh0FVi4N9hIPxDhk6XG/d
+         BLnyczBk6MYyNJvAKgq5pFSMtbbxr4L9Nkes0O7QOidUO0cxRKif3WSSQNezpUk/gXCl
+         yrqax1ntTUUrNad6keHlIQwZHAJnRCExhULwjBufs7CFNnp/Lq/J58eyoIYWn/bhJXFb
+         W5Qw==
+X-Gm-Message-State: AOAM5332jLBkK+qW1MyHGTNHAqSEHTd/re0n9hDcmB4g8UiZ3VDIF+Jk
+        Iy7agiho5bnF22V9tpBLA3LWtO8u/sg=
+X-Google-Smtp-Source: ABdhPJwLxIHBchd80Gve4mlw6g7Mb8civMvZG5ZcJoCOlzyO/mCAmx2JmX2IzIWBOuqsBIRGM+219TLjngU=
+X-Received: by 2002:a25:b903:: with SMTP id x3mr32504935ybj.445.1594122311275;
+ Tue, 07 Jul 2020 04:45:11 -0700 (PDT)
+Date:   Tue,  7 Jul 2020 04:31:19 -0700
+Message-Id: <20200707113123.3429337-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH v10 0/4] Prepare for upcoming Casefolding/Encryption patches
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+This lays the ground work for enabling casefolding and encryption at the
+same time for ext4 and f2fs. A future set of patches will enable that
+functionality.
 
-After finishing using device node got from of_find_compatible_node(),
-of_node_put() needs to be called.
+These unify the highly similar dentry_operations that ext4 and f2fs both
+use for casefolding. In addition, they improve d_hash by not requiring a
+new string allocation, and ensure we don't attempt to casefold the no-key
+token of an encrypted filename.
 
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
----
- sound/soc/fsl/mpc8610_hpcd.c | 2 ++
- 1 file changed, 2 insertions(+)
+Daniel Rosenberg (4):
+  unicode: Add utf8_casefold_hash
+  fs: Add standard casefolding support
+  f2fs: Use generic casefolding support
+  ext4: Use generic casefolding support
 
-diff --git a/sound/soc/fsl/mpc8610_hpcd.c b/sound/soc/fsl/mpc8610_hpcd.c
-index f7bd900..b3090fe 100644
---- a/sound/soc/fsl/mpc8610_hpcd.c
-+++ b/sound/soc/fsl/mpc8610_hpcd.c
-@@ -426,9 +426,11 @@ static int __init mpc8610_hpcd_init(void)
- 	guts_np = of_find_compatible_node(NULL, NULL, "fsl,mpc8610-guts");
- 	if (of_address_to_resource(guts_np, 0, &res)) {
- 		pr_err("mpc8610-hpcd: missing/invalid global utilities node\n");
-+		of_node_put(guts_np);
- 		return -EINVAL;
- 	}
- 	guts_phys = res.start;
-+	of_node_put(guts_np);
- 
- 	return platform_driver_register(&mpc8610_hpcd_driver);
- }
+ fs/ext4/dir.c           | 64 +--------------------------
+ fs/ext4/ext4.h          | 12 ------
+ fs/ext4/hash.c          |  2 +-
+ fs/ext4/namei.c         | 20 ++++-----
+ fs/ext4/super.c         | 12 +++---
+ fs/f2fs/dir.c           | 83 ++++-------------------------------
+ fs/f2fs/f2fs.h          |  4 --
+ fs/f2fs/super.c         | 10 ++---
+ fs/f2fs/sysfs.c         | 10 +++--
+ fs/libfs.c              | 96 +++++++++++++++++++++++++++++++++++++++++
+ fs/unicode/utf8-core.c  | 23 +++++++++-
+ include/linux/f2fs_fs.h |  3 --
+ include/linux/fs.h      | 16 +++++++
+ include/linux/unicode.h |  3 ++
+ 14 files changed, 174 insertions(+), 184 deletions(-)
+
 -- 
-2.9.5
+2.27.0.212.ge8ba1cc988-goog
 
