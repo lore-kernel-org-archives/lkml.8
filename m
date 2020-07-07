@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B60C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEE32078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DACD206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135218;
-	bh=GmYfSTP7acaBCHe4qM+HpWSymQK0vAq5XMbScdx8dBo=;
+	s=default; t=1594135223;
+	bh=miJHj+Pb0feMSTpT/2VYBOZJEP5ZBQoJplkSCDqOLfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ce1dkpAfHO0a38oJEUTsF3W9F4pcJsr2wNLK2TeiAVyr58BNAl4xFn4QgqmMDK75A
-	 mnEX7zaB9C4GSkJCKoDMzUcbjn2bPUrpabbUxcsxRWYGqf+lOOl/ZsTg282g4tCFrS
-	 AmzFFigE7wn3ffXcJIecOeOX7Df/FRIcHZJM+lEg=
+	b=KYgxsYcPoftQDB9uxVNixQv7EqtYg8VZGbVvbtDyuYKdHo7G1ymmg7opbKYtkPrJ8
+	 WlbuytfFMnw7Y3UXB5Zx4OMf1+10V3DJJy0hG28AMbNPj3NBpMWxynXr+kULF9M4FO
+	 DBBsdvydTa9FboPMc+0m72JyUc0bTgk7z5/KRUTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgGGPUR (ORCPT
+        id S1728669AbgGGPUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgGGPUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:10 -0400
+        id S1728665AbgGGPUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6E7206E2;
-        Tue,  7 Jul 2020 15:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FF1207BB;
+        Tue,  7 Jul 2020 15:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135209;
-        bh=GmYfSTP7acaBCHe4qM+HpWSymQK0vAq5XMbScdx8dBo=;
+        s=default; t=1594135212;
+        bh=miJHj+Pb0feMSTpT/2VYBOZJEP5ZBQoJplkSCDqOLfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iARsScGuCYRpSNHJAhU+SSVQ3PF85UDqrdoziZL+AgfFjojJ5bJs2rePAPQOOMTZK
-         TuK4v5DoTuIg+5QHFBOfu1feeQkTp17SkVM2kA6GVcIDfTrtSGa/osa1EvSKJwNjau
-         ZfV23OSKInkBaDoq5U+5Rh6T64VxSiMwp9PxkHr4=
+        b=We4Fxx8Kt62OI4Yl860dyDFfdQzYfF4DvBygBIZBoXnJWVOeMl70HIUro9kM6Fw1S
+         CZSGKoCwc81NTydtiVrbc/DKQ2QuUK023ocwTwVIlubtaqBA4s+ldqcqvP8vtVJhVz
+         9wGYTuL7si6dNd+zEarQ0jgUjXvUyuYAt+gAYd6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 17/65] nvme-multipath: fix bogus request queue reference put
-Date:   Tue,  7 Jul 2020 17:16:56 +0200
-Message-Id: <20200707145753.293645501@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 18/65] kgdb: Avoid suspicious RCU usage warning
+Date:   Tue,  7 Jul 2020 17:16:57 +0200
+Message-Id: <20200707145753.341011958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,82 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit c31244669f57963b6ce133a5555b118fc50aec95 ]
+[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
 
-The mpath disk node takes a reference on the request mpath
-request queue when adding live path to the mpath gendisk.
-However if we connected to an inaccessible path device_add_disk
-is not called, so if we disconnect and remove the mpath gendisk
-we endup putting an reference on the request queue that was
-never taken [1].
+At times when I'm using kgdb I see a splat on my console about
+suspicious RCU usage.  I managed to come up with a case that could
+reproduce this that looked like this:
 
-Fix that to check if we ever added a live path (using
-NVME_NS_HEAD_HAS_DISK flag) and if not, clear the disk->queue
-reference.
+  WARNING: suspicious RCU usage
+  5.7.0-rc4+ #609 Not tainted
+  -----------------------------
+  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
 
-[1]:
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 1372 at lib/refcount.c:28 refcount_warn_saturate+0xa6/0xf0
-CPU: 1 PID: 1372 Comm: nvme Tainted: G           O      5.7.0-rc2+ #3
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1ubuntu1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0xa6/0xf0
-RSP: 0018:ffffb29e8053bdc0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8b7a2f4fc060 RCX: 0000000000000007
-RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8b7a3ec99980
-RBP: ffff8b7a2f4fc000 R08: 00000000000002e1 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-R13: fffffffffffffff2 R14: ffffb29e8053bf08 R15: ffff8b7a320e2da0
-FS:  00007f135d4ca800(0000) GS:ffff8b7a3ec80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005651178c0c30 CR3: 000000003b650005 CR4: 0000000000360ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- disk_release+0xa2/0xc0
- device_release+0x28/0x80
- kobject_put+0xa5/0x1b0
- nvme_put_ns_head+0x26/0x70 [nvme_core]
- nvme_put_ns+0x30/0x60 [nvme_core]
- nvme_remove_namespaces+0x9b/0xe0 [nvme_core]
- nvme_do_delete_ctrl+0x43/0x5c [nvme_core]
- nvme_sysfs_delete.cold+0x8/0xd [nvme_core]
- kernfs_fop_write+0xc1/0x1a0
- vfs_write+0xb6/0x1a0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x52/0x1a0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  other info that might help us debug this:
 
-Reported-by: Anton Eidelman <anton@lightbitslabs.com>
-Tested-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+    rcu_scheduler_active = 2, debug_locks = 1
+  3 locks held by swapper/0/1:
+   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
+   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
+   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
+
+  stack backtrace:
+  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
+  Hardware name: Google Cheza (rev3+) (DT)
+  Call trace:
+   dump_backtrace+0x0/0x1b8
+   show_stack+0x1c/0x24
+   dump_stack+0xd4/0x134
+   lockdep_rcu_suspicious+0xf0/0x100
+   find_task_by_pid_ns+0x5c/0x80
+   getthread+0x8c/0xb0
+   gdb_serial_stub+0x9d4/0xd04
+   kgdb_cpu_enter+0x284/0x7ac
+   kgdb_handle_exception+0x174/0x20c
+   kgdb_brk_fn+0x24/0x30
+   call_break_hook+0x6c/0x7c
+   brk_handler+0x20/0x5c
+   do_debug_exception+0x1c8/0x22c
+   el1_sync_handler+0x3c/0xe4
+   el1_sync+0x7c/0x100
+   rpmh_rsc_probe+0x38/0x420
+   platform_drv_probe+0x94/0xb4
+   really_probe+0x134/0x300
+   driver_probe_device+0x68/0x100
+   __device_attach_driver+0x90/0xa8
+   bus_for_each_drv+0x84/0xcc
+   __device_attach+0xb4/0x13c
+   device_initial_probe+0x18/0x20
+   bus_probe_device+0x38/0x98
+   device_add+0x38c/0x420
+
+If I understand properly we should just be able to blanket kgdb under
+one big RCU read lock and the problem should go away.  We'll add it to
+the beast-of-a-function known as kgdb_cpu_enter().
+
+With this I no longer get any splats and things seem to work fine.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 574b52e911f08..e1eeed5856570 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -691,6 +691,14 @@ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
- 	kblockd_schedule_work(&head->requeue_work);
- 	flush_work(&head->requeue_work);
- 	blk_cleanup_queue(head->disk->queue);
-+	if (!test_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
-+		/*
-+		 * if device_add_disk wasn't called, prevent
-+		 * disk release to put a bogus reference on the
-+		 * request queue
-+		 */
-+		head->disk->queue = NULL;
-+	}
- 	put_disk(head->disk);
- }
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 7d54c7c280544..2222f3225e53d 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -546,6 +546,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 		arch_kgdb_ops.disable_hw_break(regs);
  
+ acquirelock:
++	rcu_read_lock();
+ 	/*
+ 	 * Interrupts will be restored by the 'trap return' code, except when
+ 	 * single stepping.
+@@ -602,6 +603,7 @@ return_normal:
+ 			atomic_dec(&slaves_in_kgdb);
+ 			dbg_touch_watchdogs();
+ 			local_irq_restore(flags);
++			rcu_read_unlock();
+ 			return 0;
+ 		}
+ 		cpu_relax();
+@@ -620,6 +622,7 @@ return_normal:
+ 		raw_spin_unlock(&dbg_master_lock);
+ 		dbg_touch_watchdogs();
+ 		local_irq_restore(flags);
++		rcu_read_unlock();
+ 
+ 		goto acquirelock;
+ 	}
+@@ -743,6 +746,7 @@ kgdb_restore:
+ 	raw_spin_unlock(&dbg_master_lock);
+ 	dbg_touch_watchdogs();
+ 	local_irq_restore(flags);
++	rcu_read_unlock();
+ 
+ 	return kgdb_info[cpu].ret_state;
+ }
 -- 
 2.25.1
 
