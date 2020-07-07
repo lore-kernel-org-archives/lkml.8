@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1574B2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B4C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135585;
-	bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
+	s=default; t=1594135590;
+	bh=cJWeeKKPGUJksknMROnR55vt55tUDqvpZ5yiYzzjj1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8oFesQ0rSNNTd7PkNkI41uADx+7+kb/kOg5uyFAmCUPNUEm43yleMeiyr+PGZrhq
-	 2oQM/JnN4QvV3BiKKgPCthHWy/aewPZ2RP38y6smgYn1aXYjRaty0vsTi3U+iBHy5J
-	 awLRH7jS9Ym+YUmCdsJhzrqnDdcKRsgaySobVybY=
+	b=oOfsZkoFz43f28DdpgBnt31m9PIGk08sgRpDAxy+f0pilQ2fevRQK6Ah+rsHkGMBX
+	 VV9KqS8JQefuCGckQPb5y0OlFIW+Pb5URaGXAStuaMFhQ+jWc+krxF73ukITwnrafE
+	 KGqcj7xxcSeTcDEnHhekM0R6ZMoR2vMgFpbGG2NU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgGGP0X (ORCPT
+        id S1729229AbgGGP01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgGGP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:14 -0400
+        id S1728717AbgGGP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09103206F6;
-        Tue,  7 Jul 2020 15:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C48232065D;
+        Tue,  7 Jul 2020 15:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135573;
-        bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
+        s=default; t=1594135576;
+        bh=cJWeeKKPGUJksknMROnR55vt55tUDqvpZ5yiYzzjj1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwYzyzrgOhUl7ZGIOqJlgdCluA6YG/Dxe4ZzwmmKvygruSlY2fOAg25a0gCB/MqHV
-         ROklfkrpfigfjdLbwto9QdbfxuneDOYxkSOnGvzEuhRFTTvEvPMGtzDENpAdj7riTR
-         zTNw7mQltRsdReMA324ECMnhIaCCv/2YSOKG+PpA=
+        b=Thl9i5M2a5SLivjl3VM1wb9AjI7wGbzvE2ORoXabHq+PVF6Xs7qbT5zB08nBD7Q98
+         326vAWOAT/ZvjT+i1brk6FPa9CpdTnoE4z9oy6+XC05JmHNm2G/f/+CDa+VtB6++nP
+         IB2HRf0aBWkN1g4LzLMA4AYx1i/dEWOd/T6llWWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 064/112] hwmon: (max6697) Make sure the OVERT mask is set correctly
-Date:   Tue,  7 Jul 2020 17:17:09 +0200
-Message-Id: <20200707145804.044514573@linuxfoundation.org>
+        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 055/112] xfs: fix use-after-free on CIL context on shutdown
+Date:   Tue,  7 Jul 2020 17:17:00 +0200
+Message-Id: <20200707145803.616756482@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,65 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
+[ Upstream commit c7f87f3984cfa1e6d32806a715f35c5947ad9c09 ]
 
-Per the datasheet for max6697, OVERT mask and ALERT mask are different.
-For example, the 7th bit of OVERT is the local channel but for alert
-mask, the 6th bit is the local channel. Therefore, we can't apply the
-same mask for both registers. In addition to that, the max6697 driver
-is supposed to be compatibale with different models. I manually went over
-all the listed chips and made sure all chip types have the same layout.
+xlog_wait() on the CIL context can reference a freed context if the
+waiter doesn't get scheduled before the CIL context is freed. This
+can happen when a task is on the hard throttle and the CIL push
+aborts due to a shutdown. This was detected by generic/019:
 
-Testing;
-    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
-    I used iotool to read the reg value back to verify. I only tested this
-    change on max6581.
+thread 1			thread 2
 
-Reference:
-https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
+__xfs_trans_commit
+ xfs_log_commit_cil
+  <CIL size over hard throttle limit>
+  xlog_wait
+   schedule
+				xlog_cil_push_work
+				wake_up_all
+				<shutdown aborts commit>
+				xlog_cil_committed
+				kmem_free
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+   remove_wait_queue
+    spin_lock_irqsave --> UAF
+
+Fix it by moving the wait queue to the CIL rather than keeping it in
+in the CIL context that gets freed on push completion. Because the
+wait queue is now independent of the CIL context and we might have
+multiple contexts in flight at once, only wake the waiters on the
+push throttle when the context we are pushing is over the hard
+throttle size threshold.
+
+Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
+Reported-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/max6697.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_log_cil.c  | 10 +++++-----
+ fs/xfs/xfs_log_priv.h |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 743752a2467a2..64122eb38060d 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -38,8 +38,9 @@ static const u8 MAX6697_REG_CRIT[] = {
-  * Map device tree / platform data register bit map to chip bit map.
-  * Applies to alert register and over-temperature register.
-  */
--#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
-+#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
- 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
-+#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index b43f0e8f43f2e..9ed90368ab311 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -671,7 +671,8 @@ xlog_cil_push_work(
+ 	/*
+ 	 * Wake up any background push waiters now this context is being pushed.
+ 	 */
+-	wake_up_all(&ctx->push_wait);
++	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
++		wake_up_all(&cil->xc_push_wait);
  
- #define MAX6697_REG_STAT(n)		(0x44 + (n))
+ 	/*
+ 	 * Check if we've anything to push. If there is nothing, then we don't
+@@ -743,13 +744,12 @@ xlog_cil_push_work(
  
-@@ -562,12 +563,12 @@ static int max6697_init_chip(struct max6697_data *data,
- 		return ret;
+ 	/*
+ 	 * initialise the new context and attach it to the CIL. Then attach
+-	 * the current context to the CIL committing lsit so it can be found
++	 * the current context to the CIL committing list so it can be found
+ 	 * during log forces to extract the commit lsn of the sequence that
+ 	 * needs to be forced.
+ 	 */
+ 	INIT_LIST_HEAD(&new_ctx->committing);
+ 	INIT_LIST_HEAD(&new_ctx->busy_extents);
+-	init_waitqueue_head(&new_ctx->push_wait);
+ 	new_ctx->sequence = ctx->sequence + 1;
+ 	new_ctx->cil = cil;
+ 	cil->xc_ctx = new_ctx;
+@@ -937,7 +937,7 @@ xlog_cil_push_background(
+ 	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
+ 		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
+ 		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
+-		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
++		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
+ 		return;
+ 	}
  
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
--					MAX6697_MAP_BITS(pdata->alert_mask));
-+				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
- 	if (ret < 0)
- 		return ret;
+@@ -1216,12 +1216,12 @@ xlog_cil_init(
+ 	INIT_LIST_HEAD(&cil->xc_committing);
+ 	spin_lock_init(&cil->xc_cil_lock);
+ 	spin_lock_init(&cil->xc_push_lock);
++	init_waitqueue_head(&cil->xc_push_wait);
+ 	init_rwsem(&cil->xc_ctx_lock);
+ 	init_waitqueue_head(&cil->xc_commit_wait);
  
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
--				MAX6697_MAP_BITS(pdata->over_temperature_mask));
-+			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
- 	if (ret < 0)
- 		return ret;
+ 	INIT_LIST_HEAD(&ctx->committing);
+ 	INIT_LIST_HEAD(&ctx->busy_extents);
+-	init_waitqueue_head(&ctx->push_wait);
+ 	ctx->sequence = 1;
+ 	ctx->cil = cil;
+ 	cil->xc_ctx = ctx;
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index ec22c7a3867f1..75a62870b63af 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -240,7 +240,6 @@ struct xfs_cil_ctx {
+ 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+ 	struct list_head	iclog_entry;
+ 	struct list_head	committing;	/* ctx committing list */
+-	wait_queue_head_t	push_wait;	/* background push throttle */
+ 	struct work_struct	discard_endio_work;
+ };
  
+@@ -274,6 +273,7 @@ struct xfs_cil {
+ 	wait_queue_head_t	xc_commit_wait;
+ 	xfs_lsn_t		xc_current_sequence;
+ 	struct work_struct	xc_push_work;
++	wait_queue_head_t	xc_push_wait;	/* background push throttle */
+ } ____cacheline_aligned_in_smp;
+ 
+ /*
 -- 
 2.25.1
 
