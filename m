@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F730C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79262C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AE0206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454B420771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135403;
-	bh=uIk4ESIW5Mg7M/v0OCJWVJvllWdahzivRGgMbeGe7dw=;
+	s=default; t=1594135405;
+	bh=fBu0ClO0KQXec2oBjKGmKPAybI4/hbfUxR6w24vd01g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6i2gZOp1KEWCF/HWLrr24+ekQlWfm8uEflFYHekDOwtXpPvo6EDwKqTiWoXs9clH
-	 P606E/tlz3QXN6hhyhPNJj1iPrk4i/13rns2I27npqoLaI2LWF9UbmY6vsgsJ8fJJg
-	 obDVADBAGsP1cNU/rLKRJ3BB/d1+QPjUGHTlEhkc=
+	b=cOzRx1FeaB8EBQvY/pb349l9Flycv9Dq2yo8HtH4a2Ul4DWO/7BDYCnQdyoaz9p7r
+	 qm/OBSw6uX2kRv9PN14OXPInYcU8R5L3bRzTQbsdjrC6nstQ4Od7SKEslhkw1s30VO
+	 zOrrkkcOGjErxCH1ryFoa92xAktebxeeG1XxNQqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgGGPXV (ORCPT
+        id S1729975AbgGGPXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbgGGPXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:18 -0400
+        id S1729954AbgGGPXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6460206F6;
-        Tue,  7 Jul 2020 15:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFB52065D;
+        Tue,  7 Jul 2020 15:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135397;
-        bh=uIk4ESIW5Mg7M/v0OCJWVJvllWdahzivRGgMbeGe7dw=;
+        s=default; t=1594135394;
+        bh=fBu0ClO0KQXec2oBjKGmKPAybI4/hbfUxR6w24vd01g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tS7alWj3w8W43903DmvzOKviX+0VNQaf0uU8C+8Ur/DKrzzuKvyzOAmDq+P9oTtNB
-         nzJFfcTMUI2zaPFe1ZfcHNCFYMRq8kZ6EBdTFmzjFEnfBesywbvpv854gloGGYWdt/
-         1q4GM5QqWZ+Pj7F+XWQ6KcDYssKbl1lFXDx1rMyU=
+        b=oIXdiFjUTjDIkYxdP1rFuAcrXIqygCZ4l3B0/LLxWa5oA8UAkE1dLb+gSNwX4S62M
+         cfDv0pw2vhmJhjJl7o3Tyo3umTqvVYHPHR+6i0mieV3+bQX6b4wP/ohkODuWaG8LFv
+         XNc2FxRLdlk/LJeeJoXwr25oKLQvicSrNRpQ8JKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        stable@vger.kernel.org, Hyunchul Lee <hyc.lee@gmail.com>,
         Sungjong Seo <sj1557.seo@samsung.com>,
         Namjae Jeon <namjae.jeon@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 004/112] exfat: move setting VOL_DIRTY over exfat_remove_entries()
-Date:   Tue,  7 Jul 2020 17:16:09 +0200
-Message-Id: <20200707145801.142772468@linuxfoundation.org>
+Subject: [PATCH 5.7 003/112] exfat: call sync_filesystem for read-only remount
+Date:   Tue,  7 Jul 2020 17:16:08 +0200
+Message-Id: <20200707145801.096068829@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,43 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namjae Jeon <namjae.jeon@samsung.com>
+From: Hyunchul Lee <hyc.lee@gmail.com>
 
-[ Upstream commit 3bcfb701099acf96b0e883bf5544f96af473aa1d ]
+[ Upstream commit a0271a15cf2cf907ea5b0f2ba611123f1b7935ec ]
 
-Move setting VOL_DIRTY over exfat_remove_entries() to avoid unneeded
-leaving VOL_DIRTY on -ENOTEMPTY.
+We need to commit dirty metadata and pages to disk
+before remounting exfat as read-only.
 
-Fixes: 5f2aa075070c ("exfat: add inode operations")
-Cc: stable@vger.kernel.org # v5.7
-Reported-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
-Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+This fixes a failure in xfstests generic/452
+
+generic/452 does the following:
+cp something <exfat>/
+mount -o remount,ro <exfat>
+
+the <exfat>/something is corrupted. because while
+exfat is remounted as read-only, exfat doesn't
+have a chance to commit metadata and
+vfs invalidates page caches in a block device.
+
+Signed-off-by: Hyunchul Lee <hyc.lee@gmail.com>
+Acked-by: Sungjong Seo <sj1557.seo@samsung.com>
 Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/exfat/namei.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/exfat/super.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
-index 3bf1dbadab691..2c9c783177213 100644
---- a/fs/exfat/namei.c
-+++ b/fs/exfat/namei.c
-@@ -984,7 +984,6 @@ static int exfat_rmdir(struct inode *dir, struct dentry *dentry)
- 		goto unlock;
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index c1b1ed306a485..e879801533980 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -637,10 +637,20 @@ static void exfat_free(struct fs_context *fc)
  	}
+ }
  
--	exfat_set_vol_flags(sb, VOL_DIRTY);
- 	exfat_chain_set(&clu_to_free, ei->start_clu,
- 		EXFAT_B_TO_CLU_ROUND_UP(i_size_read(inode), sbi), ei->flags);
++static int exfat_reconfigure(struct fs_context *fc)
++{
++	fc->sb_flags |= SB_NODIRATIME;
++
++	/* volume flag will be updated in exfat_sync_fs */
++	sync_filesystem(fc->root->d_sb);
++	return 0;
++}
++
+ static const struct fs_context_operations exfat_context_ops = {
+ 	.parse_param	= exfat_parse_param,
+ 	.get_tree	= exfat_get_tree,
+ 	.free		= exfat_free,
++	.reconfigure	= exfat_reconfigure,
+ };
  
-@@ -1012,6 +1011,7 @@ static int exfat_rmdir(struct inode *dir, struct dentry *dentry)
- 	num_entries++;
- 	brelse(bh);
- 
-+	exfat_set_vol_flags(sb, VOL_DIRTY);
- 	err = exfat_remove_entries(dir, &cdir, entry, 0, num_entries);
- 	if (err) {
- 		exfat_msg(sb, KERN_ERR,
+ static int exfat_init_fs_context(struct fs_context *fc)
 -- 
 2.25.1
 
