@@ -2,107 +2,101 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AD220739
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:16:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="cMhTetJj"
+	by mail.kernel.org (Postfix) with ESMTP id 6173620708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgGGMQJ (ORCPT
+        id S1728133AbgGGMR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgGGMQI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:16:08 -0400
-X-Greylist: delayed 654 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Jul 2020 05:16:08 PDT
-Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A3DC061755;
-        Tue,  7 Jul 2020 05:16:07 -0700 (PDT)
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 067C4xPH027462
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 7 Jul 2020 14:05:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1594123500; bh=LpYHzL1Fv+6r+q+/DerBNxWDzKGX9YKvtsmvkogOo+I=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=cMhTetJjnHHTM68v7z/MTjWLOy0iXztNxRx3x3KxRBHdOZRjbDqRmhXwtOyt1gUHq
-         yK4NbRM0DpgXhLGO6+4Jr2LpFABkr90sXKNq7GSKbMxocqGNdt5TM+Jv3dRpgpt5Pu
-         umdNqQCbLEb8vMeh3qls1TyQF0GMv9p+8qrIjf2g=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.94)
-        (envelope-from <bjorn@mork.no>)
-        id 1jsmLK-000PCr-JH; Tue, 07 Jul 2020 14:04:58 +0200
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     AceLan Kao <acelan.kao@canonical.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: usb: qmi_wwan: add support for Quectel EG95 LTE modem
-Organization: m
-References: <20200707081445.1064346-1-acelan.kao@canonical.com>
-Date:   Tue, 07 Jul 2020 14:04:58 +0200
-In-Reply-To: <20200707081445.1064346-1-acelan.kao@canonical.com> (AceLan Kao's
-        message of "Tue, 7 Jul 2020 16:14:45 +0800")
-Message-ID: <873663cyz9.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 7 Jul 2020 08:17:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42892 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgGGMR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 08:17:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 69186AE65;
+        Tue,  7 Jul 2020 12:17:56 +0000 (UTC)
+Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
+ allocation for migration
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
+Date:   Tue, 7 Jul 2020 14:17:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at canardo
-X-Virus-Status: Clean
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AceLan Kao <acelan.kao@canonical.com> writes:
-
-> Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
->
-> T:  Bus=3D01 Lev=3D01 Prnt=3D01 Port=3D02 Cnt=3D02 Dev#=3D  5 Spd=3D480 M=
-xCh=3D 0
-> D:  Ver=3D 2.00 Cls=3Def(misc ) Sub=3D02 Prot=3D01 MxPS=3D64 #Cfgs=3D  1
-> P:  Vendor=3D2c7c ProdID=3D0195 Rev=3D03.18
-> S:  Manufacturer=3DAndroid
-> S:  Product=3DAndroid
-> C:  #Ifs=3D 5 Cfg#=3D 1 Atr=3Da0 MxPwr=3D500mA
-> I:  If#=3D0x0 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
-r=3D(none)
-> I:  If#=3D0x1 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
-r=3D(none)
-> I:  If#=3D0x2 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
-r=3D(none)
-> I:  If#=3D0x3 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
-r=3D(none)
-> I:  If#=3D0x4 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
-r=3D(none)
->
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+On 7/7/20 9:44 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> In mm/migrate.c, THP allocation for migration is called with the provided
+> gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
+> would be conflict with the intention of the GFP_TRANSHUGE.
+> 
+> GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
+> behaviour by well defined manner since overhead of THP allocation is
+> quite large and the whole system could suffer from it. So, they deals
+> with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAIM
+> and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
+> that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
+> 
+> This patch fixes this situation by clearing __GFP_RECLAIM in provided
+> gfp_mask. Note that there are some other THP allocations for migration
+> and they just uses GFP_TRANSHUGE(_LIGHT) directly. This patch would make
+> all THP allocation for migration consistent.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > ---
->  drivers/net/usb/qmi_wwan.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-> index 31b1d4b959f6..07c42c0719f5 100644
-> --- a/drivers/net/usb/qmi_wwan.c
-> +++ b/drivers/net/usb/qmi_wwan.c
-> @@ -1370,6 +1370,7 @@ static const struct usb_device_id products[] =3D {
->  	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E +=
-+ */
->  	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
->  	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
-> +	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0195, 4)},	/* Quectel EG95 */
->  	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
->  	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
->  	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
+>  mm/migrate.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 02b31fe..ecd7615 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page,
+>  	}
+>  
+>  	if (PageTransHuge(page)) {
+> +		/*
+> +		 * clear __GFP_RECALIM since GFP_TRANSHUGE is the gfp_mask
+> +		 * that chooses the reclaim masks deliberately.
+> +		 */
+> +		gfp_mask &= ~__GFP_RECLAIM;
+>  		gfp_mask |= GFP_TRANSHUGE;
 
-Acked-by: Bj=C3=B8rn Mork <bjorn@mork.no>
+In addition to what Michal said...
+
+The mask is not passed to this function, so I would just redefine it, as is done
+in the hugetlb case. We probably don't even need the __GFP_RETRY_MAYFAIL for the
+THP case asi it's just there to prevent OOM kill (per commit 0f55685627d6d ) and
+the costly order of THP is enough for that.
+
+>  		order = HPAGE_PMD_ORDER;
+>  	}
+> 
+
