@@ -2,232 +2,259 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1588AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6E6206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FF820775
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXSPwmuM"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DeBAWV0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGGPBJ (ORCPT
+        id S1728216AbgGGPCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgGGPBJ (ORCPT
+        Tue, 7 Jul 2020 11:02:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59896 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgGGPCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:01:09 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500F0C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:01:09 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u5so18545694pfn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wWjXV7DEQx3ncjXAY2CjIphJoukS9/XdLpuwhVDw4mg=;
-        b=EXSPwmuMGohTTTzkX6UHPOalqXxjG/i7r0OhgEzWrc3ookD1FcDpzJWtTd8717cMoO
-         pcPydGoK/K0egjaLnbnu90EOoox6G3eHK+8PKFX6GsoaZoMCFCUDfRmYImbNwKEr1Bej
-         eWBNTcgW82nH0CF3l5bxRaRX3+FYhMp6OMZJ1B2gBhBKnqKgUenKfMxfFbyXP1w7l76G
-         Oqx/qKEpoTlPi30za8/DQTy9DzpiukI3N75jsJHMpsEOHQ6h6VF22ist3hMCoRWBriGh
-         LiFkb8vlAs3DIkVNL7YRx1LyIg2G20IJlY6zrBugvbFNNL0XEe95lpQCM7Rv0nHAScLX
-         VUrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wWjXV7DEQx3ncjXAY2CjIphJoukS9/XdLpuwhVDw4mg=;
-        b=qgkNsOdU9ZLYbYODfrrRoUuwiIZYQBkIgRumCYOzkEcryZ+JoYkgv0Y+lwLK5U4I+H
-         36WoRqwmlQs1wvRn2odr/1OdJDDVv7QafOm/Wlu8rbxJjNOmWUuiYPncEJc7xQH70Qaw
-         rZyqfDTc0+8UazzZyULqcA5tuQFEiodCIXp6tjBUU/5/beKh0F4w+a9Xs5r8ikOIgwNv
-         JGGpOemNLPoYBZ9+eI6Mc105SITuSb+sw8CM2N+K50jPj+X5hFFy5+k41na7SMTUmplv
-         CoRSxIFMWBKk8Z41H94c39B5FLjjzN3J60BUb6q6sP6YuL+D+IA/Ph4ZEXVUwco1sygo
-         HTNA==
-X-Gm-Message-State: AOAM532fUKi6hsDFzXHi0Ny7/Ls1HuhDWJBNvBRhbu1N99vFUNSGRaNh
-        kQrwH9Aj5YCnMq7wPjVRlfA=
-X-Google-Smtp-Source: ABdhPJxxHYNNtvN5cCSVr94nVB759QsFxiBzZgvUT9sAHYIiPGda9a7XIgoh6wPRUJdN1kk+dJUwRA==
-X-Received: by 2002:a63:3e09:: with SMTP id l9mr46513309pga.235.1594134067952;
-        Tue, 07 Jul 2020 08:01:07 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id q24sm1259909pgg.3.2020.07.07.08.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 08:01:07 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 23:00:55 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 01/15] perf ftrace: select function/function_graph
- tracer automatically
-Message-ID: <20200707150055.6rg3bcols2s3psrz@mail.google.com>
-References: <20200627133654.64863-1-changbin.du@gmail.com>
- <20200627133654.64863-2-changbin.du@gmail.com>
- <CAM9d7cib3uSvzVbyPh68=i63+_w7Pt1PHRVM-KCCb-XqH20jog@mail.gmail.com>
+        Tue, 7 Jul 2020 11:02:13 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200707150210euoutp018f67a896d9ec4d95ac14667e2efe7588~fgIu_FaPO2889728897euoutp01r
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:02:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200707150210euoutp018f67a896d9ec4d95ac14667e2efe7588~fgIu_FaPO2889728897euoutp01r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594134130;
+        bh=wOb/cwkj3XJiREprcybZVqbIIRoFX3C5VdLNDsmM354=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=DeBAWV0FX7eFTUx0PQzHr+d7B1H8zmsfQteKBweMLVvvFADnHPAnvU7wSPLtQpbGN
+         e3tzTeOAgAinCOeWbW7jUZ0pR/WQhLDG3gh4Ipn+cu9QHTKLFJMq+NlzEVhYJI+Dm7
+         ttLCtLHZFuXbaCwmHFjsgxHv+PROdra9Dc757eFY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200707150210eucas1p2c875f6411dc355973b7512b4cdcc6310~fgIubcEW10679706797eucas1p2K;
+        Tue,  7 Jul 2020 15:02:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 20.74.06456.27E840F5; Tue,  7
+        Jul 2020 16:02:10 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200707150209eucas1p17faf97752ee07c5b7dae3f359a18db90~fgIuGDO0o0165001650eucas1p1U;
+        Tue,  7 Jul 2020 15:02:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200707150209eusmtrp2e8b136c9b25a7dd37470b5db0e6c6154~fgIuFWk-O1360213602eusmtrp2Y;
+        Tue,  7 Jul 2020 15:02:09 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-fe-5f048e72144f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id A7.09.06017.17E840F5; Tue,  7
+        Jul 2020 16:02:09 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200707150208eusmtip224acf9ca1e9dc958003f2203ce8bb385~fgIsm4kJv1267812678eusmtip2U;
+        Tue,  7 Jul 2020 15:02:08 +0000 (GMT)
+Subject: Re: [PATCH v7 03/36] drm: core: fix common struct sg_table related
+ issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <f7306f61-089f-9639-1d7d-2dca60ef19d3@samsung.com>
+Date:   Tue, 7 Jul 2020 17:02:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cib3uSvzVbyPh68=i63+_w7Pt1PHRVM-KCCb-XqH20jog@mail.gmail.com>
+In-Reply-To: <20200619103636.11974-4-m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+c5tZ6vZcSp700icVhikSRcOGVIWcf4ME6MkddVBLW/taGVB
+        WpaJ1jAt0qElmXfNa06NqEY6RFrLy1IqZlqB4TJ1FlZazqPkf7/3e5738sBH44oB0p2OTUjm
+        NQnqOBUlI1q7Zk1bNFoicmverJS9aerG2MaCepLtn5mg2KqaTowteRbI2vs/YmzTqIVk+zqK
+        KLbu5QcJ++L7J5JtGb9F7lnF1d6rRZz+xzDJWXOMGNf8MI17Nz+Kc/mDFYh7MpROcdqWasQ1
+        91zkppvWH5Qdle0+ycfFnuU1/kFRshhDYaYkKc/3/PUOG5mOir2ykZQGZjsMmRtRNpLRCqYS
+        Qc5UKSkWdgTm511LyjSCyi8F+HKL3lRHiUIFguHqIkwsJhAUWI0Sh8uFCQVtZzpysCvTgiDj
+        zgGHCXeMumZ5ijkEivGFueYhysFyJgiGG0cWmWB8oNSSsbjOjYmA+jE9JnqcobvwE+Fg6YJ/
+        tHZu0Y8znqC3FeEiK+GKvWoxBDCTEng71CwR794PLz4UUSK7wFdjy9L7Ovjbfh8TOQ2slVdx
+        sTkLweOG9qXQgfDe9GuhmV7Y4Av1Hf4OBGYvVJRtEtEJBm3O4glOkNd6Fxef5ZCVqRBneIH1
+        1eOleUooM89QuUilWxFMtyKMbkUY3f+1JYioRko+RYiP5oWABP6cn6COF1ISov1OJMY3oYXP
+        1jNvnGpDM73HDYihkWq1PEZNRCpI9VkhNd6AgMZVrvLgVz0RCvlJdeoFXpMYqUmJ4wUD8qAJ
+        lVK+7cHYMQUTrU7mT/N8Eq9ZVjFa6p6OgmP+hFudbTtvkIc7X4/8nHUpi15z6dL4YLmlTTjd
+        UFjo+dT+O39yU+6wOQTTHlrbQ9q1MPU5qa9/4Exx1JHJ+rBd+wZqkFtlkHeIT7d/eO8G5vLE
+        KcncDsOZ58kedboCb8JtlTSZ/Gb0GFFsDGvb9Sj0dmr53FhS1zZ8XG97E6sihBh1wGZcI6j/
+        Ac/ypUFoAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsVy+t/xe7qFfSzxBg/e6Vv0njvJZLFxxnpW
+        iytf37NZrFx9lMliwX5riy9XHjJZbHp8jdXi8q45bBZrj9xltzj44QmrxZY3E1kduD3WzFvD
+        6LH92wNWj/vdx5k8Ni+p97j97zGzx+Qbyxk9dt9sYPPo27KK0WPz6WqPz5vkArii9GyK8ktL
+        UhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DIOzWxjL5ikWdG+
+        6y1rA+NcxS5GTg4JAROJ7efWsnUxcnEICSxllPjddoYNIiEusXv+W2YIW1jiz7UuqKK3jBJb
+        Ds9nBUkIC4RI9B1tYARJiAhsYZR4tuIwmMMs8JlR4u/1j1AtRxklrk/bww7SwiagKfF3802w
+        HbwCdhIPNj4Cs1kEVCQWX2sG2ycqECexfMt8dogaQYmTM5+wgNicQPWP1/wFq2cWMJOYt/kh
+        M4QtL7H97RwoW1yi6ctK1gmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al
+        6yXn525iBMbztmM/t+xg7HoXfIhRgINRiYc3I5ElXog1say4MvcQowQHs5IIr9PZ03FCvCmJ
+        lVWpRfnxRaU5qcWHGE2BnpvILCWanA9MNXkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tS
+        s1NTC1KLYPqYODilGhiLjXwys542i7Xa+3luWq07iflvn7vXe8etKxvfiqctfzXxzdFyf6t1
+        uy1mXOWZnt4WK2eUeiHu/ltj7trXe68qPOMsXDfB89i2sPbd76rbZz1WKmTzOZxyYrVqkrfS
+        iXte79XPi0bsevzsUp6c4IHbXjzu20KS/33zbYg3qrx7aH64fpqG8VMlluKMREMt5qLiRAAO
+        5m+6/QIAAA==
+X-CMS-MailID: 20200707150209eucas1p17faf97752ee07c5b7dae3f359a18db90
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103655eucas1p1b01cbe67526e2b2f8254eb20ccac1858
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103655eucas1p1b01cbe67526e2b2f8254eb20ccac1858
+References: <20200619103636.11974-1-m.szyprowski@samsung.com>
+        <CGME20200619103655eucas1p1b01cbe67526e2b2f8254eb20ccac1858@eucas1p1.samsung.com>
+        <20200619103636.11974-4-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:47:09PM +0900, Namhyung Kim wrote:
-> Hello,
-> 
-> On Sat, Jun 27, 2020 at 10:37 PM Changbin Du <changbin.du@gmail.com> wrote:
-> >
-> > The '-g/-G' options have already implied function_graph tracer should be
-> > used instead of function tracer. So the extra option '--tracer' can be
-> > killed.
-> >
-> > This patch changes the behavior as below:
-> >   - By default, function tracer is used.
-> >   - If '-g' or '-G' option is on, then function_graph tracer is used.
-> >   - The perf configuration item 'ftrace.tracer' is marked as deprecated.
-> >   - The option '--tracer' is marked as deprecated.
-> >   - The default filter for -G/-T is to trace all functions.
-> >
-> > Here are some examples.
-> >
-> > This will start tracing all functions using function tracer:
-> >   $ sudo perf ftrace
-> >
-> > This will trace all functions using function graph tracer:
-> >   $ sudo perf ftrace -G
-> >
-> > This will trace function vfs_read using function graph tracer:
-> >   $ sudo perf ftrace -G vfs_read
-> 
-> As we support running a new task on the command line, it might
-> confuse users whether it's an argument of -G option or a task to run.
-> One can use -- to separate them but it's easy to miss..
+
+On 19.06.2020 12:36, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
 >
-yes, it is a bit confusing. How about remove the default value '*'?
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+>
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+>
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-> Thanks
-> Namhyung
-> 
-> 
-> >
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  tools/perf/Documentation/perf-config.txt |  5 -----
-> >  tools/perf/Documentation/perf-ftrace.txt |  2 +-
-> >  tools/perf/builtin-ftrace.c              | 19 ++++++++++++-------
-> >  3 files changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> > index c7d3df5798e2..a25fee7de3b2 100644
-> > --- a/tools/perf/Documentation/perf-config.txt
-> > +++ b/tools/perf/Documentation/perf-config.txt
-> > @@ -612,11 +612,6 @@ trace.*::
-> >                 "libbeauty", the default, to use the same argument beautifiers used in the
-> >                 strace-like sys_enter+sys_exit lines.
-> >
-> > -ftrace.*::
-> > -       ftrace.tracer::
-> > -               Can be used to select the default tracer. Possible values are
-> > -               'function' and 'function_graph'.
-> > -
-> >  llvm.*::
-> >         llvm.clang-path::
-> >                 Path to clang. If omit, search it from $PATH.
-> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> > index b80c84307dc9..952e46669168 100644
-> > --- a/tools/perf/Documentation/perf-ftrace.txt
-> > +++ b/tools/perf/Documentation/perf-ftrace.txt
-> > @@ -24,7 +24,7 @@ OPTIONS
-> >
-> >  -t::
-> >  --tracer=::
-> > -       Tracer to use: function_graph or function.
-> > +       Tracer to use: function_graph or function. This option is deprecated.
-> >
-> >  -v::
-> >  --verbose=::
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 2bfc1b0db536..c5718503eded 100644
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -27,7 +27,6 @@
-> >  #include "util/cap.h"
-> >  #include "util/config.h"
-> >
-> > -#define DEFAULT_TRACER  "function_graph"
-> >
-> >  struct perf_ftrace {
-> >         struct evlist           *evlist;
-> > @@ -419,6 +418,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
-> >         if (strcmp(var, "ftrace.tracer"))
-> >                 return -1;
-> >
-> > +       pr_warning("Configuration ftrace.tracer is deprecated\n");
-> >         if (!strcmp(value, "function_graph") ||
-> >             !strcmp(value, "function")) {
-> >                 ftrace->tracer = value;
-> > @@ -459,7 +459,7 @@ int cmd_ftrace(int argc, const char **argv)
-> >  {
-> >         int ret;
-> >         struct perf_ftrace ftrace = {
-> > -               .tracer = DEFAULT_TRACER,
-> > +               .tracer = "function",
-> >                 .target = { .uid = UINT_MAX, },
-> >         };
-> >         const char * const ftrace_usage[] = {
-> > @@ -469,7 +469,7 @@ int cmd_ftrace(int argc, const char **argv)
-> >         };
-> >         const struct option ftrace_options[] = {
-> >         OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
-> > -                  "tracer to use: function_graph(default) or function"),
-> > +                  "tracer to use: function or function_graph (This option is deprecated)"),
-> >         OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
-> >                    "trace on existing process id"),
-> >         OPT_INCR('v', "verbose", &verbose,
-> > @@ -478,12 +478,14 @@ int cmd_ftrace(int argc, const char **argv)
-> >                     "system-wide collection from all CPUs"),
-> >         OPT_STRING('C', "cpu", &ftrace.target.cpu_list, "cpu",
-> >                     "list of cpus to monitor"),
-> > -       OPT_CALLBACK('T', "trace-funcs", &ftrace.filters, "func",
-> > -                    "trace given functions only", parse_filter_func),
-> > +       OPT_CALLBACK_DEFAULT('T', "trace-funcs", &ftrace.filters, "func",
-> > +                            "trace given functions using function tracer",
-> > +                            parse_filter_func, "*"),
-> >         OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
-> >                      "do not trace given functions", parse_filter_func),
-> > -       OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
-> > -                    "Set graph filter on given functions", parse_filter_func),
-> > +       OPT_CALLBACK_DEFAULT('G', "graph-funcs", &ftrace.graph_funcs, "func",
-> > +                            "trace given functions using function_graph tracer",
-> > +                            parse_filter_func, "*"),
-> >         OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
-> >                      "Set nograph filter on given functions", parse_filter_func),
-> >         OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
-> > @@ -505,6 +507,9 @@ int cmd_ftrace(int argc, const char **argv)
-> >         if (!argc && target__none(&ftrace.target))
-> >                 ftrace.target.system_wide = true;
-> >
-> > +       if (!list_empty(&ftrace.graph_funcs) || !list_empty(&ftrace.nograph_funcs))
-> > +               ftrace.tracer = "function_graph";
-> > +
-> >         ret = target__validate(&ftrace.target);
-> >         if (ret) {
-> >                 char errbuf[512];
-> > --
-> > 2.25.1
-> >
 
--- 
-Cheers,
-Changbin Du
+I guess whole patchset can go via drm-misc, after r-b/a-b.
+
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+
+Regards
+Andrzej
+> ---
+>   drivers/gpu/drm/drm_cache.c            |  2 +-
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 14 +++++++++-----
+>   drivers/gpu/drm/drm_prime.c            | 11 ++++++-----
+>   3 files changed, 16 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+> index 03e01b000f7a..0fe3c496002a 100644
+> --- a/drivers/gpu/drm/drm_cache.c
+> +++ b/drivers/gpu/drm/drm_cache.c
+> @@ -127,7 +127,7 @@ drm_clflush_sg(struct sg_table *st)
+>   		struct sg_page_iter sg_iter;
+>   
+>   		mb(); /*CLFLUSH is ordered only by using memory barriers*/
+> -		for_each_sg_page(st->sgl, &sg_iter, st->nents, 0)
+> +		for_each_sgtable_page(st, &sg_iter, 0)
+>   			drm_clflush_page(sg_page_iter_page(&sg_iter));
+>   		mb(); /*Make sure that all cache line entry is flushed*/
+>   
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index 4b7cfbac4daa..47d8211221f2 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -126,8 +126,8 @@ void drm_gem_shmem_free_object(struct drm_gem_object *obj)
+>   		drm_prime_gem_destroy(obj, shmem->sgt);
+>   	} else {
+>   		if (shmem->sgt) {
+> -			dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
+> -				     shmem->sgt->nents, DMA_BIDIRECTIONAL);
+> +			dma_unmap_sgtable(obj->dev->dev, shmem->sgt,
+> +					  DMA_BIDIRECTIONAL, 0);
+>   			sg_free_table(shmem->sgt);
+>   			kfree(shmem->sgt);
+>   		}
+> @@ -424,8 +424,7 @@ void drm_gem_shmem_purge_locked(struct drm_gem_object *obj)
+>   
+>   	WARN_ON(!drm_gem_shmem_is_purgeable(shmem));
+>   
+> -	dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
+> -		     shmem->sgt->nents, DMA_BIDIRECTIONAL);
+> +	dma_unmap_sgtable(obj->dev->dev, shmem->sgt, DMA_BIDIRECTIONAL, 0);
+>   	sg_free_table(shmem->sgt);
+>   	kfree(shmem->sgt);
+>   	shmem->sgt = NULL;
+> @@ -697,12 +696,17 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj)
+>   		goto err_put_pages;
+>   	}
+>   	/* Map the pages for use by the h/w. */
+> -	dma_map_sg(obj->dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
+> +	ret = dma_map_sgtable(obj->dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+> +	if (ret)
+> +		goto err_free_sgt;
+>   
+>   	shmem->sgt = sgt;
+>   
+>   	return sgt;
+>   
+> +err_free_sgt:
+> +	sg_free_table(sgt);
+> +	kfree(sgt);
+>   err_put_pages:
+>   	drm_gem_shmem_put_pages(shmem);
+>   	return ERR_PTR(ret);
+> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> index b717e52e909e..d583d6545666 100644
+> --- a/drivers/gpu/drm/drm_prime.c
+> +++ b/drivers/gpu/drm/drm_prime.c
+> @@ -617,6 +617,7 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
+>   {
+>   	struct drm_gem_object *obj = attach->dmabuf->priv;
+>   	struct sg_table *sgt;
+> +	int ret;
+>   
+>   	if (WARN_ON(dir == DMA_NONE))
+>   		return ERR_PTR(-EINVAL);
+> @@ -626,11 +627,12 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
+>   	else
+>   		sgt = obj->dev->driver->gem_prime_get_sg_table(obj);
+>   
+> -	if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
+> -			      DMA_ATTR_SKIP_CPU_SYNC)) {
+> +	ret = dma_map_sgtable(attach->dev, sgt, dir,
+> +			      DMA_ATTR_SKIP_CPU_SYNC);
+> +	if (ret) {
+>   		sg_free_table(sgt);
+>   		kfree(sgt);
+> -		sgt = ERR_PTR(-ENOMEM);
+> +		sgt = ERR_PTR(ret);
+>   	}
+>   
+>   	return sgt;
+> @@ -652,8 +654,7 @@ void drm_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
+>   	if (!sgt)
+>   		return;
+>   
+> -	dma_unmap_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
+> -			   DMA_ATTR_SKIP_CPU_SYNC);
+> +	dma_unmap_sgtable(attach->dev, sgt, dir, DMA_ATTR_SKIP_CPU_SYNC);
+>   	sg_free_table(sgt);
+>   	kfree(sgt);
+>   }
