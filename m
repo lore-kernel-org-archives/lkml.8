@@ -2,103 +2,167 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05ED620738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F5020774
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uftFUaF0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D+Yof6FF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgGGE7F (ORCPT
+        id S1727102AbgGGFHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48938 "EHLO
+        Tue, 7 Jul 2020 01:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgGGE7E (ORCPT
+        with ESMTP id S1726805AbgGGFHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:59:04 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29250C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:59:04 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id q17so17899748pfu.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:59:04 -0700 (PDT)
+        Tue, 7 Jul 2020 01:07:39 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D74C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 22:07:39 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t4so16090849oij.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 22:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fnf5BOlLTguFdAJt0eKBqSFaZTROPVc2dJ5RoFXNCYA=;
-        b=uftFUaF0PjHg0naEaC4J+NSl69Db+2w3bJ6URTUu0NQ0/8Syog8GFyJos/mOW2tD3B
-         jgroHtO7cic5K99ZvRpTyH3vKylb+A0A4Z0kAt/s3H68nivRpBkODHGFo0SSHvHlypwh
-         39U/wnLwe7ElfgFYL2M2narCr959zv9/REkd3bVvgAHOKfWH7bzVQO/xuHkcaI+QvRSB
-         gY0D5JyQgoohO2h9EN1s4UsZ/KR50Mpd3MUHjvAuX7FkSxFL4Bc+vX5F5Sfp+0a4wgOH
-         /hOfzJ5VbGOy6fluH/BL0dg/w7IxdNeK6Y4yJ5pAwXEVI9VWsrihdxwX7DdXV7ywcCzw
-         H5og==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=zAb/McZ8XV6K9mwnFmuQqAT3ttMAxvJlZ4c61ur+Pa0=;
+        b=D+Yof6FF8oNlsgkmvQuu9+VtHHmA9NcZHMWdtgSC/QSPt6pr1sj+AiB3zxUjck6g39
+         ywslF1il3kMVm/aWTK3rXKezuwLifVn5w7C3ifktqJEi2o4eOwDbGiuHK27GRm7Un1V/
+         uAGDZ8reGtpiSosTpJXUMmhGknY10wUjR85pjFzVX9eFUNrcCBBFnL8Yv5a8Tovk6IKf
+         E3O8YyKBDq73PTmSGkB/uslZp7RItO6oHD4KJbDoraUxxlpQe7aAhSwYZ/1b/2XmNUE/
+         kxJUH9iulFf8gugSa6TU/gETmNRFstl1Sq18kRVs8wwztF+RvVtQHYR2ezRguq6oNQze
+         mssg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fnf5BOlLTguFdAJt0eKBqSFaZTROPVc2dJ5RoFXNCYA=;
-        b=K6h2MLRdvhEIjZWJw72VBomULv5ii1SOrwE/ZlX+jkwbt99c38gqvxPN4vpKhdeMYT
-         ExA7abjHkGAhrCbUfmH1ahluJHPVY3pzDhTU9/z/UFbATzYaNqxLSmaP8AijebG1zari
-         Zthe7mcZj0jVqzF0VHSHQLlJr29CSFX/C3V96HkjQypQieVpZ4SOLNuW/iOyDumqaLvg
-         7bzaWvaIu2+n/yC8DwohyINx/AMNnmsjQjVBI/VHOwj0rOEbEQys+4qpD2TIDX2OVtfR
-         uJgT2nyLuKG09eNLY0FAbMVWenNa/rnQiT5EUFopc8wuDDN3CkLj7FmhFwaj7Zcu4qQ8
-         fmqg==
-X-Gm-Message-State: AOAM5306uCDFSrzS41UlmdMSm74UwyFz1KZp9fR31JRro2W2A79ifZe5
-        gAEXWjRzq+j1X8Btn/+yDY4=
-X-Google-Smtp-Source: ABdhPJwwBjwRcBhX5cznZ+2DvGqB7QhUlH1A9wSx7ThIxOU26AbLCZvRJz73gSNVuaTqZ6nuI1r/Kw==
-X-Received: by 2002:a05:6a00:1589:: with SMTP id u9mr49055656pfk.201.1594097943614;
-        Mon, 06 Jul 2020 21:59:03 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id d18sm1017930pjz.11.2020.07.06.21.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 21:59:03 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Xiubo.Lee@gmail.com, timur@tabi.org, shengjiu.wang@nxp.com,
-        linuxppc-dev@lists.ozlabs.org, festevam@gmail.com,
-        shengjiu.wang@gmail.com
-Subject: [PATCH v2] MAINTAINERS: Add Shengjiu to reviewer list of sound/soc/fsl
-Date:   Mon,  6 Jul 2020 21:58:29 -0700
-Message-Id: <20200707045829.10002-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=zAb/McZ8XV6K9mwnFmuQqAT3ttMAxvJlZ4c61ur+Pa0=;
+        b=WGqH4kkqCdEK6ECHIkd36HcdDjmsb3rkvettVDmX729p7Pdz0lvYF/wMmIrXXFNf96
+         Cu8AOrbSZuy8IeRfHSUbA8urN/L3H97ilrGcIIPXSHVvdIaIB5z+ETGpgCWRmUHSLs+6
+         A+BZodkGT2HYsaWB21kVPknTeyYkmg1z3EReqg2OAqVCGwKzLNYmqheMdC5rknGJUV6B
+         OuSE8uOELdn3vzLt+5aaDmzah0nppT1UsMgIElSA9Bz2q65Px9683+HP5YwIB2/u45SK
+         FmEVvYPRS6ca+xLxG/YKSdCEfumRzLdUJNkpvEtSJTphDjXyKtGtLaWnNiaw0v9vPSs8
+         YVWA==
+X-Gm-Message-State: AOAM533qJEQMmkmdDUiooYb5IMXUFC5QCFgmO6BvogURR5FLvYUNQLZm
+        fuFvq9yIRQKgc9vyanLICmYsFQ==
+X-Google-Smtp-Source: ABdhPJxVEHb5iTVD+kSh7pvIzuQgzyhih6LB4C6jdkDUZbpZpAoAQywdAuQlqTiMn0b3PGXucearDA==
+X-Received: by 2002:aca:5158:: with SMTP id f85mr2097275oib.6.1594098458258;
+        Mon, 06 Jul 2020 22:07:38 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id t187sm5490060oib.45.2020.07.06.22.07.35
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 06 Jul 2020 22:07:37 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 22:07:34 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Mike Rapoport <rppt@kernel.org>
+cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
+ available
+In-Reply-To: <20200706172051.19465-2-rppt@kernel.org>
+Message-ID: <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
+References: <20200706172051.19465-1-rppt@kernel.org> <20200706172051.19465-2-rppt@kernel.org>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Shengjiu who's actively working on the latest fsl/nxp audio drivers.
+On Mon, 6 Jul 2020, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> The definitions of shift, mask and size for the second and the third level
+> of the leaf pages are available only when CONFIG_TRANSPARENT_HUGEPAGE is
+> set. Otherwise they evaluate to BUILD_BUG().
+> 
+> There is no explanation neither in the code nor in the changelog why the
+> usage of, e.g. HPAGE_PMD_SIZE should be only allowed with THP and forbidden
+> otherwise while the definitions of HPAGE_PMD_SIZE and HPAGE_PUD_SIZE
+> express the sizes better than ambiguous HPAGE_SIZE.
+> 
+> Make HPAGE_PxD_{SHIFT,MASK,SIZE} definitions available unconditionally.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-Changelog
-v1->v2:
- * Replaced Shengjiu's emaill address with his gmail one
- * Added Acked-by from Shengjiu and Reviewed-by from Fabio
+Adding Andrea to Cc, he's the one who structured it that way,
+and should be consulted.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+I'm ambivalent myself.  Many's the time I've been irritated by the
+BUILD_BUG() in HPAGE_etc, and it's responsible for very many #ifdef
+CONFIG_TRANSPARENT_HUGEPAGEs or IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)s
+that you find uglily scattered around the source.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 496fd4eafb68..ff97b8cefaea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6956,6 +6956,7 @@ M:	Timur Tabi <timur@kernel.org>
- M:	Nicolin Chen <nicoleotsuka@gmail.com>
- M:	Xiubo Li <Xiubo.Lee@gmail.com>
- R:	Fabio Estevam <festevam@gmail.com>
-+R:	Shengjiu Wang <shengjiu.wang@gmail.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Maintained
--- 
-2.17.1
+But that's the point of it: it's warning when you write code peculiar
+to THP, that is going to bloat the build of kernels without any THP.
 
+So although I've often been tempted to do as you suggest, I've always
+ended up respecting Andrea's intention, and worked around it instead
+(sometimes with #ifdef or IS_ENABLED(), sometimes with
+PMD_{SHIFT,MASK_SIZE}, sometimes with a local definition).
+
+Hugh
+
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  include/linux/huge_mm.h | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 71f20776b06c..1f4b44a76e31 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -115,7 +115,6 @@ extern struct kobj_attribute shmem_enabled_attr;
+>  #define HPAGE_PMD_ORDER (HPAGE_PMD_SHIFT-PAGE_SHIFT)
+>  #define HPAGE_PMD_NR (1<<HPAGE_PMD_ORDER)
+>  
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  #define HPAGE_PMD_SHIFT PMD_SHIFT
+>  #define HPAGE_PMD_SIZE	((1UL) << HPAGE_PMD_SHIFT)
+>  #define HPAGE_PMD_MASK	(~(HPAGE_PMD_SIZE - 1))
+> @@ -124,6 +123,8 @@ extern struct kobj_attribute shmem_enabled_attr;
+>  #define HPAGE_PUD_SIZE	((1UL) << HPAGE_PUD_SHIFT)
+>  #define HPAGE_PUD_MASK	(~(HPAGE_PUD_SIZE - 1))
+>  
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +
+>  extern unsigned long transparent_hugepage_flags;
+>  
+>  /*
+> @@ -316,13 +317,6 @@ static inline struct list_head *page_deferred_list(struct page *page)
+>  }
+>  
+>  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+> -#define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
+> -#define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
+> -#define HPAGE_PMD_SIZE ({ BUILD_BUG(); 0; })
+> -
+> -#define HPAGE_PUD_SHIFT ({ BUILD_BUG(); 0; })
+> -#define HPAGE_PUD_MASK ({ BUILD_BUG(); 0; })
+> -#define HPAGE_PUD_SIZE ({ BUILD_BUG(); 0; })
+>  
+>  static inline int hpage_nr_pages(struct page *page)
+>  {
+> -- 
+> 2.26.2
