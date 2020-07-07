@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE86C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77EAE20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BFA20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nTK6Gzvx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XmmS1R2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgGGOBK (ORCPT
+        id S1728297AbgGGOBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47896 "EHLO
+        Tue, 7 Jul 2020 10:01:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgGGOBI (ORCPT
+        with ESMTP id S1728238AbgGGOBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:01:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CD6C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so46586019wmo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:07 -0700 (PDT)
+        Tue, 7 Jul 2020 10:01:10 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A9BC08C5E2
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so43379174wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+O/0d2wA9ZSFy1o93OfBEO3S/Is3leUo2WVahG+2iA4=;
-        b=nTK6GzvxFufmNCuaB/22HJzPW+ctnvIE8XhiHfh2DBolWX8XmkjKWKRNr6mcxfuVz8
-         2WFBe65mFhxIVpnvZUmNUjMcVuK2FTAFkp+J3gGwUC4AlolozrT3b/Fbb60/HtruCkDS
-         ZFMYuIBgwEfx3BrXjKfO5OG2bHyOu5swAPB9FW8MB2jhMHzER4Ho4vK4bfgYXhLqaoVt
-         jMEq9w6X5RaHLgoHJVqa5MNFhySGuagwInfbdzMqtS0MAMRVCSCE9jr1+nW/vN1kcAH3
-         A2d47G3UPS0UAasKFBCDbKN1r8wQWyWvO/k/t37a8JY9yAFqotKwsU1CLWNDeGzhIv7P
-         W0VA==
+        bh=5akYiP5XbUbIIHU3yZTiMoBU1iltsAOw/hCtwfTaVJc=;
+        b=XmmS1R2D9LdImdLyKuJbGDYLB/QYqj96CLTES0Hlurxb83iEVSOZjhC74NA3FNUelQ
+         x3wmfifyk/fKrMiPve8zbbTsvCV7UcsUd0OxmveVMbfZwHXFFXHwDPeEzSChk1mVG4Wn
+         v/FiUOq1EMMxM1DAtPF1xArvV707BeOj3E83i07QtyqPbhBYlv/MO2ydJxGqSbYoENE2
+         /Y3K5hBOFPGk1oPCkuhHZ8pqhicPWsd+S3xOKp9cFFrb3L1tBG7goNQFL/EXHs7MhYTO
+         /UzKa3qSDPe5HHpccqJfVZYdAKYVlTdKk0TfXV4htQ2UPmq+q71tTFVWoqyA1m/5QveK
+         K14w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+O/0d2wA9ZSFy1o93OfBEO3S/Is3leUo2WVahG+2iA4=;
-        b=ePvqlVl/y9+iynCELYDlQw6zxXH07UJy700p2iu9RD3+m2kppVQpbnxDWzNONyjfLb
-         wWs/PQ/yW8hVSuaFgHVCw3WUENMeFA5XqERQMllFvsn6xqp2A25s/XqzfTb5yVKQ3SB3
-         eR3E6/ls91d1+UgZ/g1odzUfIFHC8kZKxq02Cto0w6d/a48A2jzGAoXcxhqe+ZAMPaK/
-         UD6BYG+Qc9czaHGd8GhhAKZG0HwHZ8BdoHqOocbIdnm4GlguUZBX8VKmLHqBedc2E3RF
-         RqXuPMajT8N+RTCJXb8n6tYJ6BGfU8fM/sE+E6QI1EuZiVGc7FL4EEpQGCJnAtZDiThe
-         lvjQ==
-X-Gm-Message-State: AOAM530JGy+UnkTYBJm6wRjltge2Hl182LkaTpOMKBmPgOyLE6yDHVYJ
-        2O507Qel7dmhHzbUMPK/3jFrBw==
-X-Google-Smtp-Source: ABdhPJzjM2K9XAyP9w+5m7Z7UU2SGA9mOLFx1eo+L5yKfK4NKKE8aJpkHASyHiSvhRZcJmp0gwpGkg==
-X-Received: by 2002:a7b:c09a:: with SMTP id r26mr4281624wmh.176.1594130466648;
-        Tue, 07 Jul 2020 07:01:06 -0700 (PDT)
+        bh=5akYiP5XbUbIIHU3yZTiMoBU1iltsAOw/hCtwfTaVJc=;
+        b=s2rHwgbGr1nPgYKmIMglaC/QGdWcjC9iDBS+Ua0LQw8wsDlbekJyrOYTd82MWZzVpi
+         cWA0Asxqd3MV7zRCGzjfyd755DbAcySPVBuovlWr4PKMHMq8Qcl4/39ljFo249ZgwQLf
+         AcwQWsI6sZloC2zHarreYBxvt7fTJqDHF4cc7I4FylKCA13fwBAXFPUP0v6M09ev/qPA
+         IybkYmDGGOLIRvwLvexfIS+YszO+tMGUsp7udskgAzQWiMTPbkemgUULRAIA0M+dbpAe
+         E1nNiRI/VIdBPqv/6mdD9en01fipAsCRq5i2foQMol6+Ut38Pq5nCYlaGLQALmIo36QW
+         eaqg==
+X-Gm-Message-State: AOAM532s8zTRKPc3SWZWK6se2dcQ3Z5u/ywlS9+aPuQ8YMOFWePj0KQG
+        NCDc8VUsPZ4NAcaVXo63mVXinw==
+X-Google-Smtp-Source: ABdhPJwF1qF3Syu4cPqExQf8v8cF2iIj2GQcEkvKs7cauiEiajVIwpD26hksjr8q2pDY/chIhqABXg==
+X-Received: by 2002:a1c:7916:: with SMTP id l22mr4167207wme.115.1594130469133;
+        Tue, 07 Jul 2020 07:01:09 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.05
+        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:01:06 -0700 (PDT)
+        Tue, 07 Jul 2020 07:01:08 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        "Juergen E. Fischer" <fischer@norbit.de>
-Subject: [PATCH 06/10] scsi: aha152x: Remove unused variable 'ret'
-Date:   Tue,  7 Jul 2020 15:00:51 +0100
-Message-Id: <20200707140055.2956235-7-lee.jones@linaro.org>
+        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>
+Subject: [PATCH 08/10] scsi: pcmcia: nsp_cs: Remove unused variable 'dummy'
+Date:   Tue,  7 Jul 2020 15:00:53 +0100
+Message-Id: <20200707140055.2956235-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707140055.2956235-1-lee.jones@linaro.org>
 References: <20200707140055.2956235-1-lee.jones@linaro.org>
@@ -78,35 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks to be unused since 2014.
+There is no need to populate an unused variable, even if the read is required.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aha152x.c: In function ‘datai_run’:
- drivers/scsi/aha152x.c:2033:9: warning: variable ‘data’ set but not used [-Wunused-but-set-variable]
- 2033 | int data;
- | ^~~~
+ drivers/scsi/pcmcia/nsp_cs.c: In function ‘nsp_cs_message’:
+ drivers/scsi/pcmcia/nsp_cs.c:143:2: warning: function ‘nsp_cs_message’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+ drivers/scsi/pcmcia/nsp_cs.c: In function ‘nsp_fifo_count’:
+ drivers/scsi/pcmcia/nsp_cs.c:692:24: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
 
-Cc: "Juergen E. Fischer" <fischer@norbit.de>
+Cc: YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aha152x.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/pcmcia/nsp_cs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/aha152x.c b/drivers/scsi/aha152x.c
-index 90f97df1c42a4..d8e19afa7a140 100644
---- a/drivers/scsi/aha152x.c
-+++ b/drivers/scsi/aha152x.c
-@@ -2030,8 +2030,7 @@ static void datai_run(struct Scsi_Host *shpnt)
- 				    fifodata, GETPORT(FIFOSTAT));
- 			SETPORT(DMACNTRL0, ENDMA|_8BIT);
- 			while(fifodata>0) {
--				int data;
--				data=GETPORT(DATAPORT);
-+				GETPORT(DATAPORT);
- 				fifodata--;
- 				DATA_LEN++;
- 			}
+diff --git a/drivers/scsi/pcmcia/nsp_cs.c b/drivers/scsi/pcmcia/nsp_cs.c
+index 57a78f84f97ab..8655ff1249bbc 100644
+--- a/drivers/scsi/pcmcia/nsp_cs.c
++++ b/drivers/scsi/pcmcia/nsp_cs.c
+@@ -690,14 +690,14 @@ static int nsp_fifo_count(struct scsi_cmnd *SCpnt)
+ {
+ 	unsigned int base = SCpnt->device->host->io_port;
+ 	unsigned int count;
+-	unsigned int l, m, h, dummy;
++	unsigned int l, m, h;
+ 
+ 	nsp_index_write(base, POINTERCLR, POINTER_CLEAR | ACK_COUNTER);
+ 
+ 	l     = nsp_index_read(base, TRANSFERCOUNT);
+ 	m     = nsp_index_read(base, TRANSFERCOUNT);
+ 	h     = nsp_index_read(base, TRANSFERCOUNT);
+-	dummy = nsp_index_read(base, TRANSFERCOUNT); /* required this! */
++	nsp_index_read(base, TRANSFERCOUNT); /* required this! */
+ 
+ 	count = (h << 16) | (m << 8) | (l << 0);
+ 
 -- 
 2.25.1
 
