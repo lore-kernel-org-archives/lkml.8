@@ -2,154 +2,112 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1901FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA17C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE5A21532
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="U3RQQpYO"
+	by mail.kernel.org (Postfix) with ESMTP id 5B0FE21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594152937;
+	bh=I9HbhhuzQLNHpA2LIgmLXf0xSkdCv3OLshOfoSE0EIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0/dYllNiswAN4Fm08U0giYJZp2a8uBI+WA1UBPWEpa0KKyaQ+FJrFsGqZMAZVfxlt
+	 HXK7pGxKZJFpcHJ82TUv/DFlIv9e0cJ69xzYGqmyLGGjaOJyd/1E7O5755vNglCoD3
+	 rn8Qj3VG/iBL9uk0wj6rlfmDb2z9gYa2J3rt+Vkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgGGUPX (ORCPT
+        id S1728828AbgGGUPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:15:23 -0400
-Received: from mail.efficios.com ([167.114.26.124]:42648 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbgGGUPW (ORCPT
+        Tue, 7 Jul 2020 16:15:36 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42828 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgGGUPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:15:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A04446B43;
-        Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yOIvdI2ckLgJ; Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3C0716948;
-        Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3C0716948
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594152921;
-        bh=1PCRlMxH36DCjUQDGqFs23OHDpCLLV7B6FKEQGwHg9I=;
-        h=From:To:Date:Message-Id;
-        b=U3RQQpYODAIWV6N38klr6NfyC1fV3+l3Av308zbg70xc3QDe0nTj23gdbeNuHtgtY
-         Amdqp9NXbqk9WmsroOWGddLT8p21CMAeFZiTsMbVqlaDNgkiJDyjC/0cnyzdx2VebP
-         i2DPEb/9685UgVnp8oFVpec0vkH7ewAOZi1aJTQMFuBTWRIvDN48IPf1LxR4x9aA2r
-         4d+rL8TtvNKdOfbecGLAOr1oCCLt7akQWKG2U+8low/fxiQe1jdaHRxcMiFz8Z4qX7
-         UpFIt7KioAeRNFzLchYIo8p9l2LRb+emo6gFkfbRs8oIMwliWOwMF68tNRCC6dj7kK
-         0OueWy1Vc2sMw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id KSuWrz_Dvd2W; Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 25E2968E5;
-        Tue,  7 Jul 2020 16:15:19 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>, stable@vger.kernel.org
-Subject: [PATCH for 5.8] sched: Fix unreliable rseq cpu_id for new tasks
-Date:   Tue,  7 Jul 2020 16:15:05 -0400
-Message-Id: <20200707201505.2632-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jul 2020 16:15:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id c16so44581037ioi.9;
+        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K966dzq3887Uzlyy0dRpEQhzNCgkZkq/ZzXqsSsdFE4=;
+        b=l+/w6iL4OQeCt/Gc7j4Pj8KcY7A9KbXxAPGD3UCOmyuObC/KrZuOj1exitXs0P7IFF
+         dN9eAysWQAodsbUo/D961Ou16JjNlOWc3urGI/g/77PBzFvkqkIGx4Kph4Njt3rL8ZZd
+         MzuZX4Zi3FnWBbL3j4xDMGLii0oA7rESj2gV7TqQ56tIIl5oElwO+e8ziwaKRM27NQBh
+         emf5ZiB/7BwrNJ0JT2b0oqMQOJyO8bblJ92eN8tXbO1Q76KG8/e5ApeX4alf2HFPsP3x
+         7MGwV3MaiFrIrMJbD3Rqz2drJgxB6++hS/SjUGFlu80xztZeCpdazv1H4i05iLOVrsnI
+         PS+g==
+X-Gm-Message-State: AOAM5311TnxfBG413LvxKp1TRg4pSRjJKWpfMSPBqsWxClHpTwQgBMH1
+        cp9BNCicya690VPhQdboRQ==
+X-Google-Smtp-Source: ABdhPJyyR0n/NJPHCUOxaun8dycLNdyQs4Era0rW43mycahPjoJooqZYSp6SyU9Cvr6sdhxGu1p8yQ==
+X-Received: by 2002:a05:6638:dd3:: with SMTP id m19mr63316901jaj.106.1594152934274;
+        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id d77sm13999482ill.67.2020.07.07.13.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 13:15:33 -0700 (PDT)
+Received: (nullmailer pid 558788 invoked by uid 1000);
+        Tue, 07 Jul 2020 20:15:32 -0000
+Date:   Tue, 7 Jul 2020 14:15:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jack Lo <jack.lo@gtsys.com.hk>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+Message-ID: <20200707201532.GA558059@bogus>
+References: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
+ <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While integrating rseq into glibc and replacing glibc's sched_getcpu
-implementation with rseq, glibc's tests discovered an issue with
-incorrect __rseq_abi.cpu_id field value right after the first time
-a newly created process issues sched_setaffinity.
+On Sun, 05 Jul 2020 11:47:26 +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low_precision is used to switch to low precision.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> 
 
-For the records, it triggers after building glibc and running tests, and
-then issuing:
 
-  for x in {1..2000} ; do posix/tst-affinity-static  & done
+My bot found errors running 'make dt_binding_check' on your patch:
 
-and shows up as:
+Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml:  while parsing a flow mapping
+  in "<unicode string>", line 43, column 9
+did not find expected ',' or '}'
+  in "<unicode string>", line 47, column 14
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 2, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
-error: Unexpected CPU 138, expected 0
 
-This is caused by the scheduler invoking __set_task_cpu() directly from
-sched_fork() and wake_up_new_task(), thus bypassing rseq_migrate() which
-is done by set_task_cpu().
+See https://patchwork.ozlabs.org/patch/1322963
 
-Add the missing rseq_migrate() to both functions. The only other direct
-use of __set_task_cpu() is done by init_idle(), which does not involve a
-user-space task.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Based on my testing with the glibc test-case, just adding rseq_migrate()
-to wake_up_new_task() is sufficient to fix the observed issue. Also add
-it to sched_fork() to keep things consistent.
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-The reason why this never triggered so far with the rseq/basic_test
-selftest is unclear.
-
-The current use of sched_getcpu(3) does not typically require it to be
-always accurate. However, use of the __rseq_abi.cpu_id field within rseq
-critical sections requires it to be accurate. If it is not accurate, it
-can cause corruption in the per-cpu data targeted by rseq critical
-sections in user-space.
-
-Link: https://sourceware.org/pipermail/libc-alpha/2020-July/115816.html
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Tested-By: Florian Weimer <fweimer@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Florian Weimer <fw@deneb.enyo.de>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Neel Natu <neelnatu@google.com>
-Cc: linux-api@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.18+
----
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ca5db40392d4..86a855bd4d90 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2962,6 +2962,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	 * Silence PROVE_RCU.
- 	 */
- 	raw_spin_lock_irqsave(&p->pi_lock, flags);
-+	rseq_migrate(p);
- 	/*
- 	 * We're setting the CPU for the first time, we don't migrate,
- 	 * so use __set_task_cpu().
-@@ -3026,6 +3027,7 @@ void wake_up_new_task(struct task_struct *p)
- 	 * as we're not fully set-up yet.
- 	 */
- 	p->recent_used_cpu = task_cpu(p);
-+	rseq_migrate(p);
- 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
- #endif
- 	rq = __task_rq_lock(p, &rf);
--- 
-2.17.1
+Please check and re-submit.
 
