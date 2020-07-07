@@ -2,97 +2,257 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7636C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40E420674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAFD20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViObSl1Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vs27DYnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgGGPHo (ORCPT
+        id S1728211AbgGGPIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
+        Tue, 7 Jul 2020 11:08:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGPHn (ORCPT
+        with ESMTP id S1725944AbgGGPIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:07:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0DBC061755;
-        Tue,  7 Jul 2020 08:07:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so18647231pjc.4;
-        Tue, 07 Jul 2020 08:07:43 -0700 (PDT)
+        Tue, 7 Jul 2020 11:08:02 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16ABC061755;
+        Tue,  7 Jul 2020 08:08:01 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so46895851wmh.2;
+        Tue, 07 Jul 2020 08:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Cj5YHVMEb1Skcs4Bgm6WovZ+60YcaX0yJ/fN2fOst+g=;
-        b=ViObSl1ZKpdciiuiNFoSHCk5YRn01KNsWY0LK+HmrnV1MqDayYTmP09uakkSE9Oave
-         5Z6J2fusmaBC1BtqDsnhUO6FvJMblkUrvXV7QeoJgmJHeWLtWo9a/N6vpL6jIcL7L1Hu
-         9xt+yO49i5RQUVxCO88mM5b49xuIlDH5BDxbkzS+pBqsEAuyRkGQNlX5loUyRfVOCvA8
-         n8DrIp1sgKmV0ae9UvWWKWWnPw/U0/ZgU8V7NmUC67FUjASPBc1aEmswsx3zz1xd9Wwo
-         QVQxvZ4GQ7TmA00rFZCj8E1/Y5VdeTCikQGa5kVwZOZrpaatXeQdt7SuP7D50rHxjyGV
-         rI0g==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M6BV5c7GorEWs2/docPZWbdVobbwC05M0F5l2kuEJhY=;
+        b=Vs27DYnDqO9a35ks/Wv6aMUwNy9xFVR8p18Nvb7vO6wX95Cy6fsmB1rU4/1thR7zXC
+         e1/Mk6cHvVpABEaIsNGCtJuNcqImVGH8zhbyvS5TXQC30do5WjxGwukaU2FUIBiWop8v
+         aUlcJI8pLbUcegVSVlyjI7mYOQQJvCAzgdCC2dTl9wS81Yl9xJ8/jHeOmoogUbXvBKYP
+         ticsQy4rYuD70mX6zhpiMXMebPdLKJTMIS8J/XTm5XxC1iUN43wRYMMEPHuEcHCQBzGB
+         Mi5+IebW5qB7hcXMecyoBv110X4VRHxaSwhr0LvdJ0uF7vxJE4OKaV9ZzBfJbW0EIb7F
+         RFvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Cj5YHVMEb1Skcs4Bgm6WovZ+60YcaX0yJ/fN2fOst+g=;
-        b=ItInun/AoQmJgSxOxuWABryBOQg/voyHx0g60UdMKjY/tz7wmIzNoWu2SfoTCt3kOr
-         9xArLsJKRcK5EqWdX5v1Jvr7V6Ex8/Ezy8qqmkult0GwIOT2srLBta8sLzAgkP+B6oT3
-         zr0AZI/9AVb8Hx2EJ1pYARwQtRKludGE2sVcQi949PgahfeYzv8k0Pw0sJVat5Ts5qZm
-         HnqBTgapQUKZXjlQQiPYOB5Wov/wv0FfdCOXLT40q+e5jxz6UtOU2FMX4yKkrZlHLt7w
-         stSIhsqeZLdvCO8QIE5z1zFlRUghicYxLljGdVuoyhLpIx3i0AqiNxS1LZlwF4esX9wj
-         xrSw==
-X-Gm-Message-State: AOAM533dlyJu3TlTfalzrgaS/BikkCtGu5AjEmzDwPxXy2CmD0+WQN/Y
-        ZwgwW6IjsZ5MxXEsnC5rCT9+I6mjwJBM8bG89C0=
-X-Google-Smtp-Source: ABdhPJyAi6KKJgB+rJC8tyyRzMI6cuzPylPEhysjXroqhcz7RiGTClFrH2Ex/BeJyxHSXInhDczuPgIZoxvnXvep11E=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr46952213pll.18.1594134462903;
- Tue, 07 Jul 2020 08:07:42 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=M6BV5c7GorEWs2/docPZWbdVobbwC05M0F5l2kuEJhY=;
+        b=YZEWsnehExMDFaZ5lLIFxy68I72lemt+udldx8AHnJZCEhOuR15+7j3s4OwXZxP13E
+         vfR4WteXTOu6ABEAgrWXRoUcDYRSDOcsXPsKuiknn3zkK3lPGUt5Sk46HN6FHWWcfuz+
+         cuSz5HxxrWXxHhwiFyOMVmJr2tw1UmBFYE82AD6gPauTXLuxkd3Vtb1iN2Id0sy/9Il4
+         tph/6in9luLD/lZPneEN+HOGtmo585yF3a1RPQM9G3fFB0+rtNNBOA6loDi3gkpQwLgy
+         POmY5L88TwmaXQ31pN7qrYh/qV0j4NRUi6KgnB1kJhlL4m+HXyFA7ihq0vtTg1G3PAs8
+         4VMA==
+X-Gm-Message-State: AOAM533/TzEYD4sZywCZJ/752KDc0zzSabr6x3sIwdLIBGEKxsmytY3b
+        P+NUWEpdeVAj5fy6t2buXhqEkBRUultz8w==
+X-Google-Smtp-Source: ABdhPJw3uu5XW1AIN9bCVkNNsTt1jsZSNk03Bs513KYmzIrWkZcCF6ZvU9vC+U9q2Co1plIOC3JXNA==
+X-Received: by 2002:a1c:804c:: with SMTP id b73mr4637763wmd.59.1594134480351;
+        Tue, 07 Jul 2020 08:08:00 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4262:1ab:c:984b:540d:db53:2adb])
+        by smtp.gmail.com with ESMTPSA id d13sm1452605wrn.61.2020.07.07.08.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 08:07:59 -0700 (PDT)
+From:   Emil Renner Berthing <kernel@esmil.dk>
+To:     linux-riscv@lists.infradead.org
+Cc:     Emil Renner Berthing <kernel@esmil.dk>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] riscv: Add jump-label implementation
+Date:   Tue,  7 Jul 2020 17:07:48 +0200
+Message-Id: <20200707150748.14651-1-kernel@esmil.dk>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200705133038.161547-1-mans0n@gorani.run> <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
- <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com> <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
-In-Reply-To: <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Jul 2020 18:07:26 +0300
-Message-ID: <CAHp75VeKUvy9tkoBq=axx9g-2_p3QUqffA1z2WmGO-Uu8oyHHA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 5:03 PM Sungbo Eo <mans0n@gorani.run> wrote:
-> On 20. 7. 6. =EC=98=A4=ED=9B=84 9:00, Andy Shevchenko wrote:
+Add jump-label implementation based on the ARM64 version.
 
-...
+Tested on the HiFive Unleashed board.
 
-> But I don't really understand what mutex does here. The driver does not
-> need consecutive commands, it only sends/receives only one byte at a
-> time. And AFAIK each i2c_smbus function is already protected by a mutex.
-> So what should be exactly inside the lock? Should we protect the output
-> buffer as well? I'm not an expert on this so please enlighten me.
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+---
 
-There are questions, answering them will give you a solution:
-- Since we have two functions doing i2c communications, can they
-clash? If so, does the i2c framework guarantee the serialisation?
-- Since we have a shared resource (buf), can accessors clash? How do
-we guarantee serialization?
+Changes since RFC:
+- Use RISCV_PTR and RISCV_LGPTR macros to match struct jump_table
+  also in 32bit kernels.
+- Remove unneeded branch ? 1 : 0, thanks Björn
+- Fix \n\n instead of \n\t mistake
 
---=20
-With Best Regards,
-Andy Shevchenko
+ .../core/jump-labels/arch-support.txt         |  2 +-
+ arch/riscv/Kconfig                            |  2 +
+ arch/riscv/include/asm/jump_label.h           | 59 +++++++++++++++++++
+ arch/riscv/kernel/Makefile                    |  2 +
+ arch/riscv/kernel/jump_label.c                | 44 ++++++++++++++
+ 5 files changed, 108 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/include/asm/jump_label.h
+ create mode 100644 arch/riscv/kernel/jump_label.c
+
+diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
+index 632a1c7aefa2..760243d18ed7 100644
+--- a/Documentation/features/core/jump-labels/arch-support.txt
++++ b/Documentation/features/core/jump-labels/arch-support.txt
+@@ -23,7 +23,7 @@
+     |    openrisc: | TODO |
+     |      parisc: |  ok  |
+     |     powerpc: |  ok  |
+-    |       riscv: | TODO |
++    |       riscv: |  ok  |
+     |        s390: |  ok  |
+     |          sh: | TODO |
+     |       sparc: |  ok  |
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index fd639937e251..d2f5c53fdc19 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -46,6 +46,8 @@ config RISCV
+ 	select GENERIC_TIME_VSYSCALL if MMU && 64BIT
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HAVE_ARCH_AUDITSYSCALL
++	select HAVE_ARCH_JUMP_LABEL
++	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+ 	select HAVE_ARCH_KASAN if MMU && 64BIT
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_KGDB_QXFER_PKT
+diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
+new file mode 100644
+index 000000000000..d5fb342bfccf
+--- /dev/null
++++ b/arch/riscv/include/asm/jump_label.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2020 Emil Renner Berthing
++ *
++ * Based on arch/arm64/include/asm/jump_label.h
++ */
++#ifndef __ASM_JUMP_LABEL_H
++#define __ASM_JUMP_LABEL_H
++
++#ifndef __ASSEMBLY__
++
++#include <linux/types.h>
++
++#define JUMP_LABEL_NOP_SIZE 4
++
++static __always_inline bool arch_static_branch(struct static_key *key,
++					       bool branch)
++{
++	asm_volatile_goto(
++		"	.option push				\n\t"
++		"	.option norelax				\n\t"
++		"	.option norvc				\n\t"
++		"1:	nop					\n\t"
++		"	.option pop				\n\t"
++		"	.pushsection	__jump_table, \"aw\"	\n\t"
++		"	.align		" RISCV_LGPTR "		\n\t"
++		"	.long		1b - ., %l[label] - .	\n\t"
++		"	" RISCV_PTR "	%0 - .			\n\t"
++		"	.popsection				\n\t"
++		:  :  "i"(&((char *)key)[branch]) :  : label);
++
++	return false;
++label:
++	return true;
++}
++
++static __always_inline bool arch_static_branch_jump(struct static_key *key,
++						    bool branch)
++{
++	asm_volatile_goto(
++		"	.option push				\n\t"
++		"	.option norelax				\n\t"
++		"	.option norvc				\n\t"
++		"1:	jal		zero, %l[label]		\n\t"
++		"	.option pop				\n\t"
++		"	.pushsection	__jump_table, \"aw\"	\n\t"
++		"	.align		" RISCV_LGPTR "		\n\t"
++		"	.long		1b - ., %l[label] - .	\n\t"
++		"	" RISCV_PTR "	%0 - .			\n\t"
++		"	.popsection				\n\t"
++		:  :  "i"(&((char *)key)[branch]) :  : label);
++
++	return false;
++label:
++	return true;
++}
++
++#endif  /* __ASSEMBLY__ */
++#endif	/* __ASM_JUMP_LABEL_H */
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index b355cf485671..a5287ab9f7f2 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -53,4 +53,6 @@ endif
+ obj-$(CONFIG_HOTPLUG_CPU)	+= cpu-hotplug.o
+ obj-$(CONFIG_KGDB)		+= kgdb.o
+ 
++obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
++
+ clean:
+diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
+new file mode 100644
+index 000000000000..55b2d742efe1
+--- /dev/null
++++ b/arch/riscv/kernel/jump_label.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2020 Emil Renner Berthing
++ *
++ * Based on arch/arm64/kernel/jump_label.c
++ */
++#include <linux/kernel.h>
++#include <linux/jump_label.h>
++#include <asm/patch.h>
++
++#define RISCV_INSN_NOP 0x00000013
++#define RISCV_INSN_JAL 0x0000006f
++
++void arch_jump_label_transform(struct jump_entry *entry,
++			       enum jump_label_type type)
++{
++	void *addr = (void *)jump_entry_code(entry);
++	u32 insn;
++
++	if (type == JUMP_LABEL_JMP) {
++		u32 offset = jump_entry_target(entry) - jump_entry_code(entry);
++
++		insn = RISCV_INSN_JAL |
++			((offset & GENMASK(19, 12)) << (12 - 12)) |
++			((offset & GENMASK(11, 11)) << (20 - 11)) |
++			((offset & GENMASK(10,  1)) << (21 -  1)) |
++			((offset & GENMASK(20, 20)) << (31 - 20));
++	} else
++		insn = RISCV_INSN_NOP;
++
++	patch_text_nosync(addr, &insn, sizeof(insn));
++}
++
++void arch_jump_label_transform_static(struct jump_entry *entry,
++				      enum jump_label_type type)
++{
++	/*
++	 * We use the same instructions in the arch_static_branch and
++	 * arch_static_branch_jump inline functions, so there's no
++	 * need to patch them up here.
++	 * The core will call arch_jump_label_transform  when those
++	 * instructions need to be replaced.
++	 */
++}
+-- 
+2.27.0
+
