@@ -2,109 +2,106 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9795C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A882073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eW7PtF7N"
+	by mail.kernel.org (Postfix) with ESMTP id AEFC02063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594132286;
+	bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mew+rD/82A1rudqhxlq5/SHZEdt2CXrjYnIkjmvTg6NEAr9NaDUNV/gl3CTcTg9k4
+	 WQ0aqZXPf7O0dXvrvozEfEBTQXlZmTBmtavkRWFR8QlUKNzg9fhjfnInafuQwELgQp
+	 lcevymvvmFdxal10PpSQAh6LNG8K7kOyCIpEtY2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgGGObL (ORCPT
+        id S1728294AbgGGObZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgGGObK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:31:10 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D2BC061755;
-        Tue,  7 Jul 2020 07:31:10 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s14so16815243plq.6;
-        Tue, 07 Jul 2020 07:31:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i0nz+1FAozvxz4aD0FyzlhABh4V7jlm3CdKShkpSDRA=;
-        b=eW7PtF7NFYk1NicfihJofSgAhLqj7PraQUnp9z6VGmFxAEdJNqCmBEXVdK7aeNuGMm
-         94O0+goyRiecvMNQvEwom8ULyaCkZZzbVAHWMPysc0lsNkHP7SJzAJXSQreJcqTG5W/h
-         OqmpJGyHkkzdVbv0qTMcYVs2jvkKsQo2CxNVhCf1Bvdch83rU+XIyMTeESkf36+w/CGC
-         YPGjNC9454H4j9uP1IjJPIs4zI6orpDSp7bGMXQR5KUHvQ/uqxXi4Yr/BwZa5d2+GT1+
-         m4TlG964HnNZTssEb4u0lYpwh5T5O+wT6NDmvqrCATKqv/65gBXhmuq2IeMMH2r+c5vR
-         sThw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i0nz+1FAozvxz4aD0FyzlhABh4V7jlm3CdKShkpSDRA=;
-        b=lX/fN4q+UdL2wmbY2bpO2bpssN2YZ9Lka6lHWR8A7Ahzkpe+e4Fc0/Qfs8JROEr/Tz
-         chDkLPVZ64gt7Zg9uRi1xXVBEFmQ156KUsICGPdiamU63x+LcH0o7051LNEiscrt9wMN
-         9gNFaWKMfRzITSqUeGngkuumfrFqICKxjdUSfbXgTJOSkX3+VtS6Lj5M7c6QSVzjqXeu
-         CS3f9UZpClJhBiRGyq18Q5KmIcyqxKlrGzGm9JUC4H/dLJ4MOiuWEp9EQmoJqNdPRDUY
-         +XX3w8ApxriY9PqM/YQL8SQKFLL6xwvLX2vTPkbz4INFi57Vn9DrZOw1yS//VhmSVIM6
-         le6g==
-X-Gm-Message-State: AOAM532Pi0hzIstc2BUovmDFfWyJ/wBGfrDSLgf2VQhqBSECmfDZv7il
-        1EKbB7VfdOvGtm/LNbDOWJFy+r50swYeuQ==
-X-Google-Smtp-Source: ABdhPJxloa0N7jgpB2WDZ/s0AhGF57yia3mju1qYn5+CWNJsmWvkhtRY7sKGqd7PU/zvv0lfTIewEA==
-X-Received: by 2002:a17:90a:e50c:: with SMTP id t12mr4622378pjy.209.1594132269209;
-        Tue, 07 Jul 2020 07:31:09 -0700 (PDT)
-Received: from localhost.localdomain ([103.228.223.183])
-        by smtp.googlemail.com with ESMTPSA id u26sm1219478pgo.71.2020.07.07.07.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:31:08 -0700 (PDT)
-From:   Vishwas M <vishwas.reddy.vr@gmail.com>
-Cc:     Steve Glendinning <steve.glendinning@shawell.net>,
-        Vishwas M <vishwas.reddy.vr@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (emc2103) fix unable to change fan pwm1_enable attribute
-Date:   Tue,  7 Jul 2020 19:57:47 +0530
-Message-Id: <20200707142747.118414-1-vishwas.reddy.vr@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 7 Jul 2020 10:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727895AbgGGObZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:31:25 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBF22063A;
+        Tue,  7 Jul 2020 14:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594132284;
+        bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lsF4Y6TI4se0MULQuP2J7GCVnVkZH1HtvKHRAViGf7AzJiw+Z7pLIT0vKpzmqS2u2
+         u49kEzWJOv9ebnbufCdyxWLBZVbDNSZLpNhQuVqmTnVv1hkGl0T+Wh/YcKmbonOIiS
+         pdBnkAjOP/MiWgYxipjjYW4FXbuzs5EyhC/TLFOI=
+Received: by mail-oi1-f170.google.com with SMTP id t198so22472079oie.7;
+        Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
+X-Gm-Message-State: AOAM530fygOCNDFuGCiuE1o3lmvdZyp8+hCkV10NpKYERi6OhtqY1q3l
+        YxGxJOXZeMo9RPKKY4Q05rBcHCBOJVP3G/nJ2A==
+X-Google-Smtp-Source: ABdhPJxZpu3muVU1JSTu4HLqkdyNBb1nY6MBHbFPTUmS3FU1uehTPnYLfxZ3J02PgSTI2PbjH/Sgsk/bfoi+WKTi2sE=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr3517914oiw.147.1594132284171;
+ Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-2-git-send-email-amittomer25@gmail.com> <20200702210014.GA1685248@bogus>
+ <CABHD4K8=8+fFu=ZjQHEgR44x+QsvLZ+LW7w=XKH7O4oXu+QY4A@mail.gmail.com> <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
+In-Reply-To: <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 Jul 2020 08:31:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
+Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: dmaengine: convert Actions Semi Owl
+ SoCs bindings to yaml
+To:     Amit Tomer <amittomer25@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        cristian.ciocaltea@gmail.com, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a bug which does not let FAN mode to be changed from
-sysfs(pwm1_enable). i.e pwm1_enable can not be set to 3, it will always
-remain at 0.
+On Fri, Jul 3, 2020 at 1:55 AM Amit Tomer <amittomer25@gmail.com> wrote:
+>
+> On Fri, Jul 3, 2020 at 12:48 PM Amit Tomer <amittomer25@gmail.com> wrote:
+> >
+> > Hi Rob,
+> >
+> >
+> > > If you already ran 'make dt_binding_check' and didn't see the above
+> > > error(s), then make sure dt-schema is up to date:
+> > >
+> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > >
+> > > Please check and re-submit.
+> >
+> > I wasn't able to reproduce it, even after updating the dt-schema.
+> > Kindly have a look at logs:
+> >
+> > https://pastebin.ubuntu.com/p/xTBNNyBdFv/
+>
+> Looks like, dtschema even after upgrade pointing to older commit "6a941d46b9f5".
+> Wondering why it has not been pointing to latest commit "6a941d46b9f5"
+>
+> After upgrading the pip version for python3, and upgrading the dt-schema again
+> https://pastebin.ubuntu.com/p/Rd9knQgvKH/
+>
+> Issue is still reproduced.
 
-This is caused because the device driver handles the result of
-"read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg)" incorrectly. The
-driver thinks an error has occurred if the (result != 0). This has been
-fixed by changing the condition to (result < 0).
+If dtschema is changed, you need a clean tree as make doesn't track
+that changing. Specifically, processed-schema-examples.yaml needs to
+be removed.
 
-Signed-off-by: Vishwas M <vishwas.reddy.vr@gmail.com>
----
- drivers/hwmon/emc2103.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwmon/emc2103.c b/drivers/hwmon/emc2103.c
-index 491a570e8e50..924c02c1631d 100644
---- a/drivers/hwmon/emc2103.c
-+++ b/drivers/hwmon/emc2103.c
-@@ -443,7 +443,7 @@ static ssize_t pwm1_enable_store(struct device *dev,
- 	}
- 
- 	result = read_u8_from_i2c(client, REG_FAN_CONF1, &conf_reg);
--	if (result) {
-+	if (result < 0) {
- 		count = result;
- 		goto err;
- 	}
--- 
-2.25.1
-
+Rob
