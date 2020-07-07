@@ -2,53 +2,50 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609DC2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32CA2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135033;
-	bh=TFcdCfvYJ7iy0Bl2IrPcojqeLuEsw+SucB4ANliI+PE=;
+	s=default; t=1594135034;
+	bh=jg37BOgnRVux8mq45Jft7hfVe7BKUumcFyBY9H09wFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1oA7VU84GRrDku6UDfbLvuW1rF3mZJBFzvPV8yK0EaIpgf8A9QPhb0pCesmcb8bn
-	 2Ljz14ELa24T3azAPnFIqwLlgMM4MOpCa4B+sj+7voaO+Gbhz1EdGwCsz2I96HSU3R
-	 R/wUDscsafLB3+Npf3wITnAEvO8F8PrZonjelwFY=
+	b=iKbQZeiiQyJE7CL0G19EnQeWHg0DAFdsT5B5dpe2sRxVoVrz9nKryQkPrJSB3J5Th
+	 ONfcT3ryrP6EQnNXpsk0yYtFy5VjB1K+m+0B6vyxMXFOIa1kdOA6Y3sF/HV5/XCpAR
+	 4aGW8tjK+4uRzF+ccvhnJ49I5zeGwMkx0qA8kqUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgGGPRL (ORCPT
+        id S1729169AbgGGPRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbgGGPRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728571AbgGGPRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:17:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D762078A;
-        Tue,  7 Jul 2020 15:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36CCF20663;
+        Tue,  7 Jul 2020 15:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135029;
-        bh=TFcdCfvYJ7iy0Bl2IrPcojqeLuEsw+SucB4ANliI+PE=;
+        s=default; t=1594135024;
+        bh=jg37BOgnRVux8mq45Jft7hfVe7BKUumcFyBY9H09wFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNnQzCPcfqEgMyLEfmIwgWoFmxp6kQ28J+a7PKSQJocSHmp7Wr6SZUCnYwMFJJ6k9
-         b8t0mAy5sRux0W9hliwCmesl1uwbI3M3QKY8tVW/IL/iBpEjYt2pwPx2ipAOuR0Ir8
-         kSHHIWYgXRuehzMqFlw+RFznRTP7BcLvBEUqSmtQ=
+        b=W1dpUb33xos+E1Kvfn8rvfEhim+gaBB1RIR/rdQgZw+XG51NfVdG6X2N3TihbYzg5
+         O7O7F02n9gAY8FELmmB8I5wmDhiPISraPm+108X3z0F86tmAW5ovhkwxqXTvHy8sY8
+         bJAQUKsfVFAuPP0rzUbWRc/WeVyeijtI2bCg8xSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/27] virtio-blk: free vblk-vqs in error path of virtblk_probe()
-Date:   Tue,  7 Jul 2020 17:15:44 +0200
-Message-Id: <20200707145749.774950267@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.14 25/27] irqchip/gic: Atomically update affinity
+Date:   Tue,  7 Jul 2020 17:15:52 +0200
+Message-Id: <20200707145750.147315412@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -61,36 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
+commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
 
-Else there will be memory leak if alloc_disk() fails.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
+
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
+
+Drop the terminally broken code and replace it by a byte write.
+
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/virtio_blk.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-gic.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 0e18eed62c575..2f15e38fb3f8c 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -879,6 +879,7 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	put_disk(vblk->disk);
- out_free_vq:
- 	vdev->config->del_vqs(vdev);
-+	kfree(vblk->vqs);
- out_free_vblk:
- 	kfree(vblk);
- out_free_index:
--- 
-2.25.1
-
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -324,10 +324,8 @@ static int gic_irq_set_vcpu_affinity(str
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
+ 
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -337,13 +335,7 @@ static int gic_set_affinity(struct irq_d
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
+-
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
 
 
