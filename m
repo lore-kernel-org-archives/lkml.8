@@ -2,151 +2,91 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D67C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B716220738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594153504;
-	bh=DDzwBEGWrLW47pq/nQ9txoZmp3Vt4Jz+CIBmNHANzJA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=znmGH/Bc7n0knB01OhvARZZtHCRyHTf8MGQMeQZ0AudAt2PRPmCB5p7LmQiDGyYSA
-	 BnlaVGIz2u1iLM0i9vRO6B6Z01MpVqIgo6uhCIikn/nHv71lue9KBYaQHibmC0nt+Y
-	 b5U8S1Tk+/PKb6XVbWSqhMAkGFk3UszjqgyOKZCA=
+	by mail.kernel.org (Postfix) with ESMTP id 97F5120738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgGGUZD (ORCPT
+        id S1728517AbgGGU0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 16:26:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6241 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbgGGUZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:25:03 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 292B1206BE;
-        Tue,  7 Jul 2020 20:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594153502;
-        bh=DDzwBEGWrLW47pq/nQ9txoZmp3Vt4Jz+CIBmNHANzJA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dEHexLZdCFHi2/GOnTJWgeSnQejTKdYLUXYfPkj6pFT+0a3C9Fic8pC+w+kLOoElB
-         RsVs0W5lv9/jzSqA7S62Lkgah1fDQw//EPk/3aVXt/WET7W+Z2XeU5vSQFALJVScUy
-         s/gL8HllLstLqYU+LsMQ2Mem0iu39H6yt1CX4/5s=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Wei Li <liwei391@huawei.com>
-Subject: [GIT PULL] Second batch of perf tooling fixes for v5.8
-Date:   Tue,  7 Jul 2020 17:24:50 -0300
-Message-Id: <20200707202450.23345-1-acme@kernel.org>
-X-Mailer: git-send-email 2.21.3
+        id S1727908AbgGGU0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:26:25 -0400
+IronPort-SDR: 7Qjh6edZuJGpqxlHnDQ8L5qOBjx0mLTEpsB+oQuF8/x7NyrZjc/gaxIvESKF/6aNRtQy+0D+Cv
+ I5VnFsqXCJ2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="146759192"
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="146759192"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 13:26:23 -0700
+IronPort-SDR: kKJnIcKlGwzU4Mpw47283qOwWXFTF6OyFfUa/NJP4HDbjorz4a5ST4WPrHLMiWQJILAkUJhV6/
+ HYLbcOegt8RA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="315637082"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jul 2020 13:26:23 -0700
+Date:   Tue, 7 Jul 2020 13:26:23 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>
+Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
+Message-ID: <20200707202623.GM20096@linux.intel.com>
+References: <20200601115957.1581250-1-peterx@redhat.com>
+ <20200601115957.1581250-3-peterx@redhat.com>
+ <20200702230849.GL3575@linux.intel.com>
+ <20200703184122.GF6677@xz-x1>
+ <20200707061732.GI5208@linux.intel.com>
+ <20200707195009.GE88106@xz-x1>
+ <20200707195658.GK20096@linux.intel.com>
+ <20200707201508.GH88106@xz-x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707201508.GH88106@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Jul 07, 2020 at 04:15:08PM -0400, Peter Xu wrote:
+> On Tue, Jul 07, 2020 at 12:56:58PM -0700, Sean Christopherson wrote:
+> > > > It's a single line of code, and there's more than one
+> > > > "shouldn't" in the above.
+> > > 
+> > > If you want, I can both set it and add the comment.  Thanks,
+> > 
+> > Why bother with the comment?  It'd be wrong in the sense that the as_id is
+> > always valid/accurate, even if npages == 0.
+> 
+> Sorry I'm confused.. when npages==0, why as_id field is meaningful?  Even if
+> the id field is meaningless after the slot is successfully removed, or am I
+> wrong?
+> 
+> My understanding is that after your dynamic slot work, we'll only have at most
+> one extra memslot that was just removed, and that slot should be meaningless as
+> a whole.  Feel free to correct me.
 
-	Please consider pulling,
-
-Best regards,
-
-- Arnaldo
-
-The following changes since commit cdd3bb54332f82295ed90cd0c09c78cd0c0ee822:
-
-  Merge tag 'm68knommu-for-v5.8-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu (2020-07-02 22:56:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-07-07
-
-for you to fetch changes up to bee9ca1c8a237ca178f281062bf162637071ab04:
-
-  perf report TUI: Remove needless 'dummy' event from menu (2020-07-06 09:24:02 -0300)
-
-----------------------------------------------------------------
-Second batch of perf tooling fixes for v5.8:
-
-- Intel PT fixes for PEBS-via-PT with registers.
-
-- Fixes for Intel PT python based GUI.
-
-- Avoid duplicated sideband events with Intel PT in system wide tracing.
-
-- Remove needless 'dummy' event from TUI menu, used when synthesizing
-  meta data events for pre-existing processes.
-
-- Fix corner case segfault when pressing enter in a screen without
-  entries in the TUI for report/top.
-
-- Fixes for time stamp handling in libtraceevent.
-
-- Explicitly set utf-8 encoding in perf flamegraph.
-
-- Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy',
-  silencing perf build warning.
-
-Adrian Hunter (9):
-      perf scripts python: export-to-postgresql.py: Fix struct.pack() int argument
-      perf record: Fix duplicated sideband events with Intel PT system wide tracing
-      perf scripts python: exported-sql-viewer.py: Fix unexpanded 'Find' result
-      perf scripts python: exported-sql-viewer.py: Fix zero id in call graph 'Find' result
-      perf scripts python: exported-sql-viewer.py: Fix zero id in call tree 'Find' result
-      perf scripts python: exported-sql-viewer.py: Fix time chart call tree
-      perf intel-pt: Fix recording PEBS-via-PT with registers
-      perf intel-pt: Fix displaying PEBS-via-PT with registers
-      perf intel-pt: Fix PEBS sample for XMM registers
-
-Andreas Gerstmayr (1):
-      perf flamegraph: Explicitly set utf-8 encoding
-
-Arnaldo Carvalho de Melo (3):
-      Merge remote-tracking branch 'torvalds/master' into perf/urgent
-      tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'
-      perf report TUI: Remove needless 'dummy' event from menu
-
-Steven Rostedt (Red Hat) (1):
-      tools lib traceevent: Add API to read time information from kbuffer
-
-Tom Zanussi (1):
-      tools lib traceevent: Add proper KBUFFER_TYPE_TIME_STAMP handling
-
-Wei Li (1):
-      perf report TUI: Fix segmentation fault in perf_evsel__hists_browse()
-
- tools/arch/x86/lib/memcpy_64.S                    |  4 +++
- tools/lib/traceevent/kbuffer-parse.c              | 43 +++++++++++++++++++----
- tools/lib/traceevent/kbuffer.h                    |  2 ++
- tools/perf/arch/x86/util/intel-pt.c               |  1 +
- tools/perf/builtin-record.c                       | 18 +++++-----
- tools/perf/builtin-script.c                       |  2 +-
- tools/perf/scripts/python/export-to-postgresql.py |  2 +-
- tools/perf/scripts/python/exported-sql-viewer.py  | 11 ++++--
- tools/perf/scripts/python/flamegraph.py           |  8 +++--
- tools/perf/ui/browsers/hists.c                    | 36 +++++++++++++++----
- tools/perf/util/evlist.c                          | 12 +++++++
- tools/perf/util/evlist.h                          |  1 +
- tools/perf/util/evsel.c                           | 12 ++-----
- tools/perf/util/evsel.h                           |  6 ++++
- tools/perf/util/intel-pt.c                        |  5 +--
- 15 files changed, 123 insertions(+), 40 deletions(-)
+Your understanding is correct.  What I'm saying is that if something goes
+awry and the memslots need to be debugged, having accurate info for that one
+defunct memslot could be helpful, if only to not confuse a future debugger
+that doesn't fully understand memslots or address spaces.  Sure, it could be
+manually added back in for debug, but it's literally a single line of code
+to carry and it avoids the need for a special comment.
