@@ -2,154 +2,124 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B377C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 593D2207CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135448;
-	bh=ARQn63/cA+sXajjk2N9qQFRbaVwFQixHf4gcjaprjcM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3EyTJ6J3GYZLn+URSCUy7gF/BmQZ4EpOPxTSvbXycpxvZccxI1cdsVzleBeOrWo7
-	 zMqwqeTIUK5mWxTdIoK+4VEx50tWFgy7Hr3tX/9enBPx/C5pPw7YAyWJTiofNZv/O3
-	 SeUoB+BjVBaVBN8NVHR/u7UNRxKQLlurGYqXdx78=
+	by mail.kernel.org (Postfix) with ESMTP id 576382078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhKd6Ea+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgGGPYH (ORCPT
+        id S1730045AbgGGPYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728784AbgGGPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729353AbgGGPYD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:24:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B772078D;
-        Tue,  7 Jul 2020 15:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135442;
-        bh=ARQn63/cA+sXajjk2N9qQFRbaVwFQixHf4gcjaprjcM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QmQefiMoWvw1P3MYmBIHiBOdvzMjIFw1yOBpYARR+O4AMZ7NwdRx0P/awzaniYVST
-         74RSnrFZoEvQGmin4r2s0dzvFxVfSk4HTqLV3gw/Fp+YuUrkSex2XR9jmYaZ3xxD8Q
-         o8OMYOS827n1d59ocbwwBNnNrk7xD8vtmGI2SuBI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Glauber Costa <glauber@scylladb.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 025/112] mm/slub: fix stack overruns with SLUB_STATS
-Date:   Tue,  7 Jul 2020 17:16:30 +0200
-Message-Id: <20200707145802.186777620@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
-References: <20200707145800.925304888@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B41C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:24:03 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 80so38478917qko.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:24:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Txgzoid44mqUrO9velpnvNnz2jII+44h3kdWBj9Cc4=;
+        b=DhKd6Ea+KrKdh3mxPFxa58dg9l3ChgyupBfwMp6hpUaKFKyTmjRsMo9nBZYfcGRz+E
+         RNnS00Snbrv9MRHdVkLMxAr3D4nQCFXxCZEdS0Au2PYimd2d9l0cyT0gij1BO+CuH2ms
+         PLEtRAafi8TyWezJn8Rt6xLQQ0vwZUZF1T+JpURMgO1AUUp6bNUf9mTmr7YgZ6wdw1Lv
+         EfDpvFqSCcnTJtlNskKECRHBaC8pHDhMmErXmMPxlfM99Ezh82KTZZnJR3hXZyweB8Cf
+         CUHYjR+QOLll2iVMY6cH6H2Tibx+OYd3ql4ciOg2spcnO+c7LfUc4H5bKbiV8jFISjOZ
+         ZI8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Txgzoid44mqUrO9velpnvNnz2jII+44h3kdWBj9Cc4=;
+        b=WEDpgwkN3HuD4Ksc/EXkB5z/GR+nmazGsDg1LLFI4PJNU/4N54DTa3GnMoro0JQ7OJ
+         RgXCp5eTulN5ZqbMqy+BQpFSBcoCJ4xkvgP4ycf+dUqe/F/TNPnvnuVL+ifmdXkolkOl
+         sh1dHDMiQMFahFzD672QcMIlmCKf0fmDF7pNUJgLTfTS/fkZq42Oc73OhJwYczZ+1FAF
+         OiGNWOKpwoHpAQPc2139RJbZUbiFW+zhGrat2ZqNOvvudkQXo8xSImjoojNYwREoYLQ0
+         AK9zMsfojQ2kySuNjoyXQ4ybHPngz1zA5/xxKBpM1dgd8M8PoQ/NKPTAb50O6fQIauHO
+         I+0A==
+X-Gm-Message-State: AOAM532d8jTBKarHDUaF2t3/BsHznjZBNzGdkfkoNdhcQZMzB65BURAi
+        96Dk18FppdhhNZAzDOXJugIpwck2qRwbPCqH718=
+X-Google-Smtp-Source: ABdhPJwbplgzxlBYHXfTN2xECGmsIRTvhHTgN5d35KPNchNTQmeaGxVUXVAUD6N02REyY+wBPKN9gY1hZ/mjUn/jjVI=
+X-Received: by 2002:a37:4289:: with SMTP id p131mr22832369qka.28.1594135442792;
+ Tue, 07 Jul 2020 08:24:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+ <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com> <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
+In-Reply-To: <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Tue, 7 Jul 2020 18:23:46 +0300
+Message-ID: <CAOJsxLFnY=4v6UQigyiZKTMTQXKakVOKf6KA+bCkMe-XVY6sqA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial objects
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+Hi!
 
-[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
+(Sorry for the delay, I missed your response.)
 
-There is no need to copy SLUB_STATS items from root memcg cache to new
-memcg cache copies.  Doing so could result in stack overruns because the
-store function only accepts 0 to clear the stat and returns an error for
-everything else while the show method would print out the whole stat.
+On Fri, Jul 3, 2020 at 12:38 PM xunlei <xlpang@linux.alibaba.com> wrote:
+>
+> On 2020/7/2 PM 7:59, Pekka Enberg wrote:
+> > On Thu, Jul 2, 2020 at 11:32 AM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
+> >> The node list_lock in count_partial() spend long time iterating
+> >> in case of large amount of partial page lists, which can cause
+> >> thunder herd effect to the list_lock contention, e.g. it cause
+> >> business response-time jitters when accessing "/proc/slabinfo"
+> >> in our production environments.
+> >
+> > Would you have any numbers to share to quantify this jitter? I have no
+>
+> We have HSF RT(High-speed Service Framework Response-Time) monitors, the
+> RT figures fluctuated randomly, then we deployed a tool detecting "irq
+> off" and "preempt off" to dump the culprit's calltrace, capturing the
+> list_lock cost up to 100ms with irq off issued by "ss", this also caused
+> network timeouts.
 
-Then, the mismatch of the lengths returns from show and store methods
-happens in memcg_propagate_slab_attrs():
+Thanks for the follow up. This sounds like a good enough motivation
+for this patch, but please include it in the changelog.
 
-	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-		buf = mbuf;
+> > objections to this approach, but I think the original design
+> > deliberately made reading "/proc/slabinfo" more expensive to avoid
+> > atomic operations in the allocation/deallocation paths. It would be
+> > good to understand what is the gain of this approach before we switch
+> > to it. Maybe even run some slab-related benchmark (not sure if there's
+> > something better than hackbench these days) to see if the overhead of
+> > this approach shows up.
+>
+> I thought that before, but most atomic operations are serialized by the
+> list_lock. Another possible way is to hold list_lock in __slab_free(),
+> then these two counters can be changed from atomic to long.
+>
+> I also have no idea what's the standard SLUB benchmark for the
+> regression test, any specific suggestion?
 
-max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
-in show_stat() later where a bounch of sprintf() would overrun the stack
-variable.  Fix it by always allocating a page of buffer to be used in
-show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+I don't know what people use these days. When I did benchmarking in
+the past, hackbench and netperf were known to be slab-allocation
+intensive macro-benchmarks. Christoph also had some SLUB
+micro-benchmarks, but I don't think we ever merged them into the tree.
 
-  # echo 1 > /sys/kernel/slab/fs_cache/shrink
-  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
-  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
-
-  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    number+0x421/0x6e0
-    vsnprintf+0x451/0x8e0
-    sprintf+0x9e/0xd0
-    show_stat+0x124/0x1d0
-    alloc_slowpath_show+0x13/0x20
-    __kmem_cache_create+0x47a/0x6b0
-
-  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
-   process_one_work+0x0/0xb90
-
-  this frame has 1 object:
-   [32, 72) 'lockdep_map'
-
-  Memory state around the buggy address:
-   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
-                                                         ^
-   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    __kmem_cache_create+0x6ac/0x6b0
-
-Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Glauber Costa <glauber@scylladb.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 63f372366ec59..660f4324c0972 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5681,7 +5681,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
- 		 */
- 		if (buffer)
- 			buf = buffer;
--		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-+		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
-+			 !IS_ENABLED(CONFIG_SLUB_STATS))
- 			buf = mbuf;
- 		else {
- 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
--- 
-2.25.1
-
-
-
+- Pekka
