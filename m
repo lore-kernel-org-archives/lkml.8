@@ -2,60 +2,61 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52AF22073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6E12073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E5Bv52U3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LafhCb4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgGGX7D (ORCPT
+        id S1729446AbgGGX7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        Tue, 7 Jul 2020 19:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgGGX7C (ORCPT
+        with ESMTP id S1728673AbgGGX7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 19:59:02 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD0CC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 16:59:02 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a14so14553355pfi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 16:59:02 -0700 (PDT)
+        Tue, 7 Jul 2020 19:59:41 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6578DC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 16:59:41 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so20780973pgc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 16:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=rdv9aWYxdWzi7YuZEHxXGYFHP62AjpgpR6iHCVdleuI=;
-        b=E5Bv52U3XPTKQk/JUCHmdsxbrjEBV7kFdiIQaCyIgOqHSS133VrkT0uweCNwnEouhB
-         D6ChoBGorNNXQRd5vuzzcx1j8GUi9ZQpXJ/p70YeFpe/j26iafcL6ByrwDGUqHuT5A/I
-         RFDzv7/AV7eJ4KbBcjAjcMhpYwiZT3d6/TEnI=
+        bh=t+MUHlMV05Venpi+dxgNFy9m2mM7Us7wpJwUgu+0RIA=;
+        b=LafhCb4tq/+15NiiNOG2BKxCpeSoxaozRMft+310cV24Ytgchd8f5pyzQOSHeWZXfw
+         sY1Dm+QXQug+61+HPKC9CsVVEyxHf9zqWNxuuTHnNPhg66oQiL6GpDh7ADEmoCmMSf41
+         2+4zCqnrVxslrHZBmUrwZXf+GBK3TOSDNm1TQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rdv9aWYxdWzi7YuZEHxXGYFHP62AjpgpR6iHCVdleuI=;
-        b=rdaAIHGqBn84SR0Oz8rLeTWAikn0EMmz/IlzIPwn97b85me/wYJ7zAANdRasUzl9l4
-         Dn6WL3+Nq+LHbudcoXcTL4npPKuiJExZs7KPTqFQRVvhA90Rws58qS5OZ5h5l3AkKBDY
-         50TL9zaa+rdLlu9cNvfdUoGTFuTd5Dzb+cKEZxxMMaoSXg7GaAXLnhcQEc93dqAl1XgD
-         siXiKXLP0bXZZ3Im5RBGfjSXTz5CJ/lk2eVwYou4dBtSV2LLM51zfR6hV6zTqh8JPj9H
-         EtsVtvF5uRlypVwkYHfB/gwnwR4ORvLUIPfSZP5YF28nxePZzjYD+cYuey7IekAG2uwS
-         Pdrg==
-X-Gm-Message-State: AOAM530D2oOLRpB8ryx+rteDPZjfp/bsng7UKuUOAdn9pBC8KUj71Q/d
-        QhISe4Y86HFAMIOpmC6OKLkLHQ==
-X-Google-Smtp-Source: ABdhPJzYvJrtZ8JwyO03TQIq0tpFYVl2WHcKj9p5wk7nKZXNGQu8Fct93qp7eRhs4GS/cWugEjuxmw==
-X-Received: by 2002:a62:404:: with SMTP id 4mr53377463pfe.133.1594166341548;
-        Tue, 07 Jul 2020 16:59:01 -0700 (PDT)
+        bh=t+MUHlMV05Venpi+dxgNFy9m2mM7Us7wpJwUgu+0RIA=;
+        b=NkYXtsq92mukwaoL/hAxF4+0B7dvJEIHkGe9p2DceJ5jhLvAD7S1ii80wOkMA0F8xk
+         9oBu/OcxKC6LAcF2w0sWE9ukL6yni8t8+bPWOhNSyHx8Q/VV8Bc5Wwf36UNGfTGlaZfj
+         5cicjiOvmgzNabeegVY5ccwTC/Ymz1OCsC5dLJ3CZdvWHpRwPH3uB/wNjDOJA2bcFk0y
+         OnOeHaaSfZjhgBzeU8+ytqjuDJ80IIHjBAV+Eky8M+jz4+z5jyhhinVGJaId1ESCXo6h
+         8/+vMVYopY/r5/CZG7ju7pPKmNIg9jLYP1Vg492ycK00SX9QjAiZouKacmuZn2G/xFYd
+         sQeQ==
+X-Gm-Message-State: AOAM530taVAJDqV8RmILg17xCU1A20gBTBuD17vEO7jTqZ4h97MyOgzO
+        mGkCfuDAmCC/nlfxIEenML2lVQ==
+X-Google-Smtp-Source: ABdhPJxrg7MIOsckToNcEU8cl8R/PG88U4PcKuHFAM793HgSei/rQl//+UCXuWhNnVDpB4swbIRxQw==
+X-Received: by 2002:aa7:8651:: with SMTP id a17mr44429243pfo.48.1594166381010;
+        Tue, 07 Jul 2020 16:59:41 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w123sm15793025pfd.2.2020.07.07.16.59.00
+        by smtp.gmail.com with ESMTPSA id 66sm10992837pfg.63.2020.07.07.16.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 16:59:00 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 16:58:59 -0700
+        Tue, 07 Jul 2020 16:59:40 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 16:59:39 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Scott Branden <scott.branden@broadcom.com>
 Cc:     Luis Chamberlain <mcgrof@kernel.org>,
@@ -79,26 +80,30 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Andy Gross <agross@kernel.org>,
         linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v10 3/9] firmware: add request_partial_firmware_into_buf
-Message-ID: <202007071657.55C2CFA57@keescook>
+Subject: Re: [PATCH v10 4/9] test_firmware: add partial read support for
+ request_firmware_into_buf
+Message-ID: <202007071659.38721F7@keescook>
 References: <20200706232309.12010-1-scott.branden@broadcom.com>
- <20200706232309.12010-4-scott.branden@broadcom.com>
+ <20200706232309.12010-5-scott.branden@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706232309.12010-4-scott.branden@broadcom.com>
+In-Reply-To: <20200706232309.12010-5-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:23:03PM -0700, Scott Branden wrote:
-> Add request_partial_firmware_into_buf to allow for portions
-> of firmware file to be read into a buffer.  Necessary where firmware
-> needs to be loaded in portions from file in memory constrained systems.
+On Mon, Jul 06, 2020 at 04:23:04PM -0700, Scott Branden wrote:
+> Add additional hooks to test_firmware to pass in support
+> for partial file read using request_firmware_into_buf.
+> buf_size: size of buffer to request firmware into
+> partial: indicates that a partial file request is being made
+> file_offset: to indicate offset into file to request
+> 
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
-Just tear out the differing "id" and just use FW_OPT_PARTIAL and I think
-if Luis is happy, you're all set.
+I am a fan of tests. :) If Luis gives an Ack here, you're good.
 
 -- 
 Kees Cook
