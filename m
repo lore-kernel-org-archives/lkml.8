@@ -7,119 +7,101 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B777C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E101920663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4AF20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CTvNoaNi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIO4SkjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgGGPgX (ORCPT
+        id S1728598AbgGGPhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:36:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54540 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgGGPgV (ORCPT
+        Tue, 7 Jul 2020 11:37:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27060 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727079AbgGGPhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:36:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067Fa0oT026459;
-        Tue, 7 Jul 2020 10:36:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594136160;
-        bh=d4DsmzHbKkNBcX32YjQ2+lr3RY6d1aC3mMFb52eDm+w=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=CTvNoaNifJPJM/EL3sOYzRi2Usf370h3LDS6sZDfNMDq9Gh5xhBcmB7h1j3WEiVLH
-         laRqOJq16wutyTEZ26eHGrGQhMTDc76Fqw/g9Ci9CKZIBamNyzb8OX8JDveTvaQBzr
-         aj78BHCiJUVbWqtFGjSkIOVjw3b20g1znk2ojxOg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067Fa0Fc019368
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jul 2020 10:36:00 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
- 2020 10:36:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 7 Jul 2020 10:36:00 -0500
-Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067Fa0sW089681;
-        Tue, 7 Jul 2020 10:36:00 -0500
-Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
-From:   Dan Murphy <dmurphy@ti.com>
-To:     Pavel Machek <pavel@ucw.cz>, <marek.behun@nic.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200704124729.GA20088@amd> <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
-Message-ID: <a21e8389-ba60-c341-d7bd-a0b166084be6@ti.com>
-Date:   Tue, 7 Jul 2020 10:36:00 -0500
+        Tue, 7 Jul 2020 11:37:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594136241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8SdgB4saJnCjRdo/oh+TvX5LAU++LqcRafgEBY2mxVo=;
+        b=jIO4SkjIV/xPCakutcWYTGumaFN5TV9ba7iUChHQQKgHgWXGUChAUXBsjVtsG6i+aiZf4V
+        dYP8zrdxAEcZjkGviBaI+sIH+IC85CcfnC9VKXUwHELaYKB1O0/jX6a329hNy17S1AFrC4
+        GL8x+aOrvlu4LgzeXtCsdvmp2RLbZdU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-0q6c-uy_P9Ois5YIwXilvw-1; Tue, 07 Jul 2020 11:37:20 -0400
+X-MC-Unique: 0q6c-uy_P9Ois5YIwXilvw-1
+Received: by mail-ej1-f72.google.com with SMTP id c16so39798753ejb.22
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:37:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8SdgB4saJnCjRdo/oh+TvX5LAU++LqcRafgEBY2mxVo=;
+        b=VMvvDuXgEMQbBzihrY7oFcUxaWkBfQLzO7iu3YIjxcZ78Wt1MMq1g3nTutLwkFH5BU
+         Qv9sfrVpOWJ7T9Gtb3QfRutjH47nCdoBSG3u2BbFQqvpQdsnWFLt74oSCkZRKFGUWpcy
+         qriQH04QC3NzWhOqEL+B3R6KC9jWOzgdXXAoxSlIxvWpNFG7wj4CNY9bXPGYtxp7vMvT
+         eyOHyYvHqNwO5rA20TvOiuG7JxdpALdJRIwtWLdrHatjLPE4iK0owWyDNMTFHlH5TWki
+         ixyIQeaBSAthTAjQu2VJLftOMo9kGZVfBwA5DwVkqIZBtZEqnsyhMDjwoU7zNjp0u7S0
+         JFCw==
+X-Gm-Message-State: AOAM532Jx7lL/FakZVoYGLZAGcNAOF9lkprafOx0cGE4rK31RTXLmZkd
+        hMOWeGbabJm646KiZH8iMjpYhCLQ1J8WzUKZNlGoU9SBUcgJ7c9UYiC020juN2U5lVZ69dl/vy2
+        UTt4HXwnZIAZ6RONQE+9SMuV/
+X-Received: by 2002:a17:906:3787:: with SMTP id n7mr46219503ejc.551.1594136238593;
+        Tue, 07 Jul 2020 08:37:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+9cgMMpParXneUmMGaXdYI1xVfHrHMt12BKnlWwkFoZypUOBN6lHuVORzlZx4jItMWSKaUA==
+X-Received: by 2002:a17:906:3787:: with SMTP id n7mr46219487ejc.551.1594136238383;
+        Tue, 07 Jul 2020 08:37:18 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id u18sm25891090edx.34.2020.07.07.08.37.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 08:37:17 -0700 (PDT)
+Subject: Re: [PATCH v2 0/8] virt: vbox: Add support for the new
+ VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200623142401.3742-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1cbeeac9-650b-fc6a-9d2d-a5dc26ce1a45@redhat.com>
+Date:   Tue, 7 Jul 2020 17:37:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200623142401.3742-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+Hi Arnd,
 
-On 7/6/20 7:31 AM, Dan Murphy wrote:
-> Pavel
->
-> On 7/4/20 7:47 AM, Pavel Machek wrote:
->> Hi!
->>
->>> This is the multi color LED framework. This framework presents 
->>> clustered
->>> colored LEDs into an array and allows the user space to adjust the 
->>> brightness
->>> of the cluster using a single file write.  The individual colored LEDs
->>> intensities are controlled via a single file that is an array of LEDs
->>>
->>> Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
->>> Added update to the u8500_defconfig
->> Marek, would you be willing to look over this series?
->>
->> Dan, can we please get it in the order
->>
->> 1) fixes first
->>
->> 2) changes needed for multicolor but not depending on dt acks
->>
->> 3) dt changes
->>
->> 4) rest?
->>
->> This is the order it should have been in the first place, and I'd like
->> to get fixes applied, and perhaps some of the preparation.
->
-> This will depend on if there are comments.  If I have to push a v30 
-> then I will reorder.
->
-> If not then there would be no reason to re-order these.
->
-FYI I just reordered these locally and the fixes patches applied cleanly 
-to your for-next branch and the MC FW patches applied cleanly on top of 
-those.
+On 6/23/20 4:23 PM, Hans de Goede wrote:
+> Hi All,
+> 
+> Here is v2 of my vboxguest driver patch-set adding support for the
+> new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl which is necessary to
+> make guest resizing work with the new(ish) VMSVGA emulation in vbox +
+> some other small fixes.
+> 
+> The only change since v2 is rate-limiting the error-logging in:
+> [PATCH v2 7/8] virt: vbox: Log unknown ioctl requests as error
 
-So you should be able to pull in the fixes with no dependency on the MC 
-FW patches.  If you can apply the fixes cleanly then if there are 
-conflicts with the MC FW patches then I will fix those as well.
+What is the status of this series?   I've addressed the one review
+remark you had on v1 of this series and it would be nice to
+get it upstream for the next cycle.
 
-Dan
+Regards,
 
+Hans
 
-> Dan
->
->
