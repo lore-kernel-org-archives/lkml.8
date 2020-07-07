@@ -6,81 +6,180 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC47C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE98D207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0753D206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgGGMgX (ORCPT
+        id S1727989AbgGGMgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:36:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7269 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725944AbgGGMgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:36:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A32FFF6769E724F418DA;
-        Tue,  7 Jul 2020 20:36:18 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.214) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 7 Jul 2020
- 20:36:11 +0800
-Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
- tmpfile
-To:     Richard Weinberger <richard@nod.at>
-CC:     Richard Weinberger <richard.weinberger@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        yi zhang <yi.zhang@huawei.com>
-References: <20200701112643.726986-1-chengzhihao1@huawei.com>
- <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
- <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
- <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <963fa5c8-414f-783f-871e-47e751b54d87@huawei.com>
-Date:   Tue, 7 Jul 2020 20:36:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Jul 2020 08:36:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:46300 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgGGMgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 08:36:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7763D1FB;
+        Tue,  7 Jul 2020 05:36:45 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11C433F71E;
+        Tue,  7 Jul 2020 05:36:42 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 13:36:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT
+ default boost value
+Message-ID: <20200707123640.lahojmq2s4byhkhl@e107158-lin.cambridge.arm.com>
+References: <20200706142839.26629-1-qais.yousef@arm.com>
+ <20200706142839.26629-2-qais.yousef@arm.com>
+ <jhj8sfw8wzk.mognet@arm.com>
+ <20200707093447.4t6eqjy4fkt747fo@e107158-lin.cambridge.arm.com>
+ <jhj36638suv.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.214]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <jhj36638suv.mognet@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/7/7 20:09, Richard Weinberger 写道:
-> ----- Ursprüngliche Mail -----
->> Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix
->> O_TMPFILE corner case in ubifs_link()") wanted to fix.
->> I think orphan area is used to remind filesystem don't forget to delete
->> inodes (whose nlink is 0) in next unclean rebooting. Generally, the file
->> system is not corrupted caused by replaying orphan nodes.
->> Ralph reported a filesystem corruption in combination with overlayfs.
->> Can you tell me the details about that problem? Thanks.
-> On my test bed I didn't see a fs corruption, what I saw was a failing orphan
-> self test while playing with O_TMPFILE and linkat().
-Do we have a reproducer, or can I get the fail testcase? Is it a xfstest 
-case?
->
-> When you create a tmpfile it has a link count of 0 and an orphan is
-> installed. Such that the tmpfile is gone after a reboot but you can
-> still use it prior to that.
-> By using linkat() you can raise the link counter to 1 again.
-> Thus, the orphan needs to be removed.
-> This is pattern overlayfs uses a lot.
->
-> Since UBIFS never supported raising the link counter from 0 to 1
-> we have many corner cases and fixing all these turned out into a nightmare.
-> ...as you can see from the amount broken patches from me :-(.
->
-> Thanks,
-> //richard
->
-> .
+On 07/07/20 12:30, Valentin Schneider wrote:
+> 
+> On 07/07/20 10:34, Qais Yousef wrote:
+> > On 07/06/20 16:49, Valentin Schneider wrote:
+> >>
+> >> On 06/07/20 15:28, Qais Yousef wrote:
+> >> > CC: linux-fsdevel@vger.kernel.org
+> >> > ---
+> >> >
+> >> > Peter
+> >> >
+> >> > I didn't do the
+> >> >
+> >> >       read_lock(&taslist_lock);
+> >> >       smp_mb__after_spinlock();
+> >> >       read_unlock(&tasklist_lock);
+> >> >
+> >> > dance you suggested on IRC as it didn't seem necessary. But maybe I missed
+> >> > something.
+> >> >
+> >>
+> >> So the annoying bit with just uclamp_fork() is that it happens *before* the
+> >> task is appended to the tasklist. This means without too much care we
+> >> would have (if we'd do a sync at uclamp_fork()):
+> >>
+> >>   CPU0 (sysctl write)                                CPU1 (concurrent forker)
+> >>
+> >>                                                        copy_process()
+> >>                                                          uclamp_fork()
+> >>                                                            p.uclamp_min = state
+> >>     state = foo
+> >>
+> >>     for_each_process_thread(p, t)
+> >>       update_state(t);
+> >>                                                          list_add(p)
+> >>
+> >> i.e. that newly forked process would entirely sidestep the update. Now,
+> >> with Peter's suggested approach we can be in a much better situation. If we
+> >> have this in the sysctl update:
+> >>
+> >>   state = foo;
+> >>
+> >>   read_lock(&taslist_lock);
+> >>   smp_mb__after_spinlock();
+> >>   read_unlock(&tasklist_lock);
+> >>
+> >>   for_each_process_thread(p, t)
+> >>     update_state(t);
+> >>
+> >> While having this in the fork:
+> >>
+> >>   write_lock(&tasklist_lock);
+> >>   list_add(p);
+> >>   write_unlock(&tasklist_lock);
+> >>
+> >>   sched_post_fork(p); // state re-read here; probably wants an mb first
+> >>
+> >> Then we can no longer miss an update. If the forked p doesn't see the new
+> >> value, it *must* have been added to the tasklist before the updater loops
+> >> over it, so the loop will catch it. If it sees the new value, we're done.
+> >
+> > uclamp_fork() has nothing to do with the race. If copy_process() duplicates the
+> > task_struct of an RT task, it'll copy the old value.
+> >
+> 
+> Quite so; my point was if we were to use uclamp_fork() as to re-read the value.
+> 
+> > I'd expect the newly introduced sched_post_fork() (also in copy_process() after
+> > the list update) to prevent this race altogether.
+> >
+> > Now we could end up with a problem if for_each_process_thread() doesn't see the
+> > newly forked task _after_ sched_post_fork(). Hence my question to Peter.
+> >
+> 
+> 
+> >>
+> >> AIUI, the above strategy doesn't require any use of RCU. The update_state()
+> >> and sched_post_fork() can race, but as per the above they should both be
+> >> writing the same value.
+> >
+> > for_each_process_thread() must be protected by either tasklist_lock or
+> > rcu_read_lock().
+> >
+> 
+> Right
+> 
+> > The other RCU logic I added is not to protect against the race above. I
+> > describe the other race condition in a comment.
+> 
+> I take it that's the one in uclamp_sync_util_min_rt_default()?
 
+Correct.
 
+> 
+> __setscheduler_uclamp() can't be preempted as we hold task_rq_lock(). It
+> can indeed race with the sync though, but again with the above suggested
+> setup it would either:
+> - see the old value, but be guaranteed to be iterated over later by the
+>   updater
+> - see the new value
 
+AFAIU rcu_read_lock() is light weight. So having the protection applied is more
+robust against future changes.
+
+> 
+> sched_post_fork() being preempted out is a bit more annoying, but what
+> prevents us from making that bit preempt-disabled?
+
+preempt_disable() is not friendly to RT and heavy handed approach IMO.
+
+> 
+> I have to point out I'm assuming here updaters are serialized, which does
+> seem to be see the case (cf. uclamp_mutex).
+
+Correct.
+
+Thanks
+
+--
+Qais Yousef
