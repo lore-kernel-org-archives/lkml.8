@@ -2,86 +2,108 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A489C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF23FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02BCF20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E97206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZkMiEYwE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="agDyytg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGGJrg (ORCPT
+        id S1728250AbgGGJru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
+        Tue, 7 Jul 2020 05:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728206AbgGGJre (ORCPT
+        with ESMTP id S1727850AbgGGJrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:47:34 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3C1C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 02:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+xhE09FSIbPBUcO2BhFd1zwZ423fLcZ/JnwL1A6q3qQ=; b=ZkMiEYwE0mC2aCwnAqI59DykQT
-        W8za/eywlDbaja6MUe6ygYX3We8vIJ5zBZbsYUml2MUcV03UCMbJU/MEF/KMhZA6HPtF/fY04LJ//
-        I01/ROLsmmhMxHbHaWl7zTSCtd2SUKKpESOiawAd1JD1BU0rSULNPjO7w6lHfkq2oHAMjU0ZItEFl
-        0y8QLTEjI+w4+jIN1cb8n0WJF6i7GGfEeEMLRHO6rNCLtYHEybMbf+PjXm9wpobPEP1U/OlfYM8BS
-        P6z+IhOjGcv9XQqFHJxScQ+U+XzKTgakmFX1SwXjZMQybCKu6ss09VXTmk+0MXFTs+Ck6xDaTmmUn
-        us4rn3bQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jskCA-0001OE-D3; Tue, 07 Jul 2020 09:47:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F9C2304B90;
-        Tue,  7 Jul 2020 11:47:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3711B213C912A; Tue,  7 Jul 2020 11:47:18 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 11:47:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        paul.gortmaker@windriver.com, valentin.schneider@arm.com
-Subject: Re: weird loadavg on idle machine post 5.7
-Message-ID: <20200707094718.GL4800@hirez.programming.kicks-ass.net>
-References: <20200702171548.GA11813@codemonkey.org.uk>
- <20200702213627.GF3183@techsingularity.net>
- <20200703090226.GV4800@hirez.programming.kicks-ass.net>
- <20200703104033.GK117543@hirez.programming.kicks-ass.net>
- <20200703205153.GA19901@codemonkey.org.uk>
- <20200706145952.GB597537@hirez.programming.kicks-ass.net>
- <20200707092004.jviycpvzb4l5ytiz@e107158-lin.cambridge.arm.com>
+        Tue, 7 Jul 2020 05:47:49 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C742C061755;
+        Tue,  7 Jul 2020 02:47:49 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1Hfp3KR1z9sDX;
+        Tue,  7 Jul 2020 19:47:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594115266;
+        bh=YKsHVWxqBB8l5sJnD398yJiZ8PFMtfVazI/na/4CzjU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=agDyytg74DH7zKhv2kmGzowyBcwZ0B3nD89ypnxODJf+QTbyyecneBfDxvTe0uZwZ
+         QxhCiAk3c7U8eQXzw4bWBS6yprhxADDNj19XMnXf+uPTBO7Kq2HPCPvsUG2jB94u2c
+         az7lJwVFFGFCrkn1dlEqB5Sq2asCneS8Skz7yiLhmlo1fUV+K5XdsVVGaKD3N8BHSM
+         CbuRI0GxYZT5wrJKKaSjCsDFTEk06RlFDRGdFFW6AKNLypYdGo+Vv+XzFScAnH4JcA
+         q4HzQK+xpG5p53QwBQQ5YdHNsxt9BROlP9HOTyQY/+AI8Y+jhUMqjJlZN3AMu3uLpJ
+         YOn35w7s03BQQ==
+Date:   Tue, 7 Jul 2020 19:47:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the
+ generic-ioremap tree
+Message-ID: <20200707194744.2b8380d0@canb.auug.org.au>
+In-Reply-To: <20200707083917.GA26906@lst.de>
+References: <20200707183035.56420aaa@canb.auug.org.au>
+        <20200707083917.GA26906@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707092004.jviycpvzb4l5ytiz@e107158-lin.cambridge.arm.com>
+Content-Type: multipart/signed; boundary="Sig_/HQhoNQMQLKex=AWG3X0i3kF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:20:05AM +0100, Qais Yousef wrote:
-> On 07/06/20 16:59, Peter Zijlstra wrote:
+--Sig_/HQhoNQMQLKex=AWG3X0i3kF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > +	if (!preempt && prev_state && prev_state == prev->state) {
-> 
-> I think the compiler won't optimize `prev_state == prev->state` out because of
-> the smp_mb__after_spinlock() which implies a compiler barrier. Still not sure
-> if it's worth making prev->state accesses a READ_ONCE()?
+Hi Christoph,
 
-task_struct::state is one of the very rare (and ancient) variables
-that's declared volatile.
+On Tue, 7 Jul 2020 10:39:17 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Jul 07, 2020 at 06:30:35PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Commit
+> >=20
+> >   2ee080ecf668 ("wip")
+> >=20
+> > is missing a Signed-off-by from its author and comitter.
+> >=20
+> > Not much of a commit message either :-) =20
+>=20
+> This commit should have never made it into the for-next tree, sorry.
+> Please drop it if you can - I'll fix it up ASAP.
 
-We should probably clean that up some day, but so far I've not attempted
-to do such a thing.
+No worries, I often fetch trees after finishing linux-next for the
+day (to save time the next day), so the tree I saw will not be used
+until tomorrow (plenty of time to be fixed up).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HQhoNQMQLKex=AWG3X0i3kF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ERMAACgkQAVBC80lX
+0Gxtsgf/YYYLXeD7A+LcX+t09gNU+6J2a9+gQeuMqYeBwXwCnVF2S1zZpHQMkzeH
+hkFG+nORbo70GlLViGOqP8t9f7EZxUfdN+rczYi6N9tupn4MVU11PKM1HDKYy6pz
+KxXbwy+UDWdaax/pEwBlPdjLNJhAbi40viDGfm1x3p5t5MinaJ8LDM07agkyz9Fr
+4w/WiktGOqOdb0Koqt4wHpwZPP+Gfbz6++I+/Uw003fx/w0J4aRhBE4Dwj18q1Uj
+XgaSIN9HGzbbXQKdS+icYcwg4ifFq/l7Rc+tQSMJY+SPDHnEOHDGC7Yh84uFNYWd
+EY3MrBl5m96AshM+M99Du7AiNY0Y/w==
+=ZCJf
+-----END PGP SIGNATURE-----
+
+--Sig_/HQhoNQMQLKex=AWG3X0i3kF--
