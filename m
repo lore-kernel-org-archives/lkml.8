@@ -2,107 +2,118 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF99C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD2172065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:50:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxAa+leS"
+	by mail.kernel.org (Postfix) with ESMTP id F2A4B20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgGGMuO (ORCPT
+        id S1728036AbgGGMvH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgGGMuN (ORCPT
+        Tue, 7 Jul 2020 08:51:07 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:48793 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgGGMvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:50:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6492C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:50:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so49694179ljv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4SwgAW+EG6tvCZIqxu3/JdX2TBmPRZ3QJRu9pLXvW98=;
-        b=IxAa+leSkBpoUh5Bq/NRPDMzIbc1ztNHK7Nt3NEW/4c5o/7sJR21qImZuPRUcTthg+
-         MelICmihE9tq7OeoCBCxGvGU87PkJ+3NDd2CeIrZ2eQvKrts3wfxg7P+Zy+2SKtZAF1c
-         pVjNDUTVxWkqk/LFvlBBHCLYetSAgkf7RQ3ZOBQQP64oJd4mXHwoN2jRLF4dzCm51/za
-         w9hmt0b2U3ZkovysI0KP+7NFKtJzOEj2OZ+s5FK1XDpGj3/CjOwesQJGHTYVxVUa8C7j
-         Zhgv1BsDH6wUwdwSAXGGypMbhKjoHNCAC67GrMOnYAc8d5jBQQBP4vE/5l2gLbu5QIRi
-         ZVOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4SwgAW+EG6tvCZIqxu3/JdX2TBmPRZ3QJRu9pLXvW98=;
-        b=hIYmcT7K1FCzsZJ4n83jaLI0dTF+1rSehpMgHy0lw+EwktG8gXMJJ29WX2ZELiP0tT
-         QdGp1qLNSCajzfIGQ+9KqqPOkZm2fg/QHgvST/5uu5q7+2TOwvCeKLHb3CoZO3XkyefH
-         s+5uHff2zwPqSCwAZiaQBeFL8v7/2T6aYQNcpMml3ugYpHod0hApkA2YVj7gYMid1lJN
-         RevtYUsg8UFhlVZUAPQDEfuO01+0pw7QTHX5+Gln1u4mg7F2C7jLu1KFnpNt0RzfNKbh
-         ea7bSidustv8Gx/AQ8ullnL8guD8a2i/K4ALDxG60pm8L1a4vd/kOEWb3kPzT9ZvGtGo
-         xcyA==
-X-Gm-Message-State: AOAM530UxpUVORh5XT0lgodW1nUM8n6W11mSztyY+p4Gi8c35CIGxor7
-        wk8ZVEcraQ6B9DPKi1HlnGqRy5U+mBNnU68H6q5uxQ==
-X-Google-Smtp-Source: ABdhPJwb40quVLTqVbxWUanPuFGtQykjLJsdQp6TTKdlw6gNizun/jdSZa0XI0eJCmX/F+MxnSVBrBxnftFaqvy1VKI=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr16143076ljg.100.1594126211220;
- Tue, 07 Jul 2020 05:50:11 -0700 (PDT)
+        Tue, 7 Jul 2020 08:51:07 -0400
+Received: from sogo7.sd4.0x35.net (sogo7.sd4.0x35.net [10.200.201.57])
+        (Authenticated sender: kerneldev@karsmulder.nl)
+        by relay11.mail.gandi.net (Postfix) with ESMTPA id 48642100005;
+        Tue,  7 Jul 2020 12:51:02 +0000 (UTC)
+From:   "Kars Mulder" <kerneldev@karsmulder.nl>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+Date:   Tue, 07 Jul 2020 14:51:02 +0200
+Cc:     "Pavel Machek" <pavel@denx.de>,
+        "David Laight" <David.Laight@ACULAB.COM>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
+        "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+        "Oliver Neukum" <oneukum@suse.com>
+To:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 MIME-Version: 1.0
-References: <20200626211026.513520-1-furquan@google.com>
-In-Reply-To: <20200626211026.513520-1-furquan@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:50:00 +0200
-Message-ID: <CACRpkdZoTs1WHhmJtu37DW=7WhGtThD5Am46K9LwR10EAxqNwA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Honor IRQ trigger type requested by the caller
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        akshu.agrawal@amd.com, adurbin@google.com,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <2eb7-5f046f80-f7-5cdcc200@136674391>
+Subject: =?utf-8?q?=5BPATCH?==?utf-8?q?_v2=5D?==?utf-8?q?_usb=3A?=
+ =?utf-8?q?_core=3A?= fix =?utf-8?q?quirks=5Fparam=5Fset=28=29?= writing to 
+ a const pointer
+User-Agent: SOGoMail 4.3.2
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:10 PM Furquan Shaikh <furquan@google.com> wrote:
+The function quirks_param_set() takes as argument a const char* pointer
+to the new value of the usbcore.quirks parameter. It then casts this
+pointer to a non-const char* pointer and passes it to the strsep()
+function, which overwrites the value.
 
-> This change drops the override in `amd_gpio_irq_set_type()` that
-> ignores the IRQ trigger type settings from the caller. The device
-> driver (caller) is in a better position to identify the right trigger
-> type for the device based on the usage as well as the information
-> exposed by the BIOS. There are instances where the device driver might
-> want to configure the trigger type differently in different modes. An
-> example of this is gpio-keys driver which configures IRQ type as
-> trigger on both edges (to identify assert and deassert events) when in
-> S0 and reconfigures the trigger type using the information provided by
-> the BIOS when going into suspend to ensure that the wake happens on
-> the required edge.
->
-> This override in `amd_gpio_irq_set_type()` prevents the caller from
-> being able to reconfigure trigger type once it is set either based on
-> ACPI information or the type used by the first caller for IRQ on a
-> given GPIO line.
->
-> Without this change, pen-insert gpio key (used by garaged stylus on a
-> Chromebook) works fine in S0 (i.e. insert and eject events are
-> correctly identified), however, BIOS configuration for wake on only
-> pen eject i.e. only-rising edge or only-falling edge is not honored.
->
-> With this change, it was verified that pen-insert gpio key behavior is
-> correct in both S0 and for wakeup from S3.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
+Fix this by creating a copy of the value using kstrdup() and letting
+that copy be written to by strsep().
 
-Patch applied.
+Fixes: 027bd6cafd9a ("usb: core: Add "quirks" parameter for usbcore")
+Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
 
-Yours,
-Linus Walleij
+---
+ drivers/usb/core/quirks.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index e0b77674869c..c96c50faccf7 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -25,17 +25,23 @@ static unsigned int quirk_count;
+ 
+ static char quirks_param[128];
+ 
+-static int quirks_param_set(const char *val, const struct kernel_param *kp)
++static int quirks_param_set(const char *value, const struct kernel_param *kp)
+ {
+-	char *p, *field;
++	char *val, *p, *field;
+ 	u16 vid, pid;
+ 	u32 flags;
+ 	size_t i;
+ 	int err;
+ 
++	val = kstrdup(value, GFP_KERNEL);
++	if (!val)
++		return -ENOMEM;
++
+ 	err = param_set_copystring(val, kp);
+-	if (err)
++	if (err) {
++		kfree(val);
+ 		return err;
++	}
+ 
+ 	mutex_lock(&quirk_mutex);
+ 
+@@ -60,10 +66,11 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 	if (!quirk_list) {
+ 		quirk_count = 0;
+ 		mutex_unlock(&quirk_mutex);
++		kfree(val);
+ 		return -ENOMEM;
+ 	}
+ 
+-	for (i = 0, p = (char *)val; p && *p;) {
++	for (i = 0, p = val; p && *p;) {
+ 		/* Each entry consists of VID:PID:flags */
+ 		field = strsep(&p, ":");
+ 		if (!field)
+@@ -144,6 +151,7 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 
+ unlock:
+ 	mutex_unlock(&quirk_mutex);
++	kfree(val);
+ 
+ 	return 0;
+ }
+-- 
+2.27.0
+
