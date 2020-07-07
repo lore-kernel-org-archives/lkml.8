@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E12C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC08C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132DA2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB4C206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J1XcyxDn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SG9DVu7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgGGKRU (ORCPT
+        id S1728263AbgGGKRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
+        Tue, 7 Jul 2020 06:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgGGKRG (ORCPT
+        with ESMTP id S1728152AbgGGKRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:17:06 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC01C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:05 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f18so45915033wml.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:05 -0700 (PDT)
+        Tue, 7 Jul 2020 06:17:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE88C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so36485675wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tfKAHOC4Bqa/g3TTN2zyTgayqsyKLptRGMeCLeLAzGA=;
-        b=J1XcyxDnRmpZz0W4IPrMVJKymtJ07od5/Ui2uKeAXQgpc0qotceonG0/oloTEdbH7s
-         h9+dfh0LSbVUcJW+pc/XyHocqcTsyqzJb8LmBvxq6MpxjTnaT9VZNdirDOfgB5bWoWDq
-         niIIONlBk6sA9+rBm5/Zf0rtNPutp2de6yaHctV6VNL88YoptrE7bzN9P2c95z9yX8TU
-         WwB1XVGi9t17KxFLcrnyiAgHFMMynYQSuE2RBzJTnvTVRfnVq3tEgvIXuDERBUvrzOkJ
-         JpljX451HY8DEy3VySwa2mAmhxKDg2TS61UqmnWH5Dn1LD8i/9kIhADrwvWC7PFYhZae
-         S8bg==
+        bh=MeJNmc8Tyj+Q0twt9zY+vng7Jbsk0DhIYimyC4Uuyj0=;
+        b=SG9DVu7fXCmkADEx1FB+YT3/QUV77NTc0vAi8Aq/OU5JY/5r0nXXfnJqgkyWhfpyGx
+         D/UhIe9t7HU7t8lZcbEWpiDr++OlOpU+kL/tqL3Eh1wNadJzD0au75fv1TBcsNZSNkKA
+         nOjCXy180Pi8mtF0+NoAX54Kixg2UaD63ENJKA1+YP8Ld65pqMeva44ZXpor7DWQd1ju
+         LqVE4zWDY7HKent37Y3VvP8l/uIBW/84nidbsrUq+OOIyYGQIAWbpqZUxcM+8jPgDwz+
+         kb+JOM5fpsZC42M0+bwu5CJuC0R7MS7KlmUfHMsPCjS5HD8CfYN6wAditT74bUOm4bkf
+         t3hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tfKAHOC4Bqa/g3TTN2zyTgayqsyKLptRGMeCLeLAzGA=;
-        b=DisTR3bd5GxsInsDogX7M2W9ebRjW5vbIo3hZoiq3FqvTqDRZJLiBpaPgYn2dHCJRp
-         8aa2HMU2/65qgVw0nx9dCr00pweXLNwoEYVxqJpelbsItcgzZDjnXJOwXyJYvjiQxzGz
-         3lWRBezSjEZajenIEwafmtjllQKqDuZ1k+DwB43EVLvjQ9pDTJgI8tNRRSotPOSbF61E
-         +1vz+G88nqocMwos/nUZ2sX6mOhKucfVcLMREFo0vyJDEE9ASag/Djs3GHEy/XuqR8Gi
-         0QIG9RcaPYAOlMmYGJxbdfPPKogtzttyFNne9f5Z33f5MnHSx3upOx3663PRyvohG9XA
-         l72A==
-X-Gm-Message-State: AOAM533qgbPG5D5LCg9kSONdzaC5kP80gAHRK2P79YPAzUg2mCWjKBZa
-        VM68ysEUehst0a0oQOk2I/miyw==
-X-Google-Smtp-Source: ABdhPJzZOEjZmejJdYRsgb4UUUE3sZTs8G1LEoJTOp7Viz61ZnkIYUsK9D/hnCyJv8g4p3iI/k5fcQ==
-X-Received: by 2002:a05:600c:2249:: with SMTP id a9mr3274840wmm.163.1594117024429;
-        Tue, 07 Jul 2020 03:17:04 -0700 (PDT)
+        bh=MeJNmc8Tyj+Q0twt9zY+vng7Jbsk0DhIYimyC4Uuyj0=;
+        b=Zx/HC2z7BrTCjYAT70zMs35mY+V8v6wUnAz/Qzc8Iof7Ib3MFAjMQgODxb+k25dA/e
+         F+66kKfC8rBA5TBG6qapxYWM8/VvVCqzByRVne7OYe1IxTl398wA8OV0r3YabvzUQEjX
+         YUbgcpgTVVAhT4xw3m6/lMErMusRBr3JWrSE7dC/s3LROfunG40pc/R2rGcccb1e2C+G
+         X+NPkGzOrITE5S4mhAf5aLKSeBFzkqrjbkVueV4+Fo2wLuqrtGBvoK2SPb2EtJs8k0Id
+         M+TPxePhS1HoHpEwIPXeC+zvDEpoi0CQGjFHeQEapg2n+RF1IDqVTUUqcF4lZue9zDHG
+         yVgQ==
+X-Gm-Message-State: AOAM533zi4JVD5qrxMSwl1of/i7qaeocpQBqQ5BYFdfw6HyGuabqa4qf
+        gRomOTWZHa2enXsXCdI0JsJXAQ==
+X-Google-Smtp-Source: ABdhPJxy1qhKfpuwCxgH8O9/dsEgy203Bk85YKuQEh58briez0Nc3pkRWpshwrxQBdavC6rVpap1eg==
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr53690649wrn.269.1594117026710;
+        Tue, 07 Jul 2020 03:17:06 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.03
+        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:17:03 -0700 (PDT)
+        Tue, 07 Jul 2020 03:17:06 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 13/28] ASoC: qcom: qdsp6: q6asm: Provide documentation for WMA 'codec_profile'
-Date:   Tue,  7 Jul 2020 11:16:27 +0100
-Message-Id: <20200707101642.1747944-14-lee.jones@linaro.org>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Seungwhan Youn <sw.youn@samsung.com>
+Subject: [PATCH 15/28] ASoC: samsung: spdif: Fix 3 misspelled struct properties
+Date:   Tue,  7 Jul 2020 11:16:29 +0100
+Message-Id: <20200707101642.1747944-16-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
 References: <20200707101642.1747944-1-lee.jones@linaro.org>
@@ -81,31 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When documenting structure properties, they must match the names exactly.
+
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/qcom/qdsp6/q6asm.c:924: warning: Function parameter or member 'codec_profile' not described in 'q6asm_open_write'
+ sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_clkcon' not described in 'samsung_spdif_info'
+ sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_con' not described in 'samsung_spdif_info'
+ sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_cstas' not described in 'samsung_spdif_info'
 
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Seungwhan Youn <sw.youn@samsung.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/qcom/qdsp6/q6asm.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/samsung/spdif.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index ae4b2cabdf2d6..58720b18fc8c8 100644
---- a/sound/soc/qcom/qdsp6/q6asm.c
-+++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -915,6 +915,7 @@ static int q6asm_ac_send_cmd_sync(struct audio_client *ac, struct apr_pkt *pkt)
-  *
-  * @ac: audio client pointer
-  * @format: audio sample format
-+ * @codec_profile: profile to use when WMA
-  * @bits_per_sample: bits per sample
-  *
-  * Return: Will be an negative value on error or zero on success
+diff --git a/sound/soc/samsung/spdif.c b/sound/soc/samsung/spdif.c
+index 759fc66443298..4ae7ff623b826 100644
+--- a/sound/soc/samsung/spdif.c
++++ b/sound/soc/samsung/spdif.c
+@@ -70,9 +70,9 @@
+  * @clk_rate: Current clock rate for calcurate ratio.
+  * @pclk: The peri-clock pointer for spdif master operation.
+  * @sclk: The source clock pointer for making sync signals.
+- * @save_clkcon: Backup clkcon reg. in suspend.
+- * @save_con: Backup con reg. in suspend.
+- * @save_cstas: Backup cstas reg. in suspend.
++ * @saved_clkcon: Backup clkcon reg. in suspend.
++ * @saved_con: Backup con reg. in suspend.
++ * @saved_cstas: Backup cstas reg. in suspend.
+  * @dma_playback: DMA information for playback channel.
+  */
+ struct samsung_spdif_info {
 -- 
 2.25.1
 
