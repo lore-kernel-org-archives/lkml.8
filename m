@@ -2,107 +2,168 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69198C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0348C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A06E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B0A2080D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="axtmKjqf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbZF9hTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgGGPvD (ORCPT
+        id S1728640AbgGGPvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
+        Tue, 7 Jul 2020 11:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgGGPvC (ORCPT
+        with ESMTP id S1728029AbgGGPvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:51:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B001C061755;
-        Tue,  7 Jul 2020 08:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=sKnrwpscRwRPBpUhlbtspTfx0oBw6mAir2Zy9BEVNbY=; b=axtmKjqfm+LW4fWv7U2f6Lrn13
-        2zgE82uA8OYJSX7OjWObeNsFa8krOfsiU170JEztNCnVohby5uiusNK/s6KIRKYTyCHCF4Fsk77xT
-        Wmo7YLmw5npBFWBMDvLAqFOP5b/M4M6bkQ8MEqe7UR2k1lSl5QLlwD2shEPa2P0R9+g55L4K3FOfz
-        J6nXUv/oybK8ijjdQOvvQI2PCEN4MMhuqxX64UQEv/kxHjKGnmANA7ZI+IjW6zy/mIka4/LPci3S3
-        o3EI1GRux/KJIMgfJq5gIXPHvyAd84hCxF9+rMjp/Opplr5hZFuLybZIgBsw1nMDTq6Vynfjd/nFR
-        aG+n3B3g==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsps4-0006Dy-Jz; Tue, 07 Jul 2020 15:51:01 +0000
-Subject: Re: [PATCH] thermal: netlink: Fix compilation error when CONFIG_NET=n
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200707090159.1018-1-daniel.lezcano@linaro.org>
- <66b4c589-48e0-8975-b3b1-79168e3ea5e4@infradead.org>
- <04a6904d-9220-9045-6816-12cf84781f4d@linaro.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6568ae82-32a3-7a9a-9bf0-15dd7805a1fd@infradead.org>
-Date:   Tue, 7 Jul 2020 08:50:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 11:51:15 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA378C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:51:15 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id o22so13640931pjw.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
+        b=qbZF9hTub3E6dJOMlijRiMiRkHYkFQubSYFp6P+VnStOU35ksLbT5c2olfLiJpXsF3
+         p3AHOCADz7BlPRcb5xlVfsDuFkpaWzroZytIxmWQMa1Tq9gUpWVZPukI1yqE2KFTHiA3
+         9YlWvV6iIbDdJ+BZAyuKLx1RPuPn/LEcUmBvsAMcz6jJ5yyWtgLEw10Q8wnhLwp1ZVgF
+         o4GGnZfpFXNrCeoFTPW5BteobP+ETyf4GPs6Ui4f/hVYa1npYd2Jb7cBEU2OssXqWPH4
+         auU0losOJLOMYxa1RdqPXWKkY62FkFHARI3LfbFiT0CpoTlE2LZsZ8/SQVRU7EUqTPAC
+         0DtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
+        b=pTU772vzKlcr+tfBjvDoBgyceQc4r6FUV3ipVL2ZEGSNOyMoG8/wJ2exEwwLX/Y3X7
+         McsPrAvI8K6SrG17oLrEYRI30UbbQ/IkOAmZxpiskhuUHShFRpRmPjTku1Nd1O3uBsZS
+         URbCgzzzwthmPYvYz5ayaN5AuMrb3qup4gYLnEqCJpQDorObaInmWcdtzASL90sVr72p
+         wCtYfRBWHRxU82AQ15oMHczd+5BkOSfeKKTjB65iK48F7qGQNODs5B7cmXDL3QgGfLUS
+         sRti1/h27sXhlhnVbVmgF/om51kFyufqodOXv5U1eHdLFVJvwVTyXdoqHf6L6NKZ4FRd
+         mcMA==
+X-Gm-Message-State: AOAM532+5npoq85qvRzkP3kDElQR37jSpioGqCco2pnOT1syg7GJlMx+
+        nh4/z3lIVzwXIahqClPTZ584/g==
+X-Google-Smtp-Source: ABdhPJzoBjROrVaJtp6nujXRaXTatw7gwLtR2zb8jqFckSgpuUCpME8ySKJl8GGYK6iDFTRo3tsWzA==
+X-Received: by 2002:a17:90a:a106:: with SMTP id s6mr5003560pjp.53.1594137075030;
+        Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id b10sm22289026pft.59.2020.07.07.08.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 08:51:14 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 08:51:07 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200707155107.GA3357035@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
+ <20200629232059.GA3787278@google.com>
 MIME-Version: 1.0
-In-Reply-To: <04a6904d-9220-9045-6816-12cf84781f4d@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629232059.GA3787278@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 8:49 AM, Daniel Lezcano wrote:
-> On 07/07/2020 17:47, Randy Dunlap wrote:
->> On 7/7/20 2:01 AM, Daniel Lezcano wrote:
->>> When the network is not configured, the netlink are disabled on all
->>> the system. The thermal framework assumed the netlink are always
->>> opt-in.
->>>
->>> Fix this by adding a Kconfig option for the netlink notification,
->>> defaulting to yes and depending on CONFIG_NET.
->>>
->>> As the change implies multiple stubs and in order to not pollute the
->>> internal thermal header, the thermal_nelink.h has been added and
->>> included in the thermal_core.h, so this one regain some kind of
->>> clarity.
->>>
->>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>> ---
->>>  drivers/thermal/Kconfig           | 10 ++++
->>>  drivers/thermal/Makefile          |  5 +-
->>>  drivers/thermal/thermal_core.h    | 20 +------
->>>  drivers/thermal/thermal_netlink.h | 98 +++++++++++++++++++++++++++++++
->>>  4 files changed, 114 insertions(+), 19 deletions(-)
->>>  create mode 100644 drivers/thermal/thermal_netlink.h
->>>
->>
->>
->> Hm, now I get this:
->>
->> ../drivers/thermal/thermal_helpers.c: In function ‘thermal_cdev_set_cur_state’:
->> ../drivers/thermal/thermal_helpers.c:182:2: error: implicit declaration of function ‘thermal_notify_cdev_update’; did you mean ‘thermal_notify_cdev_delete’? [-Werror=implicit-function-declaration]
->>   thermal_notify_cdev_update(cdev->id, target);
->>
->>
->> or should that call be to thermal_notify_cdev_state_update()?
+On Mon, Jun 29, 2020 at 04:20:59PM -0700, Sami Tolvanen wrote:
+> Hi Masahiro,
 > 
-> Ah right, the patch applies on top of the v4 which is not yet in
-> linux-next, I'm waiting for the kernelci loop result.
+> On Mon, Jun 29, 2020 at 01:56:19AM +0900, Masahiro Yamada wrote:
+> > I also got an error for
+> > ARCH=arm64 allyesconfig + CONFIG_LTO_CLANG=y
+> > 
+> > 
+> > 
+> > $ make ARCH=arm64 LLVM=1 LLVM_IAS=1
+> > CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+> > -j24
+> > 
+> >   ...
+> > 
+> >   GEN     .version
+> >   CHK     include/generated/compile.h
+> >   UPD     include/generated/compile.h
+> >   CC      init/version.o
+> >   AR      init/built-in.a
+> >   GEN     .tmp_initcalls.lds
+> >   GEN     .tmp_symversions.lds
+> >   LTO     vmlinux.o
+> >   MODPOST vmlinux.symvers
+> >   MODINFO modules.builtin.modinfo
+> >   GEN     modules.builtin
+> >   LD      .tmp_vmlinux.kallsyms1
+> > ld.lld: error: undefined symbol: __compiletime_assert_905
+> > >>> referenced by irqbypass.c
+> > >>>               vmlinux.o:(jeq_imm)
+> > make: *** [Makefile:1161: vmlinux] Error 1
+> 
+> I can reproduce this with ToT LLVM and it's BUILD_BUG_ON_MSG(..., "value
+> too large for the field") in drivers/net/ethernet/netronome/nfp/bpf/jit.c.
+> Specifically, the FIELD_FIT / __BF_FIELD_CHECK macro in ur_load_imm_any.
+> 
+> This compiles just fine with an earlier LLVM revision, so it could be a
+> relatively recent regression. I'll take a look. Thanks for catching this!
 
-OK, that explains why I had a little trouble applying the patch.
+After spending some time debugging this with Nick, it looks like the
+error is caused by a recent optimization change in LLVM, which together
+with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
+check in FIELD_FIT that would always fail, to a compile-time check that
+breaks the build. In jeq_imm, we have:
 
-thanks.
--- 
-~Randy
+    /* struct bpf_insn: _s32 imm */
+    u64 imm = insn->imm; /* sign extend */
+    ...
+    if (imm >> 32) { /* non-zero only if insn->imm is negative */
+    	/* inlined from ur_load_imm_any */
+	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
 
+        /*
+	 * __imm has a value known at compile-time, which means
+	 * __builtin_constant_p(__imm) is true and we end up with
+	 * essentially this in __BF_FIELD_CHECK:
+	 */
+	if (__builtin_constant_p(__imm) && __imm <= 255)
+	      __compiletime_assert_N();
+
+The compile-time check comes from the following BUILD_BUG_ON_MSG:
+
+    #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)		\
+    ...
+	BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?		\
+			 ~((_mask) >> __bf_shf(_mask)) & (_val) : 0, \
+			 _pfx "value too large for the field"); \
+
+While we could stop the compiler from performing this optimization by
+telling it to never inline ur_load_imm_any, we feel like a better fix
+might be to replace FIELD_FIT(UR_REG_IMM_MAX, imm) with a simple imm
+<= UR_REG_IMM_MAX check that won't trip a compile-time assertion even
+when the condition is known to fail.
+
+Jiong, Jakub, do you see any issues here?
+
+Sami
