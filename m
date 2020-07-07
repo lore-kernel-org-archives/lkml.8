@@ -2,115 +2,117 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 029AD20722
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aQAWV/vp"
+	by mail.kernel.org (Postfix) with ESMTP id B15FC20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgGGEJK (ORCPT
+        id S1727818AbgGGEJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgGGEJK (ORCPT
+        Tue, 7 Jul 2020 00:09:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17568 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbgGGEJO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:09:10 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ED5C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:09:10 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l12so45127150ejn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kd+hagxNLahxDCtppBjRUEK5tAfJnWOu81ahPEztSaE=;
-        b=aQAWV/vpjJSXXFpPeSnG+kfh7lIyxfzTTwOYdEKW7QlmmS2VKBfdIeF9N2k88UppGc
-         VH/DtzoShRTBp3M4emxE4DHRfm7n7p8p3/C8PU0P5jGTZfgfm9jXg406VhS5VuV+OyyG
-         Vfgukri/R8fDyfCAW6m2Htts6MpWlzgluu7z5SNlK+8B8f6+vPR+6WLXT+H21/4hreMU
-         3txu3qWPmln0t3uT6YlhutbWPcYqglkwIxNM9z3hrcH5sRnaj9Q6CQR201CUAV9n0yr9
-         Tp8f2TzWiK1jcBSaBsZK9aQlMFsuAc7G2hjnbVFnPRDegUd6Z0WtMk280LPV+oIkNjNb
-         0TfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kd+hagxNLahxDCtppBjRUEK5tAfJnWOu81ahPEztSaE=;
-        b=DBtHrIJ+Itlz0G1Ti+bMshj1qnqIP9Q0cWugWbW8UGN5lCYZHKb75/zIGxPnxbJ5E8
-         QZn/XJZxYpGUkbfAJRUqCICP5WdkTHGOIsmmhigpuChg1N5EApErKi1U/CHa/ikLPDOX
-         VzQSwxo/UHi/WiKUtkLA95v24pnE4vQcoQWt7t+Ogq9Fl2Bfe54B97t770ER5Ta7TSqe
-         giuJrG4I9qL/06vuziettYcBLASK2R8ddjKHe7mFjwhW6uFt803Odgqytv1ai4jej4e3
-         sGoHnS7sBF3nxz/TkCZ4Nv26uqrV1AMdaACS/SWRaDyvXrQSlRzA8xCgBLuekjwJU0Wz
-         nQJA==
-X-Gm-Message-State: AOAM531l+nX9ZMPDZar0yP5JoU0Mv3tx2PjCpkBVyqc185cqNAs4C80s
-        ZEEhLUdpmW9g6BuxPXdWxpGP8P6GuXlLg1BOQhEq4A==
-X-Google-Smtp-Source: ABdhPJyPRqnkRZMh1ri4hzJHg5glOXCDJbyxpChWsHOcw8ODDEd5rTUzWvDESEc9IgnbrZlOqqJb1aAqJeDVIOGl5mY=
-X-Received: by 2002:a17:906:1a54:: with SMTP id j20mr45158330ejf.455.1594094948779;
- Mon, 06 Jul 2020 21:09:08 -0700 (PDT)
+        Tue, 7 Jul 2020 00:09:14 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06741rt4112843;
+        Tue, 7 Jul 2020 00:09:13 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32486cdutp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 00:09:13 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0673xPjL028027;
+        Tue, 7 Jul 2020 04:09:12 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02dal.us.ibm.com with ESMTP id 322hd922tf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 04:09:12 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06749Bs045678944
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jul 2020 04:09:11 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A57BDAC062;
+        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93B8FAC05F;
+        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
+Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
+ TPM2 ACPI table
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
+ <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
+ <20200706230914.GC20770@linux.intel.com>
+ <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
+ <20200707022416.GC112019@linux.intel.com>
+ <f3e0fb50-8617-da40-1456-158531a070cb@linux.ibm.com>
+ <20200707040325.GB143804@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <85c27199-df55-eecc-855c-dedcea64f89e@linux.ibm.com>
+Date:   Tue, 7 Jul 2020 00:09:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200706191555.GD6176@sirena.org.uk>
-In-Reply-To: <20200706191555.GD6176@sirena.org.uk>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 6 Jul 2020 21:08:57 -0700
-Message-ID: <CAPcyv4iiVvJHPTmgssTvp=jsFCs2r068mPtZ9s0qXfEKFNdVBw@mail.gmail.com>
-Subject: Re: [Tech-board-discuss] [PATCH] CodingStyle: Inclusive Terminology
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200707040325.GB143804@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_01:2020-07-06,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 suspectscore=0 bulkscore=0 phishscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007070025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 12:16 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:
->
-> > +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
-> > +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
->
-> I'd second the suggestion of device as an option here.
+On 7/7/20 12:03 AM, Jarkko Sakkinen wrote:
+> On Mon, Jul 06, 2020 at 11:08:12PM -0400, Stefan Berger wrote:
+>> On 7/6/20 10:24 PM, Jarkko Sakkinen wrote:
+>>> On Mon, Jul 06, 2020 at 07:55:26PM -0400, Stefan Berger wrote:
+>>>> On 7/6/20 7:09 PM, Jarkko Sakkinen wrote:
+>>>>> On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
+>>>>>> From: Stefan Berger <stefanb@linux.ibm.com>
+>>>>>>
+>>>>>> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+>>>>>> to get the event log from ACPI. If one is found, use it to get the
+>>>>>> start and length of the log area. This allows non-UEFI systems, such
+>>>>>> as SeaBIOS, to pass an event log when using a TPM2.
+>>>>>>
+>>>>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>>>>> Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
+>>>>> way to test this?
+>>>> Yes.
+>>> Is the emulator bundled with QEMU or does it have to be installed
+>>> separately?
+>> It has to be installed separately. On Fedora 31 it would just be a `sudo dnf
+>> -y install swtpm-tools` and you should be good to go with libvirt /
+>> virt-manager.
+> Is there some packaging for Debian/Ubuntu available?
 
-Sure, will do. I'm assuming you're thinking of cases where 'slave' is
-used in isolation without a paired relative term? If not, please
-clarify.
 
->
-> > +Of course it is around this point someone jumps in with an etymological
-> > +argument about why people should not be offended. Etymological arguments
-> > +do not scale. The scope and pace of Linux to reach new developers
-> > +exceeds the ability of historical terminology defenders to describe "no,
->
-> More generally etymological arguments are just not super relevant here
-> anyway, the issues people have are around current perceptions rather
-> than where things came from.
->
-> > +not that connotation". The revelation of 2020 was that black voices were
-> > +heard on a global scale and the Linux kernel project has done its small
-> > +part to answer that call as it wants black voices, among all voices, in
-> > +its developer community.
->
-> This, especially the bit about "revelation of 2020", sounds a little
-> off to me - I think it's that it's worryingly close to the frequently
-> derided pattern where people recognise a problem that other people have
-> been talking about for a while and treat it as something new.  Perhaps a
-> more neutrally worded reference to current events and/or our desire to
-> improve instead?
+So far may not be available yet. I had *experimented* with a PPA once: 
+https://launchpad.net/~stefanberger/+archive/ubuntu/swtpm-focal
 
-I'd just as soon let this commentary live in the archives if people
-need some more background. It's not like we have companion essays on
-the other recommendations in coding-style, and we seem to be
-converging on just amending coding-style.
+
+
+> /Jarkko
+
+
