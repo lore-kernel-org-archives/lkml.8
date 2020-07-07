@@ -2,160 +2,379 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF786C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97CB20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C632720658
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBOADVhr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IJSp4ObV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgGGNfG (ORCPT
+        id S1728155AbgGGNff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43866 "EHLO
+        Tue, 7 Jul 2020 09:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgGGNfG (ORCPT
+        with ESMTP id S1727987AbgGGNfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:35:06 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06419C061755;
-        Tue,  7 Jul 2020 06:35:06 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so14800912pje.0;
-        Tue, 07 Jul 2020 06:35:06 -0700 (PDT)
+        Tue, 7 Jul 2020 09:35:34 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F06C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 06:35:34 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dm19so32132880edb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=WcZ5qo7y9qUcKIeVIbnTxzfzPN7859vCpAHcM5CTAlc=;
-        b=VBOADVhrVQaImFIIIylGi/N7xk7WGvoP2orasZftk1JuDxbX6szpmb7IwR0xaTsGvT
-         N0QPz0zneW1MIUyYqDqIvlBjBx9T4W7235IEmX4FYc2yogqRZ45T2YZDzpBUETrUd28z
-         R6L75o2jO1miJaOC/ymI66G9moZEYnVl6HXPwvFKeHzY6W8XpE20InU9fP6I4WSPFXVP
-         de1Zqmt38o/Ex4PZ6DlBVItboWx2dK43VhKEkD6JfdMOtekoUyyeWOMLVSszdL2FHANv
-         2lLIxTc8pbkpjhV+b/wmI6kA8OVOz6CvjARrCye5tEcmwoBWeqnPSU+sCFJyU29WcJlO
-         BGng==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6wQjqeHrYmelh0ahvaUo5qZ3Zhlm4Z5A2lb/5qO36ts=;
+        b=IJSp4ObVCBA2+B4/0/8ipyQif2GwwqL1UopA4CTGsap4ni2MEvKpmZ2+eDoSabIp52
+         +gCy0fyqjd6exRFzAewcmhArVGV20XmF9LVOg5rn6LR7aW6rrTbVsxiKvaowSgO4Q9g6
+         Ki7QF70zXNWcDEWPfw52VDYf3sKoDSqHzX1Y0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=WcZ5qo7y9qUcKIeVIbnTxzfzPN7859vCpAHcM5CTAlc=;
-        b=ek3Kgx8ptPmpeBJGOawQ3Qi8t3VpkgKlYVvZDNwZGv6ct2jErHNXvdHE5Zcy6alsqp
-         oIxH2yBa9iW1lIpEKbyXL8LHq3QdmTokOlQiXFfWcizJ6ZGtqEXGtD8arXlXlccG1LLP
-         z9//J5mjdpgwwznskM0mDyLghtIIq4agLGkwopYXSdIfY/6kObFk2bR/PDqONQ3BwR1/
-         NjdsVipKfUKq/uj5Yay8fpmHay4Df9VPWf+cfptdozWXng+BGj9AEo0pAP5BM9l2dyxD
-         qezoP9X2GHTWhRFu1KonK9rdW9P0rU7UyxQPaqcJN8Je9CqpHk4AVFSnE/NSQ/8pI9IB
-         HAFg==
-X-Gm-Message-State: AOAM533980aZfTlcr2YMzOenbYEGWbHwMNdRaNtPMe7v0Dsf3rPpMbfk
-        Os7zEATYu5H61H/jAaqwGjN/JaZILdI=
-X-Google-Smtp-Source: ABdhPJyEu9Q1UlbUHSi5o70FjjCly+i1xLnaxD5bOouAPmNNhWS7+UiwW8G93d3L22USW2SQjxv7Jw==
-X-Received: by 2002:a17:90b:8d0:: with SMTP id ds16mr4665898pjb.2.1594128905556;
-        Tue, 07 Jul 2020 06:35:05 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g9sm21142608pfm.151.2020.07.07.06.35.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jul 2020 06:35:04 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 06:35:03 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Message-ID: <20200707133503.GA217263@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6wQjqeHrYmelh0ahvaUo5qZ3Zhlm4Z5A2lb/5qO36ts=;
+        b=VyqYqx0jzNHgNhOs5g+D+Bnv8qVdteBC9fGWhFtkIpbUBFr0hYptfP/E7uwT3NqBH9
+         odkVF7aLqCILMfkchvs9ATQgjHAlnO29N8pKuNxn31RlO6nn1VplAdRidzYODpDQVtrt
+         FDxvBr/tAR/hbIVd/GGYPXj8JmtJsnh8WkkR03c2hWzsIJBbuAejuImKWx+6KStTm94j
+         IORiSgFD13t4VA8R0jHN5dLnH6HxW4UmiGGH9+jd1T+TFTTfGEXOm9b4PpR/qJl4pw3y
+         DUW233tllOl8A0al78HjrvhuL8bF1MkRdKIYGIOvLl2qPTBEauEcI3v7YZUxq+mu/pn0
+         5Bzw==
+X-Gm-Message-State: AOAM533znp1eMm1Fzi+mQelxzmdpMqgqzHBNTHDQTg0n+NTqBT7i6qQK
+        l8xlp98uAAaXqOMID+6jYk3L7nGrZWACNg==
+X-Google-Smtp-Source: ABdhPJxiid2uAXion0S9cSdzAmh+pNhpAhR+i5QKz8IrUz8BZlG8WfNuT25fYfj9KZYdUcw8NmKTNw==
+X-Received: by 2002:a50:9306:: with SMTP id m6mr61031265eda.216.1594128932165;
+        Tue, 07 Jul 2020 06:35:32 -0700 (PDT)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
+        by smtp.gmail.com with ESMTPSA id l6sm11493057edr.39.2020.07.07.06.35.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 06:35:31 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id j4so42747164wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:35:30 -0700 (PDT)
+X-Received: by 2002:adf:dfcd:: with SMTP id q13mr53974562wrn.295.1594128930262;
+ Tue, 07 Jul 2020 06:35:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-20-xia.jiang@mediatek.com> <20200611184640.GC8694@chromium.org>
+ <1593485781.20112.43.camel@mhfsdcap03> <20200630165301.GA1212092@chromium.org>
+ <1594104314.4473.24.camel@mhfsdcap03>
+In-Reply-To: <1594104314.4473.24.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 7 Jul 2020 15:35:18 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5CONkGrESiq2hZ9RWZK8FU0av4LjEQi4bc_c5Nu+sRPEA@mail.gmail.com>
+Message-ID: <CAAFQd5CONkGrESiq2hZ9RWZK8FU0av4LjEQi4bc_c5Nu+sRPEA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v9 18/18] media: platform: Add jpeg enc feature
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        mojahsu@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        =?UTF-8?B?TWFvZ3VhbmcgTWVuZyAo5a2f5q+b5bm/KQ==?= 
+        <maoguang.meng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:01:03PM +0800, Chris Ruehl wrote:
-> Add documentation for the newly added DTS support in the shtc1 driver.
-> To align with the drivers logic to have high precision by default
-> a boolean sensirion,low_precision is used to switch to low precision.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> new file mode 100644
-> index 000000000000..bcccdcadd86b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sensirion SHTC1 Humidity and Temperature Sensor IC
-> +
-> +maintainers:
-> +  - jdelvare@suse.com
+On Tue, Jul 7, 2020 at 8:47 AM Xia Jiang <xia.jiang@mediatek.com> wrote:
+>
+> On Tue, 2020-06-30 at 16:53 +0000, Tomasz Figa wrote:
+> > Hi Xia,
+> >
+> > On Tue, Jun 30, 2020 at 10:56:21AM +0800, Xia Jiang wrote:
+> > > On Thu, 2020-06-11 at 18:46 +0000, Tomasz Figa wrote:
+> > > > Hi Xia,
+> > > >
+> > > > On Thu, Jun 04, 2020 at 05:05:53PM +0800, Xia Jiang wrote:
+> > [snip]
+> > > > > +static void mtk_jpeg_enc_device_run(void *priv)
+> > > > > +{
+> > > > > +       struct mtk_jpeg_ctx *ctx = priv;
+> > > > > +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> > > > > +       struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> > > > > +       enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> > > > > +       unsigned long flags;
+> > > > > +       struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > > > > +       struct mtk_jpeg_enc_bs enc_bs;
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > > > +       dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > > > > +       jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> > > > > +
+> > > > > +       ret = pm_runtime_get_sync(jpeg->dev);
+> > > > > +       if (ret < 0)
+> > > > > +               goto enc_end;
+> > > > > +
+> > > > > +       spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > > > +
+> > > > > +       /*
+> > > > > +        * Resetting the hardware every frame is to ensure that all the
+> > > > > +        * registers are cleared. This is a hardware requirement.
+> > > > > +        */
+> > > > > +       mtk_jpeg_enc_reset(jpeg->reg_base);
+> > > > > +
+> > > > > +       mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf, &enc_bs);
+> > > > > +       mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf);
+> > > > > +       mtk_jpeg_enc_set_config(jpeg->reg_base, ctx->out_q.fmt->hw_format,
+> > > > > +                               ctx->enable_exif, ctx->enc_quality,
+> > > > > +                               ctx->restart_interval);
+> > > > > +       mtk_jpeg_enc_start(jpeg->reg_base);
+> > > >
+> > > > Could we just move the above 5 functions into one function inside
+> > > > mtk_jpeg_enc_hw.c that takes mtk_jpeg_dev pointer as its argument, let's
+> > > > say mtk_jpeg_enc_hw_run() and simply program all the data to the registers
+> > > > directly, without the extra level of abstractions?
+> > > I can move the 5 functions into one function(mtk_jpeg_enc_hw_run()), but
+> > > this function will be very long, because it contains computation code
+> > > such as setting dst addr, blk_num, quality.
+> > > In v4, you have adviced the following architecture:
+> > > How about the following model, as used by many other drivers:
+> > >
+> > > mtk_jpeg_enc_set_src()
+> > > {
+> > >         // Set any registers related to source format and buffer
+> > > }
+> > >
+> > > mtk_jpeg_enc_set_dst()
+> > > {
+> > >         // Set any registers related to destination format and buffer
+> > > }
+> > >
+> > > mtk_jpeg_enc_set_params()
+> > > {
+> > >         // Set any registers related to additional encoding parameters
+> > > }
+> > >
+> > > mtk_jpeg_enc_device_run(enc, ctx)
+> > > {
+> > >         mtk_jpeg_enc_set_src(enc, src_buf, src_fmt);
+> > >         mtk_jpeg_enc_set_dst(enc, dst_buf, dst_fmt);
+> > >         mtk_jpeg_enc_set_params(enc, ctx);
+> > >         // Trigger the hardware run
+> > > }
+> > > I think that this architecture is more clear(mtk_jpeg_enc_set_config is
+> > > equivalent to mtk_jpeg_enc_set_params).
+> > > Should I keep the original architecture or move 5 functions into
+> > > mtk_jpeg_enc_hw_run?
+> >
+> > Sounds good to me.
+> >
+> > My biggest issue with the code that it ends up introducing one more
+> > level of abstraction, but with the approach you suggested, the arguments
+> > just accept standard structs, which avoids that problem.
+> >
+> > [snip]
+> > > > > +
+> > > > > +       ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> > > > > +       ctx->colorspace = V4L2_COLORSPACE_JPEG,
+> > > > > +       ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > > > +       ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > > > +       ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
+> > > >
+> > > > Since we already have a v4l2_pix_format_mplane struct which has fields for
+> > > > the above 4 values, could we just store them there?
+> > > >
+> > > > Also, I don't see this driver handling the colorspaces in any way, but it
+> > > > seems to allow changing them from the userspace. This is incorrect, because
+> > > > the userspace has no way to know that the colorspace is not handled.
+> > > > Instead, the try_fmt implementation should always override the
+> > > > userspace-provided colorspace configuration with the ones that the driver
+> > > > assumes.
+> > > >
+> > > > > +       pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> > > > > +       pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> > > > > +
+> > > > > +       q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUYV,
+> > > > > +                                     MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> > > > > +       vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> > > > > +                                   fmt.pix_mp), q->fmt);
+> > > > > +       q->w = pix_mp->width;
+> > > > > +       q->h = pix_mp->height;
+> > > > > +       q->crop_rect.width = pix_mp->width;
+> > > > > +       q->crop_rect.height = pix_mp->height;
+> > > > > +       q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> > > > > +       q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> > > >
+> > > > Actually, do we need this custom mtk_jpeg_q_data struct? Why couldn't we
+> > > > just keep the same values inside the standard v4l2_pix_format_mplane
+> > > > struct?
+> > > I think that we need mtk_jpeg_q_data struct.If we delete it, how can we
+> > > know these values(w, h, sizeimage, bytesperline, mtk_jpeg_fmt) belong to
+> > > output or capture(output and capture's sizeimages are different, width
+> > > and height are differnt too for jpeg dec )?We have
+> > > s_fmt_vid_out_mplane/cap_mplane function to set these values.
+> > >
+> > > But we can use standard v4l2_pix_format_mplane struct replacing the w, h
+> > > bytesperline, sizeimage in mtk_jpeg_q_data struct like this:
+> > > struct mtk_jpeg_q_data{
+> > >     struct mtk_jpeg_fmt *fmt;
+> > >     struct v4l2_pix_format_mplane pix_mp;
+> > >     struct v4l2_rect enc_crop_rect
+> > > }
+> > > Then delete ctx->colorspace ctx->ycbcr_enc ctx->quantization
+> > > ctx->xfer_func, becuase v4l2_pix_format_mplane in q_data has contained
+> > > them and assign them for out_q and cap_q separately.
+> > >
+> > > WDYT?
+> >
+> > Sounds good to me. I was considering just making it like
+> >
+> > struct mtk_jpeg_ctx {
+> >       struct mtk_jpeg_fmt *src_fmt;
+> >       struct v4l2_pix_format_mplane src_pix_mp;
+> >       struct v4l2_rect src_crop;
+> >
+> >       struct mtk_jpeg_fmt *dst_fmt;
+> >       struct v4l2_pix_format_mplane dst_pix_mp;
+> >       struct v4l2_rect dst_crop;
+> > };
+> >
+> > but I like your suggestion as well, as long as custom data structures
+> > are not used to store standard information.
+>
+> Dear Tomasz,
+>
+> I used the structure like below:
+>  struct mtk_jpeg_q_data{
+>         struct mtk_jpeg_fmt *fmt;
+>         struct v4l2_pix_format_mplane pix_mp;
+>         struct v4l2_rect enc_crop_rect
+> }
+> Then delete ctx->colorspace ctx->ycbcr_enc ctx->quantization
+> ctx->xfer_func, becuase v4l2_pix_format_mplane in q_data has contained
+> them and assign them for out_q and cap_q separately.
+>
+> Then the v4l2_compliance test will fail, the fail log as below:
+> Format ioctls:
+>         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>         test VIDIOC_G/S_PARM: OK (Not Supported)
+>         test VIDIOC_G_FBUF: OK (Not Supported)
+>         test VIDIOC_G_FMT: OK
+>         test VIDIOC_TRY_FMT: OK
+>                 fail: v4l2-test-formats.cpp(836):
+> fmt_cap.g_colorspace() != col
+>         test VIDIOC_S_FMT: FAIL
+>         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>         test Cropping: OK
+>         test Composing: OK (Not Supported)
+>         test Scaling: OK (Not Supported)
+>
+> The source code of  v4l2-test-formats.cpp as below:
+>
+> static int testM2MFormats(struct node *node)
+> {
+>         cv4l_fmt fmt_out;
+>         cv4l_fmt fmt;
+>         cv4l_fmt fmt_cap;
+>         __u32 cap_type = node->g_type();
+>         __u32 out_type = v4l_type_invert(cap_type);
+>         __u32 col, ycbcr_enc, quant, xfer_func;
+>
+>         fail_on_test(node->g_fmt(fmt_out, out_type));
+>         node->g_fmt(fmt_cap, cap_type);
+>         fail_on_test(fmt_cap.g_colorspace() != fmt_out.g_colorspace());
+>         fail_on_test(fmt_cap.g_ycbcr_enc() != fmt_out.g_ycbcr_enc());
+>         fail_on_test(fmt_cap.g_quantization() != fmt_out.g_quantization());
+>         fail_on_test(fmt_cap.g_xfer_func() != fmt_out.g_xfer_func());
+>         col = fmt_out.g_colorspace() == V4L2_COLORSPACE_SMPTE170M ?
+>                 V4L2_COLORSPACE_REC709 : V4L2_COLORSPACE_SMPTE170M;
+>         ycbcr_enc = fmt_out.g_ycbcr_enc() == V4L2_YCBCR_ENC_601 ?
+>                 V4L2_YCBCR_ENC_709 : V4L2_YCBCR_ENC_601;
+>         quant = fmt_out.g_quantization() == V4L2_QUANTIZATION_LIM_RANGE ?
+>                 V4L2_QUANTIZATION_FULL_RANGE : V4L2_QUANTIZATION_LIM_RANGE;
+>         xfer_func = fmt_out.g_xfer_func() == V4L2_XFER_FUNC_SRGB ?
+>                 V4L2_XFER_FUNC_709 : V4L2_XFER_FUNC_SRGB;
+>         fmt_out.s_colorspace(col);
+>         fmt_out.s_xfer_func(xfer_func);
+>         fmt_out.s_ycbcr_enc(ycbcr_enc);
+>         fmt_out.s_quantization(quant);
+>         node->s_fmt(fmt_out);
+>         fail_on_test(fmt_out.g_colorspace() != col);
+>         fail_on_test(fmt_out.g_xfer_func() != xfer_func);
+>         fail_on_test(fmt_out.g_ycbcr_enc() != ycbcr_enc);
+>         fail_on_test(fmt_out.g_quantization() != quant);
+>         node->g_fmt(fmt_cap);
+>         fail_on_test(fmt_cap.g_colorspace() != col);  // line 836
+>         fail_on_test(fmt_cap.g_xfer_func() != xfer_func);
+>         fail_on_test(fmt_cap.g_ycbcr_enc() != ycbcr_enc);
+>         fail_on_test(fmt_cap.g_quantization() != quant);
+> }
+>
+> It needs that cap's colorspace equals out's colorspace when userspace
+> just set out's colorspace and then get cap's colorspace. However, cap's
+> colorspace which getted from driver equals V4L2_COLORSPACE_JPEG, because
+> the code in g_fmt() like this:
+> pix_mp->colorspace = q_data->pix_mp.colorspace;
+> pix_mp->ycbcr_enc = q_data->pix_mp.ycbcr_enc;
+> pix_mp->xfer_func = q_data->pix_mp.xfer_func;
+> pix_mp->quantization = q_data->pix_mp.quantization;
+>
+> How should I handle this case? Should I store them(colorspace,
+> sfer_func, ycbcr_enc, quatization) in ctx as the orinal desin? Then I
+> can get them from g_fmt() like this:
+> pix_mp->colorspace = ctx->colorspace;
+> pix_mp->ycbcr_enc = ctx->ycbcr_enc;
+> pix_mp->xfer_func = ctx->xfer_func;
+> pix_mp->quantization = ctx->quantization;
 
-Did Jean agree to maintain this file ?
+Why would there be any other colorspace accepted? I suppose that the
+hardware only supports the JPEG color space, so it shouldn't accept
+any other colorspace in TRY_FMT (and thus S_FMT) anyway.
 
-> +
-> +description: |
-> +  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-> +  designed especially for battery-driven high-volume consumer electronics
-> +  applications.
-> +  For further information refere to Documentation/hwmon/shtc1.rst
-> +
-> +  This binding document describes the binding for the hardware monitor
-> +  portion of the driver.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sensirion,shtc1
-> +      - sensirion,shtw1
-> +      - sensirion,shtc3
-> +
-> +  reg: I2C address 0x70
-> +
-> +Optional properties:
-> +  sensirion,blocking_io: |
-> +    bool, if set the i2c bus hold until measure finished
-> +  sensirion,low_precision: |
-> +    bool, if set aquire data with low precision (not recommend)
+Still, for correctness, I would suggest propagating the colorspace
+(and related) information from OUTPUT format to CAPTURE format in
+S_FMT(OUTPUT).
 
-recommended
+Best regards,
+Tomasz
 
-It might make sense to mention that the default is expected to be high precision
-if not specified.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +Example:
-> +  &i2c1 {
-> +    status = "okay";
-> +    clock-frequency = <400000>;
-> +
-> +    shtc3@70 {
-> +      compatible = "sensirion,shtc3";
-> +      reg = <0x70>
-> +      sensirion,blocking_io;
-> +      status = "okay";
-> +    };
-> +  };
-> -- 
-> 2.20.1
-> 
+>
+> Best Regards,
+> Xia Jiang
+> > [snip]
+> > > > > @@ -1042,8 +1619,12 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+> > > > >                 return jpeg_irq;
+> > > > >         }
+> > > > >
+> > > > > -       ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq, 0,
+> > > > > -                              pdev->name, jpeg);
+> > > > > +       if (jpeg->variant->is_encoder)
+> > > > > +               ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_enc_irq,
+> > > > > +                                      0, pdev->name, jpeg);
+> > > > > +       else
+> > > > > +               ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq,
+> > > > > +                                      0, pdev->name, jpeg);
+> > > >
+> > > > Rather than having "is_encoder" in the variant struct, would it make more
+> > > > sense to have "irq_handler" instead? That would avoid the explicit if.
+> > > Do you mean to delete "is_encoder"? It is used 8 times in the
+> > > driver.Should I move them all to the match data?
+> >
+> > Yes. It would make the code linear and the varability between the
+> > decoder and encoder would be self-contained in the variant struct.
+> >
+> > Best regards,
+> > Tomasz
+>
