@@ -2,115 +2,122 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D224BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49541206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOfLIPJL"
+	by mail.kernel.org (Postfix) with ESMTP id B7FFD206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgGGBvo (ORCPT
+        id S1727886AbgGGBx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgGGBvn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:51:43 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CA0C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 18:51:43 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id e13so36800986qkg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qx/C0isL60DPbKTPxrph0kJVnu1AM2M66vCo2gvDUxo=;
-        b=JOfLIPJL+2nxndCtc9jPaSJdkd+AmzkyaD1JzoVZhJb34tgPdJuaPVJbdhGbbmlot1
-         nP0PCUA2MnDCVjOTzLofNt5MbSHBNXQxCZtyBJJABBz2HfoEZbvQdmxYmb7leoUTt+DX
-         hLzm1z/RZbt8s91F2R4d+0vl+3C0GK31Catd+BJ3duwE76ybY8oTZisVGdhKSxuv+eQJ
-         HnaAvpjQGIkO0c1lLMZNsMXGcVW/f8n8D9tDW/DKceRkvWp9rTl9lqt0AOwOMH3hp17c
-         g+nXeOpHlQsh/gG9W0Nkmgnc6EpRs9y15S8Up7ybEJLf3nOF7TMorGn6XpoLBKi0AF8+
-         vY4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qx/C0isL60DPbKTPxrph0kJVnu1AM2M66vCo2gvDUxo=;
-        b=VtAldLmAGRmDjF/HB+Aq9fZ/t/TZChzET4UH1RAOXFGEQSs+/1qYNvJ1PcnvlWRisT
-         XotVDvUe0Hg1a9ELXS4E8H+pK0O4re+683A8cLTofSgnqe5bObNqSBYy511KjfXuvksI
-         zQNictVeXFX205mD1Mgs6hs9tkuG42A/XbGQ0fmXgi1lYf52r/icqCv7y6E7VTd+CLOA
-         stb5kN9RAxWEulI37KoHa5o166GSfRzWmUdQxtFp1MUj2UjO0qd+jdm4kWK7N2+Fo2B2
-         /ggS4Qctxf9yrjNzND5KHGuXk0tUXOXw4SvPXrt8UhvJEtRfrXiXPn9pDvyxvk5NoJ8U
-         LV5g==
-X-Gm-Message-State: AOAM533Sz5j84l55RFKXQnRo7pz7/CMjQkjVOpwpS/b+ExYDg4O3wBd/
-        CocV4qZURinw83r68yA7eQtk01CiuXCw+vIfAeZW3qdJ
-X-Google-Smtp-Source: ABdhPJxbdu1UR0UwC4VJ18/+W8RImTA2mJWd60dbnKAprt4YwcWVw4xJ/jqDfQmncoedyIwf0fGD5hIXQ2ivhdVou/E=
-X-Received: by 2002:a37:bcb:: with SMTP id 194mr51351661qkl.103.1594086702672;
- Mon, 06 Jul 2020 18:51:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200702193102.25282-1-nicoleotsuka@gmail.com>
-In-Reply-To: <20200702193102.25282-1-nicoleotsuka@gmail.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 7 Jul 2020 09:51:31 +0800
-Message-ID: <CAA+D8AMMKKDyPXXN0790LswNh_sOfUUDVw5PiMoLB-U4qX8G9w@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Shengjiu to reviewer list of sound/soc/fsl
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, timur@tabi.org,
-        Li.Xiubo@freescale.com, linuxppc-dev@lists.ozlabs.org
+        Mon, 6 Jul 2020 21:53:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4262 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgGGBx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 21:53:29 -0400
+IronPort-SDR: /fuaNcSky8bWtccpp71V236Px0gIjnBuJvG28EfiitGolJ6aiKkGKSP6lrunoDCEbZ01N3OBPH
+ xxB1unmk3NeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="135772352"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="135772352"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 18:53:28 -0700
+IronPort-SDR: l0zbK3cOr0OZU5OZaXRgNc0Y7SxA3ywxkq6d6jdlepqPlrg30dFVzt5ULi8PbBud7qCksWKNsV
+ PlcT4/0qqscg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="297192394"
+Received: from zhexindu-mobl.ccr.corp.intel.com ([10.255.31.6])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jul 2020 18:53:27 -0700
+Message-ID: <0787af45b1fc9054ac7532790283defde7a863e2.camel@intel.com>
+Subject: Re: [PATCH v4 2/4] thermal: core: Get thermal zone by id
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Date:   Tue, 07 Jul 2020 09:53:26 +0800
+In-Reply-To: <20200706105538.2159-2-daniel.lezcano@linaro.org>
+References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
+         <20200706105538.2159-2-daniel.lezcano@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 3:33 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> Add Shengjiu who's actively working on the latest fsl/nxp audio drivers.
->
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> Cc: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Mon, 2020-07-06 at 12:55 +0200, Daniel Lezcano wrote:
+> The next patch will introduce the generic netlink protocol to handle
+> events, sampling and command from the thermal framework. In order to
+> deal with the thermal zone, it uses its unique identifier to
+> characterize it in the message. Passing an integer is more efficient
+> than passing an entire string.
+> 
+> This change provides a function returning back a thermal zone pointer
+> corresponding to the identifier passed as parameter.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+Acked-by: Zhang Rui <rui.zhang@intel.com>
 > ---
-> To Shengjiu, please ack if you feel okay with this (your email address too).
+>  drivers/thermal/thermal_core.c | 14 ++++++++++++++
+>  drivers/thermal/thermal_core.h |  2 ++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/thermal/thermal_core.c
+> b/drivers/thermal/thermal_core.c
+> index 9caaa0b6d662..5fae1621fb01 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -668,6 +668,20 @@ int for_each_thermal_zone(int (*cb)(struct
+> thermal_zone_device *, void *),
+>  	return ret;
+>  }
+>  
+> +struct thermal_zone_device *thermal_zone_get_by_id(int id)
+> +{
+> +	struct thermal_zone_device *tz = NULL;
+> +
+> +	mutex_lock(&thermal_list_lock);
+> +	list_for_each_entry(tz, &thermal_tz_list, node) {
+> +		if (tz->id == id)
+> +			break;
+> +	}
+> +	mutex_unlock(&thermal_list_lock);
+> +
+> +	return tz;
+> +}
+> +
+>  void thermal_zone_device_unbind_exception(struct thermal_zone_device
+> *tz,
+>  					  const char *cdev_type, size_t
+> size)
+>  {
+> diff --git a/drivers/thermal/thermal_core.h
+> b/drivers/thermal/thermal_core.h
+> index 71d88dac0791..4f8389efaa62 100644
+> --- a/drivers/thermal/thermal_core.h
+> +++ b/drivers/thermal/thermal_core.h
+> @@ -50,6 +50,8 @@ int for_each_thermal_cooling_device(int
+> (*cb)(struct thermal_cooling_device *,
+>  int for_each_thermal_governor(int (*cb)(struct thermal_governor *,
+> void *),
+>  			      void *thermal_governor);
+>  
+> +struct thermal_zone_device *thermal_zone_get_by_id(int id);
+> +
+>  struct thermal_attr {
+>  	struct device_attribute attr;
+>  	char name[THERMAL_NAME_LENGTH];
 
-Thanks Nicolin for nominating me as a reviewer.
-
-I'd like to use my gmail address "shengjiu.wang@gmail.com".
-with this then
-
-Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
-
-best regards
-wang shengjiu
-
->
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 496fd4eafb68..54aab083bb88 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6956,6 +6956,7 @@ M:        Timur Tabi <timur@kernel.org>
->  M:     Nicolin Chen <nicoleotsuka@gmail.com>
->  M:     Xiubo Li <Xiubo.Lee@gmail.com>
->  R:     Fabio Estevam <festevam@gmail.com>
-> +R:     Shengjiu Wang <shengjiu.wang@nxp.com>
->  L:     alsa-devel@alsa-project.org (moderated for non-subscribers)
->  L:     linuxppc-dev@lists.ozlabs.org
->  S:     Maintained
-> --
-> 2.17.1
->
