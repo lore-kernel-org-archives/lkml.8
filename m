@@ -2,97 +2,86 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74321C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19211206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D42C20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594155038;
+	bh=KoTA2o9FaMQOH2KZot8SHO+30GT1daY4qqGv1KORumc=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=Aa9/mmTMzSRRjxWYbCOSjJ2xFzcj+VE6TQw9fphRQr2AOOVT63QUUtPuzbwqKAdz8
+	 6Xm0timAjSuH13Q3jlFAvSuiIyUwlQUH+MnGiwnVJ1WN8k+61mt5my56LXNkTbLjLt
+	 h6sNbp2n4Qv3MimLP0iziMV/sirAOoR7WSgpVF/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgGGUuS (ORCPT
+        id S1728969AbgGGUuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:50:18 -0400
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:44778 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726273AbgGGUuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:50:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 7AEAD182CED34;
-        Tue,  7 Jul 2020 20:50:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wine20_5511feb26eb7
-X-Filterd-Recvd-Size: 3058
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  7 Jul 2020 20:50:16 +0000 (UTC)
-Message-ID: <51eeed808ce61e0d7b7978b2dfd4fd80f315b3b1.camel@perches.com>
-Subject: Re: [PATCH 04/30] usb: misc: sisusbvga: sisusb_init: Mark all
- 'static const' arrays as __maybe_unused
-From:   Joe Perches <joe@perches.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Winischhofer <thomas@winischhofer.net>
-Date:   Tue, 07 Jul 2020 13:50:15 -0700
-In-Reply-To: <20200707080311.GE3500@dell>
-References: <20200703174148.2749969-1-lee.jones@linaro.org>
-         <20200703174148.2749969-5-lee.jones@linaro.org>
-         <af66b6e94a26ebd500c1376631891b0bdd0912f0.camel@perches.com>
-         <20200707080311.GE3500@dell>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 7 Jul 2020 16:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgGGUug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:50:36 -0400
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8868206F6;
+        Tue,  7 Jul 2020 20:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594155036;
+        bh=KoTA2o9FaMQOH2KZot8SHO+30GT1daY4qqGv1KORumc=;
+        h=From:To:Subject:Date:From;
+        b=rqT/1s3LagS/5HYBCjZyEnJut75G82gj6+JQPOvrvSUqzoJhA/TLhpK91pVr/KL0q
+         Ip9O5bWUmM9yx6y7YpB7mgc4OslcgQKSNy/y1yI7mpn6go2wYQx0omVCIZCC19T9fU
+         9jgvb/edxoRa2HSmy9zoG4LRyuT2Zf5YWFiO1Ztc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESENT] ia64: configs: Remove useless UEVENT_HELPER_PATH
+Date:   Tue,  7 Jul 2020 22:50:30 +0200
+Message-Id: <20200707205030.32394-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-07 at 09:03 +0100, Lee Jones wrote:
-> On Fri, 03 Jul 2020, Joe Perches wrote:
-> 
-> > On Fri, 2020-07-03 at 18:41 +0100, Lee Jones wrote:
-> > > drivers/usb/misc/sisusbvga/sisusb_init.h is included by a few
-> > > source files.  Most of which do not use the majority of the
-> > > shared static const arrays which have been declared.  This
-> > > causes the build system to spew 100's of warnings.
-> > > 
-> > > Fixes the following W=1 kernel build warning(s) - and a whole lot more:
-> > > 
-> > >  In file included from drivers/usb/misc/sisusbvga/sisusb.c:54:
-> > >  drivers/usb/misc/sisusbvga/sisusb_init.h:695:34: warning: ‘SiSUSB_VCLKData’ defined but not used [-Wunused-const-variable=]
-> > >  695 | static const struct SiS_VCLKData SiSUSB_VCLKData[] = {
-> > >  | ^~~~~~~~~~~~~~~
-> > > [10's of lines snipped]
-> > >  drivers/usb/misc/sisusbvga/sisusb_init.h:206:28: warning: ‘SiS_VGA_DAC’ defined but not used [-Wunused-const-variable=]
-> > >  206 | static const unsigned char SiS_VGA_DAC[] = {
-> > >  | ^~~~~~~~~~~
-> > > [10's of lines snipped]
-> > >  drivers/usb/misc/sisusbvga/sisusb_init.h:171:29: warning: ‘ModeIndex_1280x1024’ defined but not used [-Wunused-const-variable=]
-> > >  171 | static const unsigned short ModeIndex_1280x1024[] = { 0x3a, 0x4d, 0x00, 0x65 };
-> > >  | ^~~~~~~~~~~~~~~~~~~
-> > > [10's of lines snipped]
-> > 
-> > They are not __maybe_unused, they _are_ used.
-> 
-> Actually, it looks like all of the ModeIndex_* table are *not* used,
-> so those will be removed.
-> 
-> > I think these instead should be moved to where
-> > they are used instead of being declared in an
-> > #include file.
-> 
-> The remaining tables are many and large, so stuffing them into the
-> source file does not seem like the correct thing to do.
+Remove the CONFIG_UEVENT_HELPER_PATH because:
+1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+   CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+   made default to 'n',
+2. It is not recommended (help message: "This should not be used today
+   [...] creates a high system load") and was kept only for ancient
+   userland,
+3. Certain userland specifically requests it to be disabled (systemd
+   README: "Legacy hotplug slows down the system and confuses udev").
 
-It the right thing to do is because otherwise they
-would be duplicated.  Either declare them only in
-the single file where use or declare them extern
-and define them only in one place.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/ia64/configs/generic_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
+index cb267a07c57f..f1c5aad6725e 100644
+--- a/arch/ia64/configs/generic_defconfig
++++ b/arch/ia64/configs/generic_defconfig
+@@ -37,7 +37,6 @@ CONFIG_INET=y
+ CONFIG_IP_MULTICAST=y
+ CONFIG_SYN_COOKIES=y
+ # CONFIG_IPV6 is not set
+-CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_CONNECTOR=y
+ # CONFIG_PNP_DEBUG_MESSAGES is not set
+ CONFIG_BLK_DEV_LOOP=m
+-- 
+2.17.1
 
