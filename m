@@ -2,106 +2,193 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7836C20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C42D20739
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRxCuE1+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IXIsJzNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgGGLeX (ORCPT
+        id S1728357AbgGGLe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgGGLeW (ORCPT
+        Tue, 7 Jul 2020 07:34:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40274 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727827AbgGGLeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:34:22 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D168AC08C5DF
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:34:21 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id g2so24523982lfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZWFCdEUgk5dfzDM3fhNe+v2tWxrsCvDUWA3/QI1yjsA=;
-        b=dRxCuE1+l4lJyQ2YbJAaOdam3ofJb8lgOtEdWezxKOyRRyDMxmvt7gEf0x6w0E8JX6
-         zfj7ZoIxtLjX0RoOMTlhhp7h2JjwzRPmSlFeghxpjgBnoebMvd8IizTdR+RZTz7Tb7e8
-         GWLtSt2RMzfl/2xH9EXD3CfW9B5mBTWTW6Qi28YrmmDUD8WfYzAp+GMW/NX1sf2jcim9
-         p9TV40K9JWSp95sXcbLXnhApLLu0A0ABHN7alxdXkM1r9I/97RVRvjvbSl0rwCFDnrds
-         MgVQ5wl2VKBhy5HWTXFp0joV93UB52d4AMRaTt7+yi4p9Oni+yYVsyZGW1Ys135suUi7
-         NP0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWFCdEUgk5dfzDM3fhNe+v2tWxrsCvDUWA3/QI1yjsA=;
-        b=ZMJ2sXo1E2B/07YDMGjoDxUZGhdxhq0CbASVxrbRk3qOykkdy0fYuq0422SY+H4/rN
-         g7DbETpTEqDdryrkD1AFxaNTaVUpUadVpRXRnYVi9wlImhyXpBjO6TkaDDK+KVpFjAyf
-         5MsBaN6L+ewuRPUeCEaUI1WeYeV80uA6PuQv1H7gBwKb/WjPpAwjH14+oQfILY7yE/Ha
-         rJHfAkfh/8K+ygE2z+Xc45IeNe8uyTKQt68n1NShfns+PlA8GZfQSyT32ExTHA0zTPup
-         bzHpPPcmowh4Ai4Vdu3RocA1/+4KEykvVs4c4hmUW3OWf9m18qP3ww1edtO0hl8vUf+v
-         d2kw==
-X-Gm-Message-State: AOAM533JOADJT+7mmiEb08PL/M2IVU6msxFxmSyVPG9HHGKAcArVn3tJ
-        BH3RlbjSja5SVLX+n+38dVC+JIsKp6cpinDdlhit8w==
-X-Google-Smtp-Source: ABdhPJyIiIuyUQqHN3zlh6wrnfN64GqNkLKnTcdf/MuoVjXEMgRphXgXP3Wlti/RgXHlE/J8tuuX/mMRGR2kcN3VA8g=
-X-Received: by 2002:a19:745:: with SMTP id 66mr32821101lfh.77.1594121660274;
- Tue, 07 Jul 2020 04:34:20 -0700 (PDT)
+        Tue, 7 Jul 2020 07:34:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594121662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=zzk0Poxqm5ldhMblkzjJh3Rxli04jkv3ZWwXnLqHXmc=;
+        b=IXIsJzNTqypEvuWDIXVKhmin5XMhZAzo6aaVKuTJ1e6tAJ43R74vk7W+9n99N+zXgsX0hG
+        cnLLH7vRzzukOFgvTlidPZhekBurYqSAGza1Q+2n7vCT/UCbLYTUSRhtgYIUS+WZICoo6P
+        HgpWal4GJ0/owL3Moaevsgkccf0++vw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-K7s58eHlOXuwQZH9cM1vPg-1; Tue, 07 Jul 2020 07:34:19 -0400
+X-MC-Unique: K7s58eHlOXuwQZH9cM1vPg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4FE5EC1A1;
+        Tue,  7 Jul 2020 11:34:16 +0000 (UTC)
+Received: from [10.36.114.87] (ovpn-114-87.ams2.redhat.com [10.36.114.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 931CE5D9C9;
+        Tue,  7 Jul 2020 11:34:13 +0000 (UTC)
+Subject: Re: [RFC PATCH v2 2/3] device-dax: use fallback nid when numa_node is
+ invalid
+To:     Jia He <justin.he@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        Kaly Xin <Kaly.Xin@arm.com>
+References: <20200707055917.143653-1-justin.he@arm.com>
+ <20200707055917.143653-3-justin.he@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <2409a5d4-e77b-f570-c788-feb4f6ebb498@redhat.com>
+Date:   Tue, 7 Jul 2020 13:34:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
- <1592480018-3340-4-git-send-email-hanks.chen@mediatek.com> <CACRpkdavqjcma8A1y9Sh=WWLu-n0+mQOhyNw2dHenA8ZnQkvgg@mail.gmail.com>
-In-Reply-To: <CACRpkdavqjcma8A1y9Sh=WWLu-n0+mQOhyNw2dHenA8ZnQkvgg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:34:09 +0200
-Message-ID: <CACRpkdb5TyictD3j_PE5JtBJmxX87Bk04YkxF1ErsbHwO4TSOg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] pinctrl: mediatek: avoid virtual gpio trying to
- set reg
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200707055917.143653-3-justin.he@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 1:31 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
->
-> > for virtual gpios, they should not do reg setting and
-> > should behave as expected for eint function.
-> >
-> > Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->
-> Sean if you're OK with this patch I can just apply it separately.
+On 07.07.20 07:59, Jia He wrote:
+> Previously, numa_off is set unconditionally at the end of dummy_numa_init(),
+> even with a fake numa node. Then ACPI detects node id as NUMA_NO_NODE(-1) in
+> acpi_map_pxm_to_node() because it regards numa_off as turning off the numa
+> node. Hence dev_dax->target_node is NUMA_NO_NODE on arm64 with fake numa.
+> 
+> Without this patch, pmem can't be probed as a RAM device on arm64 if SRAT table
+> isn't present:
+> $ndctl create-namespace -fe namespace0.0 --mode=devdax --map=dev -s 1g -a 64K
+> kmem dax0.0: rejecting DAX region [mem 0x240400000-0x2bfffffff] with invalid node: -1
+> kmem: probe of dax0.0 failed with error -22
+> 
+> This fixes it by using fallback memory_add_physaddr_to_nid() as nid.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+> I noticed that on powerpc memory_add_physaddr_to_nid is not exported for module
+> driver. Set it to RFC due to this concern.
+> 
+>  drivers/dax/kmem.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 275aa5f87399..68e693ca6d59 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -28,20 +28,22 @@ int dev_dax_kmem_probe(struct device *dev)
+>  	resource_size_t kmem_end;
+>  	struct resource *new_res;
+>  	const char *new_res_name;
+> -	int numa_node;
+> +	int numa_node, new_node;
+>  	int rc;
+>  
+>  	/*
+>  	 * Ensure good NUMA information for the persistent memory.
+> -	 * Without this check, there is a risk that slow memory
+> -	 * could be mixed in a node with faster memory, causing
+> -	 * unavoidable performance issues.
+> +	 * Without this check, there is a risk but not fatal that slow
+> +	 * memory could be mixed in a node with faster memory, causing
+> +	 * unavoidable performance issues. Furthermore, fallback node
+> +	 * id can be used when numa_node is invalid.
+>  	 */
+>  	numa_node = dev_dax->target_node;
+>  	if (numa_node < 0) {
+> -		dev_warn(dev, "rejecting DAX region %pR with invalid node: %d\n",
+> -			 res, numa_node);
+> -		return -EINVAL;
+> +		new_node = memory_add_physaddr_to_nid(kmem_start);
+> +		dev_info(dev, "changing nid from %d to %d for DAX region %pR\n",
+> +			numa_node, new_node, res);
+> +		numa_node = new_node;
 
-Ah nevermind since the next patch has your ACK I just applied this
-too since it's a dependency. Yell if this is wrong.
+Now, the warning does not really make sense. We have NUMA_NO_NODE (< 0),
+that is not a change in the nid, but a selection of a nid. Printing
+NUMA_NO_NODE does not make too much sense. I suggest just getting rid of
+new_node and turning the dev_info() into something like
 
-Yours,
-Linus Walleij
+dev_info(dev, "using nid %d for DAX region with undefined nid %pR\n",
+         numa_node, res);
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
