@@ -2,124 +2,91 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B77C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA404C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEB1206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:53:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vFExuLQF"
+	by mail.kernel.org (Postfix) with ESMTP id B375E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgGGLxG (ORCPT
+        id S1727090AbgGGLy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgGGLxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:53:05 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26DBC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:53:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id r22so37751651qke.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/lhR2DZXpozvvgwzQZE1TCPc3qqJrMpIFfl0B2ci+vU=;
-        b=vFExuLQFOH/bXTR/xQJn75B8oonlcSiIttbkfBjYRxIChwEd2AR3gU2B1S+lwXsSRl
-         R3WqH0yxCnRrY2KezY865zfBmTKORaxsXKfWcSiLF1SOD2peJy0N9Cewg7q5cYrnrwfW
-         n1CgK+S/uqzPLW2XqkTUZVphPCEu2Nh+Ux0A51K52eQ2Z48jprlhtMq+AIeStSSHhh+l
-         1h8Vprw543xz2CaF83OXxvIYtOvDUac7kcDUiR1nUI3nz8xk3rOEbwvXhCYNMA5jYckd
-         a+nh9RXpYON2GH08oVNgGrqJNNmQha9h52VJ+2R3hj72ne8kjBQNbtj4coPkrSSH4q7U
-         S9rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/lhR2DZXpozvvgwzQZE1TCPc3qqJrMpIFfl0B2ci+vU=;
-        b=ABPkdMTxugkrfEgbTU6tGNEer1NLYILjYFyEbXayQGqT+/Uiqhvnda3V6gH+3GQVPx
-         NSwWW3lr9vgcAj2pyegi5zKE+W94Ls51JKgEJemU7yc5ocp4Jm+3LN5U0w+qfaQUFVyt
-         B+Ix+kIy2GvX7HIdFsd9/hdk7kmfkv6fSw5vfB28AYtVzfxSu2Q7/tVB9WW9Aq6PIai9
-         p5skL6dktJnxzWin9pjNTJsbz+mVvYDh7+EOV2ViQsHhXlShzYusPtS87PhgUwDuoUv5
-         ofbfDbK5oNCKijOSGbFHRwzqkP5yByec3ENHifWn+zLYCwlkZ55XnjKh7PbdvTQm8Kmn
-         /gaA==
-X-Gm-Message-State: AOAM533a0DxxQ4PO9A7NGCyxQXfLkrRoNZi6NKX2RpP90nRlCsUfGb4k
-        2ci+kyKx2dBVWyIXy/4UrXg1bnvP19V6msXiXR8=
-X-Google-Smtp-Source: ABdhPJxI0yK/3FTcBZrGCc+QfO7hVhj1GBMGcBdmHTMw0+jvC5IYgvfTIPEaDGxgMCOZTnR4yIJOJZHt4XFq01W7GeI=
-X-Received: by 2002:a37:8b01:: with SMTP id n1mr51153237qkd.370.1594122784112;
- Tue, 07 Jul 2020 04:53:04 -0700 (PDT)
+        Tue, 7 Jul 2020 07:54:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18420 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgGGLy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:54:57 -0400
+IronPort-SDR: khKurL59450+/kibfTom+kxOIYT4/Kdtu02upNX8GT8WkWQXPGgbTAtyGgcgOyZKtyezeIsz/1
+ Qr1ZDyvyFQlw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="165653233"
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="165653233"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 04:54:57 -0700
+IronPort-SDR: Q0XzBKzpLoC00gIXad7+vF1LH2FPQ7aV7UOLCWh9gfLBTzfkGKg8kftxLgX0Ju0fnrF7MBy4rR
+ Ite9FIYltpUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="457073880"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga005.jf.intel.com with ESMTP; 07 Jul 2020 04:54:55 -0700
+Date:   Tue, 7 Jul 2020 19:56:21 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2][RFC] Makes sd->flags sysctl writable
+Message-ID: <20200707115621.GB25765@chenyu-office.sh.intel.com>
+References: <cover.1594062828.git.yu.c.chen@intel.com>
+ <20200706200049.GB5523@worktop.programming.kicks-ass.net>
+ <jhj7dvg8faj.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200702152048.1819867-1-chengzhihao1@huawei.com>
-In-Reply-To: <20200702152048.1819867-1-chengzhihao1@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Tue, 7 Jul 2020 13:52:53 +0200
-Message-ID: <CAFLxGvybobVbhS4zQSxSmq3xR40QP=pkyDG8j7jA8a6eOOKfHg@mail.gmail.com>
-Subject: Re: [PATCH] ubifs: Fix wrong orphan node deletion in ubifs_jnl_update()
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhj7dvg8faj.mognet@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 5:21 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->
-> There a wrong orphan node deleting in error handling path in
-> ubifs_jnl_update(), which may cause following error msg:
->
->   UBIFS error (ubi0:0 pid 1522): ubifs_delete_orphan [ubifs]:
->   missing orphan ino 65
->
-> Fix this by checking whether the node has been operated for
-> adding to orphan list before being deleted,
->
-> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> ---
->  fs/ubifs/journal.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
-> index e5ec1afe1c66..db0a80dd9d52 100644
-> --- a/fs/ubifs/journal.c
-> +++ b/fs/ubifs/journal.c
-> @@ -539,7 +539,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->                      const struct fscrypt_name *nm, const struct inode *inode,
->                      int deletion, int xent)
->  {
-> -       int err, dlen, ilen, len, lnum, ino_offs, dent_offs;
-> +       int err, dlen, ilen, len, lnum, ino_offs, dent_offs, orphan_added = 0;
->         int aligned_dlen, aligned_ilen, sync = IS_DIRSYNC(dir);
->         int last_reference = !!(deletion && inode->i_nlink == 0);
->         struct ubifs_inode *ui = ubifs_inode(inode);
-> @@ -630,6 +630,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->                         goto out_finish;
->                 }
->                 ui->del_cmtno = c->cmt_no;
-> +               orphan_added = 1;
->         }
->
->         err = write_head(c, BASEHD, dent, len, &lnum, &dent_offs, sync);
-> @@ -702,7 +703,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->         kfree(dent);
->  out_ro:
->         ubifs_ro_mode(c, err);
-> -       if (last_reference)
-> +       if (last_reference && orphan_added)
+Hi Valentin,
+On Mon, Jul 06, 2020 at 11:11:32PM +0100, Valentin Schneider wrote:
+> 
+> On 06/07/20 21:00, Peter Zijlstra wrote:
+> > On Tue, Jul 07, 2020 at 03:36:13AM +0800, Chen Yu wrote:
+> >> It was found that recently the flags of sched domain could
+> >> not be customized via sysctl, which might make it a little
+> >> inconenient for performance tuning/debugging.
+> >
+> > What specific goals do you have? This is a debug interface.
+> 
+> Also, while the update_top_cache_domain() call on sysctl write may work,
+> you're back to square one as soon as you go through a hotplug cycle, which
+> is icky.
+Do you mean, after the hotplug, all the settings of flags are lost? Yes,
+it is, but in our testing environment we do not do hotplug offen : )
+> 
+> That said, I second Peter in that I'm curious as to what you're really
+> using this interface for. Manually hacking the default / arch topology
+> flags is a bit tedious, but it's doable.
+Agree, but since we do monitor performance testings automatically,
+it might save more time for us to not have to reboot everytime we
+change the flags. So I guess we can hack the code to make that
+flags field temporarily writable. I guess the concern here is that it
+looks a little overkilled for us to invoke update_top_cache_domain(),
+I'm okay with current read-only attribute.
 
-I think you can just check for orphan_added here.
-Looks good otherwise, thanks for fixing! :-)
-
--- 
 Thanks,
-//richard
+Chenyu
