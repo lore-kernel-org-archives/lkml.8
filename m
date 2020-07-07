@@ -2,189 +2,197 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4302C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E28C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02AC2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sOGIb1BW"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KeotNUt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgGGJke (ORCPT
+        id S1728296AbgGGJky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:40:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60318 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgGGJkd (ORCPT
+        Tue, 7 Jul 2020 05:40:54 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:15499 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgGGJky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:40:33 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200707094032euoutp02b4124f7393e95ecf4c8fc64570135d6c~fbv6TCCeI1576815768euoutp02K
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:40:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200707094032euoutp02b4124f7393e95ecf4c8fc64570135d6c~fbv6TCCeI1576815768euoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594114832;
-        bh=NKIXIZf7DqPM44p634PRRQQpgwlo737WpVwaop6YS/g=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sOGIb1BW/40xaj8x9YhGIpD57NGrAvROgKGk93RNW5GHXK1UpyxgPS6tiWEoO2sZN
-         0nwgX2MW0/AkcMQ+jPZ7NiSuZl742N2uo5UcxndmbuASgxEeG4cexd4CX9/wEJSu3p
-         /HU/16m0NcWbHIzg4NIMJgZlCNZ0ppSNgfGp7mms=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200707094032eucas1p1561b02b886cf5d6b07ab5f897da3a11f~fbv55PHXs0287902879eucas1p1-;
-        Tue,  7 Jul 2020 09:40:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A9.67.05997.013440F5; Tue,  7
-        Jul 2020 10:40:32 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200707094031eucas1p167fcabe5e1275d9d8584de4baccc36fc~fbv5kG1Zu0287902879eucas1p1_;
-        Tue,  7 Jul 2020 09:40:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200707094031eusmtrp224005f38d42d83c2425b55661f7c16bd~fbv5jYt8d0878708787eusmtrp2H;
-        Tue,  7 Jul 2020 09:40:31 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-07-5f04431045b6
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id DF.69.06314.F03440F5; Tue,  7
-        Jul 2020 10:40:31 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200707094029eusmtip24fc305116ea90ec9f9c6e9d4392554ca~fbv3CyALk0258102581eusmtip2U;
-        Tue,  7 Jul 2020 09:40:29 +0000 (GMT)
-Subject: Re: [PATCH v7 08/36] drm: exynos: fix common struct sg_table
- related issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <53d2ae18-3d60-773f-4544-3c8f55749038@samsung.com>
-Date:   Tue, 7 Jul 2020 11:40:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Tue, 7 Jul 2020 05:40:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594114853; x=1625650853;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=NihY3ViitGJtQEPksogWk5DoMQ/1XBiWu08W85dI/4o=;
+  b=KeotNUt/eluDVbvqgDv/jGyPwrIPP5J024jIe1ST7zrB1ysV4K6Tweog
+   fNV8VWz0INI4CwLfHe582HJ1ZPwwyNCjnFtLZSHG02Cxq3nERA1R6ydfY
+   XeUSRUVg9qzsFO0JeYGEytXcnykQjAYNsw98dB7WbQDNawkNt9MTWkSJP
+   Q=;
+IronPort-SDR: X1lixmzdn1vPYBST3ApDjhtRWNutxjj1YUDQDULXpucZy5C8+yD93mwu+FQk2xR/iDRb0uTYNU
+ WWPzcpHJdvaw==
+X-IronPort-AV: E=Sophos;i="5.75,323,1589241600"; 
+   d="scan'208";a="49677446"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Jul 2020 09:40:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 7AC17A1D4E;
+        Tue,  7 Jul 2020 09:40:31 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 09:40:30 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.203) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 09:40:14 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v13 5/8] mm/damon/schemes: Implement statistics feature
+Date:   Tue, 7 Jul 2020 11:38:02 +0200
+Message-ID: <20200707093805.4775-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200707093805.4775-1-sjpark@amazon.com>
+References: <20200707093805.4775-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619103636.11974-9-m.szyprowski@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOTM747i5Nq6WB63MrRCLtLJiwLDUkJGC6o+BkDrl4G0vtquW
-        QbhkiGxkXvK2aS2SeMd01900UNouunhZMfGChpf1R0qL5S2L0nYcI/8953zv+33fezgEKh7C
-        vIgkeRqrlDNSCS4UGD/+tB4nwwWxJ5ZNu6nHAxaEailrxqjh1UWcqmv4gFC6rmBqZXgGoVpt
-        Ixj1qaMCp8qsnQjV9P6zE/X22xxGlRXN4xdc6MbnjYA2rU1j9NSjboTWv8yiJzZsKF00VgPo
-        N+NqnM4z1AN6ufXAVedo4bl4VpqUwSoDQ+KEiYUTu1JtHnfNbV8RNchx0wCCgORpOPssTgOE
-        hJisBbBm6YcTf1gBsHLdgvKHZQBLxq1AA5y3HNWWQoxjMVkDYPZsPC9aBLBpdFDAtXUno+Do
-        pg+n8SANDk1xBKdByWIE2oydKFfASX/4Rz+OcywiQ2B5vnlrgIA8DA3NrQjHe8gY2DxvQniN
-        G7SUzwk4dnboWzYNW16U9IEmewXKsyd8sFKHccMg+d0J1umLUX7ri7C7emGb3eFCt8GJ531w
-        s/0FwnMWnKp9iPLmXADbXrVvG4Lh5MAvnEuGOrZu7gjk3y4UtmUf4dEVjtnd+BVcYaGxFOWv
-        RTA3R8z38IVT/W3b/Txh9eAqng8k2h3BtDvCaHeE0f4fqwOCeuDJpqtkCazqlJy9E6BiZKp0
-        eULALYWsFTh+Wu9G98pr0PH7phmQBJC4iHJxNFaMMRmqTJkZQAKVeIjC+ntjxKJ4JvMeq1TE
-        KtOlrMoMvAmBxFMUVDV/Q0wmMGlsCsumssp/VYRw9lKDp/kF68m+MtuZteuLGmNJl+LJ9Lvb
-        ey9HFVRTh7QjS3qfS8es5Vj6ULbX/mBlT9Xwgj38bMpoqCbLvcE/jDBda1R/oYqZoOTJg1Zj
-        RJdfT+SVykhF37Qk1E8crWe0k3Z6Ro7NW88X5NmFuSnJ9b5WvXe7LtWScL9Ul5fYJ5UIVInM
-        yaOoUsX8Bby5r5xlAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsVy+t/xe7r8zizxBhcfmVv0njvJZLFxxnpW
-        iytf37NZrFx9lMliwX5riy9XHjJZbHp8jdXi8q45bBYzzu9jslh75C67xcEPT1gtZkx+yebA
-        47Fm3hpGj+3fHrB63O8+zuSxeUm9x+1/j5k9Jt9Yzuix+2YDm0ffllWMHp83yQVwRunZFOWX
-        lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlTLrNXfBYpOLQ
-        1jdMDYxtgl2MnBwSAiYSS09OYu1i5OIQEljKKPHw810miIS4xO75b5khbGGJP9e62CCK3jJK
-        fFkyDSwhLBAmcaLjJli3iMAWRolnKw4zgjjMAtOZJG52/YCae5RR4sqyCWAtbAKaEn8332QD
-        sXkF7CRmTjjECGKzCKhIbFm/CWy3qECcxPIt89khagQlTs58wgJicwLVb/y/BayXWcBMYt7m
-        h8wQtrzE9rdzoGxxiaYvK1knMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1ya
-        l66XnJ+7iREYz9uO/dy8g/HSxuBDjAIcjEo8vAlHmOOFWBPLiitzDzFKcDArifA6nT0dJ8Sb
-        klhZlVqUH19UmpNafIjRFOi5icxSosn5wFSTVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
-        JDU7NbUgtQimj4mDU6qB0ZV1eqvW5kxGBT/G0qmNIRmqeXcObzFNqVYpeXCA5fWX1zNXaZ0O
-        nGOYP0t7aR33lT1BEcH3TwSUZXPFvii+9CBIYbLx1X7O5EXndq+TdG7RKTxYcSfJdlOvzAIH
-        oXKBRUHmLf97VFg8frvVXP6/y/1w5guTT8f9BBL/C/dv2iNR5zWxLstZiaU4I9FQi7moOBEA
-        P2s+Qv0CAAA=
-X-CMS-MailID: 20200707094031eucas1p167fcabe5e1275d9d8584de4baccc36fc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9
-References: <20200619103636.11974-1-m.szyprowski@samsung.com>
-        <CGME20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9@eucas1p1.samsung.com>
-        <20200619103636.11974-9-m.szyprowski@samsung.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.203]
+X-ClientProxiedBy: EX13D36UWA002.ant.amazon.com (10.43.160.24) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
 
-On 19.06.2020 12:36, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
->
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
->
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
->
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+To tune the DAMON-based operation schemes, knowing how many and how
+large regions are affected by each of the schemes will be helful.  Those
+stats could be used for not only the tuning, but also monitoring of the
+working set size and the number of regions, if the scheme does not
+change the program behavior too much.
 
-Reviewed-by <a.hajda@samsung.com>
+For the reason, this commit implements the statistics for the schemes.
+The total number and size of the regions that each scheme is applied are
+exported to users via '->stat_count' and '->stat_sz' of 'struct damos'.
+Admins can also check the number by reading 'schemes' debugfs file.  The
+last two integers now represents the stats.  To allow collecting the
+stats without changing the program behavior, this commit also adds new
+scheme action, 'DAMOS_STAT'.  Note that 'DAMOS_STAT' is not only making
+no memory operation actions, but also does not reset the age of regions.
 
-Regards
-Andrzej
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ include/linux/damon.h |  6 ++++++
+ mm/damon.c            | 13 ++++++++++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 76e6ea2f97a7..f176a2b6e67c 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -73,6 +73,7 @@ struct damon_task {
+  * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
+  * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
+  * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
++ * @DAMOS_STAT:		Do nothing but count the stat.
+  * @DAMOS_ACTION_LEN:	Number of supported actions.
+  */
+ enum damos_action {
+@@ -81,6 +82,7 @@ enum damos_action {
+ 	DAMOS_PAGEOUT,
+ 	DAMOS_HUGEPAGE,
+ 	DAMOS_NOHUGEPAGE,
++	DAMOS_STAT,		/* Do nothing but only record the stat */
+ 	DAMOS_ACTION_LEN,
+ };
+ 
+@@ -93,6 +95,8 @@ enum damos_action {
+  * @min_age_region:	Minimum age of target regions.
+  * @max_age_region:	Maximum age of target regions.
+  * @action:		&damo_action to be applied to the target regions.
++ * @stat_count:		Total number of regions that this scheme is applied.
++ * @stat_sz:		Total size of regions that this scheme is applied.
+  * @list:		List head for siblings.
+  *
+  * For each aggregation interval, DAMON applies @action to monitoring target
+@@ -107,6 +111,8 @@ struct damos {
+ 	unsigned int min_age_region;
+ 	unsigned int max_age_region;
+ 	enum damos_action action;
++	unsigned long stat_count;
++	unsigned long stat_sz;
+ 	struct list_head list;
+ };
+ 
+diff --git a/mm/damon.c b/mm/damon.c
+index 28b1e119e521..937b6bccb7b8 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -212,6 +212,8 @@ static struct damos *damon_new_scheme(
+ 	scheme->min_age_region = min_age_region;
+ 	scheme->max_age_region = max_age_region;
+ 	scheme->action = action;
++	scheme->stat_count = 0;
++	scheme->stat_sz = 0;
+ 	INIT_LIST_HEAD(&scheme->list);
+ 
+ 	return scheme;
+@@ -927,6 +929,8 @@ static int damos_do_action(struct damon_task *task, struct damon_region *r,
+ 	case DAMOS_NOHUGEPAGE:
+ 		madv_action = MADV_NOHUGEPAGE;
+ 		break;
++	case DAMOS_STAT:
++		return 0;
+ 	default:
+ 		pr_warn("Wrong action %d\n", action);
+ 		return -EINVAL;
+@@ -950,8 +954,11 @@ static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
+ 			continue;
+ 		if (r->age < s->min_age_region || s->max_age_region < r->age)
+ 			continue;
++		s->stat_count++;
++		s->stat_sz += sz;
+ 		damos_do_action(t, r, s->action);
+-		r->age = 0;
++		if (s->action != DAMOS_STAT)
++			r->age = 0;
+ 	}
+ }
+ 
+@@ -1508,11 +1515,11 @@ static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
+ 
+ 	damon_for_each_scheme(s, c) {
+ 		rc = snprintf(&buf[written], len - written,
+-				"%lu %lu %u %u %u %u %d\n",
++				"%lu %lu %u %u %u %u %d %lu %lu\n",
+ 				s->min_sz_region, s->max_sz_region,
+ 				s->min_nr_accesses, s->max_nr_accesses,
+ 				s->min_age_region, s->max_age_region,
+-				s->action);
++				s->action, s->stat_count, s->stat_sz);
+ 		if (!rc)
+ 			return -ENOMEM;
+ 
+-- 
+2.17.1
 
-> ---
->   drivers/gpu/drm/exynos/exynos_drm_g2d.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-> index fcee33a43aca..7014a8cd971a 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-> @@ -395,8 +395,8 @@ static void g2d_userptr_put_dma_addr(struct g2d_data *g2d,
->   		return;
->   
->   out:
-> -	dma_unmap_sg(to_dma_dev(g2d->drm_dev), g2d_userptr->sgt->sgl,
-> -			g2d_userptr->sgt->nents, DMA_BIDIRECTIONAL);
-> +	dma_unmap_sgtable(to_dma_dev(g2d->drm_dev), g2d_userptr->sgt,
-> +			  DMA_BIDIRECTIONAL, 0);
->   
->   	pages = frame_vector_pages(g2d_userptr->vec);
->   	if (!IS_ERR(pages)) {
-> @@ -511,10 +511,10 @@ static dma_addr_t *g2d_userptr_get_dma_addr(struct g2d_data *g2d,
->   
->   	g2d_userptr->sgt = sgt;
->   
-> -	if (!dma_map_sg(to_dma_dev(g2d->drm_dev), sgt->sgl, sgt->nents,
-> -				DMA_BIDIRECTIONAL)) {
-> +	ret = dma_map_sgtable(to_dma_dev(g2d->drm_dev), sgt,
-> +			      DMA_BIDIRECTIONAL, 0);
-> +	if (ret) {
->   		DRM_DEV_ERROR(g2d->dev, "failed to map sgt with dma region.\n");
-> -		ret = -ENOMEM;
->   		goto err_sg_free_table;
->   	}
->   
