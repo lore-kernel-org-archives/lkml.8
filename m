@@ -2,90 +2,153 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC45C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09939C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6987206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iZm8ucIw"
+	by mail.kernel.org (Postfix) with ESMTP id D746A2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594151210;
+	bh=5xc6pN2TBXNWEcR01qSPAYpgcIpDgrzlDuJ85S1dAn0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uiHc8ZVBjrLkDkzLNMW+wPHaQ4MOYVMObCs96xwGGK3JdDGtUbt4cgI+9WuaHFEAe
+	 Uq7HHpVb9UV7fEZ1HglzM7M/OEthB0Svtt8G5U7NaJofyJ+RmxexypYxlN/k1gVEyb
+	 N6iYHOUWEPVxwRs24Ma/6ccRgYB4ueGiwFZgzdVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgGGTpo (ORCPT
+        id S1728244AbgGGTqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:45:44 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:53820 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbgGGTpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:45:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594151165; x=1625687165;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rYdMBPFrRbVbk8DFcQNubWpbbG2Xb3oRsw/dpkB/QeY=;
-  b=iZm8ucIwss395xYeuy6/lyIrXg/lxl1aIE5T381krOpDcgWMl3grSISR
-   mrK4r8gy0I00VkRsnzbxxmAPUEMc1R6YLP2wZroapQofD8IpYEA9mKXBx
-   oueGgieWW4x8mD7y+oQwQaq3wZMQeoGTUINhyO22+my56JJjxG4SP9zzM
-   0mWveAUEdJXsqP4jWs9hWbTyFeL6JbL4w5mzNeApk0D/WuF+kJyu6aG9j
-   8gsnyb8e5OtI58FrupM9Rit/yQsIEC8kdRBJnTxE04mEVwmcBndF7QoWX
-   d1v3udBqXVZQNyaXtp7ckgwk7L4ZK9DP/H0ITIX+u99aN6QRlCAm2+9F3
-   A==;
-IronPort-SDR: btQDLBa3Z1VKjRGWwi659ExoF2P0emFH899iYeQnMViGMOHIDHsdHiDetDykHUa3eThgOOHg3x
- ex/TEPcMztWkaWiRoPs3mQunupN/GPH6WgKJLXWqC5hXo1YmmUfuIP3UxZvQ/SGl3AOs0oXh5B
- aPgLqNudufRl0DSuyJ3FN8r7zDiG1+ztjK/576iJ0mmeBZEDQj2dnDrFqnkvSHBzlRCN3qqLhX
- o5OKeG53Z9+ZuQCdd+kQZhvtGhyHR+x+4WMWYrtoLIYeixNZhx9UhI09YbtC2/J8XIQZyUDHXv
- JiE=
-X-IronPort-AV: E=Sophos;i="5.75,324,1589212800"; 
-   d="scan'208";a="244884702"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Jul 2020 03:46:05 +0800
-IronPort-SDR: nSKFKD1wIQuP7Y1kcmCly4O9Vqh8RONK/bvL3DW8BFAiw6pb0y/ftDYK9eaXpjZCpblbjU9Ea8
- cwv5oboEtpM1DCNFfrhwOzsXb7+HqlISI=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:34:22 -0700
-IronPort-SDR: y0nVZrUYU/RZaOg80bWjddoYfs2s76PYymRZwFgUvzefJHjOwJCL/zV/TdKh9Mp88c3v2Rhp/u
- e6i0JrmsTDhw==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:45:42 -0700
-Date:   Tue, 7 Jul 2020 20:45:38 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
-In-Reply-To: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <alpine.LFD.2.21.2007072043250.31807@redsun52.ssa.fujisawa.hgst.com>
-References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 7 Jul 2020 15:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbgGGTqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:46:49 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D54282067D;
+        Tue,  7 Jul 2020 19:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594151208;
+        bh=5xc6pN2TBXNWEcR01qSPAYpgcIpDgrzlDuJ85S1dAn0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KrIiJh2ef4ESA5x5pkG3fH9Aqt75oiH5qXW4bb+WlvyY6y6Qy03uKi4QJO7rruhQT
+         bR4FAhRPYXNpm7ijlVoOmofnRAGYniIEV9QH3eBYXOL6/2gK4+3oR1DpdTLOj19b+A
+         P13h67E+N3b7oAmrDa7T6ZM9b76xeLAa7S4D/s3w=
+Date:   Tue, 7 Jul 2020 14:52:14 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] usbip: Use fallthrough pseudo-keyword
+Message-ID: <20200707195214.GA3932@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020, Tiezhu Yang wrote:
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-> In the MIPS architecture, we should clear the security-relevant
-> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
-> file arch/mips/include/asm/elf.h.
-> 
-> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
-> mmap to make memory executable that is not safe, because this
-> condition allows an attacker to simply jump to and execute bytes
-> that are considered to be just data [1].
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
- Why isn't the arrangement made with `mips_elf_read_implies_exec' 
-sufficient?
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/usb/usbip/stub_rx.c       |    2 +-
+ drivers/usb/usbip/vhci_hcd.c      |    7 +++----
+ drivers/usb/usbip/vhci_rx.c       |    2 +-
+ drivers/usb/usbip/vudc_transfer.c |    4 ++--
+ 4 files changed, 7 insertions(+), 8 deletions(-)
 
-  Maciej
+diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
+index e2b019532234..325c22008e53 100644
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -424,7 +424,7 @@ static void masking_bogus_flags(struct urb *urb)
+ 	case USB_ENDPOINT_XFER_BULK:
+ 		if (is_out)
+ 			allowed |= URB_ZERO_PACKET;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:			/* all non-iso endpoints */
+ 		if (!is_out)
+ 			allowed |= URB_SHORT_NOT_OK;
+diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+index 65850e9c7190..1b598db5d8b9 100644
+--- a/drivers/usb/usbip/vhci_hcd.c
++++ b/drivers/usb/usbip/vhci_hcd.c
+@@ -508,7 +508,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		case USB_PORT_FEAT_U1_TIMEOUT:
+ 			usbip_dbg_vhci_rh(
+ 				" SetPortFeature: USB_PORT_FEAT_U1_TIMEOUT\n");
+-			/* Fall through */
++			fallthrough;
+ 		case USB_PORT_FEAT_U2_TIMEOUT:
+ 			usbip_dbg_vhci_rh(
+ 				" SetPortFeature: USB_PORT_FEAT_U2_TIMEOUT\n");
+@@ -561,7 +561,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 				       "supported for USB 2.0 roothub\n");
+ 				goto error;
+ 			}
+-			/* FALLS THROUGH */
++			fallthrough;
+ 		case USB_PORT_FEAT_RESET:
+ 			usbip_dbg_vhci_rh(
+ 				" SetPortFeature: USB_PORT_FEAT_RESET\n");
+@@ -584,8 +584,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 
+ 			/* 50msec reset signaling */
+ 			vhci_hcd->re_timeout = jiffies + msecs_to_jiffies(50);
+-
+-			/* FALLS THROUGH */
++			fallthrough;
+ 		default:
+ 			usbip_dbg_vhci_rh(" SetPortFeature: default %d\n",
+ 					  wValue);
+diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
+index 00fc98741c5d..266024cbb64f 100644
+--- a/drivers/usb/usbip/vhci_rx.c
++++ b/drivers/usb/usbip/vhci_rx.c
+@@ -27,7 +27,7 @@ struct urb *pickup_urb_and_free_priv(struct vhci_device *vdev, __u32 seqnum)
+ 
+ 		switch (status) {
+ 		case -ENOENT:
+-			/* fall through */
++			fallthrough;
+ 		case -ECONNRESET:
+ 			dev_dbg(&urb->dev->dev,
+ 				 "urb seq# %u was unlinked %ssynchronously\n",
+diff --git a/drivers/usb/usbip/vudc_transfer.c b/drivers/usb/usbip/vudc_transfer.c
+index c9db846ee4f6..7e801fee33bf 100644
+--- a/drivers/usb/usbip/vudc_transfer.c
++++ b/drivers/usb/usbip/vudc_transfer.c
+@@ -404,7 +404,7 @@ static void v_timer(struct timer_list *t)
+ 			 * for now, give unlimited bandwidth
+ 			 */
+ 			limit += urb->transfer_buffer_length;
+-			/* fallthrough */
++			fallthrough;
+ 		default:
+ treat_control_like_bulk:
+ 			total -= transfer(udc, urb, ep, limit);
+@@ -479,7 +479,7 @@ void v_kick_timer(struct vudc *udc, unsigned long time)
+ 		return;
+ 	case VUDC_TR_IDLE:
+ 		t->state = VUDC_TR_RUNNING;
+-		/* fallthrough */
++		fallthrough;
+ 	case VUDC_TR_STOPPED:
+ 		/* we may want to kick timer to unqueue urbs */
+ 		mod_timer(&t->timer, time);
+
