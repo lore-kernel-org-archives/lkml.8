@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD84C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7481207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D512D2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135472;
-	bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
+	s=default; t=1594135477;
+	bh=UwEqrjqoTq75tKEp9ZpwiITGAJv3OcuzNOfpj83czJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBDz6v8cK7o1XLyOqQXgmz67dASK1KtrIONCicYKH7zFVHVGhvXZytLQxW/jNICVy
-	 GGd6eiezQyV0Isk/LcnID+15+xI5WEFMHGNZfQNPNYh+XKF3dSIkEuaowKCGxofCiL
-	 mqGm132lLuFQhNv/t+XiJRmVJO62F/T2MbfBtIQM=
+	b=My2/j5criWRPheleF387kh7XKZAULj2hO2Op51bs9+VbsvcwGMFPUMELyZS0UY1l3
+	 Q8imv6S+M1fkKh8itNA8ELoFw/7mCOfsWVEWJGCfq6lGQDbcasnrqXwZMhKLP42NTO
+	 sjlkkMzGH/rMVkBbiibJgr1+aLQWMCv1ZnGBb6o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgGGPY3 (ORCPT
+        id S1728742AbgGGPYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbgGGPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:20 -0400
+        id S1730094AbgGGPY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D3A2078D;
-        Tue,  7 Jul 2020 15:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C8102078D;
+        Tue,  7 Jul 2020 15:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135459;
-        bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
+        s=default; t=1594135467;
+        bh=UwEqrjqoTq75tKEp9ZpwiITGAJv3OcuzNOfpj83czJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcgiBGkYGz8pQLlc18S6xrZRTND6CpFgF4KHYj06QaavvCOxNZr5LCcIlzxartLu2
-         2mJVqNbBRKZVypWgfZ+egi7RLwwlnUIc0mk/lgm0HRc0BpB+iWnw+mX1hAGJmNH1Nz
-         Ap2h9JZ994tE7hTPRbUERppGu0smPyXEmu4PrvyA=
+        b=1VnJU+D9rud0zzNiQggBpguim3oqZoNCY5YGcxLV2izNN6+UqIaXGgxP338+fTt/r
+         1ir9D3sSykx+BIZUOyJQJfuUi+z7CLpJjvts/Sk5stHiwk6iAeUwvYL5yxtUWpCrIe
+         jm5bzf8J4YshHQJzPVX08EWc20vK3jIeQBFmWoMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 049/112] rxrpc: Fix afs large storage transmission performance drop
-Date:   Tue,  7 Jul 2020 17:16:54 +0200
-Message-Id: <20200707145803.337562856@linuxfoundation.org>
+Subject: [PATCH 5.7 052/112] enetc: Fix HW_VLAN_CTAG_TX|RX toggling
+Date:   Tue,  7 Jul 2020 17:16:57 +0200
+Message-Id: <20200707145803.476183728@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -59,44 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit 02c28dffb13abbaaedece1e4a6493b48ad3f913a ]
+[ Upstream commit 9deba33f1b7266a3870c9da31f787b605748fc0c ]
 
-Commit 2ad6691d988c, which moved the modification of the status annotation
-for a packet in the Tx buffer prior to the retransmission moved the state
-clearance, but managed to lose the bit that set it to UNACK.
+VLAN tag insertion/extraction offload is correctly
+activated at probe time but deactivation of this feature
+(i.e. via ethtool) is broken.  Toggling works only for
+Tx/Rx ring 0 of a PF, and is ignored for the other rings,
+including the VF rings.
+To fix this, the existing VLAN offload toggling code
+was extended to all the rings assigned to a netdevice,
+instead of the default ring 0 (likely a leftover from the
+early validation days of this feature).  And the code was
+moved to the common set_features() function to fix toggling
+for the VF driver too.
 
-Consequently, if a retransmission occurs, the packet is accidentally
-changed to the ACK state (ie. 0) by masking it off, which means that the
-packet isn't counted towards the tally of newly-ACK'd packets if it gets
-hard-ACK'd.  This then prevents the congestion control algorithm from
-recovering properly.
-
-Fix by reinstating the change of state to UNACK.
-
-Spotted by the generic/460 xfstest.
-
-Fixes: 2ad6691d988c ("rxrpc: Fix race between incoming ACK parser and retransmitter")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/call_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/enetc/enetc.c  | 26 +++++++++++++++++++
+ .../net/ethernet/freescale/enetc/enetc_hw.h   | 16 ++++++------
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |  9 -------
+ 3 files changed, 34 insertions(+), 17 deletions(-)
 
-diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
-index 985fb89202d0c..9ff85ee8337cd 100644
---- a/net/rxrpc/call_event.c
-+++ b/net/rxrpc/call_event.c
-@@ -253,7 +253,7 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
- 		 * confuse things
- 		 */
- 		annotation &= ~RXRPC_TX_ANNO_MASK;
--		annotation |= RXRPC_TX_ANNO_RESENT;
-+		annotation |= RXRPC_TX_ANNO_UNACK | RXRPC_TX_ANNO_RESENT;
- 		call->rxtx_annotations[ix] = annotation;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index 9ac5cccfe0204..a7e4274d3f402 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -1587,6 +1587,24 @@ static int enetc_set_psfp(struct net_device *ndev, int en)
+ 	return 0;
+ }
  
- 		skb = call->rxtx_buffer[ix];
++static void enetc_enable_rxvlan(struct net_device *ndev, bool en)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++	int i;
++
++	for (i = 0; i < priv->num_rx_rings; i++)
++		enetc_bdr_enable_rxvlan(&priv->si->hw, i, en);
++}
++
++static void enetc_enable_txvlan(struct net_device *ndev, bool en)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++	int i;
++
++	for (i = 0; i < priv->num_tx_rings; i++)
++		enetc_bdr_enable_txvlan(&priv->si->hw, i, en);
++}
++
+ int enetc_set_features(struct net_device *ndev,
+ 		       netdev_features_t features)
+ {
+@@ -1595,6 +1613,14 @@ int enetc_set_features(struct net_device *ndev,
+ 	if (changed & NETIF_F_RXHASH)
+ 		enetc_set_rss(ndev, !!(features & NETIF_F_RXHASH));
+ 
++	if (changed & NETIF_F_HW_VLAN_CTAG_RX)
++		enetc_enable_rxvlan(ndev,
++				    !!(features & NETIF_F_HW_VLAN_CTAG_RX));
++
++	if (changed & NETIF_F_HW_VLAN_CTAG_TX)
++		enetc_enable_txvlan(ndev,
++				    !!(features & NETIF_F_HW_VLAN_CTAG_TX));
++
+ 	if (changed & NETIF_F_HW_TC)
+ 		enetc_set_psfp(ndev, !!(features & NETIF_F_HW_TC));
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+index 587974862f488..02efda266c468 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+@@ -531,22 +531,22 @@ struct enetc_msg_cmd_header {
+ 
+ /* Common H/W utility functions */
+ 
+-static inline void enetc_enable_rxvlan(struct enetc_hw *hw, int si_idx,
+-				       bool en)
++static inline void enetc_bdr_enable_rxvlan(struct enetc_hw *hw, int idx,
++					   bool en)
+ {
+-	u32 val = enetc_rxbdr_rd(hw, si_idx, ENETC_RBMR);
++	u32 val = enetc_rxbdr_rd(hw, idx, ENETC_RBMR);
+ 
+ 	val = (val & ~ENETC_RBMR_VTE) | (en ? ENETC_RBMR_VTE : 0);
+-	enetc_rxbdr_wr(hw, si_idx, ENETC_RBMR, val);
++	enetc_rxbdr_wr(hw, idx, ENETC_RBMR, val);
+ }
+ 
+-static inline void enetc_enable_txvlan(struct enetc_hw *hw, int si_idx,
+-				       bool en)
++static inline void enetc_bdr_enable_txvlan(struct enetc_hw *hw, int idx,
++					   bool en)
+ {
+-	u32 val = enetc_txbdr_rd(hw, si_idx, ENETC_TBMR);
++	u32 val = enetc_txbdr_rd(hw, idx, ENETC_TBMR);
+ 
+ 	val = (val & ~ENETC_TBMR_VIH) | (en ? ENETC_TBMR_VIH : 0);
+-	enetc_txbdr_wr(hw, si_idx, ENETC_TBMR, val);
++	enetc_txbdr_wr(hw, idx, ENETC_TBMR, val);
+ }
+ 
+ static inline void enetc_set_bdr_prio(struct enetc_hw *hw, int bdr_idx,
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index eacd597b55f22..438648a06f2ae 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -667,15 +667,6 @@ static int enetc_pf_set_features(struct net_device *ndev,
+ 				 netdev_features_t features)
+ {
+ 	netdev_features_t changed = ndev->features ^ features;
+-	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+-
+-	if (changed & NETIF_F_HW_VLAN_CTAG_RX)
+-		enetc_enable_rxvlan(&priv->si->hw, 0,
+-				    !!(features & NETIF_F_HW_VLAN_CTAG_RX));
+-
+-	if (changed & NETIF_F_HW_VLAN_CTAG_TX)
+-		enetc_enable_txvlan(&priv->si->hw, 0,
+-				    !!(features & NETIF_F_HW_VLAN_CTAG_TX));
+ 
+ 	if (changed & NETIF_F_LOOPBACK)
+ 		enetc_set_loopback(ndev, !!(features & NETIF_F_LOOPBACK));
 -- 
 2.25.1
 
