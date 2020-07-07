@@ -2,106 +2,147 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B777C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4AF20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIO4SkjI"
+	by mail.kernel.org (Postfix) with ESMTP id 361B220738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgGGPhY (ORCPT
+        id S1728620AbgGGPh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:37:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27060 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727079AbgGGPhX (ORCPT
+        Tue, 7 Jul 2020 11:37:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63502 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728194AbgGGPh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:37:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594136241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8SdgB4saJnCjRdo/oh+TvX5LAU++LqcRafgEBY2mxVo=;
-        b=jIO4SkjIV/xPCakutcWYTGumaFN5TV9ba7iUChHQQKgHgWXGUChAUXBsjVtsG6i+aiZf4V
-        dYP8zrdxAEcZjkGviBaI+sIH+IC85CcfnC9VKXUwHELaYKB1O0/jX6a329hNy17S1AFrC4
-        GL8x+aOrvlu4LgzeXtCsdvmp2RLbZdU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-0q6c-uy_P9Ois5YIwXilvw-1; Tue, 07 Jul 2020 11:37:20 -0400
-X-MC-Unique: 0q6c-uy_P9Ois5YIwXilvw-1
-Received: by mail-ej1-f72.google.com with SMTP id c16so39798753ejb.22
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:37:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8SdgB4saJnCjRdo/oh+TvX5LAU++LqcRafgEBY2mxVo=;
-        b=VMvvDuXgEMQbBzihrY7oFcUxaWkBfQLzO7iu3YIjxcZ78Wt1MMq1g3nTutLwkFH5BU
-         Qv9sfrVpOWJ7T9Gtb3QfRutjH47nCdoBSG3u2BbFQqvpQdsnWFLt74oSCkZRKFGUWpcy
-         qriQH04QC3NzWhOqEL+B3R6KC9jWOzgdXXAoxSlIxvWpNFG7wj4CNY9bXPGYtxp7vMvT
-         eyOHyYvHqNwO5rA20TvOiuG7JxdpALdJRIwtWLdrHatjLPE4iK0owWyDNMTFHlH5TWki
-         ixyIQeaBSAthTAjQu2VJLftOMo9kGZVfBwA5DwVkqIZBtZEqnsyhMDjwoU7zNjp0u7S0
-         JFCw==
-X-Gm-Message-State: AOAM532Jx7lL/FakZVoYGLZAGcNAOF9lkprafOx0cGE4rK31RTXLmZkd
-        hMOWeGbabJm646KiZH8iMjpYhCLQ1J8WzUKZNlGoU9SBUcgJ7c9UYiC020juN2U5lVZ69dl/vy2
-        UTt4HXwnZIAZ6RONQE+9SMuV/
-X-Received: by 2002:a17:906:3787:: with SMTP id n7mr46219503ejc.551.1594136238593;
-        Tue, 07 Jul 2020 08:37:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+9cgMMpParXneUmMGaXdYI1xVfHrHMt12BKnlWwkFoZypUOBN6lHuVORzlZx4jItMWSKaUA==
-X-Received: by 2002:a17:906:3787:: with SMTP id n7mr46219487ejc.551.1594136238383;
-        Tue, 07 Jul 2020 08:37:18 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id u18sm25891090edx.34.2020.07.07.08.37.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 08:37:17 -0700 (PDT)
-Subject: Re: [PATCH v2 0/8] virt: vbox: Add support for the new
- VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200623142401.3742-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1cbeeac9-650b-fc6a-9d2d-a5dc26ce1a45@redhat.com>
-Date:   Tue, 7 Jul 2020 17:37:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200623142401.3742-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jul 2020 11:37:59 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067FVOBd141554;
+        Tue, 7 Jul 2020 11:37:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffe5v90-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 11:37:28 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067FVRd3141899;
+        Tue, 7 Jul 2020 11:37:27 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffe5v7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 11:37:27 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067F6pLA031946;
+        Tue, 7 Jul 2020 15:37:25 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 322hd83nbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 15:37:25 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067Fa8Q062390518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jul 2020 15:36:08 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9816EA4054;
+        Tue,  7 Jul 2020 15:36:08 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D379A405F;
+        Tue,  7 Jul 2020 15:36:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.200.130])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jul 2020 15:36:04 +0000 (GMT)
+Message-ID: <1594136164.23056.76.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/4] Fix misused kernel_read_file() enums
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>, James Morris <jmorris@namei.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Tue, 07 Jul 2020 11:36:04 -0400
+In-Reply-To: <20200707081926.3688096-1-keescook@chromium.org>
+References: <20200707081926.3688096-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_08:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ impostorscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007070113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi Kees,
 
-On 6/23/20 4:23 PM, Hans de Goede wrote:
-> Hi All,
+On Tue, 2020-07-07 at 01:19 -0700, Kees Cook wrote:
+> Hi,
 > 
-> Here is v2 of my vboxguest driver patch-set adding support for the
-> new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl which is necessary to
-> make guest resizing work with the new(ish) VMSVGA emulation in vbox +
-> some other small fixes.
+> In looking for closely at the additions that got made to the
+> kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
+> and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
+> *kinds* of files for the LSM to reason about. They are a "how" and
+> "where", respectively. Remove these improper aliases and refactor the
+> code to adapt to the changes.
+
+Thank you for adding the missing calls and the firmware pre allocated
+buffer comment update.
+
 > 
-> The only change since v2 is rate-limiting the error-logging in:
-> [PATCH v2 7/8] virt: vbox: Log unknown ioctl requests as error
+> Additionally adds in missing calls to security_kernel_post_read_file()
+> in the platform firmware fallback path (to match the sysfs firmware
+> fallback path) and in module loading. I considered entirely removing
+> security_kernel_post_read_file() hook since it is technically unused,
+> but IMA probably wants to be able to measure EFI-stored firmware images,
+> so I wired it up and matched it for modules, in case anyone wants to
+> move the module signature checks out of the module core and into an LSM
+> to avoid the current layering violations.
 
-What is the status of this series?   I've addressed the one review
-remark you had on v1 of this series and it would be nice to
-get it upstream for the next cycle.
+IMa has always verified kernel module signatures.  Recently appended
+kernel module signature support was added to IMA.  The same appended
+signature format is also being used to sign and verify the kexec
+kernel image.
 
-Regards,
+With IMA's new kernel module appended signature support and patch 4/4
+in this series, IMA won't be limit to the finit_module syscall, but
+could support the init_module syscall as well.
 
-Hans
+> 
+> This touches several trees, and I suspect it would be best to go through
+> James's LSM tree.
+
+Sure.
+
+thanks!
+
+Mimi
 
