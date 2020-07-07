@@ -2,232 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E271EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC4A20702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqe9A/D+"
+	by mail.kernel.org (Postfix) with ESMTP id B7377206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGGEDd (ORCPT
+        id S1726918AbgGGEEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgGGEDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:03:32 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E5AC061755;
-        Mon,  6 Jul 2020 21:03:32 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id f23so41746230iof.6;
-        Mon, 06 Jul 2020 21:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=D+tVi04ud61P4NPjNc+goY8OYQ1gw/FJ7KDohH2bELM=;
-        b=pqe9A/D+LZBFHOlFWSczZDbINuXZFbPcwwRKHfG9MF/FoCsLNat+5kvqnoxEmXpUuT
-         3LXyoeq1cROgoTF6UVIPa2FAC2jtkcWywlCe1N/SSSgFVzHJakAlm8ddoJZapjF19iHJ
-         OdMs+NGK/L8l4TpMgIQQ4LGcbvYHjra/3RPMV9+J19bPAJQAbJor/uk57bq3i30l1v+q
-         6TTh60qBdQZ+iEf72fR4LC8x0QX63QHMNw/6n16VzYWUUyDNkXy+bc/0rZQGjH+f2gkw
-         ykLcG1+I1obAKyelvg4Ual1YrkL/00KZGVKYfC1asdB38FuYDRc1ypU7eBWFWa7Dkj/T
-         s/jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=D+tVi04ud61P4NPjNc+goY8OYQ1gw/FJ7KDohH2bELM=;
-        b=kWS5G2Kh9wnPJ2KoaiJcxTmVuqJihtXs4HwskOqEmvso9PYHcyo5Z/1h1PaPrlXVpq
-         CuXUsM1J7rOa4EHOZDfwnBSP1UfNvWm6ZlICH+Wai3DRgzOmxt6vlxweu2rnRfU4WtxR
-         Xl8xDGCYOYahU2siZZPeJgMXA6RTak9xFOIvpf98IFldlheIxqSNypt8X4dvo+9frzdq
-         rp/rnmJ9brXXL1HQUxYPDJJN1Bo7pLBDhY+tbi0oPVeB2xDXrlGLZSIGJcruX/h169bS
-         SAnhpR0wckqhJJjVhTaM2tLQniPsXT+S1scgVQ+0PDtPQn9jb3vexMbwZ8OYU/JdY5y8
-         DAcw==
-X-Gm-Message-State: AOAM533JRmX2mZLK2p/JwtSk2cHCtyka0+HMXz9/w0GnejxfMnxW0vcy
-        XodLOzVKah0rDYygyARYQKfaAxlAWO4wIalRJwU=
-X-Google-Smtp-Source: ABdhPJzOlQ24ev7zzBaNpMhWH2aWI2Hg5sjYwyQvINhBGbupT9BNBD4F0TMyZRi55+gpmQqdKVfqGdItbRM1ERiMwQI=
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr25428631jaq.121.1594094610524;
- Mon, 06 Jul 2020 21:03:30 -0700 (PDT)
+        Tue, 7 Jul 2020 00:04:06 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51652 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725766AbgGGEEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:04:05 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CA0DBDA3F0266F168FF6;
+        Tue,  7 Jul 2020 12:04:03 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.203.253) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Jul 2020 12:03:55 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma is enable
+Date:   Tue, 7 Jul 2020 16:02:04 +1200
+Message-ID: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-References: <20200707034604.1539157-1-nickrterrell@gmail.com>
-In-Reply-To: <20200707034604.1539157-1-nickrterrell@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 7 Jul 2020 06:03:18 +0200
-Message-ID: <CA+icZUXvHWj7rDXNXpGL+kTRqC9UMkeUKuCCGiHJnhG6vP4VRQ@mail.gmail.com>
-Subject: Re: [GIT PULL][PATCH v6 0/8] Add support for ZSTD-compressed kernel
- and initramfs
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.203.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 5:50 AM Nick Terrell <nickrterrell@gmail.com> wrote:
->
-> From: Nick Terrell <terrelln@fb.com>
->
-> Please pull from
->
->   git@github.com:terrelln/linux.git tags/v6-zstd
->
-> to get these changes. Alternatively the patchset is included.
->
+hugetlb_cma[0] can be NULL due to various reasons, for example, node0 has
+no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
+enabled. gigantic pages might have been reserved on other nodes.
 
-Hi Nick,
+Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v3: add acked-by; make code more canonical 
 
-cool, I just pulled from their.
-Yesterday, I switched over from Linux v5.7.y to v5.8-rc4.
-What a good timing :-).
+ mm/hugetlb.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-I will report later.
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 57ece74e3aae..d293c823121e 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2546,6 +2546,20 @@ static void __init gather_bootmem_prealloc(void)
+ 	}
+ }
+ 
++bool __init hugetlb_cma_enabled(void)
++{
++#ifdef CONFIG_CMA
++	int node;
++
++	for_each_online_node(node) {
++		if (hugetlb_cma[node])
++			return true;
++	}
++#endif
++
++	return false;
++}
++
+ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ {
+ 	unsigned long i;
+@@ -2571,7 +2585,7 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ 
+ 	for (i = 0; i < h->max_huge_pages; ++i) {
+ 		if (hstate_is_gigantic(h)) {
+-			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
++			if (hugetlb_cma_enabled()) {
+ 				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
+ 				break;
+ 			}
+-- 
+2.27.0
 
-Regards,
-- Sedat -
 
-> Hi all,
->
-> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
-> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
-> are supported on all architectures. The ZSTD-compressed kernel is only
-> hooked up to x86 in this patch set.
->
-> Zstandard requires slightly more memory during the kernel decompression
-> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
-> window size.
->
-> Zstandard requires memory proprortional to the window size used during
-> compression for decompressing the ramdisk image, since streaming mode is
-> used. Newer versions of zstd (1.3.2+) list the window size of a file
-> with `zstd -lv <file>'. The absolute maximum amount of memory required
-> is just over 8 MB, but it can be controlled at compression time.
->
-> This patch set has been boot tested with buildroot and QEMU based off
-> of linux-5.8-rc4.
->
-> On i386 and x86_64 I have tested the following configurations:
-> * zstd compressed kernel and a separate zstd compressed initramfs
-> * zstd compressed kernel and a built-in zstd compressed initramfs
-> * gzip compressed kernel and a separate gzip compressed initramfs
-> * gzip compressed kernel and a built-in gzip compressed initramfs
->
-> On arm and aarch64 I tested the same configurations, except that the kernel is
-> always gzip compressed.
->
-> Facebook has been using v1 of these patches on x86_64 devices for more than 6
-> months. When we switched from a xz compressed initramfs to a zstd compressed
-> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
-> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
-> seconds of boot time.
->
-> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
-> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
-> decompression time shrunk from 27 seconds to 8 seconds.
->
-> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
-> than the xz or lzma compressed kernels, and it decompresses faster than
-> everything except lz4. See the table below for the measurement of an x86_64
-> kernel ordered by compressed size:
->
-> algo    size
-> xz       6,509,792
-> lzma     6,856,576
-> zstd     7,399,157
-> gzip     8,522,527
-> bzip     8,629,603
-> lzo      9,808,035
-> lz4     10,705,570
-> none    32,565,672
->
-> Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
->
-> v1 -> v2:
-> - Rebase
->   - usr/Makefile and init/Kconfig were changed so the patches were updated
-> - No functional changes except to rebase
-> - Split the patches up into smaller chunks
->
-> v2 -> v3:
-> - Add *.zst to the .gitignore in patch 8
-> - Style nits in patch 3
-> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
->   1 through 3
->
-> v3 -> v4:
-> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
->   With this change I switch from malloc() to large_malloc() for the
->   buffers.
-> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
->   the max that zstd in the kernel supports.
->
-> v4 -> v5:
-> - Update commit message for patch 6 in response to comments
-> - Rebase onto next-20200408
->
-> v5 -> v6:
-> - Rebase onto v5.8-rc4
->
-> Best,
-> Nick Terrell
->
-> Adam Borowski (1):
->   .gitignore: add ZSTD-compressed files
->
-> Nick Terrell (7):
->   lib: prepare zstd for preboot environment
->   lib: prepare xxhash for preboot environment
->   lib: add zstd support to decompress
->   init: add support for zstd compressed kernel
->   usr: add support for zstd compressed initramfs
->   x86: bump ZO_z_extra_bytes margin for zstd
->   x86: Add support for ZSTD compressed kernel
->
->  .gitignore                        |   1 +
->  Documentation/x86/boot.rst        |   6 +-
->  arch/x86/Kconfig                  |   1 +
->  arch/x86/boot/compressed/Makefile |   5 +-
->  arch/x86/boot/compressed/misc.c   |   4 +
->  arch/x86/boot/header.S            |   8 +-
->  arch/x86/include/asm/boot.h       |   6 +-
->  include/linux/decompress/unzstd.h |  11 +
->  init/Kconfig                      |  15 +-
->  lib/Kconfig                       |   4 +
->  lib/Makefile                      |   1 +
->  lib/decompress.c                  |   5 +
->  lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
->  lib/xxhash.c                      |  21 +-
->  lib/zstd/decompress.c             |   2 +
->  lib/zstd/fse_decompress.c         |   9 +-
->  lib/zstd/zstd_internal.h          |  14 +-
->  scripts/Makefile.lib              |  15 ++
->  usr/Kconfig                       |  20 ++
->  usr/Makefile                      |   1 +
->  20 files changed, 464 insertions(+), 27 deletions(-)
->  create mode 100644 include/linux/decompress/unzstd.h
->  create mode 100644 lib/decompress_unzstd.c
->
-> --
-> 2.27.0
->
