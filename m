@@ -2,52 +2,53 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC196C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1E82065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCDE2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135052;
-	bh=mZ+94ue3jrh62rM9/yhydqQai/V6Wz+Chq6dMesfcOo=;
+	s=default; t=1594135058;
+	bh=ij90CH/AMuoBDy4JjRvECaJxQy+UIN+yGTmCd5i+bZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4Dk5pzD1gXzVPV/C/A64PaDh5Fx34s5D1hjm2QuW6rjylxlxKmDNFKT1kevZf8BX
-	 R4MkpTfgVOclfvGozbRj8tos6Bj1c2ZlVSohxtwMo1ic4JPZNnEIyTQb3Ny1jBKOiv
-	 pqrMFUE3LI/IN+yAyIktLLZNaiS/oLmi6e8bS8sg=
+	b=ztEWUGFmuu6BaCVitME1ZO7JKdxdBEgOKwg/dkKXzSlyqOrJCjc0OpfuKtYtx4r5l
+	 O/XKqkhCN5PCxgpYp/YGxFYt7oZi1E9kC+Q29AP1CMpLecssUKJgxcqTTzcR8WeeRs
+	 tGZFE3sgaz1iHW04HHuLwCfxzuPWvXv0H9yU439I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgGGPQx (ORCPT
+        id S1728762AbgGGPRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56362 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgGGPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:50 -0400
+        id S1728717AbgGGPQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399C620663;
-        Tue,  7 Jul 2020 15:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 427CC20771;
+        Tue,  7 Jul 2020 15:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135009;
-        bh=mZ+94ue3jrh62rM9/yhydqQai/V6Wz+Chq6dMesfcOo=;
+        s=default; t=1594134999;
+        bh=ij90CH/AMuoBDy4JjRvECaJxQy+UIN+yGTmCd5i+bZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e75w6Hl2tX4ZPpslrT6QnK9/SXmYoCqg6fBL7uVA1tMe/Zy8br0nchVFW+aEU+YNl
-         tV+PALhnd2bUb4Oq+cFuq5O58Irrh5jtgYjOAonjhllH7UZXSOC2JqCO7SBFj9V9Ji
-         aB6C1lhLKQeftAuAHyy4qDOVTkeJCk1ACQYkC01U=
+        b=H07Kezxw4H7vb41dXZ+JhD2u49FG8G2420aUqPyQ5nLXfYCSrSnwdFxvVp9k47Zse
+         0o4rz3cLEypZpK2fvGBK7WuvcJGLSX+VuMebEORoKtyd5QvIpRTbFjrHSWbR9qSt8P
+         T35UKUKTVn02l8Lu8q+KWEEiaC8+5yys4NQ19fzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elliott Mitchell <ehem+debian@m5p.com>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 19/27] nfsd: apply umask on fs without ACL support
-Date:   Tue,  7 Jul 2020 17:15:46 +0200
-Message-Id: <20200707145749.870230772@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kyungtae Kim <kt0755@gmail.com>,
+        Zqiang <qiang.zhang@windriver.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 09/27] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+Date:   Tue,  7 Jul 2020 17:15:36 +0200
+Message-Id: <20200707145749.428066714@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -60,56 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Zqiang <qiang.zhang@windriver.com>
 
-commit 22cf8419f1319ff87ec759d0ebdff4cbafaee832 upstream.
+[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
 
-The server is failing to apply the umask when creating new objects on
-filesystems without ACL support.
+BUG: memory leak
+unreferenced object 0xffff888055046e00 (size 256):
+  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
+  hex dump (first 32 bytes):
+    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
+    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
+  backtrace:
+    [<00000000d121dccf>] kmemleak_alloc_recursive
+include/linux/kmemleak.h:43 [inline]
+    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
+    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
+    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
+    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
+drivers/usb/misc/usbtest.c:2790
+    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
+drivers/usb/core/driver.c:361
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
+drivers/base/dd.c:831
+    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
+    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
+    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
+    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
+    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
+    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
+drivers/usb/core/message.c:2030
+    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
+    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
+drivers/usb/core/driver.c:266
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
 
-To reproduce this, you need to use NFSv4.2 and a client and server
-recent enough to support umask, and you need to export a filesystem that
-lacks ACL support (for example, ext4 with the "noacl" mount option).
-
-Filesystems with ACL support are expected to take care of the umask
-themselves (usually by calling posix_acl_create).
-
-For filesystems without ACL support, this is up to the caller of
-vfs_create(), vfs_mknod(), or vfs_mkdir().
-
-Reported-by: Elliott Mitchell <ehem+debian@m5p.com>
-Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-Fixes: 47057abde515 ("nfsd: add support for the umask attribute")
-Cc: stable@vger.kernel.org
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/misc/usbtest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1202,6 +1202,9 @@ nfsd_create_locked(struct svc_rqst *rqst
- 		iap->ia_mode = 0;
- 	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index b3fc602b2e247..49476c0304b27 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2769,6 +2769,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
  
-+	if (!IS_POSIXACL(dirp))
-+		iap->ia_mode &= ~current_umask();
-+
- 	err = 0;
- 	host_err = 0;
- 	switch (type) {
-@@ -1413,6 +1416,9 @@ do_nfsd_create(struct svc_rqst *rqstp, s
- 		goto out;
- 	}
+ 	usb_set_intfdata(intf, NULL);
+ 	dev_dbg(&intf->dev, "disconnect\n");
++	kfree(dev->buf);
+ 	kfree(dev);
+ }
  
-+	if (!IS_POSIXACL(dirp))
-+		iap->ia_mode &= ~current_umask();
-+
- 	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
- 	if (host_err < 0) {
- 		fh_drop_write(fhp);
+-- 
+2.25.1
+
 
 
