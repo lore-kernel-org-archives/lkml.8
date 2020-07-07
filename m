@@ -2,172 +2,120 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7742BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A026AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9222065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF0B206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a20ar7j6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kh7nComz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgGGQFf (ORCPT
+        id S1728568AbgGGQFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:05:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53087 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727079AbgGGQFe (ORCPT
+        Tue, 7 Jul 2020 12:05:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbgGGQFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:05:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594137933;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PV1Zv3wedXPjVcacFn30QT0jXu7s+Wi04VyjzqEYQvs=;
-        b=a20ar7j6p9z5STiVDCDEKZ/pgOxhrXx29pxz7jzrKvTszocRqKnCZK9z+ssM+Xr4Ji9u6c
-        eo6Ci0NDElUnOwVKNddS4jFhfE3/rTIb4mCGeBO7Y+ONa0lKC+2qerkWQplDdDr8RKMSVM
-        KjOIY7s56kj99y6Z854Pb84EasEGk1U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-NUGhbUbXPUOBmBp4hto9fQ-1; Tue, 07 Jul 2020 12:05:28 -0400
-X-MC-Unique: NUGhbUbXPUOBmBp4hto9fQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A9B310059AB;
-        Tue,  7 Jul 2020 16:05:27 +0000 (UTC)
-Received: from krava (unknown [10.40.195.209])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7510D60C87;
-        Tue,  7 Jul 2020 16:05:25 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 18:05:24 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
-Message-ID: <20200707160524.GA3524217@krava>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
- <20200706123436.GD3401866@krava>
- <6cf91811-ea6a-3c7c-8bbf-7f96bfa1fc82@linux.intel.com>
- <20200706193418.GB3424581@krava>
- <b28806b9-b66e-aa2e-5425-4d9f00341387@linux.intel.com>
- <20200707131403.GD3424581@krava>
- <865ad42a-6085-41d6-06d5-730cb9904ce8@linux.intel.com>
- <20200707142351.GE3424581@krava>
- <44f494d6-b4a5-2d56-001e-b3289cbeedaa@linux.intel.com>
+        Tue, 7 Jul 2020 12:05:36 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17FBC08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:05:36 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j19so13346646pgm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BauIxngYcl8jd5OtL8hzkCrhdMv4YPyYU2tM2gh0/zA=;
+        b=Kh7nComzMNl6xsg1nwO6fTiV+447hKNoK6M36Sv6NGey7FnS2nbTYWy8lHEpSDOcWo
+         4SZpHdhE0vPOCZrLWLvUJOXmOSR8Gz0owQI+bbcY+s+LsNbCgXfdxmGINNOc3+OKJSEQ
+         2u6uTR/n4oEx4IA4WPkbLFvCRTsqJQgdkA4/RHz0JUrD5DCmtPUS6lEOlEKwOu+XAqvh
+         gr91UwjGRhE2Bo40UIkl4Z5vIAwl8OKTz32MsAM4e2vgnAlsinZ/e9QSyBdyERrQzk4E
+         y2Omj76am6hjUTfQD5hz2Tiyvs2LsHeHNRlGxwsexsoYrijIaIiXs/D6btrWCA81JdA6
+         s9vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BauIxngYcl8jd5OtL8hzkCrhdMv4YPyYU2tM2gh0/zA=;
+        b=GYk1GOlvEO7x3nCLmiSgZ8IfpKGOVvxzQRn4wNgdyydmUc3pHBo8K87LD5LQ19xa8b
+         XvVghKmACCp135g403UhUeYkgh56t94Qax2NsmoevBboSMicAnkoWd48TteNCv/IDmMl
+         GItOt3GZq2XzOcVAK8s4GRhJp4V/dnVKzYXwv3uJeMN8hJzyxgrKu3MSrt6VxD6xVnWM
+         ecmo4Kwiu/SUAvJltTW4dOSOkXfEO1L3HQDZp4Py3Crq2WuMovy8PaeO0Aqooy5+JSLM
+         j+pLieGjh6ps90TW9CX+SVVX7UC3LLGARqSbeQRrHNPQCcISvY0G9H8uYjI5ciJyQVss
+         cJYA==
+X-Gm-Message-State: AOAM531xWY6w+jHTE3blfBQ8bIfqX9HKLIqwHHZpviAsqERU5ncolue0
+        uoYSdkrkNfxOZR+uBnQwbgQp2w==
+X-Google-Smtp-Source: ABdhPJzJoQVw/SVeuV11W977gCqEtq+6LHotqK+2sy2PsCIQUHIzgnZiA2b8Kfx/70bokWXpdDZzGg==
+X-Received: by 2002:a63:5110:: with SMTP id f16mr44344138pgb.377.1594137935802;
+        Tue, 07 Jul 2020 09:05:35 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id j17sm1222342pgn.87.2020.07.07.09.05.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 09:05:34 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 09:05:28 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200707160528.GA1300535@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
+ <20200629232059.GA3787278@google.com>
+ <20200707155107.GA3357035@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <44f494d6-b4a5-2d56-001e-b3289cbeedaa@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200707155107.GA3357035@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 05:55:14PM +0300, Alexey Budankov wrote:
-
-SNIP
-
-> process_evlist() now looks suboptimal since record mode code directly calls evlist__ctlfd_process()
-> and then handles returned command specifically to the mode. So in v10 I replaced process_evlist()
-> call with direct evlist__ctlfd_process() call and then handling the returned command by printing
-> command msg tag and counter values in the required order. Like this:
+On Tue, Jul 07, 2020 at 08:51:07AM -0700, Sami Tolvanen wrote:
+> After spending some time debugging this with Nick, it looks like the
+> error is caused by a recent optimization change in LLVM, which together
+> with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
+> check in FIELD_FIT that would always fail, to a compile-time check that
+> breaks the build. In jeq_imm, we have:
 > 
-> +		clock_gettime(CLOCK_MONOTONIC, &time_start);
-> +		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
-> +			if (timeout)
-> +				break;
-> +			else
-> +				stop = handle_interval(interval, times);
-> +			time_to_sleep = sleep_time;
-> +		} else { /* fd revent */
-> +			if (evlist__ctlfd_process(evsel_list, &cmd) > 0) {
-> +				if (interval) {
-> +					switch (cmd) {
-> +					case EVLIST_CTL_CMD_ENABLE:
-> +						pr_info(EVLIST_ENABLED_MSG);
-> +						process_interval();
-> +						break;
-> +					case EVLIST_CTL_CMD_DISABLE:
-> +						process_interval();
-> +						pr_info(EVLIST_DISABLED_MSG);
-> +						break;
-> +					case EVLIST_CTL_CMD_ACK:
-> +					case EVLIST_CTL_CMD_UNSUPPORTED:
-> +					default:
-> +						break;
-> +					}
-> +				}
-> +			}
-> +			clock_gettime(CLOCK_MONOTONIC, &time_stop);
-> +			compute_tts(&time_start, &time_stop, &time_to_sleep);
-> +		}
+>     /* struct bpf_insn: _s32 imm */
+>     u64 imm = insn->imm; /* sign extend */
+>     ...
+>     if (imm >> 32) { /* non-zero only if insn->imm is negative */
+>     	/* inlined from ur_load_imm_any */
+> 	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+> 
+>         /*
+> 	 * __imm has a value known at compile-time, which means
+> 	 * __builtin_constant_p(__imm) is true and we end up with
+> 	 * essentially this in __BF_FIELD_CHECK:
+> 	 */
+> 	if (__builtin_constant_p(__imm) && __imm <= 255)
 
+Should be __imm > 255, of course, which means the compiler will generate
+a call to __compiletime_assert.
 
-hum, why not just get the bool from process_evlist like below?
+> Jiong, Jakub, do you see any issues here?
 
-jirka
+(Jiong's email bounced, so removing from the recipient list.)
 
-
----
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5021f7286422..32dd3de93f35 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -485,20 +485,20 @@ static bool handle_interval(unsigned int interval, int *times)
- 	return false;
- }
- 
--static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
-+static bool process_evlist(struct evlist *evlist)
- {
--	bool stop = false;
- 	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
-+	bool display = false;
- 
- 	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
- 		switch (cmd) {
- 		case EVLIST_CTL_CMD_ENABLE:
- 			pr_info(EVLIST_ENABLED_MSG);
--			stop = handle_interval(interval, times);
-+			display = true;
- 			break;
- 		case EVLIST_CTL_CMD_DISABLE:
--			stop = handle_interval(interval, times);
- 			pr_info(EVLIST_DISABLED_MSG);
-+			display = true;
- 			break;
- 		case EVLIST_CTL_CMD_ACK:
- 		case EVLIST_CTL_CMD_UNSUPPORTED:
-@@ -507,7 +507,7 @@ static bool process_evlist(struct evlist *evlist, unsigned int interval, int *ti
- 		}
- 	}
- 
--	return stop;
-+	return display;
- }
- 
- static void enable_counters(void)
-@@ -618,7 +618,8 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times)
- 				stop = handle_interval(interval, times);
- 			time_to_sleep = sleep_time;
- 		} else { /* fd revent */
--			stop = process_evlist(evsel_list, interval, times);
-+			if (process_evlist(evsel_list))
-+				stop = handle_interval(interval, times);
- 			clock_gettime(CLOCK_MONOTONIC, &time_stop);
- 			diff_timespec(&time_diff, &time_stop, &time_start);
- 			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
-
+Sami
