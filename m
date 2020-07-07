@@ -2,124 +2,82 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB16FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35894C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B7E2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594161399;
-	bh=XNyL4Knjloue7Zmtlah/X6qQu06hR830oaTwsSUXTHg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=K/vndI29aiJjsxfgyPHTJ75KEU8h+xi106cJA72eQ0RAjbyUHN6bIky7hefbA4WZm
-	 cZ8pKtZzF1yIuctsKSluqHVKCZUMJ0Fk+UytxvHTdqFFlQyhc6H/MrRECHX+UPHNsL
-	 K6ehHvesrC1Sa/sSS3H5LdzQ/pjNaDpyYdo9i4fE=
+	by mail.kernel.org (Postfix) with ESMTP id 0E10A20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgGGWgi (ORCPT
+        id S1729338AbgGGWhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgGGWgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:36:38 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EB320675;
-        Tue,  7 Jul 2020 22:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594161397;
-        bh=XNyL4Knjloue7Zmtlah/X6qQu06hR830oaTwsSUXTHg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=xetdEKJ5aWdBTllQu7iCldcr2gL0pHQD1391STAhb/ZytwPjQ3LkU7pnMm4aRcFwP
-         E8Ui4PxHIhfM839vwO2yKQkjGPz5EfvczV0Vo07a1qGBZlagfuWVisiGO8Fna15qob
-         nc7qm4xvca7SwrnNClgxex/yUGc1KWYI8CZyXaJc=
-Date:   Tue, 7 Jul 2020 17:36:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] PCI: Add device even if driver attach failed
-Message-ID: <20200707223634.GA392692@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706233240.3245512-1-rajatja@google.com>
+        Tue, 7 Jul 2020 18:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728299AbgGGWhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:37:20 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E0CC061755;
+        Tue,  7 Jul 2020 15:37:20 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 96833120ED48D;
+        Tue,  7 Jul 2020 15:37:19 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 15:37:18 -0700 (PDT)
+Message-Id: <20200707.153718.2038504409537711474.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        lkp@intel.com
+Subject: Re: [PATCH net-next] net: phy: add a Kconfig option for mdio_devres
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200705095547.22527-1-brgl@bgdev.pl>
+References: <20200705095547.22527-1-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 15:37:20 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:32:40PM -0700, Rajat Jain wrote:
-> device_attach() returning failure indicates a driver error while trying to
-> probe the device. In such a scenario, the PCI device should still be added
-> in the system and be visible to the user.
-> 
-> This patch partially reverts:
-> commit ab1a187bba5c ("PCI: Check device_attach() return value always")
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> Resending to stable, independent from other patches per Greg's suggestion
-> v2: Add Greg's reviewed by, fix commit log
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sun,  5 Jul 2020 11:55:47 +0200
 
-Applied to pci/enumeration for v5.8 with stable tag, thanks!
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> If phylib is built as a module and CONFIG_MDIO_DEVICE is 'y', the
+> mdio_device and mdio_bus code will be in the phylib module, not in the
+> kernel image. Meanwhile we build mdio_devres depending on the
+> CONFIG_MDIO_DEVICE symbol, so if it's 'y', it will go into the kernel
+> and we'll hit the following linker error:
+> 
+>    ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_alloc_size':
+>>> drivers/net/phy/mdio_devres.c:38: undefined reference to `mdiobus_alloc_size'
+>    ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_free':
+>>> drivers/net/phy/mdio_devres.c:16: undefined reference to `mdiobus_free'
+>    ld: drivers/net/phy/mdio_devres.o: in function `__devm_mdiobus_register':
+>>> drivers/net/phy/mdio_devres.c:87: undefined reference to `__mdiobus_register'
+>    ld: drivers/net/phy/mdio_devres.o: in function `devm_mdiobus_unregister':
+>>> drivers/net/phy/mdio_devres.c:53: undefined reference to `mdiobus_unregister'
+>    ld: drivers/net/phy/mdio_devres.o: in function `devm_of_mdiobus_register':
+>>> drivers/net/phy/mdio_devres.c:120: undefined reference to `of_mdiobus_register'
+> 
+> Add a hidden Kconfig option for MDIO_DEVRES which will be currently
+> selected by CONFIG_PHYLIB as there are no non-phylib users of these
+> helpers.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: ac3a68d56651 ("net: phy: don't abuse devres in devm_mdiobus_register()")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
->  drivers/pci/bus.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 8e40b3e6da77d..3cef835b375fd 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
->  
->  	dev->match_driver = true;
->  	retval = device_attach(&dev->dev);
-> -	if (retval < 0 && retval != -EPROBE_DEFER) {
-> +	if (retval < 0 && retval != -EPROBE_DEFER)
->  		pci_warn(dev, "device attach failed (%d)\n", retval);
-> -		pci_proc_detach_device(dev);
-> -		pci_remove_sysfs_dev_files(dev);
-> -		return;
-> -	}
->  
->  	pci_dev_assign_added(dev, true);
->  }
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+Applied, thank you.
