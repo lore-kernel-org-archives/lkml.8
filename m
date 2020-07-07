@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3AE20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAF320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135073;
-	bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
+	s=default; t=1594135077;
+	bh=FM+KNp3Mca0cmqELRNXXFn2a70pA88OGgs7zjVYJz8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czyea3H9lnmEZh4xcXZmTv15lb8gwijcvatHUtfRELTnZiiqdWC6ZD1wJhcoFUpQQ
-	 DKfQzALlt+JBTWJHmq5CTHqewDX47JOBog0/Smbttk+fxaJnk2RzyiFqc7ZnmrQ7S3
-	 5dt/M8+s41YrwuylBhRbYn78qjlRGC/vCUejsWjk=
+	b=jWIQmTSmaKmmRgsD76RJOEDsMK1c51XC19Ccxv3mrhIVjOdjAjhJuGpUdzgsVb9wd
+	 PwMwpQhSUhbk/O8ggXm3qd5XJQa1flZ+iOLH035NWpde2InZIPkzFyPlqdrQTRYqfh
+	 fBHnPWDyU6+2juBGNCCDrlk/qk86OSGe/iHJxkGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgGGPQT (ORCPT
+        id S1728881AbgGGPQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55532 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgGGPQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:15 -0400
+        id S1728878AbgGGPQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B72D2065D;
-        Tue,  7 Jul 2020 15:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7DD2065D;
+        Tue,  7 Jul 2020 15:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134974;
-        bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
+        s=default; t=1594134962;
+        bh=FM+KNp3Mca0cmqELRNXXFn2a70pA88OGgs7zjVYJz8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4jZ46sM+nQBM+QcLT45NVcxv4tdFSg2Ox/XH3v45zpbNLTFHv0MQQ5Q/qMt5VqhX
-         +uhiN6oQrWx+WNewuFmoWAFQzm/9kxoyC60cIiMOpYJRchdT28zLs+Lz9xiQt3dWcd
-         QfkX0qKEyKKbWz3VMry/2G9TGa+yKrKTfEBVd6Zs=
+        b=ks5rolKXbz96ur//COjT5gUckS/fzTv237ZcPnH+uT9Z+jQqTE1jSsvw6nWSXxJwf
+         KZHGDqGztSWcb1DiVUMNTUO4PlKsYx18FBWAK4Ep7Kkvkdj38S1GRZYmq6SmP8j6+O
+         vS70jsz/u0WwNArYT8uPM90vIvnl0ZofdatgheIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/27] hwmon: (max6697) Make sure the OVERT mask is set correctly
-Date:   Tue,  7 Jul 2020 17:15:41 +0200
-Message-Id: <20200707145749.631101828@linuxfoundation.org>
+Subject: [PATCH 4.14 01/27] btrfs: fix a block group ref counter leak after failure to remove block group
+Date:   Tue,  7 Jul 2020 17:15:28 +0200
+Message-Id: <20200707145749.015690556@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,65 +64,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
+[ Upstream commit 9fecd13202f520f3f25d5b1c313adb740fe19773 ]
 
-Per the datasheet for max6697, OVERT mask and ALERT mask are different.
-For example, the 7th bit of OVERT is the local channel but for alert
-mask, the 6th bit is the local channel. Therefore, we can't apply the
-same mask for both registers. In addition to that, the max6697 driver
-is supposed to be compatibale with different models. I manually went over
-all the listed chips and made sure all chip types have the same layout.
+When removing a block group, if we fail to delete the block group's item
+from the extent tree, we jump to the 'out' label and end up decrementing
+the block group's reference count once only (by 1), resulting in a counter
+leak because the block group at that point was already removed from the
+block group cache rbtree - so we have to decrement the reference count
+twice, once for the rbtree and once for our lookup at the start of the
+function.
 
-Testing;
-    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
-    I used iotool to read the reg value back to verify. I only tested this
-    change on max6581.
+There is a second bug where if removing the free space tree entries (the
+call to remove_block_group_free_space()) fails we end up jumping to the
+'out_put_group' label but end up decrementing the reference count only
+once, when we should have done it twice, since we have already removed
+the block group from the block group cache rbtree. This happens because
+the reference count decrement for the rbtree reference happens after
+attempting to remove the free space tree entries, which is far away from
+the place where we remove the block group from the rbtree.
 
-Reference:
-https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
+To make things less error prone, decrement the reference count for the
+rbtree immediately after removing the block group from it. This also
+eleminates the need for two different exit labels on error, renaming
+'out_put_label' to just 'out' and removing the old 'out'.
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: f6033c5e333238 ("btrfs: fix block group leak when removing fails")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/max6697.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/btrfs/extent-tree.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 221fd14920576..6df28fe0577da 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -47,8 +47,9 @@ static const u8 MAX6697_REG_CRIT[] = {
-  * Map device tree / platform data register bit map to chip bit map.
-  * Applies to alert register and over-temperature register.
-  */
--#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
-+#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
- 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
-+#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 51e26f90f0bb2..63b8812ba508a 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10554,7 +10554,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out_put_group;
++		goto out;
+ 	}
  
- #define MAX6697_REG_STAT(n)		(0x44 + (n))
+ 	/*
+@@ -10591,7 +10591,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out_put_group;
++			goto out;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -10614,13 +10614,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
  
-@@ -587,12 +588,12 @@ static int max6697_init_chip(struct max6697_data *data,
- 		return ret;
- 
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
--					MAX6697_MAP_BITS(pdata->alert_mask));
-+				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
  	if (ret < 0)
- 		return ret;
+-		goto out_put_group;
++		goto out;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out_put_group;
++			goto out;
+ 		btrfs_release_path(path);
+ 	}
  
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
--				MAX6697_MAP_BITS(pdata->over_temperature_mask));
-+			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
- 	if (ret < 0)
- 		return ret;
+@@ -10629,6 +10629,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		 &fs_info->block_group_cache_tree);
+ 	RB_CLEAR_NODE(&block_group->cache_node);
  
++	/* Once for the block groups rbtree */
++	btrfs_put_block_group(block_group);
++
+ 	if (fs_info->first_logical_byte == block_group->key.objectid)
+ 		fs_info->first_logical_byte = (u64)-1;
+ 	spin_unlock(&fs_info->block_group_cache_lock);
+@@ -10778,10 +10781,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = remove_block_group_free_space(trans, fs_info, block_group);
+ 	if (ret)
+-		goto out_put_group;
+-
+-	/* Once for the block groups rbtree */
+-	btrfs_put_block_group(block_group);
++		goto out;
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+ 	if (ret > 0)
+@@ -10791,10 +10791,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = btrfs_del_item(trans, root, path);
+ 
+-out_put_group:
++out:
+ 	/* Once for the lookup reference */
+ 	btrfs_put_block_group(block_group);
+-out:
+ 	btrfs_free_path(path);
+ 	return ret;
+ }
 -- 
 2.25.1
 
