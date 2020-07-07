@@ -2,169 +2,132 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B05A9206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E68420702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzqoVfv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGGLay (ORCPT
+        id S1727876AbgGGLbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:30:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:42068 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgGGLay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:30:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BF831FB;
-        Tue,  7 Jul 2020 04:30:53 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8F6D3F71E;
-        Tue,  7 Jul 2020 04:30:50 -0700 (PDT)
-References: <20200706142839.26629-1-qais.yousef@arm.com> <20200706142839.26629-2-qais.yousef@arm.com> <jhj8sfw8wzk.mognet@arm.com> <20200707093447.4t6eqjy4fkt747fo@e107158-lin.cambridge.arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
-In-reply-to: <20200707093447.4t6eqjy4fkt747fo@e107158-lin.cambridge.arm.com>
-Date:   Tue, 07 Jul 2020 12:30:48 +0100
-Message-ID: <jhj36638suv.mognet@arm.com>
+        Tue, 7 Jul 2020 07:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgGGLbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:31:03 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33DDC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:31:02 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so49426372ljv.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oU+zHS1dWLePXpv1roLop07qC5/+PHNWookUwJLe/zU=;
+        b=HzqoVfv5RmJSiJec48Z3gyXEpw3X1xzcpa7yGskC4YP4FKDLYWnNwGMKx7bPp5Di7M
+         tAPv4yoi7/blcmwpByoACwe0S74SDsfhbuSrSJbAMsKtYruaS6ia/LBd+13co+pkezkk
+         7ED8pj13E7YmJr85IrN0MVKjFyHLI0G0TJ73UB9v7WnD2zN0X7ICOOtfjGUQ0J71cnjP
+         iYWwsuoH7p9DXqBStWZvc8pwrz62bilvgWSXrlKpRzl7c1aLuLFkvFYxt82/FhaGmybv
+         fSUho90IdiLmF9K8hKcl976CmHjAZzritDhMnDBdK/WDiwPviUgXcEseAddmE8iDGBHE
+         TFJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oU+zHS1dWLePXpv1roLop07qC5/+PHNWookUwJLe/zU=;
+        b=QEJ4oEPPGTr2YGGWn2rpBYiowNupwJZGZA/4Rzc/9GVsWNsHC24McZLa+FZ/8lA25I
+         vnqjsdNE+YdyitT2k7aafiuJturXKGhi0bhuBpPrTxwR0JjtEBrHoo12pyBQoKSLYVah
+         jYNQTm03MIxscE4P+0TUswrO/7W/1k0SXEHs8uROYcgKNCaTr9BhbFbr0Uz0fR6+Wv4b
+         4QkTvcBAJ0RuIL8xJeDk9IgvRH4hd4OjJ3dY739uYWPvPyIAkCRkCvlSRJUqlIVSJOHa
+         RnvAh+xC9iuuCI8+cNeITD+279m2QR4B9y5V/QTzoXXG4q9g0vhGrLyQk5QHX9gXmCyu
+         ClOg==
+X-Gm-Message-State: AOAM5332O8CuGJewXZXuaFNPdAqaoozSATc0PBILVoOoBNSgN57ZGNUt
+        HaCO0e9iwrrTkXWTI0FZZB88qph0+MXBXD9sl2g=
+X-Google-Smtp-Source: ABdhPJwnwnMnJ0iADB+yNPtPOSoRhfTA8saUU2vq4vN7LszeEgrx/ZXEdYoZDO9/LdNXumlwQmvPr/VyPXzdTGQtYqA=
+X-Received: by 2002:a2e:5d8:: with SMTP id 207mr28871025ljf.257.1594121461257;
+ Tue, 07 Jul 2020 04:31:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
+ <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com> <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
+In-Reply-To: <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 7 Jul 2020 17:00:49 +0530
+Message-ID: <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Paul Durrant <xadimgnik@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 07/07/20 10:34, Qais Yousef wrote:
-> On 07/06/20 16:49, Valentin Schneider wrote:
->>
->> On 06/07/20 15:28, Qais Yousef wrote:
->> > CC: linux-fsdevel@vger.kernel.org
->> > ---
->> >
->> > Peter
->> >
->> > I didn't do the
->> >
->> >       read_lock(&taslist_lock);
->> >       smp_mb__after_spinlock();
->> >       read_unlock(&tasklist_lock);
->> >
->> > dance you suggested on IRC as it didn't seem necessary. But maybe I missed
->> > something.
->> >
->>
->> So the annoying bit with just uclamp_fork() is that it happens *before* the
->> task is appended to the tasklist. This means without too much care we
->> would have (if we'd do a sync at uclamp_fork()):
->>
->>   CPU0 (sysctl write)                                CPU1 (concurrent forker)
->>
->>                                                        copy_process()
->>                                                          uclamp_fork()
->>                                                            p.uclamp_min = state
->>     state = foo
->>
->>     for_each_process_thread(p, t)
->>       update_state(t);
->>                                                          list_add(p)
->>
->> i.e. that newly forked process would entirely sidestep the update. Now,
->> with Peter's suggested approach we can be in a much better situation. If we
->> have this in the sysctl update:
->>
->>   state = foo;
->>
->>   read_lock(&taslist_lock);
->>   smp_mb__after_spinlock();
->>   read_unlock(&tasklist_lock);
->>
->>   for_each_process_thread(p, t)
->>     update_state(t);
->>
->> While having this in the fork:
->>
->>   write_lock(&tasklist_lock);
->>   list_add(p);
->>   write_unlock(&tasklist_lock);
->>
->>   sched_post_fork(p); // state re-read here; probably wants an mb first
->>
->> Then we can no longer miss an update. If the forked p doesn't see the new
->> value, it *must* have been added to the tasklist before the updater loops
->> over it, so the loop will catch it. If it sees the new value, we're done.
+On Tue, Jul 7, 2020 at 3:08 PM J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrot=
+e:
 >
-> uclamp_fork() has nothing to do with the race. If copy_process() duplicates the
-> task_struct of an RT task, it'll copy the old value.
+> On 06.07.20 20:16, Souptick Joarder wrote:
+> > pages need to be marked as dirty before unpinned it in
+> > unlock_pages() which was oversight. This is fixed now.
+> >
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > Suggested-by: John Hubbard <jhubbard@nvidia.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Paul Durrant <xadimgnik@gmail.com>
+> > ---
+> >   drivers/xen/privcmd.c | 5 ++++-
+> >   1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> > index 33677ea..f6c1543 100644
+> > --- a/drivers/xen/privcmd.c
+> > +++ b/drivers/xen/privcmd.c
+> > @@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], uns=
+igned int nr_pages)
+> >   {
+> >       unsigned int i;
+> >
+> > -     for (i =3D 0; i < nr_pages; i++)
+> > +     for (i =3D 0; i < nr_pages; i++) {
+> > +             if (!PageDirty(pages[i]))
+> > +                     set_page_dirty_lock(pages[i]);
 >
+> With put_page() directly following I think you should be able to use
+> set_page_dirty() instead, as there is obviously a reference to the page
+> existing.
 
-Quite so; my point was if we were to use uclamp_fork() as to re-read the value.
+Patch [3/3] will convert above codes to use unpin_user_pages_dirty_lock()
+which internally do the same check. So I thought to keep linux-stable and
+linux-next code in sync. John had a similar concern [1] and later agreed to=
+ keep
+this check.
 
-> I'd expect the newly introduced sched_post_fork() (also in copy_process() after
-> the list update) to prevent this race altogether.
+Shall I keep this check ?  No ?
+
+[1] https://lore.kernel.org/xen-devel/a750e5e5-fd5d-663b-c5fd-261d7c939ba7@=
+nvidia.com/
+
 >
-> Now we could end up with a problem if for_each_process_thread() doesn't see the
-> newly forked task _after_ sched_post_fork(). Hence my question to Peter.
+> >               put_page(pages[i]);
+> > +     }
+> >   }
+> >
+> >   static long privcmd_ioctl_dm_op(struct file *file, void __user *udata=
+)
+> >
 >
-
-
->>
->> AIUI, the above strategy doesn't require any use of RCU. The update_state()
->> and sched_post_fork() can race, but as per the above they should both be
->> writing the same value.
->
-> for_each_process_thread() must be protected by either tasklist_lock or
-> rcu_read_lock().
->
-
-Right
-
-> The other RCU logic I added is not to protect against the race above. I
-> describe the other race condition in a comment.
-
-I take it that's the one in uclamp_sync_util_min_rt_default()?
-
-__setscheduler_uclamp() can't be preempted as we hold task_rq_lock(). It
-can indeed race with the sync though, but again with the above suggested
-setup it would either:
-- see the old value, but be guaranteed to be iterated over later by the
-  updater
-- see the new value
-
-sched_post_fork() being preempted out is a bit more annoying, but what
-prevents us from making that bit preempt-disabled?
-
-I have to point out I'm assuming here updaters are serialized, which does
-seem to be see the case (cf. uclamp_mutex).
-
-
-> Basically another updater on a
-> different cpu via fork() and sched_setattr() might read an old value and get
-> preempted. The rcu synchronization will ensure concurrent updaters have
-> finished before iterating the list.
->
-
-> Thanks
+> Juergen
