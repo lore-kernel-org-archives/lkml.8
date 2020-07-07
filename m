@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4750CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB14EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26ED220708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FEC2077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpTVF/md"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6OMYuv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgGGHpm (ORCPT
+        id S1728492AbgGGHpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
+        Tue, 7 Jul 2020 03:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgGGHpk (ORCPT
+        with ESMTP id S1728440AbgGGHpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:45:40 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF62C08C5E0
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 00:45:40 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so11427433pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 00:45:40 -0700 (PDT)
+        Tue, 7 Jul 2020 03:45:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA0BC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 00:45:43 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 207so17890140pfu.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 00:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jW8zp7RHqtHeCyFdrmHu1jeTiXid01JuKsYb1RMidWg=;
-        b=CpTVF/md2a3iCa8VR9iJwBK+G4iEO3L+T91WDz+Cwf9dU1AKAoDicsLjreeKyMuI6+
-         YwZ1SAPNLzOt2HW4z52+kblxmx9Giou4qhMRLwMT0gTMZI5ezBRqgROq30oOJoKjouRK
-         3J1uVk+GxIJlUFvnsrYkMvc55CDvOetiLuVba0Bp72G2bMdvpN+EkHNpQoOFwRfzpMS6
-         9zaldDwb7AKe/ABA84GNM5tGWm8q7roaWmtD2I0O8JkUe0PO9LoSpgUINDwMo/mPrQgF
-         g+IWXRTXEEVZisw32wOull+Rocr/zu84Vk9HidbWayBOJwzb0zvF2a0QvBq7upT3lFZF
-         lqLQ==
+        bh=n6Rbtl/txKKgUuy/PEsZA5yJ3o5QkIBUvNqo+dh4x9U=;
+        b=e6OMYuv6Cvw8rOj3djW6dTQTmnVCROGwcC5f18pto4sRD2ohXbd8J2oHAO7OEJMjjo
+         dEWQKsL9DBuiqYEOSoAkza3yycdMtE6wkMJSEbf7dh4owmMNOvJKUZ+8B6U5wGu1xHjz
+         6xkqCdO8l2H8jHQJYr09htT4bf5pIvamI22VNvk30BVA4oZEYJ2FjLBl2BroVX3+vLpG
+         IRvuYZd/Lf0CxYfl2CKzbsyK2FWiNN/UlZJ4ide9GbUB4HIKewuWsCec9yh41m0tG6Vk
+         UchpaM7bkesbK02c6sKL+q64Z+Vm6CGjMT9AyiAvuXKE/CUrRoCJ8HWZ/kHrE/0NA1yo
+         ALiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=jW8zp7RHqtHeCyFdrmHu1jeTiXid01JuKsYb1RMidWg=;
-        b=GAu0VHUccT8RR7lwKnTBer+INgKdoQKMKwlC25HfPtHfHJ1d1nbT3XWwjug7RSMcOM
-         2B67hXFkDoeFdypsYhfUXH4HTD8ZFzbI26kkouMqpnqXXzQgQFLognb+UEUoFzXaLiKl
-         vATWCLreZxehiw/tfPe0bTvsm80BN/hp+fr5COrTj+lAx4HSihxUBLTdnGxvSm2c5EUU
-         U5vmOD6JL+YjLDiNf2LGTxIh9+w97ce3TRiPnbqc0jmrasFtfOel2K8ynnImZ+szNL5C
-         aXTJdXcXPgyrUiuUPhe/wiUO/iGrzaF7EviuHunSXfgUbXNfrnrj3L64/IDj+cTR3GQA
-         7WWw==
-X-Gm-Message-State: AOAM531BWB8xBW+0tOJTV5p+RR3seRnhsnkIRG7FoP9lx0oJtPe0GSHV
-        /FCKcFkvQz8SuULjQwFu28U=
-X-Google-Smtp-Source: ABdhPJwAO+CEp4G8QkmcEaAo7/LkG4zHaUlREQ+Dc3Aaen6AxX9LJktCqAXuiD93ex8IH76Q/lo/RA==
-X-Received: by 2002:a17:90a:db87:: with SMTP id h7mr3221109pjv.159.1594107939801;
-        Tue, 07 Jul 2020 00:45:39 -0700 (PDT)
+        bh=n6Rbtl/txKKgUuy/PEsZA5yJ3o5QkIBUvNqo+dh4x9U=;
+        b=oQlD0zsezsfj5eWjUX/Vj42C4e7x+++ppR0UENUDaOqYGEPtVopwRRBMS5AO0Q374H
+         6E/ZmiWiNvbYQzAMSXtRq+dMOCFz6OMCaOXttW9Bl37MV6pUVauDQsZrFUz3aGseJ4Ij
+         CPV7TQVdHj3EqGRebLATVRII9QJKBpkmusHeCStCkDKLtM7c0RvbMLITLLtuKSSpFdcl
+         lup8Yw9EHvR2Hoy3YwAyKm76zdgD+25rFfKrymAKuE949y9h3xSRh6qTjXOJnobGzYQj
+         CxJ8yXuqXtnMjzMzdnDEBbD5t5Fe5o77VcuACesdoVT925LMEhFDU/u2gizYr1azVgIt
+         zo2w==
+X-Gm-Message-State: AOAM530o1sUqzzvfUcPxbo3cjYe/xeQiYrwaIQynz09Bos3a9d+4bqcM
+        vwgurquuoYztWTcG49BzgKs=
+X-Google-Smtp-Source: ABdhPJyw8VwJQhpVC5lwFEMc/qLi7+XCVCWj0fqhAIQ9/IxGxoDSgpKnUy27bITILGbIBXVOmhWGoA==
+X-Received: by 2002:a63:3fc2:: with SMTP id m185mr45078394pga.426.1594107943087;
+        Tue, 07 Jul 2020 00:45:43 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id 191sm21330151pfw.150.2020.07.07.00.45.36
+        by smtp.gmail.com with ESMTPSA id 191sm21330151pfw.150.2020.07.07.00.45.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Jul 2020 00:45:39 -0700 (PDT)
+        Tue, 07 Jul 2020 00:45:42 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,9 +70,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Michal Hocko <mhocko@suse.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v4 09/11] mm/page_alloc: remove a wrapper for alloc_migration_target()
-Date:   Tue,  7 Jul 2020 16:44:47 +0900
-Message-Id: <1594107889-32228-10-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v4 10/11] mm/memory-failure: remove a wrapper for alloc_migration_target()
+Date:   Tue,  7 Jul 2020 16:44:48 +0900
+Message-Id: <1594107889-32228-11-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -83,61 +83,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-There is a well-defined standard migration target callback.  Use it
+There is a well-defined standard migration target callback. Use it
 directly.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- mm/page_alloc.c     |  8 ++++++--
- mm/page_isolation.c | 10 ----------
- 2 files changed, 6 insertions(+), 12 deletions(-)
+ mm/memory-failure.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f3b70ee..6416d08 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8354,6 +8354,10 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
- 	unsigned long pfn = start;
- 	unsigned int tries = 0;
- 	int ret = 0;
-+	struct migration_target_control mtc = {
-+		.nid = zone_to_nid(cc->zone),
-+		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-+	};
- 
- 	migrate_prep();
- 
-@@ -8380,8 +8384,8 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
- 							&cc->migratepages);
- 		cc->nr_migratepages -= nr_reclaimed;
- 
--		ret = migrate_pages(&cc->migratepages, alloc_migrate_target,
--				    NULL, 0, cc->mode, MR_CONTIG_RANGE);
-+		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
-+				NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE);
- 	}
- 	if (ret < 0) {
- 		putback_movable_pages(&cc->migratepages);
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index f25c66e..242c031 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -306,13 +306,3 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
- 
- 	return pfn < end_pfn ? -EBUSY : 0;
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 609d42b6..3b89804 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1677,16 +1677,6 @@ int unpoison_memory(unsigned long pfn)
  }
--
--struct page *alloc_migrate_target(struct page *page, unsigned long private)
+ EXPORT_SYMBOL(unpoison_memory);
+ 
+-static struct page *new_page(struct page *p, unsigned long private)
 -{
 -	struct migration_target_control mtc = {
--		.nid = page_to_nid(page),
+-		.nid = page_to_nid(p),
 -		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
 -	};
 -
--	return alloc_migration_target(page, (unsigned long)&mtc);
+-	return alloc_migration_target(p, (unsigned long)&mtc);
 -}
+-
+ /*
+  * Safely get reference count of an arbitrary page.
+  * Returns 0 for a free page, -EIO for a zero refcount page
+@@ -1793,6 +1783,10 @@ static int __soft_offline_page(struct page *page)
+ 	const char *msg_page[] = {"page", "hugepage"};
+ 	bool huge = PageHuge(page);
+ 	LIST_HEAD(pagelist);
++	struct migration_target_control mtc = {
++		.nid = NUMA_NO_NODE,
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+ 	/*
+ 	 * Check PageHWPoison again inside page lock because PageHWPoison
+@@ -1829,8 +1823,8 @@ static int __soft_offline_page(struct page *page)
+ 	}
+ 
+ 	if (isolate_page(hpage, &pagelist)) {
+-		ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
+-					MIGRATE_SYNC, MR_MEMORY_FAILURE);
++		ret = migrate_pages(&pagelist, alloc_migration_target, NULL,
++			(unsigned long)&mtc, MIGRATE_SYNC, MR_MEMORY_FAILURE);
+ 		if (!ret) {
+ 			bool release = !huge;
+ 
 -- 
 2.7.4
 
