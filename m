@@ -2,128 +2,154 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C501EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A11B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6Ta1Kv+"
+	by mail.kernel.org (Postfix) with ESMTP id 3459C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgGGVsI (ORCPT
+        id S1729227AbgGGVsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgGGVsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:48:07 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB60C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:48:07 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g13so32980203qtv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kea5lz5SuEVjMYthwUPDUREfiUZ4imDQ4+lMs08zB6U=;
-        b=S6Ta1Kv+P7Eg1sW5CWt+ahJt07X+1kO7D8SmRfRyR/GN3XSrYWuchEH82VMppIlBTm
-         9rNp0tV1WORXPSiQPYBv/W9eRs9VHILhguUh4V0kIsX/5fsa4wlaSiqsjPCRAf5Je704
-         V7gte79Kr6uk6ZsRX1e81zPc0/iReVb6G4Or31edv7NGdpfHo8GDT6wRiu2HByS4qnjK
-         UK1HQM+2S+whIr63pSsErzlA8Y4uoqIKDdNI9QOliKKcnBcBL4+k+rRKgCqkWAx05iv7
-         qdqeL5Xhw1NAUsM6Z+3BtcEMQZKpG9sMavMaZ5c6V8VE7JQFvcL+vQ665tie91AGCHLb
-         eZrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=kea5lz5SuEVjMYthwUPDUREfiUZ4imDQ4+lMs08zB6U=;
-        b=ZIG7kTcsbiQr2Qjvc3aznJ9QOwGIuK40aqP8zcL6exJhkBiOdpJlA4yhX+x90Gfyso
-         vZY8OTmyFkkQ4wy5SInlX23V8XX0EiIRh7/STGiwoYPkjhjZWk/Tb0fHqbxV31Cex83v
-         Kx+lyXXtgdvhAZBzePDvz5vhQL2ecUj3vFc9hCS+gY2ZmsfOrZVNa37v306YpsrizSwi
-         XbraEUvzsCoO/PFAvCYM5uNrR36yOTIX4T9YLx4htOVrZGAnOwsAuF34n4ZfZwMnxll/
-         Qii0R97jnmgkTfV9afY4skiiBU3LH/Je/PJgGuy24ktBWvcb1setUaINOqHjHou7/fkk
-         EzhA==
-X-Gm-Message-State: AOAM530N17njY/Ha4rMALjksfQjtSdFfGzhTE/7/q4xP/uJ8ft3Ghi2M
-        3Le7GVURa0qKfduOszqrydU=
-X-Google-Smtp-Source: ABdhPJwST4ORT9+NOST6EufPbIia2FmPxXFBTvW3IBn571c6j8gcIDV2QsJHi3xAKoz99PN6PV84vA==
-X-Received: by 2002:ac8:4250:: with SMTP id r16mr43504761qtm.378.1594158486843;
-        Tue, 07 Jul 2020 14:48:06 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t48sm29525053qtb.50.2020.07.07.14.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 14:48:06 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 7 Jul 2020 17:48:04 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Harrosh, Boaz" <Boaz.Harrosh@netapp.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <20200707214804.GA1582632@rani.riverdale.lan>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
- <202007062234.A90F922DF@keescook>
- <DM6PR06MB3836FBAD65096AF63ACD3DB3EE660@DM6PR06MB3836.namprd06.prod.outlook.com>
- <202007070137.3ADBEDC@keescook>
+        Tue, 7 Jul 2020 17:48:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55515 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728357AbgGGVsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:48:39 -0400
+IronPort-SDR: fBAQCPB2ml5WkV1FzOMhLnX/0jW2tnbd6qw1hTQPV7BS+lTfB3FqXXgE+MWdb9lgspfteZceGN
+ FIZsIk6vOsSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127297091"
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="127297091"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:48:39 -0700
+IronPort-SDR: MvfWCAMLMSvaF6Pl5E6Cy0a7vKpQKvvmYdv1ZRk7J6adXo3IqHzTbey0egARtRcQOxz14O2Gbk
+ U5vVjOw76KmQ==
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="457262991"
+Received: from unknown (HELO [10.255.2.196]) ([10.255.2.196])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:48:30 -0700
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Andersen, John" <john.s.andersen@intel.com>, corbet@lwn.net,
+        pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, shuah@kernel.org,
+        liran.alon@oracle.com, drjones@redhat.com,
+        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mchehab+huawei@kernel.org,
+        gregkh@linuxfoundation.org, paulmck@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
+        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
+        peterz@infradead.org, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
+        dave.hansen@linux.intel.com, arjan@linux.intel.com,
+        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
+        makarandsonare@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-3-john.s.andersen@intel.com>
+ <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
+ <20200618144314.GB23@258ff54ff3c0>
+ <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+ <20200707211244.GN20096@linux.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
+Date:   Tue, 7 Jul 2020 14:48:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200707211244.GN20096@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007070137.3ADBEDC@keescook>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:54:23AM -0700, Kees Cook wrote:
-> On Tue, Jul 07, 2020 at 06:56:53AM +0000, Harrosh, Boaz wrote:
-> > Kees Cook wrote:
-> > > I have struggled with this as well. The parts of speech change, and my
-> > > grammar senses go weird. whitelist = adjective noun. allow-list = verb
-> > > noun. verbing the adj/noun combo feels okay, but verbing a verb/noun is
-> > > weird.
-> > 
-> > > And just using "allowed" and "denied" doesn't impart whether it refers
-> > > to a _single_ instance or a _list_ of instances.
-> > 
-> > > But that's all fine. The change is easy to do and is more descriptive
-> > > even if I can't find terms that don't collide with my internal grammar
-> > > checker. ;)
-> > 
-> > But why. In English many times a verb when it comes before the noun means an adjective, or an adjective like, describing some traits of the noun.
+On 7/7/20 2:12 PM, Sean Christopherson wrote:
+>>>> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
+>>>> write to kernel memory.  Linux won't set it, but an attacker would go
+>>>> after it, first thing.
+> That's an orthogonal to pinning.  KVM never lets the guest set CR4 bits that
+> are unknown to KVM.  Supporting CR4.NO_MARBLES would require an explicit KVM
+> change to allow it to be set by the guest, and would also require a userspace
+> VMM to expose NO_MARBLES to the guest.
 > 
-> This is kind of my problem being a native English speaker: I can't
-> entirely describe _why_ a grammar construct feels wrong. :(
-> 
-> > Example: 
-> > I work - work is a verb here.
-> > I used the work bench. - Work is saying something about the type of bench, an adjective. Same as you would say "I used the green bench".
-> 
-> Right, so the verb-noun being used as a noun is find, just as adj-noun
-> is. To me, "add it to the allow-list" is entirely sensible just like
-> "set it on the work-bench." It's the "verbing" of a noun that trips me
-> up.
-> 
-> "I will whitelist the syscall" -- sounds correct to me (same for
-> "it is whitelisted" or "it is in whitelisting mode").
-> 
-> "I will allow-list the syscall" -- sounds wrong to me (same for
-> "it is allow-listed" or "it is in allow-listing mode").
+> That being said, this series should supporting pinning as much as possible,
+> i.e. if the bit can be exposed to the guest and doesn't require special
+> handling in KVM, allow it to be pinned.  E.g. TS is a special case because
+> pinning would require additional emulator support and IMO isn't interesting
+> enough to justify the extra complexity.  At a glance, I don't see anything
+> that would prevent pinning FSGSBASE.
 
-I suspect it's at least partly because "allow" and "list" are both verbs
--- in fact, "list" is the actual verb in "I will allow-list it", and
-"allow" is being used to modify the verb "list". But because "allow" is
-usually a verb, the sentence sounds like there are two verbs in there
-when there should only be one. I expect our ears will get trained to
-accept that sentence once you encounter "allowlist" often enough.
+Thanks for filling in the KVM picture.
+
+If we're supporting as much pinning as possible, can we also add
+something to make it inconvenient for someone to both make a CR4 bit
+known to KVM *and* ignore the pinning aspects?
+
+We should really make folks think about it.  Something like:
+
+#define KVM_CR4_KNOWN 0xff
+#define KVM_CR4_PIN_ALLOWED 0xf0
+#define KVM_CR4_PIN_NOT_ALLOWED 0x0f
+
+BUILD_BUG_ON(KVM_CR4_KNOWN !=
+             (KVM_CR4_PIN_ALLOWED|KVM_CR4_PIN_NOT_ALLOWED));
+
+So someone *MUST* make an active declaration about new bits being pinned
+or not?
