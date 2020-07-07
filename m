@@ -2,156 +2,85 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4497C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2D820674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594137562;
-	bh=pHABt1xkSO30pAE6pokYsrVBJow+rhBN54eHVjPGB24=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FkRR7wOT54t3LZckOvAnwwcESXO6pKUkXWwSyBNN+l2oJcGSwQ4Tx2PAZ8t544GEJ
-	 btRWFU8ZgHHMg2Re/nfhOEm9r2c2nFZGPYfQ64qVsI9qiTHb+TIBnGrxjJw4hMSmQG
-	 oLNB38b9a5fGlEHZgLjCKmop4RyQfCfwozIDdbHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 82EA520674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TbRHDWpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgGGP7V (ORCPT
+        id S1728594AbgGGQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:59:21 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:35238 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgGGP7U (ORCPT
+        Tue, 7 Jul 2020 12:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728216AbgGGQA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:59:20 -0400
-Received: by mail-oo1-f66.google.com with SMTP id k47so4707041ool.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:59:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ybKYjyxhBNv1kTn9dag4mFuNouSoGCR2/Y20joSpfWA=;
-        b=aOin9jLMmI+aTwtKSECSRBbu9zlMTTARa11CekVdx4rOqDkF8y8MTDlgt/prS8gEsC
-         ZzGhFYcmJLnKY5y4qXGcc6iobndOJnhq8Kz91mFOR5MDdSEowBDISgf8gVyobhWcq12e
-         JXrxyfdQHCJDGaxCj7pcRz3BUvTAAGyR5yM9fejeAImONzLbSr3XgGesPSWW5hifBJd5
-         eCDMObkFA/REhQYopCu/c9t8dkiaLwgLdmnvhezHzzJZopz8Ea6f1uH+zDmk83McKpDZ
-         BGs2hflYC4UdK+MxJtVgGN75R32ymx2N/sb2imIP4VO6kRV6mEGLC4oxBJS9Z/afiW3F
-         X6eA==
-X-Gm-Message-State: AOAM5314unHPBfnTtgt0mwT8crLwYEN/6sMzBcZ+uyHalBgoY7zAHdu2
-        OaPrkZXEMj19w98Ftyi9ucDY52t0dZ5TNDLOub8=
-X-Google-Smtp-Source: ABdhPJxgIcG1DZyavED8sdSqF07AzJotJeUnC8/Ncw9mnaxVZb6e+P2ytm8y9iWc+fyHIcwiLTvMhXzxRPXtsphT+HE=
-X-Received: by 2002:a4a:2459:: with SMTP id v25mr47061329oov.75.1594137559641;
- Tue, 07 Jul 2020 08:59:19 -0700 (PDT)
+        Tue, 7 Jul 2020 12:00:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AC6C061755;
+        Tue,  7 Jul 2020 09:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CP3gYZf2kjid72TDwJavn73cb81r67oVs6dPbA5sJrs=; b=TbRHDWpqod5158cU9VcuMxtMl0
+        Z3G0xtpcqzLIuDWWIIcnh9C2kh7CSkV4JSSIDwUSlxfQPTygt0gA5KxoHykWQL/VPT4vSar/6D1cN
+        PMcSCdozGP0IE5ZVMVpYGkR977gY7lsrqkoMBm9jaMYhaXJARQRMx1rid9CVnNEfJUj1vQzKN4wTX
+        7y3w/+jqw3v9t7nHICdR7mfHK4r0EP1k76le37z5fmFaacVj7SkSAzzQt+zdxOGgLowaUoqsgP5gF
+        H75mhPzCgNzP6m6muIchhmbWsuB2N9uFrb53OUci0eYLguPFPhNq0038c46l9d5VckBbvuMQ3n6kU
+        jSLu7JTw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsq10-0006dx-SQ; Tue, 07 Jul 2020 16:00:14 +0000
+Date:   Tue, 7 Jul 2020 17:00:14 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
+        Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200707160014.GA25189@infradead.org>
+References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200705210947.GW25523@casper.infradead.org>
+ <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+ <20200706141002.GZ25523@casper.infradead.org>
+ <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
+ <20200706143208.GA25523@casper.infradead.org>
+ <20200707151105.GA23395@test-zns>
+ <20200707155237.GM25523@casper.infradead.org>
 MIME-Version: 1.0
-References: <20200701194259.3337652-1-saravanak@google.com> <20200701194259.3337652-2-saravanak@google.com>
-In-Reply-To: <20200701194259.3337652-2-saravanak@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jul 2020 17:59:08 +0200
-Message-ID: <CAJZ5v0jS39EPgsiNrGzCGeSpMpccu2tUQZ_zn9PABMMmtD-PBA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] driver core: Don't do deferred probe in parallel
- with kernel_init thread
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707155237.GM25523@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 9:43 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> The current deferred probe implementation can mess up suspend/resume
-> ordering if deferred probe thread is kicked off in parallel with the
-> main initcall thread (kernel_init thread) [1].
->
-> For example:
->
-> Say device-B is a consumer of device-A.
->
-> Initcall thread                                 Deferred probe thread
-> ===============                                 =====================
-> 1. device-A is added.
-> 2. device-B is added.
-> 3. dpm_list is now [device-A, device-B].
-> 4. driver-A defers probe of device-A.
->                                                 5. device-A is moved to
->                                                    end of dpm_list
->                                                 6. dpm_list is now
->                                                    [device-B, device-A]
-> 7. driver-B is registereed and probes device-B.
-> 8. dpm_list stays as [device-B, device-A].
->
-> The reverse order of dpm_list is used for suspend. So in this case
-> device-A would incorrectly get suspended before device-B.
->
-> Commit 716a7a259690 ("driver core: fw_devlink: Add support for batching
-> fwnode parsing") kicked off the deferred probe thread early during boot
-> to run in parallel with the initcall thread and caused suspend/resume
-> regressions.  This patch removes the parallel run of the deferred probe
-> thread to avoid the suspend/resume regressions.
->
-> [1] - https://lore.kernel.org/lkml/CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com/
->
-> Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/base/base.h | 1 -
->  drivers/base/core.c | 1 -
->  drivers/base/dd.c   | 5 -----
->  3 files changed, 7 deletions(-)
->
-> diff --git a/drivers/base/base.h b/drivers/base/base.h
-> index 95c22c0f9036..40fb069a8a7e 100644
-> --- a/drivers/base/base.h
-> +++ b/drivers/base/base.h
-> @@ -153,7 +153,6 @@ extern char *make_class_name(const char *name, struct kobject *kobj);
->  extern int devres_release_all(struct device *dev);
->  extern void device_block_probing(void);
->  extern void device_unblock_probing(void);
-> -extern void driver_deferred_probe_force_trigger(void);
->
->  /* /sys/devices directory */
->  extern struct kset *devices_kset;
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 67d39a90b45c..35cc9896eb9e 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1323,7 +1323,6 @@ void fw_devlink_resume(void)
->                 goto out;
->
->         device_link_add_missing_supplier_links();
-> -       driver_deferred_probe_force_trigger();
+On Tue, Jul 07, 2020 at 04:52:37PM +0100, Matthew Wilcox wrote:
+> But userspace has to _do_ something with that information anyway.  So
+> it must already have somewhere to put that information.
+> 
+> I do think that interpretation of that field should be a separate flag
+> from WRITE_APPEND so apps which genuinely don't care about where the I/O
+> ended up don't have to allocate some temporary storage.  eg a logging
+> application which just needs to know that it managed to append to the
+> end of the log and doesn't need to do anything if it's successful.
 
-So it looks like this was not needed after all.
-
-What was the role of it then?
-
->  out:
->         mutex_unlock(&defer_fw_devlink_lock);
->  }
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 9a1d940342ac..48ca81cb8ebc 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -164,11 +164,6 @@ static void driver_deferred_probe_trigger(void)
->         if (!driver_deferred_probe_enable)
->                 return;
->
-> -       driver_deferred_probe_force_trigger();
-> -}
-> -
-> -void driver_deferred_probe_force_trigger(void)
-> -{
->         /*
->          * A successful probe means that all the devices in the pending list
->          * should be triggered to be reprobed.  Move all the deferred devices
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
+I agree with the concept of a flag for just returning the write
+location.  Because if you don't need that O_APPEND is all you need
+anyway.
