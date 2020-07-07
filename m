@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3991C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C261C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0AD020663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582B9204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135987;
-	bh=Yb/kN+Ykzu3y1QxV3gSKWsc82uPftmNrmA3t8MPJMyU=;
+	s=default; t=1594135993;
+	bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qd/TxtpZZPHdwRzHMhTvNHPIGSHpWb2WAvT8KPXQXlfJPGmG3O0xxa/MFXH2Nh265
-	 IsZm0Wb/mNTyqI/vl5j5RPvdJiPRAPizxf3P9HRvdNdbJNhEWD5LpKmOnJRYdWDsRg
-	 6+KwHjeM9sfVpssmT6wUToe58wyNF9tZ7wInUiiQ=
+	b=ZXAmWRQcpN/X4adHT5MmribSDgSZbqYic6PgCF8K5s0SzhJEsUFkzZVmN3QGjTon3
+	 gHGLBv+NipgaN6M3AkmuEMUgOiWpTOkmKc9HEwdDSNttStGLyqPo5X8MfFDkE+hwvN
+	 Phq4T/g8TuTsedxu6bIYC35paxRMzwC/GpZPWfcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgGGPVO (ORCPT
+        id S1730000AbgGGPdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33320 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbgGGPVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:10 -0400
+        id S1729634AbgGGPVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C8A206E2;
-        Tue,  7 Jul 2020 15:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABB8F206E2;
+        Tue,  7 Jul 2020 15:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135269;
-        bh=Yb/kN+Ykzu3y1QxV3gSKWsc82uPftmNrmA3t8MPJMyU=;
+        s=default; t=1594135263;
+        bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTjyLkOSdkpwkwYk5BDzu4L1QzK0DeDjczK9ClNCjRuG8T8PCIEhtUxxD3FhFUHzq
-         gkqEGmo65kXgXgKjIAsxO1cEPfFawVDI7PBX6LKmVuceOP4kRRnDIiBQXMlqC8ZGGa
-         5RJGaOLbrxaz7/0mwvzc1lN91dsdSJyzPmSiTPfk=
+        b=YJDxKmyH6FaLS5Sjf3l0FnE+TBxXnsui5+CI9anZMkNKzcjr4c2InsefudBdoqCaq
+         hrKk7R1d6hGJZg/TELyC9yzGyxcdU1l/9vMk952UIvu9/7ztm1LThkLcMjthSTkbBX
+         RB6ozIc/ysIbXzkMwdzhDoqT8S0KHS20zyRt0x/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Van Do <van.do.xw@renesas.com>,
-        Dien Pham <dien.pham.ry@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kyungtae Kim <kt0755@gmail.com>,
+        Zqiang <qiang.zhang@windriver.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 33/65] thermal/drivers/rcar_gen3: Fix undefined temperature if negative
-Date:   Tue,  7 Jul 2020 17:17:12 +0200
-Message-Id: <20200707145754.075806633@linuxfoundation.org>
+Subject: [PATCH 5.4 09/65] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+Date:   Tue,  7 Jul 2020 17:16:48 +0200
+Message-Id: <20200707145752.890554879@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -64,53 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dien Pham <dien.pham.ry@renesas.com>
+From: Zqiang <qiang.zhang@windriver.com>
 
-[ Upstream commit 5f8f06425a0dcdad7bedbb77e67f5c65ab4dacfc ]
+[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
 
-As description for DIV_ROUND_CLOSEST in file include/linux/kernel.h.
-  "Result is undefined for negative divisors if the dividend variable
-   type is unsigned and for negative dividends if the divisor variable
-   type is unsigned."
+BUG: memory leak
+unreferenced object 0xffff888055046e00 (size 256):
+  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
+  hex dump (first 32 bytes):
+    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
+    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
+  backtrace:
+    [<00000000d121dccf>] kmemleak_alloc_recursive
+include/linux/kmemleak.h:43 [inline]
+    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
+    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
+    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
+    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
+drivers/usb/misc/usbtest.c:2790
+    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
+drivers/usb/core/driver.c:361
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
+drivers/base/dd.c:831
+    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
+    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
+    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
+    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
+    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
+    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
+drivers/usb/core/message.c:2030
+    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
+    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
+drivers/usb/core/driver.c:266
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
 
-In current code, the FIXPT_DIV uses DIV_ROUND_CLOSEST but has not
-checked sign of divisor before using. It makes undefined temperature
-value in case the value is negative.
-
-This patch fixes to satisfy DIV_ROUND_CLOSEST description
-and fix bug too. Note that the variable name "reg" is not good
-because it should be the same type as rcar_gen3_thermal_read().
-However, it's better to rename the "reg" in a further patch as
-cleanup.
-
-Signed-off-by: Van Do <van.do.xw@renesas.com>
-Signed-off-by: Dien Pham <dien.pham.ry@renesas.com>
-[shimoda: minor fixes, add Fixes tag]
-Fixes: 564e73d283af ("thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1593085099-2057-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/rcar_gen3_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/usbtest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-index 755d2b5bd2c2b..1ab2ffff4e7c7 100644
---- a/drivers/thermal/rcar_gen3_thermal.c
-+++ b/drivers/thermal/rcar_gen3_thermal.c
-@@ -169,7 +169,7 @@ static int rcar_gen3_thermal_get_temp(void *devdata, int *temp)
- {
- 	struct rcar_gen3_thermal_tsc *tsc = devdata;
- 	int mcelsius, val;
--	u32 reg;
-+	int reg;
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 98ada1a3425c6..bae88893ee8e3 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2873,6 +2873,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
  
- 	/* Read register and convert to mili Celsius */
- 	reg = rcar_gen3_thermal_read(tsc, REG_GEN3_TEMP) & CTEMP_MASK;
+ 	usb_set_intfdata(intf, NULL);
+ 	dev_dbg(&intf->dev, "disconnect\n");
++	kfree(dev->buf);
+ 	kfree(dev);
+ }
+ 
 -- 
 2.25.1
 
