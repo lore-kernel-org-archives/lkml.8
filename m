@@ -2,256 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C966C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C6920758
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC280206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IL9/OsUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgGGLlJ (ORCPT
+        id S1728330AbgGGLlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:41:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37729 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGLlI (ORCPT
+        Tue, 7 Jul 2020 07:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGLlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:41:08 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jslyC-0003t7-Fn; Tue, 07 Jul 2020 11:41:04 +0000
-Date:   Tue, 7 Jul 2020 13:41:03 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/7] net/scm: Regularize compat handling of
- scm_detach_fds()
-Message-ID: <20200707114103.lkfbt3kdtturp42z@wittgenstein>
-References: <20200706201720.3482959-1-keescook@chromium.org>
- <20200706201720.3482959-2-keescook@chromium.org>
+        Tue, 7 Jul 2020 07:41:37 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84540C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:41:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id t74so24547520lff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7L/0My4Hmw0nxk/zAz7LX4pkKR6TGLRcA6CE4xPJOLM=;
+        b=IL9/OsUNTSOVSExzddt4AK4CWUR/v5bZ9OfUUimh18UkjLZ40MllYFJGIB/aCN//Gi
+         IO7U8JbSaPzAxcDPh7KvBZnYAiNqrhrEryPI0oYInOPF/UXH7cP1G5VbNvhqOQVFT1z1
+         hadPDW9jXnUvIJJI+Pe2zao9mf6oozWnZFM/7sAYurmlmIUTC4in8iTwSGWI35ATdGpK
+         dYN74HhHxd8jlOvRdiEhJ2tEiH+q8w2yXuCSDell5I+ugHXJBADKnxsluAdw4VLoju1/
+         scwZVogOdt1X0Eg+J00XhrCeJl18hSU4Gyv2EUSYfrov2Aeap01RjCJ5HK0FWqDzGZld
+         EYzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7L/0My4Hmw0nxk/zAz7LX4pkKR6TGLRcA6CE4xPJOLM=;
+        b=YAfh4O65+FR9V78aoIwHg9FFZt5PNAIVKvmJl6de5MxWYfIbneyIIxJGJw+HVXLNe6
+         UYTBK6+DHhLX3BXDiL5iJL+uqujc24gU6Lt57P/4qkDzwiiJQrb0nx0ei1W/fIX4vpAy
+         z+TZtvNfyATXcu9SFb9bztSKIWmVyd1UG9ASjgCypERgFLwQ6EaAjmAKrcmqZTcIZk/b
+         UiCwNAfLQnPa9KflNM7dbE5FRoeRyX+M46y86us+CaBke/eig6oDRXGS2yoFWgPblkyz
+         q2nbGnsKSY7oHohrJw33sCU8WqegX5HXDOp+kP6cuKynEb3c3fvzCDOZeW95ZmYA2lPk
+         6ivg==
+X-Gm-Message-State: AOAM532fGaevbhvmgwxk+ccG9GTNl3M18771PB1bz0FdYOpa3TuvibEE
+        aeV+ZDJNB6NfpjrsZZffeS0IMmeB0cZNcG4orgsQaA==
+X-Google-Smtp-Source: ABdhPJz9qB6nG0uUcXiIt2zX4d51YOVLcslM/A8TsXvw47TLHd5sVFUK1DB4TwmcZWAd//+7rEtuzWJ593Cnx/sNKOs=
+X-Received: by 2002:a19:ccd0:: with SMTP id c199mr32729218lfg.194.1594122095031;
+ Tue, 07 Jul 2020 04:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200706201720.3482959-2-keescook@chromium.org>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 13:41:24 +0200
+Message-ID: <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
+Subject: Re: [PATCH v7] Add basic SoC Support for Mediatek MT6779 SoC
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 01:17:14PM -0700, Kees Cook wrote:
-> Duplicate the cleanups from commit 2618d530dd8b ("net/scm: cleanup
-> scm_detach_fds") into the compat code.
-> 
-> Move the check added in commit 1f466e1f15cf ("net: cleanly handle kernel
-> vs user buffers for ->msg_control") to before the compat call, even
-> though it should be impossible for an in-kernel call to also be compat.
-> 
-> Correct the int "flags" argument to unsigned int to match fd_install()
-> and similar APIs.
-> 
-> Regularize any remaining differences, including a whitespace issue,
-> a checkpatch warning, and add the check from commit 6900317f5eff ("net,
-> scm: fix PaX detected msg_controllen overflow in scm_detach_fds") which
-> fixed an overflow unique to 64-bit. To avoid confusion when comparing
-> the compat handler to the native handler, just include the same check
-> in the compat handler.
-> 
-> Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-> Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Thu, Jul 2, 2020 at 2:57 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-Thanks. Just a comment below.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Change since v7:
+> Commit "dt-bindings: pinctrl: add bindings for MediaTek"
+> -- fix typo and change order of patch
+> Commit "clk: mediatek: add UART0 clock support"
+> -- add fixes tag and real name
+> Commit "arm64: dts: add dts nodes for MT6779"
+> -- expose all three UARTs in the dtsi
 
->  include/net/scm.h |  1 +
->  net/compat.c      | 55 +++++++++++++++++++++--------------------------
->  net/core/scm.c    | 18 ++++++++--------
->  3 files changed, 35 insertions(+), 39 deletions(-)
-> 
-> diff --git a/include/net/scm.h b/include/net/scm.h
-> index 1ce365f4c256..581a94d6c613 100644
-> --- a/include/net/scm.h
-> +++ b/include/net/scm.h
-> @@ -37,6 +37,7 @@ struct scm_cookie {
->  #endif
->  };
->  
-> +int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags);
->  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm);
->  void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm);
->  int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *scm);
-> diff --git a/net/compat.c b/net/compat.c
-> index 5e3041a2c37d..27d477fdcaa0 100644
-> --- a/net/compat.c
-> +++ b/net/compat.c
-> @@ -281,39 +281,31 @@ int put_cmsg_compat(struct msghdr *kmsg, int level, int type, int len, void *dat
->  	return 0;
->  }
->  
-> -void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
-> +static int scm_max_fds_compat(struct msghdr *msg)
->  {
-> -	struct compat_cmsghdr __user *cm = (struct compat_cmsghdr __user *) kmsg->msg_control;
-> -	int fdmax = (kmsg->msg_controllen - sizeof(struct compat_cmsghdr)) / sizeof(int);
-> -	int fdnum = scm->fp->count;
-> -	struct file **fp = scm->fp->fp;
-> -	int __user *cmfptr;
-> -	int err = 0, i;
-> +	if (msg->msg_controllen <= sizeof(struct compat_cmsghdr))
-> +		return 0;
-> +	return (msg->msg_controllen - sizeof(struct compat_cmsghdr)) / sizeof(int);
-> +}
->  
-> -	if (fdnum < fdmax)
-> -		fdmax = fdnum;
-> +void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
-> +{
-> +	struct compat_cmsghdr __user *cm =
-> +		(struct compat_cmsghdr __user *)msg->msg_control;
-> +	unsigned int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
-> +	int fdmax = min_t(int, scm_max_fds_compat(msg), scm->fp->count);
+Oh I see there are still development on this patch set so I took out
+the patches I applied again.
 
-Just a note that SCM_RIGHTS fd-sending is limited to 253 (SCM_MAX_FD)
-fds so min_t should never ouput > SCM_MAX_FD here afaict.
+Waiting for the final reviewed version.
 
-> +	int __user *cmsg_data = CMSG_USER_DATA(cm);
-> +	int err = 0, i;
->  
-> -	for (i = 0, cmfptr = (int __user *) CMSG_COMPAT_DATA(cm); i < fdmax; i++, cmfptr++) {
-> -		int new_fd;
-> -		err = security_file_receive(fp[i]);
-> +	for (i = 0; i < fdmax; i++) {
-> +		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
->  		if (err)
->  			break;
-> -		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & kmsg->msg_flags
-> -					  ? O_CLOEXEC : 0);
-> -		if (err < 0)
-> -			break;
-> -		new_fd = err;
-> -		err = put_user(new_fd, cmfptr);
-> -		if (err) {
-> -			put_unused_fd(new_fd);
-> -			break;
-> -		}
-> -		/* Bump the usage count and install the file. */
-> -		fd_install(new_fd, get_file(fp[i]));
->  	}
->  
->  	if (i > 0) {
->  		int cmlen = CMSG_COMPAT_LEN(i * sizeof(int));
-> +
->  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
->  		if (!err)
->  			err = put_user(SCM_RIGHTS, &cm->cmsg_type);
-> @@ -321,16 +313,19 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
->  			err = put_user(cmlen, &cm->cmsg_len);
->  		if (!err) {
->  			cmlen = CMSG_COMPAT_SPACE(i * sizeof(int));
-> -			kmsg->msg_control += cmlen;
-> -			kmsg->msg_controllen -= cmlen;
-> +			if (msg->msg_controllen < cmlen)
-> +				cmlen = msg->msg_controllen;
-> +			msg->msg_control += cmlen;
-> +			msg->msg_controllen -= cmlen;
->  		}
->  	}
-> -	if (i < fdnum)
-> -		kmsg->msg_flags |= MSG_CTRUNC;
-> +
-> +	if (i < scm->fp->count || (scm->fp->count && fdmax <= 0))
-
-I think fdmax can't be < 0 after your changes? scm_max_fds() guarantees
-that fdmax is always >= 0 and min_t() guarantees that fdmax <= scm->fp->count.
-So the check should technically be :)
-
-if (i < scm->fp->count || scm->fp->count && fdmax == 0)
-
-> +		msg->msg_flags |= MSG_CTRUNC;
->  
->  	/*
-> -	 * All of the files that fit in the message have had their
-> -	 * usage counts incremented, so we just free the list.
-> +	 * All of the files that fit in the message have had their usage counts
-> +	 * incremented, so we just free the list.
->  	 */
->  	__scm_destroy(scm);
->  }
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index 875df1c2989d..6151678c73ed 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -280,7 +280,7 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
->  }
->  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
->  
-> -static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
-> +int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags)
->  {
->  	struct socket *sock;
->  	int new_fd;
-> @@ -319,29 +319,29 @@ static int scm_max_fds(struct msghdr *msg)
->  
->  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  {
-> -	struct cmsghdr __user *cm
-> -		= (__force struct cmsghdr __user*)msg->msg_control;
-> -	int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
-> +	struct cmsghdr __user *cm =
-> +		(__force struct cmsghdr __user *)msg->msg_control;
-> +	unsigned int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
->  	int fdmax = min_t(int, scm_max_fds(msg), scm->fp->count);
->  	int __user *cmsg_data = CMSG_USER_DATA(cm);
->  	int err = 0, i;
->  
-> +	/* no use for FD passing from kernel space callers */
-> +	if (WARN_ON_ONCE(!msg->msg_control_is_user))
-> +		return;
-> +
->  	if (msg->msg_flags & MSG_CMSG_COMPAT) {
->  		scm_detach_fds_compat(msg, scm);
->  		return;
->  	}
->  
-> -	/* no use for FD passing from kernel space callers */
-> -	if (WARN_ON_ONCE(!msg->msg_control_is_user))
-> -		return;
-> -
->  	for (i = 0; i < fdmax; i++) {
->  		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
->  		if (err)
->  			break;
->  	}
->  
-> -	if (i > 0)  {
-> +	if (i > 0) {
->  		int cmlen = CMSG_LEN(i * sizeof(int));
->  
->  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
-> -- 
-> 2.25.1
-> 
+Yours,
+Linus Walleij
