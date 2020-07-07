@@ -2,100 +2,113 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6966A206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC4E206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgGGDnB (ORCPT
+        id S1728471AbgGGDnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:43:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:52092 "EHLO mga05.intel.com"
+        Mon, 6 Jul 2020 23:43:06 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:55898 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbgGGDnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:43:00 -0400
-IronPort-SDR: H1dD52WgPVhxu7w0h6Xnh9j4NjFzsWhj35nzJRctmjwO63XdhzE88Mue0oGUy7kEha6h6+R0mq
- Tm2edDTALP6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232394992"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="232394992"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 20:42:59 -0700
-IronPort-SDR: 9deDu+rO1Dz5OFPUizwEUeh+NeZp0Hzs8Ri+zlcEyldeSV74XDJTSoQcqdSOIU5yL9dsxGN+3O
- YAdo3WzzMsRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="427314977"
-Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 20:42:50 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     x86@kernel.org, linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, sean.j.christopherson@intel.com,
-        yaozhangx@google.com
-Subject: [PATCH v35 24/24] x86/sgx: Update MAINTAINERS
-Date:   Tue,  7 Jul 2020 06:37:47 +0300
-Message-Id: <20200707033747.142828-25-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
-References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+        id S1727077AbgGGDnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:43:06 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jseUe-0002DJ-Bz; Tue, 07 Jul 2020 13:42:05 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 07 Jul 2020 13:42:04 +1000
+Date:   Tue, 7 Jul 2020 13:42:04 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH RESEND] lockdep: Move list.h inclusion into lockdep.h
+Message-ID: <20200707034204.GA13225@gondor.apana.org.au>
+References: <20200617071524.GA3055@gondor.apana.org.au>
+ <E1jlSJz-0003hE-8g@fornost.hmeau.com>
+ <20200617082459.GC2531@hirez.programming.kicks-ass.net>
+ <20200617122449.GX31238@alley>
+ <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the maintainer information for the SGX subsystem.
+On Thu, Jun 18, 2020 at 04:37:35PM +0200, Peter Zijlstra wrote:
+>
+> OK, done. tip/locking/header should contain just this patch, and that
+> branch also got merged into tip/locking/core.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Hi Peter:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..9b5268aa26db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8968,6 +8968,17 @@ F:	Documentation/x86/intel_txt.rst
- F:	arch/x86/kernel/tboot.c
- F:	include/linux/tboot.h
+Could you please apply this patch on top as there is still a header
+loop otherwise? Thanks!
+
+---8<---
+Currently lockdep_types.h includes list.h without actually using any
+of its macros or functions.  All it needs are the type definitions
+which were moved into types.h long ago.  This potentially causes
+inclusion loops because both are included by many core header
+files.
+
+This patch moves the list.h inclusion into lockdep.h.  Note that
+we could probably remove it completely but that could potentially
+result in compile failures should any end users not include list.h
+directly and also be unlucky enough to not get list.h via some other
+header file.
+
+Reported-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 3b73cf84f77d..b1ad5c045353 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -21,6 +21,7 @@ extern int lock_stat;
+ #ifdef CONFIG_LOCKDEP
  
-+INTEL SGX
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+M:	Sean Christopherson <sean.j.christopherson@intel.com>
-+L:	linux-sgx@vger.kernel.org
-+S:	Maintained
-+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-+T:	git https://github.com/jsakkine-intel/linux-sgx.git
-+F:	arch/x86/include/uapi/asm/sgx.h
-+F:	arch/x86/kernel/cpu/sgx/*
-+K:	\bSGX_
-+
- INTERCONNECT API
- M:	Georgi Djakov <georgi.djakov@linaro.org>
- L:	linux-pm@vger.kernel.org
+ #include <linux/linkage.h>
++#include <linux/list.h>
+ #include <linux/debug_locks.h>
+ #include <linux/stacktrace.h>
+ 
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+index 7b9350624577..bb35b449f533 100644
+--- a/include/linux/lockdep_types.h
++++ b/include/linux/lockdep_types.h
+@@ -32,8 +32,6 @@ enum lockdep_wait_type {
+ 
+ #ifdef CONFIG_LOCKDEP
+ 
+-#include <linux/list.h>
+-
+ /*
+  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
+  * the total number of states... :-(
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
