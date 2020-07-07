@@ -2,98 +2,160 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE79C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF786C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE80F206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97CB20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBOADVhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGGNeS (ORCPT
+        id S1728066AbgGGNfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:34:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58560 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgGGNeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:34:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 38CC8AC43;
-        Tue,  7 Jul 2020 13:34:16 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 15:34:15 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Tue, 7 Jul 2020 09:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgGGNfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 09:35:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06419C061755;
+        Tue,  7 Jul 2020 06:35:06 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so14800912pje.0;
+        Tue, 07 Jul 2020 06:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WcZ5qo7y9qUcKIeVIbnTxzfzPN7859vCpAHcM5CTAlc=;
+        b=VBOADVhrVQaImFIIIylGi/N7xk7WGvoP2orasZftk1JuDxbX6szpmb7IwR0xaTsGvT
+         N0QPz0zneW1MIUyYqDqIvlBjBx9T4W7235IEmX4FYc2yogqRZ45T2YZDzpBUETrUd28z
+         R6L75o2jO1miJaOC/ymI66G9moZEYnVl6HXPwvFKeHzY6W8XpE20InU9fP6I4WSPFXVP
+         de1Zqmt38o/Ex4PZ6DlBVItboWx2dK43VhKEkD6JfdMOtekoUyyeWOMLVSszdL2FHANv
+         2lLIxTc8pbkpjhV+b/wmI6kA8OVOz6CvjARrCye5tEcmwoBWeqnPSU+sCFJyU29WcJlO
+         BGng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=WcZ5qo7y9qUcKIeVIbnTxzfzPN7859vCpAHcM5CTAlc=;
+        b=ek3Kgx8ptPmpeBJGOawQ3Qi8t3VpkgKlYVvZDNwZGv6ct2jErHNXvdHE5Zcy6alsqp
+         oIxH2yBa9iW1lIpEKbyXL8LHq3QdmTokOlQiXFfWcizJ6ZGtqEXGtD8arXlXlccG1LLP
+         z9//J5mjdpgwwznskM0mDyLghtIIq4agLGkwopYXSdIfY/6kObFk2bR/PDqONQ3BwR1/
+         NjdsVipKfUKq/uj5Yay8fpmHay4Df9VPWf+cfptdozWXng+BGj9AEo0pAP5BM9l2dyxD
+         qezoP9X2GHTWhRFu1KonK9rdW9P0rU7UyxQPaqcJN8Je9CqpHk4AVFSnE/NSQ/8pI9IB
+         HAFg==
+X-Gm-Message-State: AOAM533980aZfTlcr2YMzOenbYEGWbHwMNdRaNtPMe7v0Dsf3rPpMbfk
+        Os7zEATYu5H61H/jAaqwGjN/JaZILdI=
+X-Google-Smtp-Source: ABdhPJyEu9Q1UlbUHSi5o70FjjCly+i1xLnaxD5bOouAPmNNhWS7+UiwW8G93d3L22USW2SQjxv7Jw==
+X-Received: by 2002:a17:90b:8d0:: with SMTP id ds16mr4665898pjb.2.1594128905556;
+        Tue, 07 Jul 2020 06:35:05 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g9sm21142608pfm.151.2020.07.07.06.35.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 06:35:04 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 06:35:03 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: lfpc: kernel BUG at arch/x86/mm/physaddr.c:28!
-Message-ID: <20200707133415.z4lvfnzraku7bioj@beryllium.lan>
+Subject: Re: [PATCH v3 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+Message-ID: <20200707133503.GA217263@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jul 07, 2020 at 04:01:03PM +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low_precision is used to switch to low precision.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> new file mode 100644
+> index 000000000000..bcccdcadd86b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sensirion SHTC1 Humidity and Temperature Sensor IC
+> +
+> +maintainers:
+> +  - jdelvare@suse.com
 
-While trying to debug something in qla2xxx I enabled KASAN. As it turns out,
-KASAN finds something in lpfc (and not qla2xxx so far).
+Did Jean agree to maintain this file ?
 
-I was able to reproduce this with v5.8-rc4 and the current mkp/queue
-branch. Almost all memory debug options are enabled. Not sure which
-one is able to trigger this:
+> +
+> +description: |
+> +  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
+> +  designed especially for battery-driven high-volume consumer electronics
+> +  applications.
+> +  For further information refere to Documentation/hwmon/shtc1.rst
+> +
+> +  This binding document describes the binding for the hardware monitor
+> +  portion of the driver.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - sensirion,shtc1
+> +      - sensirion,shtw1
+> +      - sensirion,shtc3
+> +
+> +  reg: I2C address 0x70
+> +
+> +Optional properties:
+> +  sensirion,blocking_io: |
+> +    bool, if set the i2c bus hold until measure finished
+> +  sensirion,low_precision: |
+> +    bool, if set aquire data with low precision (not recommend)
 
- ------------[ cut here ]------------
- kernel BUG at arch/x86/mm/physaddr.c:28!
- invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
- CPU: 0 PID: 1083 Comm: kworker/0:4 Tainted: G            E     5.8.0-rc4-default+ #59
- Hardware name: HP ProLiant DL580 Gen9/ProLiant DL580 Gen9, BIOS U17 07/21/2019
- Workqueue: events work_for_cpu_fn
- RIP: 0010:__phys_addr+0x59/0x80
- Code: 4c 39 e3 72 25 48 c7 c7 55 85 e7 87 e8 00 8d 39 00 0f b6 0d 6e e7 1a 02 4c 89 e0 48 d3 e8 48 85 c0 75 07 4c 89 e$
- RSP: 0018:ffff88842b9ff990 EFLAGS: 00010202
- RAX: 0000000000000001 RBX: ffffc90086598000 RCX: 000000000000002e
- RDX: 1ffffffff0fcf0aa RSI: 0000000000000001 RDI: ffffffff87e78555
- RBP: ffffc90006598000 R08: ffffffffc109fb97 R09: 0000000000000000
- R10: 0000000000000003 R11: ffffed108573ff0c R12: 0000408006598000
- R13: 0000000000000001 R14: ffff88842baac000 R15: ffff88843bc43800
- FS:  0000000000000000(0000) GS:ffff888812800000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f5a28f8a4b6 CR3: 00000019b240e001 CR4: 00000000001606f0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  set_memory_wc+0x1d/0x90
-  lpfc_wq_create+0x67e/0x920 [lpfc]
-  lpfc_create_wq_cq+0xde/0x240 [lpfc]
-  lpfc_sli4_queue_setup+0x489/0xc70 [lpfc]
-  lpfc_sli4_hba_setup+0xf4c/0x26d0 [lpfc]
-  ? kernfs_add_one+0x1b1/0x210
-  ? __kernfs_create_file+0xe3/0x120
-  ? lpfc_sli_read_link_ste+0x550/0x550 [lpfc]
-  ? lpfc_cpu_affinity_check.isra.0+0x5e3/0xa00 [lpfc]
-  ? lpfc_pci_probe_one_s4.isra.0+0x3b4/0x540 [lpfc]
-  lpfc_pci_probe_one_s4.isra.0+0x3b4/0x540 [lpfc]
-  ? lpfc_pci_probe_one_s4.isra.0+0x540/0x540 [lpfc]
-  lpfc_pci_probe_one+0xbb/0xd0 [lpfc]
-  ? lpfc_pci_probe_one_s4.isra.0+0x540/0x540 [lpfc]
-  ? __pm_runtime_resume+0x42/0x70
-  local_pci_probe+0x74/0xc0
-  ? pci_device_shutdown+0x80/0x80
-  work_for_cpu_fn+0x29/0x40
-  process_one_work+0x483/0x7e0
-  worker_thread+0x465/0x690
-  ? process_one_work+0x7e0/0x7e0
-  kthread+0x19f/0x1f0
-  ? kthread_parkme+0x40/0x40
-  ret_from_fork+0x22/0x30
- Modules linked in: mgag200(E+) drm_vram_helper(E) lpfc(E+) drm_kms_helper(E) sd_mod(E) nvmet_fc(E) syscopyarea(E) sysf$
- ---[ end trace 404edaadb5917ff2 ]---
+recommended
 
-Thanks,
-Daniel
+It might make sense to mention that the default is expected to be high precision
+if not specified.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +Example:
+> +  &i2c1 {
+> +    status = "okay";
+> +    clock-frequency = <400000>;
+> +
+> +    shtc3@70 {
+> +      compatible = "sensirion,shtc3";
+> +      reg = <0x70>
+> +      sensirion,blocking_io;
+> +      status = "okay";
+> +    };
+> +  };
+> -- 
+> 2.20.1
+> 
