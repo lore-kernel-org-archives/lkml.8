@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5485C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980E120773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A0120775
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134635;
-	bh=nDHHUj4tN2fihv82K94trrpOrL8ziYi2I+QD6CQeNWU=;
+	s=default; t=1594134640;
+	bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ryj5zINmOT3dSu0eof2rfPFZYpH/wcBbNNGQgv2S5fE58yXNKnDnrRZu0HYD93iTx
-	 oQfGxkWIiUvZFUjIdg8nr+kgmpgkGzmFn1l/46Uo+NCylD4UD9hlVjY4eYmtNKPyz7
-	 Cv3U+kBrff0JqgmZOABIQ6fwPKtirTfII7aF934k=
+	b=brWNbv+Fi/n85AKnmLSf4R3MVWufzzJYDxxx+9xZqmjJKfQcNuTJHpiqSxlZgoHr9
+	 LATv9rjDSn/5tk57C3CC0xwO9ffoQgWlIIpT+wiLAmMYLzaQ8TM7u5BCumNFHAlTrs
+	 X2t168UKsV9YCXSQ+cuHtE/JxWzgys7YJsJusL6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgGGPKe (ORCPT
+        id S1728440AbgGGPKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51262 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgGGPKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:10:33 -0400
+        id S1728392AbgGGPKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:10:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132AB2065D;
-        Tue,  7 Jul 2020 15:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1765B20771;
+        Tue,  7 Jul 2020 15:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134632;
-        bh=nDHHUj4tN2fihv82K94trrpOrL8ziYi2I+QD6CQeNWU=;
+        s=default; t=1594134637;
+        bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fL/1svPvMMf6wckM3CIxwPVbATgAOTisAGN9b6asOUu9UQP+wQa5bV1z9ZOmFd+QI
-         A+IOk6CVUJbXNzBVrNZnxUsHnPN1Pqr78UYB5NioqsgAQwDg/siXkbxMYFXw/M5LUA
-         hYzG8OHwXJwtxPNXO9F9udmEBSFDhAoKqDott8+w=
+        b=JUK/3wu32na5c7HfHWwzjMKlMDKEMW7OvMJJcEALqjSIdWTFYJo7nmHVDyKvjet+b
+         Lztg9TFXQ9WJ243xLHsj2k4dY23lg6xLZjaLj2FuREhurHoc5U+f6etyZF7rkLtzYh
+         xrDFwRCJkaNY72X5/lR/16ZEhwFe5B+q21ZBvGfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/19] hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
-Date:   Tue,  7 Jul 2020 17:10:14 +0200
-Message-Id: <20200707145748.067857457@linuxfoundation.org>
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 13/19] i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+Date:   Tue,  7 Jul 2020 17:10:16 +0200
+Message-Id: <20200707145748.169742260@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
 References: <20200707145747.493710555@linuxfoundation.org>
@@ -61,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 8b97f9922211c44a739c5cbd9502ecbb9f17f6d1 ]
+[ Upstream commit cd217f2300793a106b49c7dfcbfb26e348bc7593 ]
 
-Although it rarely happens, we should call free_capabilities()
-if error happens after read_capabilities() to free allocated strings.
+The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
+low, this differs to the PCA9564 which uses 90h for this indication.
+Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
 
-Fixes: de584afa5e188 ("hwmon driver for ACPI 4.0 power meters")
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Link: https://lore.kernel.org/r/20200625043242.31175-1-misono.tomohiro@jp.fujitsu.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Based on looking through the PCA9564 and PCA9665 datasheets this should
+be safe for both chips. The PCA9564 should not return 0x78 for any valid
+state and the PCA9665 should not return 0x90.
+
+Fixes: eff9ec95efaa ("i2c-algo-pca: Add PCA9665 support")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/acpi_power_meter.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index e27f7e12c05bb..9b4ad6c74041e 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -895,7 +895,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 
- 	res = setup_attrs(resource);
- 	if (res)
--		goto exit_free;
-+		goto exit_free_capability;
- 
- 	resource->hwmon_dev = hwmon_device_register(&device->dev);
- 	if (IS_ERR(resource->hwmon_dev)) {
-@@ -908,6 +908,8 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 
- exit_remove:
- 	remove_attrs(resource);
-+exit_free_capability:
-+	free_capabilities(resource);
- exit_free:
- 	kfree(resource);
- exit:
+diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
+index e370804ec8bc6..3a9db4626cb60 100644
+--- a/drivers/i2c/algos/i2c-algo-pca.c
++++ b/drivers/i2c/algos/i2c-algo-pca.c
+@@ -326,7 +326,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
+ 			DEB2("BUS ERROR - SDA Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
+-		case 0x90: /* Bus error - SCL stuck low */
++		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
++		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
+ 			DEB2("BUS ERROR - SCL Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
 -- 
 2.25.1
 
