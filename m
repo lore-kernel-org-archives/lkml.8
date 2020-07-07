@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0E6207C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDB220663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135348;
-	bh=enWQb/tSchN3mf06HJzd5tVwWPwtqvnTPre9qMVaTuU=;
+	s=default; t=1594135360;
+	bh=uz6pN9Y+lCiA2MMEyDzTGEy/64SAtA2kxSPxMrE/Vc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWcnaa/kNsQm8hOrNzKV43ij+RsUzxWfZQn0LNy6AvMK5ahVjYUYWkLvXf9uunPYa
-	 Xe4SkVVRBbX/d6QpV+Uhwriq32E/G4wVLOBLxkDKHKbrmbKWoc542TV3Fa2/RNwMlR
-	 ve+1/YD94uAxUbTbDypt55yyHl24/KQ291flJn1g=
+	b=V60xG2vf6UkwFWer+iIXK/4hUgg7RVStAkvMYFp+tpDQwmQ84xKYiTCxvc0HmSmuv
+	 YomgmjW65TvLAnVKkRYLxsJztaZ23RSplcT39ASuJ4sTTdW/VA155lquHkBS2bYtuz
+	 cUy/ysram8gzU10dGbwxfAgVZ5KQP79DyNKUFFs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgGGPW1 (ORCPT
+        id S1729888AbgGGPWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34752 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgGGPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:17 -0400
+        id S1729859AbgGGPWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F64206E2;
-        Tue,  7 Jul 2020 15:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673BA20853;
+        Tue,  7 Jul 2020 15:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135337;
-        bh=enWQb/tSchN3mf06HJzd5tVwWPwtqvnTPre9qMVaTuU=;
+        s=default; t=1594135349;
+        bh=uz6pN9Y+lCiA2MMEyDzTGEy/64SAtA2kxSPxMrE/Vc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YefmlcT6eX6Oi3pUknoclTpqlM8SIEqFEDl7y3FVXW54mftJV9DRKXSZuNvSjM6Xc
-         yg7jh/X/XPHruCRjjtGBLWgIUjalLsEW9hgKckrJYXlS3cWLFL51TND9b1iCIsFsFr
-         ckr8cthpixN+i29gUgyx2nqDT+aNTq0XLCbCOw7c=
+        b=a9LRDqrFRUShIkxUp7i4xMrUBJuxLWuuZtLSvVY1muIVaDpmlCAcp/ZOCyYe1lzE1
+         0AG6+kqdT5vJHXV4WbPYmNbjZVLjp7K/AckB1IoKpXN4/7kO4xa+tA7XzmEPMxLrAg
+         gKIAMB65HnbDhykXHz55RfMMvKGP20kGRHdapJJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, Luo Xiaogang <lxgrxd@163.com>
-Subject: [PATCH 5.4 36/65] nfsd4: fix nfsdfs reference count loop
-Date:   Tue,  7 Jul 2020 17:17:15 +0200
-Message-Id: <20200707145754.219024905@linuxfoundation.org>
+        stable@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 41/65] nvme: fix identify error status silent ignore
+Date:   Tue,  7 Jul 2020 17:17:20 +0200
+Message-Id: <20200707145754.443602576@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -59,130 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 681370f4b00af0fcc65bbfb9f82de526ab7ceb0a ]
+[ Upstream commit ea43d9709f727e728e933a8157a7a7ca1a868281 ]
 
-We don't drop the reference on the nfsdfs filesystem with
-mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
-until the nfsd module's unloaded, and we can't unload the module as long
-as there's a reference on nfsdfs.  So this prevents module unloading.
+Commit 59c7c3caaaf8 intended to only silently ignore non retry-able
+errors (DNR bit set) such that we can still identify misbehaving
+controllers, and in the other hand propagate retry-able errors (DNR bit
+cleared) so we don't wrongly abandon a namespace just because it happens
+to be temporarily inaccessible.
 
-Fixes: 2c830dd7209b ("nfsd: persist nfsd filesystem across mounts")
-Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+The goal remains the same as the original commit where this was
+introduced but unfortunately had the logic backwards.
+
+Fixes: 59c7c3caaaf8 ("nvme: fix possible hang when ns scanning fails during error recovery")
+Reported-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c |  8 +++++++-
- fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
- fs/nfsd/nfsd.h      |  3 +++
- 3 files changed, 22 insertions(+), 11 deletions(-)
+ drivers/nvme/host/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 1e8f5e281bb53..fa3dcaa82572e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7719,9 +7719,14 @@ nfs4_state_start_net(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int ret;
- 
--	ret = nfs4_state_create_net(net);
-+	ret = get_nfsdfs(net);
- 	if (ret)
- 		return ret;
-+	ret = nfs4_state_create_net(net);
-+	if (ret) {
-+		mntput(nn->nfsd_mnt);
-+		return ret;
-+	}
- 	locks_start_grace(net, &nn->nfsd4_manager);
- 	nfsd4_client_tracking_init(net);
- 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
-@@ -7790,6 +7795,7 @@ nfs4_state_shutdown_net(struct net *net)
- 
- 	nfsd4_client_tracking_exit(net);
- 	nfs4_state_destroy_net(net);
-+	mntput(nn->nfsd_mnt);
- }
- 
- void
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 159feae6af8ba..596ed6a42022d 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
- };
- MODULE_ALIAS_FS("nfsd");
- 
-+int get_nfsdfs(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct vfsmount *mnt;
-+
-+	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
-+	if (IS_ERR(mnt))
-+		return PTR_ERR(mnt);
-+	nn->nfsd_mnt = mnt;
-+	return 0;
-+}
-+
- #ifdef CONFIG_PROC_FS
- static int create_proc_exports_entry(void)
- {
-@@ -1452,7 +1464,6 @@ unsigned int nfsd_net_id;
- static __net_init int nfsd_init_net(struct net *net)
- {
- 	int retval;
--	struct vfsmount *mnt;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	retval = nfsd_export_init(net);
-@@ -1479,16 +1490,8 @@ static __net_init int nfsd_init_net(struct net *net)
- 	init_waitqueue_head(&nn->ntf_wq);
- 	seqlock_init(&nn->boot_lock);
- 
--	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
--	if (IS_ERR(mnt)) {
--		retval = PTR_ERR(mnt);
--		goto out_mount_err;
--	}
--	nn->nfsd_mnt = mnt;
- 	return 0;
- 
--out_mount_err:
--	nfsd_reply_cache_shutdown(nn);
- out_drc_error:
- 	nfsd_idmap_shutdown(net);
- out_idmap_error:
-@@ -1501,7 +1504,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
--	mntput(nn->nfsd_mnt);
- 	nfsd_reply_cache_shutdown(nn);
- 	nfsd_idmap_shutdown(net);
- 	nfsd_export_shutdown(net);
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 7a835fb7d79f7..65097324b42a0 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -89,6 +89,8 @@ void		nfsd_destroy(struct net *net);
- 
- bool		i_am_nfsd(void);
- 
-+int get_nfsdfs(struct net *);
-+
- struct nfsdfs_client {
- 	struct kref cl_ref;
- 	void (*cl_release)(struct kref *kref);
-@@ -99,6 +101,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
- 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
- void nfsd_client_rmdir(struct dentry *dentry);
- 
-+
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- #ifdef CONFIG_NFSD_V2_ACL
- extern const struct svc_version nfsd_acl_version2;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c44c00b9e1d85..d423515547237 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1088,10 +1088,16 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
+ 		dev_warn(ctrl->device,
+ 			"Identify Descriptors failed (%d)\n", status);
+ 		 /*
+-		  * Don't treat an error as fatal, as we potentially already
+-		  * have a NGUID or EUI-64.
++		  * Don't treat non-retryable errors as fatal, as we potentially
++		  * already have a NGUID or EUI-64.  If we failed with DNR set,
++		  * we want to silently ignore the error as we can still
++		  * identify the device, but if the status has DNR set, we want
++		  * to propagate the error back specifically for the disk
++		  * revalidation flow to make sure we don't abandon the
++		  * device just because of a temporal retry-able error (such
++		  * as path of transport errors).
+ 		  */
+-		if (status > 0 && !(status & NVME_SC_DNR))
++		if (status > 0 && (status & NVME_SC_DNR))
+ 			status = 0;
+ 		goto free_data;
+ 	}
 -- 
 2.25.1
 
