@@ -2,115 +2,115 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53934206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135189;
-	bh=zf+acchBvmWz+dfLqoQTn9oqkEE+4yFBrlZPW0GgMsc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5bNOzc/beBruZgBkUOB7TsBkV4CB+AxyL06M3TfTCu+pptLWkbcXZhOC7LRraGUY
-	 LM/qfnzr9XF6U+01wVwt/WFrQZrWnkl4LM+A2zFa451wvCA+n0opMlKWWtv9tq1H8I
-	 73v8p+L2QPql4MtsWKohxuPPo/8fkiAgr6A31VyQ=
+	by mail.kernel.org (Postfix) with ESMTP id A455320771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6BqCzfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGGPTs (ORCPT
+        id S1729415AbgGGPTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgGGPTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728442AbgGGPTo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:19:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492212065D;
-        Tue,  7 Jul 2020 15:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135183;
-        bh=zf+acchBvmWz+dfLqoQTn9oqkEE+4yFBrlZPW0GgMsc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEjjMq2IkTFi8kHXvyM/EBQic395iRVqt+BHS26AEvaIKDpEQC2O6XIkoylr4P567
-         bf9vXhAv+PVwLqyxJF5RHZogMqAEBmetd5sEuaQXDFom4+CGsapXqxoRyx+WUrgeU1
-         L9LtqngT5j8OWKDiVKOsFY6w+IXjaufaONn69Uow=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 4.19 32/36] cifs: Fix the target file was deleted when rename failed.
-Date:   Tue,  7 Jul 2020 17:17:24 +0200
-Message-Id: <20200707145750.699595706@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
-References: <20200707145749.130272978@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72ABC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:19:44 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d10so4840510pll.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=er6hsFquLTNA8VKEn24uMWaKfe7q89cZ0TTNSo/x5mA=;
+        b=l6BqCzfkcZOUtekgBlMOFzEoQdcPcAs3uILNTs2Rc6zKFxOoXGcFngHlzIUen+l2w4
+         edX+VgvnoybDAbGyjcunBSFrklD07tDq6aGeqP36T1S52x9ayjBAvcRyx1a7/R638gd0
+         ORLlomrwFY14zy1yc/CdmTaAfT/e6qYBgxkh6k+LBJXzmmW2cJ0p3UoNPj92WsaEECrb
+         io+RbC0J9ko7yYmpjSmgkJ2BVCQZQFX2fzn5GwfzsZ2sBrl4Mjjvs7QJHaY2m9OKZuEJ
+         XZmBuGe90ONz69yyNEZMsSp5BTPtaXPo+hgi9b4QFn+2sDc20U3KcBoPpTXWeiombnq7
+         Lkrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=er6hsFquLTNA8VKEn24uMWaKfe7q89cZ0TTNSo/x5mA=;
+        b=pF0+x7oy7sCwvGZs3hC/Y+PKB3IyezAn+c+dCP9B0mkK1+MZSnTXdZF0UWt3n146/+
+         Yo49oVxHyh3APQqJBXbF7vl/hKALMqp5ewu2UyPQzC4CeooWaeaXALcpAMtPVLEmmRrK
+         b69cjNVV+cZmQgTqgOmYWHUyKDzbcy4W6PAZjpwJ+dXQ+4ey/sNu25FPB9xhO7iWBXKP
+         JQc1882NFnhLnSH8UmfX2uvNhVGRs8mxpj32D/VeJAeAYlAqPgIjR44cHPVJruNJRGqB
+         9BjL50mkqGVI0Gc7YSI4zeWaYXzkH1zoKBe6I/9Jzb4Gz/asPx+gYMmnjGRirabbUe5J
+         bIhw==
+X-Gm-Message-State: AOAM531c1ccRN3SZfCDwwSChQzWwg9R0z292ptTcRIJcP+EIWIwCK9dr
+        zHLu+rZY2ajrxVYKBpWm5qE=
+X-Google-Smtp-Source: ABdhPJyo++a00C0KC/2zJLhYAA5YUxExURUW/Hz4ihgCnIQ0sgWSzcjPi7pGghI+EUrRuc6m1A3O6A==
+X-Received: by 2002:a17:90a:222d:: with SMTP id c42mr5140691pje.126.1594135184400;
+        Tue, 07 Jul 2020 08:19:44 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id q24sm1295225pgg.3.2020.07.07.08.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 08:19:43 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 23:19:31 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 09/15] perf ftrace: add support for tracing option
+ 'func_stack_trace'
+Message-ID: <20200707151931.ehgnhgl67cd73fjd@mail.google.com>
+References: <20200627133654.64863-1-changbin.du@gmail.com>
+ <20200627133654.64863-10-changbin.du@gmail.com>
+ <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+On Fri, Jul 03, 2020 at 03:30:32PM +0900, Namhyung Kim wrote:
+> On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > This adds support to display call trace for function tracer. To do this,
+> > just specify a '--func-call-graph' option.
+> 
+> What if it's used with -G option?  Also it might be used only with
+> the -T option..  How about showing a warning if it's missing.. ?
+>
+All '--func-xxx' options are function tracer only. The warning message is a
+good idea.
 
-commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2 upstream.
+> Thanks
+> Namhyung
+> 
+> >
+> > $ sudo perf ftrace -T vfs_read --func-call-graph
+> >  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+> >  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+> >  => vfs_read
+> >  => ksys_read
+> >  => __x64_sys_read
+> >  => do_syscall_64
+> >  => entry_SYSCALL_64_after_hwframe
+> >  ...
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-When xfstest generic/035, we found the target file was deleted
-if the rename return -EACESS.
-
-In cifs_rename2, we unlink the positive target dentry if rename
-failed with EACESS or EEXIST, even if the target dentry is positived
-before rename. Then the existing file was deleted.
-
-We should just delete the target file which created during the
-rename.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/cifs/inode.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1783,6 +1783,7 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
-+	bool new_target = d_really_is_negative(target_dentry);
- 
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1859,8 +1860,13 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
- 
- unlink_target:
--	/* Try unlinking the target dentry if it's not negative */
--	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
-+	/*
-+	 * If the target dentry was created during the rename, try
-+	 * unlinking it if it's not negative
-+	 */
-+	if (new_target &&
-+	    d_really_is_positive(target_dentry) &&
-+	    (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
-
-
+-- 
+Cheers,
+Changbin Du
