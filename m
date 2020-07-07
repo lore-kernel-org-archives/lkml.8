@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57029C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1756F20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228B420663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135239;
-	bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
+	s=default; t=1594135244;
+	bh=lcAk/MdYca1FSQV397hRvZG7gSl/5f02OBNcFf7j7Qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LS8jmDPHHcD3GxlMf/XFeH5O/P+N6/MJMtrgmZTa44d7OXOHFHib1OvZplpNqYDNz
-	 7mUFTS6tKRSmTK8W+NijdcNiG3zDg0JOWqjb2Wg0X4DaNisG2xrX8bQeqThfsaD13P
-	 gLz0SdkonTFpPbYUGiELDLp/nmApdJN64bolIU9I=
+	b=HOCrhseh7A4qH6Gp/wwo+P3dT+4mFFC0pt/k/AKUMcYKX6MSVhVkh2BjrhMWa5kEM
+	 5tju+Ki6Z+D8eDi8tj9UaLGURGT1TS15GSc7eEQX0qMnUAVBGCvvpV9ltjYBtOOS+m
+	 jtCx5c/80b75nlpRaBJmoAEqn/Q3egX6RLB+eMQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgGGPUh (ORCPT
+        id S1729563AbgGGPUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgGGPU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:28 -0400
+        id S1728598AbgGGPUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381312065D;
-        Tue,  7 Jul 2020 15:20:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87A812065D;
+        Tue,  7 Jul 2020 15:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135227;
-        bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
+        s=default; t=1594135233;
+        bh=lcAk/MdYca1FSQV397hRvZG7gSl/5f02OBNcFf7j7Qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I7eHKK/2x5/7mKoLV6FX4VBf2cTaImOgLJBf8+fG1jnovofEQHq8YBAB/rfm1YLmr
-         WtEap3uTfrz3wK2AZPno0QDvdGZgGBPpiuxfXI3H+C3qV9A2dHS6jD5le6UzsF249T
-         QOZwVucupNPQ1QJVK3KIbvt7cuQeLPyB8u6EDnuc=
+        b=ZbqWiiYJ9nMcjZeZBtnB87CLYwJCZKQ1Z2Ie1Db5h3dCFuRetk+wqq2xzrQy4ZHxO
+         brsQ4b9n12m6AuV25Q8fqp6iGGFgju9BfauqvRYIzmNqBvABxG52A65yrHOUU//LRE
+         K2Tq0Rrb1uXrb+QS1AMh7Sri0uKMNVBtFX9eTjBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 23/65] rxrpc: Fix afs large storage transmission performance drop
-Date:   Tue,  7 Jul 2020 17:17:02 +0200
-Message-Id: <20200707145753.606109506@linuxfoundation.org>
+Subject: [PATCH 5.4 25/65] cxgb4: use unaligned conversion for fetching timestamp
+Date:   Tue,  7 Jul 2020 17:17:04 +0200
+Message-Id: <20200707145753.702366107@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -59,44 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 02c28dffb13abbaaedece1e4a6493b48ad3f913a ]
+[ Upstream commit 589b1c9c166dce120e27b32a83a78f55464a7ef9 ]
 
-Commit 2ad6691d988c, which moved the modification of the status annotation
-for a packet in the Tx buffer prior to the retransmission moved the state
-clearance, but managed to lose the bit that set it to UNACK.
+Use get_unaligned_be64() to fetch the timestamp needed for ns_to_ktime()
+conversion.
 
-Consequently, if a retransmission occurs, the packet is accidentally
-changed to the ACK state (ie. 0) by masking it off, which means that the
-packet isn't counted towards the tally of newly-ACK'd packets if it gets
-hard-ACK'd.  This then prevents the congestion control algorithm from
-recovering properly.
+Fixes following sparse warning:
+sge.c:3282:43: warning: cast to restricted __be64
 
-Fix by reinstating the change of state to UNACK.
-
-Spotted by the generic/460 xfstest.
-
-Fixes: 2ad6691d988c ("rxrpc: Fix race between incoming ACK parser and retransmitter")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/call_event.c | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
-index 985fb89202d0c..9ff85ee8337cd 100644
---- a/net/rxrpc/call_event.c
-+++ b/net/rxrpc/call_event.c
-@@ -253,7 +253,7 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
- 		 * confuse things
- 		 */
- 		annotation &= ~RXRPC_TX_ANNO_MASK;
--		annotation |= RXRPC_TX_ANNO_RESENT;
-+		annotation |= RXRPC_TX_ANNO_UNACK | RXRPC_TX_ANNO_RESENT;
- 		call->rxtx_annotations[ix] = annotation;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 3a45ac8f0e011..506170fe3a8b7 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2816,7 +2816,7 @@ static noinline int t4_systim_to_hwstamp(struct adapter *adapter,
  
- 		skb = call->rxtx_buffer[ix];
+ 	hwtstamps = skb_hwtstamps(skb);
+ 	memset(hwtstamps, 0, sizeof(*hwtstamps));
+-	hwtstamps->hwtstamp = ns_to_ktime(be64_to_cpu(*((u64 *)data)));
++	hwtstamps->hwtstamp = ns_to_ktime(get_unaligned_be64(data));
+ 
+ 	return RX_PTP_PKT_SUC;
+ }
 -- 
 2.25.1
 
