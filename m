@@ -2,101 +2,94 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A43AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6173620708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED15F20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N/OvAqBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgGGMR6 (ORCPT
+        id S1727936AbgGGMSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:17:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42892 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgGGMR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:17:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 69186AE65;
-        Tue,  7 Jul 2020 12:17:56 +0000 (UTC)
-Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
- allocation for migration
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
-Date:   Tue, 7 Jul 2020 14:17:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 08:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGMSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 08:18:18 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027E6C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:18:18 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y18so24562153lfh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
+        b=N/OvAqBuFoj3Pd62waZt9/FVEceVBKbXkq4lTVip5frbC/0py1e7qlSOX/CaOcJ9KN
+         0ebXE5iiaXIXyQ4zZoZ/VQWHhEOelXphjkuL5AH8WTrx3FrDh+7Lq7yQMGJnjPLYPGjf
+         JlYqdmHB0kc4EsvML9Dg+v5OpEY/f1e+X5c3iVVMyrMs/Vj8caqxoTOpjfK6uHf7rAxS
+         HCtI7caAC/hBKCsbr+Otirw4x55NLo9xlDxOyYY2pg0EfJv7aYkbVXr7eZT1NSwSEi88
+         XvcPSH8TDp6QBHWzKhtfH++wuwbFvJXZZ9qs7kic+y2B6FLOMsY3iYjf8g7y4gqTI4K1
+         nxMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
+        b=ThntAG+VKtKejtkSYmaNLHHUgJpJds13lNfPgxrjJNQP/NMm3Cx3RNVx3zuKk4DYKL
+         cz5YjpN2LJUv7Ri1xMY4ebzYQ5gEIO66Uj7iN8pfCAjvnVjlcgH1XcGgJ6BOXxJIth44
+         pXVqdoOIPBVEQBENhx8GF2tw7//xmCusqgNJNf5Z1wPKo9UUh9eqQwv9Zv4Fsuby/+iJ
+         A4In7x/GmBysj4znR6sea7D8wxyErzQkWLr6bLX1y2taA8kkZNyjMK5X3aT3E1UVK3UG
+         +7rb90iACYm9D7cMKs73PS7t6cA0soKBBogD8MlKX2tUFx6BhNaessaXoIEVA2/X5RZ5
+         CCwA==
+X-Gm-Message-State: AOAM5312SqYkce5SzKyQLGfX/XfIVryxNiqiInEDFdbezrRP/O2eX/xW
+        vrhvOk4NUvpN8D+NmUpyCsy25x0ASkfujbO86LHKMg==
+X-Google-Smtp-Source: ABdhPJxH0G4kh8NlF9pHPkG/HVOhx9RJ/tQnhLrHOKjaGWMKl3J+G1CqdUSXg1kIkjYFLaEAugmTgoODVIXAf9jL/7E=
+X-Received: by 2002:a19:745:: with SMTP id 66mr32931901lfh.77.1594124296456;
+ Tue, 07 Jul 2020 05:18:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200622113740.46450-1-paul@crapouillou.net>
+In-Reply-To: <20200622113740.46450-1-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 14:18:05 +0200
+Message-ID: <CACRpkdYsH9B4_6XLuc-8koMsA6JdFSaMokcF+k9KK=mz-CtUBA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
+ ingenic,pinctrl.txt to YAML
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> In mm/migrate.c, THP allocation for migration is called with the provided
-> gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
-> would be conflict with the intention of the GFP_TRANSHUGE.
-> 
-> GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
-> behaviour by well defined manner since overhead of THP allocation is
-> quite large and the whole system could suffer from it. So, they deals
-> with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAIM
-> and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
-> that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
-> 
-> This patch fixes this situation by clearing __GFP_RECLAIM in provided
-> gfp_mask. Note that there are some other THP allocations for migration
-> and they just uses GFP_TRANSHUGE(_LIGHT) directly. This patch would make
-> all THP allocation for migration consistent.
-> 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Mon, Jun 22, 2020 at 1:38 PM Paul Cercueil <paul@crapouillou.net> wrote:
+
+> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
+>
+> In the process, some compatible strings now require a fallback, as the
+> corresponding SoCs are pin-compatible with their fallback variant.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  mm/migrate.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 02b31fe..ecd7615 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page,
->  	}
->  
->  	if (PageTransHuge(page)) {
-> +		/*
-> +		 * clear __GFP_RECALIM since GFP_TRANSHUGE is the gfp_mask
-> +		 * that chooses the reclaim masks deliberately.
-> +		 */
-> +		gfp_mask &= ~__GFP_RECLAIM;
->  		gfp_mask |= GFP_TRANSHUGE;
+>
+> Notes:
+>     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+>         - remove 'additionalProperties: false' since we will have pin conf nodes
 
-In addition to what Michal said...
+Patch applied.
 
-The mask is not passed to this function, so I would just redefine it, as is done
-in the hugetlb case. We probably don't even need the __GFP_RETRY_MAYFAIL for the
-THP case asi it's just there to prevent OOM kill (per commit 0f55685627d6d ) and
-the costly order of THP is enough for that.
-
->  		order = HPAGE_PMD_ORDER;
->  	}
-> 
-
+Yours,
+Linus Walleij
