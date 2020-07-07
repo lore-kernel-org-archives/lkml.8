@@ -2,154 +2,80 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A78C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15502C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78632088E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134911;
-	bh=hMGRfixjywKqcnh7RXIFeYxP2Grb1Pl3dGsTnwQXZTo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gcRvayOEa80wLlIYxrNRVY4QlHnt58umMkZ+aIUHgfLFP/nDq5GgYksO2HgcCWCPM
-	 S2Ef0SL5ZZcA+iOUor4i3yasi/kXIs+cxvEktLFPpgjIhRiuhJ96MGPVWLWJl5Q8bk
-	 Jw1ybunIgqlYg6XV7Tla6f9vty+LpiN6kfvrIfqU=
+	by mail.kernel.org (Postfix) with ESMTP id F26452065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgGGPO6 (ORCPT
+        id S1728844AbgGGPPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54440 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:15:16 -0400
+Received: from verein.lst.de ([213.95.11.211]:59269 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbgGGPO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:14:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD2842065D;
-        Tue,  7 Jul 2020 15:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134895;
-        bh=hMGRfixjywKqcnh7RXIFeYxP2Grb1Pl3dGsTnwQXZTo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkpSkv6kQwz6kvDuGZF7wIkuj6GRjf1BaMGcoOm/cxyev6S8oHXFiktXFEVWaqS+J
-         BjRMOUHzhJa579+zdxt8XWe1axjKoJqBXqPtbdjkd6d9Gf8FF0R2Y22KMoknVKN28i
-         Fbj/drswWMI11MIDPt6BAAC/u3sk8IrOalIsggBo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Glauber Costa <glauber@scylladb.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/24] mm/slub: fix stack overruns with SLUB_STATS
-Date:   Tue,  7 Jul 2020 17:13:40 +0200
-Message-Id: <20200707145749.371612734@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
-References: <20200707145748.952502272@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728747AbgGGPOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:14:47 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E6E5268AFE; Tue,  7 Jul 2020 17:14:41 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 17:14:40 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dma-mapping: add a new dma_need_sync API
+Message-ID: <20200707151440.GA23816@lst.de>
+References: <20200629130359.2690853-1-hch@lst.de> <20200629130359.2690853-2-hch@lst.de> <20200706194227.vfhv5o4lporxjxmq@bsd-mbp.dhcp.thefacebook.com> <20200707064730.GA23602@lst.de> <20200707151109.qui5uzzzq4dihfie@bsd-mbp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707151109.qui5uzzzq4dihfie@bsd-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On Tue, Jul 07, 2020 at 08:11:09AM -0700, Jonathan Lemon wrote:
+> > You need to check every mapping.  E.g. this API pairs with a
+> > dma_map_single/page call.  For S/G mappings you'd need to call it for
+> > each entry, although if you have a use case for that we really should
+> > add a dma_sg_need_sync helper instea of open coding the scatterlist walk.
+> 
+> My use case is setting up a pinned memory area, and caching the dma
+> mappings.  I'd like to bypass storing the DMA addresses if they aren't
+> needed.  For example:
+> 
+> setup()
+> {
+>     if (dma_need_sync(dev, addr, len)) {
+>         kvmalloc_array(...)
+>         cache_dma_mappings(...)
+>     }
+> 
+> 
+> dev_get_dma(page)
+> {
+>     if (!cache)
+>         return page_to_phys(page)
+> 
+>     return dma_cache_lookup(...)
+> 
+> 
+> 
+> The reason for doing it this way is that the page in question may be
+> backed by either system memory, or device memory such as a GPU.  For the
+> latter, the GPU provides a table of DMA addresses where data may be
+> accessed, so I'm unable to use the dma_map_page() API.
 
-[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
-
-There is no need to copy SLUB_STATS items from root memcg cache to new
-memcg cache copies.  Doing so could result in stack overruns because the
-store function only accepts 0 to clear the stat and returns an error for
-everything else while the show method would print out the whole stat.
-
-Then, the mismatch of the lengths returns from show and store methods
-happens in memcg_propagate_slab_attrs():
-
-	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-		buf = mbuf;
-
-max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
-in show_stat() later where a bounch of sprintf() would overrun the stack
-variable.  Fix it by always allocating a page of buffer to be used in
-show_stat() if SLUB_STATS=y which should only be used for debug purpose.
-
-  # echo 1 > /sys/kernel/slab/fs_cache/shrink
-  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
-  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
-
-  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    number+0x421/0x6e0
-    vsnprintf+0x451/0x8e0
-    sprintf+0x9e/0xd0
-    show_stat+0x124/0x1d0
-    alloc_slowpath_show+0x13/0x20
-    __kmem_cache_create+0x47a/0x6b0
-
-  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
-   process_one_work+0x0/0xb90
-
-  this frame has 1 object:
-   [32, 72) 'lockdep_map'
-
-  Memory state around the buggy address:
-   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
-                                                         ^
-   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    __kmem_cache_create+0x6ac/0x6b0
-
-Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Glauber Costa <glauber@scylladb.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index c20c87099a99d..454c1d550ad22 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5526,7 +5526,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
- 		 */
- 		if (buffer)
- 			buf = buffer;
--		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-+		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
-+			 !IS_ENABLED(CONFIG_SLUB_STATS))
- 			buf = mbuf;
- 		else {
- 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
--- 
-2.25.1
-
-
-
+dma_need_sync doesn't tell you if the unmap needs the dma_addr_t.
+I've been think about replacing CONFIG_NEED_DMA_MAP_STATE with a runtime
+for a while, which would give you exattly what you need.  For now it
+isn't very useful as there are very few configs left that do not have
+CONFIG_NEED_DMA_MAP_STATE set.
