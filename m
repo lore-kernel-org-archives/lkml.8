@@ -2,139 +2,129 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60830C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F9E20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F4320684
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eh+OT9gB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fbbH+nMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGGEFP (ORCPT
+        id S1727088AbgGGEGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:05:15 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:65198
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726491AbgGGEFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:05:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DlcrbRTFZs9dA0WWjsg/1HAY/fAIP94arzrdQlHSU7+DxSEnpsW+/ysJm9LJQldQcDDCkp4p2fcoy7Ht7N+gflHbQnqJHKs2TGC6uMQ7wl5cYo70wlAWfJWWoAVrL+05LNekpi1g/jv3LWZjK7pXypM88qq3MgvpP6RliddW5zeyjJUJghSiluzNp791bIl91rgTsEdqg5MXRUt9pWJYYWOZoByF9GgbxaQmi4CdduWNt1Gwi6EdF1peqmKV0QRLI7K/rRcxArsVAfOkXySne2J2jYNTPp23GbdPLQVByWV6R20GysuXG/eevfdi7DTU6dR11iSABRD7C6gLR/uEIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JPZ7KSYL3EVQGocQfAp0YdyQ7McHmsYOgnx1O4A/sb4=;
- b=lfQn2ek3dBYUV1DYbC6+/wIVD1PkIqrYxTT8Et4ZTHw21BDkEI5xGK+Dzl/jwXlbG2I3FWyjFZQUtJmGZ34hLcEWVT3V+ke17xmj4LS5rwEthhW+ufSkoEulEzJYyJjaPof7a0ZfYJeOkBOMC6S/kq469Gw83hBpu9YhuAXDfkvjALELGZquX/oTxEdAz/bF66XwleuL4SrdKiIw6AgO0qWoZan8T6HRN7Sb0EpaNvIK5z+i4ynqXu6XsgmCC5bQI2gbhYS8D/GA4kk/6ODTA9nE2H6y3wlHF8YcONsUoq4kV4oTeQM82qZIncK77eZd7YNkNWrII70IXiOqEpYNCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JPZ7KSYL3EVQGocQfAp0YdyQ7McHmsYOgnx1O4A/sb4=;
- b=Eh+OT9gBTm1y/xVy2PwYC0juLRsUI3Wp3bw2T08guPYYAlY3nfinWDDtaxYvsymh8oUPbDiMtZRJbhkgq6XN9w5hUnN6qWzNBIIqlb4aTJKgKie/d/JVRMlf+0AIvbydjyH0P02X1kTHn4qgV/RhxxvbF1qSHYVUyM6ylInu5wU=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM7PR04MB6902.eurprd04.prod.outlook.com
- (2603:10a6:20b:107::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Tue, 7 Jul
- 2020 04:05:11 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
- 04:05:11 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Sergey Organov <sorganov@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: RE: [EXT] [PATCH  2/5] net: fec: enable to use PPS feature without
- time stamping
-Thread-Topic: [EXT] [PATCH  2/5] net: fec: enable to use PPS feature without
- time stamping
-Thread-Index: AQHWU6F3aAODXW9jZUmdteAGjEWX/qj7f+Dw
-Date:   Tue, 7 Jul 2020 04:05:11 +0000
-Message-ID: <AM6PR0402MB360752A10C9529B13051C7F2FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-3-sorganov@gmail.com>
-In-Reply-To: <20200706142616.25192-3-sorganov@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a09834f2-f82a-4160-344c-08d8222af1b2
-x-ms-traffictypediagnostic: AM7PR04MB6902:
-x-microsoft-antispam-prvs: <AM7PR04MB6902AC57D182F424605B50E7FF660@AM7PR04MB6902.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0457F11EAF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: imnLg/kqJUflSojyuY1xkoZUCwJrUP3ZzVdauk9eSA5GQr5Ykf38ymDB8vkqDz7tBCXH3nzzlUJYGeBEYerxpmH8mXfWiVv453K0pR2jnKSrb7tyjvOyganupe1CQ52RaanTz7RmeE8ywasC0XkV0O+7WIMi+bKTNpizPgbYVNGf6a/hROt0ItamIq+T66rJ1h4knamIgAM9QivzK7P4ydxXK27aPlOvgaqBz3Pyo/U3m+MKVrNijWyrlbgy++U0KGr98MYl/jP4A3/zONM5GLvAh2kpf0xyGlsxxW0xI9rn0/eN0atxSimZvYFKfrGr
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(316002)(26005)(186003)(6506007)(110136005)(71200400001)(54906003)(7696005)(478600001)(8936002)(8676002)(4326008)(33656002)(55016002)(2906002)(9686003)(76116006)(83380400001)(52536014)(86362001)(5660300002)(66446008)(64756008)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: N037i5KJKcEkbn+hiBvePgpoLlMHozJzwKIy56df/6zfGrYrLiFI3WIeWxLFW329/brCBM1ClntqyBohAhRxb6fBTcncaii4wsAfWDUH+aM+LY7VtKRLdLJ480+5s9gB314MnemluJM+VHwX+Bofm++PXuZxvjSj2wRt08j0cRYt+VHWCYkkgTFPUKx3VhwO/dmkH5C4olXdYdvnlhZE4fJn0M4oYmdXqY7FI9vuUFX815XSrN9vfb18r85mWCcnupaaA9KIo5b0U6kpDQ3vcFZnuw72AT6ojKnrbtKdHGFBawtxl0bsIE5WOPG9r1DbIm1iBwTzmJc6QXkJG5ll6zmIUyJ31WPXH10ZnPlX2UDrTcPm+xLETPvXWlmdrwbdyD41iHG/bnSvBpmzsto9pvEtHWNR59P5C40TFaX5I4oZzS66WEgiRj6mnwXGeVO+5pcCJB7/cB9sQDB+6RxeeYlMxWPDpTeMFHcOpVh2V9w=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jul 2020 00:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgGGEGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:06:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06812C061755;
+        Mon,  6 Jul 2020 21:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zVZLs0N75aZV67cHh+dPIHohMDTzmdFMj5VSVF1NIIE=; b=fbbH+nMUdsi61xBpyAWZ3pwwVH
+        RcP5goKiCyW+CRG6U9h5HWCFdyU+6CeAngxeyk4mKEo0Ikxe738kaJPNlAkgu/yVDbVTUH6kaba8A
+        TcL7cBxYSgt/4V2PoGfEyJQUelVVAa4Qhzay8lmHjYTMnSCXfvWvweIr8+5z8KFrfNSeo9Q31MyGf
+        5rih/kL54q1ouZUoKRNi8rvVcyH6J0Cai5xSPnjIejds8/Ba3fL6/sMEB8gd9Xy3AhLMYBToZShyw
+        QXQJjyu/jDt0iWZ2nlS95xsjZM0cAcdP+feB3S+6B3vn+ILQUpIfyYMLv8S1hssK/1oLPZ5zvqBon
+        o+Sunugg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jses2-0005Cw-0f; Tue, 07 Jul 2020 04:06:14 +0000
+Date:   Tue, 7 Jul 2020 05:06:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v35 23/24] docs: x86/sgx: Document SGX micro architecture
+ and kernel internals
+Message-ID: <20200707040613.GH25523@casper.infradead.org>
+References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+ <20200707033747.142828-24-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a09834f2-f82a-4160-344c-08d8222af1b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 04:05:11.1464
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9bYNHz4MaC8PM8bdFVGsAV0zNbQ41w7fWwaRfpZfz8ve2pMVtCuh/1miOkWlT/Z30A7blJys60poPUYHwffoJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6902
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707033747.142828-24-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020 10:26 =
-PM
-> PPS feature could be useful even when hardware time stamping of network
-> packets is not in use, so remove offending check for this condition from
-> fec_ptp_enable_pps().
+On Tue, Jul 07, 2020 at 06:37:46AM +0300, Jarkko Sakkinen wrote:
+> +*Software Guard eXtensions (SGX)* is a set of instructions that enable ring-3
 
-If hardware time stamping of network packets is not in use, PPS is based on=
- local
-clock, what is the use case ?
+I can never remember which way up intel numbers their rings.
+Is that user mode or kernel mode?
 
->=20
-> Signed-off-by: Sergey Organov <sorganov@gmail.com>
-> ---
->  drivers/net/ethernet/freescale/fec_ptp.c | 5 -----
->  1 file changed, 5 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
-> b/drivers/net/ethernet/freescale/fec_ptp.c
-> index f8a592c..4a12086 100644
-> --- a/drivers/net/ethernet/freescale/fec_ptp.c
-> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-> @@ -103,11 +103,6 @@ static int fec_ptp_enable_pps(struct
-> fec_enet_private *fep, uint enable)
->         u64 ns;
->         val =3D 0;
->=20
-> -       if (!(fep->hwts_tx_en || fep->hwts_rx_en)) {
-> -               dev_err(&fep->pdev->dev, "No ptp stack is running\n");
-> -               return -EINVAL;
-> -       }
-> -
->         if (fep->pps_enable =3D=3D enable)
->                 return 0;
->=20
-> --
-> 2.10.0.1.g57b01a3
+> +applications to set aside private regions of code and data. These regions are
+> +called enclaves. An enclave can be entered to a fixed set of entry points. Only
+
+entered through?
+
+> +a CPU running inside the enclave can access its code and data.
+> +
+> +The support can be determined by
+> +
+> +	``grep sgx /proc/cpuinfo``
+> +
+> +Enclave Page Cache
+> +==================
+> +
+> +SGX utilizes an *Enclave Page Cache (EPC)* to store pages that are associated
+> +with an enclave. It is contained in a BIOS reserved region of physical memory.
+> +Unlike pages used for regular memory, pages can only be accessed outside the
+> +enclave for different purposes with the instructions **ENCLS**, **ENCLV** and
+> +**ENCLU**.
+> +
+> +Direct memory accesses to an enclave can be only done by a CPU executing inside
+> +the enclave. An enclave can be entered with **ENCLU[EENTER]** to a fixed set of
+> +entry points. However, a CPU executing inside the enclave can do outside memory
+> +accesses.
+
+This is rather tortured.  I think what you're trying to say here is:
+
+Only a CPU executing inside an enclave can access memory belonging to the
+enclave.  The CPU may access memory outside the enclave as long as it does
+not attempt to access memory which is inside a different enclave.
+
+> +Enclave Page Cache Map
+> +----------------------
+> +
+> +The processor tracks EPC pages via the *Enclave Page Cache Map (EPCM)*.  EPCM
+> +contains an entry for each EPC page, which describes the owning enclave, access
+> +rights and page type among the other things.
+> +
+> +The permissions from EPCM is consulted if and only if walking the kernel page
+> +tables succeeds. The total permissions are thus a conjunction between page table
+> +and EPCM permissions.
+> +
+> +For all intents and purposes the SGX architecture allows the processor to
+> +invalidate all EPCM entries at will, i.e. requires that software be prepared to
+> +handle an EPCM fault at any time. The contents of EPC are encrypted with an
+> +ephemeral key, which is lost on power transitions.
+
+The SGX architecture allows the processor to invalidate any EPCM entry
+at any time.  Sotware must be prepared to handle the resulting EPCM fault.
+The contents of EPC are encrypted with an ephemeral key, which is lost on
+power transitions.
+
+(can you be a bit more specific about power transitions?  do you mean
+suspend/resume?  hibernate/wake?  poweroff/poweron?  what about reset?
+surely you don't mean S1?  or do you?)
 
