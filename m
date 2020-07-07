@@ -2,147 +2,249 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B126C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F62C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E9920702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EDB20702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:30:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xeoov7gH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGGE3F (ORCPT
+        id S1727038AbgGGEar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:29:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17162 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgGGE3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:29:05 -0400
-IronPort-SDR: yiFcuQjDZgwVUD8y0GymcOEuLi4U+58jkkfH3ai97V5ZWjTJvnNY2XU+IOWrSjUKU3G6Yfi3FE
- 4hySrXVX9/cA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="127624021"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="127624021"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 21:29:04 -0700
-IronPort-SDR: vEy7KA1HNinYAO7xUdxEB5KiqWDaxM1DoqJ6bCM1wUKER80OKYK3e3sNT+23vpPDKslKXoFW3C
- pSFzAWOwehaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="283301840"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 06 Jul 2020 21:29:04 -0700
-Date:   Mon, 6 Jul 2020 21:29:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v34 11/24] x86/sgx: Add SGX enclave driver
-Message-ID: <20200707042904.GD5208@linux.intel.com>
-References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
- <20200707030204.126021-12-jarkko.sakkinen@linux.intel.com>
- <20200707033617.GF25523@casper.infradead.org>
- <20200707041151.GE143804@linux.intel.com>
+        Tue, 7 Jul 2020 00:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGEar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:30:47 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2243DC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:30:47 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id h28so37265364edz.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nY1NX73YQB7wCYaxOlNn70nzgryfZkuffDL7UW1FZgQ=;
+        b=xeoov7gHbtBFjLh+CW8iWLYDcM6VlKJXt2qFs/sxcUcFTgfY7QVGCaTE/TXvZeeP7n
+         1SPwK9XAaGZP3nbJgkvKVqhc2F3rrT6dL7C0t/tFwswq5DbKnL6q3B5fzKAhQueIFSfp
+         6LGW9ykd7nBCOcOYrBlQ7IM9tAJ/2+/1i4l6AZk6FxC7L2yc0PJf0jhgw41CaVlxp9aH
+         L/j4+A0TsDdubdUXYQwEAFd29Cb9uJ4PuWDPCdyD2JgaIXKY1HgjVGDntuN0RclkqEoO
+         CHbbWeGTZZwQhMxhsWEDmUa4iCicAtcUbpqjhzOYf+jRIdBKqWdOeyCB1IZw6ABVEsgt
+         o7eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nY1NX73YQB7wCYaxOlNn70nzgryfZkuffDL7UW1FZgQ=;
+        b=gvrv3iJ+XJ5ZVXX7PQixb5scBtxMLApYDX4FCxb+SkMDzF7IWQWbjRdBeKBCCDzMe4
+         y6G/6lptFLNXo1AXTEndWth8OqXP2szLo11pHJJrFBx7UbnjSMU5oGJKJ93uJj1Jeld+
+         64SkZ/ktImK+fJ17g7QSKrZOfYZj8jUyzGPw1JHRH+TexxXab5C/2KE+nYe9MUMsXkPZ
+         Tlyj4qx0GQ/WKkwy8x0ylg3IlYU9kseUyHZd9aupyFEs9HJcSAEKVx2LTZghCX4kuCC+
+         GG/xVITW+Uu15naVvJr3FCoO09+Vp2vjjS/G9diJ1W/1mawLLsa0Ja7ClXEYSmtbP5Fm
+         VbRQ==
+X-Gm-Message-State: AOAM532yuabRMJvJ46f6s8+tcEMSUzsT/hYtv8OMWlpQTaqv1iPmk+/9
+        gs3GsC8eUvGBU8bD8dK5BiZZhcH92MjWS5pBSj3DXA==
+X-Google-Smtp-Source: ABdhPJxP09vAntcEfZ47uc+HcE6HUVgrmDot8jw8/z6A6GHRRxVdKywscxgkHQrIMwJ+fmngkhyz12UTfumMb6N/GDQ=
+X-Received: by 2002:a50:a1e7:: with SMTP id 94mr57877555edk.165.1594096245726;
+ Mon, 06 Jul 2020 21:30:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707041151.GE143804@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <202007041703.51F4059CA@keescook>
+In-Reply-To: <202007041703.51F4059CA@keescook>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 6 Jul 2020 21:30:32 -0700
+Message-ID: <CAPcyv4jy6cKLNBhi9HCUP=f6GC4bM_iw_-U8o0uMrO8OX1SWTw@mail.gmail.com>
+Subject: Re: [PATCH] CodingStyle: Inclusive Terminology
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Man, I really need to type faster.
+On Sat, Jul 4, 2020 at 5:41 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:
+> > Recent events have prompted a Linux position statement on inclusive
+> > terminology. Given that Linux maintains a coding-style and its own
+> > idiomatic set of terminology here is a proposal to answer the call to
+> > replace non-inclusive terminology.
+> >
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Chris Mason <clm@fb.clm>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> (nit: isn't this a Co-developed-by chain, not a SoB chain?)
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
+>
+> Comments below...
+>
+> > ---
+> >  Documentation/process/coding-style.rst          |   12 ++++
+> >  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
+> >  Documentation/process/index.rst                 |    1
+> >  3 files changed, 77 insertions(+)
+> >  create mode 100644 Documentation/process/inclusive-terminology.rst
+> >
+> > diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> > index 2657a55c6f12..4b15ab671089 100644
+> > --- a/Documentation/process/coding-style.rst
+> > +++ b/Documentation/process/coding-style.rst
+> > @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
+> >  problem, which is called the function-growth-hormone-imbalance syndrome.
+> >  See chapter 6 (Functions).
+> >
+> > +For symbol names, avoid introducing new usage of the words 'slave' and
+> > +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
+> > +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
+> > +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
+> > +'denylist'.
+>
+> Keeping "master" in a "master/slave" pairing (i.e. replacing only
+> "slave") seems incomplete to me. If "master" is paired with "slave", it
+> should be replaced too. Potential examples: 'primary', 'leader', 'principle',
+> 'controller', 'sender', 'initial'.
 
-On Tue, Jul 07, 2020 at 07:11:51AM +0300, Jarkko Sakkinen wrote:
-> On Tue, Jul 07, 2020 at 04:36:17AM +0100, Matthew Wilcox wrote:
-> > What's a leaf function?  Is it like a CPU instruction?
-> 
-> Yeah, the opcode is ENCLS for ring-0 (enclave management and
-> construction) and ENCLU for ring-3 (entrance to the enclave etc).
-> The leaf function number goes to EAX.
+Yes, this matches Andy's feedback, will add.
 
-To add to Jarkko's comments, for all intents and purposes they are individual
-instructions, e.g. all of their own entries in the SDM, but are buried behind
-a single opcode that switches on EAX, e.g. ECREATE is EAX=0,  EADD is EAX=1,
-EINIT is EAX=2.  It's purely a way to save opcode space when the extra
-overhead is a non-issue, e.g. SMX/TXT's GETSEC does the same shenanigans.
+> Similarly, for "whitelist/blacklist", "whitelist" needs to replaced when
+> "blacklist" has been. For example, seccomp documentation[1] uses
+> "allow-list" and "deny-list".
+>
+> [1] https://man7.org/linux/man-pages/man2/seccomp.2.html
 
-> > > +	atomic_set(&encl->flags, 0);
-> > > +	kref_init(&encl->refcount);
-> > > +	INIT_RADIX_TREE(&encl->page_tree, GFP_KERNEL);
-> > 
-> > Why are you using a radix tree instead of an xarray?
-> 
-> Because xarray did not exist in 2017 and nobody has pointed out to use
-> it. Now I know it exists (yet do not know what it is).
+Oh, good to know will make that change.
 
-I've followed xarrays a little, but obviously not closely enough to
-understand their advantages over radix trees.  At a glance, range-based
-iteration alone is probably justification enough to switch.
+> > +Exceptions for introducing new usage is to maintain a userspace ABI, or
+>
+> and API?
 
-> > > +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> > > +		     unsigned long end, unsigned long vm_prot_bits)
-> > > +{
-> > > +	unsigned long idx, idx_start, idx_end;
-> > > +	struct sgx_encl_page *page;
-> > > +
-> > > +	/*
-> > > +	 * Disallow RIE tasks as their VMA permissions might conflict with the
-> > > +	 * enclave page permissions.
-> > > +	 */
-> > > +	if (!!(current->personality & READ_IMPLIES_EXEC))
-> > > +		return -EACCES;
-> > > +
-> > > +	idx_start = PFN_DOWN(start);
-> > > +	idx_end = PFN_DOWN(end - 1);
-> > > +
-> > > +	for (idx = idx_start; idx <= idx_end; ++idx) {
-> > > +		mutex_lock(&encl->lock);
-> > > +		page = radix_tree_lookup(&encl->page_tree, idx);
-> > > +		mutex_unlock(&encl->lock);
-> > > +
-> > > +		if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
-> > > +			return -EACCES;
-> > 
-> > You should really use an iterator here instead of repeated lookups.
-> > xas_for_each() will probably be what you want.
-> 
-> Thank you for your remarks. I'll look into using xarray for this.
+True, yes, the intent was "don't break userspace" for terminology replacement.
 
-Question for Matthew:
+>
+> > +when updating code for an existing (as of 2020) hardware or protocol
+> > +specification that mandates those terms. For new specifications consider
+> > +translating specification usage of the terminology to the kernel coding
+> > +standard where possible. See :ref:`process/inclusive-terminology.rst
+> > +<inclusiveterminology>` for details.
+>
+> Let's add:
+>
+>  Where possible, old instances of this language should be replaced when
+>  it is not tied to external specifications nor userspace ABI/API.
 
-To enforce the "page must be populated" rule, is there a clean way to retrieve
-the index of the current entry?  Our entries/pages don't have information
-about their index.  Or should we just count the number of entries and check
-'em at the end? E.g.
+Sounds good to me.
 
-        xas_for_each(...) {
-                if (~page->vm_max_prot_bits & vm_prot_bits)
-                        return -EACCES;
-                nr_entries++;
-        }
+>
+> >
+> >  5) Typedefs
+> >  -----------
+> > diff --git a/Documentation/process/inclusive-terminology.rst b/Documentation/process/inclusive-terminology.rst
+> > new file mode 100644
+> > index 000000000000..a8eb26690eb4
+> > --- /dev/null
+> > +++ b/Documentation/process/inclusive-terminology.rst
+> > @@ -0,0 +1,64 @@
+> > +.. _inclusiveterminology:
+> > +
+> > +Linux kernel inclusive terminology
+> > +==================================
+> > +
+> > +The Linux kernel is a global software project, and in 2020 there was a
+> > +global reckoning on race relations that caused many organizations to
+> > +re-evaluate their policies and practices relative to the inclusion of
+> > +people of African descent. This document describes why the 'Naming'
+> > +section in :ref:`process/coding-style.rst <codingstyle>` recommends
+> > +avoiding usage of 'slave' and 'blacklist' in new additions to the Linux
+> > +kernel.
+>
+> ... usage of 'master/slave', 'slave', 'whitelist/blacklist', and
+> 'blacklist' in the Linux kernel.
 
-        if (nr_entries != (end_index - start_index))
-                return -EACCES;
+Yes, but as I'm reading this thread backwards I've already agreed to
+just push the coding-style change in isolation.
+
+>
+> > +
+> > +On the triviality of replacing words
+> > +====================================
+> > +
+> > +The African slave trade was a brutal system of human misery deployed at
+> > +global scale. Some word choice decisions in a modern software project
+> > +does next to nothing to compensate for that legacy. So why put any
+> > +effort into something so trivial in comparison? Because the goal is not
+> > +to repair, or erase the past. The goal is to maximize availability and
+> > +efficiency of the global developer community to participate in the Linux
+> > +kernel development process.
+> > +
+> > +Word choice and developer efficiency
+> > +====================================
+> > +
+> > +Why does any software project go through the trouble of developing a
+> > +document like :ref:`process/coding-style.rst <codingstyle>`? It does so
+> > +because a common coding style maximizes the efficiency of both
+> > +maintainers and developers. Developers learn common design patterns and
+> > +idiomatic expressions while maintainers can spot deviations from those
+> > +norms. Even non-compliant whitespace is considered a leading indicator
+> > +to deeper problems in a patchset. Coding style violations are known to
+> > +take a maintainer "out of the zone" of reviewing code. Maintainers are
+> > +also sensitive to word choice across specifications and often choose to
+> > +deploy Linux terminology to replace non-idiomatic word-choice in a
+> > +specification.
+> > +
+> > +Non-inclusive terminology has that same distracting effect which is why
+> > +it is a style issue for Linux, it injures developer efficiency.
+> > +
+> > +Of course it is around this point someone jumps in with an etymological
+> > +argument about why people should not be offended. Etymological arguments
+> > +do not scale. The scope and pace of Linux to reach new developers
+> > +exceeds the ability of historical terminology defenders to describe "no,
+> > +not that connotation". The revelation of 2020 was that black voices were
+> > +heard on a global scale and the Linux kernel project has done its small
+> > +part to answer that call as it wants black voices, among all voices, in
+> > +its developer community.
+> > +
+> > +Really, 'blacklist' too?
+> > +========================
+> > +
+> > +While 'slave' has a direct connection to human suffering the etymology
+> > +of 'blacklist' is devoid of a historical racial connection. However, one
+> > +thought exercise is to consider replacing 'blacklist/whitelist' with
+> > +'redlist/greenlist'. Realize that the replacement only makes sense if
+> > +you have been socialized with the concepts that 'red/green' implies
+> > +'stop/go'. Colors to represent a policy requires an indirection. The
+> > +socialization of 'black/white' to have the connotation of
+> > +'impermissible/permissible' does not support inclusion.
+> > +
+> > +Inclusion == global developer community efficiency.
+>
+> Let's add:
+>
+>  Beyond just Linux
+>  =================
+>
+>  For those of us in the kernel community involved in specification
+>  development or similar larger ecosystem conversations, please help
+>  steer those discussions to avoid these terms in new specifications
+>  or APIs.
+
+I agree with this statement and am interested in getting connected to
+those conversations, but this may be a bit too much advocacy to expect
+in kernel documentation.
