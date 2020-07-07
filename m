@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A8B20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA28320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135679;
-	bh=hcARAQi8ypLXq9FRLf2KdIrI8ycMTzItFzTbgDX+B2M=;
+	s=default; t=1594135683;
+	bh=0cZEtpLDgDWLJJYDX5oYDaxVIe3w12K+915qYrRErDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSP6rWjvad+3cRtwPL+LzTDfqm+oWXOe67JxrfbwJl/JO5RaOKpnzmmcFfyiezRTF
-	 eAuRPurg0E0phOp0INP/VIpiPT19oAqldsI/E8yHoq+Wcz6Os9C5gfMqZX9FsfR0Q6
-	 yfjLw4LUDYvDyY9mENidwtLrqHP2RoxZBJ0cA8h4=
+	b=MzWj8pWLpggJGlB2DdK87A5iTdsKZZDxleUTct9PqC1vfNy/xnOiow5vxjov7j6Rq
+	 JOqnp7tN5ZvXffqEpuiTNFbZ5zWgQIky3zUh3k4ejLr2iT+HHHzuNTOgIpqqpiNHhH
+	 HkN2BsyPsd46dIgZtp9DiEc+IX9XNWWHFI5gJ920=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgGGP0g (ORCPT
+        id S1729848AbgGGP2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40694 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728869AbgGGP0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:25 -0400
+        id S1728891AbgGGP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA5B220663;
-        Tue,  7 Jul 2020 15:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839DA2082E;
+        Tue,  7 Jul 2020 15:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135584;
-        bh=hcARAQi8ypLXq9FRLf2KdIrI8ycMTzItFzTbgDX+B2M=;
+        s=default; t=1594135595;
+        bh=0cZEtpLDgDWLJJYDX5oYDaxVIe3w12K+915qYrRErDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nf+RQvIBKdAk2XzVs4iAjiYuRnSEH3uj3Bv5+dI+hDIJyj34WdENIBJINJRM00d+x
-         KqlXjBRUpAFEEn0SAvfOtLppVNp9NywdtbRfdO3zvo7CEVMR8OWb0TDHNRjR9pHE0B
-         MUrMXZRTaCkT8p3y/h397bfcE1jn2vtonWjhwfsM=
+        b=XAT8fH1QdCgXmUaFii5mDwv5BZeTCITjgTskm/FloVPAgY1OD18kda/TERHrSjv3D
+         bP5IFfdFgWDkCRsph9jSw25AFRqZ3W4XLVwIzf7whafiap45mxzc+BHURjTFFSaLq5
+         2AibV75B4zqdMSruXtZkbcyLemHSfiUchXvC4HgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.7 099/112] x86/split_lock: Dont write MSR_TEST_CTRL on CPUs that arent whitelisted
-Date:   Tue,  7 Jul 2020 17:17:44 +0200
-Message-Id: <20200707145805.686653891@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
+        Bjorn Nostvold <bjorn.nostvold@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 103/112] drm/amd/powerplay: Fix NULL dereference in lock_bus() on Vega20 w/o RAS
+Date:   Tue,  7 Jul 2020 17:17:48 +0200
+Message-Id: <20200707145805.877030566@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,112 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Ivan Mironov <mironov.ivan@gmail.com>
 
-commit 009bce1df0bb5eb970b9eb98d963861f7fe353c7 upstream.
+commit 7e89e4aaa9ae83107d059c186955484b3aa6eb23 upstream.
 
-Choo! Choo!  All aboard the Split Lock Express, with direct service to
-Wreckage!
+I updated my system with Radeon VII from kernel 5.6 to kernel 5.7, and
+following started to happen on each boot:
 
-Skip split_lock_verify_msr() if the CPU isn't whitelisted as a possible
-SLD-enabled CPU model to avoid writing MSR_TEST_CTRL.  MSR_TEST_CTRL
-exists, and is writable, on many generations of CPUs.  Writing the MSR,
-even with '0', can result in bizarre, undocumented behavior.
+	...
+	BUG: kernel NULL pointer dereference, address: 0000000000000128
+	...
+	CPU: 9 PID: 1940 Comm: modprobe Tainted: G            E     5.7.2-200.im0.fc32.x86_64 #1
+	Hardware name: System manufacturer System Product Name/PRIME X570-P, BIOS 1407 04/02/2020
+	RIP: 0010:lock_bus+0x42/0x60 [amdgpu]
+	...
+	Call Trace:
+	 i2c_smbus_xfer+0x3d/0xf0
+	 i2c_default_probe+0xf3/0x130
+	 i2c_detect.isra.0+0xfe/0x2b0
+	 ? kfree+0xa3/0x200
+	 ? kobject_uevent_env+0x11f/0x6a0
+	 ? i2c_detect.isra.0+0x2b0/0x2b0
+	 __process_new_driver+0x1b/0x20
+	 bus_for_each_dev+0x64/0x90
+	 ? 0xffffffffc0f34000
+	 i2c_register_driver+0x73/0xc0
+	 do_one_initcall+0x46/0x200
+	 ? _cond_resched+0x16/0x40
+	 ? kmem_cache_alloc_trace+0x167/0x220
+	 ? do_init_module+0x23/0x260
+	 do_init_module+0x5c/0x260
+	 __do_sys_init_module+0x14f/0x170
+	 do_syscall_64+0x5b/0xf0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+	...
 
-This fixes a crash on Haswell when resuming from suspend with a live KVM
-guest.  Because APs use the standard SMP boot flow for resume, they will
-go through split_lock_init() and the subsequent RDMSR/WRMSR sequence,
-which runs even when sld_state==sld_off to ensure SLD is disabled.  On
-Haswell (at least, my Haswell), writing MSR_TEST_CTRL with '0' will
-succeed and _may_ take the SMT _sibling_ out of VMX root mode.
+Error appears when some i2c device driver tries to probe for devices
+using adapter registered by `smu_v11_0_i2c_eeprom_control_init()`.
+Code supporting this adapter requires `adev->psp.ras.ras` to be not
+NULL, which is true only when `amdgpu_ras_init()` detects HW support by
+calling `amdgpu_ras_check_supported()`.
 
-When KVM has an active guest, KVM performs VMXON as part of CPU onlining
-(see kvm_starting_cpu()).  Because SMP boot is serialized, the resulting
-flow is effectively:
+Before 9015d60c9ee1, adapter was registered by
 
-  on_each_ap_cpu() {
-     WRMSR(MSR_TEST_CTRL, 0)
-     VMXON
-  }
+	-> amdgpu_device_ip_init()
+	  -> amdgpu_ras_recovery_init()
+	    -> amdgpu_ras_eeprom_init()
+	      -> smu_v11_0_i2c_eeprom_control_init()
 
-As a result, the WRMSR can disable VMX on a different CPU that has
-already done VMXON.  This ultimately results in a #UD on VMPTRLD when
-KVM regains control and attempt run its vCPUs.
+after verifying that `adev->psp.ras.ras` is not NULL in
+`amdgpu_ras_recovery_init()`. Currently it is registered
+unconditionally by
 
-The above voodoo was confirmed by reworking KVM's VMXON flow to write
-MSR_TEST_CTRL prior to VMXON, and to serialize the sequence as above.
-Further verification of the insanity was done by redoing VMXON on all
-APs after the initial WRMSR->VMXON sequence.  The additional VMXON,
-which should VM-Fail, occasionally succeeded, and also eliminated the
-unexpected #UD on VMPTRLD.
+	-> amdgpu_device_ip_init()
+	  -> pp_sw_init()
+	    -> hwmgr_sw_init()
+	      -> vega20_smu_init()
+	        -> smu_v11_0_i2c_eeprom_control_init()
 
-The damage done by writing MSR_TEST_CTRL doesn't appear to be limited
-to VMX, e.g. after suspend with an active KVM guest, subsequent reboots
-almost always hang (even when fudging VMXON), a #UD on a random Jcc was
-observed, suspend/resume stability is qualitatively poor, and so on and
-so forth.
+Fix simply adds HW support check (ras == NULL => no support) before
+calling `smu_v11_0_i2c_eeprom_control_{init,fini}()`.
 
-  kernel BUG at arch/x86/kvm/x86.c:386!
-  CPU: 1 PID: 2592 Comm: CPU 6/KVM Tainted: G      D
-  Hardware name: ASUS Q87M-E/Q87M-E, BIOS 1102 03/03/2014
-  RIP: 0010:kvm_spurious_fault+0xf/0x20
-  Call Trace:
-   vmx_vcpu_load_vmcs+0x1fb/0x2b0
-   vmx_vcpu_load+0x3e/0x160
-   kvm_arch_vcpu_load+0x48/0x260
-   finish_task_switch+0x140/0x260
-   __schedule+0x460/0x720
-   _cond_resched+0x2d/0x40
-   kvm_arch_vcpu_ioctl_run+0x82e/0x1ca0
-   kvm_vcpu_ioctl+0x363/0x5c0
-   ksys_ioctl+0x88/0xa0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Please note that there is a chance that similar fix is also required for
+CHIP_ARCTURUS. I do not know whether any actual Arcturus hardware without
+RAS exist, and whether calling `smu_i2c_eeprom_init()` makes any sense
+when there is no HW support.
 
-Fixes: dbaba47085b0c ("x86/split_lock: Rework the initialization flow of split lock detection")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200605192605.7439-1-sean.j.christopherson@intel.com
+Fixes: 9015d60c9ee1 ("drm/amdgpu: Move EEPROM I2C adapter to amdgpu_device")
+Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
+Tested-by: Bjorn Nostvold <bjorn.nostvold@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/intel.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -49,6 +49,13 @@ static enum split_lock_detect_state sld_
- static u64 msr_test_ctrl_cache __ro_after_init;
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
+@@ -508,9 +508,11 @@ static int vega20_smu_init(struct pp_hwm
+ 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].version = 0x01;
+ 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].size = sizeof(DpmActivityMonitorCoeffInt_t);
  
- /*
-+ * With a name like MSR_TEST_CTL it should go without saying, but don't touch
-+ * MSR_TEST_CTL unless the CPU is one of the whitelisted models.  Writing it
-+ * on CPUs that do not support SLD can cause fireworks, even when writing '0'.
-+ */
-+static bool cpu_model_supports_sld __ro_after_init;
-+
-+/*
-  * Processors which have self-snooping capability can handle conflicting
-  * memory type across CPUs by snooping its own cache. However, there exists
-  * CPU models in which having conflicting memory types still leads to
-@@ -1064,7 +1071,8 @@ static void sld_update_msr(bool on)
+-	ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
+-	if (ret)
+-		goto err4;
++	if (adev->psp.ras.ras) {
++		ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
++		if (ret)
++			goto err4;
++	}
  
- static void split_lock_init(void)
- {
--	split_lock_verify_msr(sld_state != sld_off);
-+	if (cpu_model_supports_sld)
-+		split_lock_verify_msr(sld_state != sld_off);
- }
+ 	return 0;
  
- static void split_lock_warn(unsigned long ip)
-@@ -1167,5 +1175,6 @@ void __init cpu_set_core_cap_bits(struct
- 		return;
- 	}
+@@ -546,7 +548,8 @@ static int vega20_smu_fini(struct pp_hwm
+ 			(struct vega20_smumgr *)(hwmgr->smu_backend);
+ 	struct amdgpu_device *adev = hwmgr->adev;
  
-+	cpu_model_supports_sld = true;
- 	split_lock_setup();
- }
+-	smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
++	if (adev->psp.ras.ras)
++		smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
+ 
+ 	if (priv) {
+ 		amdgpu_bo_free_kernel(&priv->smu_tables.entry[TABLE_PPTABLE].handle,
 
 
