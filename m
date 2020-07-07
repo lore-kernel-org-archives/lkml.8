@@ -2,153 +2,189 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E47C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC937C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE5F206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91AF206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p+taEDuk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UWYVic96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgGGRRi (ORCPT
+        id S1728324AbgGGRS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
+        Tue, 7 Jul 2020 13:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgGGRRh (ORCPT
+        with ESMTP id S1727975AbgGGRS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:17:37 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5D9C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:17:37 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k5so1145340plk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:17:37 -0700 (PDT)
+        Tue, 7 Jul 2020 13:18:27 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55926C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:18:27 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id p25so15141808vsg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1l5foeggCPnvjxEutFU8wFN3OGjiNb8LVGar6Q0E2bk=;
-        b=p+taEDukDZunYk2YVvDirVBFCS5gqPr2R9RnKJfnddhTGc20YU572SKyACE7vpcaTR
-         F5HFH2fMBR8VjtEEwiyQ74CmsVRSj4Ad4FLU1To0K6z4ULdO3jvbHZeeGBHBRmSu0PTW
-         UbccsCiQebhN4H0b9EnPYPa5Ai8Ws0KmyU4TI5o1FFt5ZLgZIreDV3fb67rOGyWIfR6/
-         oou2xq9qwW2pgE28CTCAGQHvyAbBx2Fzy3ylMs664PbsO+zz4aI2MU8QtAAJwDXtirLI
-         6B9dfNDIOTNJp7sWV70NHM21ivLgatQ2mrd5vfPNJba12U8BMEgM7EeQ3t2Y2FedZETc
-         ViTw==
+        bh=74Xd65ujs50AwKytINLgt7qtTa7IevS/aqZRV1i9Rd8=;
+        b=UWYVic96pOSZRZsRmw2D0xW579eTy1JPNBw9lI+/tOGAhV3ymR2VcORJIdFnYMXlx/
+         Pyh7l5oLPF9TOnZJYezcZKg0Et63e+3Ah4oPnZkC/aFt8IXpEP/Dw63qRvAoiZeMGyTl
+         BkYS5dtdJ+VAfBgPrKdTozMDQ4weGwZxX/96E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1l5foeggCPnvjxEutFU8wFN3OGjiNb8LVGar6Q0E2bk=;
-        b=a5BPmZY8ORfx4rq/HNOvo6nqRKjBgfjVLe/esKBMlMcJ1jF0Jy68AWUAnuVBP7OxqQ
-         0G08k3wLzeMhxmRRel6rmeu9aO/0NPgkZYq8JJMq9dP/DULgDv6mLPVAo2U8Q4W9vd9D
-         HKgufHKzDNS3sMZG9ZY7T7/OL/dBfR0SkdPSN/6SbbKs/jj9adyIPo9O3MrxH+XNmNn9
-         Q40ZMXNPtaxt2pWlym4KjuxA+aeNaZ+LxpY4PQu/STElD4iGUM7gVTsL2Ad2gmgPcdFJ
-         WVjlgAg3UUoVmnu6xKgFLvAhlwoGWmJwS/AbSysU/g+LRwY/DpNJ+1fPtzdIRilvEpIc
-         6aeQ==
-X-Gm-Message-State: AOAM531tfDq3YPJTNHSaZ/5k7tspDC04mmuSVso0EDtbA8p4rzEkj8L4
-        qt3EmxJwmSMFF4HjJisywlVSgr4y+aGfv1ilWiFyMQ==
-X-Google-Smtp-Source: ABdhPJzimEYKgjGUXrlBaLBBjIq4MiI2yDdoA4ahjq7vNkr0ok0O/VlCBrFDIeS1Bs6yHN7Uv+XaLt7SQoM3eHhtWPo=
-X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr5585509pjc.101.1594142256771;
- Tue, 07 Jul 2020 10:17:36 -0700 (PDT)
+        bh=74Xd65ujs50AwKytINLgt7qtTa7IevS/aqZRV1i9Rd8=;
+        b=Er+/WR9erMtf3E+LHrBTbAzdv0HVedIz+aT0/+va/31EpesQ1NJ1AHv7L/eXv1GtxE
+         OLXXVsgu4qCCQ+wZjSsbheNKf9mKegZk9cG08STIu9vSKb/9dQLePLXIvq1husv7kCLZ
+         M5Zqvrlah6WpbNXeYtDuCvXppAfBWthOQkgioGfkE94vvya/TItqql8St+l9augszzys
+         TBiXAx2Tv9dKr4rLpamFK1qb4AStFLQl7ifJvS32lMes3xPDRK1ogvSrKxf7suwK6fJr
+         rsc6AffkHUsHFt0BgKGGi/+aK7W/yT04iSRSTb+dJ5oqQRihyNmfwS5YHEYJb1pYrm/b
+         BRdw==
+X-Gm-Message-State: AOAM530JIr2A5L6G4YsvgVK7CqIkwwg0FWZg5yDS3HByTXVp4jliIs6T
+        fl/nLaGSVHBBpQdJh0WNvpRtFgcLHtC4kqnvW24Wmw==
+X-Google-Smtp-Source: ABdhPJwk+V71z2wv/WQnTefFWymSCRO53UNKZiBT8TehImzf1AUUKNg93mkz/cBBz2gO3h2NY5EkhH6PKev8387kkUo=
+X-Received: by 2002:a67:6e05:: with SMTP id j5mr32408546vsc.196.1594142306552;
+ Tue, 07 Jul 2020 10:18:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
- <20200629232059.GA3787278@google.com> <20200707155107.GA3357035@google.com>
- <20200707160528.GA1300535@google.com> <20200707095651.422f0b22@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200707095651.422f0b22@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Jul 2020 10:17:25 -0700
-Message-ID: <CAKwvOd=z0n2+1voMCzC6Hft9EBdLM+6PUi9qBVTVvea_3kM91w@mail.gmail.com>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+References: <20200707162417.3514284-1-abhishekpandit@chromium.org>
+ <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+ <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
+ <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com> <CAJZ5v0iVXbxHzV0Y_y5idkoS4DdF+cXQ6kmA0bWWHWZ-TVv8wg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iVXbxHzV0Y_y5idkoS4DdF+cXQ6kmA0bWWHWZ-TVv8wg@mail.gmail.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 7 Jul 2020 10:18:15 -0700
+Message-ID: <CANFp7mXEB4ckWKRDDqUdmBBrbk00CW_pOX+1zmo_AgywtHZ+Nw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 9:56 AM Jakub Kicinski <kuba@kernel.org> wrote:
+Sounds good to me. Patch v5 incoming after compile-test.
+
+Thanks
+Abhishek
+
+On Tue, Jul 7, 2020 at 10:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> > On Tue, Jul 07, 2020 at 08:51:07AM -0700, Sami Tolvanen wrote:
-> > > After spending some time debugging this with Nick, it looks like the
-> > > error is caused by a recent optimization change in LLVM, which together
-> > > with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
-> > > check in FIELD_FIT that would always fail, to a compile-time check that
-> > > breaks the build. In jeq_imm, we have:
+> On Tue, Jul 7, 2020 at 6:48 PM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
+> >
+> > Hi Rafael,
+> >
+> > (resent in plain text)
+> >
+> > On Tue, Jul 7, 2020 at 9:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 > > >
-> > >     /* struct bpf_insn: _s32 imm */
-> > >     u64 imm = insn->imm; /* sign extend */
-> > >     ...
-> > >     if (imm >> 32) { /* non-zero only if insn->imm is negative */
-> > >             /* inlined from ur_load_imm_any */
-> > >     u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+> > > On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
+> > > <abhishekpandit@chromium.org> wrote:
+> > > >
+> > > > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > > > correctly if device_set_wakeup_capable is called after the device is
+> > > > created. This can happen for several reasons (driver sets wakeup after
+> > > > device is created, wakeup is changed on parent device, etc) and it seems
+> > > > reasonable to emit a changed event when adding or removing attributes on
+> > > > the device.
+> > > >
+> > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > > ---
+> > > >
+> > > > Changes in v4:
+> > > > - Fix warning where returning from void and tested on device
+> > > >
+> > > > Changes in v3:
+> > > > - Simplified error handling
+> > > >
+> > > > Changes in v2:
+> > > > - Add newline at end of bt_dev_err
+> > > >
+> > > >  drivers/base/power/sysfs.c | 9 ++++++++-
+> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > > > index 24d25cf8ab1487..aeb58d40aac8de 100644
+> > > > --- a/drivers/base/power/sysfs.c
+> > > > +++ b/drivers/base/power/sysfs.c
+> > > > @@ -1,6 +1,7 @@
+> > > >  // SPDX-License-Identifier: GPL-2.0
+> > > >  /* sysfs entries for device PM */
+> > > >  #include <linux/device.h>
+> > > > +#include <linux/kobject.h>
+> > > >  #include <linux/string.h>
+> > > >  #include <linux/export.h>
+> > > >  #include <linux/pm_qos.h>
+> > > > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> > > >
+> > > >  int wakeup_sysfs_add(struct device *dev)
+> > > >  {
+> > > > -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > > +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > > +
+> > > > +       if (ret)
+> > > > +               return ret;
+> > > > +
+> > > > +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
 > > >
-> > >         /*
-> > >      * __imm has a value known at compile-time, which means
-> > >      * __builtin_constant_p(__imm) is true and we end up with
-> > >      * essentially this in __BF_FIELD_CHECK:
-> > >      */
-> > >     if (__builtin_constant_p(__imm) && __imm > 255)
+> > > So let me repeat the previous comment:
+> > >
+> > > If you return an error here, it may confuse the caller to think that
+> > > the operation has failed completely, whereas the merging of the
+> > > attribute group has been successful already.
+> > >
+> > > I don't think that an error can be returned at this point.
+> > >
+> >
+> > The caller looks at the return code and just logs that an error
+> > occurred (no other action). It's also unlikely for kobject_uevent to
+> > fail (I saw mostly -ENOMEM and an -ENOENT when the kobj wasn't in the
+> > correct set).
+> >
+> > Call site:
+> >     int ret = wakeup_sysfs_add(dev);
+> >
+> >     if (ret)
+> >         dev_info(dev, "Wakeup sysfs attributes not added\n");
 >
-> I think FIELD_FIT() should not pass the value into __BF_FIELD_CHECK().
+> Yes, which is confusing, because the wakeup attributes may in fact
+> have been added.  Which is my point.
 >
-> So:
+> >
+> > So I'm ok with either keeping this as-is (caller isn't getting
+> > confused, just logging) or swallowing the return of kobject_uevent.
 >
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 48ea093ff04c..4e035aca6f7e 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -77,7 +77,7 @@
->   */
->  #define FIELD_FIT(_mask, _val)                                         \
->         ({                                                              \
-> -               __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");     \
-> +               __BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");     \
->                 !((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
->         })
+> I would just ignore the return value of kobject_uevent() along the
+> lines of wakeup_sysfs_remove() below.
 >
-> It's perfectly legal to pass a constant which does not fit, in which
-> case FIELD_FIT() should just return false not break the build.
+> Thanks!
 >
-> Right?
-
-I see the value of the __builtin_constant_p check; this is just a very
-interesting case where rather than an integer literal appearing in the
-source, the compiler is able to deduce that the parameter can only
-have one value in one case, and allows __builtin_constant_p to
-evaluate to true for it.
-
-I had definitely asked Sami about the comment above FIELD_FIT:
-"""
- 76  * Return: true if @_val can fit inside @_mask, false if @_val is
-too big.
-"""
-in which FIELD_FIT doesn't return false if @_val is too big and a
-compile time constant. (Rather it breaks the build).
-
-Of the 14 expansion sites of FIELD_FIT I see in mainline, it doesn't
-look like any integral literals are passed, so maybe the compile time
-checks of _val are of little value for FIELD_FIT.
-
-So I think your suggested diff is the most concise fix.
--- 
-Thanks,
-~Nick Desaulniers
+> > > >  }
+> > > >
+> > > >  void wakeup_sysfs_remove(struct device *dev)
+> > > >  {
+> > > >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > > +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> > > >  }
+> > > >
+> > > >  int pm_qos_sysfs_add_resume_latency(struct device *dev)
+> > > > --
+> > > > 2.27.0.212.ge8ba1cc988-goog
+> > > >
