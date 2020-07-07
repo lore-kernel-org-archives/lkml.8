@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB0320738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B64F20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135134;
-	bh=6Tc+4crn+p9A5zdLf83nRerooyDn77JqdPDXeS+DMfk=;
+	s=default; t=1594135137;
+	bh=jcT4x3sOkEfC37eVwUQ/OPxOH2St/0use41/zQWHQvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaFpHBwpufdwvqqiS/tv3pl5Ciwv1d5cafIKBi86c+nqFCpdJ4YgHNPApnezTgsnM
-	 s9AI6ctsgiw9kml+yfvfzvIEAT1ovO/k0W/MiNnsjffCLyg39MWPTTDA6KIeuLCNHP
-	 aB0+rtEACVAEAjfYVds6zldhpYG7Rm8YLxq4f/Ac=
+	b=iwjrW+vbunugw1/CJfMxMmyJYd8EkD8oVlq+t6ytKa8eyI4bHyspYMpNINZvJRJqZ
+	 h5fQfHjFvspYyzGWg1Nd1CTZAcBqghY6DyL1Cifr07rrZtb3/46up9hzipbhnx5PgX
+	 +tfrnYZnXZAu2yVkvDZlrap0+wD1/du8Q9/Pf/Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgGGPSx (ORCPT
+        id S1728211AbgGGPS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58334 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgGGPSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:50 -0400
+        id S1729274AbgGGPSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB1320738;
-        Tue,  7 Jul 2020 15:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C4220773;
+        Tue,  7 Jul 2020 15:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135130;
-        bh=6Tc+4crn+p9A5zdLf83nRerooyDn77JqdPDXeS+DMfk=;
+        s=default; t=1594135132;
+        bh=jcT4x3sOkEfC37eVwUQ/OPxOH2St/0use41/zQWHQvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8qTvjt/VxIVoP9MFoiJk7fz/xkisCBD1+L9PW1QsGtNPo7awnA74zRLncuwiLmrg
-         sHrLliS8by4lWgi+z6/j5A4o1jocIj2u1a1opST1/gTCZ5un9zxBjkStmeflaCBi14
-         Ng0B7Z4+tf7x1BD1mvOfk8kzuY1plWrdq1/pRyoI=
+        b=jamigCiKHc/xapXC8m9S4+wZvj+Vmy0sFSHC3feOETRHAePeuRuH1k3TnP3zFyjAN
+         kqn01/c+BcFCpim0EWMQiVsRqDccfNP3RoKTqy1lYZbj4/1i5YBsrlxZ3V/d8ZBsG1
+         9AN3nnWIUHmqILZGJr3XrN1JsiGC/kA/Kj7SgN6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/36] virtio-blk: free vblk-vqs in error path of virtblk_probe()
-Date:   Tue,  7 Jul 2020 17:17:14 +0200
-Message-Id: <20200707145750.188557862@linuxfoundation.org>
+Subject: [PATCH 4.19 04/36] usbnet: smsc95xx: Fix use-after-free after removal
+Date:   Tue,  7 Jul 2020 17:16:56 +0200
+Message-Id: <20200707145749.348169173@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -61,34 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
+[ Upstream commit b835a71ef64a61383c414d6bf2896d2c0161deca ]
 
-Else there will be memory leak if alloc_disk() fails.
+Syzbot reports an use-after-free in workqueue context:
 
-Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+BUG: KASAN: use-after-free in mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ __smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:217 [inline]
+ smsc95xx_mdio_read+0x583/0x870 drivers/net/usb/smsc95xx.c:278
+ check_carrier+0xd1/0x2e0 drivers/net/usb/smsc95xx.c:644
+ process_one_work+0x777/0xf90 kernel/workqueue.c:2274
+ worker_thread+0xa8f/0x1430 kernel/workqueue.c:2420
+ kthread+0x2df/0x300 kernel/kthread.c:255
+
+It looks like that smsc95xx_unbind() is freeing the structures that are
+still in use by the concurrently running workqueue callback. Thus switch
+to using cancel_delayed_work_sync() to ensure the work callback really
+is no longer active.
+
+Reported-by: syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/usb/smsc95xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 9be54e5ef96ae..075523777a4a9 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -882,6 +882,7 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	put_disk(vblk->disk);
- out_free_vq:
- 	vdev->config->del_vqs(vdev);
-+	kfree(vblk->vqs);
- out_free_vblk:
- 	kfree(vblk);
- out_free_index:
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index 6e971628bb50a..c3389bd87c654 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1338,7 +1338,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
+ 
+ 	if (pdata) {
+-		cancel_delayed_work(&pdata->carrier_check);
++		cancel_delayed_work_sync(&pdata->carrier_check);
+ 		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
+ 		kfree(pdata);
+ 		pdata = NULL;
 -- 
 2.25.1
 
