@@ -2,116 +2,227 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C08FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04294C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3C02075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RS5Z4PVV"
+	by mail.kernel.org (Postfix) with ESMTP id D716120771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGGNH2 (ORCPT
+        id S1728165AbgGGNH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:07:28 -0400
-Received: from crapouillou.net ([89.234.176.41]:45666 "EHLO crapouillou.net"
+        Tue, 7 Jul 2020 09:07:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:26262 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGGNH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:07:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594127240; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YjUN5iHsuoX3i3c10PKFGKRySNFxu1qtYOPInkkgVzM=;
-        b=RS5Z4PVVeEE7Cgt3y1X3NbDmFYU5FoyMgJGnNHJdGUWE3OcYWpyusZ2g0/UkBY6cyMr7vD
-        +DZ3qzooRvYao2dY23C4RXNVdpFrTlUWcMJuw4q5lphm8ZQzoyGv/N7/R+QaSdxE04Vm9I
-        DwYE1ozQrW0bJKMWbHsBP7QkwfUGL8Q=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] drm/panel-simple: Add 50 Hz mode to the Frida FRD350H54004 panel
-Date:   Tue,  7 Jul 2020 15:07:07 +0200
-Message-Id: <20200707130707.51843-2-paul@crapouillou.net>
-In-Reply-To: <20200707130707.51843-1-paul@crapouillou.net>
-References: <20200707130707.51843-1-paul@crapouillou.net>
+        id S1725944AbgGGNHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 09:07:54 -0400
+IronPort-SDR: lmQk0uXFw2UQkF39E19XjIQs01MG1OtrWe7hiKKOuZJpeVTGlbaccItHxMH6RRcJpoIs91Q0Rz
+ HlF/TM3SWrvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="165662873"
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="165662873"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 06:07:46 -0700
+IronPort-SDR: ww/4rtd2LrlsJUXXXeFFGmglA/U8HTWP9/QTxfeZ2fv+zEcThHcwoabRnCfYMsqMrHfgLZkFJW
+ UwV8Z69MyEIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="427467528"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 07 Jul 2020 06:07:46 -0700
+Received: from [10.249.228.33] (abudanko-mobl.ccr.corp.intel.com [10.249.228.33])
+        by linux.intel.com (Postfix) with ESMTP id 1FC9C5807C8;
+        Tue,  7 Jul 2020 06:07:43 -0700 (PDT)
+Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+ <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
+ <20200706123436.GD3401866@krava>
+ <6cf91811-ea6a-3c7c-8bbf-7f96bfa1fc82@linux.intel.com>
+ <20200706193418.GB3424581@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b28806b9-b66e-aa2e-5425-4d9f00341387@linux.intel.com>
+Date:   Tue, 7 Jul 2020 16:07:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200706193418.GB3424581@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By changing the pixel clock and the length of the back porch, it is
-possible to obtain a perfect 50 Hz refresh rate.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/panel/panel-simple.c | 43 +++++++++++++++++++---------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+On 06.07.2020 22:34, Jiri Olsa wrote:
+> On Mon, Jul 06, 2020 at 05:47:54PM +0300, Alexey Budankov wrote:
+>>
+>> On 06.07.2020 15:34, Jiri Olsa wrote:
+>>> On Fri, Jul 03, 2020 at 10:47:22AM +0300, Alexey Budankov wrote:
+>>>>
+>>>> Implement handling of 'enable' and 'disable' control commands
+>>>> coming from control file descriptor. process_evlist() function
+>>>> checks for events on control fds and makes required operations.
+>>>> If poll event splits initiated timeout interval then the reminder
+>>>> is calculated and still waited in the following poll() syscall.
+>>>>
+>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>> ---
+>>>>  tools/perf/builtin-stat.c | 75 ++++++++++++++++++++++++++++-----------
+>>>>  1 file changed, 55 insertions(+), 20 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>>>> index 9e4288ecf2b8..5021f7286422 100644
+>>>> --- a/tools/perf/builtin-stat.c
+>>>> +++ b/tools/perf/builtin-stat.c
+>>>> @@ -485,6 +485,31 @@ static bool handle_interval(unsigned int interval, int *times)
+>>>>  	return false;
+>>>>  }
+>>>>  
+>>>> +static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
+>>>> +{
+>>>> +	bool stop = false;
+>>>> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+>>>> +
+>>>> +	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
+>>>> +		switch (cmd) {
+>>>> +		case EVLIST_CTL_CMD_ENABLE:
+>>>> +			pr_info(EVLIST_ENABLED_MSG);
+>>>> +			stop = handle_interval(interval, times);
+>>>> +			break;
+>>>> +		case EVLIST_CTL_CMD_DISABLE:
+>>>> +			stop = handle_interval(interval, times);
+>>>
+>>> I still don't understand why you call handle_interval in here
+>>>
+>>> I don't see it being necessary.. you enable events and handle_interval,
+>>> wil be called in the next iteration of dispatch_events, why complicate
+>>> this function with that?
+>>
+>> Printing event counts at the moment of command processing lets scripts
+>> built on top of stat output to provide more plain and accurate metrics.
+>> Otherwise it may get spikes in the beginning of the next time interval
+>> because not all counts lay inside [Events enabled, Events disable]
+>> If -I interval is large tail event count can be also large. Compare the
+>> output below with the output in the cover letter. Either way is possible
+>> but the latter one likely complicates the scripts I mentioned above.
+>>
+>> perf=tools/perf/perf
+>> ${perf} stat -D -1 -e cpu-cycles -a -I 1000       \
+>>              --control fd:${ctl_fd},${ctl_fd_ack} \
+>>              -- sleep 40 &
+>>
+>> Events disabled
+>> #           time             counts unit events
+>>      1.001100723      <not counted>      cpu-cycles                                                  
+>>      2.003146566      <not counted>      cpu-cycles                                                  
+>>      3.005073317      <not counted>      cpu-cycles                                                  
+>>      4.006337062      <not counted>      cpu-cycles                                                  
+>> Events enabled
+>> enable acked(ack)
+>>      5.011182000         54,128,692      cpu-cycles <===                                                 
+>>      6.012300167      3,648,804,827      cpu-cycles                                                  
+>>      7.013631689        590,438,536      cpu-cycles                                                  
+>>      8.015558583        406,935,663      cpu-cycles                                                  
+>>      9.017455505        407,806,862      cpu-cycles                                                  
+>>     10.019300780        399,351,824      cpu-cycles                                                  
+>>     11.021180025        404,584,417      cpu-cycles                                                  
+>>     12.023033661        537,787,981      cpu-cycles                                                  
+>>     13.024422354        699,395,364      cpu-cycles                                                  
+>>     14.026325749        397,871,324      cpu-cycles                                                  
+>> disable acked()
+>> Events disabled
+>>     15.027857981        396,956,159      cpu-cycles <===
+>>     16.029279264      <not counted>      cpu-cycles                                                  
+>>     17.031131311      <not counted>      cpu-cycles                                                  
+>>     18.033010580      <not counted>      cpu-cycles                                                  
+>>     19.034918883      <not counted>      cpu-cycles                                                  
+>> enable acked(ack)
+>> Events enabled
+>>     20.036758793        183,544,975      cpu-cycles <===                                             
+>>     21.038163289        419,054,544      cpu-cycles                                                  
+>>     22.040108245        413,993,309      cpu-cycles                                                  
+>>     23.042042365        403,584,493      cpu-cycles                                                  
+>>     24.043985381        416,512,094      cpu-cycles                                                  
+>>     25.045925682        401,513,429      cpu-cycles                                                  
+>> #           time             counts unit events
+>>     26.047822238        461,205,096      cpu-cycles                                                  
+>>     27.049784263        414,319,162      cpu-cycles                                                  
+>>     28.051745360        403,706,915      cpu-cycles                                                  
+>>     29.053674600        416,502,883      cpu-cycles                                                  
+>> disable acked()
+>> Events disabled
+>>     30.054750685        414,184,409      cpu-cycles <===
+> 
+> ok, but we could still take handle_interval out of process_evlist
+> and the interval process will be more clear for me (with some
+> additional comments in the code) ... perhaps something like below?
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 5021f7286422..af83bf6b2db0 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -485,19 +485,18 @@ static bool handle_interval(unsigned int interval, int *times)
+>  	return false;
+>  }
+>  
+> -static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
+> +static bool process_evlist(struct evlist *evlist)
+>  {
+> -	bool stop = false;
+>  	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+> +	bool enabled = false;
+>  
+>  	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
+>  		switch (cmd) {
+>  		case EVLIST_CTL_CMD_ENABLE:
+>  			pr_info(EVLIST_ENABLED_MSG);
+> -			stop = handle_interval(interval, times);
+> +			enabled = true;
+>  			break;
+>  		case EVLIST_CTL_CMD_DISABLE:
+> -			stop = handle_interval(interval, times);
+>  			pr_info(EVLIST_DISABLED_MSG);
+>  			break;
+>  		case EVLIST_CTL_CMD_ACK:
+> @@ -507,7 +506,7 @@ static bool process_evlist(struct evlist *evlist, unsigned int interval, int *ti
+>  		}
+>  	}
+>  
+> -	return stop;
+> +	return enabled;
+>  }
+>  
+>  static void enable_counters(void)
+> @@ -618,7 +617,8 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times)
+>  				stop = handle_interval(interval, times);
+>  			time_to_sleep = sleep_time;
+>  		} else { /* fd revent */
+> -			stop = process_evlist(evsel_list, interval, times);
+> +			if (process_evlist(evsel_list))
+> +				stop = handle_interval(interval, times);
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 1188d191076b..bebcc31e2484 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1692,23 +1692,38 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
- 
--static const struct drm_display_mode frida_frd350h54004_mode = {
--	.clock = 6000,
--	.hdisplay = 320,
--	.hsync_start = 320 + 44,
--	.hsync_end = 320 + 44 + 16,
--	.htotal = 320 + 44 + 16 + 20,
--	.vdisplay = 240,
--	.vsync_start = 240 + 2,
--	.vsync_end = 240 + 2 + 6,
--	.vtotal = 240 + 2 + 6 + 2,
--	.vrefresh = 60,
--	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+static const struct drm_display_mode frida_frd350h54004_modes[] = {
-+	{ /* 60 Hz */
-+		.clock = 6000,
-+		.hdisplay = 320,
-+		.hsync_start = 320 + 44,
-+		.hsync_end = 320 + 44 + 16,
-+		.htotal = 320 + 44 + 16 + 20,
-+		.vdisplay = 240,
-+		.vsync_start = 240 + 2,
-+		.vsync_end = 240 + 2 + 6,
-+		.vtotal = 240 + 2 + 6 + 2,
-+		.vrefresh = 60,
-+		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	},
-+	{ /* 50 Hz */
-+		.clock = 5400,
-+		.hdisplay = 320,
-+		.hsync_start = 320 + 56,
-+		.hsync_end = 320 + 56 + 16,
-+		.htotal = 320 + 56 + 16 + 40,
-+		.vdisplay = 240,
-+		.vsync_start = 240 + 2,
-+		.vsync_end = 240 + 2 + 6,
-+		.vtotal = 240 + 2 + 6 + 2,
-+		.vrefresh = 50,
-+		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	},
- };
- 
- static const struct panel_desc frida_frd350h54004 = {
--	.modes = &frida_frd350h54004_mode,
--	.num_modes = 1,
-+	.modes = frida_frd350h54004_modes,
-+	.num_modes = ARRAY_SIZE(frida_frd350h54004_modes),
- 	.bpc = 8,
- 	.size = {
- 		.width = 77,
--- 
-2.27.0
+It will call only on enable command and lead to artificial spikes in the beginning of interval.
+May be just take handle_interval() out of process_evlist() and have it similar to record case?
 
+Alexey
