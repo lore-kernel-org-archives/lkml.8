@@ -2,182 +2,91 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C270C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3EA206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86959206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wOcMzoL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGGMi7 (ORCPT
+        id S1728088AbgGGMjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:38:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39390 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGMi6 (ORCPT
+        Tue, 7 Jul 2020 08:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgGGMjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:38:58 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jsmsB-0008IT-CA; Tue, 07 Jul 2020 12:38:55 +0000
-Date:   Tue, 7 Jul 2020 14:38:54 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] fs: Expand __receive_fd() to accept existing fd
-Message-ID: <20200707123854.wi4s2kzwkhkgieyv@wittgenstein>
-References: <20200706201720.3482959-1-keescook@chromium.org>
- <20200706201720.3482959-6-keescook@chromium.org>
+        Tue, 7 Jul 2020 08:39:35 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A04C08C5E0
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:39:34 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id t25so45099286lji.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PR8nQ43YtQ2kzqu7CAHdusW+BG3WkQqUNKXDoqQv2Bc=;
+        b=wOcMzoL9PKOfCE92T5O5jZORfBcPgPzM0JNaF/FGTlzRWnpNx4/Ts9/TwRH1muW1hG
+         NtSdl2AsV52A1f8vNs8jpCg5Sf08q8JmBH+QSIUFvTTXqj6SDODu3YlIz6LgkR5Mml5d
+         uWyGBXz0agObrxeH3HyQv9iCPdwcXOwztAd5URyZolZuy2Ho3Wc8lRh30jBV8yx+UK/s
+         eQlHYQzaoxf+4UtJh1jgFILwyzXqmKHa6EahoUnz0l+tEO8fIGz/n54Hn9A3hN5nxOjh
+         Poymz4VH+xHPQcQ5Evt8qCUXRKk228OpZRp0a3vyuyhgD4Md+wT9iTxnU1xfEifnAe0+
+         bRQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PR8nQ43YtQ2kzqu7CAHdusW+BG3WkQqUNKXDoqQv2Bc=;
+        b=kQDTSU+emiWsbqWeeQM1MS+drU5B9koI/0I8wkQ7lRS4nASdkSBF7/COyO3X+jO6N1
+         h2Pe8g5GNnrZb4TCuBMcrCj97JbQ7QCswrCPusSwjgmXEXgphHVhGW+hccV8RklQYIfJ
+         Yd8EaDUBPXmwlzTQkR2RDDVGb776uw6uQau+f5MikpPzlg2IP9F2HujMFhwxjaIiSMv2
+         fEO/4/luu6upAqO783qiIGmHRcvsu4JxtjMk7MpENiBuc8IVXczIIzBXWUfljlafAA+7
+         Ctg6bSDc1BSQxGDQgocrJ59OSujcOVPIU9r4GCSxmy+KjTXyxmNikOoLKSnOsQoedr8G
+         4uYA==
+X-Gm-Message-State: AOAM5317z4S62VO4jLg8KfX6KUNV25u14oaLKc1xKZtlJR7X48QQep58
+        9yCjTwFAyS854VL1A04ZdAVVbAkWGSnCdWk7YbntEg==
+X-Google-Smtp-Source: ABdhPJzLxIIZvKvs0uuMjas/mWF0QR8HShPsPw1tvxHg6ZOg/jx/Zkt6iaQekUaGKH8RYIPUuoMFtXs1GM/t0jP7rH8=
+X-Received: by 2002:a2e:9c3:: with SMTP id 186mr31275956ljj.293.1594125573245;
+ Tue, 07 Jul 2020 05:39:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200706201720.3482959-6-keescook@chromium.org>
+References: <20200625064619.2775707-1-lee.jones@linaro.org> <20200625064619.2775707-4-lee.jones@linaro.org>
+In-Reply-To: <20200625064619.2775707-4-lee.jones@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 14:39:22 +0200
+Message-ID: <CACRpkdYTb4MTX9YGAW9_Th1ntcE4Go_N=wGMJ9Po8KpBGehT4w@mail.gmail.com>
+Subject: Re: [PATCH 03/10] mfd: db8500-prcmu: Add description for
+ 'reset_reason' in kerneldoc
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 01:17:18PM -0700, Kees Cook wrote:
-> Expand __receive_fd() with support for replace_fd() for the coming seccomp
-> "addfd" ioctl(). Add new wrapper receive_fd_replace() for the new behavior
-> and update existing wrappers to retain old behavior.
-> 
-> Thanks to Colin Ian King <colin.king@canonical.com> for pointing out an
-> uninitialized variable exposure in an earlier version of this patch.
-> 
-> Reviewed-by: Sargun Dhillon <sargun@sargun.me>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Thu, Jun 25, 2020 at 8:46 AM Lee Jones <lee.jones@linaro.org> wrote:
 
-Thanks!
-(One tiny-nit below.)
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Each function parameter should be documented in kerneldoc format.
+>
+> Squashes the following W=1 warnings:
+>
+>  drivers/mfd/db8500-prcmu.c:2281: warning: Function parameter or member 'reset_code' not described in 'db8500_prcmu_system_reset'
+>  drivers/mfd/db8500-prcmu.c:3012: warning: Function parameter or member 'pdev' not described in 'db8500_prcmu_probe'
+>
+> Cc: <stable@vger.kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
->  fs/file.c            | 24 ++++++++++++++++++------
->  include/linux/file.h | 10 +++++++---
->  2 files changed, 25 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/file.c b/fs/file.c
-> index 0efdcf413210..11313ff36802 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -937,6 +937,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
->  /**
->   * __receive_fd() - Install received file into file descriptor table
->   *
-> + * @fd: fd to install into (if negative, a new fd will be allocated)
->   * @file: struct file that was received from another process
->   * @ufd: __user pointer to write new fd number to
->   * @o_flags: the O_* flags to apply to the new fd entry
-> @@ -950,7 +951,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
->   *
->   * Returns newly install fd or -ve on error.
->   */
-> -int __receive_fd(struct file *file, int __user *ufd, unsigned int o_flags)
-> +int __receive_fd(int fd, struct file *file, int __user *ufd, unsigned int o_flags)
->  {
->  	struct socket *sock;
->  	int new_fd;
-> @@ -960,18 +961,30 @@ int __receive_fd(struct file *file, int __user *ufd, unsigned int o_flags)
->  	if (error)
->  		return error;
->  
-> -	new_fd = get_unused_fd_flags(o_flags);
-> -	if (new_fd < 0)
-> -		return new_fd;
-> +	if (fd < 0) {
-> +		new_fd = get_unused_fd_flags(o_flags);
-> +		if (new_fd < 0)
-> +			return new_fd;
-> +	} else
-> +		new_fd = fd;
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-This is nitpicky but coding style technically wants us to use braces
-around both branches if one of them requires them. ;)
-
->  
->  	if (ufd) {
->  		error = put_user(new_fd, ufd);
->  		if (error) {
-> -			put_unused_fd(new_fd);
-> +			if (fd < 0)
-> +				put_unused_fd(new_fd);
->  			return error;
->  		}
->  	}
->  
-> +	if (fd < 0)
-> +		fd_install(new_fd, get_file(file));
-> +	else {
-> +		error = replace_fd(new_fd, file, o_flags);
-> +		if (error)
-> +			return error;
-> +	}
-> +
->  	/*
->  	 * Bump the usage count and install the file. The resulting value of
->  	 * "error" is ignored here since we only need to take action when
-> @@ -982,7 +995,6 @@ int __receive_fd(struct file *file, int __user *ufd, unsigned int o_flags)
->  		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
->  		sock_update_classid(&sock->sk->sk_cgrp_data);
->  	}
-> -	fd_install(new_fd, get_file(file));
->  	return new_fd;
->  }
->  
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index d9fee9f5c8da..225982792fa2 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -92,18 +92,22 @@ extern void put_unused_fd(unsigned int fd);
->  
->  extern void fd_install(unsigned int fd, struct file *file);
->  
-> -extern int __receive_fd(struct file *file, int __user *ufd,
-> +extern int __receive_fd(int fd, struct file *file, int __user *ufd,
->  			unsigned int o_flags);
->  static inline int receive_fd_user(struct file *file, int __user *ufd,
->  				  unsigned int o_flags)
->  {
->  	if (ufd == NULL)
->  		return -EFAULT;
-> -	return __receive_fd(file, ufd, o_flags);
-> +	return __receive_fd(-1, file, ufd, o_flags);
->  }
->  static inline int receive_fd(struct file *file, unsigned int o_flags)
->  {
-> -	return __receive_fd(file, NULL, o_flags);
-> +	return __receive_fd(-1, file, NULL, o_flags);
-> +}
-> +static inline int receive_fd_replace(int fd, struct file *file, unsigned int o_flags)
-> +{
-> +	return __receive_fd(fd, file, NULL, o_flags);
->  }
->  
->  extern void flush_delayed_fput(void);
-> -- 
-> 2.25.1
-> 
+Yours,
+Linus Walleij
