@@ -2,80 +2,109 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E80C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE08C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B2D20702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594118464;
-	bh=b0lxYJ9lP6g69W79rfSf6hh9ZzB1DotCO31lEeMmK4A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Zgu2OdPOLfhlCTfCT2Ww6m6F1uNmC1b3f0+q8jCgCN5S/ola09snTeL0AkYW0kbmg
-	 gr5nIrAZC12bVwQta2nQg+Je8rfOgef4iKtKWucZ72DL4FqxinEoR4BUzGBTmGViqd
-	 ipA9urXREImlBfz8mCZMrRAMXP35iYf6iZTzyChM=
+	by mail.kernel.org (Postfix) with ESMTP id CF3C82064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i+8zrHE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgGGKlD (ORCPT
+        id S1728066AbgGGKoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgGGKlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:41:02 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 289102064C;
-        Tue,  7 Jul 2020 10:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594118462;
-        bh=b0lxYJ9lP6g69W79rfSf6hh9ZzB1DotCO31lEeMmK4A=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=uZHILEBdfEtmn83GvooIUDxkeaVWBALM8fPvlKJcmKeanUBqJ87RXrfyfc6lM04Wl
-         pQMn3D3oPZ7vrfwmWKuuiSSUsfwD0p7Io3iL6N5htJitN0dlggSM8DH1IiMnM2YNVP
-         +qizjbDc8TN2BmtwzTmxzPkyXnE2ag6wiN3x5qwg=
-Date:   Tue, 7 Jul 2020 12:40:59 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Harry Cutts <hcutts@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: logitech-hidpp: avoid repeated "multiplier = " log
- messages
-In-Reply-To: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-Message-ID: <nycvar.YFH.7.76.2007071240480.15962@cbobk.fhfr.pm>
-References: <7d2c980f071487cecfd1534adb7561b33d922af3.1593970340.git.mail@maciej.szmigiero.name>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 7 Jul 2020 06:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgGGKoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:44:19 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430EBC08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:44:18 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id x83so26949382oif.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7QgWKK4RTXLZo2mZ8LP12+iEtRAYWukejbIygBOzwIw=;
+        b=i+8zrHE/fs2Y8R0mSJSYG3HjDe8DMVO33zE9s8G+U3bPlySiM1KMfVq7FQZXMQAhf1
+         1otQWa3z0Vo7rjF4WrjRMSTIn13HVhr/JHalXoGUunpOX7WHRLB3zlFjoS1E2nKKej2L
+         wWpZzxVUx8xWAMhvXDyMkaCaV3SfS6vGC00xyBcxsE3DhCqezURHXrD0RavIKX0oj+sp
+         /oPMgxrv/HUucbo5d4BmjphhcwAKuEq5xOk51hTZk2do4F4w3ppJDidPfTL+qFOXKgk2
+         BplIYO3/hCX+Qvdwhdxy7PAM/Rm0Np0kp7ad9ua2RSY+KL50IHQX2mnutETcFSLaBndV
+         Gpvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7QgWKK4RTXLZo2mZ8LP12+iEtRAYWukejbIygBOzwIw=;
+        b=PvV+fe2H5Qiinw5gqewzLEW7hjfX/7nLhu69T5mOFMrLDqIflXZ8L8U977aiw1rYy+
+         JikUuUVbL4SYNwtJ84ihrJDoJ9NNouAIB1MKOARhm/J3sMiTU7h00FBdL82h/nJgwMuf
+         c3DixMRE41akAeleOlVW/okqwoGIQGSm7oogWvgTi44wLz6fStRuTzZnXw9CfgjpMRnj
+         RYcDPJr2QXzuI4OxF+liRSudFIFhiHvslE0dSrKJxyd/DvcKaD6Hp8bf1n3kZ/vc/6XJ
+         CmvYsrVO9fRt7m09rdJBreiu3crnHa33/Cn56kmnQQGsMdXa30CXqZPrLKRVd/A3LjWq
+         sbgA==
+X-Gm-Message-State: AOAM530Fo24YO7377J7A763WXsK18sSQtG5xowpUywsEikvOwXANIqgC
+        QMB4R/EIAgnIJWUWiUu7SenB/ZyI1M20o9HjcyiEbA==
+X-Google-Smtp-Source: ABdhPJz+TeWph34DQmuzU5/HwXijA0+NDY97HXcO97SKerniK7b3Ulr3aDgUOA25daDJjAs5gvkPux2OD9AQjmHA6HA=
+X-Received: by 2002:a05:6808:a19:: with SMTP id n25mr2626139oij.84.1594118657366;
+ Tue, 07 Jul 2020 03:44:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200624043341.33364-1-drosen@google.com> <20200624043341.33364-5-drosen@google.com>
+ <877dvxggsl.fsf@collabora.com>
+In-Reply-To: <877dvxggsl.fsf@collabora.com>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Tue, 7 Jul 2020 03:44:06 -0700
+Message-ID: <CA+PiJmQN6Mkqq3aA+v6032QZehHs2sTqthzM-NqZN6k3jGBJvg@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] ext4: Use generic casefolding support
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Jul 2020, Maciej S. Szmigiero wrote:
+On Tue, Jun 23, 2020 at 10:43 PM Gabriel Krisman Bertazi
+<krisman@collabora.com> wrote:
+>
+> Daniel Rosenberg <drosen@google.com> writes:
+>
+> > -
+> >  const struct dentry_operations ext4_dentry_ops = {
+> > -     .d_hash = ext4_d_hash,
+> > -     .d_compare = ext4_d_compare,
+> > +     .d_hash = generic_ci_d_hash,
+> > +     .d_compare = generic_ci_d_compare,
+> >  };
+> >  #endif
+>
+> Can you make the structure generic since it is the same for f2fs and
+> ext4, which let you drop the code guards?  Unless that becomes a problem for
+> d_revalidate with fscrypt, it is fine like this.
+>
+> --
+> Gabriel Krisman Bertazi
 
-> These messages appear each time the mouse wakes from sleep, in my case
-> (Logitech M705), every minute or so.
-> Let's downgrade them to the "debug" level so they don't fill the kernel log
-> by default.
-> 
-> While we are at it, let's make clear that this is a wheel multiplier (and
-> not, for example, XY movement multiplier).
-> 
-> Fixes: 4435ff2f09a2 ("HID: logitech: Enable high-resolution scrolling on Logitech mice")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+I unify them in a later patch, since I end up having to deal with
+fscrypt's d_revalidate. With that patch I'd end up undoing the export
+I'd add for this, so I'll skip that for the moment.
 
-Applied, thank you Maciej.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+-Daniel
