@@ -2,146 +2,193 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14484C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6F320708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD778206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f3wQLBn5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cAEhRHrf";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="PfoR7rJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgGGRxE (ORCPT
+        id S1728418AbgGGRx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgGGRxE (ORCPT
+        Tue, 7 Jul 2020 13:53:58 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:41131 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbgGGRx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:53:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E2DC061755;
-        Tue,  7 Jul 2020 10:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ikLDu9Sqnofb7uotDosNOhH64p/v3I5ZekNTOjjncWE=; b=f3wQLBn5jEdVdwA61niHFtDcYq
-        HurwCJPCNykfmI4pqa6SJPG4Y4l9kfx3UO1Qq3gGPsYxFiGZp+RrLUkJt+jr4f2cSiAIhlmneDKHu
-        JVvWx+XVrdW1hg+FqBX4Ak1SbFyq6EtYIfbMUaoI5z3K+0Ys0aqt3YwXcyMVdlimSAvUVCZS3mbKh
-        G6mVv5H1r+aCwp31mA3uf1VrvNE9UucIZBQIF+a7wkof/Fd2NhJQGCEDe9bXgygNz5wVBp+6XwgSP
-        myrSeWKwwtNAe9RazV3T34Lv2GgED2tQnBY+3efFSpAi08gdmS1bU0UbFCJfJtKN2oDBJubIWePzZ
-        +2l+3h/A==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsrm5-0003kX-Pj; Tue, 07 Jul 2020 17:52:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 21/23] fs: don't allow kernel reads and writes without iter ops
-Date:   Tue,  7 Jul 2020 19:47:59 +0200
-Message-Id: <20200707174801.4162712-22-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200707174801.4162712-1-hch@lst.de>
-References: <20200707174801.4162712-1-hch@lst.de>
+        Tue, 7 Jul 2020 13:53:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594144436; x=1625680436;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=xw3S66fEfd0VyI9qKTQXhyZ7GPkfglwR1Iz3vv7GzgA=;
+  b=cAEhRHrfy/P2eGhxS0QWjd8netzflmPd1U5G4nKGbU2yrGih/CvnpTEx
+   SNZUQq+2pBlkblMWCI2IUz5qkG/inBV5M8piyDco/pa8hZT0nBUnSSHAS
+   ko6Gzz5ua+lb9ovHQlpk+4uCV84dIwnpyfKhp30ed18l8j/e7f03CsofQ
+   MXVfG4CeXXaLlOKHvoyvobLWxUjJV7CtSBQtFl7Yy6NTol8T4DDpQjy6e
+   o4ISm6MBtM6AhtUVFDWcRtwX7uN9L5xeiUSLod4sIlvnP1c0rYknoGRHk
+   eRXAFCbkpOStzQS3Zqui3IqDwFodzhfKX26P1iow1bRNhAMJ3h+DVt7c7
+   g==;
+IronPort-SDR: LlC/qQARs+D2uv4qzIglbdwKS9ccHrlKHiXS9fRVPe64hwtkD6NgZO5u/+FXwIQhHbNEPQ2YWj
+ VLTbUdKoMnMjI9Ht6touEZEusBO5igjg9Tx776AMjHjT7XxbizBm0IhQrUhhDwekxlYoHV+eeT
+ ruw7FDHNLtZwNzsY9A9gvUo4B1qCcslqDbMo4527QkJK6vY7Mivm169oY2gQKUgFSeCuuoFCbZ
+ 2m+Z1Z/IwsSgfQsaiEo1l48h4Xnzk0XBhftgDpXHFp5LCi2UT0rwdnXs4KYJaklsEavZlM6Q5W
+ cis=
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="79051977"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Jul 2020 10:53:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 7 Jul 2020 10:53:30 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Tue, 7 Jul 2020 10:53:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EYWIJMySPYGVtpsZF+3X2S0cn28sPHE0OsuKcz6VfrPHmGTpeNmxt1a02ZRX0VdbRQVDLTmOK1NkPkLrCt49d3SBPJkzSQhyr/rztWu0FrYgHhFKWwem7CUruahVZ4caS6MjBBpcHdg86uuq6395Gnfg5kF7QUpQYSYV+RfJn5D55Aatp/fCscmg9Q+BS2t50jdzf8ao8GkrHhDozOl5IvSeU3BZb6OdTmi9jZFpflgv4bXtEkIUm69GrReed+0nDkdTMmF0KSwU3ibXt60GyzMhPaWa7KfOwoEp1ZpyZkWthfYNYUc+LAuJ8KASOryeXMoDXVmwhtUIQ0JRRut4mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xw3S66fEfd0VyI9qKTQXhyZ7GPkfglwR1Iz3vv7GzgA=;
+ b=W7RahP2UFxw9bWgwYpxnTuEMel9xT7Hvf76uTN+fyIjh1AKRuftZqJdjairoFJ6QPJxODFIEVvFHi/+EWTbnVRzm2LVNT5U6ik9Hrlix/yRY1itXDdWG/3GiVr7WwsuVIUWgEuoVQu1b2itf5E7ibkISXP9FME0evtqBDawx5cYVemT5cahnlkIYX6bQCqKuZPXLIJozEBmWqN8QD/l5vMIz1JsuBXal5BZLUCQohJxbq0SCYBCqyzR+T6Iufr/LgY8bOOM6oFXl+l9dKx7rl9ZPmGG5B49j0w1quQGwONsPGomB/YFtqQXe2UYGt8Z5qxvCiWscRyjwyE9RPJ7P/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xw3S66fEfd0VyI9qKTQXhyZ7GPkfglwR1Iz3vv7GzgA=;
+ b=PfoR7rJGKAl6oywFcY3r9h/1ekXyBpaPsL658PCKEoIDc2ETP4QQ2ZruWXaoD52PTxAOA4GUnPzEPgoZS7B7Hin34PgEjJsL8MlLHHmoqWoYIb9O8KC3YDXSCjZ8/beRnwKLAxy7ZqwDS44yeHsZYjqxoI1tk81zGT15dk6C1Zw=
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
+ by BY5PR11MB4024.namprd11.prod.outlook.com (2603:10b6:a03:192::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Tue, 7 Jul
+ 2020 17:53:53 +0000
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 17:53:52 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <p.yadav@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <vigneshr@ti.com>, <broonie@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
+        <michal.simek@xilinx.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     <nsekhar@ti.com>, <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v10 06/17] mtd: spi-nor: sfdp: get command opcode
+ extension type from BFPT
+Thread-Topic: [PATCH v10 06/17] mtd: spi-nor: sfdp: get command opcode
+ extension type from BFPT
+Thread-Index: AQHWVIeTPEfqRDg7DkGG9JINhim1sA==
+Date:   Tue, 7 Jul 2020 17:53:52 +0000
+Message-ID: <a8513b6b-4780-e854-897b-6b6364606bce@microchip.com>
+References: <20200623183030.26591-1-p.yadav@ti.com>
+ <20200623183030.26591-7-p.yadav@ti.com>
+In-Reply-To: <20200623183030.26591-7-p.yadav@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [86.127.52.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 39db2f43-6be0-4f45-23fa-08d8229eb630
+x-ms-traffictypediagnostic: BY5PR11MB4024:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB4024FA5ADEDDD2C564A4BB5AF0660@BY5PR11MB4024.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vpAcuD5dBQXKtiEAbJ82+2M5SMUt6pItdln8M9giLdEKBIEl4H0zqEtgdR2BF+zXDVjkOHPOwLOGtLSupe4/sspit0RERg4oZPVGpV4xc0p6CVv0CfgDr84pb+tFnXnhVIttaQOTjXYgK12j8cGT0lYhwKV+iVNXf9ZWEltkcT4fuKuGe/MtNM0UkQ1c70OIef2uLfgqZ0S8GevEZMXYSSJoQDtnWL7aNNRmBRV7cO7x1l3RkF7GDFHZ/2gPmM6OxUOLkOvzqCW1BZAAFCeO1OOvqUxZ+KTxzd4JNn3EIlDHBvM5MZh7LEbjqbePios7y7Qg1z3xiuH8svqJTQ7J+/tRmuFo71aE9tmp/qzi1HgGgDzlsBTpjXDfhFnOzBu7S5UAJZYi80NvnzOLZKFNxQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(346002)(376002)(39850400004)(396003)(36756003)(186003)(66446008)(66946007)(8936002)(6506007)(64756008)(66556008)(66476007)(4326008)(76116006)(2906002)(91956017)(53546011)(26005)(5660300002)(6512007)(86362001)(71200400001)(110136005)(31696002)(316002)(54906003)(31686004)(7416002)(478600001)(2616005)(8676002)(6486002)(921003)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: S4OFd/rG725w5ezSO1IwErK2D6K3JRUct1gftNiyGJUL82X1fsPzCvXIMmI7fbpC29apS2bV6A4OGOo1M9fBl+hWC3r/AxijfCJtkJsPBuistgivekZXKQ2sYTpuz345dUG1LLXa17biCXqh05QP/zkAwiSz+9As2LRqcpyh30T/mHQ8ktcoI4KtY7eUgM1kNDtLswyDo7OY1tFp/JvVAOCWCmlst9Ld+FT7T/8ebQVFZxqM/LaVq2pkcGBLIHmQTc6fQYBFSGREAsaGxY54KGUHGGrfEzMma8HSakWbF5hURESflXjPAEr5bidw1aETUoaSSaBpARDj+l0qqRqZ63M29UqrxqvhHLIhSOTJTw/kLbRfcXS3XrCX+hfXtMBYqMoRefT0dtul3pdyAJulyRFQx01DiqnsyF4OlVwTe9qXUDQ7hq0jBElAJA5MhZrIiPj7s/0jR6T4i7cNBdUink8O40qpFxJo7Sn8/fsctO0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C4D3E4A1880A514EA9E1287839D56C55@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39db2f43-6be0-4f45-23fa-08d8229eb630
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 17:53:52.8141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h3hvH/esMQc5JWC4tVwUmbWlsZmaPR6MC4morxcY/xkizMq/Ud5MPwoK0hP+Mlv4/KAzWe7vcj8B2F/JTEdVn5U/jStHGpDHpQL5HueLBp8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't allow calling ->read or ->write with set_fs as a preparation for
-killing off set_fs.  While I've not triggered any of these cases in my
-setups as all the usual suspect (file systems, pipes, sockets, block
-devices, system character devices) use the iter ops this is almost
-going to be guaranteed to eventuall break something, so print a detailed
-error message helping to debug such cases.  The fix will be to switch the
-affected driver to use the iter ops.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/read_write.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
-
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 8bec4418543994..11c55547cfc9d6 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -419,6 +419,13 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
- 	return ret;
- }
- 
-+static void warn_unsupported(struct file *file, const char *op)
-+{
-+	pr_warn_ratelimited(
-+		"kernel %s not supported for file %pD4 (pid: %d comm: %.20s)\n",
-+		op, file, current->pid, current->comm);
-+}
-+
- ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
- {
- 	ssize_t ret;
-@@ -430,13 +437,7 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
- 
- 	if (count > MAX_RW_COUNT)
- 		count =  MAX_RW_COUNT;
--	if (file->f_op->read) {
--		mm_segment_t old_fs = get_fs();
--
--		set_fs(KERNEL_DS);
--		ret = file->f_op->read(file, (void __user *)buf, count, pos);
--		set_fs(old_fs);
--	} else if (file->f_op->read_iter) {
-+	if (file->f_op->read_iter) {
- 		struct kvec iov = { .iov_base = buf, .iov_len = count };
- 		struct kiocb kiocb;
- 		struct iov_iter iter;
-@@ -447,6 +448,8 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
- 		ret = file->f_op->read_iter(&kiocb, &iter);
- 		*pos = kiocb.ki_pos;
- 	} else {
-+		if (file->f_op->read)
-+			warn_unsupported(file, "read");
- 		ret = -EINVAL;
- 	}
- 	if (ret > 0) {
-@@ -530,14 +533,7 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
- 
- 	if (count > MAX_RW_COUNT)
- 		count =  MAX_RW_COUNT;
--	if (file->f_op->write) {
--		mm_segment_t old_fs = get_fs();
--
--		set_fs(KERNEL_DS);
--		ret = file->f_op->write(file, (__force const char __user *)buf,
--				count, pos);
--		set_fs(old_fs);
--	} else if (file->f_op->write_iter) {
-+	if (file->f_op->write_iter) {
- 		struct kvec iov = { .iov_base = (void *)buf, .iov_len = count };
- 		struct kiocb kiocb;
- 		struct iov_iter iter;
-@@ -549,6 +545,8 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
- 		if (ret > 0)
- 			*pos = kiocb.ki_pos;
- 	} else {
-+		if (file->f_op->write)
-+			warn_unsupported(file, "write");
- 		ret = -EINVAL;
- 	}
- 	if (ret > 0) {
--- 
-2.26.2
-
+T24gNi8yMy8yMCA5OjMwIFBNLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToNCj4gRVhURVJOQUwgRU1B
+SUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25v
+dyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBTb21lIGRldmljZXMgaW4gRFRSIG1vZGUgZXhw
+ZWN0IGFuIGV4dHJhIGNvbW1hbmQgYnl0ZSBjYWxsZWQgdGhlDQo+IGV4dGVuc2lvbi4gVGhlIGV4
+dGVuc2lvbiBjYW4gZWl0aGVyIGJlIHNhbWUgYXMgdGhlIG9wY29kZSwgYml0d2lzZQ0KPiBpbnZl
+cnNlIG9mIHRoZSBvcGNvZGUsIG9yIGFub3RoZXIgYWRkaXRpb25hbCBieXRlIGZvcm1pbmcgYSAx
+Ni1ieXRlDQo+IG9wY29kZS4gR2V0IHRoZSBleHRlbnNpb24gdHlwZSBmcm9tIHRoZSBCRlBULiBG
+b3Igbm93LCBvbmx5IGZsYXNoZXMgd2l0aA0KPiAicmVwZWF0IiBhbmQgImludmVyc2UiIGV4dGVu
+c2lvbnMgYXJlIHN1cHBvcnRlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFByYXR5dXNoIFlhZGF2
+IDxwLnlhZGF2QHRpLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL3NmZHAuYyB8
+IDE3ICsrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL3NmZHAuaCB8ICA2
+ICsrKysrKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9zZmRwLmMgYi9kcml2ZXJzL210ZC9zcGktbm9y
+L3NmZHAuYw0KPiBpbmRleCBjYjZlOTNhMzU2MGEuLjNmNzA5ZGU1ZWE2NyAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9tdGQvc3BpLW5vci9zZmRwLmMNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5v
+ci9zZmRwLmMNCj4gQEAgLTYwNSw2ICs2MDUsMjMgQEAgc3RhdGljIGludCBzcGlfbm9yX3BhcnNl
+X2JmcHQoc3RydWN0IHNwaV9ub3IgKm5vciwNCj4gICAgICAgICBpZiAoYmZwdF9oZWFkZXItPmxl
+bmd0aCA9PSBCRlBUX0RXT1JEX01BWF9KRVNEMjE2QikNCj4gICAgICAgICAgICAgICAgIHJldHVy
+biBzcGlfbm9yX3Bvc3RfYmZwdF9maXh1cHMobm9yLCBiZnB0X2hlYWRlciwgJmJmcHQsDQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhcmFtcyk7DQo+
+ICsgICAgICAgLyogOEQtOEQtOEQgY29tbWFuZCBleHRlbnNpb24uICovDQo+ICsgICAgICAgc3dp
+dGNoIChiZnB0LmR3b3Jkc1tCRlBUX0RXT1JEKDE4KV0gJiBCRlBUX0RXT1JEMThfQ01EX0VYVF9N
+QVNLKSB7DQo+ICsgICAgICAgY2FzZSBCRlBUX0RXT1JEMThfQ01EX0VYVF9SRVA6DQo+ICsgICAg
+ICAgICAgICAgICBub3ItPmNtZF9leHRfdHlwZSA9IFNQSV9OT1JfRVhUX1JFUEVBVDsNCj4gKyAg
+ICAgICAgICAgICAgIGJyZWFrOw0KPiArDQo+ICsgICAgICAgY2FzZSBCRlBUX0RXT1JEMThfQ01E
+X0VYVF9JTlY6DQo+ICsgICAgICAgICAgICAgICBub3ItPmNtZF9leHRfdHlwZSA9IFNQSV9OT1Jf
+RVhUX0lOVkVSVDsNCj4gKyAgICAgICAgICAgICAgIGJyZWFrOw0KPiArDQo+ICsgICAgICAgY2Fz
+ZSBCRlBUX0RXT1JEMThfQ01EX0VYVF9SRVM6DQoNCmRldl9kYmcNCg0KPiArICAgICAgICAgICAg
+ICAgcmV0dXJuIC1FSU5WQUw7DQoNCkRvIHdlIHJlYWxseSB3YW50IHRvIHN0b3AgdGhlIFNGRFAg
+cGFyc2luZyBoZXJlIGFuZCBsb29zZSBldmVyeXRoaW5nIHRoYXQNCndlIGdhdGhlcmVkPw0KDQoN
+Cj4gKw0KPiArICAgICAgIGNhc2UgQkZQVF9EV09SRDE4X0NNRF9FWFRfMTZCOg0KPiArICAgICAg
+ICAgICAgICAgZGV2X2Vycihub3ItPmRldiwgIjE2LWJpdCBvcGNvZGVzIG5vdCBzdXBwb3J0ZWRc
+biIpOw0KDQpkZXZfZGJnDQoNCj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PVFNVUFA7DQo+
+ICsgICAgICAgfQ0KPiANCj4gICAgICAgICByZXR1cm4gc3BpX25vcl9wb3N0X2JmcHRfZml4dXBz
+KG5vciwgYmZwdF9oZWFkZXIsICZiZnB0LCBwYXJhbXMpOw0KPiAgfQ0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tdGQvc3BpLW5vci9zZmRwLmggYi9kcml2ZXJzL210ZC9zcGktbm9yL3NmZHAuaA0K
+PiBpbmRleCA3Zjk4NDZiM2ExYWQuLjZkNzI0MzA2NzI1MiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9tdGQvc3BpLW5vci9zZmRwLmgNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9zZmRwLmgN
+Cj4gQEAgLTkwLDYgKzkwLDEyIEBAIHN0cnVjdCBzZmRwX2JmcHQgew0KPiAgI2RlZmluZSBCRlBU
+X0RXT1JEMTVfUUVSX1NSMl9CSVQxX05PX1JEICAgICAgICAgICAgICAgICgweDRVTCA8PCAyMCkN
+Cj4gICNkZWZpbmUgQkZQVF9EV09SRDE1X1FFUl9TUjJfQklUMSAgICAgICAgICAgICAgKDB4NVVM
+IDw8IDIwKSAvKiBTcGFuc2lvbiAqLw0KPiANCj4gKyNkZWZpbmUgQkZQVF9EV09SRDE4X0NNRF9F
+WFRfTUFTSyAgICAgICAgICAgICAgR0VOTUFTSygzMCwgMjkpDQo+ICsjZGVmaW5lIEJGUFRfRFdP
+UkQxOF9DTURfRVhUX1JFUCAgICAgICAgICAgICAgICgweDBVTCA8PCAyOSkgLyogUmVwZWF0ICov
+DQo+ICsjZGVmaW5lIEJGUFRfRFdPUkQxOF9DTURfRVhUX0lOViAgICAgICAgICAgICAgICgweDFV
+TCA8PCAyOSkgLyogSW52ZXJ0ICovDQo+ICsjZGVmaW5lIEJGUFRfRFdPUkQxOF9DTURfRVhUX1JF
+UyAgICAgICAgICAgICAgICgweDJVTCA8PCAyOSkgLyogUmVzZXJ2ZWQgKi8NCj4gKyNkZWZpbmUg
+QkZQVF9EV09SRDE4X0NNRF9FWFRfMTZCICAgICAgICAgICAgICAgKDB4M1VMIDw8IDI5KSAvKiAx
+Ni1iaXQgb3Bjb2RlICovDQo+ICsNCj4gIHN0cnVjdCBzZmRwX3BhcmFtZXRlcl9oZWFkZXIgew0K
+PiAgICAgICAgIHU4ICAgICAgICAgICAgICBpZF9sc2I7DQo+ICAgICAgICAgdTggICAgICAgICAg
+ICAgIG1pbm9yOw0KPiAtLQ0KPiAyLjI3LjANCj4gDQoNCg==
