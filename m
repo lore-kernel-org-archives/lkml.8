@@ -2,96 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F773C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1523020702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594117299;
-	bh=+cBelIs0ehSsds8X4dHmvK2864Wy8QgaOL5fQnupcLk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pYncniMbl5d8cqM3i9Z/OIY8GZ6hsdHuhZkxTLhSMSx/GXcl03li2Y10ChDKLD0La
-	 qdr6WxPH3GTq3rc9V18QvvVGw6X5o+aRJcIjkm/Hd3WOQySKbcrvu7kgF8954DQ0D6
-	 3VKUhauYj3PA8dDjNTnm+OY2vEXH8cE3v5YaXT58=
+	by mail.kernel.org (Postfix) with ESMTP id 7826A2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NosxYRu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGGKVN (ORCPT
+        id S1728155AbgGGKWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgGGKUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:20:50 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jul 2020 06:22:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24353 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728149AbgGGKTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:19:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594117182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xfEXOl5JDAHiuWzCx5YNFPGjR852TJKcIIA0Lm3L8Rg=;
+        b=NosxYRu38u2qcweele0Xvyk10Yunyjkl+yxgj8uAz6sD4qRRHFSOCqnn7YSX7AyZi6x8f0
+        EtjjRwOfqRE4ARaA0aN9LLXOcSKHhPyIp92D3zDbVllRzKIpMk45Lg/60toahPZ01jXxjz
+        T7GibYSwOk83KHMwUx/8TDjT9f+O/LA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-u2R3ELclMs6Q9hL0ffEEnA-1; Tue, 07 Jul 2020 06:19:40 -0400
+X-MC-Unique: u2R3ELclMs6Q9hL0ffEEnA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E657206F6;
-        Tue,  7 Jul 2020 10:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594117249;
-        bh=+cBelIs0ehSsds8X4dHmvK2864Wy8QgaOL5fQnupcLk=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=ZAvb6I9vDb3w6KWUww8p1xAQaAhA2POMmlykCDVLQumMM5h/pWVPlOzvEn2QDf+KP
-         QOx8pEn3NzKUIwSz7/iLevs8Cg2BUcXxvR9e7pzUoo4/UUNnsEHyOtOTM1oKfXlXAV
-         +XdZlgf6w/1mnxL7QlX+4Yax43oPMPgkMNFx/GwU=
-Date:   Tue, 7 Jul 2020 12:20:46 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Marius Zachmann <mail@mariuszachmann.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v7] hwmon: add Corsair Commander Pro driver
-In-Reply-To: <20200630021642.GA155878@roeck-us.net>
-Message-ID: <nycvar.YFH.7.76.2007071220210.15962@cbobk.fhfr.pm>
-References: <20200626055936.4441-1-mail@mariuszachmann.de> <20200630021642.GA155878@roeck-us.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00C96800C64;
+        Tue,  7 Jul 2020 10:19:39 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DDD1275E47;
+        Tue,  7 Jul 2020 10:19:38 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     christian@brauner.io, shuah@kernel.org
+Subject: [PATCH v3 2/2] selftests: pidfd: skip test if unshare fails with EPERM
+Date:   Tue,  7 Jul 2020 06:19:36 -0400
+Message-Id: <20200707101936.12052-3-pbonzini@redhat.com>
+In-Reply-To: <20200707101936.12052-1-pbonzini@redhat.com>
+References: <20200707101936.12052-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020, Guenter Roeck wrote:
+Similar to how ENOSYS causes a skip if pidfd_send_signal is not present,
+we can do the same for unshare if it fails with EPERM.  This way, running
+the test without privileges causes four tests to skip but no early bail out.
 
-> On Fri, Jun 26, 2020 at 07:59:36AM +0200, Marius Zachmann wrote:
-> > This is v7 of a driver for the Corsair Commander Pro.
-> > It provides sysfs attributes for:
-> > - Reading fan speed
-> > - Reading temp sensors
-> > - Reading voltage values
-> > - Writing pwm and reading last written pwm
-> > - Reading fan and temp connection status
-> > 
-> > It is an usb driver, so it needs to be ignored by usbhid.
-> > The Corsair Commander Pro is a fan controller and provides
-> > no means for user interaction.
-> > The two device numbers are there, because there is a slightly
-> > different version of the same device. (Only difference
-> > seem to be in some presets.)
-> > 
-> > This is based on the staging/hwmon tree.
-> > 
-> > Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
-> 
-> For my reference:
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Waiting for Ack from HID maintainer.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ tools/testing/selftests/pidfd/pidfd_test.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-
-for the drivers/hid/hid-quirks.c hunk. Thanks,
-
+diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+index f65ad4e32353..dcc86e8f7a9f 100644
+--- a/tools/testing/selftests/pidfd/pidfd_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_test.c
+@@ -162,15 +162,26 @@ static int test_pidfd_send_signal_recycled_pid_fail(void)
+ 	}
+ 
+ 	ret = unshare(CLONE_NEWPID);
+-	if (ret < 0)
++	if (ret < 0) {
++		if (errno == EPERM) {
++			ksft_test_result_skip("%s test: Unsharing pid namespace not permitted\n",
++					      test_name);
++			return 0;
++		}
+ 		ksft_exit_fail_msg("%s test: Failed to unshare pid namespace\n",
+ 				   test_name);
++	}
+ 
+ 	ret = unshare(CLONE_NEWNS);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: Failed to unshare mount namespace\n",
+-			test_name);
++	if (ret < 0) {
++		if (errno == EPERM) {
++			ksft_test_result_skip("%s test: Unsharing mount namespace not permitted\n",
++					      test_name);
++			return 0;
++		}
++		ksft_exit_fail_msg("%s test: Failed to unshare mount namespace\n",
++				   test_name);
++	}
+ 
+ 	ret = mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
+ 	if (ret < 0)
 -- 
-Jiri Kosina
-SUSE Labs
+2.26.2
 
