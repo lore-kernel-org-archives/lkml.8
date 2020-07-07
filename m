@@ -2,88 +2,217 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9449CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 570CD2070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7711A206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:14:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGGCOH (ORCPT
+        id S1728121AbgGGCOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:14:07 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:42968 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726434AbgGGCOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:14:06 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Tue, 7 Jul 2020 10:13:52
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.65]
-Date:   Tue, 7 Jul 2020 10:13:52 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
-Cc:     kjlu@umn.edu, "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
-        "Stanimir Varbanov" <svarbanov@mm-sol.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] PCI: qcom: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200706095821.GB26377@e121166-lin.cambridge.arm.com>
-References: <20200520085837.1399-1-dinghao.liu@zju.edu.cn>
- <20200706095821.GB26377@e121166-lin.cambridge.arm.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Mon, 6 Jul 2020 22:14:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31473 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbgGGCOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:14:53 -0400
+IronPort-SDR: v5qjLqyOUK8njnrYW46G5ZD9XYzeX04Vw4XiH3/UiEhgHy0brX7N5WBi0GsxLDpffJBL3TCX3p
+ Dkp2TDh0qWAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145628561"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="145628561"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:14:49 -0700
+IronPort-SDR: aM/DQzSNXqXoRKoo+f4FUPP8V+ChlSee823io9y6Qo1rVJETAQmGsTUduAc04a83jMqLOfZryy
+ ZkPdDP7hyB/w==
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="427299087"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:14:49 -0700
+Subject: [PATCH v2 00/12] ACPI/NVDIMM: Runtime Firmware Activation
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 06 Jul 2020 18:58:33 -0700
+Message-ID: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Message-ID: <6269091e.4c120.173270d082d.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCHIARg2gNfDI4nAw--.64370W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwNBlZdtO+R4gABsn
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbuCS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
-        4UMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
-        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
-        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
-        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r1j6r4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
-        nxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdl
-IGNvdW50ZXIgZXZlbgo+ID4gaXQgcmV0dXJucyBhbiBlcnJvciBjb2RlLiBUaHVzIGEgcGFpcmlu
-ZyBkZWNyZW1lbnQgaXMgbmVlZGVkIG9uCj4gPiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0byBr
-ZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFv
-IExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jIHwgMyArLS0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKyksIDIgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL3BjaWUtcWNvbS5jCj4gPiBpbmRleCAxMzhlMWEyZDIxY2MuLjM1Njg2OTMwZGYxZCAxMDA2
-NDQKPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiAr
-KysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYwo+ID4gQEAgLTEzNDAs
-OCArMTM0MCw3IEBAIHN0YXRpYyBpbnQgcWNvbV9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpCj4gPiAgCXBtX3J1bnRpbWVfZW5hYmxlKGRldik7Cj4gPiAgCXJldCA9IHBt
-X3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsKPiA+ICAJaWYgKHJldCA8IDApIHsKPiA+IC0JCXBtX3J1
-bnRpbWVfZGlzYWJsZShkZXYpOwo+ID4gLQkJcmV0dXJuIHJldDsKPiA+ICsJCWdvdG8gZXJyX3Bt
-X3J1bnRpbWVfcHV0Owo+IAo+IEkgdGhpbmsgeW91IG5lZWQgdG8gcmVtb3ZlIHRoZSBicmFja2V0
-cyAtIHRoaXMgYmVjb21lIGEgc2luZ2xlIGxpbmUKPiBpZiBzdGF0ZW1lbnQuCj4gCgpUaGFuayB5
-b3UgZm9yIHlvdXIgYWR2aWNlISBJIHdpbGwgZml4IHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbiBv
-ZiBwYXRjaC4KClJlZ2FyZHMsCkRpbmdoYW8K
+Changes since v1 [1]:
+- Move the syscore callback from 'suspend' path to the 'hibernate' path
+  (Rafael)
+
+- Add a new PM debug test mode, 'mem-quiet' to disable some unnecessary
+  hibernation steps (memory image preparation) and debug sleeps when the
+  hibernation code is just being used to quiet the system for firmware
+  activation. (Rafael)
+
+- Greg already applied "driver-core: Introduce
+  DEVICE_ATTR_ADMIN_{RO,RW}" to driver-core-next, so I'll need to
+  duplicate that commit in nvdimm.git, or work out a common branch
+  baseline with Greg for this topic and driver-core-next to share.
+
+[1]: http://lore.kernel.org/r/159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com
+
+---
+
+Quoting the documentation:
+
+    Some persistent memory devices run a firmware locally on the device /
+    "DIMM" to perform tasks like media management, capacity provisioning,
+    and health monitoring. The process of updating that firmware typically
+    involves a reboot because it has implications for in-flight memory
+    transactions. However, reboots are disruptive and at least the Intel
+    persistent memory platform implementation, described by the Intel ACPI
+    DSM specification [1], has added support for activating firmware at
+    runtime.
+
+    [1]: https://docs.pmem.io/persistent-memory/
+
+The approach taken is to abstract the Intel platform specific mechanism
+behind a libnvdimm-generic sysfs interface. The interface could support
+runtime-firmware-activation on another architecture without need to
+change userspace tooling.
+
+The ACPI NFIT implementation involves a set of device-specific-methods
+(DSMs) to 'arm' individual devices for activation and bus-level
+'trigger' method to execute the activation. Informational / enumeration
+methods are also provided at the bus and device level.
+
+One complicating aspect of the memory device firmware activation is that
+the memory controller may need to be quiesced, no memory cycles, during
+the activation. While the platform has mechanisms to support holding off
+in-flight DMA during the activation, the device response to that delay
+is potentially undefined. The platform may reject a runtime firmware
+update if, for example a PCI-E device does not support its completion
+timeout value being increased to meet the activation time. Outside of
+device timeouts the quiesce period may also violate application
+timeouts.
+
+Given the above device and application timeout considerations the
+implementation defaults to hooking into the hibernation path to trigger
+the activation, i.e. that a hibernate-resume cycle (at least up to the
+syscore mem-quiet point) is required. That default policy ensures that
+the system is in a quiescent state before ceasing memory controller
+responses for the activate. However, if desired, runtime activation
+without the hibernate freeze can be forced as an override.
+
+The ndctl utility grows the following extensions / commands to drive
+this mechanism:
+
+1/ The existing update-firmware command will 'arm' devices where the
+   firmware image is staged by default.
+
+    ndctl update-firmware all -f firmware_image.bin
+
+2/ The existing ability to enumerate firmware-update capabilities now
+   includes firmware activate capabilities at the 'bus' and 'dimm/device'
+   level:
+
+    ndctl list -BDF -b nfit_test.0
+    [
+      {
+        "provider":"nfit_test.0",
+        "dev":"ndbus2",
+        "scrub_state":"idle",
+        "firmware":{
+          "activate_method":"suspend",
+          "activate_state":"idle"
+        },
+        "dimms":[
+          {
+            "dev":"nmem1",
+            "id":"cdab-0a-07e0-ffffffff",
+            "handle":0,
+            "phys_id":0,
+            "security":"disabled",
+            "firmware":{
+              "current_version":0,
+              "can_update":true
+            }
+          },
+    ...
+
+3/ When the system can support activation without quiesce, or when the
+   hibernate-resume requirement is going to be suppressed, the new
+   activate-firmware command wraps that functionality:
+
+    ndctl activate-firmware nfit_test.0 --force
+
+   Otherwise, if activate_method is "suspend" then the activation can be
+   triggered by the mem-quiet hibernate debug state, or a full hibernate
+   resume:
+
+    echo mem-quiet > /sys/power/pm_debug
+    echo disk > /sys/power/state
+
+---
+
+Dan Williams (12):
+      libnvdimm: Validate command family indices
+      ACPI: NFIT: Move bus_dsm_mask out of generic nvdimm_bus_descriptor
+      ACPI: NFIT: Define runtime firmware activation commands
+      tools/testing/nvdimm: Cleanup dimm index passing
+      tools/testing/nvdimm: Add command debug messages
+      tools/testing/nvdimm: Prepare nfit_ctl_test() for ND_CMD_CALL emulation
+      tools/testing/nvdimm: Emulate firmware activation commands
+      driver-core: Introduce DEVICE_ATTR_ADMIN_{RO,RW}
+      libnvdimm: Convert to DEVICE_ATTR_ADMIN_RO()
+      libnvdimm: Add runtime firmware activation sysfs interface
+      PM, libnvdimm: Add 'mem-quiet' state and callback for firmware activation
+      ACPI: NFIT: Add runtime firmware activate support
+
+
+ Documentation/ABI/testing/sysfs-bus-nfit           |   35 ++
+ Documentation/ABI/testing/sysfs-bus-nvdimm         |    2 
+ .../driver-api/nvdimm/firmware-activate.rst        |   74 +++
+ drivers/acpi/nfit/core.c                           |  146 +++++--
+ drivers/acpi/nfit/intel.c                          |  426 ++++++++++++++++++++
+ drivers/acpi/nfit/intel.h                          |   61 +++
+ drivers/acpi/nfit/nfit.h                           |   39 ++
+ drivers/base/syscore.c                             |   21 +
+ drivers/nvdimm/bus.c                               |   46 ++
+ drivers/nvdimm/core.c                              |  103 +++++
+ drivers/nvdimm/dimm_devs.c                         |   99 +++++
+ drivers/nvdimm/namespace_devs.c                    |    2 
+ drivers/nvdimm/nd-core.h                           |    1 
+ drivers/nvdimm/pfn_devs.c                          |    2 
+ drivers/nvdimm/region_devs.c                       |    2 
+ include/linux/device.h                             |    4 
+ include/linux/libnvdimm.h                          |   53 ++
+ include/linux/syscore_ops.h                        |    2 
+ include/linux/sysfs.h                              |    7 
+ include/uapi/linux/ndctl.h                         |    5 
+ kernel/power/hibernate.c                           |   17 +
+ kernel/power/main.c                                |    1 
+ kernel/power/power.h                               |    7 
+ kernel/power/snapshot.c                            |   13 +
+ kernel/power/suspend.c                             |   12 +
+ tools/testing/nvdimm/test/nfit.c                   |  367 ++++++++++++++---
+ 26 files changed, 1427 insertions(+), 120 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
+ create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
