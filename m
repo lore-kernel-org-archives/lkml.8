@@ -2,168 +2,118 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE04C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5800C20773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DCD2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lz0nPDxc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gOyURcK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGGOhs (ORCPT
+        id S1728190AbgGGOhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
+        Tue, 7 Jul 2020 10:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGOhr (ORCPT
+        with ESMTP id S1725944AbgGGOhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:37:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009DAC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:37:46 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so43526445wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:37:46 -0700 (PDT)
+        Tue, 7 Jul 2020 10:37:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7FCC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:37:48 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so37338438wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5iF8ft+c50gpwNnzzALPrKJo/bbNCmFujAo6+tQfbag=;
-        b=Lz0nPDxcqEOwOrN6zYyousamF2fXBBFMTdeR4LW8bSilPOhb/g/iLa84hhIJJFuDW6
-         CHgzKjN/Ks6bLLbbMjwmjRdKIr/m4ToP0M3Ic+JLsug2W7O9eYaS4I+2X8batugOPe+M
-         3MGJM+fcDQpTnBBWXXzUKPOcLnFG6F91I0Qd3mc54oBIMtqrjBel4wjkRq+YEjKDY0Eo
-         Kk7J2QqmYxBmWkviAU1EFsDPmrOhRGzyZJVWglkYX4qqXij9fyPIwAA2YwXSQL5DQ3SR
-         419aaKH6rylK9L6oSlUNULiT38rOIfwa9kWMflWB5O95h6VpS0DQQuAC098qrjCpsGfC
-         +7kA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X8lNwwZEdxo/c3swk/aA3YOExp2MKHA0sqq87q0a3wI=;
+        b=gOyURcK3r2DwvFpoXBFwf+VxrVGMJBFa5tiVKiVlD1Sv9lgSJWBeMg+Yax8Pr+ammt
+         CbKHd9ahg6vBz7VNf2xbE9ZssjsBljDR3DjEbulgbGUDZrFoHU9h4D9wbsTb4jBnfoNR
+         BTPi5POXO3enLgGBzWsE3oHOowzkBN9RZtp+Bbt+eKAwJq02R36MsWF0EP+2c1AaczEv
+         bE2WQFjK+3Znea5sLS/gQOIFmLDDGJ8AQQvQk3IBTU2FB6NmZuPTDyO4CDvlS2YFnvQl
+         P7R0E5P4x/uOsmhlSg0iofJtsjdLb+XJrIiMBSKnhqm17vb9OXyIP+HyGFWYJmTcejJF
+         ecog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5iF8ft+c50gpwNnzzALPrKJo/bbNCmFujAo6+tQfbag=;
-        b=gF316+4bTWZVyvGXSHMPerZ+N+G7QenGMdel9BJIUm8F+Kfakz8dbNarjgyxKP2A9K
-         tb3TmJzvv48e719a9KBtA8F9X/7NJZZFs7MbvSiXm5NqrQTbGgGe14/vnhAJUxH2USnf
-         fLGbJQCmEVJZJ5cW5lPaa9n3djbBmJ3CpxUQAnp839iEcQ7C9vzzClpA50BlSL0sZfJ7
-         9An2lLZ824JyXl3Wzy6Q918PyUtvjaF9K3iyTFPfcXRcvnVY14oSJAM4CKtEGM5oREkH
-         5HISmxGtH0m2IcAasIIAzMKYw/fXvxzlRuoI4mwrIKSyU61LHeNEsr2u2hTagJoGoEjS
-         Ho/w==
-X-Gm-Message-State: AOAM530oNcX+t8lubFIemfflxPwmrzjkpUvGsNuM3wlpqyjnBqWH/vX/
-        72Cbu3itl1E9R3D/LKYRScmXpQ==
-X-Google-Smtp-Source: ABdhPJw1xINFmSvbUCOzjkbGqZ/QUUiOXhKsCkIjO0i2XygXmAlkbXkTnXKhAMio+o2WFG4v85WpSA==
-X-Received: by 2002:a1c:9e06:: with SMTP id h6mr4299319wme.45.1594132665610;
-        Tue, 07 Jul 2020 07:37:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X8lNwwZEdxo/c3swk/aA3YOExp2MKHA0sqq87q0a3wI=;
+        b=ReK1UxMrnLBnoAKv0ZKXXbdmFOnu2IpwMQpoVb6eahGbWjokY4quztjjDMTuRxiUN9
+         GZpxmCYjy1jXYEncFGfzNxdtqmh2eRGKnQZyifJ9XsDHzGOLI1Vd2VlIFGVGfyN1iLQh
+         Yf8HDZ7f5T4yhvJQl3rrZdlXuMzd4gk5nS4ud3dNwT4B4JOoYYjSinXNeq5S1gvtz/vr
+         vRVOi59okrgiQEB5+qamWihUn2IBvPxCpX9r1a2fqU9UBxur7LuyOdCz+8WgkCikV5/j
+         iMXNSlEBmZ8k2as5T77YX2EKZYz7L2ZQRz5gWjX1zlaIUJaqCQB9xXg0veCb09WceZPY
+         1l6Q==
+X-Gm-Message-State: AOAM5301FXMl2d70LgASu/CE+rWhBd/HYQJeamr+f5yOFSKngN23wEy+
+        ZD22kNwWmQKQ8HdhsGeljDYoqg==
+X-Google-Smtp-Source: ABdhPJw5AegAISkmzpd19TGSo7pM2dobgJDA/WJik6mZA0LLKNll4VvB7zgDEdydTeGdMWD3L+9EsQ==
+X-Received: by 2002:a5d:40c9:: with SMTP id b9mr52265378wrq.425.1594132667350;
+        Tue, 07 Jul 2020 07:37:47 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.37.44
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.37.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:37:45 -0700 (PDT)
+        Tue, 07 Jul 2020 07:37:46 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 00/28] Clean-up ASoC's W=1 build warnings
-Date:   Tue,  7 Jul 2020 15:37:14 +0100
-Message-Id: <20200707143742.2959960-1-lee.jones@linaro.org>
+        alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Bo Shen <voice.shen@atmel.com>,
+        Sedji Gaouaou <sedji.gaouaou@atmel.com>
+Subject: [PATCH v2 01/28] ASoC: atmel: atmel-pcm-dma: Demote function header which is clearly not kerneldoc
+Date:   Tue,  7 Jul 2020 15:37:15 +0100
+Message-Id: <20200707143742.2959960-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
+References: <20200707143742.2959960-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+No attempt has been made to document the demoted function here.
 
-After these patches are applied, the build system no longer
-complains about any W=0 nor W=1 level warnings in sound/soc,
-when building for Arm.
+Fixes the following W=1 kernel build warning(s):
 
-Hurrah!
+ sound/soc/atmel/atmel-pcm-dma.c:55: warning: Function parameter or member 'ssc_sr' not described in 'atmel_pcm_dma_irq'
+ sound/soc/atmel/atmel-pcm-dma.c:55: warning: Function parameter or member 'substream' not described in 'atmel_pcm_dma_irq'
 
-Changelog
+Cc: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Bo Shen <voice.shen@atmel.com>
+Cc: Sedji Gaouaou <sedji.gaouaou@atmel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ sound/soc/atmel/atmel-pcm-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v1 => v2:
- - Remove whole read from patch 21
-   - Suggested by Peter
-
-Lee Jones (28):
-  ASoC: atmel: atmel-pcm-dma: Demote function header which is clearly
-    not kerneldoc
-  ASoC: atmel: atmel_ssc_dai: Demote function header which is clearly
-    not kerneldoc
-  ASoC: fsl: fsl-asoc-card: Use correct format when providing struct
-    documentation
-  ASoC: fsl: fsl_asrc: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  ASoC: fsl: fsl_ssi: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  ASoC: fsl: fsl_ssi_dbg: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  ASoC: fsl: fsl_spdif: Use correct formatting when denoting struct
-    documentation
-  ASoC: fsl: fsl_spdif: Update 'struct fsl_spdif_priv's descriptions
-  ASoC: fsl: fsl_esai: Fix a bunch of kerneldoc issues
-  ASoC: fsl: fsl_esai: Add descriptions for 'tx_mask' and 'rx_mask' to
-    'fsl_esai'
-  ASoC: pxa: pxa-ssp: Demote seemingly unintentional kerneldoc header
-  ASoC: codecs: ak4458: Remove set but never checked variable 'ret'
-  ASoC: qcom: qdsp6: q6asm: Provide documentation for WMA
-    'codec_profile'
-  ASoC: samsung: pcm: Demote half-documented kerneldoc header
-  ASoC: samsung: spdif: Fix 3 misspelled struct properties
-  ASoC: sunxi: sun4i-i2s: Demote half-documented kerneldoc header
-  ASoC: uniphier: aio-core: Fix incorrectly named struct property and
-    remove another
-  ASoC: sunxi: sun4i-spdif: Fix misspelling of 'reg_dac_txdata'
-  ASoC: ux500: ux500_msp_i2s: Remove unused variables 'reg_val_DR' and
-    'reg_val_TSTDR'
-  ASoC: sti: uniperif: Mark 'uni_tdm_hw' as __maybe_unused
-  ASoC: ti: omap-mcbsp-st: Remove set, but unused variable 'w'
-  ASoC: codecs: da7210: Fix formatting issues in da7210_set_dai_pll()
-    header
-  ASoC: soc-ac97: Demote seemingly unintentional kerneldoc header
-  ASoC: codecs: jz4770: Remove defined but never used variable
-    'mic_boost_tlv'
-  ASoC: codecs: rt5631: Demote misuse of kerneldoc to standard comment
-    blocks
-  ASoC: codecs: rt5659: Remove many unused const variables
-  ASoC: codecs: tlv320aic26: Demote seemingly unintentional kerneldoc
-    header
-  ASoC: codecs: wm8400: Remove a bunch of unused variables
-
- sound/soc/atmel/atmel-pcm-dma.c |  2 +-
- sound/soc/atmel/atmel_ssc_dai.c |  2 +-
- sound/soc/codecs/ak4458.c       |  6 +++---
- sound/soc/codecs/da7210.c       | 12 ++++++-----
- sound/soc/codecs/jz4770.c       |  1 -
- sound/soc/codecs/rt5631.c       | 12 +++++------
- sound/soc/codecs/rt5659.c       | 37 ---------------------------------
- sound/soc/codecs/tlv320aic26.c  |  2 +-
- sound/soc/codecs/wm8400.c       | 12 -----------
- sound/soc/fsl/fsl-asoc-card.c   | 16 +++++++-------
- sound/soc/fsl/fsl_asrc.c        | 28 ++++++++++++-------------
- sound/soc/fsl/fsl_esai.c        | 19 ++++++++++-------
- sound/soc/fsl/fsl_spdif.c       |  5 +++--
- sound/soc/fsl/fsl_ssi.c         | 28 ++++++++++++-------------
- sound/soc/fsl/fsl_ssi_dbg.c     |  4 ++--
- sound/soc/pxa/pxa-ssp.c         |  2 +-
- sound/soc/qcom/qdsp6/q6asm.c    |  1 +
- sound/soc/samsung/pcm.c         |  2 +-
- sound/soc/samsung/spdif.c       |  6 +++---
- sound/soc/soc-ac97.c            |  2 +-
- sound/soc/sti/uniperif.h        |  2 +-
- sound/soc/sunxi/sun4i-i2s.c     |  2 +-
- sound/soc/sunxi/sun4i-spdif.c   |  2 +-
- sound/soc/ti/omap-mcbsp-st.c    |  3 ---
- sound/soc/uniphier/aio-core.c   |  7 +++----
- sound/soc/ux500/ux500_msp_i2s.c |  8 +++----
- 26 files changed, 88 insertions(+), 135 deletions(-)
-
+diff --git a/sound/soc/atmel/atmel-pcm-dma.c b/sound/soc/atmel/atmel-pcm-dma.c
+index cb03c4f7324c9..0a2e956232afe 100644
+--- a/sound/soc/atmel/atmel-pcm-dma.c
++++ b/sound/soc/atmel/atmel-pcm-dma.c
+@@ -44,7 +44,7 @@ static const struct snd_pcm_hardware atmel_pcm_dma_hardware = {
+ 	.buffer_bytes_max	= 512 * 1024,
+ };
+ 
+-/**
++/*
+  * atmel_pcm_dma_irq: SSC interrupt handler for DMAENGINE enabled SSC
+  *
+  * We use DMAENGINE to send/receive data to/from SSC so this ISR is only to
 -- 
 2.25.1
 
