@@ -2,100 +2,121 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF18C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C3920720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:13:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOA54ZJ4"
+	by mail.kernel.org (Postfix) with ESMTP id 0908820738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594160233;
+	bh=igRw/elAJpmXW1QKqDLoTjdA6cufEesoAiQ9X3RKU98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=v6CHl3Qe2CnCviOIc/7IQ8n1ycFuv3YMNx/fBiil1gjI2wO09SUCx83WbiPK9Tt7+
+	 4FqWTvU/JcW+G99oom95KffpSOk1C891U/Tca0rvhNBCL6up4m6RvjYoP2Mp0IIYya
+	 6EHFzALuPqC27GN4qY/2EcLeKUvrP+7HEyV3c8Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgGGWNd (ORCPT
+        id S1728575AbgGGWRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgGGWNd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:13:33 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEDCC061755;
-        Tue,  7 Jul 2020 15:13:32 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q3so26698202ilt.8;
-        Tue, 07 Jul 2020 15:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ebHoea24iBgPzS9O9JOWhIPUCQLUd/MkaP3rwV0k9ns=;
-        b=uOA54ZJ49ZliLtaMBtzWa5R5sdXU4fhkaJKt2aCHbDZsQBe1W0jp5Qq3LXByql3TxN
-         4XUc3A9Iu76iEPLukx5bh41xAcUIodCr3M4Oo1Rsau2XU0ZvPy0eixQqD4w4Gyg0gaEH
-         865ii0tPiRcqpMFW0mMsUGRWqkoDflk/7SuawIqWZ5QEqLo7zXAa7dYXFZ6EcrKGiSa9
-         Gg0k7M/L9Q5vwFCV4n5OiFaz5uej/I20sdyNh4B3C4DRMiFpJYxJUueMdhbOc4LQosNl
-         Oq//UHgVN88QzCLO+dIst+Ggl+TQP/0yNXry8JVXytjamagrRFgEZDX/0S1zdIKV/C+1
-         brTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ebHoea24iBgPzS9O9JOWhIPUCQLUd/MkaP3rwV0k9ns=;
-        b=Y3xi1jQYlWo1bsSOoz7zAenC7GvUotCh95q9TiWUq6RLNv2siwo0Djq/IrfF62pi4Z
-         ASmeQvdIfw5iiwNvpw5CAbT67Uq7xloY86X23bDCLGV2EPrVAnLvPSmqgtENpqNEBfNs
-         XpI/YLaH8CJxMx0+BdyaQSDhR+cHREt2zj5FTu9xNg2Cydob/5MBEwl59h1YhM12q3O/
-         y3I+91okEbYkE3vwREcF7qOYT59IVdvfQW0DsskhHXE44e90a/kEL+dybbqVMDsIY70C
-         vTNwJ8cHIWGJn5l0oaxAN4GaoEd2ZWBqCeNKrr5L4D6EwMMV//2MY4Ew3EO98FVPWAL9
-         rHyw==
-X-Gm-Message-State: AOAM533yXtNk08IJ/cM7XWRDquZ5HBYLL5VfKoBAU7vvZT6bhafCHP9N
-        TmPKGuekaBPZIxNthMm2tPViFDnWlk8VTBxwgNc=
-X-Google-Smtp-Source: ABdhPJxqwaGXwz83DTFQOUjRKXL59dDxJXKiaYLJtLhFWxFQTpza0ByW2F7SfF9q63gthTZDzoQzQ4Hv3IBDoSHXfj0=
-X-Received: by 2002:a92:5b4b:: with SMTP id p72mr7632967ilb.285.1594160012404;
- Tue, 07 Jul 2020 15:13:32 -0700 (PDT)
+        Tue, 7 Jul 2020 18:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgGGWRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:17:10 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E84920720;
+        Tue,  7 Jul 2020 22:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594160230;
+        bh=igRw/elAJpmXW1QKqDLoTjdA6cufEesoAiQ9X3RKU98=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BoMX280eZ6j8c0uOMxf7N8F68APr7FNfRfBWmRG8kE/UF2+Ea/a2QAPbPTrtXkOVA
+         xH2jXglyK3hKURat5vSMKtHPYw0UE/TZ6xIKvmWcBlulRQygeyGsY4NbH+k9CQcv/r
+         QQzd+jaGi93ARw7lHyK+DiNmw5aMyiFQXU94vrIs=
+Date:   Tue, 7 Jul 2020 17:17:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] pci: enforce usage of 'pci_channel_state_t'
+Message-ID: <20200707221708.GA390968@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CAFXsbZrVZjiyO_G6z6T82t0xT36Zi2gGo0kPnt6n58R-rO3TVg@mail.gmail.com>
- <CAOMZO5DctkSWri+6Zh1HfSWFJcz=nb8eUHZsvwFwRZ_B9ZCSTg@mail.gmail.com>
-In-Reply-To: <CAOMZO5DctkSWri+6Zh1HfSWFJcz=nb8eUHZsvwFwRZ_B9ZCSTg@mail.gmail.com>
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Tue, 7 Jul 2020 15:13:21 -0700
-Message-ID: <CAFXsbZrVxE4fGhwfax7C5tJCLnbihxB6=Q4VxUisXd2OE_ut4Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM64: dts: update MDIO speed and preamble for zii-ultra device
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702162651.49526-1-luc.vanoostenryck@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 2:54 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Chris,
->
-> The subject pattern used for ARM64 i.MX patches is like:
->
-> arm64: dts: zii-ultra: update MDIO speed and preamble
+On Thu, Jul 02, 2020 at 06:26:48PM +0200, Luc Van Oostenryck wrote:
+> The definition of pci_channel_io_normal and friends is relatively
+> complicated and ugly:
+> 	typedef unsigned int __bitwise pci_channel_state_t;
+> 	enum pci_channel_state {
+> 		pci_channel_io_normal = (__force pci_channel_state_t) 1,
+> 		...
+> 	};
+> 
+> This is clearly motivated by a desire to have some strong typing
+> for this constants but:
+> * in C enums are weakly typed (they're essentially the same as 'int')
+> * sparse only allow to define bitwise ints, not bitwise enums.
+> 
+> This series is a preparation step to introduce bitwise enums.
+> This would allow to define these constant without having to use
+> the force cast:
+> 	enum __bitwise pci_channel_state {
+> 		pci_channel_io_normal = 1,
+> 		...
+> 	};
+> or, equivalently:
+> 	typedef enum __bitwise {
+> 		pci_channel_io_normal = 1,
+> 		...
+> 	} pci_channel_state_t;
+> 
+> 
+> Note: the first patch is, I think, uncontroversial, the other ones
+>       less so but can be safely dropped.
+> 
+> 
+> Changes since v1:
+> * add missing conversion
+> * try to avoid using 'enum pci_channel_state' in include/linux/pci.h
+> * try to avoid using 'enum pci_channel_state' in the documentation
+> 
+> 
+> Luc Van Oostenryck (3):
+>   pci: use 'pci_channel_state_t' instead of 'enum pci_channel_state'
+>   pci: use anonymous 'enum' instead of 'enum pci_channel_state'
+>   pci: update to doc to use 'pci_channel_state_t'
+> 
+>  Documentation/PCI/pci-error-recovery.rst    | 8 ++++----
+>  arch/powerpc/kernel/eeh_driver.c            | 2 +-
+>  drivers/block/rsxx/core.c                   | 2 +-
+>  drivers/dma/ioat/init.c                     | 2 +-
+>  drivers/media/pci/ngene/ngene-cards.c       | 2 +-
+>  drivers/misc/genwqe/card_base.c             | 2 +-
+>  drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
+>  drivers/net/ethernet/intel/ice/ice_main.c   | 2 +-
+>  drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
+>  drivers/net/ethernet/sfc/efx.c              | 2 +-
+>  drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
+>  drivers/pci/pci.h                           | 2 +-
+>  drivers/pci/pcie/err.c                      | 4 ++--
+>  drivers/pci/pcie/portdrv_pci.c              | 2 +-
+>  drivers/scsi/aacraid/linit.c                | 2 +-
+>  drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
+>  drivers/staging/qlge/qlge_main.c            | 2 +-
+>  include/linux/pci.h                         | 4 ++--
+>  18 files changed, 24 insertions(+), 24 deletions(-)
 
-Thanks for pointing this out.  I have to make a change to this patch
-anyway so I will resubmit with the correct subject pattern.
-
->
-> On Sat, Jul 4, 2020 at 10:26 PM Chris Healy <cphealy@gmail.com> wrote:
-> >
-> > Update MDIO configuration with zii-ultra device to fully utilize
-> > MDIO endpoint capabilities.  Device supports 12.5MHz clock and
-> > doesn't require MDIO preamble.
-> >
-> > Signed-off-by: Chris Healy <cphealy@gmail.com>
->
-> Other than that:
->
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Since it's all basically "use pci_channel_state_t instead of enum
+pci_channel_state", I squashed these all together and applied the
+result to pci/error for v5.8, thanks!
