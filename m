@@ -2,84 +2,69 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2871C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF012065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594117270;
-	bh=R3l7w7sSMwxmhD6/XB+NrMzrnx3QnVGQA0T4xmwnAb4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qmSk4yT2LTNiXyOLKt037a3qBjPXOu2vu03tdpb0HsyDYe3SNOEjDZZPeeTo6F/ja
-	 Ls41pDtNDL5v9u1tMVj736LIgpxlWtq++iFW5iK9/6fTnkEtJpV8YAJycj6tVQb5vR
-	 bQ6WXjH2tyieQAOhJIrBzFSSSMv2kW/wGQT0SvXM=
+	by mail.kernel.org (Postfix) with ESMTP id 4F552206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGGKVB (ORCPT
+        id S1728272AbgGGKVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgGGKTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:19:46 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402F9206DF;
-        Tue,  7 Jul 2020 10:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594117168;
-        bh=R3l7w7sSMwxmhD6/XB+NrMzrnx3QnVGQA0T4xmwnAb4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=MeCQsaO5aZfTEGpDaMWARAHdZUqxdjXcW+aMPls5l8OmXIFJ3jdv57W7VshLELA1E
-         pCPXl6L1nAvgDBAY6u0qlrqvgipXsrARNcyloD7AAd/2+PHR7noB6U9NdhmUfsk0Vl
-         scaF1lxtQEu9irmyIIAjOQRa+dEZHWSQtN4t+M9A=
-Date:   Tue, 7 Jul 2020 12:19:25 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-cc:     srinivas.pandruvada@linux.intel.com,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Zhang Lixu <lixu.zhang@intel.com>, Even Xu <even.xu@intel.com>,
-        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
-        <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] HID: intel-ish-hid: Replace PCI_DEV_FLAGS_NO_D3 with
- pci_save_state
-In-Reply-To: <20200629041648.19113-1-kai.heng.feng@canonical.com>
-Message-ID: <nycvar.YFH.7.76.2007071219140.15962@cbobk.fhfr.pm>
-References: <20200629041648.19113-1-kai.heng.feng@canonical.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 7 Jul 2020 06:21:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7262 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727936AbgGGKUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:20:43 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7BD35A78D68840B548BE;
+        Tue,  7 Jul 2020 18:20:34 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Jul 2020 18:20:24 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <hare@suse.de>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <robert.w.love@intel.com>, <Neerav.Parikh@intel.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jingxiangfeng@huawei.com>
+Subject: [PATCH] scsi: fcoe: add missed kfree() in an error path
+Date:   Tue, 7 Jul 2020 18:24:31 +0800
+Message-ID: <20200707102431.178675-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020, Kai-Heng Feng wrote:
+fcoe_fdmi_info() misses to call kfree() in an error path.
+Add the missed function call to fix it.
 
-> PCI_DEV_FLAGS_NO_D3 should not be used outside of PCI core.
-> 
-> Instead, we can use pci_save_state() to hint PCI core that the device
-> should stay at D0 during suspend. By doing so, PCI core will let the
-> upstream bridges also stays at D0 so the entire hierarchy is in the
-> correct power state as PCI spec mandates.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v3:
->  - Use multi-line comments.
-> v2:
->  - Wording change.
+Fixes: f07d46bbc9ba ("fcoe: Fix smatch warning in fcoe_fdmi_info function")
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ drivers/scsi/fcoe/fcoe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied, thanks.
-
+diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+index 25dae9f0b205..976f70cbe043 100644
+--- a/drivers/scsi/fcoe/fcoe.c
++++ b/drivers/scsi/fcoe/fcoe.c
+@@ -830,6 +830,7 @@ static void fcoe_fdmi_info(struct fc_lport *lport, struct net_device *netdev)
+ 		if (rc) {
+ 			printk(KERN_INFO "fcoe: Failed to retrieve FDMI "
+ 					"information from netdev.\n");
++			kfree(fdmi);
+ 			return;
+ 		}
+ 
 -- 
-Jiri Kosina
-SUSE Labs
+2.17.1
 
