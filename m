@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF765C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277C7206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE76A206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135335;
-	bh=SaU6faIfkLOai/TtYZSn8aYY+GDh7kDuUDRzTcFNcX8=;
+	s=default; t=1594135338;
+	bh=YkPX7C835u0Pj/MOlkpss0mapDUcaO+iKRlRfbVBS50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUqqRAoNSDq2GjlEy8RZ97O+dZ4lDKwIyj7xOAtU8QFGtUbQGOb1MoTXAfMkJ9713
-	 t6VGb7c0u4923I1yuyg/QlmCEB26lV+0KVbPpZH0FBzIjnJ750bqMLCdq1BS6YGmQ2
-	 psFJYiAWN0a/az7pkJnKgdSM7gSBACwXaOGFnDMc=
+	b=py1X/WJl1zcunaXwUVC+cz541XKvSlEqUHNWRd3uWTCZDiotwK3Dm2T7WRUt0LkyD
+	 jVOANt0X0lRTq7vVaDU/QpG7kFAJH6MK0VH6ftIPjZMbpwrlGA9mfDNqsLH0FBgQZP
+	 9sLFauFzFQO69AtWIdC+Vz0TbcGBuOXKBsDmSayg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgGGPWO (ORCPT
+        id S1729175AbgGGPWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbgGGPWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:10 -0400
+        id S1729802AbgGGPWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41BDF206E2;
-        Tue,  7 Jul 2020 15:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49E2206F6;
+        Tue,  7 Jul 2020 15:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135329;
-        bh=SaU6faIfkLOai/TtYZSn8aYY+GDh7kDuUDRzTcFNcX8=;
+        s=default; t=1594135332;
+        bh=YkPX7C835u0Pj/MOlkpss0mapDUcaO+iKRlRfbVBS50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+QqFhK3h/n6edVHdEUpuKZ9KSaCxYiboj++nOiO+MMUsTkxshdeSdNhbdGVFpjN4
-         m85mcIDplpaeiVyNupC01lTnZ9W1sU7TMZ6QqJevAoKhtDadBpRfBHYygYzvE6LYbs
-         tDb5YFmfOmcfHiyNdNNARTTDR/UYDnSjzEDGYk5s=
+        b=Evx2kGZ4IS/fZ/ZHJoVJaGQq+8877rw4GlNiXDvhn9i4eEe4AZIBDK1IGdAKdjawm
+         hWjCBRPdpl92J8Y4Dh8rrYn1KnTjwG8E5DHNnXRvseWss+aN+XQ/88cXpkHtgzWJb4
+         AhtuNKmGehyBScTJYm5vU+PE5sqWXKfG2S7g0ejU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Hugh Dickins <hughd@google.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Wang <liwang@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 62/65] mm, compaction: make capture control handling safe wrt interrupts
-Date:   Tue,  7 Jul 2020 17:17:41 +0200
-Message-Id: <20200707145755.470278154@linuxfoundation.org>
+        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 63/65] x86/resctrl: Fix memory bandwidth counter width for AMD
+Date:   Tue,  7 Jul 2020 17:17:42 +0200
+Message-Id: <20200707145755.516964685@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -64,93 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Babu Moger <babu.moger@amd.com>
 
-commit b9e20f0da1f5c9c68689450a8cb436c9486434c8 upstream.
+commit 2c18bd525c47f882f033b0a813ecd09c93e1ecdf upstream.
 
-Hugh reports:
+Memory bandwidth is calculated reading the monitoring counter
+at two intervals and calculating the delta. It is the software’s
+responsibility to read the count often enough to avoid having
+the count roll over _twice_ between reads.
 
- "While stressing compaction, one run oopsed on NULL capc->cc in
-  __free_one_page()'s task_capc(zone): compact_zone_order() had been
-  interrupted, and a page was being freed in the return from interrupt.
+The current code hardcodes the bandwidth monitoring counter's width
+to 24 bits for AMD. This is due to default base counter width which
+is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
+to adjust the counter width. But, the AMD hardware supports much
+wider bandwidth counter with the default width of 44 bits.
 
-  Though you would not expect it from the source, both gccs I was using
-  (4.8.1 and 7.5.0) had chosen to compile compact_zone_order() with the
-  ".cc = &cc" implemented by mov %rbx,-0xb0(%rbp) immediately before
-  callq compact_zone - long after the "current->capture_control =
-  &capc". An interrupt in between those finds capc->cc NULL (zeroed by
-  an earlier rep stos).
+Kernel reads these monitoring counters every 1 second and adjusts the
+counter value for overflow. With 24 bits and scale value of 64 for AMD,
+it can only measure up to 1GB/s without overflowing. For the rates
+above 1GB/s this will fail to measure the bandwidth.
 
-  This could presumably be fixed by a barrier() before setting
-  current->capture_control in compact_zone_order(); but would also need
-  more care on return from compact_zone(), in order not to risk leaking
-  a page captured by interrupt just before capture_control is reset.
+Fix the issue setting the default width to 44 bits by adjusting the
+offset.
 
-  Maybe that is the preferable fix, but I felt safer for task_capc() to
-  exclude the rather surprising possibility of capture at interrupt
-  time"
+AMD future products will implement CPUID 0xF.[ECX=1]:EAX.
 
-I have checked that gcc10 also behaves the same.
+ [ bp: Let the line stick out and drop {}-brackets around a single
+   statement. ]
 
-The advantage of fix in compact_zone_order() is that we don't add
-another test in the page freeing hot path, and that it might prevent
-future problems if we stop exposing pointers to uninitialized structures
-in current task.
-
-So this patch implements the suggestion for compact_zone_order() with
-barrier() (and WRITE_ONCE() to prevent store tearing) for setting
-current->capture_control, and prevents page leaking with
-WRITE_ONCE/READ_ONCE in the proper order.
-
-Link: http://lkml.kernel.org/r/20200616082649.27173-1-vbabka@suse.cz
-Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: Hugh Dickins <hughd@google.com>
-Suggested-by: Hugh Dickins <hughd@google.com>
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Li Wang <liwang@redhat.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>	[5.1+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- mm/compaction.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
 
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2310,15 +2310,26 @@ static enum compact_result compact_zone_
- 		.page = NULL,
- 	};
+---
+ arch/x86/kernel/cpu/resctrl/core.c     |    2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |    3 +++
+ arch/x86/kernel/cpu/resctrl/monitor.c  |    3 ++-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -260,6 +260,7 @@ static bool __get_mem_config_intel(struc
+ 	r->num_closid = edx.split.cos_max + 1;
+ 	r->membw.max_delay = eax.split.max_delay + 1;
+ 	r->default_ctrl = MAX_MBA_BW;
++	r->membw.mbm_width = MBM_CNTR_WIDTH;
+ 	if (ecx & MBA_IS_LINEAR) {
+ 		r->membw.delay_linear = true;
+ 		r->membw.min_bw = MAX_MBA_BW - r->membw.max_delay;
+@@ -289,6 +290,7 @@ static bool __rdt_get_mem_config_amd(str
+ 	/* AMD does not use delay */
+ 	r->membw.delay_linear = false;
  
--	current->capture_control = &capc;
-+	/*
-+	 * Make sure the structs are really initialized before we expose the
-+	 * capture control, in case we are interrupted and the interrupt handler
-+	 * frees a page.
-+	 */
-+	barrier();
-+	WRITE_ONCE(current->capture_control, &capc);
++	r->membw.mbm_width = MBM_CNTR_WIDTH_AMD;
+ 	r->membw.min_bw = 0;
+ 	r->membw.bw_gran = 1;
+ 	/* Max value is 2048, Data width should be 4 in decimal */
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -32,6 +32,7 @@
+ #define CQM_LIMBOCHECK_INTERVAL	1000
  
- 	ret = compact_zone(&cc, &capc);
+ #define MBM_CNTR_WIDTH			24
++#define MBM_CNTR_WIDTH_AMD		44
+ #define MBM_OVERFLOW_INTERVAL		1000
+ #define MAX_MBA_BW			100u
+ #define MBA_IS_LINEAR			0x4
+@@ -368,6 +369,7 @@ struct rdt_cache {
+  * @min_bw:		Minimum memory bandwidth percentage user can request
+  * @bw_gran:		Granularity at which the memory bandwidth is allocated
+  * @delay_linear:	True if memory B/W delay is in linear scale
++ * @mbm_width:		memory B/W monitor counter width
+  * @mba_sc:		True if MBA software controller(mba_sc) is enabled
+  * @mb_map:		Mapping of memory B/W percentage to memory B/W delay
+  */
+@@ -376,6 +378,7 @@ struct rdt_membw {
+ 	u32		min_bw;
+ 	u32		bw_gran;
+ 	u32		delay_linear;
++	u32		mbm_width;
+ 	bool		mba_sc;
+ 	u32		*mb_map;
+ };
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -216,8 +216,9 @@ void free_rmid(u32 rmid)
  
- 	VM_BUG_ON(!list_empty(&cc.freepages));
- 	VM_BUG_ON(!list_empty(&cc.migratepages));
+ static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr)
+ {
+-	u64 shift = 64 - MBM_CNTR_WIDTH, chunks;
++	u64 shift, chunks;
  
--	*capture = capc.page;
--	current->capture_control = NULL;
-+	/*
-+	 * Make sure we hide capture control first before we read the captured
-+	 * page pointer, otherwise an interrupt could free and capture a page
-+	 * and we would leak it.
-+	 */
-+	WRITE_ONCE(current->capture_control, NULL);
-+	*capture = READ_ONCE(capc.page);
- 
- 	return ret;
++	shift = 64 - rdt_resources_all[RDT_RESOURCE_MBA].membw.mbm_width;
+ 	chunks = (cur_msr << shift) - (prev_msr << shift);
+ 	return chunks >>= shift;
  }
 
 
