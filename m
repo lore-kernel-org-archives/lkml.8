@@ -2,143 +2,129 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47106C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0495C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAE120739
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UdqHyib+"
+	by mail.kernel.org (Postfix) with ESMTP id B4A6420739
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgGGGJQ (ORCPT
+        id S1726911AbgGGGLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:09:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33098 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727008AbgGGGJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:09:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594102153;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M6vzX4pgRklp7CNc1swxRtrbo/Er7OvueNgs+gb+Ros=;
-        b=UdqHyib+bFEoy+PsSqKBd+2CG+lUOzAoyTIl+d3I64dJ0Ugbjutc5ZjHAOXyigjuX3sLKy
-        r4Peav3naEwhtcYmpgmgTbDDHub1W7e9ti6vyuu3DLagRrjZ5IGJ1ZbWeymKk40uFVULL9
-        cF3OMZy5kD1CBCzFiptlAkHnYIWK4Jc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-sQPcG_A1O8m0LYGZvKO0OQ-1; Tue, 07 Jul 2020 02:09:09 -0400
-X-MC-Unique: sQPcG_A1O8m0LYGZvKO0OQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6975880058A;
-        Tue,  7 Jul 2020 06:09:08 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 528D25C1B2;
-        Tue,  7 Jul 2020 06:08:59 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 08:08:57 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, Hangbin Liu <haliu@redhat.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>, Yonghong Song <yhs@fb.com>,
-        Martin Lau <kafai@fb.com>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, brouer@redhat.com
-Subject: Re: [PATCH bpf-next V2 2/2] selftests/bpf: test_progs avoid minus
- shell exit codes
-Message-ID: <20200707080857.29d45856@carbon>
-In-Reply-To: <CAEf4BzZ=v1fMxfxP9XdtEOmQV97XdwJ+Ago++VyVN19-TmeF3A@mail.gmail.com>
-References: <159405478968.1091613.16934652228902650021.stgit@firesoul>
-        <159405481655.1091613.6475075949369245359.stgit@firesoul>
-        <CAEf4BzZ=v1fMxfxP9XdtEOmQV97XdwJ+Ago++VyVN19-TmeF3A@mail.gmail.com>
+        Tue, 7 Jul 2020 02:11:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:46685 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgGGGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:11:07 -0400
+IronPort-SDR: p0PIgJrCUjLrCw3eYmG7Qwf6TMQF1mEERDcY4k5Xsw/TI0gyOQ6rtcg0Jzhum+ZI34+K66Y1fw
+ 7Wi47KhbmHfw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145643551"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="145643551"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 23:11:06 -0700
+IronPort-SDR: Ic5QahZia01aDkIbIo2DsFJbqUaDAzcEjxU8uOBOuZYpCMIDaWYZ82c/A4btsliPneit15TAbl
+ P7YTbI4R6aig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="305542613"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 23:11:06 -0700
+Date:   Mon, 6 Jul 2020 23:11:05 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
+Message-ID: <20200707061105.GH5208@linux.intel.com>
+References: <20200702174455.282252-1-mlevitsk@redhat.com>
+ <20200702181606.GF3575@linux.intel.com>
+ <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 15:17:57 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Mon, Jul 6, 2020 at 10:00 AM Jesper Dangaard Brouer
-> <brouer@redhat.com> wrote:
-> >
-> > There are a number of places in test_progs that use minus-1 as the argument
-> > to exit(). This improper use as a process exit status is masked to be a
-> > number between 0 and 255 as defined in man exit(3).  
+On Sun, Jul 05, 2020 at 12:40:25PM +0300, Maxim Levitsky wrote:
+> > Rather than compute the mask every time, it can be computed once on module
+> > load and stashed in a global.  Note, there's a RFC series[*] to support
+> > reprobing bugs at runtime, but that has bigger issues with existing KVM
+> > functionality to be addressed, i.e. it's not our problem, yet :-).
+> > 
+> > [*] https://lkml.kernel.org/r/1593703107-8852-1-git-send-email-mihai.carabas@oracle.com
 > 
-> nit: I wouldn't call it improper use, as it's a well defined behavior
-> (lower byte of returned integer).
-> 
-> >
-> > This patch use two different positive exit codes instead, to allow a shell  
-> 
-> typo: uses
-> 
-> > script to tell the two error cases apart.
-> >
-> > Fixes: fd27b1835e70 ("selftests/bpf: Reset process and thread affinity after each test/sub-test")
-> > Fixes: 811d7e375d08 ("bpf: selftests: Restore netns after each test")
-> > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> > ---
-> >  tools/testing/selftests/bpf/test_progs.c |   12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-> > index e8f7cd5dbae4..50803b080593 100644
-> > --- a/tools/testing/selftests/bpf/test_progs.c
-> > +++ b/tools/testing/selftests/bpf/test_progs.c
-> > @@ -12,7 +12,9 @@
-> >  #include <string.h>
-> >  #include <execinfo.h> /* backtrace */
-> >
-> > -#define EXIT_NO_TEST 2
-> > +#define EXIT_NO_TEST           2
-> > +#define EXIT_ERR_NETNS         3
-> > +#define EXIT_ERR_RESET_AFFINITY        4  
-> 
-> Let's not overdo this with too granular error codes? All of those seem
-> to be just a failure, is there any practical need to differentiate
-> between NETNS vs RESET_AFFINITY failure?
+> Thanks for the pointer!
+>  
+> Note though that the above code only runs once, since after a single
+> successful (non #GP) set of it to non-zero value, it is cleared in MSR bitmap
+> for both reads and writes on both VMX and SVM.
 
-I agree, because both cases (NETNS vs RESET_AFFINITY) print to stderr,
-which makes it possible to troubleshoot for a human afterwards.  The
-shell script just need to differentiate that is an "infra" setup issue,
-as we e.g. might want to allow the RPM build to continue in those cases.
+For me the performance is secondary to documenting the fact that the host
+valid bits are fixed for a given instance of the kernel.  There's enough
+going on in kvm_spec_ctrl_valid_bits_host() that's it's not super easy to
+see that it's a "constant" value.
 
+> This is done because of performance reasons which in this case are more
+> important than absolute correctness.  Thus to some extent the guest checks in
+> the above are pointless.
+>  
+> If you ask me, I would just remove the kvm_spec_ctrl_valid_bits, and pass
+> this msr to guest right away and not on first access.
 
-> I'd go with 3 values:
-> 
-> 1 - at least one test failed
-> 2 - no tests were selected
-> 3 - "infra" (not a test-specific failure) error (like netns or affinity failed).
-> 
-> Thoughts?
+That would unnecessarily penalize guests that don't utilize the MSR as KVM
+would need to do a RDMSR on every VM-Exit to grab the guest's value.
 
-Sure, I can do this.
+One oddity with this whole thing is that by passing through the MSR, KVM is
+allowing the guest to write bits it doesn't know about, which is definitely
+not normal.  It also means the guest could write bits that the host VMM
+can't.
 
-What define name reflect this best:
- EXIT_ERR_SETUP ?
- EXIT_ERR_INFRA ?
- EXIT_ERR_SETUP_INFRA ?
+Somehwat crazy idea inbound... rather than calculating the valid bits in
+software, what if we throw the value at the CPU and see if it fails?  At
+least that way the host and guest are subject to the same rules.  E.g.
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2062,11 +2062,19 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+                    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+                        return 1;
+
+-               if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+-                       return 1;
+-
++               ret = 0;
+                vmx->spec_ctrl = data;
+-               if (!data)
++
++               local_irq_disable();
++               if (rdmsrl_safe(MSR_IA32_SPEC_CTRL, &data))
++                       ret = 1;
++               else if (wrmsrl_safe(MSR_IA32_SPEC_CTRL, vmx->spec_ctrl))
++                       ret = 1;
++               else
++                       wrmsrl(MSR_IA32_SPEC_CTRL, data))
++               local_irq_enable();
++
++               if (ret || !vmx->spec_ctrl)
+                        break;
+
+                /*
 
