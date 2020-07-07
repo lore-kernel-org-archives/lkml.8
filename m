@@ -2,85 +2,123 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8920BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69EC12075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594154046;
-	bh=22247wNSUaVMbBxUM4HAY4IX0OgMCfGAtnzOBJT9N5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WHTZi2nsda9nJfHFZdmQGIFoq4x4Dt+3AU6gA0U+55r4/5cn90D0UOnEftorVLdrT
-	 XZ7hcwGjwH1+HcH3x9IY/YDiO/uAmMCFVEMDULzmg7ARr8DN0eqN/CJS+w9vsrRKng
-	 HwJAEvh3rF7rLDSBsxDk2TGOM7jj02ZDrAIk+geU=
+	by mail.kernel.org (Postfix) with ESMTP id B0731206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:36:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ztuh0++A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgGGUeF (ORCPT
+        id S1728877AbgGGUgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728347AbgGGUeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:34:04 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA81206E2;
-        Tue,  7 Jul 2020 20:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594154044;
-        bh=22247wNSUaVMbBxUM4HAY4IX0OgMCfGAtnzOBJT9N5c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EvIgD2qRQFfglKXfInCCRBKgY2It04EIB3ttX9LKmCYvkuqpUU8rpL4QlEI4QrVAN
-         vXVo0lvxVpllhYrN0bx4ecHr97N1CMSSE0oB/WfEO0gIhFzvUhgKk3epwL52vbrxHa
-         Eq+SwfiLSPFmuF7hrio/XCB2NnIRZXrG7p1vX20c=
-Date:   Tue, 7 Jul 2020 13:34:02 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Subject: Re: [PATCH 1/6] fs/minix: check return value of sb_getblk()
-Message-ID: <20200707203402.GB3426938@gmail.com>
-References: <20200628060846.682158-1-ebiggers@kernel.org>
- <20200628060846.682158-2-ebiggers@kernel.org>
- <20200707122612.249699c3f136968dd6782452@linux-foundation.org>
+        Tue, 7 Jul 2020 16:36:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgGGUgU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:36:20 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2602EC061755;
+        Tue,  7 Jul 2020 13:36:20 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id k27so4462229pgm.2;
+        Tue, 07 Jul 2020 13:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kYdONvMdJAADML4BPPbRbs7311WOl+MmOi58FDooBKo=;
+        b=Ztuh0++A/C/3gGj6shzPsBd5YTUcajDUvpDLzheQE94FqM4Zgij8EkBSXVR0pKZhG4
+         mCIeJ/M7KrkHlql0bZnwslTWYz+snttwyYDTz7qzEY3mkIVWo8QXQ0m3uP5Gsif6vQ4u
+         dGAVa71d0kwaDr8KSO5+xztFesKkc5lisTTycGm3smRn/uhtk2LeTJBdHiEXtVPUBrpC
+         J9yYxforKh3D7XuCL6XQKtsVZWP/GmxXgyD95FnOE9cIpUJHmNPcdVDFvAGmQfDgrv0s
+         hDuSQCgycc5wloMRljI6NHVGBZHa7mASXTooTZ0/JLhupWZzTTO6vqxrg2QDl+vV1Nss
+         4Axg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kYdONvMdJAADML4BPPbRbs7311WOl+MmOi58FDooBKo=;
+        b=p7SeQrUKP6WpINKicE9yC+JecqByi+qyXKNT3Yqb9Zn/oMvl2BmV/ntvzUoxsrOZeA
+         wA0RT4NpZo3EHN/kYmMZPdvnNhGFnt1Dj9RvE8nFUQD2wXFWjclT0jnxhqJhrZ6hbPjD
+         zD12v/TX05qAmwSLX35yUb/u1fZkPRhJQqG/Bt1QmCtrCqKCgyjaA5euftkQAPDl5nZf
+         p+aaSIh0jda+KTczhOAT7b9ErK9MIuPQbr6rsvE5kN80EwTfEXCL+aFkF4neVDfT+s5u
+         l75bYyefTXxj8OomxizGDeZTd6rk1KMicgoSzLsB7qmLHiqn8COBxMlpucZ3TSSVPrRu
+         bPww==
+X-Gm-Message-State: AOAM530CggLXtEx6yexu1QMuYGi/ZS+4N8h9PsJSmhzWSqtTZmZUf9da
+        uZzOlAtK1R5ZKsrItn8lKY4=
+X-Google-Smtp-Source: ABdhPJzhV3qXUyNVtweFO4xS/ZbBj105176Kpc6BoO2oGQwnKkqdFkpWsOYX28d8ssKhm3VlR559aQ==
+X-Received: by 2002:a63:a558:: with SMTP id r24mr47731179pgu.70.1594154179555;
+        Tue, 07 Jul 2020 13:36:19 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id q7sm23942952pfn.23.2020.07.07.13.36.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 13:36:18 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Eric Anholt <eric@anholt.net>,
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), Harigovindan P <harigovi@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list),
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>
+Subject: [PATCH 0/2] drm/msm/adreno: cleanup some packet building
+Date:   Tue,  7 Jul 2020 13:34:58 -0700
+Message-Id: <20200707203529.2098979-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707122612.249699c3f136968dd6782452@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:26:12PM -0700, Andrew Morton wrote:
-> On Sat, 27 Jun 2020 23:08:40 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
-> 
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > sb_getblk() can fail, so check its return value.
-> > 
-> > This fixes a NULL pointer dereference.
-> > 
-> > Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > Cc: stable@vger.kernel.org
-> > Originally-from: Qiujun Huang <anenbupt@gmail.com>
-> 
-> Originally-from: isn't really a thing.  Did the original come with a
-> signed-off-by:?
-> 
+From: Rob Clark <robdclark@chromium.org>
 
-Yes it did.  Qiujun's patch was
-https://lkml.kernel.org/lkml/20200323125700.7512-1-hqjagain@gmail.com
-But I basically started from scratch anyway and my patch ended up different,
-so I didn't leave the original "Author:".  Feel free to adjust the patch.
+Resync generated headers, which we haven't done in a while, and cleanup
+some open coded packet building.
 
-- Eric
+Rob Clark (2):
+  drm/msm: sync generated headers
+  drm/msm/adreno: un-open-code some packets
+
+ drivers/gpu/drm/msm/adreno/a2xx.xml.h         | 1102 +++++++-
+ drivers/gpu/drm/msm/adreno/a3xx.xml.h         |   85 +-
+ drivers/gpu/drm/msm/adreno/a4xx.xml.h         |   87 +-
+ drivers/gpu/drm/msm/adreno/a5xx.xml.h         |  156 +-
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |    5 +-
+ drivers/gpu/drm/msm/adreno/a6xx.xml.h         | 2305 ++++++++++++++---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h     |   28 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |   11 +-
+ .../gpu/drm/msm/adreno/adreno_common.xml.h    |   29 +-
+ drivers/gpu/drm/msm/adreno/adreno_pm4.xml.h   |  932 ++++++-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4.xml.h      |    2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5.xml.h      |    2 +-
+ drivers/gpu/drm/msm/disp/mdp_common.xml.h     |    2 +-
+ drivers/gpu/drm/msm/dsi/dsi.xml.h             |  208 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c            |   14 +-
+ drivers/gpu/drm/msm/dsi/mmss_cc.xml.h         |    2 +-
+ drivers/gpu/drm/msm/dsi/sfpb.xml.h            |    2 +-
+ drivers/gpu/drm/msm/edp/edp.xml.h             |    2 +-
+ drivers/gpu/drm/msm/hdmi/hdmi.xml.h           |    2 +-
+ drivers/gpu/drm/msm/hdmi/qfprom.xml.h         |    2 +-
+ 20 files changed, 4328 insertions(+), 650 deletions(-)
+
+-- 
+2.26.2
+
