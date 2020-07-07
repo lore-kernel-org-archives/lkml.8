@@ -2,102 +2,189 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96674C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4302C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752E42075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594114825;
-	bh=ncpZrogq3J8lmjYVURRcrUwe28LiM7BV6dS0EhuvMYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IlYhha1qoUstsj4jz+6MgYbHQiKuRJRbRsnaG2CA7C3t7bAwVjIjyCh4+1Eqp9Tvb
-	 Joj37opDzVUpw9PO04MVErDzKSolAtrz9fEotXhSKqW0ncMUYbJD/3Jvq+3b77ztwY
-	 NEwWHB0igVS2DYSmPfK0qEpqURRJvPhtkX1+p12A=
+	by mail.kernel.org (Postfix) with ESMTP id 9E28C206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sOGIb1BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGGJkY (ORCPT
+        id S1728288AbgGGJke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbgGGJkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:40:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 748922065F;
-        Tue,  7 Jul 2020 09:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594114821;
-        bh=ncpZrogq3J8lmjYVURRcrUwe28LiM7BV6dS0EhuvMYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qpoN0vyZtStKSEGEbjrGotpdOhig7Flj630Ebfzd7XzgvP3pkzPdr9qyKetD14bjC
-         4onI/J8co2fF4Z2iBwsMeP2PU5/c4EFBqjz7si14mxt7+zcBYu+BQbG+0UWT+0Vev/
-         F/yBgirTg64y7+pXStMAUrnp05wefaOurTN5TDUg=
-Date:   Tue, 7 Jul 2020 11:40:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Cathy Zhang <cathy.zhang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
-        kyung.min.park@intel.com, jpoimboe@redhat.com, ak@linux.intel.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 2/4] x86/cpufeatures: Enumerate TSX suspend load
- address tracking instructions
-Message-ID: <20200707094019.GA2639362@kroah.com>
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
- <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
+        Tue, 7 Jul 2020 05:40:34 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60318 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgGGJkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:40:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200707094032euoutp02b4124f7393e95ecf4c8fc64570135d6c~fbv6TCCeI1576815768euoutp02K
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:40:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200707094032euoutp02b4124f7393e95ecf4c8fc64570135d6c~fbv6TCCeI1576815768euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594114832;
+        bh=NKIXIZf7DqPM44p634PRRQQpgwlo737WpVwaop6YS/g=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sOGIb1BW/40xaj8x9YhGIpD57NGrAvROgKGk93RNW5GHXK1UpyxgPS6tiWEoO2sZN
+         0nwgX2MW0/AkcMQ+jPZ7NiSuZl742N2uo5UcxndmbuASgxEeG4cexd4CX9/wEJSu3p
+         /HU/16m0NcWbHIzg4NIMJgZlCNZ0ppSNgfGp7mms=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200707094032eucas1p1561b02b886cf5d6b07ab5f897da3a11f~fbv55PHXs0287902879eucas1p1-;
+        Tue,  7 Jul 2020 09:40:32 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id A9.67.05997.013440F5; Tue,  7
+        Jul 2020 10:40:32 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200707094031eucas1p167fcabe5e1275d9d8584de4baccc36fc~fbv5kG1Zu0287902879eucas1p1_;
+        Tue,  7 Jul 2020 09:40:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200707094031eusmtrp224005f38d42d83c2425b55661f7c16bd~fbv5jYt8d0878708787eusmtrp2H;
+        Tue,  7 Jul 2020 09:40:31 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-07-5f04431045b6
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id DF.69.06314.F03440F5; Tue,  7
+        Jul 2020 10:40:31 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200707094029eusmtip24fc305116ea90ec9f9c6e9d4392554ca~fbv3CyALk0258102581eusmtip2U;
+        Tue,  7 Jul 2020 09:40:29 +0000 (GMT)
+Subject: Re: [PATCH v7 08/36] drm: exynos: fix common struct sg_table
+ related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <53d2ae18-3d60-773f-4544-3c8f55749038@samsung.com>
+Date:   Tue, 7 Jul 2020 11:40:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
+In-Reply-To: <20200619103636.11974-9-m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOTM747i5Nq6WB63MrRCLtLJiwLDUkJGC6o+BkDrl4G0vtquW
+        QbhkiGxkXvK2aS2SeMd01900UNouunhZMfGChpf1R0qL5S2L0nYcI/8953zv+33fezgEKh7C
+        vIgkeRqrlDNSCS4UGD/+tB4nwwWxJ5ZNu6nHAxaEailrxqjh1UWcqmv4gFC6rmBqZXgGoVpt
+        Ixj1qaMCp8qsnQjV9P6zE/X22xxGlRXN4xdc6MbnjYA2rU1j9NSjboTWv8yiJzZsKF00VgPo
+        N+NqnM4z1AN6ufXAVedo4bl4VpqUwSoDQ+KEiYUTu1JtHnfNbV8RNchx0wCCgORpOPssTgOE
+        hJisBbBm6YcTf1gBsHLdgvKHZQBLxq1AA5y3HNWWQoxjMVkDYPZsPC9aBLBpdFDAtXUno+Do
+        pg+n8SANDk1xBKdByWIE2oydKFfASX/4Rz+OcywiQ2B5vnlrgIA8DA3NrQjHe8gY2DxvQniN
+        G7SUzwk4dnboWzYNW16U9IEmewXKsyd8sFKHccMg+d0J1umLUX7ri7C7emGb3eFCt8GJ531w
+        s/0FwnMWnKp9iPLmXADbXrVvG4Lh5MAvnEuGOrZu7gjk3y4UtmUf4dEVjtnd+BVcYaGxFOWv
+        RTA3R8z38IVT/W3b/Txh9eAqng8k2h3BtDvCaHeE0f4fqwOCeuDJpqtkCazqlJy9E6BiZKp0
+        eULALYWsFTh+Wu9G98pr0PH7phmQBJC4iHJxNFaMMRmqTJkZQAKVeIjC+ntjxKJ4JvMeq1TE
+        KtOlrMoMvAmBxFMUVDV/Q0wmMGlsCsumssp/VYRw9lKDp/kF68m+MtuZteuLGmNJl+LJ9Lvb
+        ey9HFVRTh7QjS3qfS8es5Vj6ULbX/mBlT9Xwgj38bMpoqCbLvcE/jDBda1R/oYqZoOTJg1Zj
+        RJdfT+SVykhF37Qk1E8crWe0k3Z6Ro7NW88X5NmFuSnJ9b5WvXe7LtWScL9Ul5fYJ5UIVInM
+        yaOoUsX8Bby5r5xlAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsVy+t/xe7r8zizxBhcfmVv0njvJZLFxxnpW
+        iytf37NZrFx9lMliwX5riy9XHjJZbHp8jdXi8q45bBYzzu9jslh75C67xcEPT1gtZkx+yebA
+        47Fm3hpGj+3fHrB63O8+zuSxeUm9x+1/j5k9Jt9Yzuix+2YDm0ffllWMHp83yQVwRunZFOWX
+        lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlTLrNXfBYpOLQ
+        1jdMDYxtgl2MnBwSAiYSS09OYu1i5OIQEljKKPHw810miIS4xO75b5khbGGJP9e62CCK3jJK
+        fFkyDSwhLBAmcaLjJli3iMAWRolnKw4zgjjMAtOZJG52/YCae5RR4sqyCWAtbAKaEn8332QD
+        sXkF7CRmTjjECGKzCKhIbFm/CWy3qECcxPIt89khagQlTs58wgJicwLVb/y/BayXWcBMYt7m
+        h8wQtrzE9rdzoGxxiaYvK1knMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1ya
+        l66XnJ+7iREYz9uO/dy8g/HSxuBDjAIcjEo8vAlHmOOFWBPLiitzDzFKcDArifA6nT0dJ8Sb
+        klhZlVqUH19UmpNafIjRFOi5icxSosn5wFSTVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
+        JDU7NbUgtQimj4mDU6qB0ZV1eqvW5kxGBT/G0qmNIRmqeXcObzFNqVYpeXCA5fWX1zNXaZ0O
+        nGOYP0t7aR33lT1BEcH3TwSUZXPFvii+9CBIYbLx1X7O5EXndq+TdG7RKTxYcSfJdlOvzAIH
+        oXKBRUHmLf97VFg8frvVXP6/y/1w5guTT8f9BBL/C/dv2iNR5zWxLstZiaU4I9FQi7moOBEA
+        P2s+Qv0CAAA=
+X-CMS-MailID: 20200707094031eucas1p167fcabe5e1275d9d8584de4baccc36fc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9
+References: <20200619103636.11974-1-m.szyprowski@samsung.com>
+        <CGME20200619103658eucas1p1c3236e2de2798c2d8c02279a9263e9a9@eucas1p1.samsung.com>
+        <20200619103636.11974-9-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:16:21AM +0800, Cathy Zhang wrote:
-> Intel TSX suspend load tracking instructions aim to give a way to
-> choose which memory accesses do not need to be tracked in the TSX
-> read set. Add TSX suspend load tracking CPUID feature flag TSXLDTRK
-> for enumeration.
-> 
-> A processor supports Intel TSX suspend load address tracking if
-> CPUID.0x07.0x0:EDX[16] is present. Two instructions XSUSLDTRK, XRESLDTRK
-> are available when this feature is present.
-> 
-> The CPU feature flag is shown as "tsxldtrk" in /proc/cpuinfo.
-> 
-> Detailed information on the instructions and CPUID feature flag TSXLDTRK
-> can be found in the latest Intel Architecture Instruction Set Extensions
-> and Future Features Programming Reference and Intel 64 and IA-32
-> Architectures Software Developer's Manual.
-> 
-> Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
-> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
+
+On 19.06.2020 12:36, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+>
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+>
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+>
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+Reviewed-by <a.hajda@samsung.com>
+
+Regards
+Andrzej
+
+
 > ---
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index adf45cf..34b66d7 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -366,6 +366,7 @@
->  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
->  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
->  #define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
-> +#define X86_FEATURE_TSX_LDTRK           (18*32+16) /* TSX Suspend Load Address Tracking */
-
-No tabs?
-
-:(
-
+>   drivers/gpu/drm/exynos/exynos_drm_g2d.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> index fcee33a43aca..7014a8cd971a 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> @@ -395,8 +395,8 @@ static void g2d_userptr_put_dma_addr(struct g2d_data *g2d,
+>   		return;
+>   
+>   out:
+> -	dma_unmap_sg(to_dma_dev(g2d->drm_dev), g2d_userptr->sgt->sgl,
+> -			g2d_userptr->sgt->nents, DMA_BIDIRECTIONAL);
+> +	dma_unmap_sgtable(to_dma_dev(g2d->drm_dev), g2d_userptr->sgt,
+> +			  DMA_BIDIRECTIONAL, 0);
+>   
+>   	pages = frame_vector_pages(g2d_userptr->vec);
+>   	if (!IS_ERR(pages)) {
+> @@ -511,10 +511,10 @@ static dma_addr_t *g2d_userptr_get_dma_addr(struct g2d_data *g2d,
+>   
+>   	g2d_userptr->sgt = sgt;
+>   
+> -	if (!dma_map_sg(to_dma_dev(g2d->drm_dev), sgt->sgl, sgt->nents,
+> -				DMA_BIDIRECTIONAL)) {
+> +	ret = dma_map_sgtable(to_dma_dev(g2d->drm_dev), sgt,
+> +			      DMA_BIDIRECTIONAL, 0);
+> +	if (ret) {
+>   		DRM_DEV_ERROR(g2d->dev, "failed to map sgt with dma region.\n");
+> -		ret = -ENOMEM;
+>   		goto err_sg_free_table;
+>   	}
+>   
