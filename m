@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D149C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F07362080D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C9A20853
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135540;
-	bh=Oi7wYcE/YFfHSzj7dau8rDS3JbKaxqE5Oyv2XFaEYvE=;
+	s=default; t=1594135547;
+	bh=3fZqCq27fp8l+1dIvBNv3c0JEQIzEhLcC9QqoEuXH5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5aOq/asBiBy5FXdUqpNT4KgpYMcWD6CMt/tcVX/7kDrMVUo9wubWO0Agd6bIvfc7
-	 g4zh+KpuAziE78HQRuFJg8c79fyzBeOYq1Vc06vL34XBaTaOe3u0qcFqgaf3YqLwxq
-	 bDmNcIaOzrR6hJUyziSW8PHSUxy2piTrOesaVg/A=
+	b=jnoVIq8uCUBbMopDFIZh6ekP7gUhK5k8dEYrw+FIPxrjPUTbdoVhy0XbnoXym9rFZ
+	 yi80NiqfsGIVvcycA0greAMR42fMKcAq/BS7whL4CmV3q0HNugaQTdMw2wF6ZF7bd1
+	 j0RtbT9HwirnGlhUeq8WpBM038Gbxwi8KQGaCrqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgGGPZi (ORCPT
+        id S1730248AbgGGPZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgGGPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:33 -0400
+        id S1730234AbgGGPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1444520663;
-        Tue,  7 Jul 2020 15:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1362065D;
+        Tue,  7 Jul 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135532;
-        bh=Oi7wYcE/YFfHSzj7dau8rDS3JbKaxqE5Oyv2XFaEYvE=;
+        s=default; t=1594135535;
+        bh=3fZqCq27fp8l+1dIvBNv3c0JEQIzEhLcC9QqoEuXH5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSd5ViqUi9wLkmNvDSeykY1fUfL8ApwK+nrbdtKmM+1EZ+bMuLlO5DxJ4aLmnGmUx
-         Hkc8fL92ncQB7Hfi/M7S4RyofvD2Wg26lkhMNfAPLWpAmBHER6ULSdiLNj+6X53bDv
-         /a9ZOjMrtgIPj3KFIknKzvysLgJRQ1YOcrncR144=
+        b=Lldy8+j7pwpND/9vvs2gYy0z68CIteVmQMFGyFhjyhpbIg3wkp/9wB1ZFP5oMKZTZ
+         khQ+LI5IfzWZUfKXQ9P6H1057Zc837QrXXaS4Nc+q0KbWfswl0E0zoOVJIfHHj9gA6
+         HyrPmH19yfKuRgXKYRpUhKkJhXhOd6ySIJpn8qTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avinash M N <Avinash.M.N@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
+        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 078/112] nvme: fix a crash in nvme_mpath_add_disk
-Date:   Tue,  7 Jul 2020 17:17:23 +0200
-Message-Id: <20200707145804.703589351@linuxfoundation.org>
+Subject: [PATCH 5.7 079/112] tpm: ibmvtpm: Wait for ready buffer before probing for TPM2 attributes
+Date:   Tue,  7 Jul 2020 17:17:24 +0200
+Message-Id: <20200707145804.749754189@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -62,42 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: David Gibson <david@gibson.dropbear.id.au>
 
-[ Upstream commit 72d447113bb751ded97b2e2c38f886e4a4139082 ]
+[ Upstream commit 72d0556dca39f45eca6c4c085e9eb0fc70aec025 ]
 
-For private namespaces ns->head_disk is NULL, so add a NULL check
-before updating the BDI capabilities.
+The tpm2_get_cc_attrs_tbl() call will result in TPM commands being issued,
+which will need the use of the internal command/response buffer.  But,
+we're issuing this *before* we've waited to make sure that buffer is
+allocated.
 
-Fixes: b2ce4d90690b ("nvme-multipath: set bdi capabilities once")
-Reported-by: Avinash M N <Avinash.M.N@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+This can result in intermittent failures to probe if the hypervisor / TPM
+implementation doesn't respond quickly enough.  I find it fails almost
+every time with an 8 vcpu guest under KVM with software emulated TPM.
+
+To fix it, just move the tpm2_get_cc_attrs_tlb() call after the
+existing code to wait for initialization, which will ensure the buffer
+is allocated.
+
+Fixes: 18b3670d79ae9 ("tpm: ibmvtpm: Add support for TPM2")
+Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/char/tpm/tpm_ibmvtpm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 03bc3aba09871..36db7d2e6a896 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -673,10 +673,11 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+index 09fe45246b8cc..994385bf37c0c 100644
+--- a/drivers/char/tpm/tpm_ibmvtpm.c
++++ b/drivers/char/tpm/tpm_ibmvtpm.c
+@@ -683,13 +683,6 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+ 	if (rc)
+ 		goto init_irq_cleanup;
+ 
+-	if (!strcmp(id->compat, "IBM,vtpm20")) {
+-		chip->flags |= TPM_CHIP_FLAG_TPM2;
+-		rc = tpm2_get_cc_attrs_tbl(chip);
+-		if (rc)
+-			goto init_irq_cleanup;
+-	}
+-
+ 	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
+ 				ibmvtpm->rtce_buf != NULL,
+ 				HZ)) {
+@@ -697,6 +690,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+ 		goto init_irq_cleanup;
  	}
  
- 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--		struct backing_dev_info *info =
--					ns->head->disk->queue->backing_dev_info;
-+		struct gendisk *disk = ns->head->disk;
- 
--		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+		if (disk)
-+			disk->queue->backing_dev_info->capabilities |=
-+					BDI_CAP_STABLE_WRITES;
- 	}
- }
- 
++	if (!strcmp(id->compat, "IBM,vtpm20")) {
++		chip->flags |= TPM_CHIP_FLAG_TPM2;
++		rc = tpm2_get_cc_attrs_tbl(chip);
++		if (rc)
++			goto init_irq_cleanup;
++	}
++
+ 	return tpm_chip_register(chip);
+ init_irq_cleanup:
+ 	do {
 -- 
 2.25.1
 
