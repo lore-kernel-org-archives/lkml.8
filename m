@@ -2,104 +2,126 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0768CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99633C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2CB2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594152390;
-	bh=Q8cYr3emIBz5I2SVRAbSwt8x/mXTe6S9IVSIduWrF8M=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=eD8lFylprs8/9mdBGozad1zcs5n6NcW86O661w9MHGR0Y2HwDCdJyuRH0O4XbSTVt
-	 +VmANcFnJOm43/RBd5dYCLuMgShhAuXM93sspxibTH6rvqvuUaAISa8+07YBli/U+m
-	 09ufHq46U0OFBqoFe3s+vQ6REgHPbJFfcSN4ojoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 76454206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yoQ6HpvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgGGUGa (ORCPT
+        id S1728414AbgGGUMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
+        Tue, 7 Jul 2020 16:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728208AbgGGUG2 (ORCPT
+        with ESMTP id S1726763AbgGGUMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:06:28 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9281CC08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 13:06:28 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id h1so13093277otq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=r5PL45TtpUanLMjUFz1CcEwQghycNM5MHybEf6+OAdY=;
-        b=Ia/xRu4E5EmGy6Euz2yN+Lu4bpiUJmEdWdzTD8OqM8AxBU6FQFBhSUpyKT01Vr8Gfb
-         B1Z5wCAkGvzqfHGLEzzzBaknQJXeNrxuVnCP9kf8bRooXqJKq6zqnMXR+v5lLmKVtu5A
-         QTSvpd1Xn3a+ElGJKiVI+MGiIxrLD5plOOwc0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r5PL45TtpUanLMjUFz1CcEwQghycNM5MHybEf6+OAdY=;
-        b=ikEi5yLFEhJYdTBwppK19DCtFLOaUAKn+LacFom1mkv5acJuz2lpRE+mwEnJ+x8OOG
-         1i660JCY8aoPP9hy1T0N89jnUq2eWArYGuocF3OgcaR3DTuAbfDB7cUywOo/qgrTTE4g
-         DxSEbIk9aAfNkDW38ixnzupSz5ow9jXMUMFJv2Nq5tq3XDuHRrl4yjkmI1GMSCeOmCt6
-         TkyfVwY07J7u8WyFaFv0d48BVXuXaZSgTky7LriQncEIOIrpfBAPBopOq9O+d0lPyKSL
-         Brl2urzc1pkS3GdHVCYIrwx3HqUPe7qPhrRE4MopLvwBZF9xgx2jVm91MRDBua07LxPh
-         OdKA==
-X-Gm-Message-State: AOAM533T08aqGECNAnRlk70wYY2gBLUF7mfUHH0rMn3qsr1viIZ9CDYh
-        KOwt5Vbvquv7ZY+BVSi78OvbIA==
-X-Google-Smtp-Source: ABdhPJwwnZXLOhRRrCJBbJ2DZTfTavUWiRd8aI97qtpmNCNSuXiRBk3Odg92UJhZ/9Q7+WOFz9Le2Q==
-X-Received: by 2002:a9d:2261:: with SMTP id o88mr8252897ota.334.1594152388040;
-        Tue, 07 Jul 2020 13:06:28 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id d193sm302792oib.53.2020.07.07.13.06.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 13:06:27 -0700 (PDT)
-Subject: Re: [PATCH] usbip: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200707195214.GA3932@embeddedor>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org>
-Date:   Tue, 7 Jul 2020 14:06:26 -0600
+        Tue, 7 Jul 2020 16:12:16 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38D3C061755;
+        Tue,  7 Jul 2020 13:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=B/o5Uj7bv1uKmlSBwdGS6cD2I4R/nsJYtW8ks3eYCiY=; b=yoQ6HpvMh/27T/sXK71yFTTfje
+        wz1bO443OdeoeMKq6jb+govoxFts4nlmoEYVMaUMslznkdIIVdHi4593t91yqrOxUYEiJU0QgYJop
+        HqXF3TwlrPyLRSzUITc+u6bPEDTSJLmRyIcHci7+5iPz+lH5G/rAxSfh/KEwsyO/LIpP67tsYzMsR
+        5/eNbab17s5Yi3XneR2K88y+YYj3l9JAmgUSGZatk/lEmJpwujMJoecbtyfSmt9GeLIBW0MPq89QB
+        4Hvx5tEcJ7jvnTmtr7DjjuryhIZS/8xGA9wV0M2WORXS8s4w7B9cifC/ERNsr8MJuujfNiYuTlJSL
+        KBfyLNdw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jstwl-0008MJ-Kd; Tue, 07 Jul 2020 20:12:07 +0000
+Subject: Re: [PATCH v19 07/12] landlock: Support filesystem access-control
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <20200707180955.53024-1-mic@digikod.net>
+ <20200707180955.53024-8-mic@digikod.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6a80b712-a7b9-7b47-083a-08b7769016f8@infradead.org>
+Date:   Tue, 7 Jul 2020 13:11:58 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200707195214.GA3932@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200707180955.53024-8-mic@digikod.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 1:52 PM, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
+Hi--
+
+On 7/7/20 11:09 AM, Mickaël Salaün wrote:
+> ---
+>  arch/Kconfig                  |   7 +
+>  arch/um/Kconfig               |   1 +
+>  include/uapi/linux/landlock.h |  78 +++++
+>  security/landlock/Kconfig     |   2 +-
+>  security/landlock/Makefile    |   2 +-
+>  security/landlock/fs.c        | 609 ++++++++++++++++++++++++++++++++++
+>  security/landlock/fs.h        |  60 ++++
+>  security/landlock/setup.c     |   7 +
+>  security/landlock/setup.h     |   2 +
+>  9 files changed, 766 insertions(+), 2 deletions(-)
+>  create mode 100644 include/uapi/linux/landlock.h
+>  create mode 100644 security/landlock/fs.c
+>  create mode 100644 security/landlock/fs.h
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 8cc35dc556c7..483b7476ac69 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -845,6 +845,13 @@ config COMPAT_32BIT_TIME
+>  config ARCH_NO_PREEMPT
+>  	bool
+>  
+> +config ARCH_EPHEMERAL_STATES
+> +	def_bool n
+> +	help
+> +	  An arch should select this symbol if it do not keep an internal kernel
 
-Is fallthrough syntax supported on our min gcc version?
+	                                       it does not
 
-Does checkpatch or coccicheck catch these cases?
+> +	  state for kernel objects such as inodes, but instead rely on something
 
-The patch looks good.
+	                                               instead relies on
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> +	  else (e.g. the host kernel for an UML kernel).
+> +
+>  config ARCH_SUPPORTS_RT
+>  	bool
+>  
 
-thanks,
--- Shuah
+thanks.
+-- 
+~Randy
+
