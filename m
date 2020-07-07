@@ -2,126 +2,98 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A13EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B88C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3864520578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294F220578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594104101;
-	bh=RJd5gU31yiOjajLt/tJJ7V/CSWnm1xiLjteER4WNP0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TUuHoB68bbXhDpjaGLdvDjwcYxsy0JP7tiBZcMf2fGq7hcTnIndn6siNTEy0Msgj6
-	 0laIBr2wdlOUuu/Xo+Ar4T8ad/1nAuMJdhAPiXmGXSuhCrqrsfq5IUSPhy9ErdbEiJ
-	 1nOrr/XF38S1EirfbPOqzfReF+SGj1qvc70sgNUY=
+	s=default; t=1594104266;
+	bh=SYwszmG9vuty7jS2t5cuUJ5XsHCEixpMnvWvkJrpkng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IYNIc7wFELeb8rW4lkM9CLSKeN17YeVZhbqRTRrm/KQ1S3mO9XxNTgfQJezTeugZb
+	 yDGDI/B+Y67AyrizAGwVmN25HxAE49hJLC9fyZVxRnmqT0kfKp2PhbPvbQcDsTWvZu
+	 41ktL9l71kjluPtpuSUZsdcgXssmUyAs+TZhdPxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgGGGlk (ORCPT
+        id S1727875AbgGGGoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgGGGlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:41:40 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B0F206F6;
-        Tue,  7 Jul 2020 06:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594104099;
-        bh=RJd5gU31yiOjajLt/tJJ7V/CSWnm1xiLjteER4WNP0A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tONDhxf0QBJIM3f4VpihR47KunOjYPZ2jhFLTiV/wO/aflKiNmzVw6hAhqO8R/uIz
-         Xlm1CiyD2g7ETZ5vfugzQD0D7Oy2DpcUXhX7bI7e6GzcAmTReWVA6Yr/NMj2N3HKdr
-         VlWXtkBAG8D1E2VzGhNobzBmSCqlD2Qa9oJHvwB8=
-Received: by mail-ot1-f44.google.com with SMTP id 5so31526784oty.11;
-        Mon, 06 Jul 2020 23:41:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531Ot67Xdx01O/LKjA+Fc09UoQPCxjpQxtj8o4sMs+0wIFq0r0xF
-        dwbl8Kblq/eR6oS870Bj3UlHEfm61TiAoN5Qg0w=
-X-Google-Smtp-Source: ABdhPJwhDbsC77VdApD0Yu5jlF0o1Fbg6FB0JcBCaZr0l4MwXzKW782eArC4YsN/3RFShEqWA4n7wSNLntLdwVfHkGM=
-X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr47348216otf.77.1594104098794;
- Mon, 06 Jul 2020 23:41:38 -0700 (PDT)
+        Tue, 7 Jul 2020 02:44:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55953 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgGGGoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:44:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g75so42034572wme.5;
+        Mon, 06 Jul 2020 23:44:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mW3E2MtDuPUcGU+63FpYdbWOc+tTMlG34yDRynkWV5w=;
+        b=VpxxgOHjHepxlC25qTOD7CDYCjEB5sjD/XWx3Uz5zBdVOTcNpuzRdyDDhkmbUGuIdq
+         0wsC9ppuDEkknV99aXNaKE59x8wbi+yG5Nm/lyfocCh+7aHjW6fo4ZMc+5d2P+s2bl4H
+         2a0iKWN+V83d5GKpzQMTazyoQxmpsRMUwvYOffZ67SYHtHwaNsuFDykAoDYNtdpGiDkG
+         9HiIBiRgndgprB0PqJJFKymwaY7Q/B8gKx21Fif+wgcNEmmnWjm1cM6rtL6BI/xTyvPX
+         nokNIBL4Eut2RJH/x83XlzQRjgwpvUooIe1agQwo+dJOulbPt/feqDbFvEBFY5lXAm4r
+         uDsQ==
+X-Gm-Message-State: AOAM530HEpp5ACoF5J5JuviSdpOiCAuVzSgwyglBZc7ZMA0sCSS+OmwG
+        +ne48eywnC3++JmCIMuX06Z9UR5M
+X-Google-Smtp-Source: ABdhPJx/GZ5wwUsHhMP8Dm6hZDOrkdkLfjSEppSoFX56hhEEpuaxQSTp5DpWNcRT9T1chq7Zsb/dBQ==
+X-Received: by 2002:a7b:ce83:: with SMTP id q3mr2495366wmj.5.1594104260927;
+        Mon, 06 Jul 2020 23:44:20 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id o21sm2158458wmh.18.2020.07.06.23.44.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jul 2020 23:44:20 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 08:44:17 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 4/8] arm64: dts: exynos: Remove DMA controller bus
+ node name to fix dtschema warnings
+Message-ID: <20200707064417.GB15031@kozik-lap>
+References: <20200702155149.12854-1-krzk@kernel.org>
+ <20200702155149.12854-4-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200706172609.25965-1-atish.patra@wdc.com>
-In-Reply-To: <20200706172609.25965-1-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 7 Jul 2020 09:41:27 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXG5OxRod_-Z5K55XLXDda2ahfezm0yaRbv=82JmrFRZxw@mail.gmail.com>
-Message-ID: <CAMj1kXG5OxRod_-Z5K55XLXDda2ahfezm0yaRbv=82JmrFRZxw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 00/11] Add UEFI support for RISC-V
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200702155149.12854-4-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 at 20:26, Atish Patra <atish.patra@wdc.com> wrote:
->
-> This series adds UEFI support for RISC-V.
->
-> Linux kernel: 5.8-rc4
-> U-Boot: master
-> OpenSBI: master
->
-> Patch 1-6 are preparatory patches that fixes some of the geric efi and riscv issues.
->
-> Patch 7-9 adds the efi stub support for RISC-V which was reviewed few months back.
-> https://www.spinics.net/lists/linux-efi/msg19144.html
->
-> Patch 10 just renames arm-init code so that it can be used across different
-> architectures. Patch 11 adds the runtime services for RISC-V.
->
-> The patches can also be found in following git repo.
-> https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v2
->
-> The patches have been verified on Qemu using bootefi command in U-Boot for both
-> RV32 and RV64.
->
-> For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
-> beyond 1G of physical memory for RV32.
->
-> EDK2 can boot quite far into Linux with current series. Currently, we are seeing
-> some traps from drivers (spi/network). At first glance, they don't seem to be
-> caused by efi. I thought it is better to get some early feedback on the series
-> while EDK2 issue is being debugged.
->
-> That's why uefi runtime services are not actually well tested in RISC-V.
-> Any suggestions to test the efi run time services are appreciated.
->
-> Changes from v1->v2:
-> 1. Removed patch 1 as it is already taken into efi-tree.
-> 2. Fixed compilation issues with patch 9.
-> 3. Moved few function prototype declaration to header file to keep kbuild happy.
->
-> Changes from previous version:
-> 1. Added full ioremap support.
-> 2. Added efi runtime services support.
-> 3. Fixes mm issues
->
+On Thu, Jul 02, 2020 at 05:51:45PM +0200, Krzysztof Kozlowski wrote:
+> There is no need to keep DMA controller nodes under AMBA bus node.
+> Remove the "amba" node to fix dtschema warnings like:
+> 
+>     amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
 
-Hi Atish,
+Applied.
 
-This all looks reasonable to me, so I think we can merge this once you
-can confirm that the runtime services actually work.
+Best regards,
+Krzysztof
 
-Could you explain how you are dealing with the memory map? Are memory
-nodes in DT ignored entirely as they should be? What about memory
-reservations?
-
-In any case, I will take the first patch as a fix, so it should turn
-up in mainline in 1~2 weeks.
-
-Thanks,
-Ard.
