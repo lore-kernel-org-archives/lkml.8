@@ -2,154 +2,214 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12219C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E550320674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A27A20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135002;
-	bh=U+B+7RFkci1f7yxGdvHrTpuTzMDQAB/yfQC6i3ElCu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEV61zsgmeXMNZwlpENsZ73l4Wgl4v1AxzSwBSZXjkQov9t5tZg/BcpFP4fV902MJ
-	 P+hDUxXpXowLhSW7FJKh98yKQTtLIsDEAM8h2pVwD6409BjiFtO0DCtpH6LlWPsFfC
-	 SDhT9++NQGJZUCAmAN+py0SXdDmPFLZsA6r3Vpn8=
+	s=default; t=1594135007;
+	bh=YKZ97IGbHOb4vj0ONqehGCGdrnnN72YK/J361llD+eo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OQLYFamwr3I+p3o4/u6b00IgJ0/iLBt75KQbjTCYNk/bzNk4ioC5bjCrjxHQGDnJA
+	 66zRb2G5th/KMYc3PoZtgjVXERr3duV3YKvOypLRVztvyRIEBM8ZZPO255DwIKq88J
+	 lB4XBM3p3KqW+4MCoAApTr9Wm2VnyulyznErLK38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgGGPQm (ORCPT
+        id S1729093AbgGGPQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgGGPQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:38 -0400
+        id S1729081AbgGGPQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 667D820663;
-        Tue,  7 Jul 2020 15:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A7A2065D;
+        Tue,  7 Jul 2020 15:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134997;
-        bh=U+B+7RFkci1f7yxGdvHrTpuTzMDQAB/yfQC6i3ElCu8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=opRmXq9N9zdjCzP3wJfF3ieFGbSx0FxRxJKZioUZwvSOQORX8l5KftfyVVPyyuZvH
-         vlhtaKSwrfN8HBF3lwi1iYwki+CfHSG+MjqdVku6zqWqt/Q6owXNlqdhq/hKC+OQKH
-         R61W2QmfHwe4Ej32p3P6939rfGRpim3ilKWHde74=
+        s=default; t=1594135002;
+        bh=YKZ97IGbHOb4vj0ONqehGCGdrnnN72YK/J361llD+eo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jK4U1E4fmuzoY/Wa0mCtL3rUetDmDS3B+UekAowfKe7MkuNGCOkyBW28RSPvYbDje
+         jBN9KJTJIFx62uxGhVYbHTbCu9OK+ntatE2yBXZjc9tMrXqT1om816qHNPXQyKlkqa
+         m67Lu55hc3s0vYstat+aEANtSvpKJOpe2J1Ysom8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Glauber Costa <glauber@scylladb.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 08/27] mm/slub: fix stack overruns with SLUB_STATS
-Date:   Tue,  7 Jul 2020 17:15:35 +0200
-Message-Id: <20200707145749.371039874@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/27] 4.14.188-rc1 review
+Date:   Tue,  7 Jul 2020 17:15:27 +0200
+Message-Id: <20200707145748.944863698@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
-References: <20200707145748.944863698@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.188-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.188-rc1
+X-KernelTest-Deadline: 2020-07-09T14:57+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+This is the start of the stable review cycle for the 4.14.188 release.
+There are 27 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
+Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+Anything received after that time might be too late.
 
-There is no need to copy SLUB_STATS items from root memcg cache to new
-memcg cache copies.  Doing so could result in stack overruns because the
-store function only accepts 0 to clear the stat and returns an error for
-everything else while the show method would print out the whole stat.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.188-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-Then, the mismatch of the lengths returns from show and store methods
-happens in memcg_propagate_slab_attrs():
+thanks,
 
-	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-		buf = mbuf;
+greg k-h
 
-max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
-in show_stat() later where a bounch of sprintf() would overrun the stack
-variable.  Fix it by always allocating a page of buffer to be used in
-show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+-------------
+Pseudo-Shortlog of commits:
 
-  # echo 1 > /sys/kernel/slab/fs_cache/shrink
-  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
-  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.188-rc1
 
-  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    number+0x421/0x6e0
-    vsnprintf+0x451/0x8e0
-    sprintf+0x9e/0xd0
-    show_stat+0x124/0x1d0
-    alloc_slowpath_show+0x13/0x20
-    __kmem_cache_create+0x47a/0x6b0
+Peter Jones <pjones@redhat.com>
+    efi: Make it possible to disable efivar_ssdt entirely
 
-  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
-   process_one_work+0x0/0xb90
+Hou Tao <houtao1@huawei.com>
+    dm zoned: assign max_io_len correctly
 
-  this frame has 1 object:
-   [32, 72) 'lockdep_map'
+Marc Zyngier <maz@kernel.org>
+    irqchip/gic: Atomically update affinity
 
-  Memory state around the buggy address:
-   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
-                                                         ^
-   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    __kmem_cache_create+0x6ac/0x6b0
+Hauke Mehrtens <hauke@hauke-m.de>
+    MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
 
-Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Glauber Costa <glauber@scylladb.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+    cifs: Fix the target file was deleted when rename failed.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 66b7987129337..09d4cc4391bb2 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5601,7 +5601,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
- 		 */
- 		if (buffer)
- 			buf = buffer;
--		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-+		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
-+			 !IS_ENABLED(CONFIG_SLUB_STATS))
- 			buf = mbuf;
- 		else {
- 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
--- 
-2.25.1
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor persistent/resilient handle flags for multiuser mounts
 
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor 'seal' flag for multiuser mounts
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "ALSA: usb-audio: Improve frames size computation"
+
+J. Bruce Fields <bfields@redhat.com>
+    nfsd: apply umask on fs without ACL support
+
+Chris Packham <chris.packham@alliedtelesis.co.nz>
+    i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+
+Hou Tao <houtao1@huawei.com>
+    virtio-blk: free vblk-vqs in error path of virtblk_probe()
+
+Chen-Yu Tsai <wens@csie.org>
+    drm: sun4i: hdmi: Remove extra HPD polling
+
+Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+    hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
+
+Chu Lin <linchuyuan@google.com>
+    hwmon: (max6697) Make sure the OVERT mask is set correctly
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: parse TC-U32 key values and masks natively
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: use unaligned conversion for fetching timestamp
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+
+Douglas Anderson <dianders@chromium.org>
+    kgdb: Avoid suspicious RCU usage warning
+
+Zqiang <qiang.zhang@windriver.com>
+    usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+
+Qian Cai <cai@lca.pw>
+    mm/slub: fix stack overruns with SLUB_STATS
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    mm/slub.c: fix corrupted freechain in deactivate_slab()
+
+Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+    usbnet: smsc95xx: Fix use-after-free after removal
+
+Borislav Petkov <bp@suse.de>
+    EDAC/amd64: Read back the scrub rate PCI register on F15h
+
+Hugh Dickins <hughd@google.com>
+    mm: fix swap cache node allocation mask
+
+Filipe Manana <fdmanana@suse.com>
+    btrfs: fix data block group relocation failure due to concurrent scrub
+
+Anand Jain <Anand.Jain@oracle.com>
+    btrfs: cow_file_range() num_bytes and disk_num_bytes are same
+
+Filipe Manana <fdmanana@suse.com>
+    btrfs: fix a block group ref counter leak after failure to remove block group
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/mips/kernel/traps.c                           |   1 +
+ crypto/af_alg.c                                    |  26 ++---
+ crypto/algif_aead.c                                |   9 +-
+ crypto/algif_hash.c                                |   9 +-
+ crypto/algif_skcipher.c                            |   9 +-
+ drivers/block/virtio_blk.c                         |   1 +
+ drivers/edac/amd64_edac.c                          |   2 +
+ drivers/firmware/efi/Kconfig                       |  11 ++
+ drivers/firmware/efi/efi.c                         |   2 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   5 +-
+ drivers/hwmon/acpi_power_meter.c                   |   4 +-
+ drivers/hwmon/max6697.c                            |   7 +-
+ drivers/i2c/algos/i2c-algo-pca.c                   |   3 +-
+ drivers/irqchip/irq-gic.c                          |  14 +--
+ drivers/md/dm-zoned-target.c                       |   2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c  |  18 +--
+ .../ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h    | 122 ++++++++++++++-------
+ drivers/net/ethernet/chelsio/cxgb4/sge.c           |   2 +-
+ drivers/net/usb/smsc95xx.c                         |   2 +-
+ drivers/usb/misc/usbtest.c                         |   1 +
+ fs/btrfs/extent-tree.c                             |  19 ++--
+ fs/btrfs/inode.c                                   |  35 ++++--
+ fs/cifs/connect.c                                  |   3 +
+ fs/cifs/inode.c                                    |  10 +-
+ fs/nfsd/vfs.c                                      |   6 +
+ include/crypto/if_alg.h                            |   4 +-
+ kernel/debug/debug_core.c                          |   4 +
+ mm/slub.c                                          |  30 ++++-
+ mm/swap_state.c                                    |   3 +-
+ sound/usb/card.h                                   |   4 -
+ sound/usb/endpoint.c                               |  43 +-------
+ sound/usb/endpoint.h                               |   1 -
+ sound/usb/pcm.c                                    |   2 -
+ 34 files changed, 239 insertions(+), 179 deletions(-)
 
 
