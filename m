@@ -2,139 +2,118 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA978C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835572078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54DC20702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3L5Bzw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgGGDvV (ORCPT
+        id S1728280AbgGGDvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:51:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:42876 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgGGDvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbgGGDvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 23:51:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90E72C0A;
-        Mon,  6 Jul 2020 20:51:19 -0700 (PDT)
-Received: from [10.163.86.118] (unknown [10.163.86.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E34973F718;
-        Mon,  6 Jul 2020 20:51:11 -0700 (PDT)
-Subject: Re: [PATCH V4 1/3] mm/sparsemem: Enable vmem_altmap support in
- vmemmap_populate_basepages()
-To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
-Cc:     justin.he@arm.com, catalin.marinas@arm.com,
-        akpm@linux-foundation.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1594004178-8861-1-git-send-email-anshuman.khandual@arm.com>
- <1594004178-8861-2-git-send-email-anshuman.khandual@arm.com>
- <eeeb44f9-bc0a-2c3d-8e8f-7e3d9e066c7e@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7ac5ff78-378c-37e2-444f-9f72844b8697@arm.com>
-Date:   Tue, 7 Jul 2020 09:20:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA925C061755;
+        Mon,  6 Jul 2020 20:51:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ch3so2726399pjb.5;
+        Mon, 06 Jul 2020 20:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=033/koxi8tBQP0JLIdsncSOzrcGFA+WfwhEA16y7708=;
+        b=O3L5Bzw8rTtucvD4lnK6MughGQc70fhn+QffJvqXfAfG9BTX4s8iXDKHeCTwz5qvwi
+         2aLSldd7LtY9jjaaQLC7mSDVoiF47AGqsBit4KFDNilM56dI4yySSfkwFjAaGvcjLaKi
+         UTWKCHd1RY9VX/G9gRuJ74ahlbawORv1SAJZ+x4/f1+GEXZ6Mas261mCMEKYfx+yknXm
+         /DDjkxs+AyYwMHsZA/72e9oCfYpJpvSE5f1UldkbmhdH+Zjfw0xnMmrzgSA7Xh36xylU
+         3ICpX2GbHQGqnLzN6rcWaARxpgrUQNuYuv4FoJTrsH+wswJJgQyuti+bu/ey20z/IvBy
+         uMfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=033/koxi8tBQP0JLIdsncSOzrcGFA+WfwhEA16y7708=;
+        b=pn/MwX8Y5Ezohohk4tkCsDONHl02mD0cgWV9Qlh2Z3khZRtx5XpV9qGqEYs8rlgIiA
+         20cSPci6qOH8XkBGYm4YzkWn2Fii80CuERQ8e4VLSy9eP7I6izeyEm2bln5q2Wkgtjba
+         18xT3hLgwTdDukmYJqEIPlswVv1Bkf1YduMqdi3PBXvguDSozFle7Nbj3UaO34bbYq7L
+         e6fdVMSqNaTpsWDlT3rGG4kouM/fHn/eitdIOP3+zVrKdfe4W7wha4ghQr+IGDSQoaZr
+         j3LX0gmOXgGhtKTu8PAeNMov3Pr3YgkpLIxRLfj4C8WJeKo1h87EzQnQY/bZr74ETszS
+         mfuA==
+X-Gm-Message-State: AOAM533NqKoWRK0a19n3Dxoghx1r4oP6B5F36qMhW6Neg9blDCIZxaJc
+        T1J/dK3kZjf848Nvnj+Oo7w=
+X-Google-Smtp-Source: ABdhPJyU5pnmkinPhabPfM9/XOUiCk9YjfUoGgAzqlDY+UsGCKo9/LuFKk4rpFu8tt55F619kOwU4g==
+X-Received: by 2002:a17:90a:a383:: with SMTP id x3mr2327888pjp.199.1594093880309;
+        Mon, 06 Jul 2020 20:51:20 -0700 (PDT)
+Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
+        by smtp.gmail.com with ESMTPSA id d22sm20466320pfd.105.2020.07.06.20.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 20:51:19 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: [PATCH v6 8/8] .gitignore: add ZSTD-compressed files
+Date:   Mon,  6 Jul 2020 20:46:04 -0700
+Message-Id: <20200707034604.1539157-9-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707034604.1539157-1-nickrterrell@gmail.com>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <eeeb44f9-bc0a-2c3d-8e8f-7e3d9e066c7e@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Adam Borowski <kilobyte@angband.pl>
 
+For now, that's arch/x86/boot/compressed/vmlinux.bin.zst but probably more
+will come, thus let's be consistent with all other compressors.
 
-On 07/06/2020 02:33 PM, David Hildenbrand wrote:
->>  	return 0;
->> @@ -1505,7 +1505,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>  	int err;
->>  
->>  	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
->> -		err = vmemmap_populate_basepages(start, end, node);
->> +		err = vmemmap_populate_basepages(start, end, node, NULL);
->>  	else if (boot_cpu_has(X86_FEATURE_PSE))
->>  		err = vmemmap_populate_hugepages(start, end, node, altmap);
->>  	else if (altmap) {
-> 
-> It's somewhat weird that we don't allocate basepages from altmap on x86
-> (both for sub-sections and without PSE). I wonder if we can simply
-> unlock that with your change. Especially, also handle the
-> !X86_FEATURE_PSE case below properly with an altmap.
-> 
-> a) all hw with PMEM has PSE - except special QEMU setups, so nobody
-> cared to implement. For the sub-section special case, nobody cared about
-> a handfull of memmap not ending up on the altmap. (but it's still wasted
-> system memory IIRC).
-> 
-> b) the pagetable overhead for small pages is not-neglectable and might
-> result in similar issues as solved by the switch to altmap on very huge
-> PMEM (with small amount of system RAM).
-> 
-> I guess it is due to a).
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Nick Terrell <terrelln@fb.com>
+Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hmm, I assume these are some decisions that x86 platform will have to
-make going forward in a subsequent patch as the third patch does for
-the arm64 platform. But it is clearly beyond the scope of this patch
-which never intended to change existing behavior on a given platform.
+diff --git a/.gitignore b/.gitignore
+index d5f4804ed07c..162bd2b67bdf 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -44,6 +44,7 @@
+ *.tab.[ch]
+ *.tar
+ *.xz
++*.zst
+ Module.symvers
+ modules.builtin
+ modules.order
+-- 
+2.27.0
 
-> 
-> [...]
-> 
->>  
->> -pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
->> +pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
->> +				       struct vmem_altmap *altmap)
->>  {
->>  	pte_t *pte = pte_offset_kernel(pmd, addr);
->>  	if (pte_none(*pte)) {
->>  		pte_t entry;
->> -		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
->> +		void *p;
->> +
->> +		if (altmap)
->> +			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
->> +		else
->> +			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
->>  		if (!p)
->>  			return NULL;
-> 
-> I was wondering if
-> 
-> if (altmap)
-> 	p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
-> if (!p)
-> 	p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
-> if (!p)
-> 	return NULL
-> 
-> Would make sense. But I guess this isn't really relevant in practice,
-> because the altmap is usually sized properly.
-> 
-> In general, LGTM.
-
-Okay, I assume that no further changes are required here.
