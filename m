@@ -2,93 +2,105 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47959C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B03206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O3TpP6f7"
+	by mail.kernel.org (Postfix) with ESMTP id 2B51120708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgGGCof (ORCPT
+        id S1727874AbgGGCon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:44:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:56395 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgGGCof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:44:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B16GS4VjSz9sRR;
-        Tue,  7 Jul 2020 12:44:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594089872;
-        bh=HP+pO41oFoQSlyD8UWUtPdpmn6fAVCYBd6fmrUXd82w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=O3TpP6f74YD9R7g4wzVkCIS8RlyRL9sIyduZ0yGmckRI0YatglZCuXuT9PDpUBE/X
-         p75HQ03zlwBAMlDrclX9gDEg4SV4/Z8IMx4wAiOG3Nalbw0ASyj4gDFpYtf6dbSj7D
-         NtZi86nOUmzw0S4fKi3/D3XqT65hQekPO9DpUKz7A1CyDNN44vZhm9Rr7fjaCUZ8Ao
-         RULer9aFav8cCgbvJETlwyivea+bEwKwSUkW2w3CcTWW0FE/qb8HzItaBP8A9Rgbd4
-         804QpSPZ3uT02+A8InbAr360fMOEkErFMCkdocfNeE4t4x+3akWDVSkvubehZworsL
-         eHUcXXU1Se3JQ==
-Date:   Tue, 7 Jul 2020 12:44:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the mfd tree
-Message-ID: <20200707124431.450bb0da@canb.auug.org.au>
+        Mon, 6 Jul 2020 22:44:43 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:51916 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726434AbgGGCon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:44:43 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 7 Jul 2020
+ 10:44:39 +0800
+Received: from [10.32.56.62] (10.32.56.62) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 7 Jul 2020
+ 10:44:36 +0800
+Subject: Re: [PATCH] x86/cpufeatures: Add new Zhaoxin CPU features
+To:     "Luck, Tony" <tony.luck@intel.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <hpa@zytor.com>,
+        <pawan.kumar.gupta@linux.intel.com>, <jpoimboe@redhat.com>,
+        <peterz@infradead.org>, <thellstrom@vmware.com>,
+        <mgross@linux.intel.com>, <kim.phillips@amd.com>,
+        <linux-kernel@vger.kernel.org>, <DavidWang@zhaoxin.com>,
+        <CooperYan@zhaoxin.com>, <QiyuanWang@zhaoxin.com>,
+        <HerryYang@zhaoxin.com>, <CobeChen@zhaoxin.com>
+References: <1593429689-25131-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <20200706160228.GA4663@agluck-desk2.amr.corp.intel.com>
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Message-ID: <3de2dfe9-0b17-d32b-1924-149722ac96fd@zhaoxin.com>
+Date:   Tue, 7 Jul 2020 10:43:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TvkVtWjdCBZFDArLLAFpwQZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200706160228.GA4663@agluck-desk2.amr.corp.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.32.56.62]
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TvkVtWjdCBZFDArLLAFpwQZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the mfd tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+On 07/07/2020 00:02, Luck, Tony wrote:
+> On Mon, Jun 29, 2020 at 07:21:29PM +0800, Tony W Wang-oc wrote:
+>> Add new Zhaoxin CPU features for enumeration in /proc/cpuinfo:
+>> SM2, SM2_EN, SM3, SM4, SM3_EN, SM4_EN, PARALLAX, PARALLAX_EN,
+>> TM3, TM3_EN, RNG2, RNG2_EN, PHE2, PHE2_EN, RSA, RSA_EN.
+>>
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 0]  SM2
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 1]  SM2_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 4]  SM3 SM4
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 5]  SM3_EN SM4_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 16] PARALLAX
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 17] PARALLAX_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 20] TM3
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 21] TM3_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 22] RNG2
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 23] RNG2_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 25] PHE2
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 26] PHE2_EN
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 27] RSA
+>> CPUID.(EAX=0xc0000001,ECX=0):EDX[bit 28] RSA_EN
+>>
+>> SM2, SM3, SM4 are Chinese Cipher Security algorithm.
+>> PARALLAX is a feature that automatically adjusts processors's voltage
+>> as a function of temperature.
+>> TM3 is Zhaoxin CPU Thermal Monitor v3.
+>> RNG2 is Zhaoxin Random Number Generation v2.
+>> PHE2 is Zhaoxin Padlock Hash Engine v2.
+>> RSA is Zhaoxin hardware support for RSA algorithm.
+> 
+> Boris is on vacation, so I'll ask the question that he would ask
+> if he were here ... "Are there some follow-up patches that use all
+> of these feature bits?"
 
-drivers/mfd/axp20x-i2c.c:82:5: warning: "CONFIG_ACPI" is not defined, evalu=
-ates to 0 [-Wundef]
-   82 | #if CONFIG_ACPI
-      |     ^~~~~~~~~~~
+No for up to now.
 
-Introduced by commit
+Sincerely
+TonyWWang-oc
 
-  20f359cb236b ("mfd: axp20x-i2c: Do not define 'struct acpi_device_id' whe=
-n !CONFIG_ACPI")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TvkVtWjdCBZFDArLLAFpwQZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8D4Y8ACgkQAVBC80lX
-0GyvrQf+K+Qjf4neIlMo2JtfdDGyKKNJR6RpAcC/JWhC4IF3BrotP2cSbpZHkE2B
-yLXyrnsIM5O/DLXUTfJFUPQxC4laW2k0hszr36hTxBAiZipMOCqeBmwN+atJkZ5D
-UoYc0SzWQ6zZ/X/BT4ydLJ2g6uJyhnePn4tUlSwJUfd06oOCO2nGTCnH7YtKiAbJ
-Eu/t4VDZcmYyPzpsY3FUavJSfWVBYsoJUf1hPWLogeh7DP0wjHJ775+nVR3mEj6Y
-yIafruTIJzILqaUXMwdaVo4vqSOn/MPqqgvz5vLdTqrVd9RwTKKEISKZ0h6p2oAf
-3A7Q3FrZoeed477buZSeIPVZql7YiA==
-=/lgx
------END PGP SIGNATURE-----
-
---Sig_/TvkVtWjdCBZFDArLLAFpwQZ--
+> 
+> Just adding bits to /proc/cpuinfo is of limited use.
+> 
+> -Tony
+> .
+> 
