@@ -2,101 +2,117 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84942C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF26C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62714206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AD1206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZxQBzAmi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JirTA1Rl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgGGLhe (ORCPT
+        id S1728264AbgGGLiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
+        Tue, 7 Jul 2020 07:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727886AbgGGLhd (ORCPT
+        with ESMTP id S1726839AbgGGLiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:37:33 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF53C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:37:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t25so44892807lji.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:37:32 -0700 (PDT)
+        Tue, 7 Jul 2020 07:38:13 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9254BC061755;
+        Tue,  7 Jul 2020 04:38:13 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id s21so20520121ilk.5;
+        Tue, 07 Jul 2020 04:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OnCd1YAPjG2Ik+wSQkHZosL6QWVa11jN4YE6zzRMrv0=;
-        b=ZxQBzAmi25Zp6vi/k2z/1OssFAAw4KoH6gUCTpfVD1ZM+K879D7B1UIQA1+cYHb0vq
-         JmPpN97k3pMzkijiQy9NvqBrQktnRzols67yxfeAVCMCpoKCZVaPuqgGNTTKCs3nyBQ4
-         1wIgcqKPw1dt4fMUp/lBnXTMWSQEu8TbmXzDJVNfwbg3PHoGQ3CrD3qWYQZtHy6WntgD
-         Evd8VHYB+ivGSvcUfOUP5nf82hsdhNVL8Xm2EnOMUWeLuDdllosFDWhirQOjR1wu+4dw
-         auTq2pWgQlkzGmvldemqEllSLI1WT0Hlu4AYAGKL/MuSV4C1t7xqfCVIq1kTnb9Jb+L/
-         YXtA==
+        bh=1+9PXsEHC8Tau1MQTySeSJIu15QBhP57I+JN1uapBu0=;
+        b=JirTA1RlvJAlDXxssPiBjYAQw8/IAQxOLQXqoDRmUr5Q7eXEI05rN0ZCnBmWsZzbFe
+         Fse1fi06L+PCjopdbPPnGNT1QeQojO3coqU1ja8XSjRjF03hlXmzC0GLIWJUCIhcm3yk
+         nexkBSFm9tW9pjzicOY0yEmXy+WBwvcexBGHnjSkhPXZDAx3P2pkRwd5xKSEENjE1Alf
+         /1Yf7FdVFHCXNGYnUEcg0LUccx2gPlnuBsZkwpRz7lZ661siGnnxrpYu/I5r8bEADam2
+         6S/vUj52Ak5EkHTaIEoaCCDdPgdGT6/tL9DFm402FNQaW5itQi11KgZOCG3mUTv8/4uC
+         Sehw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OnCd1YAPjG2Ik+wSQkHZosL6QWVa11jN4YE6zzRMrv0=;
-        b=ikJOKL9LpKwyakBtnyBZVqaM0tH6vSmkNoZ9b1o/ZfkEpP6gnHnC2SZRs5VxAjwVCu
-         LaR9KlIpqI+0jPyWBvHml+quzbjbPEvOn94y4vqKA+2INJjy3eWBflij/ZWTOpZBa0Vp
-         qSbHaqEtpqFbC4VxKy9wcFNPR7IvnUt/XzRse1dxM10VZBKOJXvSG6Tz7PCbzr+Bctii
-         MxNQumRamw45MVnkr+J6f5C+tnAxAoTegHJ5Ogbki+BZzkk6hmO8Jm0ecQ8c2RdqVvh4
-         STQAceD9lFCNyfdnqLNrvNeNovVdY73bxTDVIwmyxpFO0c4uVWhOIQgbIg5vu1WDMfWK
-         5m3g==
-X-Gm-Message-State: AOAM532Br9VSgnyix+cqr27zreUxjlSgQ163FLT30JzLX0S29eEBUX/u
-        Oo6+h9W2VAwf+mKyszv1sncD6dsxeaGukccw5HAqXw==
-X-Google-Smtp-Source: ABdhPJwP9hKdzcTYu5+7+gkCXic4cOTdr0VXL+Zzwrh1whoWKZc3WZtCAHkFv6JpcmVTdMaJuMYRFm8FqSC3eqGZGt8=
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr8538176ljj.283.1594121851218;
- Tue, 07 Jul 2020 04:37:31 -0700 (PDT)
+        bh=1+9PXsEHC8Tau1MQTySeSJIu15QBhP57I+JN1uapBu0=;
+        b=roTmvF9pSzP0C2GBAH1L1L5m5N5ApQJd7NdN2TO0kvX60qIzpg4GmXmBEmgHNMjuVP
+         ZIi2ln2QsJSKGzgS+OwpQDFccaB+LJJkK7jmImZ3+AZSArminYMtjgHC+5bolCfsi+5n
+         PiK2BwCqDvqz+yxo9M/lBcleKCaXjqkDpcQoQj+gakjzq0TXv9kIuyx+syZFbfS8MGmC
+         3EG9CL/B0wKRxTXaHg5ZzXk+qlOw+a36awZyrVAgnCbaiYaxv+ABxFJD/WLW37egz7M5
+         kYcKhuxALSJ5RDO2+eftVMJm2ZCy3hJoh/uDCecVAP5DbvexxyxX2us3VKcokZVWM+dB
+         Z5vg==
+X-Gm-Message-State: AOAM531UH367wOKFaPJXdpKTUFsnErJqOVtlJgISOxupgX455U/er8H5
+        HF++VJ4NCCZFNPBUQiB1WJ29bhIml8mMKkhVbh8=
+X-Google-Smtp-Source: ABdhPJyLy71kFINoMC1IHKN/W9Wzb6/SH2hqLTyUZVHsX7LIVZCqyVklNgrjn7GmuSwIHTTceD6R3Lnu4FTNFB1XILg=
+X-Received: by 2002:a92:c7ab:: with SMTP id f11mr36287094ilk.50.1594121892966;
+ Tue, 07 Jul 2020 04:38:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-5-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1592480018-3340-5-git-send-email-hanks.chen@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:37:20 +0200
-Message-ID: <CACRpkdaDVzEjwrRbUjEPdGqVOHrLYaYSA6uVc4t_sY_A-0S-dg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/7] pinctrl: mediatek: add pinctrl support for MT6779 SoC
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
+References: <20200618144355.17324-1-axboe@kernel.dk> <20200618144355.17324-6-axboe@kernel.dk>
+ <20200624010253.GB5369@dread.disaster.area> <20200624014645.GJ21350@casper.infradead.org>
+ <bad52be9-ae44-171b-8dbf-0d98eedcadc0@kernel.dk> <70b0427c-7303-8f45-48bd-caa0562a2951@kernel.dk>
+ <20200624164127.GP21350@casper.infradead.org> <8835b6f2-b3c5-c9a0-2119-1fb161cf87dd@kernel.dk>
+In-Reply-To: <8835b6f2-b3c5-c9a0-2119-1fb161cf87dd@kernel.dk>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Tue, 7 Jul 2020 13:38:01 +0200
+Message-ID: <CAHpGcMJsrQXX4OQe6MqjyTt8BOLZw-y1ixdk76p_DsZONyEJcQ@mail.gmail.com>
+Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>, io-uring@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
-
-> This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
+Am Mi., 24. Juni 2020 um 18:48 Uhr schrieb Jens Axboe <axboe@kernel.dk>:
 >
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> On 6/24/20 10:41 AM, Matthew Wilcox wrote:
+> > On Wed, Jun 24, 2020 at 09:35:19AM -0600, Jens Axboe wrote:
+> >> On 6/24/20 9:00 AM, Jens Axboe wrote:
+> >>> On 6/23/20 7:46 PM, Matthew Wilcox wrote:
+> >>>> I'd be quite happy to add a gfp_t to struct readahead_control.
+> >>>> The other thing I've been looking into for other reasons is adding
+> >>>> a memalloc_nowait_{save,restore}, which would avoid passing down
+> >>>> the gfp_t.
+> >>>
+> >>> That was my first thought, having the memalloc_foo_save/restore for
+> >>> this. I don't think adding a gfp_t to readahead_control is going
+> >>> to be super useful, seems like the kind of thing that should be
+> >>> non-blocking by default.
+> >>
+> >> We're already doing memalloc_nofs_save/restore in
+> >> page_cache_readahead_unbounded(), so I think all we need is to just do a
+> >> noio dance in generic_file_buffered_read() and that should be enough.
+> >
+> > I think we can still sleep though, right?  I was thinking more
+> > like this:
+> >
+> > http://git.infradead.org/users/willy/linux.git/shortlog/refs/heads/memalloc
+>
+> Yeah, that's probably better. How do we want to handle this? I've already
+> got the other bits queued up. I can either add them to the series, or
+> pull a branch that'll go into Linus as well.
 
-Patch applied.
+Also note my conflicting patch that introduces a IOCB_NOIO flag for
+fixing a gfs2 regression:
 
-Yours,
-Linus Walleij
+https://lore.kernel.org/linux-fsdevel/20200703095325.1491832-2-agruenba@redhat.com/
+
+Thanks,
+Andreas
