@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B821204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C89204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135880;
-	bh=Q8fB8wIWAkntYlaLQqD7YhS0waYCcldxL0PkeKniStw=;
+	s=default; t=1594135885;
+	bh=dV0gNCmUrXIR5SUldbObEaG2LXR9tG3iUZCJCixlu5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0H4/7EQj1x86ft5jn2fhfOdE3caF/yQXTHh7Eqyb1gsxbd5qmfneQbM4+Adame7W0
-	 9RdyJ3Gjfolrm4rD7zJG70FXqSyda6HCgbmcC7pZz40BT2NWA7nJwT3NfvsE/Y0ZA2
-	 QSRyscMoUs/gTGC8ljlw17ogsJNzI8qLa5gh/KMo=
+	b=E/8Q3+6HZSL7wbJi+lbXgMolRqsWlIw+8iKZTUA8yJAVFPIzAZjb9f36eB11dX9FC
+	 QBRNaw+eRpITuSPvjHZOPFrCMtqxC0pGOV0sTGVGL+XXkdLatdOT7Mt31CLbeMNw5M
+	 48ejETEOTobrUc6RbulW+XWHOTCpIGjm6RcIsd58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgGGPXI (ORCPT
+        id S1729976AbgGGPbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgGGPXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:00 -0400
+        id S1728868AbgGGPXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1DFC2065D;
-        Tue,  7 Jul 2020 15:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6EFE2065D;
+        Tue,  7 Jul 2020 15:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135379;
-        bh=Q8fB8wIWAkntYlaLQqD7YhS0waYCcldxL0PkeKniStw=;
+        s=default; t=1594135384;
+        bh=dV0gNCmUrXIR5SUldbObEaG2LXR9tG3iUZCJCixlu5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tp5f/hgezPcLXFxYb3b734rPQVzWxXtp6WcY2vvV/O8uUSIcFFnBic9LffKdc7MQR
-         +qsSuJTjwiz+6xLtjAfPkpvW0x/PqLZ1/EHBKPCc2l1TBaNOzqpAUwSGJtMvvZ2DuA
-         knk2xo+JWSX4hKayMW2Po3iYe2a0e6VqQMjkYVuc=
+        b=aD/nkA8gOTxofOdjuWDuclbTibK5exTa+DFtl+1P/FqpYKfgFKIP+cQ8m7Go59cMV
+         fLmgaP/kBC8YerXKzSDugFO8LnamkeVNHW179/5jsWaCcr6Swk68P5kUpnlpDqR56k
+         To5WYvXvuods0y/b772AaEE0FSjPX1ZFXsD0wZ48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        John Clements <John.Clements@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Markus Elfring <Markus.Elfring@web.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 018/112] drm/amdgpu: fix non-pointer dereference for non-RAS supported
-Date:   Tue,  7 Jul 2020 17:16:23 +0200
-Message-Id: <20200707145801.863243602@linuxfoundation.org>
+Subject: [PATCH 5.7 002/112] exfat: add missing brelse() calls on error paths
+Date:   Tue,  7 Jul 2020 17:16:07 +0200
+Message-Id: <20200707145801.048188269@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,67 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit a9d82d2f91297679cfafd7e61c4bccdca6cd550d ]
+[ Upstream commit e8dd3cda8667118b70d9fe527f61fe22623de04d ]
 
-Backtrace on gpu recover test on Navi10.
+If the second exfat_get_dentry() call fails then we need to release
+"old_bh" before returning.  There is a similar bug in exfat_move_file().
 
-[ 1324.516681] RIP: 0010:amdgpu_ras_set_error_query_ready+0x15/0x20 [amdgpu]
-[ 1324.523778] Code: 4c 89 f7 e8 cd a2 a0 d8 e9 99 fe ff ff 45 31 ff e9 91 fe ff ff 0f 1f 44 00 00 55 48 85 ff 48 89 e5 74 0e 48 8b 87 d8 2b 01 00 <40> 88 b0 38 01 00 00 5d c3 66 90 0f 1f 44 00 00 55 31 c0 48 85 ff
-[ 1324.543452] RSP: 0018:ffffaa1040e4bd28 EFLAGS: 00010286
-[ 1324.549025] RAX: 0000000000000000 RBX: ffff911198b20000 RCX: 0000000000000000
-[ 1324.556217] RDX: 00000000000c0a01 RSI: 0000000000000000 RDI: ffff911198b20000
-[ 1324.563514] RBP: ffffaa1040e4bd28 R08: 0000000000001000 R09: ffff91119d0028c0
-[ 1324.570804] R10: ffffffff9a606b40 R11: 0000000000000000 R12: 0000000000000000
-[ 1324.578413] R13: ffffaa1040e4bd70 R14: ffff911198b20000 R15: 0000000000000000
-[ 1324.586464] FS:  00007f4441cbf540(0000) GS:ffff91119ed80000(0000) knlGS:0000000000000000
-[ 1324.595434] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1324.601345] CR2: 0000000000000138 CR3: 00000003fcdf8004 CR4: 00000000003606e0
-[ 1324.608694] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1324.616303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1324.623678] Call Trace:
-[ 1324.626270]  amdgpu_device_gpu_recover+0x6e7/0xc50 [amdgpu]
-[ 1324.632018]  ? seq_printf+0x4e/0x70
-[ 1324.636652]  amdgpu_debugfs_gpu_recover+0x50/0x80 [amdgpu]
-[ 1324.643371]  seq_read+0xda/0x420
-[ 1324.647601]  full_proxy_read+0x5c/0x90
-[ 1324.652426]  __vfs_read+0x1b/0x40
-[ 1324.656734]  vfs_read+0x8e/0x130
-[ 1324.660981]  ksys_read+0xa7/0xe0
-[ 1324.665201]  __x64_sys_read+0x1a/0x20
-[ 1324.669907]  do_syscall_64+0x57/0x1c0
-[ 1324.674517]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1324.680654] RIP: 0033:0x7f44417cf081
-
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: John Clements <John.Clements@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 5f2aa075070c ("exfat: add inode operations")
+Reported-by: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/exfat/namei.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index aa6148d12d5a4..b0aa4e1ed4df7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -82,13 +82,13 @@ static bool amdgpu_ras_check_bad_page(struct amdgpu_device *adev,
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index a2659a8a68a14..3bf1dbadab691 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -1089,10 +1089,14 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
  
- void amdgpu_ras_set_error_query_ready(struct amdgpu_device *adev, bool ready)
- {
--	if (adev)
-+	if (adev && amdgpu_ras_get_context(adev))
- 		amdgpu_ras_get_context(adev)->error_query_ready = ready;
- }
+ 		epold = exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
+ 			&sector_old);
++		if (!epold)
++			return -EIO;
+ 		epnew = exfat_get_dentry(sb, p_dir, newentry + 1, &new_bh,
+ 			&sector_new);
+-		if (!epold || !epnew)
++		if (!epnew) {
++			brelse(old_bh);
+ 			return -EIO;
++		}
  
- bool amdgpu_ras_get_error_query_ready(struct amdgpu_device *adev)
- {
--	if (adev)
-+	if (adev && amdgpu_ras_get_context(adev))
- 		return amdgpu_ras_get_context(adev)->error_query_ready;
+ 		memcpy(epnew, epold, DENTRY_SIZE);
+ 		exfat_update_bh(sb, new_bh, sync);
+@@ -1173,10 +1177,14 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
  
- 	return false;
+ 	epmov = exfat_get_dentry(sb, p_olddir, oldentry + 1, &mov_bh,
+ 		&sector_mov);
++	if (!epmov)
++		return -EIO;
+ 	epnew = exfat_get_dentry(sb, p_newdir, newentry + 1, &new_bh,
+ 		&sector_new);
+-	if (!epmov || !epnew)
++	if (!epnew) {
++		brelse(mov_bh);
+ 		return -EIO;
++	}
+ 
+ 	memcpy(epnew, epmov, DENTRY_SIZE);
+ 	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
 -- 
 2.25.1
 
