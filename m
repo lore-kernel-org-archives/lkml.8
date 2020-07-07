@@ -2,54 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40468C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7768E20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161702078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135156;
-	bh=SOHD4JQllf3nDabfdNkDslA68fyYTjsdIl+3w4uFs6c=;
+	s=default; t=1594135160;
+	bh=FKfxQsRyT7kjS0tQFt9nWm9CYWhxBmsTbmgijqJj0yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDTz7KuAjwiChCCAXFcW+uopGOrR/XekkuWD8HZriQ7C1q18+6T4e2OosT6o9+evm
-	 VgfWtuI5DkoyM8zvhm6BXGz+6ArDFZgyRGqi+b+tHjXXCdlKKx15gEbAQ5xil8H+08
-	 QAubOcneYMguyGnSvB2uatiD0A0tiBpGX9XhsTFs=
+	b=RvDFaTlG7u9HE6FBnjg1mo4bvxkuUUoFEhyq3Fxc2AE2EFh+bCcrswrS7VfopwPO8
+	 rraiRtLmfjhphr6hRSiBjrf1Xk3dwb4/QggtNobJmGTf2dEABmJ50o39cStTZYJPGy
+	 orSDcwFqNf+P2ZG8oQhNjZuXc0ZwDYL6rEhMbNnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgGGPTP (ORCPT
+        id S1729313AbgGGPTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58880 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgGGPTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:13 -0400
+        id S1729307AbgGGPTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9D220674;
-        Tue,  7 Jul 2020 15:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB45B20771;
+        Tue,  7 Jul 2020 15:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135152;
-        bh=SOHD4JQllf3nDabfdNkDslA68fyYTjsdIl+3w4uFs6c=;
+        s=default; t=1594135155;
+        bh=FKfxQsRyT7kjS0tQFt9nWm9CYWhxBmsTbmgijqJj0yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oNUfkpuryc0kvcgi6P2uumr6LiKCCPHMTTRoa5cSYLA1AuplVoNPyqfauQ1Mgesfk
-         f98PiJneA95TDFO43K5HcZ7xGdEkzrpU2yPyEucJPrtsIXqU7K1rHjTc/CfhHtlt56
-         ammJ6avmo7Tikus/5tJvE7IAuNC5B2zKZvjn4Jeg=
+        b=r1UfDzO+PuGxdNosiujkEoE0gXA/hQJz4J3qW8zFE2M2yf7X2Lssg2U5sRUXqUzax
+         eFxqEjtgA8amj0X2h8oXJZWbCwuVBltvn0IVkZ8kQhF2xwhCrivj+3SjQNPKVALT8/
+         iSVNy87pbyj2K3/HeseRCzxvYBYU3NRmcGZmJcnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avinash M N <Avinash.M.N@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/36] nvme: fix a crash in nvme_mpath_add_disk
-Date:   Tue,  7 Jul 2020 17:17:16 +0200
-Message-Id: <20200707145750.283893884@linuxfoundation.org>
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.19 33/36] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+Date:   Tue,  7 Jul 2020 17:17:25 +0200
+Message-Id: <20200707145750.738867355@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -62,44 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-[ Upstream commit 72d447113bb751ded97b2e2c38f886e4a4139082 ]
+commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
 
-For private namespaces ns->head_disk is NULL, so add a NULL check
-before updating the BDI capabilities.
+This resolves the hazard between the mtc0 in the change_c0_status() and
+the mfc0 in configure_exception_vector(). Without resolving this hazard
+configure_exception_vector() could read an old value and would restore
+this old value again. This would revert the changes change_c0_status()
+did. I checked this by printing out the read_c0_status() at the end of
+per_cpu_trap_init() and the ST0_MX is not set without this patch.
 
-Fixes: b2ce4d90690b ("nvme-multipath: set bdi capabilities once")
-Reported-by: Avinash M N <Avinash.M.N@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The hazard is documented in the MIPS Architecture Reference Manual Vol.
+III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
+6.03 table 8.1 which includes:
+
+   Producer | Consumer | Hazard
+  ----------|----------|----------------------------
+   mtc0     | mfc0     | any coprocessor 0 register
+
+I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
+There the change_c0_status() function would activate the DSPen by
+setting ST0_MX in the c0_status register. This was reverted and then the
+system got a DSP exception when the DSP registers were saved in
+save_dsp() in the first process switch. The crash looks like this:
+
+[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
+[    0.113470] Rebooting in 1 seconds..
+
+We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
+not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
+kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
+did not happen.
+
+In the kernel I bisected this problem to commit 9012d011660e ("compiler:
+allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
+reverted it also happened after commit 172dcd935c34b ("MIPS: Always
+allocate exception vector for MIPSr2+").
+
+Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
+does similar changes to a different file. I am not sure if there are
+more places affected by this problem.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/multipath.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/mips/kernel/traps.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 3ad6183c5e6b4..2e63c1106030b 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -532,10 +532,11 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 	}
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -2096,6 +2096,7 @@ static void configure_status(void)
  
- 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--		struct backing_dev_info *info =
--					ns->head->disk->queue->backing_dev_info;
-+		struct gendisk *disk = ns->head->disk;
- 
--		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+		if (disk)
-+			disk->queue->backing_dev_info->capabilities |=
-+					BDI_CAP_STABLE_WRITES;
- 	}
+ 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
+ 			 status_set);
++	back_to_back_c0_hazard();
  }
  
--- 
-2.25.1
-
+ unsigned int hwrena;
 
 
