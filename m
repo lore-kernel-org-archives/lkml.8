@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982882065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177BF20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134651;
-	bh=fsv8QM8PN/qV2fuRTlCXCxViKXQXGi/PJgSr0V0TKIg=;
+	s=default; t=1594134655;
+	bh=dxPAnu+QUeb8GHs9JmFoF4WsmUsrXtWVFlxVUxpCAQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7LOTM6zTbg3ucEfZzZHI1wVEyUHwg/cNC0QNryjWbK4gHwMUUzsjcj4pstWNF3OZ
-	 r8yT4Egw4c0SPFjVWtJvpupKuf8QNH3y1ScTiCAZ9GEyn7tZ+xm21TEcdjHru97qDE
-	 u3hb0zdXF42ibqWwpioumKyCno7IbGLY9LzWO9Ok=
+	b=bhLB4Y0R9Ptq1g3l8tUWwp48gVXR/6kFZ8j4An7soSEbcZfHvPhE3+7YKaUcdpnr1
+	 9zHScolZJw2o18G1p9zmipmXIL+5Yqml+jRzkGx4r3O37eD+O+p+WL7tczN35Gb0+Y
+	 bKNr0nW1WLM/qo4iAQF0A/Tnc3af3A30rSTTBHlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgGGPKu (ORCPT
+        id S1728520AbgGGPKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgGGPKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:10:45 -0400
+        id S1728492AbgGGPKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:10:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2E520773;
-        Tue,  7 Jul 2020 15:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6892420674;
+        Tue,  7 Jul 2020 15:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134645;
-        bh=fsv8QM8PN/qV2fuRTlCXCxViKXQXGi/PJgSr0V0TKIg=;
+        s=default; t=1594134649;
+        bh=dxPAnu+QUeb8GHs9JmFoF4WsmUsrXtWVFlxVUxpCAQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb1INGGg1eVkzfH6Up7QS/YsQgIm1R8iTPPJ1XLjW/9HobXr7kB73mdW8iKTDY2k5
-         unw+O+SH6HB4ZXcO7eKcCRZ7gI0voYn/M57QE5rvGEL38dIj5L7aJ+x3L1BfRQx7M6
-         6yK0tLcbyE/1kGL6xmqI1hzmzQ6eeXN+zQElgwOE=
+        b=mEQm/LxbBJly5B8PrIVI3a2qePorzQ81usXYvowLs4ZEzmyJ2IFDni/dMw7sMZX5D
+         41PRwBgChZ5cpXd3l3Iwewc+itYTkERKAOEDvPP7SVtLbxMHGWa6nsBK+p3I5lGtQH
+         Lxz7st/5PVgNskrdGJASdZJEOipfcmrcibu2jyuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 4.4 16/19] SMB3: Honor persistent/resilient handle flags for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:10:19 +0200
-Message-Id: <20200707145748.310362283@linuxfoundation.org>
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.4 18/19] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+Date:   Tue,  7 Jul 2020 17:10:21 +0200
+Message-Id: <20200707145748.411814202@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
 References: <20200707145747.493710555@linuxfoundation.org>
@@ -60,36 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-commit 00dfbc2f9c61185a2e662f27c45a0bb29b2a134f upstream.
+commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
 
-Without this:
+This resolves the hazard between the mtc0 in the change_c0_status() and
+the mfc0 in configure_exception_vector(). Without resolving this hazard
+configure_exception_vector() could read an old value and would restore
+this old value again. This would revert the changes change_c0_status()
+did. I checked this by printing out the read_c0_status() at the end of
+per_cpu_trap_init() and the ST0_MX is not set without this patch.
 
-- persistent handles will only be enabled for per-user tcons if the
-  server advertises the 'Continuous Availabity' capability
-- resilient handles would never be enabled for per-user tcons
+The hazard is documented in the MIPS Architecture Reference Manual Vol.
+III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
+6.03 table 8.1 which includes:
 
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+   Producer | Consumer | Hazard
+  ----------|----------|----------------------------
+   mtc0     | mfc0     | any coprocessor 0 register
+
+I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
+There the change_c0_status() function would activate the DSPen by
+setting ST0_MX in the c0_status register. This was reverted and then the
+system got a DSP exception when the DSP registers were saved in
+save_dsp() in the first process switch. The crash looks like this:
+
+[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
+[    0.113470] Rebooting in 1 seconds..
+
+We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
+not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
+kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
+did not happen.
+
+In the kernel I bisected this problem to commit 9012d011660e ("compiler:
+allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
+reverted it also happened after commit 172dcd935c34b ("MIPS: Always
+allocate exception vector for MIPSr2+").
+
+Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
+does similar changes to a different file. I am not sure if there are
+more places affected by this problem.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/kernel/traps.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4203,6 +4203,8 @@ cifs_construct_tcon(struct cifs_sb_info
- 	vol_info->retry = master_tcon->retry;
- 	vol_info->nocase = master_tcon->nocase;
- 	vol_info->local_lease = master_tcon->local_lease;
-+	vol_info->resilient = master_tcon->use_resilient;
-+	vol_info->persistent = master_tcon->use_persistent;
- 	vol_info->no_linux_ext = !master_tcon->unix_ext;
- 	vol_info->sectype = master_tcon->ses->sectype;
- 	vol_info->sign = master_tcon->ses->sign;
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -2080,6 +2080,7 @@ static void configure_status(void)
+ 
+ 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
+ 			 status_set);
++	back_to_back_c0_hazard();
+ }
+ 
+ /* configure HWRENA register */
 
 
