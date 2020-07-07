@@ -7,105 +7,126 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E83AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B708C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A7820775
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCA32073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DY/Y6rRC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pjWCUJEZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgGGOBe (ORCPT
+        id S1728350AbgGGOBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47870 "EHLO
+        Tue, 7 Jul 2020 10:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgGGOBD (ORCPT
+        with ESMTP id S1728100AbgGGOBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 10:01:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1159C08C5E2
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18757C08C5E1
         for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so46661244wml.3
+Received: by mail-wm1-x32d.google.com with SMTP id f139so46660823wmf.5
         for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/cqZIdFqcpIXxhTbwotqjldLYbQ1H9RlyQjCdSkXyGs=;
-        b=DY/Y6rRCsOjNTJ4MkMoPwBn+t6tp8Ea3aR3cwKW07HPMrJatmNWyjsxXWn8QkYDC9A
-         MjrEbwgrbgZZxlHsmKUvipQUvak0bqLJ9f+zQwDGAQFTgW54RkqkMz/JGF+4e5i78Q/c
-         2KBqbs2XOY808AW/smRWfFkGiaf9aMa713477C90tUkPIRj74nGwK2SRjYtBnft1e8i3
-         IVkvAi1yYxYJ37bqk704jsA8Ompe5sVbx1WP9CxrdUjsqIps8siu/zYqjiAuTHQrJdCb
-         41vt5Gk8sl8yd0WJ0DpcW5y/WTCY7ErzeiiIJe2KAXO8GRuw9+Oe0ws8P8hbK/NUezih
-         UwYw==
+        bh=jN1nbT1sxQbFlRXUCBfggkW/hnjjJGCQVCG/NPTfu6Y=;
+        b=pjWCUJEZwyPxA5RaPU66fCI6rKNgDNOxWlKt8d8YsnOGnz9+M2K1koQ7iG9eKhjaFx
+         g8YYXzC7TkDHe9hJ+8+ILM1uoCB/M+MHWG34tN2gn70O8IytBqRJWMHsFxODpQitWvEe
+         sT1z3OQLglHZy7jLwHM8UGQsPz8CNy8aRD+rEndm5AA2TpFh6opalazJ6fET6JTQdH6o
+         +tipp3x4BsKQaEnJZRxgT8WT7DN2KIDtAgsdP5DvogsK2YWShtueljfN3tKDaAN+lpu2
+         YLnIN4NNKIPdCd2/DMVhL0hcCLI01P4Qqh9eyPNxWoFhcq6sDnQe2S9JbIZ4IQOte1b9
+         to+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/cqZIdFqcpIXxhTbwotqjldLYbQ1H9RlyQjCdSkXyGs=;
-        b=KzTVoYxNwzNRaIma3x+wbkhOvBDwkAhWG4AEma92tVvzbRg3e9x9VPfaJumh03KGXD
-         iIzPonbCvFe5odTueDQpwrEvtWmHaWYkheZExJ9qroyt9701Vwij4StA8NW+fE006eOP
-         ImoIgT3B00OvsRKuN/BNkbXvFDPuO60kU5ImK6npxcFpzS19sL7kPykGipYbshj87Qve
-         iJDFJ4TA9B1Gymzl/RQuMYQH77tZhftM649aaI0qHswyV0RQslxRHws0REUsMgUusnN+
-         UtwX0cpyc5NjMTLHsmaDf0yatPLz0puJF1PZq6kLSuZWlLeIBK+gYMBMXdLLT2e26ppM
-         oJ4Q==
-X-Gm-Message-State: AOAM5308yby5qxzDtM4qKq6KHBriKYaRSpR9Nhs6NPk7poUSGbs4QphW
-        JH12Mf8e6PNw+53UEmu+7HK3RA7v6t0=
-X-Google-Smtp-Source: ABdhPJxcwcKHBS+Zqr7hOZ8rG07HC55gAhjiOhogcm4iiP2hTlX4x1wCiARK/E88lw9mjx75xGrnpA==
-X-Received: by 2002:a1c:49d4:: with SMTP id w203mr4610085wma.13.1594130462391;
-        Tue, 07 Jul 2020 07:01:02 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=jN1nbT1sxQbFlRXUCBfggkW/hnjjJGCQVCG/NPTfu6Y=;
+        b=Qpp3C+4iDbzwyIcrQCWk6CW0TQb2nqTdV0O8vUXNdKsOCIUlXLZkqKjfg2a5S2FxnO
+         ZHconYZkfbA7kr7q2mxurCr8PJsTE0jDPG/4POSO0mH85kk2Zrr4B/74MLy2m9t2X/fw
+         QOTA1tpwJBou+sJ7TLzNvAmMeL/44ct9tsH3TiqKWu1m11RLveBPxgXO+EYBkDT1nTjJ
+         jsB3bcObPNmFDmzWnmVtuXBNJDpcTKRPYGa67kEkhBCvILcsyG8Orv6dU4dZs6XCrumR
+         YkIYgLA+D8qSistzeBlPYkJuWbn7uDkFOFFhvmU8dcNZW8IyHG2S7l4jETXzPondczMJ
+         1Wiw==
+X-Gm-Message-State: AOAM530RyY3sit05pKWNRShKAzGnioifcfyQrJ6GJgpO81GHwhyNZ3gB
+        Ztb67gvF58Xp2ofqazKsm3fBDQ==
+X-Google-Smtp-Source: ABdhPJzUV97sKhk0cTprn9h4VIm8fJrhl/nqYSZ5hY14wPRhadSv020fwC6sc7z+gXrJDrbeBjfV5A==
+X-Received: by 2002:a1c:4303:: with SMTP id q3mr4547681wma.134.1594130461172;
         Tue, 07 Jul 2020 07:01:01 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 07:01:00 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 03/10] scsi: fdomain: Mark 'fdomain_pm_ops' as __maybe_unused
-Date:   Tue,  7 Jul 2020 15:00:48 +0100
-Message-Id: <20200707140055.2956235-4-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Atul Mukker <Atul.Mukker@lsi.com>,
+        Sreenivas Bagalkote <Sreenivas.Bagalkote@lsi.com>,
+        Manoj Jose <Manoj.Jose@lsi.com>, megaraidlinux@lsi.com,
+        megaraidlinux.pdl@broadcom.com
+Subject: [PATCH 02/10] scsi: megaraid: megaraid_mbox: Fix some kerneldoc bitrot
+Date:   Tue,  7 Jul 2020 15:00:47 +0100
+Message-Id: <20200707140055.2956235-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707140055.2956235-1-lee.jones@linaro.org>
 References: <20200707140055.2956235-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all source files which include 'fdomain.h' make use of 'fdomain_pm_ops'
-leaving them defined but unused.  Mark it as __maybe_unused to tell the
-compiler this is not only acceptable, but expected.
+Some function parameters have changed without updating the documentation.
 
 Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/scsi/pcmcia/fdomain_cs.c:16:
- drivers/scsi/fdomain.h:106:32: warning: ‘fdomain_pm_ops’ defined but not used [-Wunused-const-variable=]
- 106 | static const struct dev_pm_ops fdomain_pm_ops;
- | ^~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_mbox.c:3314: warning: Excess function parameter 'level' description in 'megaraid_mbox_display_scb'
+ drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Function parameter or member 'dev' not described in 'megaraid_sysfs_show_app_hndl'
+ drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Function parameter or member 'attr' not described in 'megaraid_sysfs_show_app_hndl'
+ drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Excess function parameter 'cdev' description in 'megaraid_sysfs_show_app_hndl'
 
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Cc: Atul Mukker <Atul.Mukker@lsi.com>
+Cc: Sreenivas Bagalkote <Sreenivas.Bagalkote@lsi.com>
+Cc: Manoj Jose <Manoj.Jose@lsi.com>
+Cc: megaraidlinux@lsi.com
+Cc: megaraidlinux.pdl@broadcom.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/fdomain.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_mbox.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/fdomain.h b/drivers/scsi/fdomain.h
-index 6f63fc6b0d127..93afcee207aed 100644
---- a/drivers/scsi/fdomain.h
-+++ b/drivers/scsi/fdomain.h
-@@ -103,7 +103,7 @@ enum {
- #define REG_FIFO_COUNT		14	/* R: FIFO Data Count */
+diff --git a/drivers/scsi/megaraid/megaraid_mbox.c b/drivers/scsi/megaraid/megaraid_mbox.c
+index 8f918df631bfe..cace28dd81ad8 100644
+--- a/drivers/scsi/megaraid/megaraid_mbox.c
++++ b/drivers/scsi/megaraid/megaraid_mbox.c
+@@ -3304,7 +3304,6 @@ megaraid_mbox_fire_sync_cmd(adapter_t *adapter)
+  * megaraid_mbox_display_scb - display SCB information, mostly debug purposes
+  * @adapter		: controller's soft state
+  * @scb			: SCB to be displayed
+- * @level		: debug level for console print
+  *
+  * Diplay information about the given SCB iff the current debug level is
+  * verbose.
+@@ -3972,7 +3971,8 @@ megaraid_sysfs_get_ldmap(adapter_t *adapter)
  
- #ifdef CONFIG_PM_SLEEP
--static const struct dev_pm_ops fdomain_pm_ops;
-+static const struct dev_pm_ops __maybe_unused fdomain_pm_ops;
- #define FDOMAIN_PM_OPS	(&fdomain_pm_ops)
- #else
- #define FDOMAIN_PM_OPS	NULL
+ /**
+  * megaraid_sysfs_show_app_hndl - display application handle for this adapter
+- * @cdev	: class device object representation for the host
++ * @dev		: device object representation for the host
++ * @attr	: unused
+  * @buf		: buffer to send data to
+  *
+  * Display the handle used by the applications while executing management
 -- 
 2.25.1
 
