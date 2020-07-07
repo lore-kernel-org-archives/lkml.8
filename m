@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09939C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D746A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC6A2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594151210;
-	bh=5xc6pN2TBXNWEcR01qSPAYpgcIpDgrzlDuJ85S1dAn0=;
+	s=default; t=1594151306;
+	bh=FzVkTRZbVTWo26JlUWux1r2hqQFY+dIy55fBtRo68nw=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=uiHc8ZVBjrLkDkzLNMW+wPHaQ4MOYVMObCs96xwGGK3JdDGtUbt4cgI+9WuaHFEAe
-	 Uq7HHpVb9UV7fEZ1HglzM7M/OEthB0Svtt8G5U7NaJofyJ+RmxexypYxlN/k1gVEyb
-	 N6iYHOUWEPVxwRs24Ma/6ccRgYB4ueGiwFZgzdVI=
+	b=Fpxsn0wQTYdn0gpNoTogWImeggP/tFjYHTI1rx+WDzsbwnaHR+y33zSHlbYUSoTo2
+	 hH13ko1ueolgQOalpNVQlRWHsU+l1Z6ECYNn1htt8kUMVYhrcUM5gMbuRozuOyK5FQ
+	 SARcP9LE7ls7aDp4CjqYCnIuy1EfmHjcpnK9koSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgGGTqt (ORCPT
+        id S1728328AbgGGTsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 15:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgGGTqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:46:49 -0400
+        id S1727090AbgGGTsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:48:25 -0400
 Received: from embeddedor (unknown [200.39.26.250])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D54282067D;
-        Tue,  7 Jul 2020 19:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E90F2067D;
+        Tue,  7 Jul 2020 19:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594151208;
-        bh=5xc6pN2TBXNWEcR01qSPAYpgcIpDgrzlDuJ85S1dAn0=;
+        s=default; t=1594151304;
+        bh=FzVkTRZbVTWo26JlUWux1r2hqQFY+dIy55fBtRo68nw=;
         h=Date:From:To:Cc:Subject:From;
-        b=KrIiJh2ef4ESA5x5pkG3fH9Aqt75oiH5qXW4bb+WlvyY6y6Qy03uKi4QJO7rruhQT
-         bR4FAhRPYXNpm7ijlVoOmofnRAGYniIEV9QH3eBYXOL6/2gK4+3oR1DpdTLOj19b+A
-         P13h67E+N3b7oAmrDa7T6ZM9b76xeLAa7S4D/s3w=
-Date:   Tue, 7 Jul 2020 14:52:14 -0500
+        b=YN2eRfFAQTisuTkdb3UVqOKJQx9daTY64aN7IyfvLHFCAzzBdWPd2oRh4CDMJTt5J
+         G9mM9RXD7DymeXTdImTyOM5p0QFsBPRHyesVvYknnD3igrVuJdXYOxPuYChgcHZfUN
+         RpUpIhv1Re0t8QBCiwiCT8tgu0wagWfS9pril6jg=
+Date:   Tue, 7 Jul 2020 14:53:51 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>
+        Alan Stern <stern@rowland.harvard.edu>
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] usbip: Use fallthrough pseudo-keyword
-Message-ID: <20200707195214.GA3932@embeddedor>
+Subject: [PATCH] USB: OHCI: Use fallthrough pseudo-keyword
+Message-ID: <20200707195351.GA4061@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -65,90 +64,93 @@ fall-through markings when it is the case.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/usb/usbip/stub_rx.c       |    2 +-
- drivers/usb/usbip/vhci_hcd.c      |    7 +++----
- drivers/usb/usbip/vhci_rx.c       |    2 +-
- drivers/usb/usbip/vudc_transfer.c |    4 ++--
- 4 files changed, 7 insertions(+), 8 deletions(-)
+ drivers/usb/host/ohci-hcd.c  |    4 ++--
+ drivers/usb/host/ohci-hub.c  |    2 +-
+ drivers/usb/host/ohci-q.c    |    6 +++---
+ drivers/usb/host/ohci-tmio.c |    6 +++---
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
-index e2b019532234..325c22008e53 100644
---- a/drivers/usb/usbip/stub_rx.c
-+++ b/drivers/usb/usbip/stub_rx.c
-@@ -424,7 +424,7 @@ static void masking_bogus_flags(struct urb *urb)
- 	case USB_ENDPOINT_XFER_BULK:
- 		if (is_out)
- 			allowed |= URB_ZERO_PACKET;
+diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+index 4de91653a2c7..9b4121927d4a 100644
+--- a/drivers/usb/host/ohci-hcd.c
++++ b/drivers/usb/host/ohci-hcd.c
+@@ -385,7 +385,7 @@ ohci_endpoint_disable (struct usb_hcd *hcd, struct usb_host_endpoint *ep)
+ 			ed_free (ohci, ed);
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		/* caller was supposed to have unlinked any requests;
+ 		 * that's not our job.  can't recover; must leak ed.
+@@ -1051,7 +1051,7 @@ int ohci_restart(struct ohci_hcd *ohci)
+ 			ed->ed_next = ohci->ed_rm_list;
+ 			ed->ed_prev = NULL;
+ 			ohci->ed_rm_list = ed;
+-			/* FALLTHROUGH */
++			fallthrough;
+ 		case ED_UNLINK:
+ 			break;
+ 		default:
+diff --git a/drivers/usb/host/ohci-hub.c b/drivers/usb/host/ohci-hub.c
+index 634f3c7bf774..44504c1751e0 100644
+--- a/drivers/usb/host/ohci-hub.c
++++ b/drivers/usb/host/ohci-hub.c
+@@ -58,7 +58,7 @@ __acquires(ohci->lock)
+ 		ohci->hc_control |= OHCI_USB_RESET;
+ 		ohci_writel (ohci, ohci->hc_control, &ohci->regs->control);
+ 		(void) ohci_readl (ohci, &ohci->regs->control);
+-		/* FALL THROUGH */
++		fallthrough;
+ 	case OHCI_USB_RESET:
+ 		status = -EBUSY;
+ 		ohci_dbg (ohci, "needs reinit!\n");
+diff --git a/drivers/usb/host/ohci-q.c b/drivers/usb/host/ohci-q.c
+index 4ccb85a67bb3..3b445312beea 100644
+--- a/drivers/usb/host/ohci-q.c
++++ b/drivers/usb/host/ohci-q.c
+@@ -647,7 +647,7 @@ static void td_submit_urb (
+ 		/* ... and periodic urbs have extra accounting */
+ 		periodic = ohci_to_hcd(ohci)->self.bandwidth_int_reqs++ == 0
+ 			&& ohci_to_hcd(ohci)->self.bandwidth_isoc_reqs == 0;
 -		/* FALLTHROUGH */
 +		fallthrough;
- 	default:			/* all non-iso endpoints */
- 		if (!is_out)
- 			allowed |= URB_SHORT_NOT_OK;
-diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-index 65850e9c7190..1b598db5d8b9 100644
---- a/drivers/usb/usbip/vhci_hcd.c
-+++ b/drivers/usb/usbip/vhci_hcd.c
-@@ -508,7 +508,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 		case USB_PORT_FEAT_U1_TIMEOUT:
- 			usbip_dbg_vhci_rh(
- 				" SetPortFeature: USB_PORT_FEAT_U1_TIMEOUT\n");
--			/* Fall through */
-+			fallthrough;
- 		case USB_PORT_FEAT_U2_TIMEOUT:
- 			usbip_dbg_vhci_rh(
- 				" SetPortFeature: USB_PORT_FEAT_U2_TIMEOUT\n");
-@@ -561,7 +561,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 				       "supported for USB 2.0 roothub\n");
- 				goto error;
- 			}
--			/* FALLS THROUGH */
-+			fallthrough;
- 		case USB_PORT_FEAT_RESET:
- 			usbip_dbg_vhci_rh(
- 				" SetPortFeature: USB_PORT_FEAT_RESET\n");
-@@ -584,8 +584,7 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 
- 			/* 50msec reset signaling */
- 			vhci_hcd->re_timeout = jiffies + msecs_to_jiffies(50);
--
--			/* FALLS THROUGH */
-+			fallthrough;
- 		default:
- 			usbip_dbg_vhci_rh(" SetPortFeature: default %d\n",
- 					  wValue);
-diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
-index 00fc98741c5d..266024cbb64f 100644
---- a/drivers/usb/usbip/vhci_rx.c
-+++ b/drivers/usb/usbip/vhci_rx.c
-@@ -27,7 +27,7 @@ struct urb *pickup_urb_and_free_priv(struct vhci_device *vdev, __u32 seqnum)
- 
- 		switch (status) {
- 		case -ENOENT:
--			/* fall through */
-+			fallthrough;
- 		case -ECONNRESET:
- 			dev_dbg(&urb->dev->dev,
- 				 "urb seq# %u was unlinked %ssynchronously\n",
-diff --git a/drivers/usb/usbip/vudc_transfer.c b/drivers/usb/usbip/vudc_transfer.c
-index c9db846ee4f6..7e801fee33bf 100644
---- a/drivers/usb/usbip/vudc_transfer.c
-+++ b/drivers/usb/usbip/vudc_transfer.c
-@@ -404,7 +404,7 @@ static void v_timer(struct timer_list *t)
- 			 * for now, give unlimited bandwidth
- 			 */
- 			limit += urb->transfer_buffer_length;
--			/* fallthrough */
-+			fallthrough;
- 		default:
- treat_control_like_bulk:
- 			total -= transfer(udc, urb, ep, limit);
-@@ -479,7 +479,7 @@ void v_kick_timer(struct vudc *udc, unsigned long time)
- 		return;
- 	case VUDC_TR_IDLE:
- 		t->state = VUDC_TR_RUNNING;
+ 	case PIPE_BULK:
+ 		info = is_out
+ 			? TD_T_TOGGLE | TD_CC | TD_DP_OUT
+@@ -879,11 +879,11 @@ static void ed_halted(struct ohci_hcd *ohci, struct td *td, int cc)
+ 	case TD_DATAUNDERRUN:
+ 		if ((urb->transfer_flags & URB_SHORT_NOT_OK) == 0)
+ 			break;
 -		/* fallthrough */
 +		fallthrough;
- 	case VUDC_TR_STOPPED:
- 		/* we may want to kick timer to unqueue urbs */
- 		mod_timer(&t->timer, time);
+ 	case TD_CC_STALL:
+ 		if (usb_pipecontrol (urb->pipe))
+ 			break;
+-		/* fallthrough */
++		fallthrough;
+ 	default:
+ 		ohci_dbg (ohci,
+ 			"urb %p path %s ep%d%s %08x cc %d --> status %d\n",
+diff --git a/drivers/usb/host/ohci-tmio.c b/drivers/usb/host/ohci-tmio.c
+index fb6f5e9ae5c6..7f857bad9e95 100644
+--- a/drivers/usb/host/ohci-tmio.c
++++ b/drivers/usb/host/ohci-tmio.c
+@@ -97,13 +97,13 @@ static void tmio_stop_hc(struct platform_device *dev)
+ 	switch (ohci->num_ports) {
+ 		default:
+ 			dev_err(&dev->dev, "Unsupported amount of ports: %d\n", ohci->num_ports);
+-			/* fall through */
++			fallthrough;
+ 		case 3:
+ 			pm |= CCR_PM_USBPW3;
+-			/* fall through */
++			fallthrough;
+ 		case 2:
+ 			pm |= CCR_PM_USBPW2;
+-			/* fall through */
++			fallthrough;
+ 		case 1:
+ 			pm |= CCR_PM_USBPW1;
+ 	}
 
