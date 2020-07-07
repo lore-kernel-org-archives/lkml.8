@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B26F207BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE092082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tihaag9j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4icUTAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgGGOiE (ORCPT
+        id S1728369AbgGGOiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53664 "EHLO
+        Tue, 7 Jul 2020 10:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728208AbgGGOiB (ORCPT
+        with ESMTP id S1728321AbgGGOiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:01 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E990C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:01 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o2so46778461wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:01 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:03 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17A0C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so34119870wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HXwAK5e9O3NfsiXPR7kk8AeqU5Nw2ls4PmOWf/vu7lg=;
-        b=Tihaag9jMZwV29UerK76hQHb+DRXAFh+EUs1V7aQVmLUfa12c5Fgqr88tInVnn3Uc1
-         LOGKlmUmb+W/soV/36Apjvy+WJPjIp43OaM8ccv/ZI9kSNdijHkDH6/Gl3UPf7G6HBdf
-         xiaH7jdxISmGJOyBG2mT24keyFUnXZ4oMlos6cNb89np7R9u13rqCCPwN0VKr6W4bKj+
-         V3acj0cuYTx9DTeA41/QMR0Gn4mK+hnG7Aaa7kxv48yTjcNutHvDXt1ekAr2SXoIQr8n
-         6YJeRmk++sSjJasxlfqA1DPJNpHwqCymdkR6TM+tEFI+jO78WkaMABQw3YGw7/etEaqx
-         208A==
+        bh=YsokizqvcQrYmRK4XFUw9AfpZPmtx9CnTkzjsD5Kh2w=;
+        b=U4icUTAip9+fVemfIStmlUm+NwJ6HLWkl2RVpVYHUx/CKlpWCnzwXVC3CzO6ZJxzhS
+         2A1u3oeiQiRbLQzl0ReMEMvLcVbjfBld3DOsbinq/HDwtkUHvTpoWwmwIW3JsgEKydrN
+         sT3Mcd7tmzyJB7ZIkVdXvVfah2S5RNbEIcqZBCMnb6IrgPpJML1ZcTZMJjZpFjGT9bwX
+         KFw/rVo796NGAFlBcF22gotYI6DwHJNR9jKSzyYFD5cOe2ZDQ9Y6jIASEoBUkL5rLH3v
+         YxlY2MQtb7I3y0oBmo4AzeIL57N0+DjNcvsd9DRoEZo+/djPEr+HoSNOmqkrC0YQRMhu
+         DvRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HXwAK5e9O3NfsiXPR7kk8AeqU5Nw2ls4PmOWf/vu7lg=;
-        b=k8TPW5lRGyzpDY24f7LJZrN2v78W/reiPW2fCC9T0dwsEjIxf2zOxm/d0zhqioUSJi
-         ke/xK8rxpIMVWPDaq5TZ170o9KcjtRc3I1izq3pkon+eBtORf0HgnZeM1aJHU1s+tMX9
-         Y+xD1qt5Y3AY1WMomE97FJD07jK4+bfrhtwiBw4V1fH/6T1r9KI6AS1pnX8o0bvEQp33
-         2oZoqT0B1TKwMcOaZ+V6Bx5tW8Fl2TPhpV6jXhtUJyncisRQleKYc8Z2Gvh/cOSzAZm4
-         +eXe9Wsabw4ikDhQt54qJonqSOi16LshPk9t7LTPpvPjEODcH9dWu2ifDP/7ILTLQDZc
-         ul0g==
-X-Gm-Message-State: AOAM532nCPHH85IOsrJ856hWkRInUhQFmCU55Br9PTGg6f+XjUdDTVl+
-        0OihlEzL0PvUJJ0ju1RyuU//Dg==
-X-Google-Smtp-Source: ABdhPJxKl25fOx72TKj8zseBRL2O39bOx4sTMEBHeAZ/aj9XhWqZW3rmDeB2Wlp30lHgwCTBjVA4cg==
-X-Received: by 2002:a1c:7f82:: with SMTP id a124mr4232616wmd.132.1594132680416;
-        Tue, 07 Jul 2020 07:38:00 -0700 (PDT)
+        bh=YsokizqvcQrYmRK4XFUw9AfpZPmtx9CnTkzjsD5Kh2w=;
+        b=PQe5Y/UEy8oEdsMwHjhz+FIzaelaXmGv5YsuSUkzAyWrdmSfskURQNqAPaTOTzbCEf
+         FVzhzBBL62EzU1TbzfavpynASOROFU45k2IGhWx4Xtr7DsQ+kyReiHEE54HzVPbD1Lot
+         mdtO6Rts+W4mC5Nank9+CT3ONsO+UPeX6lYXfxufFIIB6t6L/0kAAsS/awnC/S/s4PmP
+         c00zKOypRRaoG4fFbrtUvOhUlW4vh2VwzFIyCRJ/V7zkEhtjZ96Rsms4JMj0hzYT/opF
+         uXOM+UR4Znl/i8lSscn4zoIYirWBsGrmjaue1XzA8JmErPVmYyE4HfVkmq0QfM1BZ9xv
+         kcLA==
+X-Gm-Message-State: AOAM531T0zpPkcyG0yRRnhjWXrC9JVyhXY+LrWt0GtLw24PnERTYPlVx
+        6RlpyRV9csssDANc3tN2G243GQ==
+X-Google-Smtp-Source: ABdhPJyQQtUDPp475nOrZE1vXhOfcyykGtayzQzLC4nanwruesoW0y74DEzt0XwmDnl//B05KWRVDw==
+X-Received: by 2002:a5d:6990:: with SMTP id g16mr45394243wru.131.1594132681537;
+        Tue, 07 Jul 2020 07:38:01 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.37.55
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:37:59 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:01 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
@@ -68,11 +68,10 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Nicolin Chen <nicoleotsuka@gmail.com>,
         Xiubo Li <Xiubo.Lee@gmail.com>,
         Fabio Estevam <festevam@gmail.com>,
-        Vladimir Barinov <vbarinov@embeddedalley.com>,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 08/28] ASoC: fsl: fsl_spdif: Update 'struct fsl_spdif_priv's descriptions
-Date:   Tue,  7 Jul 2020 15:37:22 +0100
-Message-Id: <20200707143742.2959960-9-lee.jones@linaro.org>
+Subject: [PATCH v2 09/28] ASoC: fsl: fsl_esai: Fix a bunch of kerneldoc issues
+Date:   Tue,  7 Jul 2020 15:37:23 +0100
+Message-Id: <20200707143742.2959960-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
@@ -83,52 +82,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two descriptions for 'soc' and 'regcache_srpc' were missing.  Add them.
+Struct headers require a 'struct $NAME' title, all function parameters
+require a description and need to be in the format '@.*:', else the
+checker gets confused.  Also demote one kerneldoc header where no effort
+was made to document any of the function's params.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/fsl/fsl_spdif.c:125: warning: Function parameter or member 'soc' not described in 'fsl_spdif_priv'
- sound/soc/fsl/fsl_spdif.c:125: warning: Function parameter or member 'regcache_srpc' not described in 'fsl_spdif_priv'
+ sound/soc/fsl/fsl_esai.c:30: warning: cannot understand function prototype: 'struct fsl_esai_soc_data '
+ sound/soc/fsl/fsl_esai.c:61: warning: cannot understand function prototype: 'struct fsl_esai '
+ sound/soc/fsl/fsl_esai.c:170: warning: Function parameter or member 'dai' not described in 'fsl_esai_divisor_cal'
+ sound/soc/fsl/fsl_esai.c:265: warning: Function parameter or member 'dai' not described in 'fsl_esai_set_dai_sysclk'
+ sound/soc/fsl/fsl_esai.c:265: warning: Function parameter or member 'clk_id' not described in 'fsl_esai_set_dai_sysclk'
+ sound/soc/fsl/fsl_esai.c:265: warning: Function parameter or member 'freq' not described in 'fsl_esai_set_dai_sysclk'
+ sound/soc/fsl/fsl_esai.c:265: warning: Function parameter or member 'dir' not described in 'fsl_esai_set_dai_sysclk'
+ sound/soc/fsl/fsl_esai.c:265: warning: Excess function parameter 'Parameters' description in 'fsl_esai_set_dai_sysclk'
+ sound/soc/fsl/fsl_esai.c:364: warning: Function parameter or member 'dai' not described in 'fsl_esai_set_bclk'
+ sound/soc/fsl/fsl_esai.c:364: warning: Function parameter or member 'tx' not described in 'fsl_esai_set_bclk'
+ sound/soc/fsl/fsl_esai.c:364: warning: Function parameter or member 'freq' not described in 'fsl_esai_set_bclk'
 
 Cc: Timur Tabi <timur@kernel.org>
 Cc: Nicolin Chen <nicoleotsuka@gmail.com>
 Cc: Xiubo Li <Xiubo.Lee@gmail.com>
 Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Vladimir Barinov <vbarinov@embeddedalley.com>
 Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/fsl/fsl_spdif.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_esai.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 7aa3bdec5b6b5..f0b2375a9246f 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -83,6 +83,7 @@ struct spdif_mixer_control {
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index cbcb70d6f8c83..bb3c405df623c 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -22,7 +22,7 @@
+ 				SNDRV_PCM_FMTBIT_S24_LE)
+ 
  /**
-  * struct fsl_spdif_priv - Freescale SPDIF private data
+- * fsl_esai_soc_data: soc specific data
++ * struct fsl_esai_soc_data - soc specific data
   *
-+ * @soc: SoC specific data
-  * @fsl_spdif_control: SPDIF control data
-  * @cpu_dai_drv: cpu dai driver
-  * @pdev: platform device pointer
-@@ -100,6 +101,7 @@ struct spdif_mixer_control {
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @dma_params_tx: DMA parameters for transmit channel
-  * @dma_params_rx: DMA parameters for receive channel
-+ * @regcache_srpc: regcache for SRPC
-  */
- struct fsl_spdif_priv {
- 	const struct fsl_spdif_soc_data *soc;
-@@ -120,7 +122,6 @@ struct fsl_spdif_priv {
- 	struct clk *spbaclk;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
--	/* regcache for SRPC */
- 	u32 regcache_srpc;
+  * @imx: for imx platform
+  * @reset_at_xrun: flags for enable reset operaton
+@@ -33,7 +33,7 @@ struct fsl_esai_soc_data {
  };
  
+ /**
+- * fsl_esai: ESAI private data
++ * struct fsl_esai - ESAI private data
+  *
+  * @dma_params_rx: DMA parameters for receive channel
+  * @dma_params_tx: DMA parameters for transmit channel
+@@ -160,10 +160,11 @@ static irqreturn_t esai_isr(int irq, void *devid)
+  * This function is used to calculate the divisors of psr, pm, fp and it is
+  * supposed to be called in set_dai_sysclk() and set_bclk().
+  *
++ * @dai: SoC DAI
++ * @tx: current setting is for playback or capture
+  * @ratio: desired overall ratio for the paticipating dividers
+  * @usefp: for HCK setting, there is no need to set fp divider
+  * @fp: bypass other dividers by setting fp directly if fp != 0
+- * @tx: current setting is for playback or capture
+  */
+ static int fsl_esai_divisor_cal(struct snd_soc_dai *dai, bool tx, u32 ratio,
+ 				bool usefp, u32 fp)
+@@ -252,11 +253,11 @@ static int fsl_esai_divisor_cal(struct snd_soc_dai *dai, bool tx, u32 ratio,
+ /**
+  * This function mainly configures the clock frequency of MCLK (HCKT/HCKR)
+  *
+- * @Parameters:
+- * clk_id: The clock source of HCKT/HCKR
++ * @dai: SoC DAI
++ * @clk_id: The clock source of HCKT/HCKR
+  *	  (Input from outside; output from inside, FSYS or EXTAL)
+- * freq: The required clock rate of HCKT/HCKR
+- * dir: The clock direction of HCKT/HCKR
++ * @freq: The required clock rate of HCKT/HCKR
++ * @dir: The clock direction of HCKT/HCKR
+  *
+  * Note: If the direction is input, we do not care about clk_id.
+  */
+@@ -357,7 +358,7 @@ static int fsl_esai_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * This function configures the related dividers according to the bclk rate
+  */
+ static int fsl_esai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
 -- 
 2.25.1
 
