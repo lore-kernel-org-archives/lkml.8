@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9340AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1718FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBE4204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE910204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135859;
-	bh=3hWHspX37AzT5nJB2ou9YS6LXgzkVdN09nZlqnESwZc=;
+	s=default; t=1594135861;
+	bh=icEx2rs1FcIm/j9Jcdb7xo63CLckXhpCa6bWSvF59U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COTqvVge2FSdREf8BlP7WZsGfQLTBFl+EWEWxTus1WPTVRkTT8S7O73U0SKqfPwhv
-	 pzDvf8vlJX4zvxpSkKJ+jChgzmiqkj5EG4UA8lGIokXQUi4whnPulAXVgXLNcMJBuP
-	 i6xfRcSEdk08UwL8RTeJfO7o+dCx3STtM68zZmKA=
+	b=aAyNG5Wd4jM/NwwDceBEcNaAoFjkVqAVtm0YZTw3b7JbOCBNYH30eTHOsVJUYOO/p
+	 sZNvklOt6NaAjW8P0SnxBLw4f+qTEWRk8afWMGTMa4lv6oyXWVh8g/UgeCZLC2zvxP
+	 wPxwZvPWIrGCQjEy3kWisun5FwxY5QZpUdil3xLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgGGPa4 (ORCPT
+        id S1729328AbgGGPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37068 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbgGGPXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:47 -0400
+        id S1728879AbgGGPXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A6442084C;
-        Tue,  7 Jul 2020 15:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40ABD2065D;
+        Tue,  7 Jul 2020 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135426;
-        bh=3hWHspX37AzT5nJB2ou9YS6LXgzkVdN09nZlqnESwZc=;
+        s=default; t=1594135416;
+        bh=icEx2rs1FcIm/j9Jcdb7xo63CLckXhpCa6bWSvF59U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRC6QPs2lWNvo+pFhCnav14EkF/G6IvqJzDDVQ2z8iju3K97kl0o3LaMnjQgJwOSp
-         rjvcLf8gREy1qfVm3oSRKNj6C4lK7LTgGZzgqfFhEd3UCn2xuqQLYqqNli6act/I83
-         SBt35N+CG3ILCzzt/KGqoodGVpJ/pfxcxHI2hprQ=
+        b=1+ow4+93qKnwU3rnNF+5EUk2SseCgzyPLxZyM2gUmbMMmCdoV9K+VUcudtnGmBJdx
+         b44LkiX+FoIq3a16d38tZRI8ieWPRyj4n3y2lkaYwt1oza1zImzVbBm+DtzhBc2SBt
+         QYgZ9upexy9kafqtJa9i+6nakJvO8ziJ/cYeJtcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 037/112] nvme-multipath: fix deadlock due to head->lock
-Date:   Tue,  7 Jul 2020 17:16:42 +0200
-Message-Id: <20200707145802.754736487@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 033/112] io_uring: fix io_sq_thread no schedule when busy
+Date:   Tue,  7 Jul 2020 17:16:38 +0200
+Message-Id: <20200707145802.563255670@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,122 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 
-[ Upstream commit d8a22f85609fadb46ba699e0136cc3ebdeebff79 ]
+[ Upstream commit b772f07add1c0b22e02c0f1e96f647560679d3a9 ]
 
-In the following scenario scan_work and ana_work will deadlock:
+When the user consumes and generates sqe at a fast rate,
+io_sqring_entries can always get sqe, and ret will not be equal to -EBUSY,
+so that io_sq_thread will never call cond_resched or schedule, and then
+we will get the following system error prompt:
 
-When scan_work calls nvme_mpath_add_disk() this holds ana_lock
-and invokes nvme_parse_ana_log(), which may issue IO
-in device_add_disk() and hang waiting for an accessible path.
+rcu: INFO: rcu_sched self-detected stall on CPU
+or
+watchdog: BUG: soft lockup-CPU#23 stuck for 112s! [io_uring-sq:1863]
 
-While nvme_mpath_set_live() only called when nvme_state_is_live(),
-a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
+This patch checks whether need to call cond_resched() by checking
+the need_resched() function every cycle.
 
-Since nvme_mpath_set_live() holds ns->head->lock, an ana_work on
-ANY ctrl will not be able to complete nvme_mpath_set_live()
-on the same ns->head, which is required in order to update
-the new accessible path and remove NVME_NS_ANA_PENDING..
-Therefore IO never completes: deadlock [1].
-
-Fix:
-Move device_add_disk out of the head->lock and protect it with an
-atomic test_and_set for a new NVME_NS_HEAD_HAS_DISK bit.
-
-[1]:
-kernel: INFO: task kworker/u8:2:160 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:2    D    0   160      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  nvme_update_ns_ana_state+0x22/0x60 [nvme_core]
-kernel:  nvme_update_ana_state+0xca/0xe0 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  nvme_read_ana_log+0x76/0x100 [nvme_core]
-kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-kernel: INFO: task kworker/u8:4:439 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:4    D    0   439      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  efi_partition+0x1e6/0x708
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_mpath_add_disk+0xbe/0x100 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  nvme_scan_work+0x256/0x390 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Suggested-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 4 ++--
- drivers/nvme/host/nvme.h      | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ fs/io_uring.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index f4287d8550a9f..d1cb65698288b 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -413,11 +413,11 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 	if (!head->disk)
- 		return;
- 
--	mutex_lock(&head->lock);
--	if (!(head->disk->flags & GENHD_FL_UP))
-+	if (!test_and_set_bit(NVME_NSHEAD_DISK_LIVE, &head->flags))
- 		device_add_disk(&head->subsys->dev, head->disk,
- 				nvme_ns_id_attr_groups);
- 
-+	mutex_lock(&head->lock);
- 	if (nvme_path_is_optimized(ns)) {
- 		int node, srcu_idx;
- 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 2e04a36296d95..719342600be62 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -359,6 +359,8 @@ struct nvme_ns_head {
- 	spinlock_t		requeue_lock;
- 	struct work_struct	requeue_work;
- 	struct mutex		lock;
-+	unsigned long		flags;
-+#define NVME_NSHEAD_DISK_LIVE	0
- 	struct nvme_ns __rcu	*current_path[];
- #endif
- };
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index bb74e45941af2..63a456921903e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6084,7 +6084,7 @@ static int io_sq_thread(void *data)
+ 		 * If submit got -EBUSY, flag us as needing the application
+ 		 * to enter the kernel to reap and flush events.
+ 		 */
+-		if (!to_submit || ret == -EBUSY) {
++		if (!to_submit || ret == -EBUSY || need_resched()) {
+ 			/*
+ 			 * Drop cur_mm before scheduling, we can't hold it for
+ 			 * long periods (or over schedule()). Do this before
+@@ -6100,7 +6100,7 @@ static int io_sq_thread(void *data)
+ 			 * more IO, we should wait for the application to
+ 			 * reap events and wake us up.
+ 			 */
+-			if (!list_empty(&ctx->poll_list) ||
++			if (!list_empty(&ctx->poll_list) || need_resched() ||
+ 			    (!time_after(jiffies, timeout) && ret != -EBUSY &&
+ 			    !percpu_ref_is_dying(&ctx->refs))) {
+ 				if (current->task_works)
 -- 
 2.25.1
 
