@@ -2,131 +2,120 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B708C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCA32073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pjWCUJEZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0904F2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594130569;
+	bh=edIgc1HsmNAf0Fn0SMHWtli5jUaKGL0947RRvOW2G+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ND78xwEC04xMlf0772k3UkBi4XUObDdl4YSAb5GTbG7wIgAGMPo7cOHYgwOy2yEJ2
+	 jL66/Aq78IxLwBW/eFODh5YJ4O/8tywRPkEOuTrJh1wVUZ4W1zl1P056velb1aT/2j
+	 ejAVTBLSAAk//3KxLsYCz2yDtUC4Qk5XFRIB0pmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgGGOBj (ORCPT
+        id S1728190AbgGGOCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgGGOBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:01:03 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18757C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:03 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id f139so46660823wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jN1nbT1sxQbFlRXUCBfggkW/hnjjJGCQVCG/NPTfu6Y=;
-        b=pjWCUJEZwyPxA5RaPU66fCI6rKNgDNOxWlKt8d8YsnOGnz9+M2K1koQ7iG9eKhjaFx
-         g8YYXzC7TkDHe9hJ+8+ILM1uoCB/M+MHWG34tN2gn70O8IytBqRJWMHsFxODpQitWvEe
-         sT1z3OQLglHZy7jLwHM8UGQsPz8CNy8aRD+rEndm5AA2TpFh6opalazJ6fET6JTQdH6o
-         +tipp3x4BsKQaEnJZRxgT8WT7DN2KIDtAgsdP5DvogsK2YWShtueljfN3tKDaAN+lpu2
-         YLnIN4NNKIPdCd2/DMVhL0hcCLI01P4Qqh9eyPNxWoFhcq6sDnQe2S9JbIZ4IQOte1b9
-         to+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jN1nbT1sxQbFlRXUCBfggkW/hnjjJGCQVCG/NPTfu6Y=;
-        b=Qpp3C+4iDbzwyIcrQCWk6CW0TQb2nqTdV0O8vUXNdKsOCIUlXLZkqKjfg2a5S2FxnO
-         ZHconYZkfbA7kr7q2mxurCr8PJsTE0jDPG/4POSO0mH85kk2Zrr4B/74MLy2m9t2X/fw
-         QOTA1tpwJBou+sJ7TLzNvAmMeL/44ct9tsH3TiqKWu1m11RLveBPxgXO+EYBkDT1nTjJ
-         jsB3bcObPNmFDmzWnmVtuXBNJDpcTKRPYGa67kEkhBCvILcsyG8Orv6dU4dZs6XCrumR
-         YkIYgLA+D8qSistzeBlPYkJuWbn7uDkFOFFhvmU8dcNZW8IyHG2S7l4jETXzPondczMJ
-         1Wiw==
-X-Gm-Message-State: AOAM530RyY3sit05pKWNRShKAzGnioifcfyQrJ6GJgpO81GHwhyNZ3gB
-        Ztb67gvF58Xp2ofqazKsm3fBDQ==
-X-Google-Smtp-Source: ABdhPJzUV97sKhk0cTprn9h4VIm8fJrhl/nqYSZ5hY14wPRhadSv020fwC6sc7z+gXrJDrbeBjfV5A==
-X-Received: by 2002:a1c:4303:: with SMTP id q3mr4547681wma.134.1594130461172;
-        Tue, 07 Jul 2020 07:01:01 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:01:00 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Atul Mukker <Atul.Mukker@lsi.com>,
-        Sreenivas Bagalkote <Sreenivas.Bagalkote@lsi.com>,
-        Manoj Jose <Manoj.Jose@lsi.com>, megaraidlinux@lsi.com,
-        megaraidlinux.pdl@broadcom.com
-Subject: [PATCH 02/10] scsi: megaraid: megaraid_mbox: Fix some kerneldoc bitrot
-Date:   Tue,  7 Jul 2020 15:00:47 +0100
-Message-Id: <20200707140055.2956235-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707140055.2956235-1-lee.jones@linaro.org>
-References: <20200707140055.2956235-1-lee.jones@linaro.org>
+        Tue, 7 Jul 2020 10:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727777AbgGGOCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:02:47 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9ED20738;
+        Tue,  7 Jul 2020 14:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594130566;
+        bh=edIgc1HsmNAf0Fn0SMHWtli5jUaKGL0947RRvOW2G+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yXHwPMNojeUXhMOEmzHyHl8EmzY47rKX1qvX5FKtkoDiZpK5tGx06I9dluEM8fJhG
+         XCCUlR4qSly/5HxmgHBQ7kXUsBS2Y87+39MBCMt+KqI2CxuDJ7zeGq7wExXuQgnbNK
+         cB6vrrfdgounGRCkKNx89GXdGFkMpmrVYJhtGaGk=
+Received: by pali.im (Postfix)
+        id A62ABBF7; Tue,  7 Jul 2020 16:02:44 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 16:02:44 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Indicate error in 'val' when config read
+ fails
+Message-ID: <20200707140244.uhmyoqd5mblz5ids@pali>
+References: <20200601130315.18895-1-pali@kernel.org>
+ <20200619105618.aksoivu4gb5ex3s3@pali>
+ <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some function parameters have changed without updating the documentation.
+On Tuesday 07 July 2020 14:53:11 Lorenzo Pieralisi wrote:
+> On Fri, Jun 19, 2020 at 12:56:18PM +0200, Pali Rohár wrote:
+> > Hello Lorenzo! Could you please review this patch?
+> > 
+> > On Monday 01 June 2020 15:03:15 Pali Rohár wrote:
+> > > Most callers of config read do not check for return value. But most of the
+> > > ones that do, checks for error indication in 'val' variable.
+> > > 
+> > > This patch updates error handling in advk_pcie_rd_conf() function. If PIO
+> > > transfer fails then 'val' variable is set to 0xffffffff which indicates
+> > > failture.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > I should add credit for Bjorn as he found this issue
+> 
+> Could you provide a lore archive link to the relevant
+> discussion please ? I will apply it then.
 
-Fixes the following W=1 kernel build warning(s):
+Hello Lorenzo! Here is link to the Bjorn's email:
+https://lore.kernel.org/linux-pci/20200528162604.GA323482@bjorn-Precision-5520/
 
- drivers/scsi/megaraid/megaraid_mbox.c:3314: warning: Excess function parameter 'level' description in 'megaraid_mbox_display_scb'
- drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Function parameter or member 'dev' not described in 'megaraid_sysfs_show_app_hndl'
- drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Function parameter or member 'attr' not described in 'megaraid_sysfs_show_app_hndl'
- drivers/scsi/megaraid/megaraid_mbox.c:3985: warning: Excess function parameter 'cdev' description in 'megaraid_sysfs_show_app_hndl'
-
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: Atul Mukker <Atul.Mukker@lsi.com>
-Cc: Sreenivas Bagalkote <Sreenivas.Bagalkote@lsi.com>
-Cc: Manoj Jose <Manoj.Jose@lsi.com>
-Cc: megaraidlinux@lsi.com
-Cc: megaraidlinux.pdl@broadcom.com
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/megaraid/megaraid_mbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_mbox.c b/drivers/scsi/megaraid/megaraid_mbox.c
-index 8f918df631bfe..cace28dd81ad8 100644
---- a/drivers/scsi/megaraid/megaraid_mbox.c
-+++ b/drivers/scsi/megaraid/megaraid_mbox.c
-@@ -3304,7 +3304,6 @@ megaraid_mbox_fire_sync_cmd(adapter_t *adapter)
-  * megaraid_mbox_display_scb - display SCB information, mostly debug purposes
-  * @adapter		: controller's soft state
-  * @scb			: SCB to be displayed
-- * @level		: debug level for console print
-  *
-  * Diplay information about the given SCB iff the current debug level is
-  * verbose.
-@@ -3972,7 +3971,8 @@ megaraid_sysfs_get_ldmap(adapter_t *adapter)
- 
- /**
-  * megaraid_sysfs_show_app_hndl - display application handle for this adapter
-- * @cdev	: class device object representation for the host
-+ * @dev		: device object representation for the host
-+ * @attr	: unused
-  * @buf		: buffer to send data to
-  *
-  * Display the handle used by the applications while executing management
--- 
-2.25.1
-
+> Lorenzo
+> 
+> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> > 
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 53a4cfd7d377..783a7f1f2c44 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -691,8 +691,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+> > >  	advk_writel(pcie, 1, PIO_START);
+> > >  
+> > >  	ret = advk_pcie_wait_pio(pcie);
+> > > -	if (ret < 0)
+> > > +	if (ret < 0) {
+> > > +		*val = 0xffffffff;
+> > >  		return PCIBIOS_SET_FAILED;
+> > > +	}
+> > >  
+> > >  	advk_pcie_check_pio_status(pcie);
+> > >  
+> > > -- 
+> > > 2.20.1
+> > > 
