@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5952E2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A112078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135638;
-	bh=7J7s3JxUCA9ycuh/TID/A9mEMpPr8x26xb6gQZz8V0I=;
+	s=default; t=1594135641;
+	bh=OPqoMn+/06zTJ/IhQ4HFgXBDX7x8RWNi3teDAPSeLTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9gYo7do+bhwiH40FQWRsdUtagedlDuQ7CWR24a8YDevIP8dfEWTA76nyWPaQFtXf
-	 m2ljiBenSOPF5kt8GG6vJprBw/Lj/LqJtLni8g8x2zHjIYbsF8sI/GlCUvUclYeddZ
-	 2H1xGfzC6I/ATr6kL0Olfp/30UCg6Vr3EvEspPPc=
+	b=cEhm5gHu9/aXnuxZdbYIYrB57PcOypb400o0+iyousCmuKhDS9z5N+/iVKh1x2ROa
+	 y7LmCfT6myAepv1XcuW94onaOgLFwyWm0R9jm/+lO/PSOuMUMF0OG67Yuh+/2dTLff
+	 9XzUGrVHdiP3DNojndqGRaHOq4ZnLlyOBGXugvIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbgGGP1Q (ORCPT
+        id S1728504AbgGGP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbgGGP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:27:08 -0400
+        id S1730350AbgGGP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:27:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B581206F6;
-        Tue,  7 Jul 2020 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB9C2083B;
+        Tue,  7 Jul 2020 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135627;
-        bh=7J7s3JxUCA9ycuh/TID/A9mEMpPr8x26xb6gQZz8V0I=;
+        s=default; t=1594135633;
+        bh=OPqoMn+/06zTJ/IhQ4HFgXBDX7x8RWNi3teDAPSeLTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1A3kA3zv0HXIKrbrmVEOIhTgd9fivdHqcjFjkWRVSE8oJOtvkMHxfTLknPUfkJdU
-         5sHv+l0cLc005yN5iA2ByamcFPHOcRx5syjmjMUbWnazUOBALn+H4Do6XmMkwCx3Ul
-         0J37cyciH1H7WRX16nsmj0M3jX/C20u7ioD+1RvI=
+        b=trQR4ks0uSSRNm3b9n3zGFpmcgGUjM1CQHosT2wbCsRgAnzTyJ3K4dGOlYKuXzoYp
+         WZZw6M9gM9CtfLdEEwEaOMpAn+8kZZJWe/0LQy8SlkJFUoLuH+uH51b+LLNlFp0IOa
+         y7cq3oOEXVeLM9bQw0TkE0X8ejUH7iqHShNvexHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 5.7 093/112] cifs: Fix the target file was deleted when rename failed.
-Date:   Tue,  7 Jul 2020 17:17:38 +0200
-Message-Id: <20200707145805.402316653@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.7 095/112] hwmon: (pmbus) Fix page vs. register when accessing fans
+Date:   Tue,  7 Jul 2020 17:17:40 +0200
+Message-Id: <20200707145805.496172289@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,56 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Jan Kundrát <jan.kundrat@cesnet.cz>
 
-commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2 upstream.
+commit b4c8af4c2a226fc9c25e1decbd26fdab1b0993ee upstream.
 
-When xfstest generic/035, we found the target file was deleted
-if the rename return -EACESS.
+Commit 16358542f32f ("hwmon: (pmbus) Implement multi-phase support")
+added support for multi-phase pmbus devices. However, when calling
+pmbus_add_sensor() for fans, the patch swapped the `page` and `reg`
+attributes. As a result, the fan speeds were reported as 0 RPM on my device.
 
-In cifs_rename2, we unlink the positive target dentry if rename
-failed with EACESS or EEXIST, even if the target dentry is positived
-before rename. Then the existing file was deleted.
-
-We should just delete the target file which created during the
-rename.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Jan Kundrát <jan.kundrat@cesnet.cz>
+Fixes: 16358542f32f ("hwmon: (pmbus) Implement multi-phase support")
+Cc: stable@vger.kernel.org # v5.7+
+Link: https://lore.kernel.org/r/449bc9e6c0e4305581e45905ce9d043b356a9932.1592904387.git.jan.kundrat@cesnet.cz
+[groeck: Fixed references to offending commit]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/hwmon/pmbus/pmbus_core.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1855,6 +1855,7 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
-+	bool new_target = d_really_is_negative(target_dentry);
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -1869,7 +1869,7 @@ static int pmbus_add_fan_ctrl(struct i2c
+ 	struct pmbus_sensor *sensor;
  
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1931,8 +1932,13 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
+ 	sensor = pmbus_add_sensor(data, "fan", "target", index, page,
+-				  PMBUS_VIRT_FAN_TARGET_1 + id, 0xff, PSC_FAN,
++				  0xff, PMBUS_VIRT_FAN_TARGET_1 + id, PSC_FAN,
+ 				  false, false, true);
  
- unlink_target:
--	/* Try unlinking the target dentry if it's not negative */
--	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
-+	/*
-+	 * If the target dentry was created during the rename, try
-+	 * unlinking it if it's not negative
-+	 */
-+	if (new_target &&
-+	    d_really_is_positive(target_dentry) &&
-+	    (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
+ 	if (!sensor)
+@@ -1880,14 +1880,14 @@ static int pmbus_add_fan_ctrl(struct i2c
+ 		return 0;
+ 
+ 	sensor = pmbus_add_sensor(data, "pwm", NULL, index, page,
+-				  PMBUS_VIRT_PWM_1 + id, 0xff, PSC_PWM,
++				  0xff, PMBUS_VIRT_PWM_1 + id, PSC_PWM,
+ 				  false, false, true);
+ 
+ 	if (!sensor)
+ 		return -ENOMEM;
+ 
+ 	sensor = pmbus_add_sensor(data, "pwm", "enable", index, page,
+-				  PMBUS_VIRT_PWM_ENABLE_1 + id, 0xff, PSC_PWM,
++				  0xff, PMBUS_VIRT_PWM_ENABLE_1 + id, PSC_PWM,
+ 				  true, false, false);
+ 
+ 	if (!sensor)
+@@ -1929,7 +1929,7 @@ static int pmbus_add_fan_attributes(stru
+ 				continue;
+ 
+ 			if (pmbus_add_sensor(data, "fan", "input", index,
+-					     page, pmbus_fan_registers[f], 0xff,
++					     page, 0xff, pmbus_fan_registers[f],
+ 					     PSC_FAN, true, true, true) == NULL)
+ 				return -ENOMEM;
+ 
 
 
