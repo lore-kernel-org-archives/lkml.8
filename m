@@ -2,53 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACCFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F58C204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87FF2078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136020;
-	bh=20y4Mugg4uM0Zxy27gW+xkoeKE5+EVAkevoG4qqLK3M=;
+	s=default; t=1594136023;
+	bh=MyqIBmbktvH5KAoEP+GVoOvvqEC07GsCMyrNj3Ff8AA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W0TaxpP9TcDe/h/SqILUCoEpJyxTLjGkfVJ2fD2V77ZubGHzqFNQaGXoQdenr1Qkx
-	 9gdojeQ/oSWL1FnY/7RePmAs8j72SN9SU0Gj/gnkrakmaEuB1EI85/cQ8a9IoY6Okt
-	 enSheHUJ3jxakCu0Hx7MB0Q8oSQsVBB+3kAFXQiA=
+	b=uxkzIBbScKRP32yq6rxpMYWHDMB4XkJflbMJf1URF1aZLQX+QyAdFe+9uOdk2+4Uo
+	 Ds1X63jb1PH60pm55RSq5t5Esnj/RtGzulEcAk9cVKP22ePBCjm117Kh19i55EKWum
+	 g4UN2J+1K6qvA9obGLjGqejONi6Hww6PbWLllufw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgGGPUY (ORCPT
+        id S1729403AbgGGPdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60238 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgGGPUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:15 -0400
+        id S1728877AbgGGPUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A522078A;
-        Tue,  7 Jul 2020 15:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83B5206CD;
+        Tue,  7 Jul 2020 15:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135214;
-        bh=20y4Mugg4uM0Zxy27gW+xkoeKE5+EVAkevoG4qqLK3M=;
+        s=default; t=1594135220;
+        bh=MyqIBmbktvH5KAoEP+GVoOvvqEC07GsCMyrNj3Ff8AA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n//OSaL1kf9vdF+Rmr6eJS4gDdCPwqQjTuspAqRrjlh1A9Juny89LKMD0Kc9BFc3A
-         iBaHAQoZayafpeaSOYcL23oxHTo9iXwmpQawxD1YpdDipfoJ3Fja8xvW6UQG3tcTe0
-         SMmQGkV6sVtQtWjqVpwcJIOBKtgWDd+dW0tB03LA=
+        b=t9fY4ti2XO8C1kMVZd5+0ztEHRI+qIpKBDbYR4CAJ1N363dMvXduBLOQCNAGO/7Wa
+         PORutxWSSq3UuE4Ea6BKQgeepN51sdenvsq5l0NTL5IkgArxHuk++6kM4OJBkxd0pz
+         hRTSW2ZSPLszXdr9Sg53jnAvRalxHtxMuWs7L2qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.4 19/65] selftests: tpm: Use /bin/sh instead of /bin/bash
-Date:   Tue,  7 Jul 2020 17:16:58 +0200
-Message-Id: <20200707145753.408759134@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Andersson <pipatron@gmail.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 03/65] EDAC/amd64: Read back the scrub rate PCI register on F15h
+Date:   Tue,  7 Jul 2020 17:16:42 +0200
+Message-Id: <20200707145752.594697885@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,41 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Borislav Petkov <bp@suse.de>
 
-commit 377ff83083c953dd58c5a030b3c9b5b85d8cc727 upstream.
+[ Upstream commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 ]
 
-It's better to use /bin/sh instead of /bin/bash in order to run the tests
-in the BusyBox shell.
+Commit:
 
-Fixes: 6ea3dfe1e073 ("selftests: add TPM 2.0 tests")
-Cc: stable@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
 
+added support for F15h, model 0x60 CPUs but in doing so, missed to read
+back SCRCTRL PCI config register on F15h CPUs which are *not* model
+0x60. Add that read so that doing
+
+  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
+
+can show the previously set DRAM scrub rate.
+
+Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
+Reported-by: Anders Andersson <pipatron@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org> #v4.4..
+Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/tpm2/test_smoke.sh |    2 +-
- tools/testing/selftests/tpm2/test_space.sh |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/edac/amd64_edac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,4 +1,4 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index ad7d2bce91cd8..125a44d5a69e3 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -265,6 +265,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
  
- python -m unittest -v tpm2_tests.SmokeTest
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,4 +1,4 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 		if (pvt->model == 0x60)
+ 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
++		else
++			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
+ 		break;
  
- python -m unittest -v tpm2_tests.SpaceTest
+ 	case 0x17:
+-- 
+2.25.1
+
 
 
