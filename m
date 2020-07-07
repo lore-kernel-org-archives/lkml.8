@@ -2,275 +2,109 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85173C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D94C206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552CA2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pH2EQs+9"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DE1fTl6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgGGJCH (ORCPT
+        id S1727800AbgGGJD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58088 "EHLO
+        Tue, 7 Jul 2020 05:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgGGJCG (ORCPT
+        with ESMTP id S1726540AbgGGJD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:02:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5A8C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 02:02:06 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so44288788wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 02:02:06 -0700 (PDT)
+        Tue, 7 Jul 2020 05:03:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC440C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 02:03:25 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k6so44330237wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 02:03:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=kRUj27P8zkGmRIKsXZ+nQk6qp/gprxkKDYwZvWToTEw=;
-        b=pH2EQs+98Q+b/hALQfjLX+d/kUVqXcCMJojjSCHyCDhhWUqwLbxL1Dmc/I4kLt4+rc
-         gzTPDZuuPVC+Tqj7E9x/p47pPP0Pg995WHDCujTB5jfF3eULQol88fmyftUQmvSIHHBK
-         bcN8qq/70I4t2S6PyMoS4L/X5UAvHtMFMsl5n1uR6EIFwgIYLX/1/91rk1AMip5Etk7X
-         8ywDSgwegbQCwBx9o5kK4oNOR4kSpGhUEW55z8Glp+upLI8C31bdWU2gnU7ObrY0NSKc
-         iGo1MHOBCoxhAd3vRwdB9nM/JMn2VnDliLKGtsrsOxUb+pgOmVA2Q05bmcECkvJkc88h
-         hIOA==
+        d=googlemail.com; s=20161025;
+        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xwb7Hcke9Nx5o8FCnqrp67esi5SW8u2PZFlfYio7RYs=;
+        b=DE1fTl6fpP6OAcT/jwSdUK+T2twJx+t0TNzpVaXPuSjNxZQupmpqDa+GncvEa+mS/o
+         nVBHUgOVzz2TJ0i73ppmeqoNz9fz+GUYfRYBI/J96UBIlBanfbd4M8Lte3u1yClgowKr
+         zHoJWwVUT7G1v54sZlMe++vyPnlk4Q69P4MeekEn6WFkGC6kRcnQkkmoFMII2Rv4JNVC
+         xxoSRi2JuuC/lNfXyOHK3ZSWiUxNTH3NwSWyypH5dHdC9Z7M4koyq5lyO5H5Z7Y6Jua/
+         Xwnj0yMV10RUA8s+2d6vubuKY9RRzSMhmRVOX6p4zeeOQnWXH06s4pMV7JQfLp7iHD2p
+         6TSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kRUj27P8zkGmRIKsXZ+nQk6qp/gprxkKDYwZvWToTEw=;
-        b=hpHgSCOZIg5nBkoJx2CLse5vL3sbhqFKUrymnXyiHS8jKITmehlB3QsF7j/68Jjan/
-         VntB2QW74DsAbcDkEkPfF8tP5DWNViNGqsOa04gY7PQybHmvtwt1jtuqcB1n7C2/i94O
-         r9b2cFTGNBwIp+t/GXZcJ0WonPAAgDLNaza22YOtPdN5IfxeEgCSEzucjj88Z+CrNnKQ
-         gzkgAGKxK/0QwzO8RWa/lottV1ZhGlK7mdTrpApYvlSYDcgTwB39uH95pc65HUkV1BW5
-         O+ALK2eWKa6YILSQt/VxAQ5d4mD5hL/iCHiyZRFc2R5BNjwyFN1h+EsLCAgVw7NaP1Wm
-         NeNQ==
-X-Gm-Message-State: AOAM532EAziS1XeC+sVGJViUZTMFV7U1jSbuj86TMmwI+0KwJPwSWKDE
-        i9Q+LnRGIvrZgKK2btDgzP/05Q==
-X-Google-Smtp-Source: ABdhPJw0LLwgq5sF+UNMHDhajm6tbuK6sIv9ZaOSuqr0BBO+kT16aXZYIymLrhUsFYfKPCbgX3Y/Lw==
-X-Received: by 2002:adf:f707:: with SMTP id r7mr52056237wrp.70.1594112524900;
-        Tue, 07 Jul 2020 02:02:04 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id d201sm142998wmd.34.2020.07.07.02.02.03
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=xwb7Hcke9Nx5o8FCnqrp67esi5SW8u2PZFlfYio7RYs=;
+        b=ZEzujWpR1pHl6WYcOnI1Aa89EwLslvFPkIaOjeSl49Ewkb+WkrCQMofHfMJ9aKaLLp
+         t763OC6tPpV+lqxblsmsBQ3sgB9UW8iLpSJ7FBMHXi+uqQjTJp3hl4sjimMpjSwZdeE1
+         uUEEwhFlKAWhHd8J52RcEp7p/HdbJm1aqHzumg2NjdQO2tdS5IiNpcc5R3KqqZPa5B6f
+         C8PpsOw/wpCcbR2gA64OrGBgCqthQ+cKWjdhGOmMzKyvBZ0R+dlhhyeT95HTf7TAjJC7
+         4LyroASeGgAjPeMZrFvzgcoO8UeECjM3pobXbIw5OUrJHarxcyI06M3lfnfbsGva85i2
+         2bhQ==
+X-Gm-Message-State: AOAM530CFk/YzP91JqNrhV46dNpFckIb3m5poWRWcf1NYoLH+Fm7/g4G
+        By9glvCgjk43jQJXBlOyr6o=
+X-Google-Smtp-Source: ABdhPJwmObKqeMSTQBuAPNDf4Bh5od9kb8fgTeytbNfKI2U/rjRHdQq0s7qJTZRzp9oSSiIVt2I6Lw==
+X-Received: by 2002:a5d:5642:: with SMTP id j2mr52699860wrw.19.1594112604694;
+        Tue, 07 Jul 2020 02:03:24 -0700 (PDT)
+Received: from ?IPv6:2a02:8070:bb9:bc00::fc? ([2a02:8070:bb9:bc00::fc])
+        by smtp.gmail.com with ESMTPSA id g82sm174900wma.37.2020.07.07.02.03.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 02:02:04 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, rdunlap@infradead.org
-Subject: [PATCH] thermal: netlink: Fix compilation error when CONFIG_NET=n
-Date:   Tue,  7 Jul 2020 11:01:57 +0200
-Message-Id: <20200707090159.1018-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 07 Jul 2020 02:03:24 -0700 (PDT)
+Message-ID: <da3aece9abd23b12837e9abf908ee67f0c2c988c.camel@googlemail.com>
+Subject: [PATCH] regulator: fan53880: fix Kconfig dependency
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com,
+        kernel test robot <lkp@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 07 Jul 2020 11:03:23 +0200
+In-Reply-To: <202007071433.Z3bmcgjU%lkp@intel.com>
+References: <202007071433.Z3bmcgjU%lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the network is not configured, the netlink are disabled on all
-the system. The thermal framework assumed the netlink are always
-opt-in.
+Currently the fan53880 regulator driver needs a device tree to get
+probed, this patch provides the necessary dependency.
 
-Fix this by adding a Kconfig option for the netlink notification,
-defaulting to yes and depending on CONFIG_NET.
-
-As the change implies multiple stubs and in order to not pollute the
-internal thermal header, the thermal_nelink.h has been added and
-included in the thermal_core.h, so this one regain some kind of
-clarity.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
 ---
- drivers/thermal/Kconfig           | 10 ++++
- drivers/thermal/Makefile          |  5 +-
- drivers/thermal/thermal_core.h    | 20 +------
- drivers/thermal/thermal_netlink.h | 98 +++++++++++++++++++++++++++++++
- 4 files changed, 114 insertions(+), 19 deletions(-)
- create mode 100644 drivers/thermal/thermal_netlink.h
+ drivers/regulator/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 3eb2348e5242..07983bef8d6a 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -17,6 +17,16 @@ menuconfig THERMAL
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index d47055db999d..76ef4b2de2e7 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -338,7 +338,7 @@ config REGULATOR_FAN53555
  
- if THERMAL
- 
-+config THERMAL_NETLINK
-+	bool "Thermal netlink management"
-+	depends on NET
-+	default y
-+	help
-+	  The thermal framework has a netlink interface to do thermal
-+	  zones discovery, temperature readings and events such as
-+	  trip point crossed, cooling device update or governor
-+	  change. It is recommended to enable the feature.
-+
- config THERMAL_STATISTICS
- 	bool "Thermal state transition statistics"
+ config REGULATOR_FAN53880
+ 	tristate "Fairchild FAN53880 Regulator"
+-	depends on I2C
++	depends on I2C && OF
+ 	select REGMAP_I2C
  	help
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 1bbf0805fb04..589f6fb0d381 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -5,7 +5,10 @@
- 
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
--					thermal_helpers.o thermal_netlink.o
-+					thermal_helpers.o
-+
-+# netlink interface to manage the thermal framework
-+thermal_sys-$(CONFIG_THERMAL_NETLINK)		+= thermal_netlink.o
- 
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index b44969d50ec0..99d065e6ed08 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -12,6 +12,8 @@
- #include <linux/device.h>
- #include <linux/thermal.h>
- 
-+#include "thermal_netlink.h"
-+
- /* Default Thermal Governor */
- #if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
- #define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-@@ -52,24 +54,6 @@ int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
- 
- struct thermal_zone_device *thermal_zone_get_by_id(int id);
- 
--/* Netlink notification function */
--int thermal_notify_tz_create(int tz_id, const char *name);
--int thermal_notify_tz_delete(int tz_id);
--int thermal_notify_tz_enable(int tz_id);
--int thermal_notify_tz_disable(int tz_id);
--int thermal_notify_tz_trip_down(int tz_id, int id);
--int thermal_notify_tz_trip_up(int tz_id, int id);
--int thermal_notify_tz_trip_delete(int tz_id, int id);
--int thermal_notify_tz_trip_add(int tz_id, int id, int type,
--			       int temp, int hyst);
--int thermal_notify_tz_trip_change(int tz_id, int id, int type,
--				  int temp, int hyst);
--int thermal_notify_cdev_state_update(int cdev_id, int state);
--int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
--int thermal_notify_cdev_delete(int cdev_id);
--int thermal_notify_tz_gov_change(int tz_id, const char *name);
--int thermal_genl_sampling_temp(int id, int temp);
--
- struct thermal_attr {
- 	struct device_attribute attr;
- 	char name[THERMAL_NAME_LENGTH];
-diff --git a/drivers/thermal/thermal_netlink.h b/drivers/thermal/thermal_netlink.h
-new file mode 100644
-index 000000000000..0ec28d105da5
---- /dev/null
-+++ b/drivers/thermal/thermal_netlink.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) Linaro Ltd 2020
-+ *  Author: Daniel Lezcano <daniel.lezcano@linaro.org>
-+ */
-+
-+/* Netlink notification function */
-+#ifdef CONFIG_THERMAL_NETLINK
-+int thermal_notify_tz_create(int tz_id, const char *name);
-+int thermal_notify_tz_delete(int tz_id);
-+int thermal_notify_tz_enable(int tz_id);
-+int thermal_notify_tz_disable(int tz_id);
-+int thermal_notify_tz_trip_down(int tz_id, int id);
-+int thermal_notify_tz_trip_up(int tz_id, int id);
-+int thermal_notify_tz_trip_delete(int tz_id, int id);
-+int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-+			       int temp, int hyst);
-+int thermal_notify_tz_trip_change(int tz_id, int id, int type,
-+				  int temp, int hyst);
-+int thermal_notify_cdev_state_update(int cdev_id, int state);
-+int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
-+int thermal_notify_cdev_delete(int cdev_id);
-+int thermal_notify_tz_gov_change(int tz_id, const char *name);
-+int thermal_genl_sampling_temp(int id, int temp);
-+#else
-+static inline int thermal_notify_tz_create(int tz_id, const char *name)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_delete(int tz_id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_enable(int tz_id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_disable(int tz_id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_trip_down(int tz_id, int id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_trip_up(int tz_id, int id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_trip_delete(int tz_id, int id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-+					     int temp, int hyst)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_trip_change(int tz_id, int id, int type,
-+						int temp, int hyst)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_cdev_state_update(int cdev_id, int state)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_cdev_add(int cdev_id, const char *name,
-+					  int max_state)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_cdev_delete(int cdev_id)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_notify_tz_gov_change(int tz_id, const char *name)
-+{
-+	return 0;
-+}
-+
-+static inline int thermal_genl_sampling_temp(int id, int temp)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_THERMAL_NETLINK */
+ 	  This driver supports Fairchild (ON Semiconductor) FAN53880
 -- 
-2.17.1
+2.20.1
+
 
