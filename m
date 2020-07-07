@@ -2,102 +2,93 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A24C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB751C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52C820708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594140885;
-	bh=fEhHujOWT36+OabKkCVMgT4sNk+uKrQIrQGXIHydFwA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V0l8rh0ADvPd0Zc37LKkLZQRjImCe2S5rkulYOr+jog9iuuFytFXm4tH5PcZGWMRz
-	 knyELwdQmD3uhYNnBEikOwYD1rmD3SM1o2OzzuR3D0LoxyVMkYlzzSBN6ZzhWWm0FV
-	 W0pgI/5dcVKRV0+c0y0s5JLh6tBtKulrglKBv2gQ=
+	by mail.kernel.org (Postfix) with ESMTP id B8AC52065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgGGQyo (ORCPT
+        id S1728251AbgGGQ4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgGGQyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:54:44 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 093B82073E;
-        Tue,  7 Jul 2020 16:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594140883;
-        bh=fEhHujOWT36+OabKkCVMgT4sNk+uKrQIrQGXIHydFwA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bCjJrygyiPww6kUU1HIhiqvAtUoYFZgfBZLacoL8WWlEnNSpxyNTKSWWnE02wur3W
-         la5/xoBE/rrYn79OqHMEZyKCfnR6at4ysqt7OgZQRTEXFhQbzmvGlABsaWFhTozrLN
-         BqSDAWIbImu3SzXMGQyAzxLupyTh6IKQ7SJyzEyA=
-Received: by mail-lj1-f169.google.com with SMTP id 9so50699453ljv.5;
-        Tue, 07 Jul 2020 09:54:42 -0700 (PDT)
-X-Gm-Message-State: AOAM532rgQKXqcBIdGCeHf8QecpU1j5vH9V3UU/6OPlWF6T+TIUFoJcS
-        AsZD2F1O3HX9nCJG3uQJ69Cg+fdnoJ1iVUnefGU=
-X-Google-Smtp-Source: ABdhPJzFOzMDLXjZKmd6F6Pp7vLuJIA+Ucm855pm5b8NKZ5A6EYoeTZy9JfFcYYbEy+B8rG0uxCxsGAeLu6NZEkIV/4=
-X-Received: by 2002:a2e:9eca:: with SMTP id h10mr31940794ljk.273.1594140881295;
- Tue, 07 Jul 2020 09:54:41 -0700 (PDT)
+        Tue, 7 Jul 2020 12:56:06 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39990 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgGGQ4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 12:56:06 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6075C1C0C0A; Tue,  7 Jul 2020 18:56:03 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 18:56:02 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Len Brown <len.brown@intel.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+Message-ID: <20200707165602.GB1947@amd>
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-2-hch@lst.de>
- <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com> <20200707103439.GA2812@lst.de>
-In-Reply-To: <20200707103439.GA2812@lst.de>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 7 Jul 2020 09:54:30 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6CvKMPEuUEFfZhxyyU2ke9oiYOuCwkM+NM2=bo_o_MFw@mail.gmail.com>
-Message-ID: <CAPhsuW6CvKMPEuUEFfZhxyyU2ke9oiYOuCwkM+NM2=bo_o_MFw@mail.gmail.com>
-Subject: Re: [PATCH 01/16] init: remove the bstat helper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
+Content-Disposition: inline
+In-Reply-To: <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 3:34 AM Christoph Hellwig <hch@lst.de> wrote:
+
+--xXmbgvnjoT4axfJE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> @@ -234,6 +234,7 @@ static const char * const pm_tests[__TEST_AFTER_LAST]=
+ =3D {
+>  	[TEST_PLATFORM] =3D "platform",
+>  	[TEST_DEVICES] =3D "devices",
+>  	[TEST_FREEZER] =3D "freezer",
+> +	[TEST_MEM_QUIET] =3D "mem-quiet",
+>  };
 >
-> On Thu, Jul 02, 2020 at 04:25:41PM -0700, Song Liu wrote:
-> > Hi Christoph,
-> >
-> > On Mon, Jun 15, 2020 at 5:53 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > The only caller of the bstat function becomes cleaner and simpler whe=
-n
-> > > open coding the function.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >
-> > Thanks for the set. md parts of the set look good to me.
-> >
-> > How should we route this set, as it touches multiple subsystems?
->
-> Good question as there is no really applicable tree.  One option
-> would the vfs tree as it touche=D1=95 some VFS stuff, and the follow on
-> series that depends on it is all about VFS bits.  Alternatively I
-> could set up a tree just for these bits.  The important bit is that
-> it doesn't go into the -mm tree as the usual catchall, as I have
-> more stuff that depends on it and requires a git tree.
 
-Would this official mm tree work?
+This adds field to sysfs interface, right? I guess we need
+documentation for that....
 
-T:      git git://github.com/hnaz/linux-mm.git
+Best regards,
+									Pavel
+								=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-If not, I am OK with either vfs tree or a dedicated tree.
+--xXmbgvnjoT4axfJE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Song
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8EqSIACgkQMOfwapXb+vLR9gCfa6KeYH8VY1zioulRsZBNW+Kg
+s1wAnjRjjBnRWMzhG9K4RAp7LgAB86Hl
+=mxU5
+-----END PGP SIGNATURE-----
+
+--xXmbgvnjoT4axfJE--
