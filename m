@@ -2,183 +2,119 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0031C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451E22065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0F4206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VtwHsJ7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgGGHvI (ORCPT
+        id S1727124AbgGGHxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:51:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59019 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgGGHvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:51:07 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jsiNZ-0007LE-Ew; Tue, 07 Jul 2020 07:51:01 +0000
-Date:   Tue, 7 Jul 2020 09:51:00 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     torvalds@linux-foundation.org,
-        ksummit-discuss@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <20200707075100.pnznglulr7yjkd65@wittgenstein>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Tue, 7 Jul 2020 03:53:49 -0400
+Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:23806
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725766AbgGGHxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 03:53:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DprhM3IOz/fW7THiUKt9El6cXkHRA6Xz7N7C9UZjgBh6lP7MDYStIt30HVn5OJ07szgCfbCtSf5kErsLMNC5eO7vQwdhjKLVHkMnO7lK6TYm49p1MgamfmHEkRPUaOhrgjECQhenE9HoKL6ozf2HPBsiqfeDWzFoZw/hs9EGfzQ08YjjvnJo7ZO0S48D7IrowwnFcMvm5O4ExyNyWQF4fFl0D8/dpgKMtIpxL6lp7DJnKNPvYws5d7BL2q0ezlE9xiUmGVOV0z+xXa7j3Nj6Wk/60NIor0qNT22SfhaYboWl6WoP5PKfak14tpFPeLcO7UZx2G5zkX9ee05t3kMvgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4CadFWR5dj6yibSn4NikLwsO8Dlc6RgvqkG+usc67C8=;
+ b=OsZyKojSrFAVhYS5mvdRICBHhZaJfsupZLSO1gwQ318mPl37dtVPYk6ItFdG+DLESd40noZ7EkiNVYG/yDld5IT6Nmv3Z05l99CKaIXb66SlMc81WKP6pXuljAejJM5ffBWQRqTixGGvAImvFSIJ84x/91OY/XjwFzfXEkgpT5/vlFQRr1dbJNML5v38gU6+P1Nfb+UeGDqV9iyE7DCKviReda7HsNrevNK87ov5HXazffxh1FQYh1gBioh1ldB6P951ZkNCChDcZBJvuOtVRf1xp+J1lQwx16CnpHBcjC/EyPqcQE+FMSQJWoaG6PUWPYp9Qvbx9MAn6GVE5zreUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4CadFWR5dj6yibSn4NikLwsO8Dlc6RgvqkG+usc67C8=;
+ b=VtwHsJ7VnIl7mAgBk3eOtgBMqq/3nCQHstigs9OsXOg+qgRvbEy5i9HK3fivCOezQLY0YJ7ns3mC0b5RTj12FaOTovqklXSO6VTbsi2rjC80kLy68GOwgNmATwd2VNfePOOpsVzvuYNr6Qa/I9IxGX/+V5sbH25RIol+cmAy5zA=
+Received: from AM0PR04MB6754.eurprd04.prod.outlook.com (2603:10a6:208:170::28)
+ by AM0PR04MB6324.eurprd04.prod.outlook.com (2603:10a6:208:13f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 7 Jul
+ 2020 07:53:46 +0000
+Received: from AM0PR04MB6754.eurprd04.prod.outlook.com
+ ([fe80::41d8:c1a9:7e34:9987]) by AM0PR04MB6754.eurprd04.prod.outlook.com
+ ([fe80::41d8:c1a9:7e34:9987%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 07:53:46 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     Michael Walle <michael@walle.cc>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: RE: [PATCH net-next v4 1/3] net: dsa: felix: move USXGMII defines to
+ common place
+Thread-Topic: [PATCH net-next v4 1/3] net: dsa: felix: move USXGMII defines to
+ common place
+Thread-Index: AQHWU+E8m7d28/V01EedBiZGjqeZk6j7vk+A
+Date:   Tue, 7 Jul 2020 07:53:45 +0000
+Message-ID: <AM0PR04MB6754BD71B86911A613AB944596660@AM0PR04MB6754.eurprd04.prod.outlook.com>
+References: <20200706220255.14738-1-michael@walle.cc>
+ <20200706220255.14738-2-michael@walle.cc>
+In-Reply-To: <20200706220255.14738-2-michael@walle.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: walle.cc; dkim=none (message not signed)
+ header.d=none;walle.cc; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [82.76.66.138]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a90054ee-08ef-4b86-6c4c-08d8224ae05f
+x-ms-traffictypediagnostic: AM0PR04MB6324:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6324085C990EAFAAB5D94BAF96660@AM0PR04MB6324.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Xu14ZkbeXeScVS03/eHZ48JMa0Yd3YfUGfrZDeaQ2znjXEFHGLAVXNJsShd/+gCCB7Ua4s0zRXhjuZcluvr6EqMqCF958j/o6LXC+yKpbLGeyYWu15BUGh1k0rCzVL4hksc6EXegPpsw07RZg2JmZ6sXtA3cccxqsYoLdoEr1kvnIQ5wWtbeYO9x13g9HrvhTeC5VJ3DtmQTkoyWESP6rwhSCCFPYBheF6BEg3UtL2GIJnY3IsjuQ+YgUI1miPENwad4pwNW7NV4k9jLs164Un90Vd3dPOwCok+zeoPBX7lvsRKHJRYR3Q32Ib7SRr6l
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6754.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(66446008)(64756008)(478600001)(26005)(6506007)(66946007)(66556008)(66476007)(4326008)(186003)(83380400001)(2906002)(110136005)(54906003)(9686003)(316002)(55016002)(76116006)(44832011)(4744005)(86362001)(5660300002)(8936002)(8676002)(52536014)(33656002)(71200400001)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vxjR04bhCNdvPOsvQ855xL9/jw9CwNQsMwg/5Rjv+q7pI/1IuFRnskIxsbIewNF2IBiKwVb9uErm38L7cgdDSw4gy7GYmTRN9oY1awMLexGzWrk52qY44zBfiOh2t76HLUASOFXo87a0az7wvpY0nNdpsK6WLPT7cCOOYtCSJGj6EwjHgmDqbZvMm8ltpqxlfscAYXLpzBxLPxOgM9FT99tKoIxtZBFgor4SC0luPSd5oVfs/qcA26rjo5Qe4WkVnwNsEWb9IAELFFJL7HLyZva4kz9LpX4iTdFffpOuIuOUsxrZaMQSWCpe4EGm+meKBXI6J3E3gLIjAvrfMwwrgQbITaeFkJlg/UjGWnqTa+ue4eZEN7AEz1sQaF9wFyD6yot6bTb7+EB5DBaGNA32bd3lWWvzQcItVTu2F4LlCwm8A89KOHZ4/5rEKj5zg1A3sj0LOQnQjuvUVe+X8W8baKuZ5UbrxXHbsduY4UUYtyc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6754.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a90054ee-08ef-4b86-6c4c-08d8224ae05f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 07:53:45.9000
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CutkTlCu88fNQTB1aM0BWDWoMXoKx0fj8AfIeyBHYungsmk4HQpF7x6BVBE/SyV7h1tw4BtezyjtXRadufV8pg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6324
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 01:02:51PM -0700, Dan Williams wrote:
-> Recent events have prompted a Linux position statement on inclusive
-> terminology. Given that Linux maintains a coding-style and its own
-> idiomatic set of terminology here is a proposal to answer the call to
-> replace non-inclusive terminology.
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Chris Mason <clm@fb.clm>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
+>-----Original Message-----
+>From: Michael Walle <michael@walle.cc>
+>Sent: Tuesday, July 7, 2020 1:03 AM
+[...]
+>Subject: [PATCH net-next v4 1/3] net: dsa: felix: move USXGMII defines to
+>common place
+>
+>The ENETC has the same PCS PHY and thus needs the same definitions. Move
+>them into the common enetc_mdio.h header which has already the macros
+>for the SGMII PCS.
+>
+>Signed-off-by: Michael Walle <michael@walle.cc>
 
-This is the right thing to do.
-
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-(Imho, I agree with Andy and the historical bits could probably be
- moved into the changelog.)
-
->  Documentation/process/coding-style.rst          |   12 ++++
->  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
->  Documentation/process/index.rst                 |    1 
->  3 files changed, 77 insertions(+)
->  create mode 100644 Documentation/process/inclusive-terminology.rst
-> 
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index 2657a55c6f12..4b15ab671089 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
->  problem, which is called the function-growth-hormone-imbalance syndrome.
->  See chapter 6 (Functions).
->  
-> +For symbol names, avoid introducing new usage of the words 'slave' and
-> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
-> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
-> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
-> +'denylist'.
-> +
-> +Exceptions for introducing new usage is to maintain a userspace ABI, or
-> +when updating code for an existing (as of 2020) hardware or protocol
-> +specification that mandates those terms. For new specifications consider
-> +translating specification usage of the terminology to the kernel coding
-> +standard where possible. See :ref:`process/inclusive-terminology.rst
-> +<inclusiveterminology>` for details.
->  
->  5) Typedefs
->  -----------
-> diff --git a/Documentation/process/inclusive-terminology.rst b/Documentation/process/inclusive-terminology.rst
-> new file mode 100644
-> index 000000000000..a8eb26690eb4
-> --- /dev/null
-> +++ b/Documentation/process/inclusive-terminology.rst
-> @@ -0,0 +1,64 @@
-> +.. _inclusiveterminology:
-> +
-> +Linux kernel inclusive terminology
-> +==================================
-> +
-> +The Linux kernel is a global software project, and in 2020 there was a
-> +global reckoning on race relations that caused many organizations to
-> +re-evaluate their policies and practices relative to the inclusion of
-> +people of African descent. This document describes why the 'Naming'
-> +section in :ref:`process/coding-style.rst <codingstyle>` recommends
-> +avoiding usage of 'slave' and 'blacklist' in new additions to the Linux
-> +kernel.
-> +
-> +On the triviality of replacing words
-> +====================================
-> +
-> +The African slave trade was a brutal system of human misery deployed at
-> +global scale. Some word choice decisions in a modern software project
-> +does next to nothing to compensate for that legacy. So why put any
-> +effort into something so trivial in comparison? Because the goal is not
-> +to repair, or erase the past. The goal is to maximize availability and
-> +efficiency of the global developer community to participate in the Linux
-> +kernel development process.
-> +
-> +Word choice and developer efficiency
-> +====================================
-> +
-> +Why does any software project go through the trouble of developing a
-> +document like :ref:`process/coding-style.rst <codingstyle>`? It does so
-> +because a common coding style maximizes the efficiency of both
-> +maintainers and developers. Developers learn common design patterns and
-> +idiomatic expressions while maintainers can spot deviations from those
-> +norms. Even non-compliant whitespace is considered a leading indicator
-> +to deeper problems in a patchset. Coding style violations are known to
-> +take a maintainer "out of the zone" of reviewing code. Maintainers are
-> +also sensitive to word choice across specifications and often choose to
-> +deploy Linux terminology to replace non-idiomatic word-choice in a
-> +specification.
-> +
-> +Non-inclusive terminology has that same distracting effect which is why
-> +it is a style issue for Linux, it injures developer efficiency.
-> +
-> +Of course it is around this point someone jumps in with an etymological
-> +argument about why people should not be offended. Etymological arguments
-> +do not scale. The scope and pace of Linux to reach new developers
-> +exceeds the ability of historical terminology defenders to describe "no,
-> +not that connotation". The revelation of 2020 was that black voices were
-> +heard on a global scale and the Linux kernel project has done its small
-> +part to answer that call as it wants black voices, among all voices, in
-> +its developer community.
-> +
-> +Really, 'blacklist' too?
-> +========================
-> +
-> +While 'slave' has a direct connection to human suffering the etymology
-> +of 'blacklist' is devoid of a historical racial connection. However, one
-> +thought exercise is to consider replacing 'blacklist/whitelist' with
-> +'redlist/greenlist'. Realize that the replacement only makes sense if
-> +you have been socialized with the concepts that 'red/green' implies
-> +'stop/go'. Colors to represent a policy requires an indirection. The
-> +socialization of 'black/white' to have the connotation of
-> +'impermissible/permissible' does not support inclusion.
-> +
-> +Inclusion == global developer community efficiency.
-> diff --git a/Documentation/process/index.rst b/Documentation/process/index.rst
-> index f07c9250c3ac..ed861f6f8d25 100644
-> --- a/Documentation/process/index.rst
-> +++ b/Documentation/process/index.rst
-> @@ -27,6 +27,7 @@ Below are the essential guides that every developer should read.
->     submitting-patches
->     programming-language
->     coding-style
-> +   inclusive-terminology
->     maintainer-pgp-guide
->     email-clients
->     kernel-enforcement-statement
-> 
-> _______________________________________________
-> Ksummit-discuss mailing list
-> Ksummit-discuss@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
