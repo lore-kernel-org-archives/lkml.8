@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F375CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E11B82078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA48C2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135498;
-	bh=W6ZCKqVWmrvLUaqsfEod1eJbx0YNy6bRzf5/LmCVh4U=;
+	s=default; t=1594135501;
+	bh=1vbPAtHeq3nKicDWuZcnx1viEjrIU0IOgLUmA2NYj1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=th0mBYxbqB42ogBr6eFPanLu8VgAEDSoDiBOEpJC6H0AdzapZC4EQsf5dxzfsP2G9
-	 3omDQrq6220TEhW/1tDJAaFpOz0kKC4CK5AGMyeDkPjSXi/alaLF2JDdNO97mycU34
-	 8Acw3A/f4DC9voKswObfe/evdrS7/kPNxzM22q1c=
+	b=JovTOKmd6MHCFp4YOd5983lwUKRlibQ8VehfJfraqO+NeZVuSc2cN+czr5APYdfzI
+	 E7/4Ewi9V5j9kQGRecGnP1YEKgg2X06Ew3EvHPaGm2oibOdb88RJvoyA56H/+YQj7u
+	 BsF3/4px4sQ5FYkcIsSUxK+0n0KTq2IQEVEb08vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgGGPYy (ORCPT
+        id S1729052AbgGGPZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730134AbgGGPYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:48 -0400
+        id S1730155AbgGGPYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05764206F6;
-        Tue,  7 Jul 2020 15:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617BC20663;
+        Tue,  7 Jul 2020 15:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135487;
-        bh=W6ZCKqVWmrvLUaqsfEod1eJbx0YNy6bRzf5/LmCVh4U=;
+        s=default; t=1594135494;
+        bh=1vbPAtHeq3nKicDWuZcnx1viEjrIU0IOgLUmA2NYj1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Slzv2ZvB469YModFStwUPPWyAosKdk3rj+WiiRZojZLyBla4VYSkip/12E+NBS+M1
-         RLqQR/L54+eqZMBzXUxSFU4pvlp1/VkiCKlsFWj/1XA09HR0bjSsuAtOdfSvKxtPsc
-         HBKygFj74HSRUD+gWtHcR6+44XS8PvQEG6ssMBMg=
+        b=UZiMDYxpyE9IIlFWcXDufi5MiK2bqEPowApSfOATO9GXax4OjjXIsVNB8me6UXePt
+         qZD61EpmiRK/alhFejn1WGOBwstvek8C1h4MR4z1eif0XPxuZHCutrOHAoPlqXDSyk
+         5NllH4fhP8vlWzY7bufLp0ifhtB+t703MWmYQuLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kees Kook <keescook@chromium.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 031/112] tools lib traceevent: Handle __attribute__((user)) in field names
-Date:   Tue,  7 Jul 2020 17:16:36 +0200
-Message-Id: <20200707145802.467329359@linuxfoundation.org>
+Subject: [PATCH 5.7 056/112] hsr: remove hsr interface if all slaves are removed
+Date:   Tue,  7 Jul 2020 17:17:01 +0200
+Message-Id: <20200707145803.665343106@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -68,96 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 74621d929d944529a5e2878a84f48bfa6fb69a66 ]
+[ Upstream commit 34a9c361dd480041d790fff3d6ea58513c8769e8 ]
 
-Commit c61f13eaa1ee1 ("gcc-plugins: Add structleak for more stack
-initialization") added "__attribute__((user))" to the user when
-stackleak detector is enabled. This now appears in the field format of
-system call trace events for system calls that have user buffers. The
-"__attribute__((user))" breaks the parsing in libtraceevent. That needs
-to be handled.
+When all hsr slave interfaces are removed, hsr interface doesn't work.
+At that moment, it's fine to remove an unused hsr interface automatically
+for saving resources.
+That's a common behavior of virtual interfaces.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaewon Kim <jaewon31.kim@samsung.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kees Kook <keescook@chromium.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200324200956.663647256@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 39 +++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ net/hsr/hsr_main.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index eec96c31ea9e5..010e60d5a0817 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1444,6 +1444,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 	enum tep_event_type type;
- 	char *token;
- 	char *last_token;
-+	char *delim = " ";
- 	int count = 0;
- 	int ret;
+diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
+index 26d6c39f24e16..e2564de676038 100644
+--- a/net/hsr/hsr_main.c
++++ b/net/hsr/hsr_main.c
+@@ -15,12 +15,23 @@
+ #include "hsr_framereg.h"
+ #include "hsr_slave.h"
  
-@@ -1504,13 +1505,49 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 					field->flags |= TEP_FIELD_IS_POINTER;
++static bool hsr_slave_empty(struct hsr_priv *hsr)
++{
++	struct hsr_port *port;
++
++	hsr_for_each_port(hsr, port)
++		if (port->type != HSR_PT_MASTER)
++			return false;
++	return true;
++}
++
+ static int hsr_netdev_notify(struct notifier_block *nb, unsigned long event,
+ 			     void *ptr)
+ {
+-	struct net_device *dev;
+ 	struct hsr_port *port, *master;
++	struct net_device *dev;
+ 	struct hsr_priv *hsr;
++	LIST_HEAD(list_kill);
+ 	int mtu_max;
+ 	int res;
  
- 				if (field->type) {
--					ret = append(&field->type, " ", last_token);
-+					ret = append(&field->type, delim, last_token);
- 					free(last_token);
- 					if (ret < 0)
- 						goto fail;
- 				} else
- 					field->type = last_token;
- 				last_token = token;
-+				delim = " ";
-+				continue;
+@@ -85,8 +96,15 @@ static int hsr_netdev_notify(struct notifier_block *nb, unsigned long event,
+ 		master->dev->mtu = mtu_max;
+ 		break;
+ 	case NETDEV_UNREGISTER:
+-		if (!is_hsr_master(dev))
++		if (!is_hsr_master(dev)) {
++			master = hsr_port_get_hsr(port->hsr, HSR_PT_MASTER);
+ 			hsr_del_port(port);
++			if (hsr_slave_empty(master->hsr)) {
++				unregister_netdevice_queue(master->dev,
++							   &list_kill);
++				unregister_netdevice_many(&list_kill);
 +			}
-+
-+			/* Handle __attribute__((user)) */
-+			if ((type == TEP_EVENT_DELIM) &&
-+			    strcmp("__attribute__", last_token) == 0 &&
-+			    token[0] == '(') {
-+				int depth = 1;
-+				int ret;
-+
-+				ret = append(&field->type, " ", last_token);
-+				ret |= append(&field->type, "", "(");
-+				if (ret < 0)
-+					goto fail;
-+
-+				delim = " ";
-+				while ((type = read_token(&token)) != TEP_EVENT_NONE) {
-+					if (type == TEP_EVENT_DELIM) {
-+						if (token[0] == '(')
-+							depth++;
-+						else if (token[0] == ')')
-+							depth--;
-+						if (!depth)
-+							break;
-+						ret = append(&field->type, "", token);
-+						delim = "";
-+					} else {
-+						ret = append(&field->type, delim, token);
-+						delim = " ";
-+					}
-+					if (ret < 0)
-+						goto fail;
-+					free(last_token);
-+					last_token = token;
-+				}
- 				continue;
- 			}
- 			break;
++		}
+ 		break;
+ 	case NETDEV_PRE_TYPE_CHANGE:
+ 		/* HSR works only on Ethernet devices. Refuse slave to change
 -- 
 2.25.1
 
