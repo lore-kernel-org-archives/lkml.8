@@ -2,477 +2,96 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4556C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2047FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78736206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E697920771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3d48+VI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E44Npy+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGGVlM (ORCPT
+        id S1728851AbgGGVme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:41:12 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21086 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726273AbgGGVlL (ORCPT
+        Tue, 7 Jul 2020 17:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgGGVme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:41:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594158068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0IfWSatVX+vH3V9kv/Lg154b3bCGVffWShFuAH/9J2Q=;
-        b=J3d48+VIQF0y0DgU4TXX09lLANKjHFp4s8p1087qYH02oFqQ9eaG2GlrlCP+7gxc1ZZ0ZX
-        k0ONzrjxebgA0qNkUgp0CcBFr2483zmXBKMIyTs1s1deoB+ThPF29JdUd3Z9vkiKBRlGUB
-        dsPrFoohXOvw8boD3/4Ep/kuKbmSiDo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-_3Ei0FvMMqusOHRItImMOg-1; Tue, 07 Jul 2020 17:41:03 -0400
-X-MC-Unique: _3Ei0FvMMqusOHRItImMOg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6D10107ACCA;
-        Tue,  7 Jul 2020 21:41:01 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2036078469;
-        Tue,  7 Jul 2020 21:40:58 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 15:40:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v3 1/5] docs: IOMMU user API
-Message-ID: <20200707154054.0893c30d@x1.home>
-In-Reply-To: <20200629160518.471159cf@jacob-builder>
-References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1592931837-58223-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200626161923.339e17a6@w520.home>
-        <20200629160518.471159cf@jacob-builder>
-Organization: Red Hat
+        Tue, 7 Jul 2020 17:42:34 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E60C061755;
+        Tue,  7 Jul 2020 14:42:34 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id i4so44763266iov.11;
+        Tue, 07 Jul 2020 14:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eEphcFSLy8QcL2YgiuOYJ/038OCI0x9oymTZf0ealxU=;
+        b=E44Npy+uD9w9OdRwhIZI8Eg596xSQB5BuN5tTCsfBVLb3wIB2ftJHf4hYQ1VdIgGzT
+         ILX4A6wUkGdfVD00JELfXSv2arJ0OJ46HvKLA8nVtOHWQ6cUR///emWAakv8t0ax/4Ch
+         xU6ihHXBkiGPNCFB0aaBoNuzU6x8Wpa8PtgGPuhiFEIxx+7+Z661VhObYrAYIgy/HgkZ
+         f2LXtoeD8pjfl3ZgBYy+f6hwfPVTrOI4huglmsTpTaQNhlSc/4Tm8dccT0beKKwDvnKd
+         hR+EopVSR8+8GKVpinFtIMhL3JZBsO29W9sMXcJm4/wWEYeCBbJSe6iw/Ekf0zLnCWpp
+         WAtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eEphcFSLy8QcL2YgiuOYJ/038OCI0x9oymTZf0ealxU=;
+        b=i7kfZuKlY2bDHu8AZaw6D4TEbkVKJg/tNbZY1UaDR7T/aXRwfDhGZaD8XeGNtjFKqz
+         Xp3okzZwl4pDEkmPz3UOJ3PXYLqfF8Rm7PrqEsAV3Wc6kuGwxHBrKF2mgDr+OS/lYhUZ
+         6W+04AdQXj31oc4doXX/iceswaZ7V79hqTaMo0KxGn8AXfGXE3MU+4S2mhG2XLYqVfd1
+         Q5vcjb6kXyW5AljA9gTWIjd2XXdS+DjA/BXZENaZCpOn8SKuR2zSwhhKb9JzrjJI5u99
+         Nx8wvGwSBhvKfgbhF8eLzxjy7L2MZWDrWQUZoRVDj+MEP6IlBp2v2zoWRkv4kgBNpNkR
+         dyjQ==
+X-Gm-Message-State: AOAM531YW4MT9ryVFh3EYZakziKzZZyNq2AEY/qZTO6Kd4kQiQjHp/ym
+        PsanLSzaBMQ++jVhVSGYDO3WdkbigUi/yvAk3iI=
+X-Google-Smtp-Source: ABdhPJx6vXCFv0Sq8KiF3sflQwhJCic0rGSxeKwIiWlFas4fu6Fka6BqgyVfZM8yhXkk3dtsXcNLPYkxUjnUr6ICrAg=
+X-Received: by 2002:a5d:8f01:: with SMTP id f1mr33454675iof.20.1594158153413;
+ Tue, 07 Jul 2020 14:42:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200707144457.1603400-1-agruenba@redhat.com> <20200707144457.1603400-2-agruenba@redhat.com>
+ <e49c5a2b-866f-14ae-9665-284726815bbd@kernel.dk>
+In-Reply-To: <e49c5a2b-866f-14ae-9665-284726815bbd@kernel.dk>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Tue, 7 Jul 2020 23:42:22 +0200
+Message-ID: <CAHpGcM+mpg9vCT=jGYq0r2aezBY921O06D5aAxLozx8RDJ63-g@mail.gmail.com>
+Subject: Re: [RFC v3 1/2] fs: Add IOCB_NOIO flag for generic_file_read_iter
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 16:05:18 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+Am Di., 7. Juli 2020 um 20:40 Uhr schrieb Jens Axboe <axboe@kernel.dk>:
+> On 7/7/20 8:44 AM, Andreas Gruenbacher wrote:
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 3f881a892ea7..1ab2ea19e883 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -315,6 +315,7 @@ enum rw_hint {
+> >  #define IOCB_SYNC            (1 << 5)
+> >  #define IOCB_WRITE           (1 << 6)
+> >  #define IOCB_NOWAIT          (1 << 7)
+> > +#define IOCB_NOIO            (1 << 8)
+>
+> Just to make this even more trivial in terms of merge conflicts, could
+> you do 1 << 9 instead?
 
-> On Fri, 26 Jun 2020 16:19:23 -0600
-> Alex Williamson <alex.williamson@redhat.com> wrote:
-> 
-> > On Tue, 23 Jun 2020 10:03:53 -0700
-> > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> >   
-> > > IOMMU UAPI is newly introduced to support communications between
-> > > guest virtual IOMMU and host IOMMU. There has been lots of
-> > > discussions on how it should work with VFIO UAPI and userspace in
-> > > general.
-> > > 
-> > > This document is indended to clarify the UAPI design and usage. The
-> > > mechenics of how future extensions should be achieved are also
-> > > covered in this documentation.
-> > > 
-> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  Documentation/userspace-api/iommu.rst | 244
-> > > ++++++++++++++++++++++++++++++++++ 1 file changed, 244 insertions(+)
-> > >  create mode 100644 Documentation/userspace-api/iommu.rst
-> > > 
-> > > diff --git a/Documentation/userspace-api/iommu.rst
-> > > b/Documentation/userspace-api/iommu.rst new file mode 100644
-> > > index 000000000000..f9e4ed90a413
-> > > --- /dev/null
-> > > +++ b/Documentation/userspace-api/iommu.rst
-> > > @@ -0,0 +1,244 @@
-> > > +.. SPDX-License-Identifier: GPL-2.0
-> > > +.. iommu:
-> > > +
-> > > +=====================================
-> > > +IOMMU Userspace API
-> > > +=====================================
-> > > +
-> > > +IOMMU UAPI is used for virtualization cases where communications
-> > > are +needed between physical and virtual IOMMU drivers. For native
-> > > +usage, IOMMU is a system device which does not need to communicate
-> > > +with user space directly.
-> > > +
-> > > +The primary use cases are guest Shared Virtual Address (SVA) and
-> > > +guest IO virtual address (IOVA), wherein a virtual IOMMU (vIOMMU)
-> > > is +required to communicate with the physical IOMMU in the host.
-> > > +
-> > > +.. contents:: :local:
-> > > +
-> > > +Functionalities
-> > > +===============
-> > > +Communications of user and kernel involve both directions. The
-> > > +supported user-kernel APIs are as follows:
-> > > +
-> > > +1. Alloc/Free PASID
-> > > +2. Bind/unbind guest PASID (e.g. Intel VT-d)
-> > > +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
-> > > +4. Invalidate IOMMU caches
-> > > +5. Service page requests
-> > > +
-> > > +Requirements
-> > > +============
-> > > +The IOMMU UAPIs are generic and extensible to meet the following
-> > > +requirements:
-> > > +
-> > > +1. Emulated and para-virtualised vIOMMUs
-> > > +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
-> > > +3. Extensions to the UAPI shall not break existing user space
-> > > +
-> > > +Interfaces
-> > > +==========
-> > > +Although the data structures defined in IOMMU UAPI are
-> > > self-contained, +there is no user API functions introduced.
-> > > Instead, IOMMU UAPI is +designed to work with existing user driver
-> > > frameworks such as VFIO. +
-> > > +Extension Rules & Precautions
-> > > +-----------------------------
-> > > +When IOMMU UAPI gets extended, the data structures can *only* be
-> > > +modified in two ways:
-> > > +
-> > > +1. Adding new fields by re-purposing the padding[] field. No size
-> > > change. +2. Adding new union members at the end. May increase in
-> > > size. +
-> > > +No new fields can be added *after* the variable sized union in
-> > > that it +will break backward compatibility when offset moves. In
-> > > both cases, a +new flag must be accompanied with a new field such
-> > > that the IOMMU +driver can process the data based on the new flag.
-> > > Version field is +only reserved for the unlikely event of UAPI
-> > > upgrade at its entirety. +
-> > > +It's *always* the caller's responsibility to indicate the size of
-> > > the +structure passed by setting argsz appropriately.
-> > > +Though at the same time, argsz is user provided data which is not
-> > > +trusted. The argsz field allows the user to indicate how much data
-> > > +they're providing, it's still the kernel's responsibility to
-> > > validate +whether it's correct and sufficient for the requested
-> > > operation. +
-> > > +Compatibility Checking
-> > > +----------------------
-> > > +When IOMMU UAPI extension results in size increase, user such as
-> > > VFIO +has to handle the following cases:
-> > > +
-> > > +1. User and kernel has exact size match
-> > > +2. An older user with older kernel header (smaller UAPI size)
-> > > running on a
-> > > +   newer kernel (larger UAPI size)
-> > > +3. A newer user with newer kernel header (larger UAPI size) running
-> > > +   on an older kernel.
-> > > +4. A malicious/misbehaving user pass illegal/invalid size but
-> > > within
-> > > +   range. The data may contain garbage.    
-> > 
-> > What exactly does vfio need to do to handle these?
-> >   
-> VFIO does nothing other than returning the status from IOMMU driver.
-> Based on the return status, users such as QEMU can cause fault
-> conditions within the vIOMMU.
-> 
-> > > +
-> > > +Feature Checking
-> > > +----------------
-> > > +While launching a guest with vIOMMU, it is important to ensure
-> > > that host +can support the UAPI data structures to be used for
-> > > vIOMMU-pIOMMU +communications. Without upfront compatibility
-> > > checking, future faults +are difficult to report even in normal
-> > > conditions. For example, TLB +invalidations should always succeed.
-> > > There is no architectural way to +report back to the vIOMMU if the
-> > > UAPI data is incompatible. If that +happens, in order to protect
-> > > IOMMU iosolation guarantee, we have to +resort to not giving
-> > > completion status in vIOMMU. This may result in +VM hang.
-> > > +
-> > > +For this reason the following IOMMU UAPIs cannot fail:
-> > > +
-> > > +1. Free PASID
-> > > +2. Unbind guest PASID
-> > > +3. Unbind guest PASID table (SMMU)
-> > > +4. Cache invalidate
-> > > +
-> > > +User applications such as QEMU is expected to import kernel UAPI
-> > > +headers. Backward compatibility is supported per feature flags.
-> > > +For example, an older QEMU (with older kernel header) can run on
-> > > newer +kernel. Newer QEMU (with new kernel header) may refuse to
-> > > initialize +on an older kernel if new feature flags are not
-> > > supported by older +kernel. Simply recompile existing code with
-> > > newer kernel header should +not be an issue in that only existing
-> > > flags are used. +
-> > > +IOMMU vendor driver should report the below features to IOMMU UAPI
-> > > +consumers (e.g. via VFIO).
-> > > +
-> > > +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
-> > > +2. IOMMU_NESTING_FEAT_BIND_PGTBL
-> > > +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
-> > > +4. IOMMU_NESTING_FEAT_CACHE_INVLD
-> > > +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
-> > > +
-> > > +Take VFIO as example, upon request from VFIO user space (e.g.
-> > > QEMU), +VFIO kernel code shall query IOMMU vendor driver for the
-> > > support of +the above features. Query result can then be reported
-> > > back to the +user-space caller. Details can be found in
-> > > +Documentation/driver-api/vfio.rst.
-> > > +
-> > > +
-> > > +Data Passing Example with VFIO
-> > > +------------------------------
-> > > +As the ubiquitous userspace driver framework, VFIO is already IOMMU
-> > > +aware and share many key concepts such as device model, group, and
-> > > +protection domain. Other user driver frameworks can also be
-> > > extended +to support IOMMU UAPI but it is outside the scope of this
-> > > document. +
-> > > +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of
-> > > the +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates
-> > > user-kernel +transport, capability checking, security, and life
-> > > cycle management of +process address space ID (PASID).
-> > > +
-> > > +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver
-> > > is the +ultimate consumer of its UAPI data. At VFIO layer, the
-> > > IOMMU UAPI data +is wrapped in a VFIO UAPI data. It follows the
-> > > +pattern below::
-> > > +
-> > > +   struct {
-> > > +	__u32 argsz;
-> > > +	__u32 flags;
-> > > +	__u8  data[];
-> > > +   };
-> > > +
-> > > +Here data[] contains the IOMMU UAPI data structures. VFIO has the
-> > > +freedom to bundle the data as well as parse data size based on its
-> > > own flags. +
-> > > +In order to determine the size and feature set of the user data,
-> > > argsz +and flags are also embedded in the IOMMU UAPI data
-> > > structures. +A "__u32 argsz" field is *always* at the beginning of
-> > > each structure. +
-> > > +For example:
-> > > +::
-> > > +
-> > > +   struct iommu_cache_invalidate_info {
-> > > +	__u32	argsz;
-> > > +	#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
-> > > +	__u32	version;
-> > > +	/* IOMMU paging structure cache */
-> > > +	#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /*
-> > > IOMMU IOTLB */
-> > > +	#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /*
-> > > Device IOTLB */
-> > > +	#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /*
-> > > PASID cache */
-> > > +	#define IOMMU_CACHE_INV_TYPE_NR		(3)
-> > > +	__u8	cache;
-> > > +	__u8	granularity;
-> > > +	__u8	padding[2];
-> > > +	union {
-> > > +		struct iommu_inv_pasid_info pasid_info;
-> > > +		struct iommu_inv_addr_info addr_info;
-> > > +	} granu;
-> > > +   };
-> > > +
-> > > +VFIO is responsible for checking its own argsz and flags then
-> > > invokes +appropriate IOMMU UAPI functions. User pointer is passed
-> > > to IOMMU +layer for further processing. The responsibilities are
-> > > divided as +follows:
-> > > +
-> > > +- Generic IOMMU layer checks argsz range and override out-of-range
-> > > +  value. If the exact argsz is based on generic flags, they are
-> > > checked
-> > > +  here as well.
-> > > +
-> > > +- Vendor IOMMU driver checks argsz based on vendor flags, UAPI data
-> > > +  is consumed based on flags
-> > > +
-> > > +Once again, use guest TLB invalidation as an example, argsz is
-> > > based +on generic flags in the invalidation information. IOMMU
-> > > generic code +shall process the UAPI data as the following:
-> > > +
-> > > +::
-> > > +
-> > > + int iommu_cache_invalidate(struct iommu_domain *domain, struct
-> > > device *dev,
-> > > +			void __user *uinfo)
-> > > + {
-> > > +	/* Current kernel data size is the max to be copied from
-> > > user */
-> > > +	maxsz = sizeof(struct iommu_cache_invalidate_info);
-> > > +	memset((void *)&inv_info, 0, maxsz);
-> > > +
-> > > +	/*
-> > > +	 * No new spaces can be added before the variable sized
-> > > union, the
-> > > +	 * minimum size is the offset to the union.
-> > > +	 */
-> > > +	minsz = offsetof(struct iommu_cache_invalidate_info,
-> > > granu); +
-> > > +	/* Copy minsz from user to get flags and argsz */
-> > > +	if (copy_from_user(&inv_info, uinfo, minsz))
-> > > +		return -EFAULT;
-> > > +
-> > > +	/* Fields before variable size union is mandatory */
-> > > +	if (inv_info.argsz < minsz)
-> > > +		return -EINVAL;
-> > > +	/*
-> > > +	 * User might be using a newer UAPI header which has a
-> > > larger data
-> > > +	 * size, we shall support the existing flags within the
-> > > current
-> > > +	 * size.
-> > > +	 */
-> > > +	if (inv_info.argsz > maxsz)
-> > > +		inv_info.argsz = maxsz;
-> > > +
-> > > +	/* Checking the exact argsz based on generic flags */
-> > > +	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
-> > > +		inv_info.argsz != offsetofend(struct
-> > > iommu_cache_invalidate_info,
-> > > +					granu.addr_info))    
-> > 
-> > Is it really reasonable to expect the user to specify argsz to the
-> > exact union element for the callback?  I'd certainly expect users to
-> > simply use sizeof(struct iommu_cache_invalidate_info) and it should
-> > therefore be sufficient to test >= here rather than jump through hoops
-> > with an exact size.  We're already changing inv_info.argsz above to
-> > fit our known structure, it's inconsistent to then expect it to be
-> > some exact value.
-> >    
-> I was thinking argsz doesn't have to be the exact struct size. It should
-> be whatever the sufficient & correct size used by the user for a given
-> call.
-> 
-> For example, current struct iommu_gpasid_bind_data {} only has VT-d
-> data. If it gets extended with SMMU data in the union, VT-d vIOMMU
-> emulation should only fill the union size of vt-d.
+Sure.
 
-But the user is simply going to have a struct iommu_gpasid_bind_data
-and set argsz to sizeof that struct.  The user is providing that entire
-struct as the arg, so it doesn't really make sense to pinpoint the last
-field of the union they chose to use.  The fields of the structure
-define which union is applicable.  If you're following the vfio
-interface as an example, sufficiently sized is all we require, we don't
-ask for union member level granularity, which I think is confusing and
-error prone for users.
-
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
-> > > +		inv_info.argsz != offsetofend(struct
-> > > iommu_cache_invalidate_info,
-> > > +					granu.pasid_info))
-> > > +		return -EINVAL;
-> > > +
-> > > +	/* Copy the remaining user data _after_ minsz */
-> > > +	if (copy_from_user((void *)&inv_info + minsz, uinfo +
-> > > minsz,
-> > > +				inv_info.argsz - minsz))
-> > > +		return -EFAULT;
-> > > +
-> > > +	return domain->ops->cache_invalidate(domain, dev,
-> > > &inv_info);
-> > > + }
-> > > + Add a wrapper
-> > > +   __iommu_unbind_( kernel data, same user data, kernel copy)
-> > > +  
-> This should be removed. Sorry about the confusion. The patch does not
-> have two data pointers, just separate APIs for kernel and user.
-> 
-> > > +Notice that in this example, since union size is determined by
-> > > generic +flags, all checking to argsz is validated in the generic
-> > > IOMMU layer, +vendor driver does not need to check argsz. However,
-> > > if union size is +based on vendor data, such as
-> > > iommu_sva_bind_gpasid(), it will be +vendor driver's responsibility
-> > > to validate the exact argsz.    
-> > 
-> > struct iommu_cache_invalidate_info is a good example because it
-> > explicitly states a table of type vs granularity validity.  When the
-> > cache_invalidate() callback is used by an internal user we can
-> > consider it a bug in the caller if its usage falls outside of these
-> > prescribed valid combinations, ie. iommu_ops callbacks may assume a
-> > trusted caller that isn't trying to exploit any loophole.  
-> Separate APIs are proposed in the patchset to address UAPIs
-> with both kernel and user callers. Sorry about the last line in the
-> example above. Currently, only unbind_gpasid() and page_response() have
-> both kernel and userspace callers. e.g.
-> 
->    /* userspace caller */
->    int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-> 			void __user *udata)
-> 
->    /* in-kernel caller */
->    int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
->                                  struct iommu_gpasid_bind_data *data)
-> 
-> We don;t expect in-kernel caller for cache invalidate in that it is
-> implied in unmap, unbind operations.
-
-That specific function was only an example of an interface which has
-invalid combinations where in-kernel it's the caller's responsibility
-to abide by the rules, but a user interface needs further validation.
-
-> >  But here
-> > we've done nothing more than validated the supplied size to pass it
-> > through to a non-user hardened callback.  We didn't check the
-> > version,  
-> Yes, I should move up the version check from vendor driver.
-> 
-> > we didn't check that any of the undefined bits in cache or
-> > granularity or padding were set, we don't know what flags might be
-> > set in the union elements.  
-> You are right, we should sanitize reserved bits.
-> 
-> > For example, if a user is able to set a
-> > flag that gets ignored now, that means we can never use that flag
-> > without potentially breaking that user in the future.  
-> Good point, all reserved/unused bits should be tested.
-> 
-> >  If a user can
-> > pass in version 3141592654 now, then we can never use version for
-> > validation.  I see that intel_iommu_sva_invalidate() does test the
-> > version, but has no obvious other hardening.  I'm afraid we're being
-> > far to lax about accepting a data structure provided by a user, we
-> > should not assume good faith. Thanks,
-> >   
-> Agreed. will add checks in the IOMMU generic layer for reserved
-> bits.
-> For VT-d vendor driver, we do check all bits in cache types, i.e. in
-> intel/iommu.c
-> 	for_each_set_bit(cache_type,
-> 			 (unsigned long *)&inv_info->cache,
-> 			 IOMMU_CACHE_INV_TYPE_NR) {
-> 
-> 
-> one other hardening is to check vendor argsz. This is in the
-> bind_gpasid call.
-> 
-> 	if (data->argsz != offsetofend(struct iommu_gpasid_bind_data, vendor.vtd))
-> 		return -EINVAL;
-
-This is the same issue I raise above whether this is actually too
-strict.  The user is providing a full structure as the arg, the
-structure defines the valid fields via its content, it shouldn't be
-necessary to have field level granularity for argsz.  Thanks,
-
-Alex
-
+Andreas
