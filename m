@@ -7,156 +7,111 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A58F206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E99206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SJcEfdTt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QoVnhhkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgGGKR6 (ORCPT
+        id S1728391AbgGGKSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41462 "EHLO
+        Tue, 7 Jul 2020 06:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgGGKRU (ORCPT
+        with ESMTP id S1728248AbgGGKRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:17:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BA3C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:19 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so44560017wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:19 -0700 (PDT)
+        Tue, 7 Jul 2020 06:17:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA26BC08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:18 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k6so44564617wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
-        b=SJcEfdTtluJRJ9drVxAEM084sLA2jjg2omREK8yyLHD5QF4fquunCIC3osGjdY+i8M
-         BrPPOXhxhQSpxRhiU4+fbkmi+4dMKtSbB8gYesK+Z9X3T1NqQeLhdRgH2vWDU1cvpE+R
-         PYS0ZwS8h1ihPLT3G3c16hhCJ1KBoJG1ZbsPwrXQ1QNq/BicFRrDnZJzAccXitAGMYne
-         lPh0gdOFjd2w94WzTScj+7JLsDxkoGXcOyAshHQgtAv+5pB6mE+oZp6R+1uD5ZsUTis8
-         eWLozHqgIHEAodALeznoyshSfIRd8qod9GXI8pQkFLJVOp8LwD5JpC5Mc4zMr2ad2Dzl
-         HLtA==
+        bh=c4/atXJGhj1n0uTQI5cYV/gQNs+sjaOZMgJsAAMgfWA=;
+        b=QoVnhhknZYVxWfl9mcL1Hgta3/3Af8FucpK51zcYOzuI1LPngqjVM8rBVmQqjLgh7E
+         1Uw5NQ/B6U3SUgvxl1hiVmj1hwCKO9EaY5U/DRBIuNUsVN/pN8KwuthGGhnUKBnKlSQB
+         a4d7SMY6AFyJbq8ZR4ADQrnNHzUMD5ziAGLPIcECCntkWmbzjXnZofBCZFbWuKIPcqcC
+         wAZxm9Rtksb3/dunSciAduuH/UVb0HHOL8I3Rsr26SmQn3plTAqH/gh7J1xC4qLizdp6
+         nnU60q8xCFLFZxL4M3qkB9cNqUBR/rnNppyXEvYp/IwKxkobwyQx6HJWu9+ptWGyT82Y
+         JKlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
-        b=QeGNfjgNhkSZjloUvttHcErq5bWYwJFNkS+EObE38+tqusp1sbM3yQOQmKnxwz5mJV
-         flwD4w/xi3PzJmWUUO+fAIGv/P3E0QCvEXRHUenqV6Wj8Yhh+odYD3nVYUUZ9InUfTW1
-         9eZjNwFXCTOdi7a+GrfCOaAZOUZkCMWQNMCmjJIbHq5+Hl/eB+v7qTUtUzlzhXoUtnsk
-         wBb6BCdyxNGvHKw0uPy0AEaTggNg/EYHsSDGqzaKNrAjT5FQtzdcwvLdNiP6hkH0uAVU
-         CFQgtKJjkCu6Ma2+Ga+WS8xTJaH9Hlmhc8a2d0xNpKVya3SJ0864zIxGYzeGi1BlhAXJ
-         4qIA==
-X-Gm-Message-State: AOAM530rbPc61MhfESdsdArQqExGhn+bc9uTH4w8uJ5PT5nWaxNwNG8f
-        W78q3lF5I7SIgbP5dwWXBj6TQg==
-X-Google-Smtp-Source: ABdhPJzRh/ancHeMqyP+Io8AG6Q6pzx7xBhbdTVJ+PS2MJdQ9kFHphykVYJVX0M5fqWOZIm7rVI35g==
-X-Received: by 2002:adf:f711:: with SMTP id r17mr54294795wrp.409.1594117038542;
-        Tue, 07 Jul 2020 03:17:18 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=c4/atXJGhj1n0uTQI5cYV/gQNs+sjaOZMgJsAAMgfWA=;
+        b=NllQTsJFU3aOpNpa0WsPgm4V7kwXlsWLApNpLo2S9R0w0+fNgCUU+o8lYVohjilNHW
+         Y4afYS6rh6w3IFyZ0AQ5wxYtif/uIzFD5cHOCWZ1JUozxovIKeN1UXeOBZbnKamjc9Kb
+         hRXbffOdokFHLJWnQehCG/AIwh6VYgfyUnWZLaFkvqCRTjtmfcBYjscbgZrq1AX1aFoO
+         DAyj9Qht6rX43YoF6pwBpYpIKcGIKzODN7j3RUyXrrFoGddIzBxCx6fc5Ua/a42ndR5v
+         L8dqn6Gx0oceHIGUavK5INY1btjaOMJ2WylXgudfHUM9LNb5ah8TrjsABF10aGESRJjQ
+         bRfw==
+X-Gm-Message-State: AOAM533VepPvbttDtj3w4QVBxMpHgZChyH6dpPtYIgsm8hfdYjXwFn7h
+        woxjVObtA0m+0iJ1axI5BJPJBQ==
+X-Google-Smtp-Source: ABdhPJw9oo8pfsuehCGY22+GnK13HnMCljfQRckQGf4lIiSb36XKwJQOyruMnCDQuGqbsropcrAgFw==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr51698572wrm.31.1594117037406;
         Tue, 07 Jul 2020 03:17:17 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 03:17:16 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Oder Chiou <oder_chiou@realtek.com>, flove <flove@realtek.com>
-Subject: [PATCH 25/28] ASoC: codecs: rt5631: Demote misuse of kerneldoc to standard comment blocks
-Date:   Tue,  7 Jul 2020 11:16:39 +0100
-Message-Id: <20200707101642.1747944-26-lee.jones@linaro.org>
+        Paul Cercueil <paul@crapouillou.net>,
+        ter Huurne <maarten@treewalker.org>
+Subject: [PATCH 24/28] ASoC: codecs: jz4770: Remove defined but never used variable 'mic_boost_tlv'
+Date:   Tue,  7 Jul 2020 11:16:38 +0100
+Message-Id: <20200707101642.1747944-25-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
 References: <20200707101642.1747944-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Little or no attempt has been made to document any of the demoted functions here.
-
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'component' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'reg' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'value' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'component' not described in 'rt5631_read_index'
- sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'reg' not described in 'rt5631_read_index'
- sound/soc/codecs/rt5631.c:367: warning: Function parameter or member 'component' not described in 'onebit_depop_power_stage'
- sound/soc/codecs/rt5631.c:405: warning: Function parameter or member 'component' not described in 'onebit_depop_mute_stage'
- sound/soc/codecs/rt5631.c:443: warning: Function parameter or member 'component' not described in 'depop_seq_power_stage'
- sound/soc/codecs/rt5631.c:515: warning: Function parameter or member 'component' not described in 'depop_seq_mute_stage'
+ In file included from include/sound/tlv.h:10,
+ from sound/soc/codecs/jz4770.c:19:
+ sound/soc/codecs/jz4770.c:306:35: warning: ‘mic_boost_tlv’ defined but not used [-Wunused-const-variable=]
+ 306 | static const DECLARE_TLV_DB_SCALE(mic_boost_tlv, 0, 400, 0);
+ | ^~~~~~~~~~~~~
+ include/uapi/sound/tlv.h:64:15: note: in definition of macro ‘SNDRV_CTL_TLVD_DECLARE_DB_SCALE’
+ 64 | unsigned int name[] = { | ^~~~
+ sound/soc/codecs/jz4770.c:306:14: note: in expansion of macro ‘DECLARE_TLV_DB_SCALE’
+ 306 | static const DECLARE_TLV_DB_SCALE(mic_boost_tlv, 0, 400, 0);
+ | ^~~~~~~~~~~~~~~~~~~~
 
-Cc: Oder Chiou <oder_chiou@realtek.com>
-Cc: flove <flove@realtek.com>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: ter Huurne <maarten@treewalker.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/codecs/rt5631.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/codecs/jz4770.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5631.c b/sound/soc/codecs/rt5631.c
-index b5184f0e10e34..f1ace236c401e 100644
---- a/sound/soc/codecs/rt5631.c
-+++ b/sound/soc/codecs/rt5631.c
-@@ -64,7 +64,7 @@ static const struct reg_default rt5631_reg[] = {
- 	{ RT5631_PSEUDO_SPATL_CTRL, 0x0553 },
- };
+diff --git a/sound/soc/codecs/jz4770.c b/sound/soc/codecs/jz4770.c
+index 34775aa624024..4dee585761c24 100644
+--- a/sound/soc/codecs/jz4770.c
++++ b/sound/soc/codecs/jz4770.c
+@@ -303,7 +303,6 @@ static int jz4770_codec_digital_mute(struct snd_soc_dai *dai, int mute)
+ static const DECLARE_TLV_DB_MINMAX_MUTE(dac_tlv, -3100, 0);
+ static const DECLARE_TLV_DB_SCALE(adc_tlv, 0, 100, 0);
+ static const DECLARE_TLV_DB_MINMAX(out_tlv, -2500, 600);
+-static const DECLARE_TLV_DB_SCALE(mic_boost_tlv, 0, 400, 0);
+ static const DECLARE_TLV_DB_SCALE(linein_tlv, -2500, 100, 0);
  
--/**
-+/*
-  * rt5631_write_index - write index register of 2nd layer
-  */
- static void rt5631_write_index(struct snd_soc_component *component,
-@@ -74,7 +74,7 @@ static void rt5631_write_index(struct snd_soc_component *component,
- 	snd_soc_component_write(component, RT5631_INDEX_DATA, value);
- }
- 
--/**
-+/*
-  * rt5631_read_index - read index register of 2nd layer
-  */
- static unsigned int rt5631_read_index(struct snd_soc_component *component,
-@@ -357,7 +357,7 @@ static int check_adcr_select(struct snd_soc_dapm_widget *source,
- 	return !(reg & RT5631_M_MIC2_TO_RECMIXER_R);
- }
- 
--/**
-+/*
-  * onebit_depop_power_stage - auto depop in power stage.
-  * @enable: power on/off
-  *
-@@ -395,7 +395,7 @@ static void onebit_depop_power_stage(struct snd_soc_component *component, int en
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * onebit_depop_mute_stage - auto depop in mute stage.
-  * @enable: mute/unmute
-  *
-@@ -433,7 +433,7 @@ static void onebit_depop_mute_stage(struct snd_soc_component *component, int ena
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * onebit_depop_power_stage - step by step depop sequence in power stage.
-  * @enable: power on/off
-  *
-@@ -505,7 +505,7 @@ static void depop_seq_power_stage(struct snd_soc_component *component, int enabl
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * depop_seq_mute_stage - step by step depop sequence in mute stage.
-  * @enable: mute/unmute
-  *
+ /* Unconditional controls. */
 -- 
 2.25.1
 
