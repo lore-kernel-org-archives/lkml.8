@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D590C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2618C20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B8620771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135102;
-	bh=JeFMOdyARf81Ai9KYW2h+vSD4qvKFHikUBfHmt4UuEM=;
+	s=default; t=1594135104;
+	bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njlrSXSShyzFZ0ipOxseRu5lsHk4+UCatPCoVW4RVlob30BDZFBlDL21EBuDSLH3m
-	 9EOiq3Kv0lDfcKTkZMyIboXGmGSrTEyRZeFK2v9JgPYocX9zTIr91AiLc9wLsHxmV7
-	 QKUE5gDfMDWUon89NKPwzmOZMFVdLpcULK9hph/8=
+	b=dmk7uc8f7dAytVQvEwvv53FKLu7UvhbDEMf5df89x9CrseqqdvI7FeYiqI5I4zm29
+	 bGyyvNXep+Js13B97Hcccw1RwXIEcJSXyGSGiWyDJNMWNmhbxfePrlZnBr14GmuV8q
+	 jnRMlj9l0LIJCZpxF9GDCYCe54YPLt6QY0uoIfOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgGGPSV (ORCPT
+        id S1728789AbgGGPSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgGGPSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:18 -0400
+        id S1728414AbgGGPSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E42720674;
-        Tue,  7 Jul 2020 15:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4F822065D;
+        Tue,  7 Jul 2020 15:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135097;
-        bh=JeFMOdyARf81Ai9KYW2h+vSD4qvKFHikUBfHmt4UuEM=;
+        s=default; t=1594135100;
+        bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/W7H6jCGQIe7exb50wnkTRuquFcL28whjyzXqiP54c33J8ii2FhmXmcEHoekafut
-         I5WHqTjixJG+awBvZyyY+TMPSRrVjDarpsXK/N8hLhpSvrrHM3+v7tWPStbpvuoMTE
-         flsX+nE+vRLlcE6V+bzW+T7DUgGcSxkeFGtTKe1s=
+        b=nNh8z/a7Q2bLuIBcTgUVIe6rRotleDccfUJYp2R3Ycu9PB3aZwZSDksxLndqsArrw
+         7uPY3sFx54EWl+VdB/tjxbVwYbFAtU8D+RNN+wWwx0oXp6PotahvF57sJbs0GkC3vF
+         cOjfnWvuntQX0b7q0BkhlMkfNj+RzsnuEclK8xN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Chris Murphy <lists@colorremedies.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/36] mm: fix swap cache node allocation mask
-Date:   Tue,  7 Jul 2020 17:16:54 +0200
-Message-Id: <20200707145749.253629832@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 11/36] nvme-multipath: fix deadlock between ana_work and scan_work
+Date:   Tue,  7 Jul 2020 17:17:03 +0200
+Message-Id: <20200707145749.677702241@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -64,95 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-[ Upstream commit 243bce09c91b0145aeaedd5afba799d81841c030 ]
+[ Upstream commit 489dd102a2c7c94d783a35f9412eb085b8da1aa4 ]
 
-Chris Murphy reports that a slightly overcommitted load, testing swap
-and zram along with i915, splats and keeps on splatting, when it had
-better fail less noisily:
+When scan_work calls nvme_mpath_add_disk() this holds ana_lock
+and invokes nvme_parse_ana_log(), which may issue IO
+in device_add_disk() and hang waiting for an accessible path.
+While nvme_mpath_set_live() only called when nvme_state_is_live(),
+a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
 
-  gnome-shell: page allocation failure: order:0,
-  mode:0x400d0(__GFP_IO|__GFP_FS|__GFP_COMP|__GFP_RECLAIMABLE),
-  nodemask=(null),cpuset=/,mems_allowed=0
-  CPU: 2 PID: 1155 Comm: gnome-shell Not tainted 5.7.0-1.fc33.x86_64 #1
-  Call Trace:
-    dump_stack+0x64/0x88
-    warn_alloc.cold+0x75/0xd9
-    __alloc_pages_slowpath.constprop.0+0xcfa/0xd30
-    __alloc_pages_nodemask+0x2df/0x320
-    alloc_slab_page+0x195/0x310
-    allocate_slab+0x3c5/0x440
-    ___slab_alloc+0x40c/0x5f0
-    __slab_alloc+0x1c/0x30
-    kmem_cache_alloc+0x20e/0x220
-    xas_nomem+0x28/0x70
-    add_to_swap_cache+0x321/0x400
-    __read_swap_cache_async+0x105/0x240
-    swap_cluster_readahead+0x22c/0x2e0
-    shmem_swapin+0x8e/0xc0
-    shmem_swapin_page+0x196/0x740
-    shmem_getpage_gfp+0x3a2/0xa60
-    shmem_read_mapping_page_gfp+0x32/0x60
-    shmem_get_pages+0x155/0x5e0 [i915]
-    __i915_gem_object_get_pages+0x68/0xa0 [i915]
-    i915_vma_pin+0x3fe/0x6c0 [i915]
-    eb_add_vma+0x10b/0x2c0 [i915]
-    i915_gem_do_execbuffer+0x704/0x3430 [i915]
-    i915_gem_execbuffer2_ioctl+0x1ea/0x3e0 [i915]
-    drm_ioctl_kernel+0x86/0xd0 [drm]
-    drm_ioctl+0x206/0x390 [drm]
-    ksys_ioctl+0x82/0xc0
-    __x64_sys_ioctl+0x16/0x20
-    do_syscall_64+0x5b/0xf0
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+In order to recover and complete the IO ana_work on the same ctrl
+should be able to update the path state and remove NVME_NS_ANA_PENDING.
 
-Reported on 5.7, but it goes back really to 3.1: when
-shmem_read_mapping_page_gfp() was implemented for use by i915, and
-allowed for __GFP_NORETRY and __GFP_NOWARN flags in most places, but
-missed swapin's "& GFP_KERNEL" mask for page tree node allocation in
-__read_swap_cache_async() - that was to mask off HIGHUSER_MOVABLE bits
-from what page cache uses, but GFP_RECLAIM_MASK is now what's needed.
+The deadlock occurs because scan_work keeps holding ana_lock,
+so ana_work hangs [1].
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208085
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2006151330070.11064@eggly.anvils
-Fixes: 68da9f055755 ("tmpfs: pass gfp to shmem_getpage_gfp")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reported-by: Chris Murphy <lists@colorremedies.com>
-Analyzed-by: Vlastimil Babka <vbabka@suse.cz>
-Analyzed-by: Matthew Wilcox <willy@infradead.org>
-Tested-by: Chris Murphy <lists@colorremedies.com>
-Cc: <stable@vger.kernel.org>	[3.1+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fix:
+Now nvme_mpath_add_disk() uses nvme_parse_ana_log() to obtain a copy
+of the ANA group desc, and then calls nvme_update_ns_ana_state() without
+holding ana_lock.
+
+[1]:
+kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  io_schedule+0x16/0x40
+kernel:  do_read_cache_page+0x438/0x830
+kernel:  read_cache_page+0x12/0x20
+kernel:  read_dev_sector+0x27/0xc0
+kernel:  read_lba+0xc1/0x220
+kernel:  efi_partition+0x1e6/0x708
+kernel:  check_partition+0x154/0x244
+kernel:  rescan_partitions+0xae/0x280
+kernel:  __blkdev_get+0x40f/0x560
+kernel:  blkdev_get+0x3d/0x140
+kernel:  __device_add_disk+0x388/0x480
+kernel:  device_add_disk+0x13/0x20
+kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
+kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
+kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
+kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
+kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
+kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
+kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x249/0x400
+kernel:  kthread+0x104/0x140
+
+kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  schedule_preempt_disabled+0xe/0x10
+kernel:  __mutex_lock.isra.0+0x182/0x4f0
+kernel:  ? __switch_to_asm+0x34/0x70
+kernel:  ? select_task_rq_fair+0x1aa/0x5c0
+kernel:  ? kvm_sched_clock_read+0x11/0x20
+kernel:  ? sched_clock+0x9/0x10
+kernel:  __mutex_lock_slowpath+0x13/0x20
+kernel:  mutex_lock+0x2e/0x40
+kernel:  nvme_read_ana_log+0x3a/0x100 [nvme_core]
+kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x4d/0x400
+kernel:  kthread+0x104/0x140
+kernel:  ? process_one_work+0x380/0x380
+kernel:  ? kthread_park+0x80/0x80
+kernel:  ret_from_fork+0x35/0x40
+
+Fixes: 0d0b660f214d ("nvme: add ANA support")
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap_state.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index ecee9c6c4cc17..09731f4174c7e 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -23,6 +23,7 @@
- #include <linux/huge_mm.h>
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 6f584a9515f42..3ad6183c5e6b4 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -496,26 +496,34 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
+ }
+ DEVICE_ATTR_RO(ana_state);
  
- #include <asm/pgtable.h>
-+#include "internal.h"
+-static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
++static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
+ 		struct nvme_ana_group_desc *desc, void *data)
+ {
+-	struct nvme_ns *ns = data;
++	struct nvme_ana_group_desc *dst = data;
  
- /*
-  * swapper_space is a fiction, retained to simplify the path through
-@@ -416,7 +417,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
- 		/*
- 		 * call radix_tree_preload() while we can wait.
- 		 */
--		err = radix_tree_maybe_preload(gfp_mask & GFP_KERNEL);
-+		err = radix_tree_maybe_preload(gfp_mask & GFP_RECLAIM_MASK);
- 		if (err)
- 			break;
+-	if (ns->ana_grpid == le32_to_cpu(desc->grpid)) {
+-		nvme_update_ns_ana_state(desc, ns);
+-		return -ENXIO; /* just break out of the loop */
+-	}
++	if (desc->grpid != dst->grpid)
++		return 0;
  
+-	return 0;
++	*dst = *desc;
++	return -ENXIO; /* just break out of the loop */
+ }
+ 
+ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ {
+ 	if (nvme_ctrl_use_ana(ns->ctrl)) {
++		struct nvme_ana_group_desc desc = {
++			.grpid = id->anagrpid,
++			.state = 0,
++		};
++
+ 		mutex_lock(&ns->ctrl->ana_lock);
+ 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
+-		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
++		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
+ 		mutex_unlock(&ns->ctrl->ana_lock);
++		if (desc.state) {
++			/* found the group desc: update */
++			nvme_update_ns_ana_state(&desc, ns);
++		}
+ 	} else {
+ 		mutex_lock(&ns->head->lock);
+ 		ns->ana_state = NVME_ANA_OPTIMIZED; 
 -- 
 2.25.1
 
