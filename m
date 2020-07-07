@@ -2,113 +2,163 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3D5206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E952206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a4lwH1jh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KHPHmp6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgGGLZf (ORCPT
+        id S1728288AbgGGLZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:25:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3217 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727044AbgGGLZf (ORCPT
+        Tue, 7 Jul 2020 07:25:41 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41962 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgGGLZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:25:35 -0400
-X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vfvjtfH3Qs6aHOw/QXhcQ51ZF1iRs+TYc8vvEskKgac=;
-        b=a4lwH1jhsqzlod4taTS95VZTNCoYXO3ItijaP8jF5e/2Mimn5KW7Kt4ejWZ5YJVTYxSrKcTDqyHwHVkQR1IjhC36+k6nwULgHw0Y+2+TKSA8Z/plz7na4EqiL20klEDy8HzRe8J+6NO3e/W7TMCUkPabj6i9QQGHrIdSHDTRUPk=;
-X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 522712986; Tue, 07 Jul 2020 19:25:30 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 19:25:25 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 19:25:26 +0800
-Message-ID: <1594121128.20610.9.camel@mtkswgap22>
-Subject: Re: [PATCH v7 0/7] Add basic SoC Support for Mediatek MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Tue, 7 Jul 2020 19:25:28 +0800
-In-Reply-To: <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
-         <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 7 Jul 2020 07:25:41 -0400
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2A3D720B7188
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:25:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A3D720B7188
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594121140;
+        bh=BKCVWRXZ9Ouj0n7PqqzxeeGd+C5Mkj0pv5/dEZdQLBo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KHPHmp6MOjLDjSWpfdMLhmd3kPhW54SLhux4xCryDsPpaLs7/m+NhDkAzbJaf4LLa
+         5BJHl7M05taXyw1zCtwFQlR8zE4/4UZW+ITNHyFsVR3YePoMkzRMqMFIa5mbw14bu9
+         R0xhMHCCjpzzywRQ+BdunPV9kZilKKN+g0G+1h1s=
+Received: by mail-qv1-f48.google.com with SMTP id el4so14532807qvb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:25:39 -0700 (PDT)
+X-Gm-Message-State: AOAM533fsjS5t1MKidElirPOUKxbzHJY62+zpbqOFLTL5UYXL31Wfq/0
+        7wkigznzalmX3wmDPlzMWCaM+J9j/osp/f6UJMs=
+X-Google-Smtp-Source: ABdhPJxvEFlnazCDXb2cYPOR5tRT5OGOgIi9kX280zN5a24Hw9bRN9xhHeezGiQMrH5qE4yklpe8eJPzAklsBpKgd+0=
+X-Received: by 2002:a0c:e3d0:: with SMTP id e16mr52296966qvl.250.1594121138978;
+ Tue, 07 Jul 2020 04:25:38 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 054C2A82F4257DC0A2C98A1257360749210D114C218370F82C156C88CC470A042000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200706234045.9516-1-mcroce@linux.microsoft.com> <202007061852.5B9A0F9ED@keescook>
+In-Reply-To: <202007061852.5B9A0F9ED@keescook>
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+Date:   Tue, 7 Jul 2020 13:25:02 +0200
+X-Gmail-Original-Message-ID: <CAFnufp1WJxhE_Rj=+BdPwDhoKQe9kZCRVfpmgRiTxS2m7xKRjA@mail.gmail.com>
+Message-ID: <CAFnufp1WJxhE_Rj=+BdPwDhoKQe9kZCRVfpmgRiTxS2m7xKRjA@mail.gmail.com>
+Subject: Re: [PATCH] pstore/platform: build fix when crypto API are disabled
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWljaGFlbCwgU3RlcGhlbiwgTWF0dGhpYXMgYW5kIGFsbCwNCg0KZ2VudGxlIHBpbmcgZm9y
-IHRoaXMgcGF0Y2ggc2V0DQoNCklmIG5vIG5ldyBjb21tZW50cywgSSB3b3VsZCBsaWtlIHRvIHNl
-bmQgYSBuZXdlciB2ZXJzaW9uIGZvciB0aGUgc2VyaWVzLg0KDQpwYXRjaCBzZXQ6DQpodHRwczov
-L2xrbWwub3JnL2xrbWwvMjAyMC83LzIvNDk3DQoNCg0KVGhhbmtzDQpIYW5rcyBDaGVuDQoNCg0K
-T24gVGh1LCAyMDIwLTA3LTAyIGF0IDIwOjU3ICswODAwLCBIYW5rcyBDaGVuIHdyb3RlOg0KPiAq
-KiogQkxVUkIgSEVSRSAqKioNCj4gDQo+IEFuZHkgVGVuZyAoMSk6DQo+ICAgZHQtYmluZGluZ3M6
-IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgTVQ2Nzc5IFNvQw0KPiANCj4gSGFu
-a3MgQ2hlbiAoNik6DQo+ICAgcGluY3RybDogbWVkaWF0ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5p
-dGlvbnMgZm9yIG10Njc3OQ0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhdm9pZCB2aXJ0dWFsIGdw
-aW8gdHJ5aW5nIHRvIHNldCByZWcNCj4gICBwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwg
-c3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQw0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhZGQgbXQ2Nzc5
-IGVpbnQgc3VwcG9ydA0KPiAgIGNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
-DQo+ICAgYXJtNjQ6IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5DQo+IA0KPiAgLi4uL2Jp
-bmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbCAgfCAgMjEwICsrDQo+
-ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICB8ICAg
-IDEgKw0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyAgICAg
-ICAgfCAgIDMxICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kg
-ICAgICAgICAgIHwgIDI3MSArKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3Nzku
-YyAgICAgICAgICAgICAgICAgIHwgICAgMiArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiAgZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGRyaXZlcnMvcGlu
-Y3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc3OS5jICAgICAgICAgIHwgIDc4MyArKysrKysrKw0K
-PiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jICAgfCAg
-IDI1ICsNCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIu
-aCAgIHwgICAgMSArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2
-Nzc5LmggICAgICB8IDIwODUgKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAgICAgIHwgICAgNyArDQo+ICBpbmNsdWRl
-L2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2Nzc5LXBpbmZ1bmMuaCAgICAgICB8IDEyNDIgKysrKysr
-KysrKysrDQo+ICAxMyBmaWxlcyBjaGFuZ2VkLCA0NjcxIGluc2VydGlvbnMoKykNCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9t
-ZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
-cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cw0KPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kNCj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1t
-dDY3NzkuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3Ry
-bC9tdDY3NzktcGluZnVuYy5oDQo+IA0KDQo=
+On Tue, Jul 7, 2020 at 4:37 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Jul 07, 2020 at 01:40:45AM +0200, Matteo Croce wrote:
+> > From: Matteo Croce <mcroce@microsoft.com>
+> >
+> > When building a kernel with CONFIG_PSTORE=y and CONFIG_CRYPTO not set,
+> > a build error happens:
+> >
+> >     ld: fs/pstore/platform.o: in function `pstore_dump':
+> >     platform.c:(.text+0x3f9): undefined reference to `crypto_comp_compress'
+> >     ld: fs/pstore/platform.o: in function `pstore_get_backend_records':
+> >     platform.c:(.text+0x784): undefined reference to `crypto_comp_decompress'
+> >
+> > This because some pstore code uses crypto_comp_(de)compress
+> > regardless of the CONFIG_CRYPTO status.
+> > Fix it by wrapping the (de)compress usage by IS_ENABLED(CONFIG_PSTORE_COMPRESS)
+>
+> I'm surprised this hasn't come up before in a randconfig! But I guess
+> it'd require a very lucky config: picking CONFIG_PSTORE but not
+> CONFIG_CRYPTO _and_ 0 of the many compression options in pstore. :P
+>
+> But yes, I can reproduce this with:
+>
+> # CONFIG_CRYPTO is not set
+> CONFIG_PSTORE=y
+> # CONFIG_PSTORE_DEFLATE_COMPRESS is not set
+> # CONFIG_PSTORE_LZO_COMPRESS is not set
+> # CONFIG_PSTORE_LZ4_COMPRESS is not set
+> # CONFIG_PSTORE_LZ4HC_COMPRESS is not set
+> # CONFIG_PSTORE_842_COMPRESS is not set
+> # CONFIG_PSTORE_ZSTD_COMPRESS is not set
+>
+> >
+> > Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> > ---
+> >  fs/pstore/platform.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> > index a9e297eefdff..6022d8359f96 100644
+> > --- a/fs/pstore/platform.c
+> > +++ b/fs/pstore/platform.c
+> > @@ -436,7 +436,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+> >                                         dst_size, &dump_size))
+> >                       break;
+> >
+> > -             if (big_oops_buf) {
+> > +             if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && big_oops_buf) {
+> >                       zipped_len = pstore_compress(dst, psinfo->buf,
+> >                                               header_size + dump_size,
+> >                                               psinfo->bufsize);
+> > @@ -668,7 +668,7 @@ static void decompress_record(struct pstore_record *record)
+> >       int unzipped_len;
+> >       char *unzipped, *workspace;
+> >
+> > -     if (!record->compressed)
+> > +     if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !record->compressed)
+> >               return;
+> >
+> >       /* Only PSTORE_TYPE_DMESG support compression. */
+> > --
+> > 2.26.2
+>
+> This report also reminds me that I want to stop hard-coding the possible
+> compressors[1].
+>
+> Regardless, for now, I'd like a slightly different patch, which pokes
+> pstore_compress() instead of doing it inline in pstore_dump():
+>
+>
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index a9e297eefdff..36714df37d5d 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -269,6 +269,9 @@ static int pstore_compress(const void *in, void *out,
+>  {
+>         int ret;
+>
+> +       if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION))
+> +               return -EINVAL;
+> +
+>         ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
+>         if (ret) {
+>                 pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
+> @@ -668,7 +671,7 @@ static void decompress_record(struct pstore_record *record)
+>         int unzipped_len;
+>         char *unzipped, *workspace;
+>
+> -       if (!record->compressed)
+> +       if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION) || !record->compressed)
+>                 return;
+>
+>         /* Only PSTORE_TYPE_DMESG support compression. */
+>
+>
+>
+> Let me know if that works for you (it fixes it on my end).
+>
 
+Yes, it works for me!
+
+-- 
+per aspera ad upstream
