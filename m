@@ -2,53 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF356C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D463C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5202082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2FC2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135558;
-	bh=yarrN/SMtJ/H7bc1F42VTZOXDsUTCBQx14FHEqb7RuM=;
+	s=default; t=1594135561;
+	bh=3NwqFezCmPe9nPgiAGgAMOp5zWQ+zCs/N3fpTYnnuxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZWBwpptz+Qxo5TXZ2Mvnsz5qXupYefa2BvvCeXP6bRb8BS2Wklp3FfnZzq/WMig5
-	 51MFzF6Tu9U6d19Z4eHm8x3jkkRA/K8lX4OSlACPmLxDB2S5AtjxM3g1HoMF2heETT
-	 51imAJBZIEi+iGI4cGNpP1RVku0Hu6y9MZRG9zE8=
+	b=m8PxWPRfMcVrtZ8V2AgFB76kEaAtJmK/KcjbPI61d9S0CdURrbI2ySo7DXT5M0acm
+	 scuGi9ueSlpt02zYWThJ1k2BFwHEq3WjQkkfwY64rMdzImoU93/FHAy8IHM2rOG/44
+	 S+ENdXa5I8Qr7xKsL5mLAvnF+g03nA6lwuZ8Ocm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbgGGPZ5 (ORCPT
+        id S1729906AbgGGPZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgGGPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:50 -0400
+        id S1730253AbgGGPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F752082E;
-        Tue,  7 Jul 2020 15:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF6712065D;
+        Tue,  7 Jul 2020 15:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135549;
-        bh=yarrN/SMtJ/H7bc1F42VTZOXDsUTCBQx14FHEqb7RuM=;
+        s=default; t=1594135552;
+        bh=3NwqFezCmPe9nPgiAGgAMOp5zWQ+zCs/N3fpTYnnuxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpzd38OmCDYL2qwoIGEP6AzcltkZuDyuOG9VY4DkgAmv4YHomvjs7GjbZDaRhboWS
-         U+1/6+Ytns6r1cspxSCZN+gbgQp4Ri/ce1Itcc4ynJ7I5gOVereq2ZAVY9/vCv9Jcd
-         hlhI6WqzDc0YsH+du2gpg4jal80iFxcU1bTEVA4M=
+        b=AtI8umdkxx5xLjIIwG8nJEN32QBfcCUm/Z4d1OgZIkxk5f8v1C6/Hi1in3xm0rz5E
+         8W+KH7YugdLswg0kwgS93s700d1jp6BZe2qyjVAlTc9oPa2qXRymCfekLX6ylKZqAn
+         a9NQDxlcj8o+bt/4U08dfWoHw5l867Qt40nl/aLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 058/112] cxgb4: use unaligned conversion for fetching timestamp
-Date:   Tue,  7 Jul 2020 17:17:03 +0200
-Message-Id: <20200707145803.761321697@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 085/112] spi: spi-fsl-dspi: Fix external abort on interrupt in resume or exit paths
+Date:   Tue,  7 Jul 2020 17:17:30 +0200
+Message-Id: <20200707145805.025735817@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,39 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 589b1c9c166dce120e27b32a83a78f55464a7ef9 ]
+commit 3d87b613d6a3c6f0980e877ab0895785a2dde581 upstream.
 
-Use get_unaligned_be64() to fetch the timestamp needed for ns_to_ktime()
-conversion.
+If shared interrupt comes late, during probe error path or device remove
+(could be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+dspi_interrupt() will access registers with the clock being disabled.
+This leads to external abort on non-linefetch on Toradex Colibri VF50
+module (with Vybrid VF5xx):
 
-Fixes following sparse warning:
-sge.c:3282:43: warning: cast to restricted __be64
+    $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
 
-Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+    Internal error: : 1008 [#1] ARM
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+    Backtrace:
+      (regmap_mmio_read32le)
+      (regmap_mmio_read)
+      (_regmap_bus_reg_read)
+      (_regmap_read)
+      (regmap_read)
+      (dspi_interrupt)
+      (free_irq)
+      (devm_irq_release)
+      (release_nodes)
+      (devres_release_all)
+      (device_release_driver_internal)
+
+The resource-managed framework should not be used for shared interrupt
+handling, because the interrupt handler might be called after releasing
+other resources and disabling clocks.
+
+Similar bug could happen during suspend - the shared interrupt handler
+could be invoked after suspending the device.  Each device sharing this
+interrupt line should disable the IRQ during suspend so handler will be
+invoked only in following cases:
+1. None suspended,
+2. All devices resumed.
+
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622110543.5035-3-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index db8106d9d6edf..28ce9856a0784 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -3300,7 +3300,7 @@ static noinline int t4_systim_to_hwstamp(struct adapter *adapter,
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1105,6 +1105,8 @@ static int dspi_suspend(struct device *d
+ 	struct spi_controller *ctlr = dev_get_drvdata(dev);
+ 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
  
- 	hwtstamps = skb_hwtstamps(skb);
- 	memset(hwtstamps, 0, sizeof(*hwtstamps));
--	hwtstamps->hwtstamp = ns_to_ktime(be64_to_cpu(*((u64 *)data)));
-+	hwtstamps->hwtstamp = ns_to_ktime(get_unaligned_be64(data));
++	if (dspi->irq)
++		disable_irq(dspi->irq);
+ 	spi_controller_suspend(ctlr);
+ 	clk_disable_unprepare(dspi->clk);
  
- 	return RX_PTP_PKT_SUC;
+@@ -1125,6 +1127,8 @@ static int dspi_resume(struct device *de
+ 	if (ret)
+ 		return ret;
+ 	spi_controller_resume(ctlr);
++	if (dspi->irq)
++		enable_irq(dspi->irq);
+ 
+ 	return 0;
  }
--- 
-2.25.1
-
+@@ -1381,8 +1385,8 @@ static int dspi_probe(struct platform_de
+ 		goto poll_mode;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+-			       IRQF_SHARED, pdev->name, dspi);
++	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
++				   IRQF_SHARED, pdev->name, dspi);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+ 		goto out_clk_put;
+@@ -1396,7 +1400,7 @@ poll_mode:
+ 		ret = dspi_request_dma(dspi, res->start);
+ 		if (ret < 0) {
+ 			dev_err(&pdev->dev, "can't get dma channels\n");
+-			goto out_clk_put;
++			goto out_free_irq;
+ 		}
+ 	}
+ 
+@@ -1411,11 +1415,14 @@ poll_mode:
+ 	ret = spi_register_controller(ctlr);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+-		goto out_clk_put;
++		goto out_free_irq;
+ 	}
+ 
+ 	return ret;
+ 
++out_free_irq:
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ out_clk_put:
+ 	clk_disable_unprepare(dspi->clk);
+ out_ctlr_put:
+@@ -1431,6 +1438,8 @@ static int dspi_remove(struct platform_d
+ 
+ 	/* Disconnect from the SPI framework */
+ 	dspi_release_dma(dspi);
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ 	clk_disable_unprepare(dspi->clk);
+ 	spi_unregister_controller(dspi->ctlr);
+ 
 
 
