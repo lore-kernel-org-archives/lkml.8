@@ -2,301 +2,199 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90179C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FAC207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674ED2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135812;
+	bh=2YOrN/eXCeYZZ+Hvhn0y30XY5LNsyOcDuqV7G/KEYhs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LywcxxQC8rfOPerXm808Ft0BnZCFznh5QTyFS3Y0fByeWkaq0jCwrVohlSrQFpdrL
+	 wKGxFW9x79i6oE8PqLJnF8jXqPaCdckIAmCRPWHuzYthTD7J0Z7wp7Q9uU8LwvbuYh
+	 efDYDPGAR0q2B+MQsgqKXnBK6w5RxiYxPTqojoAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgGGPaF (ORCPT
+        id S1730302AbgGGPaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:30:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729527AbgGGPaA (ORCPT
+        Tue, 7 Jul 2020 11:30:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730072AbgGGPYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:30:00 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067F1mUA098873;
-        Tue, 7 Jul 2020 11:29:27 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 324pr1swbs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 11:29:26 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067F6lWN013952;
-        Tue, 7 Jul 2020 15:29:25 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 322h1h3gw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 15:29:24 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067FTMpk30670966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 15:29:22 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B894AAE055;
-        Tue,  7 Jul 2020 15:29:22 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A31D1AE045;
-        Tue,  7 Jul 2020 15:29:20 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.70.197])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 15:29:20 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, srivatsa@csail.mit.edu,
-        shuah@kernel.org, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/2] cpuidle: Trace IPI based and timer based wakeup latency from idle states
-Date:   Tue,  7 Jul 2020 20:59:16 +0530
-Message-Id: <20200707152917.10652-2-psampat@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200707152917.10652-1-psampat@linux.ibm.com>
-References: <20200707152917.10652-1-psampat@linux.ibm.com>
+        Tue, 7 Jul 2020 11:24:16 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96BC2C08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:24:16 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id r8so35163643oij.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oQlH+5Rxv1TZTmNUKokYf1gRnidmklj65FW3ajui8n8=;
+        b=gtkvz8FGNaNJgUQOYZxrh8RQ//6B5EnuDkuA0CI343tqSUwxmVFPrUj22a9A5eJ0d8
+         PeRYJ7/r2g4Kb8/uLNJPEoQbqvXD4iPm2Z9HvDz4VKCy0kRM+h+dhgWKuhgTucsBKEob
+         mQC+mhd+P5O+UaZRgc8Myl3wXAx5Vygcp/Uq8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oQlH+5Rxv1TZTmNUKokYf1gRnidmklj65FW3ajui8n8=;
+        b=Bq3EwaK7BH7J8v2HfDfG0MjCBU7NhymTiuhvdXMUoeTFAMRUCUUr+uUa718FZLMpHJ
+         O7QCeuc02ivg1PqmIWcG3GxfmE4RfWtC/2S0ASIY/9b3XAGEHfzdJ/ISNFFU21pB3PyN
+         TAoZMX4Aq3GxMZo0RiAKzo2Fgk6krqS2PXCukq7IqEctLQvUST6AGRt4DvslD9nZcrW+
+         NSu3hxtI2vUrj3kk1fR8HERAVEItgf8knzvj4cHxTQxPetNd3z6XBq2YMrOTHcRKgEvF
+         Hw0avXsrobHJiakpOMmEcaaYdEJ4G4cbP5z2hrzCHCL+KpB2T+vlJ1JrW/FOcdDyhL9H
+         /tMg==
+X-Gm-Message-State: AOAM531gC3+2rTXQIniEdL85UAB8VodNMz1gIhqSsMwKxMLUxOs568MD
+        5ftY2g3aiGDfrn9y3F4DratC3w==
+X-Google-Smtp-Source: ABdhPJwTBVZClUaOBGBLJNT1lD+iIbNdX7fMrPQfh1eSqtSETAt6r/3QI8NT+64KTOzF8Wxb/CGV8w==
+X-Received: by 2002:aca:5158:: with SMTP id f85mr3774047oib.6.1594135455807;
+        Tue, 07 Jul 2020 08:24:15 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id t16sm188781oou.28.2020.07.07.08.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 08:24:15 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] selftests: pidfd: do not use ksft_exit_skip after
+ ksft_set_plan
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     christian@brauner.io, shuah@kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200707101936.12052-1-pbonzini@redhat.com>
+ <20200707101936.12052-2-pbonzini@redhat.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f10aaf26-39f6-79ae-c3cc-56c31835f57e@linuxfoundation.org>
+Date:   Tue, 7 Jul 2020 09:24:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_08:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- cotscore=-2147483648 lowpriorityscore=0 bulkscore=0 adultscore=0
- suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007070109
+In-Reply-To: <20200707101936.12052-2-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fire directed smp_call_function_single IPIs from a specified source
-CPU to the specified target CPU to reduce the noise we have to wade
-through in the trace log.
-The module is based on the idea written by Srivatsa Bhat and maintained
-by Vaidyanathan Srinivasan internally.
+On 7/7/20 4:19 AM, Paolo Bonzini wrote:
+> Calling ksft_exit_skip after ksft_set_plan results in executing fewer tests
+> than planned.  Use ksft_test_result_skip instead.
+> 
+> The plan passed to ksft_set_plan was wrong, too, so fix it while at it.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Message-Id: <20200623001547.22255-5-pbonzini@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   tools/testing/selftests/pidfd/pidfd_test.c | 34 +++++++++++++++++++---
+>   1 file changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+> index 7aff2d3b42c0..f65ad4e32353 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
+> @@ -8,6 +8,7 @@
+>   #include <sched.h>
+>   #include <signal.h>
+>   #include <stdio.h>
+> +#include <stdbool.h>
+>   #include <stdlib.h>
+>   #include <string.h>
+>   #include <syscall.h>
+> @@ -27,6 +28,8 @@
+>   
+>   #define MAX_EVENTS 5
+>   
+> +static bool have_pidfd_send_signal = false;
 
-Queue HR timer and measure jitter. Wakeup latency measurement for idle
-states using hrtimer.  Echo a value in ns to timer_test_function and
-watch trace. A HRtimer will be queued and when it fires the expected
-wakeup vs actual wakeup is computes and delay printed in ns.
+You don't need to initialize this to false. Rest looks good.
 
-Implemented as a module which utilizes debugfs so that it can be
-integrated with selftests.
+> +
+>   static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+>   {
+>   	size_t stack_size = 1024;
+> @@ -56,6 +59,13 @@ static int test_pidfd_send_signal_simple_success(void)
+>   	int pidfd, ret;
+>   	const char *test_name = "pidfd_send_signal send SIGUSR1";
+>   
+> +	if (!have_pidfd_send_signal) {
+> +		ksft_test_result_skip(
+> +			"%s test: pidfd_send_signal() syscall not supported\n",
+> +			test_name);
+> +		return 0;
+> +	}
+> +
+>   	pidfd = open("/proc/self", O_DIRECTORY | O_CLOEXEC);
+>   	if (pidfd < 0)
+>   		ksft_exit_fail_msg(
+> @@ -86,6 +96,13 @@ static int test_pidfd_send_signal_exited_fail(void)
+>   	pid_t pid;
+>   	const char *test_name = "pidfd_send_signal signal exited process";
+>   
+> +	if (!have_pidfd_send_signal) {
+> +		ksft_test_result_skip(
+> +			"%s test: pidfd_send_signal() syscall not supported\n",
+> +			test_name);
+> +		return 0;
+> +	}
+> +
+>   	pid = fork();
+>   	if (pid < 0)
+>   		ksft_exit_fail_msg("%s test: Failed to create new process\n",
+> @@ -137,6 +154,13 @@ static int test_pidfd_send_signal_recycled_pid_fail(void)
+>   	pid_t pid1;
+>   	const char *test_name = "pidfd_send_signal signal recycled pid";
+>   
+> +	if (!have_pidfd_send_signal) {
+> +		ksft_test_result_skip(
+> +			"%s test: pidfd_send_signal() syscall not supported\n",
+> +			test_name);
+> +		return 0;
+> +	}
+> +
+>   	ret = unshare(CLONE_NEWPID);
+>   	if (ret < 0)
+>   		ksft_exit_fail_msg("%s test: Failed to unshare pid namespace\n",
+> @@ -325,15 +349,17 @@ static int test_pidfd_send_signal_syscall_support(void)
+>   
+>   	ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
+>   	if (ret < 0) {
+> -		if (errno == ENOSYS)
+> -			ksft_exit_skip(
+> +		if (errno == ENOSYS) {
+> +			ksft_test_result_skip(
+>   				"%s test: pidfd_send_signal() syscall not supported\n",
+>   				test_name);
+> -
+> +			return 0;
+> +		}
+>   		ksft_exit_fail_msg("%s test: Failed to send signal\n",
+>   				   test_name);
+>   	}
+>   
+> +	have_pidfd_send_signal = true;
+>   	close(pidfd);
+>   	ksft_test_result_pass(
+>   		"%s test: pidfd_send_signal() syscall is supported. Tests can be executed\n",
+> @@ -521,7 +547,7 @@ static void test_pidfd_poll_leader_exit(int use_waitpid)
+>   int main(int argc, char **argv)
+>   {
+>   	ksft_print_header();
+> -	ksft_set_plan(4);
+> +	ksft_set_plan(8);
+>   
+>   	test_pidfd_poll_exec(0);
+>   	test_pidfd_poll_exec(1);
+> 
 
-To include the module, check option and include as module
-kernel hacking -> Cpuidle latency selftests
-
-[srivatsa.bhat@linux.vnet.ibm.com: Initial implementation in
- cpidle/sysfs]
-
-[svaidy@linux.vnet.ibm.com: wakeup latency measurements using hrtimer
- and fix some of the time calculation]
-
-[ego@linux.vnet.ibm.com: Fix some whitespace and tab errors and
- increase the resolution of IPI wakeup]
-
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- drivers/cpuidle/Makefile               |   1 +
- drivers/cpuidle/test-cpuidle_latency.c | 150 +++++++++++++++++++++++++
- lib/Kconfig.debug                      |  10 ++
- 3 files changed, 161 insertions(+)
- create mode 100644 drivers/cpuidle/test-cpuidle_latency.c
-
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index f07800cbb43f..2ae05968078c 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
- obj-$(CONFIG_DT_IDLE_STATES)		  += dt_idle_states.o
- obj-$(CONFIG_ARCH_HAS_CPU_RELAX)	  += poll_state.o
- obj-$(CONFIG_HALTPOLL_CPUIDLE)		  += cpuidle-haltpoll.o
-+obj-$(CONFIG_IDLE_LATENCY_SELFTEST)	  += test-cpuidle_latency.o
- 
- ##################################################################################
- # ARM SoC drivers
-diff --git a/drivers/cpuidle/test-cpuidle_latency.c b/drivers/cpuidle/test-cpuidle_latency.c
-new file mode 100644
-index 000000000000..61574665e972
---- /dev/null
-+++ b/drivers/cpuidle/test-cpuidle_latency.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Module-based API test facility for cpuidle latency using IPIs and timers
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+/* IPI based wakeup latencies */
-+struct latency {
-+	unsigned int src_cpu;
-+	unsigned int dest_cpu;
-+	ktime_t time_start;
-+	ktime_t time_end;
-+	u64 latency_ns;
-+} ipi_wakeup;
-+
-+static void measure_latency(void *info)
-+{
-+	struct latency *v;
-+	ktime_t time_diff;
-+
-+	v = (struct latency *)info;
-+	v->time_end = ktime_get();
-+	time_diff = ktime_sub(v->time_end, v->time_start);
-+	v->latency_ns = ktime_to_ns(time_diff);
-+}
-+
-+void run_smp_call_function_test(unsigned int cpu)
-+{
-+	ipi_wakeup.src_cpu = smp_processor_id();
-+	ipi_wakeup.dest_cpu = cpu;
-+	ipi_wakeup.time_start = ktime_get();
-+	smp_call_function_single(cpu, measure_latency, &ipi_wakeup, 1);
-+}
-+
-+/* Timer based wakeup latencies */
-+struct timer_data {
-+	unsigned int src_cpu;
-+	u64 timeout;
-+	ktime_t time_start;
-+	ktime_t time_end;
-+	struct hrtimer timer;
-+	u64 timeout_diff_ns;
-+} timer_wakeup;
-+
-+static enum hrtimer_restart timer_called(struct hrtimer *hrtimer)
-+{
-+	struct timer_data *w;
-+	ktime_t time_diff;
-+
-+	w = container_of(hrtimer, struct timer_data, timer);
-+	w->time_end = ktime_get();
-+
-+	time_diff = ktime_sub(w->time_end, w->time_start);
-+	time_diff = ktime_sub(time_diff, ns_to_ktime(w->timeout));
-+	w->timeout_diff_ns = ktime_to_ns(time_diff);
-+	return HRTIMER_NORESTART;
-+}
-+
-+static void run_timer_test(unsigned int ns)
-+{
-+	hrtimer_init(&timer_wakeup.timer, CLOCK_MONOTONIC,
-+		     HRTIMER_MODE_REL);
-+	timer_wakeup.timer.function = timer_called;
-+	timer_wakeup.time_start = ktime_get();
-+	timer_wakeup.src_cpu = smp_processor_id();
-+	timer_wakeup.timeout = ns;
-+
-+	hrtimer_start(&timer_wakeup.timer, ns_to_ktime(ns),
-+		      HRTIMER_MODE_REL_PINNED);
-+}
-+
-+static struct dentry *dir;
-+
-+static int cpu_read_op(void *data, u64 *value)
-+{
-+	*value = ipi_wakeup.dest_cpu;
-+	return 0;
-+}
-+
-+static int cpu_write_op(void *data, u64 value)
-+{
-+	run_smp_call_function_test(value);
-+	return 0;
-+}
-+DEFINE_SIMPLE_ATTRIBUTE(ipi_ops, cpu_read_op, cpu_write_op, "%llu\n");
-+
-+static int timeout_read_op(void *data, u64 *value)
-+{
-+	*value = timer_wakeup.timeout;
-+	return 0;
-+}
-+
-+static int timeout_write_op(void *data, u64 value)
-+{
-+	run_timer_test(value);
-+	return 0;
-+}
-+DEFINE_SIMPLE_ATTRIBUTE(timeout_ops, timeout_read_op, timeout_write_op, "%llu\n");
-+
-+static int __init latency_init(void)
-+{
-+	struct dentry *temp;
-+
-+	dir = debugfs_create_dir("latency_test", 0);
-+	if (!dir) {
-+		pr_alert("latency_test: failed to create /sys/kernel/debug/latency_test\n");
-+		return -1;
-+	}
-+	temp = debugfs_create_file("ipi_cpu_dest",
-+				   0666,
-+				   dir,
-+				   NULL,
-+				   &ipi_ops);
-+	if (!temp) {
-+		pr_alert("latency_test: failed to create /sys/kernel/debug/ipi_cpu_dest\n");
-+		return -1;
-+	}
-+	debugfs_create_u64("ipi_latency_ns", 0444, dir, &ipi_wakeup.latency_ns);
-+	debugfs_create_u32("ipi_cpu_src", 0444, dir, &ipi_wakeup.src_cpu);
-+
-+	temp = debugfs_create_file("timeout_expected_ns",
-+				   0666,
-+				   dir,
-+				   NULL,
-+				   &timeout_ops);
-+	if (!temp) {
-+		pr_alert("latency_test: failed to create /sys/kernel/debug/timeout_expected_ns\n");
-+		return -1;
-+	}
-+	debugfs_create_u64("timeout_diff_ns", 0444, dir, &timer_wakeup.timeout_diff_ns);
-+	debugfs_create_u32("timeout_cpu_src", 0444, dir, &timer_wakeup.src_cpu);
-+	pr_info("Latency Test module loaded\n");
-+	return 0;
-+}
-+
-+static void __exit latency_cleanup(void)
-+{
-+	pr_info("Cleaning up Latency Test module.\n");
-+	debugfs_remove_recursive(dir);
-+}
-+
-+module_init(latency_init);
-+module_exit(latency_cleanup);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("IBM Corporation");
-+MODULE_DESCRIPTION("Measuring idle latency for IPIs and Timers");
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d74ac0fd6b2d..e2283790245a 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1375,6 +1375,16 @@ config DEBUG_KOBJECT
- 	  If you say Y here, some extra kobject debugging messages will be sent
- 	  to the syslog.
- 
-+config IDLE_LATENCY_SELFTEST
-+	tristate "Cpuidle latency selftests"
-+	depends on CPU_IDLE
-+	help
-+	  This option provides a kernel module that runs tests using the IPI and
-+	  timers to measure latency.
-+
-+	  Say M if you want these self tests to build as a module.
-+	  Say N if you are unsure.
-+
- config DEBUG_KOBJECT_RELEASE
- 	bool "kobject release debugging"
- 	depends on DEBUG_OBJECTS_TIMERS
--- 
-2.25.4
-
+thanks,
+-- Shuah
