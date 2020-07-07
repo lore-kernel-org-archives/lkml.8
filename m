@@ -2,146 +2,113 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4C9206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3D5206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFs2OsBC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a4lwH1jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGGLX6 (ORCPT
+        id S1728194AbgGGLZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgGGLX6 (ORCPT
+        Tue, 7 Jul 2020 07:25:35 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3217 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727044AbgGGLZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:23:58 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F97C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:23:57 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id h28so38072435edz.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z+HTaDJORry76de6xJh2nNWpDzvXRte/7hWFD6xg3L0=;
-        b=zFs2OsBCi8DqKxj1YR0JHMK7UjSD/oZ/Z7BDnr1ZUxpIoAaPD4S4IKK4hGDeddFjTt
-         3BGApI+F1fzdkFWT7exYU5xyhldcg7eLpeBuLLhJ+aXC5j8cN3+H/i5LrHVnap88M9dH
-         W34FYzJkfIjh/aDMP9w8uU0X6SEe9f3nCfiKHej0GGxTEieXobrFZ5elrhd7Q4athgmt
-         K8jd2P2nrdufj2lG76LEKtKxltV8v5QSXfHnH3VFLr4WQvymX2Y2EdwHEr6pgZ10Ue4E
-         4hMYcgs1r5y1LAAd6lkwxqLFOJMEXIuCVdwCqAKlyfTHjvcB6L4J0Vy2Z6FtePyO6I9E
-         EHdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z+HTaDJORry76de6xJh2nNWpDzvXRte/7hWFD6xg3L0=;
-        b=tt4y4HFpDLX7lqYgRhrvYw8RICLgjrDK/IcnKZMICQyCVloaRWlMJs/w/vG8mRBWJ/
-         2mhn8hrm6p6wbBbR251klQqnO/dC6YP0KH6CgZV0UR3Jy7UptLQeoUoFY2/OnooeOnK8
-         ZrFIGeMR08Ukr5zFahivhk/qzzbGdValT3FlaVGf+be0Oo3ERDuEioEc8HE8f23/yKko
-         jF3si49Hu9pz+bdoh8NlpOXTA+KF1LZXrn5xyHYI9dVyDr2MvuIhue1vFHQolUVLX6pM
-         O2y2gcgwGzZALSaEL/ehjs+ZpM1rPBjv5UMHrw5nO5mogz2Q66cHa91VJB1zkxD+ywAM
-         K32w==
-X-Gm-Message-State: AOAM5307yvYcTd4+kuPzYU+J/2zHqOpno/vfsSPngaHrSeJE0sn5WDT4
-        PE+q3TLHB12sP1+P4C3o+jxKsA==
-X-Google-Smtp-Source: ABdhPJyYekwZMG+8JnnvjOeze0PtU9kmUGUw77NAnpt4KdPekwPaq5NofPFrBGFOfhl9DiucSf9AFA==
-X-Received: by 2002:aa7:da46:: with SMTP id w6mr50895220eds.261.1594121036582;
-        Tue, 07 Jul 2020 04:23:56 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id s1sm25488302edy.1.2020.07.07.04.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 04:23:56 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 13:23:44 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] iommu/vt-d: Report page request faults for guest
- SVA
-Message-ID: <20200707112344.GB159413@myrica>
-References: <20200706002535.9381-1-baolu.lu@linux.intel.com>
- <20200706002535.9381-4-baolu.lu@linux.intel.com>
+        Tue, 7 Jul 2020 07:25:35 -0400
+X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vfvjtfH3Qs6aHOw/QXhcQ51ZF1iRs+TYc8vvEskKgac=;
+        b=a4lwH1jhsqzlod4taTS95VZTNCoYXO3ItijaP8jF5e/2Mimn5KW7Kt4ejWZ5YJVTYxSrKcTDqyHwHVkQR1IjhC36+k6nwULgHw0Y+2+TKSA8Z/plz7na4EqiL20klEDy8HzRe8J+6NO3e/W7TMCUkPabj6i9QQGHrIdSHDTRUPk=;
+X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 522712986; Tue, 07 Jul 2020 19:25:30 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Jul 2020 19:25:25 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Jul 2020 19:25:26 +0800
+Message-ID: <1594121128.20610.9.camel@mtkswgap22>
+Subject: Re: [PATCH v7 0/7] Add basic SoC Support for Mediatek MT6779 SoC
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Tue, 7 Jul 2020 19:25:28 +0800
+In-Reply-To: <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+         <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706002535.9381-4-baolu.lu@linux.intel.com>
+X-TM-SNTS-SMTP: 054C2A82F4257DC0A2C98A1257360749210D114C218370F82C156C88CC470A042000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:25:34AM +0800, Lu Baolu wrote:
-> A pasid might be bound to a page table from a VM guest via the iommu
-> ops.sva_bind_gpasid. In this case, when a DMA page fault is detected
-> on the physical IOMMU, we need to inject the page fault request into
-> the guest. After the guest completes handling the page fault, a page
-> response need to be sent back via the iommu ops.page_response().
-> 
-> This adds support to report a page request fault. Any external module
-> which is interested in handling this fault should regiester a notifier
-> callback.
-> 
-> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
-[...]
-> +static int
-> +intel_svm_prq_report(struct device *dev, struct page_req_dsc *desc)
-> +{
-> +	struct iommu_fault_event event;
-> +	u8 bus, devfn;
-> +
-> +	memset(&event, 0, sizeof(struct iommu_fault_event));
-> +	bus = PCI_BUS_NUM(desc->rid);
-> +	devfn = desc->rid & 0xff;
-> +
-> +	/* Fill in event data for device specific processing */
-> +	event.fault.type = IOMMU_FAULT_PAGE_REQ;
-> +	event.fault.prm.addr = desc->addr;
-> +	event.fault.prm.pasid = desc->pasid;
-> +	event.fault.prm.grpid = desc->prg_index;
-> +	event.fault.prm.perm = prq_to_iommu_prot(desc);
-> +
-> +	/*
-> +	 * Set last page in group bit if private data is present,
-> +	 * page response is required as it does for LPIG.
-> +	 */
-> +	if (desc->lpig)
-> +		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
-> +	if (desc->pasid_present)
-> +		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+SGkgTWljaGFlbCwgU3RlcGhlbiwgTWF0dGhpYXMgYW5kIGFsbCwNCg0KZ2VudGxlIHBpbmcgZm9y
+IHRoaXMgcGF0Y2ggc2V0DQoNCklmIG5vIG5ldyBjb21tZW50cywgSSB3b3VsZCBsaWtlIHRvIHNl
+bmQgYSBuZXdlciB2ZXJzaW9uIGZvciB0aGUgc2VyaWVzLg0KDQpwYXRjaCBzZXQ6DQpodHRwczov
+L2xrbWwub3JnL2xrbWwvMjAyMC83LzIvNDk3DQoNCg0KVGhhbmtzDQpIYW5rcyBDaGVuDQoNCg0K
+T24gVGh1LCAyMDIwLTA3LTAyIGF0IDIwOjU3ICswODAwLCBIYW5rcyBDaGVuIHdyb3RlOg0KPiAq
+KiogQkxVUkIgSEVSRSAqKioNCj4gDQo+IEFuZHkgVGVuZyAoMSk6DQo+ICAgZHQtYmluZGluZ3M6
+IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgTVQ2Nzc5IFNvQw0KPiANCj4gSGFu
+a3MgQ2hlbiAoNik6DQo+ICAgcGluY3RybDogbWVkaWF0ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5p
+dGlvbnMgZm9yIG10Njc3OQ0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhdm9pZCB2aXJ0dWFsIGdw
+aW8gdHJ5aW5nIHRvIHNldCByZWcNCj4gICBwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwg
+c3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQw0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhZGQgbXQ2Nzc5
+IGVpbnQgc3VwcG9ydA0KPiAgIGNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
+DQo+ICAgYXJtNjQ6IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5DQo+IA0KPiAgLi4uL2Jp
+bmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbCAgfCAgMjEwICsrDQo+
+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICB8ICAg
+IDEgKw0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyAgICAg
+ICAgfCAgIDMxICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kg
+ICAgICAgICAgIHwgIDI3MSArKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3Nzku
+YyAgICAgICAgICAgICAgICAgIHwgICAgMiArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiAgZHJpdmVycy9waW5jdHJsL21l
+ZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGRyaXZlcnMvcGlu
+Y3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc3OS5jICAgICAgICAgIHwgIDc4MyArKysrKysrKw0K
+PiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jICAgfCAg
+IDI1ICsNCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIu
+aCAgIHwgICAgMSArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2
+Nzc5LmggICAgICB8IDIwODUgKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvcGluY3Ry
+bC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAgICAgIHwgICAgNyArDQo+ICBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2Nzc5LXBpbmZ1bmMuaCAgICAgICB8IDEyNDIgKysrKysr
+KysrKysrDQo+ICAxMyBmaWxlcyBjaGFuZ2VkLCA0NjcxIGluc2VydGlvbnMoKykNCj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9t
+ZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
+cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cw0KPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kNCj4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1t
+dDY3NzkuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3Ry
+bC9tdDY3NzktcGluZnVuYy5oDQo+IA0KDQo=
 
-Do you also need to set IOMMU_FAULT_PAGE_RESPONSE_NEEDS_PASID?  I added
-the flag to deal with devices that do not want a PASID value in their PRI
-response (bit 15 in the PCIe Page Request Status Register):
-https://lore.kernel.org/linux-iommu/20200616144712.748818-1-jean-philippe@linaro.org/
-(applied by Joerg for v5.9)
-
-Grepping for pci_prg_resp_pasid_required() in intel/iommu.c it seems to
-currently reject devices that do not want a PASID in a PRI response, so I
-think you can set this flag unconditionally for now.
-
-Thanks,
-Jean
-
-> +	if (desc->priv_data_present) {
-> +		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
-> +		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
-> +		memcpy(event.fault.prm.private_data, desc->priv_data,
-> +		       sizeof(desc->priv_data));
-> +	}
-> +
-> +	return iommu_report_device_fault(dev, &event);
-> +}
