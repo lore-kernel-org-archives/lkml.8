@@ -2,52 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B1E2080D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0E6207C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135342;
-	bh=yDWefRkMe9qUEJoLyvTql1Q8OuXw7bj+6Z9/PVE7/3I=;
+	s=default; t=1594135348;
+	bh=enWQb/tSchN3mf06HJzd5tVwWPwtqvnTPre9qMVaTuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPVceDlgq7X/S3KYoCfrf4NgDJdLryggjOq/cnOqcEAA2jz35K3u8iLFIx0cqaiZC
-	 FzIH3vazyCn73PBuD4D7AnVRS+QqNdcx3Pk2Z8lnybiLo1L4STwpOhLkHaOuphv1t6
-	 nBfFaJo4o4W63CLmX7hxEDYaFL7vdZ4nHkdjoQJA=
+	b=NWcnaa/kNsQm8hOrNzKV43ij+RsUzxWfZQn0LNy6AvMK5ahVjYUYWkLvXf9uunPYa
+	 Xe4SkVVRBbX/d6QpV+Uhwriq32E/G4wVLOBLxkDKHKbrmbKWoc542TV3Fa2/RNwMlR
+	 ve+1/YD94uAxUbTbDypt55yyHl24/KQ291flJn1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgGGPWU (ORCPT
+        id S1729852AbgGGPW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbgGGPWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:14 -0400
+        id S1729832AbgGGPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08E7320663;
-        Tue,  7 Jul 2020 15:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F64206E2;
+        Tue,  7 Jul 2020 15:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135334;
-        bh=yDWefRkMe9qUEJoLyvTql1Q8OuXw7bj+6Z9/PVE7/3I=;
+        s=default; t=1594135337;
+        bh=enWQb/tSchN3mf06HJzd5tVwWPwtqvnTPre9qMVaTuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyhJLFzak/btwN+pMRO5GrS3Lhe7PRHkkoFFC3ucqgJcRjjtaPuJobmsRwkIFTcP+
-         mZU92nNd1sOUNi9/OqX9lE89pPKsDSVHv7pjpv1ZPelOsdTVFyE8KVbQzniEIHYcB0
-         5T7P2wq988B54FOWPIKdu2g6EAEXWtfz9ZPCAkxI=
+        b=YefmlcT6eX6Oi3pUknoclTpqlM8SIEqFEDl7y3FVXW54mftJV9DRKXSZuNvSjM6Xc
+         yg7jh/X/XPHruCRjjtGBLWgIUjalLsEW9hgKckrJYXlS3cWLFL51TND9b1iCIsFsFr
+         ckr8cthpixN+i29gUgyx2nqDT+aNTq0XLCbCOw7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 64/65] dm zoned: assign max_io_len correctly
-Date:   Tue,  7 Jul 2020 17:17:43 +0200
-Message-Id: <20200707145755.565283438@linuxfoundation.org>
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Luo Xiaogang <lxgrxd@163.com>
+Subject: [PATCH 5.4 36/65] nfsd4: fix nfsdfs reference count loop
+Date:   Tue,  7 Jul 2020 17:17:15 +0200
+Message-Id: <20200707145754.219024905@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,35 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit 7b2377486767503d47265e4d487a63c651f6b55d upstream.
+[ Upstream commit 681370f4b00af0fcc65bbfb9f82de526ab7ceb0a ]
 
-The unit of max_io_len is sector instead of byte (spotted through
-code review), so fix it.
+We don't drop the reference on the nfsdfs filesystem with
+mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
+until the nfsd module's unloaded, and we can't unload the module as long
+as there's a reference on nfsdfs.  So this prevents module unloading.
 
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Fixes: 2c830dd7209b ("nfsd: persist nfsd filesystem across mounts")
+Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-zoned-target.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c |  8 +++++++-
+ fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
+ fs/nfsd/nfsd.h      |  3 +++
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
---- a/drivers/md/dm-zoned-target.c
-+++ b/drivers/md/dm-zoned-target.c
-@@ -790,7 +790,7 @@ static int dmz_ctr(struct dm_target *ti,
- 	}
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 1e8f5e281bb53..fa3dcaa82572e 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -7719,9 +7719,14 @@ nfs4_state_start_net(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	int ret;
  
- 	/* Set target (no write same support) */
--	ti->max_io_len = dev->zone_nr_sectors << 9;
-+	ti->max_io_len = dev->zone_nr_sectors;
- 	ti->num_flush_bios = 1;
- 	ti->num_discard_bios = 1;
- 	ti->num_write_zeroes_bios = 1;
+-	ret = nfs4_state_create_net(net);
++	ret = get_nfsdfs(net);
+ 	if (ret)
+ 		return ret;
++	ret = nfs4_state_create_net(net);
++	if (ret) {
++		mntput(nn->nfsd_mnt);
++		return ret;
++	}
+ 	locks_start_grace(net, &nn->nfsd4_manager);
+ 	nfsd4_client_tracking_init(net);
+ 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+@@ -7790,6 +7795,7 @@ nfs4_state_shutdown_net(struct net *net)
+ 
+ 	nfsd4_client_tracking_exit(net);
+ 	nfs4_state_destroy_net(net);
++	mntput(nn->nfsd_mnt);
+ }
+ 
+ void
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 159feae6af8ba..596ed6a42022d 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
+ };
+ MODULE_ALIAS_FS("nfsd");
+ 
++int get_nfsdfs(struct net *net)
++{
++	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct vfsmount *mnt;
++
++	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
++	if (IS_ERR(mnt))
++		return PTR_ERR(mnt);
++	nn->nfsd_mnt = mnt;
++	return 0;
++}
++
+ #ifdef CONFIG_PROC_FS
+ static int create_proc_exports_entry(void)
+ {
+@@ -1452,7 +1464,6 @@ unsigned int nfsd_net_id;
+ static __net_init int nfsd_init_net(struct net *net)
+ {
+ 	int retval;
+-	struct vfsmount *mnt;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+ 	retval = nfsd_export_init(net);
+@@ -1479,16 +1490,8 @@ static __net_init int nfsd_init_net(struct net *net)
+ 	init_waitqueue_head(&nn->ntf_wq);
+ 	seqlock_init(&nn->boot_lock);
+ 
+-	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+-	if (IS_ERR(mnt)) {
+-		retval = PTR_ERR(mnt);
+-		goto out_mount_err;
+-	}
+-	nn->nfsd_mnt = mnt;
+ 	return 0;
+ 
+-out_mount_err:
+-	nfsd_reply_cache_shutdown(nn);
+ out_drc_error:
+ 	nfsd_idmap_shutdown(net);
+ out_idmap_error:
+@@ -1501,7 +1504,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+-	mntput(nn->nfsd_mnt);
+ 	nfsd_reply_cache_shutdown(nn);
+ 	nfsd_idmap_shutdown(net);
+ 	nfsd_export_shutdown(net);
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 7a835fb7d79f7..65097324b42a0 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -89,6 +89,8 @@ void		nfsd_destroy(struct net *net);
+ 
+ bool		i_am_nfsd(void);
+ 
++int get_nfsdfs(struct net *);
++
+ struct nfsdfs_client {
+ 	struct kref cl_ref;
+ 	void (*cl_release)(struct kref *kref);
+@@ -99,6 +101,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
+ 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
+ void nfsd_client_rmdir(struct dentry *dentry);
+ 
++
+ #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+ #ifdef CONFIG_NFSD_V2_ACL
+ extern const struct svc_version nfsd_acl_version2;
+-- 
+2.25.1
+
 
 
