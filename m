@@ -2,87 +2,95 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7672C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1313C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E4B206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E66206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="moOzwUM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgGGGiv (ORCPT
+        id S1728025AbgGGGi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:38:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57520 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGGiv (ORCPT
+        Tue, 7 Jul 2020 02:38:58 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:38509 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGGi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:38:51 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jshFb-0005om-1g; Tue, 07 Jul 2020 06:38:43 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     irusskikh@marvell.com
-Cc:     anthony.wong@canonical.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nikita Danilov <ndanilov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Dmitry Bezrukov <dmitry.bezrukov@aquantia.com>,
-        netdev@vger.kernel.org (open list:AQUANTIA ETHERNET DRIVER (atlantic)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net: atlantic: Add support for firmware v4
-Date:   Tue,  7 Jul 2020 14:38:28 +0800
-Message-Id: <20200707063830.15645-1-kai.heng.feng@canonical.com>
+        Tue, 7 Jul 2020 02:38:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594103937; x=1625639937;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=5yEvq7StD06SmEX9yNGvdQ9oUgxXrCyeGSGmzeunTGI=;
+  b=moOzwUM8k4COnZokJfpSfX/orx1iiFB6NzoeFTT9fq113Ykn4dJpOYRh
+   Em+VPq2HCYOOO0KNBvTTgAaTcE5KILjJsKCki4r0wpC8tze9y0H52Olpf
+   X6tP0C8HvOgEr3u64ubJ18oXVDiqPIR9k+4lzpyCq4g1oXIsqBNdHxHSg
+   Q=;
+IronPort-SDR: gH2xrJdS5ijwT+nBq3S1DTWStzGTKjk5Daw0r+1C9dWMlH+Ya1av1O8pVyNZpSEnw5+aAJNhoL
+ cUSrbmMig/rw==
+X-IronPort-AV: E=Sophos;i="5.75,321,1589241600"; 
+   d="scan'208";a="49642298"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Jul 2020 06:38:50 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 1559214177C;
+        Tue,  7 Jul 2020 06:38:46 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 06:38:46 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.146) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 06:38:41 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     David Gow <davidgow@google.com>
+CC:     Brendan Higgins <brendanhiggins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: kunit: Remove references to --defconfig
+Date:   Tue, 7 Jul 2020 08:38:25 +0200
+Message-ID: <20200707063825.4361-1-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200707043119.3016937-1-davidgow@google.com> (raw)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.146]
+X-ClientProxiedBy: EX13P01UWA004.ant.amazon.com (10.43.160.127) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a new ethernet card that is supported by the atlantic driver:
-01:00.0 Ethernet controller [0200]: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] [1d6a:07b1] (rev 02)
+On Mon,  6 Jul 2020 21:31:20 -0700 David Gow <davidgow@google.com> wrote:
 
-But the driver failed to probe the device:
-kernel: atlantic: Bad FW version detected: 400001e
-kernel: atlantic: probe of 0000:01:00.0 failed with error -95
+> The --defconfig option in kunit_tool was removed in [1], but the getting
+> started and kunit_tool documentation still encouraged its use. Update
+> those documents to reflect that it's no-longer required, and is the
+> default behaviour if no .kunitconfig is found.
+> 
+> Also update a couple of places where .kunitconfig is still referred to
+> as kunitconfig (this was changed in [2]).
+> 
+> [1]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=kunit-fixes&id=9bdf64b35117cc10813d24e1842cd8ee40ecbf19
+> [2]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=kunit-fixes&id=14ee5cfd4512ee3d1e0047d8751450dcc6544070
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
 
-As a pure guesswork, simply adding the firmware version to the driver
-can make it function. Doing iperf3 as a smoketest doesn't show any
-abnormality either.
+Reviewed-by: SeongJae Park <sjpark@amazon.de>
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-index 73c0f41df8d8..0b4cd1c0e022 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-@@ -46,6 +46,7 @@
- #define HW_ATL_FW_VER_1X 0x01050006U
- #define HW_ATL_FW_VER_2X 0x02000000U
- #define HW_ATL_FW_VER_3X 0x03000000U
-+#define HW_ATL_FW_VER_4X 0x0400001EU
- 
- #define FORCE_FLASHLESS 0
- 
-@@ -81,6 +82,9 @@ int hw_atl_utils_initfw(struct aq_hw_s *self, const struct aq_fw_ops **fw_ops)
- 	} else if (hw_atl_utils_ver_match(HW_ATL_FW_VER_3X,
- 					  self->fw_ver_actual) == 0) {
- 		*fw_ops = &aq_fw_2x_ops;
-+	} else if (hw_atl_utils_ver_match(HW_ATL_FW_VER_4X,
-+					  self->fw_ver_actual) == 0) {
-+		*fw_ops = &aq_fw_2x_ops;
- 	} else {
- 		aq_pr_err("Bad FW version detected: %x\n",
- 			  self->fw_ver_actual);
--- 
-2.17.1
-
+Thanks,
+SeongJae Park
