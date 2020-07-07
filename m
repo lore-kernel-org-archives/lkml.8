@@ -2,166 +2,230 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C642074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594121483;
-	bh=aUIVEVAXZbopFMRH3TGsLEtnnL4vBmzSRg0vOGqapQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A2/QI+RHhCxuMWwEMoB9rX1zTBiq6QTI4VQz74jwWID+pT7X/8ShcmPgK0QZQ/keR
-	 dxXqPPRPrD8PZOPxqZ5vgccyuYQbnKpNWuoeGZDMzN6IO6e7z1AncK0U9RD5tnicGH
-	 lbKyXtq+pRQIeTWE8h8BBwLADgCjqoyKIIfLIzNA=
+	by mail.kernel.org (Postfix) with ESMTP id AD29020702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgGGLbW (ORCPT
+        id S1728204AbgGGLb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:31:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36676 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgGGLbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:31:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k6so44781736wrn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:31:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=toA1Nevv1Y/0QdhHvMEudjFGAmi/53XiG4RbTAj5+K0=;
-        b=ZjZ7SoCZYN7w4RMLvOvKrYrKd+8ZLW0Jyc3xo6MzG2QgO4ky7hb8w0ftkC4HzWyPzF
-         folPCu1LVjVHkDmmiDL/zGBiB/FKme7jOgCB4BKNpY4ezNhz6GO57BxfEASnIhOwHe6P
-         G5cxEL3LUXgFs0A6I5UMbsr5di/27mcKRBnw4T7mpS4Qk656ZIf6/nJpAKXaxBq0ynu/
-         UUwR5G4T4p7OqvacI2EjzE13sHHrmojchEOad99bgzcXMruI8nGyXHiIsjA8QB7RI4Zd
-         hJf08yXX56MqlYJIE/kpXc95l5QLxFaYi12CH7mbByK4NDYOMN0fh4pwZnvoHbuU7Jqd
-         EdgQ==
-X-Gm-Message-State: AOAM530qF867Iu5c/MmPx3KwpsT4zf/PoOJwhYfmoPtuAhxUKp17nhjU
-        63idM0a0TbHod6NrvuEpS+Q=
-X-Google-Smtp-Source: ABdhPJxo42/JcizNe97kE/wFAk45kbPAX4LbQ8fCJ/gE7Yu6LDTeW5hvofnItd66CbgtgK5zUTB7Mg==
-X-Received: by 2002:a5d:4607:: with SMTP id t7mr57351198wrq.251.1594121479234;
-        Tue, 07 Jul 2020 04:31:19 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id b10sm627955wmj.30.2020.07.07.04.31.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 04:31:18 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 13:31:16 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 04/11] mm/hugetlb: make hugetlb migration callback CMA
- aware
-Message-ID: <20200707113116.GH5913@dhcp22.suse.cz>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
+        Tue, 7 Jul 2020 07:31:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:42142 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgGGLbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:31:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 622B21FB;
+        Tue,  7 Jul 2020 04:31:24 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 139213F71E;
+        Tue,  7 Jul 2020 04:31:22 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 12:31:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     tjoseph@cadence.com, robh@kernel.org, bhelgaas@google.com,
+        thierry.reding@gmail.com, toan@os.amperecomputing.com,
+        ley.foon.tan@intel.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: controller: convert to
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200707113117.GA15536@e121166-lin.cambridge.arm.com>
+References: <20200602171601.17630-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <20200602171601.17630-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-07-20 16:44:42, Joonsoo Kim wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Wed, Jun 03, 2020 at 01:16:01AM +0800, Dejin Zheng wrote:
+> Use devm_platform_ioremap_resource_byname() to simplify codes.
+> it contains platform_get_resource_byname() and devm_ioremap_resource().
 > 
-> new_non_cma_page() in gup.c which try to allocate migration target page
-> requires to allocate the new page that is not on the CMA area.
-> new_non_cma_page() implements it by removing __GFP_MOVABLE flag.  This way
-> works well for THP page or normal page but not for hugetlb page.
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v1 -> v2:
+> 	- Discard changes to the file drivers/pci/controller/pcie-xilinx-nwl.c
+> 	  Due to my mistakes, my patch will modify pcie-xilinx-nwl.c,
+> 	  but it still need to use the res variable, but
+> 	  devm_platform_ioremap_resource_byname() funtion can't assign a
+> 	  value to the variable res. kbuild test robot report it. Thanks
+> 	  very much for kbuild test robot <lkp@intel.com>.
 > 
-> hugetlb page allocation process consists of two steps.  First is dequeing
-> from the pool.  Second is, if there is no available page on the queue,
-> allocating from the page allocator.
-> 
-> new_non_cma_page() can control allocation from the page allocator by
-> specifying correct gfp flag.  However, dequeing cannot be controlled until
-> now, so, new_non_cma_page() skips dequeing completely.  It is a suboptimal
-> since new_non_cma_page() cannot utilize hugetlb pages on the queue so this
-> patch tries to fix this situation.
-> 
-> This patch makes the deque function on hugetlb CMA aware and skip CMA
-> pages if newly added skip_cma argument is passed as true.
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 3 +--
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 3 +--
+>  drivers/pci/controller/pci-tegra.c                 | 8 +++-----
+>  drivers/pci/controller/pci-xgene.c                 | 3 +--
+>  drivers/pci/controller/pcie-altera-msi.c           | 3 +--
+>  drivers/pci/controller/pcie-altera.c               | 9 +++------
+>  drivers/pci/controller/pcie-mediatek.c             | 4 +---
+>  drivers/pci/controller/pcie-rockchip.c             | 5 ++---
+>  8 files changed, 13 insertions(+), 25 deletions(-)
 
-I really dislike this as already mentioned in the previous version of
-the patch. You are making hugetlb and only one part of its allocator a
-special snowflake which is almost always a bad idea. Your changelog
-lacks any real justification for this inconsistency.
+Applied to pci/dwc with Rob and Gustavo's tags (next time please
+carry them over and send v2 in-reply-to v1 so that I can follow
+it), thanks.
 
-Also by doing so you are keeping an existing bug that the hugetlb
-allocator doesn't respect scope gfp flags as I have mentioned when
-reviewing the previous version. That bug likely doesn't matter now but
-it might in future and as soon as it is fixed all this is just a
-pointless exercise.
+Lorenzo
 
-I do not have energy and time to burn to repeat that argumentation to I
-will let Mike to have a final word. Btw. you are keeping his acks even
-after considerable changes to patches which I am not really sure he is
-ok with.
-
-> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-To this particular patch.
-[...]
-
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 5daadae..2c3dab4 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1630,11 +1630,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  #ifdef CONFIG_HUGETLB_PAGE
->  	if (PageHuge(page)) {
->  		struct hstate *h = page_hstate(page);
-> +
->  		/*
->  		 * We don't want to dequeue from the pool because pool pages will
->  		 * mostly be from the CMA region.
->  		 */
-> -		return alloc_migrate_huge_page(h, gfp_mask, nid, NULL);
-> +		return alloc_huge_page_nodemask(h, nid, NULL, gfp_mask, true);
-
-Let me repeat that this whole thing is running under
-memalloc_nocma_save. So additional parameter is bogus.
-[...]
-> -static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
-> +static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid, bool skip_cma)
-
-If you really insist on an additional parameter at this layer than it
-should be checking for the PF_MEMALLOC_NOCMA instead.
-
-[...]
-> @@ -1971,21 +1977,29 @@ struct page *alloc_buddy_huge_page_with_mpol(struct hstate *h,
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c15c8352125..74ffa03fde5f 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -408,8 +408,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
 >  
->  /* page migration callback function */
->  struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
-> -		nodemask_t *nmask, gfp_t gfp_mask)
-> +		nodemask_t *nmask, gfp_t gfp_mask, bool skip_cma)
+>  	pcie->is_rc = false;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> -	pcie->reg_base = devm_ioremap_resource(dev, res);
+> +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+>  	if (IS_ERR(pcie->reg_base)) {
+>  		dev_err(dev, "missing \"reg\"\n");
+>  		return PTR_ERR(pcie->reg_base);
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8c2543f28ba0..dcc460a54875 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -225,8 +225,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	rc->device_id = 0xffff;
+>  	of_property_read_u32(np, "device-id", &rc->device_id);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> -	pcie->reg_base = devm_ioremap_resource(dev, res);
+> +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+>  	if (IS_ERR(pcie->reg_base)) {
+>  		dev_err(dev, "missing \"reg\"\n");
+>  		return PTR_ERR(pcie->reg_base);
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index e3e917243e10..3e608383df66 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -1462,7 +1462,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
 >  {
-> +	unsigned int flags = 0;
-> +	struct page *page = NULL;
-> +
-> +	if (skip_cma)
-> +		flags = memalloc_nocma_save();
-
-This is pointless for a scope that is already defined up in the call
-chain and fundamentally this is breaking the expected use of the scope
-API. The primary reason for that API to exist is to define the scope and
-have it sticky for _all_ allocation contexts. So if you have to use it
-deep in the allocator then you are doing something wrong.
--- 
-Michal Hocko
-SUSE Labs
+>  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+> -	struct resource *pads, *afi, *res;
+> +	struct resource *res;
+>  	const struct tegra_pcie_soc *soc = pcie->soc;
+>  	int err;
+>  
+> @@ -1486,15 +1486,13 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+>  		}
+>  	}
+>  
+> -	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
+> -	pcie->pads = devm_ioremap_resource(dev, pads);
+> +	pcie->pads = devm_platform_ioremap_resource_byname(pdev, "pads");
+>  	if (IS_ERR(pcie->pads)) {
+>  		err = PTR_ERR(pcie->pads);
+>  		goto phys_put;
+>  	}
+>  
+> -	afi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "afi");
+> -	pcie->afi = devm_ioremap_resource(dev, afi);
+> +	pcie->afi = devm_platform_ioremap_resource_byname(pdev, "afi");
+>  	if (IS_ERR(pcie->afi)) {
+>  		err = PTR_ERR(pcie->afi);
+>  		goto phys_put;
+> diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+> index d1efa8ffbae1..1431a18eb02c 100644
+> --- a/drivers/pci/controller/pci-xgene.c
+> +++ b/drivers/pci/controller/pci-xgene.c
+> @@ -355,8 +355,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
+>  	if (IS_ERR(port->csr_base))
+>  		return PTR_ERR(port->csr_base);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> -	port->cfg_base = devm_ioremap_resource(dev, res);
+> +	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+>  	if (IS_ERR(port->cfg_base))
+>  		return PTR_ERR(port->cfg_base);
+>  	port->cfg_addr = res->start;
+> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> index 16d938920ca5..613e19af71bd 100644
+> --- a/drivers/pci/controller/pcie-altera-msi.c
+> +++ b/drivers/pci/controller/pcie-altera-msi.c
+> @@ -228,8 +228,7 @@ static int altera_msi_probe(struct platform_device *pdev)
+>  	mutex_init(&msi->lock);
+>  	msi->pdev = pdev;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
+> -	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
+> +	msi->csr_base = devm_platform_ioremap_resource_byname(pdev, "csr");
+>  	if (IS_ERR(msi->csr_base)) {
+>  		dev_err(&pdev->dev, "failed to map csr memory\n");
+>  		return PTR_ERR(msi->csr_base);
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index 24cb1c331058..7200e40ffa26 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -696,17 +696,14 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct platform_device *pdev = pcie->pdev;
+> -	struct resource *cra;
+> -	struct resource *hip;
+>  
+> -	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+> -	pcie->cra_base = devm_ioremap_resource(dev, cra);
+> +	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
+>  	if (IS_ERR(pcie->cra_base))
+>  		return PTR_ERR(pcie->cra_base);
+>  
+>  	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> -		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
+> -		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
+> +		pcie->hip_base =
+> +			devm_platform_ioremap_resource_byname(pdev, "Hip");
+>  		if (IS_ERR(pcie->hip_base))
+>  			return PTR_ERR(pcie->hip_base);
+>  	}
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index ebfa7d5a4e2d..d8e38276dbe3 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -905,7 +905,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  			       int slot)
+>  {
+>  	struct mtk_pcie_port *port;
+> -	struct resource *regs;
+>  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	char name[10];
+> @@ -916,8 +915,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  		return -ENOMEM;
+>  
+>  	snprintf(name, sizeof(name), "port%d", slot);
+> -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> -	port->base = devm_ioremap_resource(dev, regs);
+> +	port->base = devm_platform_ioremap_resource_byname(pdev, name);
+>  	if (IS_ERR(port->base)) {
+>  		dev_err(dev, "failed to map port%d base\n", slot);
+>  		return PTR_ERR(port->base);
+> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> index c53d1322a3d6..904dec0d3a88 100644
+> --- a/drivers/pci/controller/pcie-rockchip.c
+> +++ b/drivers/pci/controller/pcie-rockchip.c
+> @@ -45,9 +45,8 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>  			return -EINVAL;
+>  	}
+>  
+> -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -					    "apb-base");
+> -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
+> +	rockchip->apb_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "apb-base");
+>  	if (IS_ERR(rockchip->apb_base))
+>  		return PTR_ERR(rockchip->apb_base);
+>  
+> -- 
+> 2.25.0
+> 
