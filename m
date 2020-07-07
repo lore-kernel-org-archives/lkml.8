@@ -2,315 +2,214 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8B6206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECA7206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EOgJOpwB"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="bZ5qsaBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgGGVEQ (ORCPT
+        id S1729138AbgGGVFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:04:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23081 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728550AbgGGVEQ (ORCPT
+        Tue, 7 Jul 2020 17:05:52 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:52713 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGGVFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:04:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594155853;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cKsYa862UOba1pX41B7ZWFKEGALuvSNs0tQVCwNZJ5I=;
-        b=EOgJOpwBUpJCP0ZdlXDclKKyWbAwtN2wyi0UyKajSB5y6aMV7lOarm/B9zFyHM+B40vefr
-        SSwd2WtS/lAxmkfr6OEw2IM0Vsr517ApSPH7DdbmnoaHyNxAu2rIbm6wcSRmIrhVnA1nGp
-        DbFeQADTg5eQlNAw4GztcoaOkqIX8kk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-KxuCHQmVOCCzhyceZtkVOg-1; Tue, 07 Jul 2020 17:04:12 -0400
-X-MC-Unique: KxuCHQmVOCCzhyceZtkVOg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4463C800C64;
-        Tue,  7 Jul 2020 21:04:10 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 497281A7CD;
-        Tue,  7 Jul 2020 21:04:09 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 15:04:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
-Message-ID: <20200707150408.474d81f1@x1.home>
-In-Reply-To: <20200707013957.23672-2-baolu.lu@linux.intel.com>
-References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
-        <20200707013957.23672-2-baolu.lu@linux.intel.com>
-Organization: Red Hat
+        Tue, 7 Jul 2020 17:05:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=HQwHsSLOGbbfu+RvJtKph55JfGztos9/1WaHqc0svfo=;
+        b=bZ5qsaBAKMZZ64pVaN68mfU5j8qdhWrokgn3LEURbYhAlwfK6DxCuhwFAii+ttnc8YGJ
+        cv0e/NIYsPG+PW5cL/Fpkaqf+xU9a5ewEeei0RquGZHMyISyMmqMWwGKmRGn/JHmChlkWs
+        HePE9KZnRymYbN/BcRxmBAZxPS17BQ3Hw=
+Received: by filterdrecv-p3las1-7754f7d4cc-blxz6 with SMTP id filterdrecv-p3las1-7754f7d4cc-blxz6-19-5F04E3AD-65
+        2020-07-07 21:05:49.733146971 +0000 UTC m=+1047129.013300829
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
+        id VzyOxLf3TS-z3j0rGr7bLQ
+        Tue, 07 Jul 2020 21:05:49.292 +0000 (UTC)
+Subject: Re: [PATCH v2 14/14] phy/rockchip: inno-hdmi: Support more pre-pll
+ configuration
+References: <20200108210740.28769-1-jonas@kwiboo.se>
+ <20200108210740.28769-15-jonas@kwiboo.se>
+ <425e10c2-ed03-be64-8153-9bc3657da10e@gmail.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <3124cfc2-8561-beff-5963-63f8f42bc644@kwiboo.se>
+Date:   Tue, 07 Jul 2020 21:05:49 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <425e10c2-ed03-be64-8153-9bc3657da10e@gmail.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hyw1I00a5pC6Cn8Pg?=
+ =?us-ascii?Q?VuGIRzrvNwwRCA4W3FGC9+j7OAlpVlG7MqBEPmB?=
+ =?us-ascii?Q?QrRLojx7WqK6rWFzELAiMtWrLWD7by9pmODglll?=
+ =?us-ascii?Q?hiOBk8U7B268bYhiyPxhXXSbLQULPX+J16aFlGQ?=
+ =?us-ascii?Q?EPYz5owr14ry1OenCxhc4kayzbLjOpITNEwXqK2?=
+ =?us-ascii?Q?eyhBvs5yyBMe0F5CLAYMw=3D=3D?=
+To:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sandy Huang <hjc@rock-chips.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Zheng Yang <zhengyang@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Algea Cao <algea.cao@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jul 2020 09:39:56 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On 2020-07-07 21:53, Johan Jonker wrote:
+> 
+> Hi,
+> 
+> What's the status for this patch?
+> This is just what I needed for A95X Z2 to get the vop+hdmi and monitor
+> working. ;)
+> 
+> Could this become applied to mainline already?
+> The ack is already there.
 
-> The hardware assistant vfio mediated device is a use case of iommu
-> aux-domain. The interactions between vfio/mdev and iommu during mdev
-> creation and passthr are:
-> 
-> - Create a group for mdev with iommu_group_alloc();
-> - Add the device to the group with
->         group = iommu_group_alloc();
->         if (IS_ERR(group))
->                 return PTR_ERR(group);
-> 
->         ret = iommu_group_add_device(group, &mdev->dev);
->         if (!ret)
->                 dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->                          iommu_group_id(group));
-> - Allocate an aux-domain
->         iommu_domain_alloc()
-> - Attach the aux-domain to the physical device from which the mdev is
->   created.
->         iommu_aux_attach_device()
-> 
-> In the whole process, an iommu group was allocated for the mdev and an
-> iommu domain was attached to the group, but the group->domain leaves
-> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
-> 
-> The iommu_get_domain_for_dev() is a necessary interface for device
-> drivers that want to support aux-domain. For example,
-> 
->         struct iommu_domain *domain;
->         struct device *dev = mdev_dev(mdev);
->         unsigned long pasid;
-> 
->         domain = iommu_get_domain_for_dev(dev);
->         if (!domain)
->                 return -ENODEV;
-> 
->         pasid = iommu_aux_get_pasid(domain, dev->parent);
+I will send a v3 of the phy/rockchip parts of this series later tonight/tomorrow.
 
-How did we know this was an aux domain? ie. How did we know we could
-use it with iommu_aux_get_pasid()?
+The drm side still need work and I have some pending patches that also
+improve rk3288/rk3399 hdmi support for up to 4k@30hz, should make its way
+onto the list in a few days.
 
-Why did we assume the parent device is the iommu device for the aux
-domain?  Should that level of detail be already known by the aux domain?
+Regards,
+Jonas
 
-Nits - The iomu device of an mdev device is found via
-mdev_get_iommu_device(dev), it should not be assumed to be the parent.
-The parent of an mdev device is found via mdev_parent_dev(mdev).
-
-The leaps in logic here make me wonder if we should instead be exposing
-more of an aux domain API rather than blurring the differences between
-these domains.  Thanks,
-
-Alex
-
->         if (pasid == IOASID_INVALID)
->                 return -EINVAL;
 > 
->          /* Program the device context with the PASID value */
->          ....
+> Thanks,
 > 
-> This extends iommu_aux_at(de)tach_device() so that the users could pass
-> in an optional device pointer (struct device for vfio/mdev for example),
-> and the necessary check and data link could be done.
+> Johan Jonker
 > 
-> Fixes: a3a195929d40b ("iommu: Add APIs for multiple domains per device")
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/iommu.c           | 86 +++++++++++++++++++++++++++++----
->  drivers/vfio/vfio_iommu_type1.c |  5 +-
->  include/linux/iommu.h           | 12 +++--
->  3 files changed, 87 insertions(+), 16 deletions(-)
+> https://lore.kernel.org/lkml/20200620134659.4592-1-jbx6244@gmail.com/
 > 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 1ed1e14a1f0c..435835058209 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -2723,26 +2723,92 @@ EXPORT_SYMBOL_GPL(iommu_dev_feature_enabled);
->   * This should make us safe against a device being attached to a guest as a
->   * whole while there are still pasid users on it (aux and sva).
->   */
-> -int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev)
-> +int iommu_aux_attach_device(struct iommu_domain *domain,
-> +			    struct device *phys_dev, struct device *dev)
->  {
-> -	int ret = -ENODEV;
-> +	struct iommu_group *group;
-> +	int ret;
->  
-> -	if (domain->ops->aux_attach_dev)
-> -		ret = domain->ops->aux_attach_dev(domain, dev);
-> +	if (!domain->ops->aux_attach_dev ||
-> +	    !iommu_dev_feature_enabled(phys_dev, IOMMU_DEV_FEAT_AUX))
-> +		return -ENODEV;
->  
-> -	if (!ret)
-> -		trace_attach_device_to_domain(dev);
-> +	/* Bare use only. */
-> +	if (!dev) {
-> +		ret = domain->ops->aux_attach_dev(domain, phys_dev);
-> +		if (!ret)
-> +			trace_attach_device_to_domain(phys_dev);
-> +
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * The caller has created a made-up device (for example, vfio/mdev)
-> +	 * and allocated an iommu_group for user level direct assignment.
-> +	 * Make sure that the group has only single device and hasn't been
-> +	 * attached by any other domain.
-> +	 */
-> +	group = iommu_group_get(dev);
-> +	if (!group)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Lock the group to make sure the device-count doesn't change while
-> +	 * we are attaching.
-> +	 */
-> +	mutex_lock(&group->mutex);
-> +	ret = -EINVAL;
-> +	if ((iommu_group_device_count(group) != 1) || group->domain)
-> +		goto out_unlock;
-> +
-> +	ret = -EBUSY;
-> +	if (group->default_domain && group->domain != group->default_domain)
-> +		goto out_unlock;
-> +
-> +	ret = domain->ops->aux_attach_dev(domain, phys_dev);
-> +	if (!ret) {
-> +		trace_attach_device_to_domain(phys_dev);
-> +		group->domain = domain;
-> +	}
-> +
-> +out_unlock:
-> +	mutex_unlock(&group->mutex);
-> +	iommu_group_put(group);
->  
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(iommu_aux_attach_device);
->  
-> -void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev)
-> +void iommu_aux_detach_device(struct iommu_domain *domain,
-> +			     struct device *phys_dev, struct device *dev)
->  {
-> -	if (domain->ops->aux_detach_dev) {
-> -		domain->ops->aux_detach_dev(domain, dev);
-> -		trace_detach_device_from_domain(dev);
-> +	struct iommu_group *group;
-> +
-> +	if (WARN_ON_ONCE(!domain->ops->aux_detach_dev))
-> +		return;
-> +
-> +	if (!dev) {
-> +		domain->ops->aux_detach_dev(domain, phys_dev);
-> +		trace_detach_device_from_domain(phys_dev);
-> +
-> +		return;
->  	}
-> +
-> +	group = iommu_group_get(dev);
-> +	if (!group)
-> +		return;
-> +
-> +	mutex_lock(&group->mutex);
-> +	if (WARN_ON(iommu_group_device_count(group) != 1))
-> +		goto out_unlock;
-> +
-> +	domain->ops->aux_detach_dev(domain, phys_dev);
-> +	group->domain = NULL;
-> +	trace_detach_device_from_domain(phys_dev);
-> +
-> +out_unlock:
-> +	mutex_unlock(&group->mutex);
-> +	iommu_group_put(group);
->  }
->  EXPORT_SYMBOL_GPL(iommu_aux_detach_device);
->  
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 5e556ac9102a..d3be45dfa58e 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1635,7 +1635,8 @@ static int vfio_mdev_attach_domain(struct device *dev, void *data)
->  	iommu_device = vfio_mdev_get_iommu_device(dev);
->  	if (iommu_device) {
->  		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> -			return iommu_aux_attach_device(domain, iommu_device);
-> +			return iommu_aux_attach_device(domain,
-> +						       iommu_device, dev);
->  		else
->  			return iommu_attach_device(domain, iommu_device);
->  	}
-> @@ -1651,7 +1652,7 @@ static int vfio_mdev_detach_domain(struct device *dev, void *data)
->  	iommu_device = vfio_mdev_get_iommu_device(dev);
->  	if (iommu_device) {
->  		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> -			iommu_aux_detach_device(domain, iommu_device);
-> +			iommu_aux_detach_device(domain, iommu_device, dev);
->  		else
->  			iommu_detach_device(domain, iommu_device);
->  	}
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 5657d4fef9f2..7da5e67bf7dc 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -632,8 +632,10 @@ bool iommu_dev_has_feature(struct device *dev, enum iommu_dev_features f);
->  int iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features f);
->  int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features f);
->  bool iommu_dev_feature_enabled(struct device *dev, enum iommu_dev_features f);
-> -int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev);
-> -void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev);
-> +int iommu_aux_attach_device(struct iommu_domain *domain,
-> +			    struct device *phys_dev, struct device *dev);
-> +void iommu_aux_detach_device(struct iommu_domain *domain,
-> +			     struct device *phys_dev, struct device *dev);
->  int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev);
->  
->  struct iommu_sva *iommu_sva_bind_device(struct device *dev,
-> @@ -1007,13 +1009,15 @@ iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
->  }
->  
->  static inline int
-> -iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev)
-> +iommu_aux_attach_device(struct iommu_domain *domain,
-> +			struct device *phys_dev, struct device *dev)
->  {
->  	return -ENODEV;
->  }
->  
->  static inline void
-> -iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev)
-> +iommu_aux_detach_device(struct iommu_domain *domain,
-> +			struct device *phys_dev, struct device *dev)
->  {
->  }
->  
-
+> On 1/8/20 10:07 PM, Jonas Karlman wrote:
+>> From: Algea Cao <algea.cao@rock-chips.com>
+>>
+>> Adding the following freq cfg in 8-bit and 10-bit color depth:
+>>
+>> {
+>>   40000000,  65000000,  71000000,  83500000, 85750000,
+>>   88750000, 108000000, 119000000, 162000000
+>> }
+>>
+>> New freq has been validated by quantumdata 980.
+>>
+>> For some freq which can't be got by only using integer freq div,
+>> frac freq div is needed, Such as 88.75Mhz 10-bit. But The actual
+>> freq is different from the target freq, We must try to narrow
+>> the gap between them. RK322X only support integer freq div.
+>>
+>> The VCO of pre-PLL must be more than 2Ghz, otherwise PLL may be
+>> unlocked.
+>>
+>> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> Acked-by: Heiko Stuebner <heiko@sntech.de>
+>> ---
+>>  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 74 ++++++++++++-------
+>>  1 file changed, 49 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+>> index 3719309ad0d0..bb8bdf5e3301 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+>> @@ -291,32 +291,56 @@ struct inno_hdmi_phy_drv_data {
+>>  	const struct phy_config		*phy_cfg_table;
+>>  };
+>>  
+>> +/*
+>> + * If only using integer freq div can't get frequency we want, frac
+>> + * freq div is needed. For example, pclk 88.75 Mhz and tmdsclk
+>> + * 110.9375 Mhz must use frac div 0xF00000. The actual frequency is different
+>> + * from the target frequency. Such as the tmds clock 110.9375 Mhz,
+>> + * the actual tmds clock we get is 110.93719 Mhz. It is important
+>> + * to note that RK322X platforms do not support frac div.
+>> + */
+>>  static const struct pre_pll_config pre_pll_cfg_table[] = {
+>> -	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
+>> -	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
+>> -	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
+>> -	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
+>> -	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
+>> -	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3, 4, 0, 0xE6AE6B},
+>> -	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3, 4, 0, 0},
+>> -	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3, 4, 0, 0xE6AE6B},
+>> -	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3, 4, 0, 0},
+>> -	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3, 4, 0, 0x816817},
+>> -	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3, 4, 0, 0},
+>> -	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2, 2, 0, 0xE6AE6B},
+>> -	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2, 2, 0, 0},
+>> -	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2, 2, 0, 0x816817},
+>> -	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2, 2, 0, 0},
+>> -	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2, 2, 0, 0xE6AE6B},
+>> -	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 2, 0, 0},
+>> -	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1, 1, 0, 0x816817},
+>> -	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 0, 0},
+>> -	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2, 1, 0, 0xE6AE6B},
+>> -	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 1, 0, 0},
+>> -	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1, 1, 1, 0x816817},
+>> -	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 1, 0},
+>> -	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1, 1, 0, 0xE6AE6B},
+>> -	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1, 1, 0, 0},
+>> +	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3,  4, 0, 0},
+>> +	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3,  4, 0, 0},
+>> +	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2,  2, 0, 0},
+>> +	{ 40000000,  50000000, 1, 100, 2, 2, 2,  1, 0, 0, 15, 0, 0},
+>> +	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3,  4, 0, 0xE6AE6B},
+>> +	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3,  4, 0, 0},
+>> +	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3,  4, 0, 0xE6AE6B},
+>> +	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3,  4, 0, 0},
+>> +	{ 65000000,  65000000, 1, 130, 2, 2, 2,  1, 0, 0, 12, 0, 0},
+>> +	{ 65000000,  81250000, 3, 325, 0, 3, 3,  1, 0, 0, 10, 0, 0},
+>> +	{ 71000000,  71000000, 3, 284, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+>> +	{ 71000000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0, 10, 0, 0},
+>> +	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3,  4, 0, 0xE6AE6B},
+>> +	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3,  4, 0, 0},
+>> +	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3,  4, 0, 0x816817},
+>> +	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3,  4, 0, 0},
+>> +	{ 83500000,  83500000, 2, 167, 2, 1, 1,  1, 0, 0,  6, 0, 0},
+>> +	{ 83500000, 104375000, 1, 104, 2, 1, 1,  1, 1, 0,  5, 0, 0x600000},
+>> +	{ 85750000,  85750000, 3, 343, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+>> +	{ 88750000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+>> +	{ 88750000, 110937500, 1, 110, 2, 1, 1,  1, 1, 0,  5, 0, 0xF00000},
+>> +	{108000000, 108000000, 1,  90, 3, 0, 0,  1, 0, 0,  5, 0, 0},
+>> +	{108000000, 135000000, 1,  90, 0, 2, 2,  1, 0, 0,  5, 0, 0},
+>> +	{119000000, 119000000, 1, 119, 2, 1, 1,  1, 0, 0,  6, 0, 0},
+>> +	{119000000, 148750000, 1,  99, 0, 2, 2,  1, 0, 0,  5, 0, 0x2AAAAA},
+>> +	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2,  2, 0, 0xE6AE6B},
+>> +	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2,  2, 0, 0},
+>> +	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2,  2, 0, 0x816817},
+>> +	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2,  2, 0, 0},
+>> +	{162000000, 162000000, 1, 108, 0, 2, 2,  1, 0, 0,  4, 0, 0},
+>> +	{162000000, 202500000, 1, 135, 0, 2, 2,  1, 0, 0,  5, 0, 0},
+>> +	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2,  2, 0, 0xE6AE6B},
+>> +	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  2, 0, 0},
+>> +	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1,  1, 0, 0x816817},
+>> +	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 0, 0},
+>> +	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2,  1, 0, 0xE6AE6B},
+>> +	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  1, 0, 0},
+>> +	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1,  1, 1, 0x816817},
+>> +	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 1, 0},
+>> +	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1,  1, 0, 0xE6AE6B},
+>> +	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1,  1, 0, 0},
+>>  	{ /* sentinel */ }
+>>  };
+>>  
+>>
+> 
