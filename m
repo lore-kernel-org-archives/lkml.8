@@ -2,53 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B4C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B692078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135590;
-	bh=cJWeeKKPGUJksknMROnR55vt55tUDqvpZ5yiYzzjj1k=;
+	s=default; t=1594135594;
+	bh=ISNzpa7ny7l40jBlFAU0uG+mNebx2zp/Zz4x0X73iKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOfsZkoFz43f28DdpgBnt31m9PIGk08sgRpDAxy+f0pilQ2fevRQK6Ah+rsHkGMBX
-	 VV9KqS8JQefuCGckQPb5y0OlFIW+Pb5URaGXAStuaMFhQ+jWc+krxF73ukITwnrafE
-	 KGqcj7xxcSeTcDEnHhekM0R6ZMoR2vMgFpbGG2NU=
+	b=JsbrlwD69vaSmP8Qpy95AO5IwlWi+7laITyhrtEolZe/CW16JlAkXuSLB3l2svsuQ
+	 2iFuZhpL1wwIzck/7AAz8EvEkc4sIOoTSAxxU/koAQkcyA8yZQ9KPEyX4cS0uUQ+YU
+	 AS9yXhSao120UhSyonK8r35QWe6CGRO9AIcacXMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgGGP01 (ORCPT
+        id S1730284AbgGGP0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:26:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgGGP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:17 -0400
+        id S1730270AbgGGP0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C48232065D;
-        Tue,  7 Jul 2020 15:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 500C02078D;
+        Tue,  7 Jul 2020 15:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135576;
-        bh=cJWeeKKPGUJksknMROnR55vt55tUDqvpZ5yiYzzjj1k=;
+        s=default; t=1594135581;
+        bh=ISNzpa7ny7l40jBlFAU0uG+mNebx2zp/Zz4x0X73iKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Thl9i5M2a5SLivjl3VM1wb9AjI7wGbzvE2ORoXabHq+PVF6Xs7qbT5zB08nBD7Q98
-         326vAWOAT/ZvjT+i1brk6FPa9CpdTnoE4z9oy6+XC05JmHNm2G/f/+CDa+VtB6++nP
-         IB2HRf0aBWkN1g4LzLMA4AYx1i/dEWOd/T6llWWs=
+        b=s6swsNK9Y8CVrBSl90XS0UkOjyRK435JKytFrFML0u4LirvlMZjCO1WmEjW9jTkkQ
+         Zy1c2wZdZEktLsJQzuYQ+n8YoCXTIeqrv2t/XkNFLadFPuwKxCyxMZwihCmYl46qj4
+         0sQIP6YulB0YhXxcO6wuv22nRM9Txy9sJjm5tt0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 055/112] xfs: fix use-after-free on CIL context on shutdown
-Date:   Tue,  7 Jul 2020 17:17:00 +0200
-Message-Id: <20200707145803.616756482@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.7 098/112] gfs2: fix trans slab error when withdraw occurs inside log_flush
+Date:   Tue,  7 Jul 2020 17:17:43 +0200
+Message-Id: <20200707145805.638478632@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,124 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit c7f87f3984cfa1e6d32806a715f35c5947ad9c09 ]
+commit 58e08e8d83ab03a1ca25d53420bd0b87f2dfe458 upstream.
 
-xlog_wait() on the CIL context can reference a freed context if the
-waiter doesn't get scheduled before the CIL context is freed. This
-can happen when a task is on the hard throttle and the CIL push
-aborts due to a shutdown. This was detected by generic/019:
+Log flush operations (gfs2_log_flush()) can target a specific transaction.
+But if the function encounters errors (e.g. io errors) and withdraws,
+the transaction was only freed it if was queued to one of the ail lists.
+If the withdraw occurred before the transaction was queued to the ail1
+list, function ail_drain never freed it. The result was:
 
-thread 1			thread 2
+BUG gfs2_trans: Objects remaining in gfs2_trans on __kmem_cache_shutdown()
 
-__xfs_trans_commit
- xfs_log_commit_cil
-  <CIL size over hard throttle limit>
-  xlog_wait
-   schedule
-				xlog_cil_push_work
-				wake_up_all
-				<shutdown aborts commit>
-				xlog_cil_committed
-				kmem_free
+This patch makes log_flush() add the targeted transaction to the ail1
+list so that function ail_drain() will find and free it properly.
 
-   remove_wait_queue
-    spin_lock_irqsave --> UAF
+Cc: stable@vger.kernel.org # v5.7+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix it by moving the wait queue to the CIL rather than keeping it in
-in the CIL context that gets freed on push completion. Because the
-wait queue is now independent of the CIL context and we might have
-multiple contexts in flight at once, only wake the waiters on the
-push throttle when the context we are pushing is over the hard
-throttle size threshold.
-
-Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
-Reported-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_log_cil.c  | 10 +++++-----
- fs/xfs/xfs_log_priv.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ fs/gfs2/log.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index b43f0e8f43f2e..9ed90368ab311 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -671,7 +671,8 @@ xlog_cil_push_work(
- 	/*
- 	 * Wake up any background push waiters now this context is being pushed.
- 	 */
--	wake_up_all(&ctx->push_wait);
-+	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
-+		wake_up_all(&cil->xc_push_wait);
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -987,6 +987,16 @@ void gfs2_log_flush(struct gfs2_sbd *sdp
  
- 	/*
- 	 * Check if we've anything to push. If there is nothing, then we don't
-@@ -743,13 +744,12 @@ xlog_cil_push_work(
- 
- 	/*
- 	 * initialise the new context and attach it to the CIL. Then attach
--	 * the current context to the CIL committing lsit so it can be found
-+	 * the current context to the CIL committing list so it can be found
- 	 * during log forces to extract the commit lsn of the sequence that
- 	 * needs to be forced.
- 	 */
- 	INIT_LIST_HEAD(&new_ctx->committing);
- 	INIT_LIST_HEAD(&new_ctx->busy_extents);
--	init_waitqueue_head(&new_ctx->push_wait);
- 	new_ctx->sequence = ctx->sequence + 1;
- 	new_ctx->cil = cil;
- 	cil->xc_ctx = new_ctx;
-@@ -937,7 +937,7 @@ xlog_cil_push_background(
- 	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
- 		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
- 		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
--		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-+		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
- 		return;
+ out:
+ 	if (gfs2_withdrawn(sdp)) {
++		/**
++		 * If the tr_list is empty, we're withdrawing during a log
++		 * flush that targets a transaction, but the transaction was
++		 * never queued onto any of the ail lists. Here we add it to
++		 * ail1 just so that ail_drain() will find and free it.
++		 */
++		spin_lock(&sdp->sd_ail_lock);
++		if (tr && list_empty(&tr->tr_list))
++			list_add(&tr->tr_list, &sdp->sd_ail1_list);
++		spin_unlock(&sdp->sd_ail_lock);
+ 		ail_drain(sdp); /* frees all transactions */
+ 		tr = NULL;
  	}
- 
-@@ -1216,12 +1216,12 @@ xlog_cil_init(
- 	INIT_LIST_HEAD(&cil->xc_committing);
- 	spin_lock_init(&cil->xc_cil_lock);
- 	spin_lock_init(&cil->xc_push_lock);
-+	init_waitqueue_head(&cil->xc_push_wait);
- 	init_rwsem(&cil->xc_ctx_lock);
- 	init_waitqueue_head(&cil->xc_commit_wait);
- 
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents);
--	init_waitqueue_head(&ctx->push_wait);
- 	ctx->sequence = 1;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index ec22c7a3867f1..75a62870b63af 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -240,7 +240,6 @@ struct xfs_cil_ctx {
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
--	wait_queue_head_t	push_wait;	/* background push throttle */
- 	struct work_struct	discard_endio_work;
- };
- 
-@@ -274,6 +273,7 @@ struct xfs_cil {
- 	wait_queue_head_t	xc_commit_wait;
- 	xfs_lsn_t		xc_current_sequence;
- 	struct work_struct	xc_push_work;
-+	wait_queue_head_t	xc_push_wait;	/* background push throttle */
- } ____cacheline_aligned_in_smp;
- 
- /*
--- 
-2.25.1
-
 
 
