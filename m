@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36217C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DDD2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11234206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135247;
-	bh=uzT2E0K+tOIWrprQmEmnJN0iK49KZfC9ZlTd6G5BhZg=;
+	s=default; t=1594135252;
+	bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGbT/QINtWsoUkvXE7ybZksolHJpw5w5krwMk2eKC8f5oQIt3wqP9NF/6UtvOwO35
-	 VK0uufaAJXzYyZ7tz75IDz5XNNK8F68N1ho4TMC7Z+abowexYAHmHItkxEUmowvoY6
-	 +hOJ8Ph3rbHbF7OZSh8Y70xEXdMLHVD1qjz+KICo=
+	b=Apf53zcUJg6P/fk6mYI4cMxVCirgg3pLmUGYPT9aXrv51qpR7YtK4hP050/Qkje/+
+	 KkeTjcVl704Lx9hTahMowGHlKi/Drx2AJWtZfvVq+Fq5aKySRlyNuvD0jgmKFc1qDL
+	 cgw1eSW6OpSyOgoaPKKJIt2cWI3t7k2DzolPQjMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgGGPUq (ORCPT
+        id S1729602AbgGGPUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60840 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbgGGPUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:41 -0400
+        id S1728645AbgGGPUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3961820663;
-        Tue,  7 Jul 2020 15:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D988E20663;
+        Tue,  7 Jul 2020 15:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135240;
-        bh=uzT2E0K+tOIWrprQmEmnJN0iK49KZfC9ZlTd6G5BhZg=;
+        s=default; t=1594135245;
+        bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldswGIGPeJ6wb0yFI2JWDZsn+5jOkh/mPQt5QsOxGJsR1yPMtitIp3d7kNl9yXf7a
-         ue7xWu0acPNMb9YYbzz6pxZteW/2afuEsaPaxTQ7MRWIFyq+h9S5yQLCm7Z62YPlQC
-         VWpCEwzz6Yu0K5ZsxOBOqzdgUC+HziLdUotn4/eY=
+        b=a397CYXU+ZMyxzgeCQ0xUd/CzEK1mPxktUbM7AIedUdn6s4PU38zHImiLUHffu9Dy
+         G2QpZgYwLubKNpFsxD1+rGXoFhNyLopH/EMb1lr9bHOjHJWiFgtMUazuTfXgn/AyOC
+         +klTSKlmKUp4vqsDz9MhOWzgnAif/0mgYOCTDxRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 28/65] cxgb4: use correct type for all-mask IP address comparison
-Date:   Tue,  7 Jul 2020 17:17:07 +0200
-Message-Id: <20200707145753.835519759@linuxfoundation.org>
+Subject: [PATCH 5.4 30/65] hwmon: (max6697) Make sure the OVERT mask is set correctly
+Date:   Tue,  7 Jul 2020 17:17:09 +0200
+Message-Id: <20200707145753.931334575@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,54 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Chu Lin <linchuyuan@google.com>
 
-[ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
+[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
 
-Use correct type to check for all-mask exact match IP addresses.
+Per the datasheet for max6697, OVERT mask and ALERT mask are different.
+For example, the 7th bit of OVERT is the local channel but for alert
+mask, the 6th bit is the local channel. Therefore, we can't apply the
+same mask for both registers. In addition to that, the max6697 driver
+is supposed to be compatibale with different models. I manually went over
+all the listed chips and made sure all chip types have the same layout.
 
-Fixes following sparse warnings due to big endian value checks
-against 0xffffffff in is_addr_all_mask():
-cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
-cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
-cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
-cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
-cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
+Testing;
+    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
+    I used iotool to read the reg value back to verify. I only tested this
+    change on max6581.
 
-Fixes: 3eb8b62d5a26 ("cxgb4: add support to create hash-filters via tc-flower offload")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reference:
+https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/hwmon/max6697.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-index 8a67a04a5bbc6..375e1be6a2d8d 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-@@ -839,16 +839,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
- 		struct in_addr *addr;
+diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
+index 743752a2467a2..64122eb38060d 100644
+--- a/drivers/hwmon/max6697.c
++++ b/drivers/hwmon/max6697.c
+@@ -38,8 +38,9 @@ static const u8 MAX6697_REG_CRIT[] = {
+  * Map device tree / platform data register bit map to chip bit map.
+  * Applies to alert register and over-temperature register.
+  */
+-#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
++#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+ 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
++#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
  
- 		addr = (struct in_addr *)ipmask;
--		if (addr->s_addr == 0xffffffff)
-+		if (ntohl(addr->s_addr) == 0xffffffff)
- 			return true;
- 	} else if (family == AF_INET6) {
- 		struct in6_addr *addr6;
+ #define MAX6697_REG_STAT(n)		(0x44 + (n))
  
- 		addr6 = (struct in6_addr *)ipmask;
--		if (addr6->s6_addr32[0] == 0xffffffff &&
--		    addr6->s6_addr32[1] == 0xffffffff &&
--		    addr6->s6_addr32[2] == 0xffffffff &&
--		    addr6->s6_addr32[3] == 0xffffffff)
-+		if (ntohl(addr6->s6_addr32[0]) == 0xffffffff &&
-+		    ntohl(addr6->s6_addr32[1]) == 0xffffffff &&
-+		    ntohl(addr6->s6_addr32[2]) == 0xffffffff &&
-+		    ntohl(addr6->s6_addr32[3]) == 0xffffffff)
- 			return true;
- 	}
- 	return false;
+@@ -562,12 +563,12 @@ static int max6697_init_chip(struct max6697_data *data,
+ 		return ret;
+ 
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
+-					MAX6697_MAP_BITS(pdata->alert_mask));
++				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
+-				MAX6697_MAP_BITS(pdata->over_temperature_mask));
++			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
