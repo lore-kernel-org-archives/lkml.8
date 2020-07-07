@@ -2,150 +2,146 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0692C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F181C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFC64206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ezn5S6o1"
+	by mail.kernel.org (Postfix) with ESMTP id 89A872067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgGGTuQ (ORCPT
+        id S1728578AbgGGTuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:50:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24679 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726951AbgGGTuQ (ORCPT
+        Tue, 7 Jul 2020 15:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgGGTuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594151414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1MyiecDX95vYDn16o1AnLNPElpX9iu/bMS7QGJmoJuA=;
-        b=Ezn5S6o1mJtao82drG9DKUfIGEvcH6/qddkvT5XkH6r8sOkg6mDh9XBfhmeSQTTBCm/YS0
-        Yv7lKHFMnuxUCJ/omVEpVwc9Q6JQJJk6uOR+8qg+CX3VMIUjHbTPu+WZbJUBU31YIcH9vw
-        n0HpTmVeQyeoXbFc+DG2FOSUB2gooO8=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-p9AkMfYZMTSdWbZ5mhhRcg-1; Tue, 07 Jul 2020 15:50:12 -0400
-X-MC-Unique: p9AkMfYZMTSdWbZ5mhhRcg-1
-Received: by mail-qt1-f199.google.com with SMTP id g6so31534133qtr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:50:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1MyiecDX95vYDn16o1AnLNPElpX9iu/bMS7QGJmoJuA=;
-        b=RUvGSw8jeLgDtXQtj2+D3hprmjHbTJr9wJxu656vi0vnd7j+yoSs00cfqKGXO/gkht
-         EhLiu0VJUcyDxhknmFYrcMqqbEST1LbasUfThuphozpU5OMb3JRxPDkwrD4+nfV0vOnG
-         gRhEslSPtwrkH3nouaw4jZy05E8m0NiP/wvzrkjy5yDwYs7srzFGtLAjKDCOGvFcCQS+
-         RgUCnto04fvD+87uhezkHJpgViSqgUSeMv1XFvhLFiXFHCO743uafSKJAu3L2fHCKnAt
-         8l0spVlsVtQ66pG7atLBWvOP2duSgDq+46caCzTI/eJEDHdcFw0m+UnuKsxfqYSDNhQW
-         t2rQ==
-X-Gm-Message-State: AOAM533nEKULojWeZLjQW0RjQXNT+OIpcrSuI+CKiKohQHdzrXvLE6fF
-        Mob4i9RvloZEWfqlpBy2BBZwX/vyAnYRjvr5Ta6PXBOtXMKIw821JpkA93hgdjQxuexNUqyXneO
-        I4V6vxDbanDV+eHAjwZ22SFts
-X-Received: by 2002:aed:2fa1:: with SMTP id m30mr41633877qtd.306.1594151412052;
-        Tue, 07 Jul 2020 12:50:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxQG9gFW6u6nd+w3S2m/MpDzbGYxLTlBzGT3OREctmj26wBZlUi6rIGQkS/PR/KM97vnhychQ==
-X-Received: by 2002:aed:2fa1:: with SMTP id m30mr41633836qtd.306.1594151411697;
-        Tue, 07 Jul 2020 12:50:11 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id o20sm28889533qtk.56.2020.07.07.12.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 12:50:10 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 15:50:09 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200707195009.GE88106@xz-x1>
-References: <20200601115957.1581250-1-peterx@redhat.com>
- <20200601115957.1581250-3-peterx@redhat.com>
- <20200702230849.GL3575@linux.intel.com>
- <20200703184122.GF6677@xz-x1>
- <20200707061732.GI5208@linux.intel.com>
+        Tue, 7 Jul 2020 15:50:22 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CF4C061755;
+        Tue,  7 Jul 2020 12:50:21 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 52F51BC0C1;
+        Tue,  7 Jul 2020 19:50:18 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
+        kuba@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: NFS, SUNRPC, and LOCKD clients
+Date:   Tue,  7 Jul 2020 21:50:12 +0200
+Message-Id: <20200707195012.52559-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200707061732.GI5208@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:17:32PM -0700, Sean Christopherson wrote:
-> On Fri, Jul 03, 2020 at 02:41:22PM -0400, Peter Xu wrote:
-> > On Thu, Jul 02, 2020 at 04:08:49PM -0700, Sean Christopherson wrote:
-> > > On Mon, Jun 01, 2020 at 07:59:45AM -0400, Peter Xu wrote:
-> > > > Cache the address space ID just like the slot ID.  It will be used in
-> > > > order to fill in the dirty ring entries.
-> > > > 
-> > > > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> > > > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > > ---
-> > > >  include/linux/kvm_host.h | 1 +
-> > > >  virt/kvm/kvm_main.c      | 1 +
-> > > >  2 files changed, 2 insertions(+)
-> > > > 
-> > > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > > > index 01276e3d01b9..5e7bbaf7a36b 100644
-> > > > --- a/include/linux/kvm_host.h
-> > > > +++ b/include/linux/kvm_host.h
-> > > > @@ -346,6 +346,7 @@ struct kvm_memory_slot {
-> > > >  	unsigned long userspace_addr;
-> > > >  	u32 flags;
-> > > >  	short id;
-> > > > +	u16 as_id;
-> > > >  };
-> > > >  
-> > > >  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-> > > > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > > > index 74bdb7bf3295..ebdd98a30e82 100644
-> > > > --- a/virt/kvm/kvm_main.c
-> > > > +++ b/virt/kvm/kvm_main.c
-> > > > @@ -1243,6 +1243,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> > > >  	if (!mem->memory_size)
-> > > >  		return kvm_delete_memslot(kvm, mem, &old, as_id);
-> > > 
-> > > This technically needs to set as_id in the deleted memslot.  I highly doubt
-> > > it will ever matter from a functionality perspective, but it'd be confusing
-> > > to encounter a memslot whose as_id did not match that of its owner.
-> > 
-> > Yeah it shouldn't matter because as_id is directly passed in to look up the
-> > pointer of kvm_memslots in kvm_delete_memslot, and memslot->as_id shouldn't be
-> > further referenced.
-> > 
-> > I can add a comment above if this can clarify things a bit:
-> > 
-> > +	u16 as_id; /* cache of as_id; only valid if npages != 0 */
-> 
-> Why not just set it?
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Because the value is useless even if set? :)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-You mean in kvm_delete_memslot(), am I right?  
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
 
-> It's a single line of code, and there's more than one
-> "shouldn't" in the above.
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
 
-If you want, I can both set it and add the comment.  Thanks,
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
 
+ fs/lockd/mon.c                  | 2 +-
+ include/linux/sunrpc/bc_xprt.h  | 2 +-
+ include/linux/sunrpc/msg_prot.h | 2 +-
+ net/sunrpc/backchannel_rqst.c   | 2 +-
+ net/sunrpc/sunrpc.h             | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/lockd/mon.c b/fs/lockd/mon.c
+index 1eabd91870e6..1d9488cf0534 100644
+--- a/fs/lockd/mon.c
++++ b/fs/lockd/mon.c
+@@ -417,7 +417,7 @@ void nsm_release(struct nsm_handle *nsm)
+ /*
+  * XDR functions for NSM.
+  *
+- * See http://www.opengroup.org/ for details on the Network
++ * See https://www.opengroup.org/ for details on the Network
+  * Status Monitor wire protocol.
+  */
+ 
+diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xprt.h
+index d796058cdff2..f07c334c599f 100644
+--- a/include/linux/sunrpc/bc_xprt.h
++++ b/include/linux/sunrpc/bc_xprt.h
+@@ -4,7 +4,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+diff --git a/include/linux/sunrpc/msg_prot.h b/include/linux/sunrpc/msg_prot.h
+index bea40d9f03a1..43f854487539 100644
+--- a/include/linux/sunrpc/msg_prot.h
++++ b/include/linux/sunrpc/msg_prot.h
+@@ -143,7 +143,7 @@ typedef __be32	rpc_fraghdr;
+ /*
+  * Well-known netids. See:
+  *
+- *   http://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
++ *   https://www.iana.org/assignments/rpc-netids/rpc-netids.xhtml
+  */
+ #define RPCBIND_NETID_UDP	"udp"
+ #define RPCBIND_NETID_TCP	"tcp"
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index 195b40c5dae4..3fecad369592 100644
+--- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -5,7 +5,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+index f6fe2e6cd65a..2f59464e6524 100644
+--- a/net/sunrpc/sunrpc.h
++++ b/net/sunrpc/sunrpc.h
+@@ -4,7 +4,7 @@
+ 
+ NetApp provides this source code under the GPL v2 License.
+ The GPL v2 license is available at
+-http://opensource.org/licenses/gpl-license.php.
++https://opensource.org/licenses/gpl-license.php.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 -- 
-Peter Xu
+2.27.0
 
