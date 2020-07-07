@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F087A20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D3220771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SGBT2hXu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k1S6jrk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgGGRs3 (ORCPT
+        id S1728672AbgGGRse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
+        Tue, 7 Jul 2020 13:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgGGRsZ (ORCPT
+        with ESMTP id S1728630AbgGGRs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:48:25 -0400
+        Tue, 7 Jul 2020 13:48:28 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA906C061755;
-        Tue,  7 Jul 2020 10:48:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7062C08C5DC;
+        Tue,  7 Jul 2020 10:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=8oAca2Sh96a0lCcV3gNnPlvoMT0ySVT+lMAbT/xWciU=; b=SGBT2hXuirr0IaFti3lia9tSRU
-        VweNIjq3OrAr2hK/vno0vV+HxxOmSpcmqkNEbPWnvWFYBR1Hr9srSkkQnOHCv4NViyNQtXY3DeDi8
-        SzPd1dWGgRq1ZgN0uoWxPQMt69bZXzMnxdgpkTV6a1n8KmzCjdFPHNSovZBeantiOow4m6xcubRT/
-        Frd//4rP24Zf9GPiJo+yqR4k0bGEsBgw9J+d5QKNSPUJLJ/L1xoNykfvJIofZNqn8zAhZIrQNygjV
-        o5dgGljCjpSRBn+hbyV5ijuqsyaCDIsNv3YY9VyBDxWieholZd9mVfoBAPxZ7C3SV4UBv/iEiySD1
-        8z20ql8A==;
+        bh=mmoVUcobkO+dCnZgQ7fZY0lcjXQ10mtOvDim8BHPO/s=; b=k1S6jrk3gGfBlEejCf+NgE87yK
+        UUGnXPbrF7WMcZid7t7hAk40jb9mTh1morboQIwh+YMRUeoxZbUopHlcJll4ANNsBMflzyQ2S4ptk
+        aAnzgP9feaBOYRk5ECAMsf8HzB59quqD5sDKL4bbRtNU8CBboxJPJ4eFkEEYi2jV7jBGHdYIvkry4
+        iIC3KVKfNEFw+SsAvchK1wKO5eEtqan7RKy4VqRiVf+va1lbGxgsBTD6SFIyqfb2zSqzWRd4Pv5MW
+        Je6372XNnpg75i9Na62igg8gBTXm5k2Pc+yRbCBOQQW6B3+TSFwuPiBWrmjWZCaqIMUbmy+pKYFFi
+        KMrnFM2Q==;
 Received: from [2001:4bb8:18c:3b3b:a49f:8154:a2b7:8b6c] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsrhV-0003IQ-Rs; Tue, 07 Jul 2020 17:48:14 +0000
+        id 1jsrhc-0003Jn-Pb; Tue, 07 Jul 2020 17:48:21 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -48,9 +48,9 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Iurii Zaikin <yzaikin@google.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 09/23] fs: add a __kernel_read helper
-Date:   Tue,  7 Jul 2020 19:47:47 +0200
-Message-Id: <20200707174801.4162712-10-hch@lst.de>
+Subject: [PATCH 14/23] seq_file: add seq_read_iter
+Date:   Tue,  7 Jul 2020 19:47:52 +0200
+Message-Id: <20200707174801.4162712-15-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200707174801.4162712-1-hch@lst.de>
 References: <20200707174801.4162712-1-hch@lst.de>
@@ -62,61 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the counterpart to __kernel_write, and skip the rw_verify_area
-call compared to kernel_read.
+iov_iter based variant for reading a seq_file.  seq_read is
+reimplemented on top of the iter variant.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/read_write.c    | 23 +++++++++++++++++++++++
- include/linux/fs.h |  1 +
- 2 files changed, 24 insertions(+)
+ fs/seq_file.c            | 45 ++++++++++++++++++++++++++++------------
+ include/linux/seq_file.h |  1 +
+ 2 files changed, 33 insertions(+), 13 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index bd46c959799e97..cc8e0b4f3cd697 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -430,6 +430,29 @@ ssize_t __vfs_read(struct file *file, char __user *buf, size_t count,
- 		return -EINVAL;
- }
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index 4e6239f33c066a..4c00cd222adcdc 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -18,6 +18,7 @@
+ #include <linux/mm.h>
+ #include <linux/printk.h>
+ #include <linux/string_helpers.h>
++#include <linux/uio.h>
  
-+ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
-+{
-+	mm_segment_t old_fs = get_fs();
+ #include <linux/uaccess.h>
+ #include <asm/page.h>
+@@ -146,7 +147,28 @@ static int traverse(struct seq_file *m, loff_t offset)
+  */
+ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ {
+-	struct seq_file *m = file->private_data;
++	struct iovec iov = { .iov_base = buf, .iov_len = size};
++	struct kiocb kiocb;
++	struct iov_iter iter;
 +	ssize_t ret;
 +
-+	if (WARN_ON_ONCE(!(file->f_mode & FMODE_READ)))
-+		return -EINVAL;
-+	if (!(file->f_mode & FMODE_CAN_READ))
-+		return -EINVAL;
++	init_sync_kiocb(&kiocb, file);
++	iov_iter_init(&iter, READ, &iov, 1, size);
 +
-+	if (count > MAX_RW_COUNT)
-+		count =  MAX_RW_COUNT;
-+	set_fs(KERNEL_DS);
-+	ret = __vfs_read(file, (void __user *)buf, count, pos);
-+	set_fs(old_fs);
-+	if (ret > 0) {
-+		fsnotify_access(file);
-+		add_rchar(current, ret);
-+	}
-+	inc_syscr(current);
++	kiocb.ki_pos = *ppos;
++	ret = seq_read_iter(&kiocb, &iter);
++	*ppos = kiocb.ki_pos;
 +	return ret;
 +}
++EXPORT_SYMBOL(seq_read);
 +
- ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
- {
- 	mm_segment_t old_fs;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3f881a892ea746..22cbe7b2e91994 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3033,6 +3033,7 @@ extern int kernel_read_file_from_path_initns(const char *, void **, loff_t *, lo
- extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
- 				    enum kernel_read_file_id);
- extern ssize_t kernel_read(struct file *, void *, size_t, loff_t *);
-+ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos);
- extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
- extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
- extern struct file * open_exec(const char *);
++/*
++ * Ready-made ->f_op->read_iter()
++ */
++ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct seq_file *m = iocb->ki_filp->private_data;
++	size_t size = iov_iter_count(iter);
+ 	size_t copied = 0;
+ 	size_t n;
+ 	void *p;
+@@ -158,14 +180,14 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	 * if request is to read from zero offset, reset iterator to first
+ 	 * record as it might have been already advanced by previous requests
+ 	 */
+-	if (*ppos == 0) {
++	if (iocb->ki_pos == 0) {
+ 		m->index = 0;
+ 		m->count = 0;
+ 	}
+ 
+-	/* Don't assume *ppos is where we left it */
+-	if (unlikely(*ppos != m->read_pos)) {
+-		while ((err = traverse(m, *ppos)) == -EAGAIN)
++	/* Don't assume ki_pos is where we left it */
++	if (unlikely(iocb->ki_pos != m->read_pos)) {
++		while ((err = traverse(m, iocb->ki_pos)) == -EAGAIN)
+ 			;
+ 		if (err) {
+ 			/* With prejudice... */
+@@ -174,7 +196,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 			m->count = 0;
+ 			goto Done;
+ 		} else {
+-			m->read_pos = *ppos;
++			m->read_pos = iocb->ki_pos;
+ 		}
+ 	}
+ 
+@@ -187,13 +209,11 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	/* if not empty - flush it first */
+ 	if (m->count) {
+ 		n = min(m->count, size);
+-		err = copy_to_user(buf, m->buf + m->from, n);
+-		if (err)
++		if (copy_to_iter(m->buf + m->from, n, iter) != n)
+ 			goto Efault;
+ 		m->count -= n;
+ 		m->from += n;
+ 		size -= n;
+-		buf += n;
+ 		copied += n;
+ 		if (!size)
+ 			goto Done;
+@@ -254,8 +274,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	}
+ 	m->op->stop(m, p);
+ 	n = min(m->count, size);
+-	err = copy_to_user(buf, m->buf, n);
+-	if (err)
++	if (copy_to_iter(m->buf, n, iter) != n)
+ 		goto Efault;
+ 	copied += n;
+ 	m->count -= n;
+@@ -264,7 +283,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	if (!copied)
+ 		copied = err;
+ 	else {
+-		*ppos += copied;
++		iocb->ki_pos += copied;
+ 		m->read_pos += copied;
+ 	}
+ 	mutex_unlock(&m->lock);
+@@ -276,7 +295,7 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	err = -EFAULT;
+ 	goto Done;
+ }
+-EXPORT_SYMBOL(seq_read);
++EXPORT_SYMBOL(seq_read_iter);
+ 
+ /**
+  *	seq_lseek -	->llseek() method for sequential files.
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 813614d4b71fbc..b83b3ae3c877f3 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -107,6 +107,7 @@ void seq_pad(struct seq_file *m, char c);
+ char *mangle_path(char *s, const char *p, const char *esc);
+ int seq_open(struct file *, const struct seq_operations *);
+ ssize_t seq_read(struct file *, char __user *, size_t, loff_t *);
++ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter);
+ loff_t seq_lseek(struct file *, loff_t, int);
+ int seq_release(struct inode *, struct file *);
+ int seq_write(struct seq_file *seq, const void *data, size_t len);
 -- 
 2.26.2
 
