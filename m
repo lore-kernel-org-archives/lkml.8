@@ -2,236 +2,256 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D409C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA8B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C6920758
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGGLk7 (ORCPT
+        id S1728315AbgGGLlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:40:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:42870 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgGGLk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:40:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A658F1FB;
-        Tue,  7 Jul 2020 04:40:57 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57B1B3F71E;
-        Tue,  7 Jul 2020 04:40:56 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 12:40:50 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     tjoseph@cadence.com, robh@kernel.org, bhelgaas@google.com,
-        thierry.reding@gmail.com, toan@os.amperecomputing.com,
-        ley.foon.tan@intel.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: controller: convert to
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200707114050.GA15666@e121166-lin.cambridge.arm.com>
-References: <20200602171601.17630-1-zhengdejin5@gmail.com>
- <20200707113117.GA15536@e121166-lin.cambridge.arm.com>
+        Tue, 7 Jul 2020 07:41:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37729 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGLlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:41:08 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jslyC-0003t7-Fn; Tue, 07 Jul 2020 11:41:04 +0000
+Date:   Tue, 7 Jul 2020 13:41:03 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] net/scm: Regularize compat handling of
+ scm_detach_fds()
+Message-ID: <20200707114103.lkfbt3kdtturp42z@wittgenstein>
+References: <20200706201720.3482959-1-keescook@chromium.org>
+ <20200706201720.3482959-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200707113117.GA15536@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200706201720.3482959-2-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:31:17PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Jun 03, 2020 at 01:16:01AM +0800, Dejin Zheng wrote:
-> > Use devm_platform_ioremap_resource_byname() to simplify codes.
-> > it contains platform_get_resource_byname() and devm_ioremap_resource().
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> > v1 -> v2:
-> > 	- Discard changes to the file drivers/pci/controller/pcie-xilinx-nwl.c
-> > 	  Due to my mistakes, my patch will modify pcie-xilinx-nwl.c,
-> > 	  but it still need to use the res variable, but
-> > 	  devm_platform_ioremap_resource_byname() funtion can't assign a
-> > 	  value to the variable res. kbuild test robot report it. Thanks
-> > 	  very much for kbuild test robot <lkp@intel.com>.
-> > 
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 3 +--
-> >  drivers/pci/controller/cadence/pcie-cadence-host.c | 3 +--
-> >  drivers/pci/controller/pci-tegra.c                 | 8 +++-----
-> >  drivers/pci/controller/pci-xgene.c                 | 3 +--
-> >  drivers/pci/controller/pcie-altera-msi.c           | 3 +--
-> >  drivers/pci/controller/pcie-altera.c               | 9 +++------
-> >  drivers/pci/controller/pcie-mediatek.c             | 4 +---
-> >  drivers/pci/controller/pcie-rockchip.c             | 5 ++---
-> >  8 files changed, 13 insertions(+), 25 deletions(-)
+On Mon, Jul 06, 2020 at 01:17:14PM -0700, Kees Cook wrote:
+> Duplicate the cleanups from commit 2618d530dd8b ("net/scm: cleanup
+> scm_detach_fds") into the compat code.
 > 
-> Applied to pci/dwc with Rob and Gustavo's tags (next time please
-> carry them over and send v2 in-reply-to v1 so that I can follow
-> it), thanks.
-
-Moved to pci/misc since it is not really dwc related, apologies.
-
-Lorenzo
-
-> Lorenzo
+> Move the check added in commit 1f466e1f15cf ("net: cleanly handle kernel
+> vs user buffers for ->msg_control") to before the compat call, even
+> though it should be impossible for an in-kernel call to also be compat.
 > 
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > index 1c15c8352125..74ffa03fde5f 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -408,8 +408,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> >  
-> >  	pcie->is_rc = false;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
-> >  	if (IS_ERR(pcie->reg_base)) {
-> >  		dev_err(dev, "missing \"reg\"\n");
-> >  		return PTR_ERR(pcie->reg_base);
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > index 8c2543f28ba0..dcc460a54875 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > @@ -225,8 +225,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> >  	rc->device_id = 0xffff;
-> >  	of_property_read_u32(np, "device-id", &rc->device_id);
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
-> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
-> >  	if (IS_ERR(pcie->reg_base)) {
-> >  		dev_err(dev, "missing \"reg\"\n");
-> >  		return PTR_ERR(pcie->reg_base);
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index e3e917243e10..3e608383df66 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -1462,7 +1462,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
-> >  {
-> >  	struct device *dev = pcie->dev;
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> > -	struct resource *pads, *afi, *res;
-> > +	struct resource *res;
-> >  	const struct tegra_pcie_soc *soc = pcie->soc;
-> >  	int err;
-> >  
-> > @@ -1486,15 +1486,13 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
-> >  		}
-> >  	}
-> >  
-> > -	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
-> > -	pcie->pads = devm_ioremap_resource(dev, pads);
-> > +	pcie->pads = devm_platform_ioremap_resource_byname(pdev, "pads");
-> >  	if (IS_ERR(pcie->pads)) {
-> >  		err = PTR_ERR(pcie->pads);
-> >  		goto phys_put;
-> >  	}
-> >  
-> > -	afi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "afi");
-> > -	pcie->afi = devm_ioremap_resource(dev, afi);
-> > +	pcie->afi = devm_platform_ioremap_resource_byname(pdev, "afi");
-> >  	if (IS_ERR(pcie->afi)) {
-> >  		err = PTR_ERR(pcie->afi);
-> >  		goto phys_put;
-> > diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-> > index d1efa8ffbae1..1431a18eb02c 100644
-> > --- a/drivers/pci/controller/pci-xgene.c
-> > +++ b/drivers/pci/controller/pci-xgene.c
-> > @@ -355,8 +355,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
-> >  	if (IS_ERR(port->csr_base))
-> >  		return PTR_ERR(port->csr_base);
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> > -	port->cfg_base = devm_ioremap_resource(dev, res);
-> > +	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
-> >  	if (IS_ERR(port->cfg_base))
-> >  		return PTR_ERR(port->cfg_base);
-> >  	port->cfg_addr = res->start;
-> > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> > index 16d938920ca5..613e19af71bd 100644
-> > --- a/drivers/pci/controller/pcie-altera-msi.c
-> > +++ b/drivers/pci/controller/pcie-altera-msi.c
-> > @@ -228,8 +228,7 @@ static int altera_msi_probe(struct platform_device *pdev)
-> >  	mutex_init(&msi->lock);
-> >  	msi->pdev = pdev;
-> >  
-> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
-> > -	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
-> > +	msi->csr_base = devm_platform_ioremap_resource_byname(pdev, "csr");
-> >  	if (IS_ERR(msi->csr_base)) {
-> >  		dev_err(&pdev->dev, "failed to map csr memory\n");
-> >  		return PTR_ERR(msi->csr_base);
-> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> > index 24cb1c331058..7200e40ffa26 100644
-> > --- a/drivers/pci/controller/pcie-altera.c
-> > +++ b/drivers/pci/controller/pcie-altera.c
-> > @@ -696,17 +696,14 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
-> >  {
-> >  	struct device *dev = &pcie->pdev->dev;
-> >  	struct platform_device *pdev = pcie->pdev;
-> > -	struct resource *cra;
-> > -	struct resource *hip;
-> >  
-> > -	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
-> > -	pcie->cra_base = devm_ioremap_resource(dev, cra);
-> > +	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
-> >  	if (IS_ERR(pcie->cra_base))
-> >  		return PTR_ERR(pcie->cra_base);
-> >  
-> >  	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
-> > -		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
-> > -		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
-> > +		pcie->hip_base =
-> > +			devm_platform_ioremap_resource_byname(pdev, "Hip");
-> >  		if (IS_ERR(pcie->hip_base))
-> >  			return PTR_ERR(pcie->hip_base);
-> >  	}
-> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > index ebfa7d5a4e2d..d8e38276dbe3 100644
-> > --- a/drivers/pci/controller/pcie-mediatek.c
-> > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > @@ -905,7 +905,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
-> >  			       int slot)
-> >  {
-> >  	struct mtk_pcie_port *port;
-> > -	struct resource *regs;
-> >  	struct device *dev = pcie->dev;
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> >  	char name[10];
-> > @@ -916,8 +915,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
-> >  		return -ENOMEM;
-> >  
-> >  	snprintf(name, sizeof(name), "port%d", slot);
-> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-> > -	port->base = devm_ioremap_resource(dev, regs);
-> > +	port->base = devm_platform_ioremap_resource_byname(pdev, name);
-> >  	if (IS_ERR(port->base)) {
-> >  		dev_err(dev, "failed to map port%d base\n", slot);
-> >  		return PTR_ERR(port->base);
-> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> > index c53d1322a3d6..904dec0d3a88 100644
-> > --- a/drivers/pci/controller/pcie-rockchip.c
-> > +++ b/drivers/pci/controller/pcie-rockchip.c
-> > @@ -45,9 +45,8 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > -					    "apb-base");
-> > -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
-> > +	rockchip->apb_base =
-> > +		devm_platform_ioremap_resource_byname(pdev, "apb-base");
-> >  	if (IS_ERR(rockchip->apb_base))
-> >  		return PTR_ERR(rockchip->apb_base);
-> >  
-> > -- 
-> > 2.25.0
-> > 
+> Correct the int "flags" argument to unsigned int to match fd_install()
+> and similar APIs.
+> 
+> Regularize any remaining differences, including a whitespace issue,
+> a checkpatch warning, and add the check from commit 6900317f5eff ("net,
+> scm: fix PaX detected msg_controllen overflow in scm_detach_fds") which
+> fixed an overflow unique to 64-bit. To avoid confusion when comparing
+> the compat handler to the native handler, just include the same check
+> in the compat handler.
+> 
+> Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+
+Thanks. Just a comment below.
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+>  include/net/scm.h |  1 +
+>  net/compat.c      | 55 +++++++++++++++++++++--------------------------
+>  net/core/scm.c    | 18 ++++++++--------
+>  3 files changed, 35 insertions(+), 39 deletions(-)
+> 
+> diff --git a/include/net/scm.h b/include/net/scm.h
+> index 1ce365f4c256..581a94d6c613 100644
+> --- a/include/net/scm.h
+> +++ b/include/net/scm.h
+> @@ -37,6 +37,7 @@ struct scm_cookie {
+>  #endif
+>  };
+>  
+> +int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags);
+>  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm);
+>  void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm);
+>  int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *scm);
+> diff --git a/net/compat.c b/net/compat.c
+> index 5e3041a2c37d..27d477fdcaa0 100644
+> --- a/net/compat.c
+> +++ b/net/compat.c
+> @@ -281,39 +281,31 @@ int put_cmsg_compat(struct msghdr *kmsg, int level, int type, int len, void *dat
+>  	return 0;
+>  }
+>  
+> -void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
+> +static int scm_max_fds_compat(struct msghdr *msg)
+>  {
+> -	struct compat_cmsghdr __user *cm = (struct compat_cmsghdr __user *) kmsg->msg_control;
+> -	int fdmax = (kmsg->msg_controllen - sizeof(struct compat_cmsghdr)) / sizeof(int);
+> -	int fdnum = scm->fp->count;
+> -	struct file **fp = scm->fp->fp;
+> -	int __user *cmfptr;
+> -	int err = 0, i;
+> +	if (msg->msg_controllen <= sizeof(struct compat_cmsghdr))
+> +		return 0;
+> +	return (msg->msg_controllen - sizeof(struct compat_cmsghdr)) / sizeof(int);
+> +}
+>  
+> -	if (fdnum < fdmax)
+> -		fdmax = fdnum;
+> +void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
+> +{
+> +	struct compat_cmsghdr __user *cm =
+> +		(struct compat_cmsghdr __user *)msg->msg_control;
+> +	unsigned int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
+> +	int fdmax = min_t(int, scm_max_fds_compat(msg), scm->fp->count);
+
+Just a note that SCM_RIGHTS fd-sending is limited to 253 (SCM_MAX_FD)
+fds so min_t should never ouput > SCM_MAX_FD here afaict.
+
+> +	int __user *cmsg_data = CMSG_USER_DATA(cm);
+> +	int err = 0, i;
+>  
+> -	for (i = 0, cmfptr = (int __user *) CMSG_COMPAT_DATA(cm); i < fdmax; i++, cmfptr++) {
+> -		int new_fd;
+> -		err = security_file_receive(fp[i]);
+> +	for (i = 0; i < fdmax; i++) {
+> +		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
+>  		if (err)
+>  			break;
+> -		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & kmsg->msg_flags
+> -					  ? O_CLOEXEC : 0);
+> -		if (err < 0)
+> -			break;
+> -		new_fd = err;
+> -		err = put_user(new_fd, cmfptr);
+> -		if (err) {
+> -			put_unused_fd(new_fd);
+> -			break;
+> -		}
+> -		/* Bump the usage count and install the file. */
+> -		fd_install(new_fd, get_file(fp[i]));
+>  	}
+>  
+>  	if (i > 0) {
+>  		int cmlen = CMSG_COMPAT_LEN(i * sizeof(int));
+> +
+>  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
+>  		if (!err)
+>  			err = put_user(SCM_RIGHTS, &cm->cmsg_type);
+> @@ -321,16 +313,19 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
+>  			err = put_user(cmlen, &cm->cmsg_len);
+>  		if (!err) {
+>  			cmlen = CMSG_COMPAT_SPACE(i * sizeof(int));
+> -			kmsg->msg_control += cmlen;
+> -			kmsg->msg_controllen -= cmlen;
+> +			if (msg->msg_controllen < cmlen)
+> +				cmlen = msg->msg_controllen;
+> +			msg->msg_control += cmlen;
+> +			msg->msg_controllen -= cmlen;
+>  		}
+>  	}
+> -	if (i < fdnum)
+> -		kmsg->msg_flags |= MSG_CTRUNC;
+> +
+> +	if (i < scm->fp->count || (scm->fp->count && fdmax <= 0))
+
+I think fdmax can't be < 0 after your changes? scm_max_fds() guarantees
+that fdmax is always >= 0 and min_t() guarantees that fdmax <= scm->fp->count.
+So the check should technically be :)
+
+if (i < scm->fp->count || scm->fp->count && fdmax == 0)
+
+> +		msg->msg_flags |= MSG_CTRUNC;
+>  
+>  	/*
+> -	 * All of the files that fit in the message have had their
+> -	 * usage counts incremented, so we just free the list.
+> +	 * All of the files that fit in the message have had their usage counts
+> +	 * incremented, so we just free the list.
+>  	 */
+>  	__scm_destroy(scm);
+>  }
+> diff --git a/net/core/scm.c b/net/core/scm.c
+> index 875df1c2989d..6151678c73ed 100644
+> --- a/net/core/scm.c
+> +++ b/net/core/scm.c
+> @@ -280,7 +280,7 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
+>  }
+>  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
+>  
+> -static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
+> +int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags)
+>  {
+>  	struct socket *sock;
+>  	int new_fd;
+> @@ -319,29 +319,29 @@ static int scm_max_fds(struct msghdr *msg)
+>  
+>  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+>  {
+> -	struct cmsghdr __user *cm
+> -		= (__force struct cmsghdr __user*)msg->msg_control;
+> -	int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
+> +	struct cmsghdr __user *cm =
+> +		(__force struct cmsghdr __user *)msg->msg_control;
+> +	unsigned int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
+>  	int fdmax = min_t(int, scm_max_fds(msg), scm->fp->count);
+>  	int __user *cmsg_data = CMSG_USER_DATA(cm);
+>  	int err = 0, i;
+>  
+> +	/* no use for FD passing from kernel space callers */
+> +	if (WARN_ON_ONCE(!msg->msg_control_is_user))
+> +		return;
+> +
+>  	if (msg->msg_flags & MSG_CMSG_COMPAT) {
+>  		scm_detach_fds_compat(msg, scm);
+>  		return;
+>  	}
+>  
+> -	/* no use for FD passing from kernel space callers */
+> -	if (WARN_ON_ONCE(!msg->msg_control_is_user))
+> -		return;
+> -
+>  	for (i = 0; i < fdmax; i++) {
+>  		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
+>  		if (err)
+>  			break;
+>  	}
+>  
+> -	if (i > 0)  {
+> +	if (i > 0) {
+>  		int cmlen = CMSG_LEN(i * sizeof(int));
+>  
+>  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
+> -- 
+> 2.25.1
+> 
