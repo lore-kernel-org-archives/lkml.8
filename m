@@ -2,349 +2,166 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D073FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4043C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D65206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54B7206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594121812;
+	bh=0NyNP3p9AO30DGaSQbT8qjnRElflhinNpFwpYZSO7z4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=brreN/6UTMVRQFOOoeyZ1giy4jU1LiFomGcuHdojfqJHNPwnrPuYGOW4XTUokQqgi
+	 zp138KgRVQtEYJoz6xE3693gh5IbNzH0yNBVQ1B5UgeZfAIwQpUyFhKHI7tJlksuQx
+	 qwG6S9smmQkoCJgNpb+e0V6VuBPDPze4EoBNA6gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgGGLgr (ORCPT
+        id S1728249AbgGGLgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:36:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:42538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgGGLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:36:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 353A41FB;
-        Tue,  7 Jul 2020 04:36:46 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 889143F71E;
-        Tue,  7 Jul 2020 04:36:44 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] drm/msm: Add support to create a local pagetable
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org
-References: <20200626200414.14382-1-jcrouse@codeaurora.org>
- <20200626200414.14382-5-jcrouse@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3feed674-5eb9-ca2f-76a7-f888f431c409@arm.com>
-Date:   Tue, 7 Jul 2020 12:36:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 07:36:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38194 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726745AbgGGLgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:36:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z13so44786373wrw.5;
+        Tue, 07 Jul 2020 04:36:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g8eYN4DcaE4cWGmQIJYjXftOZqfTHMZ6RPDgEcxyfN4=;
+        b=PSmZYdUmOKsnB+kTyNp3fcu5M5IJjcno0zdBVaWtiVcZQn8zL2CuqWCxo7LtPHPypi
+         CRtT3+OTskT4e/1jg0V9GwNeq/GA0Zscpoy2jEafT+0YjrZ9clIzbHxLBJbaSw/TKCpU
+         iPBYre8Fak3sfoCwjhhQhI/N4qvBTuWIOpVj4slroCaJg0x+vrG9HP4//hSs415I+sFj
+         tuc/p23AueHA4hiPabVamlXSfY6oqui392yD6BHgVQc2SeRMKVOvyQXIKNJr6PEslmwW
+         yiOuhNSoleJ/zdL/UFpjMI7w5Mor84GUCNGzYSjk7+TwGt81SaCpPj3WZHRPLjh2St9Q
+         oXfQ==
+X-Gm-Message-State: AOAM533fnS/3GheMtzw6p0kWg697ayYcO3eefo/Im6hsdfa/nH6MmWYY
+        JO9iAzWq6Pr25h6fl4FnJeA=
+X-Google-Smtp-Source: ABdhPJwKCEvXtM2zZL2ji1JGazyFrHq5dOKCyuwKbPn7zy2n+xmnz/++1EwOm1VFpfZBrfngSrd0cw==
+X-Received: by 2002:a5d:4991:: with SMTP id r17mr25847697wrq.1.1594121808402;
+        Tue, 07 Jul 2020 04:36:48 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id v24sm764491wrd.92.2020.07.07.04.36.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 04:36:47 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 13:36:45 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v3] phy: samsung: Use readl_poll_timeout function
+Message-ID: <20200707113645.GA27280@kozik-lap>
+References: <20200707095908.372-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200626200414.14382-5-jcrouse@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200707095908.372-1-linux.amoon@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-26 21:04, Jordan Crouse wrote:
-> Add support to create a io-pgtable for use by targets that support
-> per-instance pagetables.  In order to support per-instance pagetables the
-> GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
-> split pagetables and auxiliary domains need to be supported and enabled.
+On Tue, Jul 07, 2020 at 09:59:08AM +0000, Anand Moon wrote:
+> Instead of a busy waiting loop while loop using udelay
+
+You doubled "loop".
+
+> use readl_poll_timeout function to check the condition
+> is met or timeout occurs in crport_handshake function.
+
+Still you did not mention that you convert the function to use sleeping
+primitive.  You also did not mention whether it is actually allowed in
+this context and I am not sure if you investigated it.
+
+Best regards,
+Krzysztof
+
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
+> Changes v3:
+> --Fix the commit message.
+> --Drop the variable, used the value directly.
+> Changes v2:
+> --used the default timeout values.
+> --Added missing Fixed tags.
+> ---
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 35 +++++++-----------------
+>  1 file changed, 10 insertions(+), 25 deletions(-)
 > 
->   drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
->   drivers/gpu/drm/msm/msm_iommu.c  | 180 ++++++++++++++++++++++++++++++-
->   drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
->   3 files changed, 195 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-> index 310a31b05faa..aab121f4beb7 100644
-> --- a/drivers/gpu/drm/msm/msm_gpummu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
-> @@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
->   	}
->   
->   	gpummu->gpu = gpu;
-> -	msm_mmu_init(&gpummu->base, dev, &funcs);
-> +	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
->   
->   	return &gpummu->base;
->   }
-> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> index 1b6635504069..f455c597f76d 100644
-> --- a/drivers/gpu/drm/msm/msm_iommu.c
-> +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> @@ -4,15 +4,192 @@
->    * Author: Rob Clark <robdclark@gmail.com>
->    */
->   
-> +#include <linux/io-pgtable.h>
->   #include "msm_drv.h"
->   #include "msm_mmu.h"
->   
->   struct msm_iommu {
->   	struct msm_mmu base;
->   	struct iommu_domain *domain;
-> +	struct iommu_domain *aux_domain;
->   };
-> +
->   #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
->   
-> +struct msm_iommu_pagetable {
-> +	struct msm_mmu base;
-> +	struct msm_mmu *parent;
-> +	struct io_pgtable_ops *pgtbl_ops;
-> +	phys_addr_t ttbr;
-> +	u32 asid;
-> +};
-> +
-> +static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
-> +{
-> +	return container_of(mmu, struct msm_iommu_pagetable, base);
-> +}
-> +
-> +static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
-> +		size_t size)
-> +{
-> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> +	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-> +	size_t unmapped = 0;
-> +
-> +	/* Unmap the block one page at a time */
-> +	while (size) {
-> +		unmapped += ops->unmap(ops, iova, 4096, NULL);
-> +		iova += 4096;
-> +		size -= 4096;
-> +	}
-> +
-> +	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
-> +
-> +	return (unmapped == size) ? 0 : -EINVAL;
-> +}
-
-Remember in patch #1 when you said "Then 'domain' can be used like any 
-other iommu domain to map and unmap iova addresses in the pagetable."?
-
-This appears to be very much not that :/
-
-Robin.
-
-> +
-> +static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
-> +		struct sg_table *sgt, size_t len, int prot)
-> +{
-> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> +	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-> +	struct scatterlist *sg;
-> +	size_t mapped = 0;
-> +	u64 addr = iova;
-> +	unsigned int i;
-> +
-> +	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-> +		size_t size = sg->length;
-> +		phys_addr_t phys = sg_phys(sg);
-> +
-> +		/* Map the block one page at a time */
-> +		while (size) {
-> +			if (ops->map(ops, addr, phys, 4096, prot)) {
-> +				msm_iommu_pagetable_unmap(mmu, iova, mapped);
-> +				return -EINVAL;
-> +			}
-> +
-> +			phys += 4096;
-> +			addr += 4096;
-> +			size -= 4096;
-> +			mapped += 4096;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
-> +{
-> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> +
-> +	free_io_pgtable_ops(pagetable->pgtbl_ops);
-> +	kfree(pagetable);
-> +}
-> +
-> +/*
-> + * Given a parent device, create and return an aux domain. This will enable the
-> + * TTBR0 region
-> + */
-> +static struct iommu_domain *msm_iommu_get_aux_domain(struct msm_mmu *parent)
-> +{
-> +	struct msm_iommu *iommu = to_msm_iommu(parent);
-> +	struct iommu_domain *domain;
-> +	int ret;
-> +
-> +	if (iommu->aux_domain)
-> +		return iommu->aux_domain;
-> +
-> +	if (!iommu_dev_has_feature(parent->dev, IOMMU_DEV_FEAT_AUX))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	domain = iommu_domain_alloc(&platform_bus_type);
-> +	if (!domain)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	ret = iommu_aux_attach_device(domain, parent->dev);
-> +	if (ret) {
-> +		iommu_domain_free(domain);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	iommu->aux_domain = domain;
-> +	return domain;
-> +}
-> +
-> +int msm_iommu_pagetable_params(struct msm_mmu *mmu,
-> +		phys_addr_t *ttbr, int *asid)
-> +{
-> +	struct msm_iommu_pagetable *pagetable;
-> +
-> +	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
-> +		return -EINVAL;
-> +
-> +	pagetable = to_pagetable(mmu);
-> +
-> +	if (ttbr)
-> +		*ttbr = pagetable->ttbr;
-> +
-> +	if (asid)
-> +		*asid = pagetable->asid;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct msm_mmu_funcs pagetable_funcs = {
-> +		.map = msm_iommu_pagetable_map,
-> +		.unmap = msm_iommu_pagetable_unmap,
-> +		.destroy = msm_iommu_pagetable_destroy,
-> +};
-> +
-> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
-> +{
-> +	static int next_asid = 16;
-> +	struct msm_iommu_pagetable *pagetable;
-> +	struct iommu_domain *aux_domain;
-> +	struct io_pgtable_cfg cfg;
-> +	int ret;
-> +
-> +	/* Make sure that the parent has a aux domain attached */
-> +	aux_domain = msm_iommu_get_aux_domain(parent);
-> +	if (IS_ERR(aux_domain))
-> +		return ERR_CAST(aux_domain);
-> +
-> +	/* Get the pagetable configuration from the aux domain */
-> +	ret = iommu_domain_get_attr(aux_domain, DOMAIN_ATTR_PGTABLE_CFG, &cfg);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
-> +	if (!pagetable)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
-> +		MSM_MMU_IOMMU_PAGETABLE);
-> +
-> +	cfg.tlb = NULL;
-> +
-> +	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
-> +		&cfg, aux_domain);
-> +
-> +	if (!pagetable->pgtbl_ops) {
-> +		kfree(pagetable);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +
-> +	/* Needed later for TLB flush */
-> +	pagetable->parent = parent;
-> +	pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
-> +
-> +	pagetable->asid = next_asid;
-> +	next_asid = (next_asid + 1)  % 255;
-> +	if (next_asid < 16)
-> +		next_asid = 16;
-> +
-> +	return &pagetable->base;
-> +}
-> +
->   static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
->   		unsigned long iova, int flags, void *arg)
->   {
-> @@ -40,6 +217,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
->   	if (iova & BIT_ULL(48))
->   		iova |= GENMASK_ULL(63, 49);
->   
-> +
->   	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
->   	WARN_ON(!ret);
->   
-> @@ -85,7 +263,7 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
->   		return ERR_PTR(-ENOMEM);
->   
->   	iommu->domain = domain;
-> -	msm_mmu_init(&iommu->base, dev, &funcs);
-> +	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
->   	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
->   
->   	ret = iommu_attach_device(iommu->domain, dev);
-> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-> index 3a534ee59bf6..61ade89d9e48 100644
-> --- a/drivers/gpu/drm/msm/msm_mmu.h
-> +++ b/drivers/gpu/drm/msm/msm_mmu.h
-> @@ -17,18 +17,26 @@ struct msm_mmu_funcs {
->   	void (*destroy)(struct msm_mmu *mmu);
->   };
->   
-> +enum msm_mmu_type {
-> +	MSM_MMU_GPUMMU,
-> +	MSM_MMU_IOMMU,
-> +	MSM_MMU_IOMMU_PAGETABLE,
-> +};
-> +
->   struct msm_mmu {
->   	const struct msm_mmu_funcs *funcs;
->   	struct device *dev;
->   	int (*handler)(void *arg, unsigned long iova, int flags);
->   	void *arg;
-> +	enum msm_mmu_type type;
->   };
->   
->   static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
-> -		const struct msm_mmu_funcs *funcs)
-> +		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
->   {
->   	mmu->dev = dev;
->   	mmu->funcs = funcs;
-> +	mmu->type = type;
->   }
->   
->   struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
-> @@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
->   	mmu->handler = handler;
->   }
->   
-> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
-> +
->   void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
->   		dma_addr_t *tran_error);
->   
-> +
-> +int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
-> +		int *asid);
-> +
->   #endif /* __MSM_MMU_H__ */
+> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> index e510732afb8b..fa75fa88da33 100644
+> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mutex.h>
+> @@ -556,40 +557,24 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+>  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+>  			    u32 val, u32 cmd)
+>  {
+> -	u32 usec = 100;
+>  	unsigned int result;
+> +	int err;
+>  
+>  	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>  
+> -	do {
+> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+> -		if (result & PHYREG1_CR_ACK)
+> -			break;
+> -
+> -		udelay(1);
+> -	} while (usec-- > 0);
+> -
+> -	if (!usec) {
+> -		dev_err(phy_drd->dev,
+> -			"CRPORT handshake timeout1 (0x%08x)\n", val);
+> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
+> +			result,	(result & PHYREG1_CR_ACK), 1, 100);
+> +	if (err) {
+> +		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
+>  		return -ETIME;
+>  	}
+>  
+> -	usec = 100;
+> -
+>  	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>  
+> -	do {
+> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+> -		if (!(result & PHYREG1_CR_ACK))
+> -			break;
+> -
+> -		udelay(1);
+> -	} while (usec-- > 0);
+> -
+> -	if (!usec) {
+> -		dev_err(phy_drd->dev,
+> -			"CRPORT handshake timeout2 (0x%08x)\n", val);
+> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
+> +			result,	!(result & PHYREG1_CR_ACK), 1, 100);
+> +	if (err) {
+> +		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
+>  		return -ETIME;
+>  	}
+>  
+> -- 
+> 2.27.0
 > 
