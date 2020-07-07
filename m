@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16787C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC93C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E26DA206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A5D20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135326;
-	bh=tsP8O2XrM6avr/0AZZLaqustfwT7bO1HRrcl6qYXHwE=;
+	s=default; t=1594135331;
+	bh=8AF14UblYs3ptHNxNzaQdjEKUMpZrRcDcrOJjLDL8Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfl39ad+gnj9XbMJ2L9mDX17BeYSm1yqg4m3HnotZKNSi2ouHJKNLkLvLWC8m1AGN
-	 jhZaF8Gi2RRMhfVHDPIqBCqYuX31jjqpTA+prcN3m5oNssCesLChnNpjVXJwUrsgEp
-	 WzToBtYa6kO2qa9/JLH3dvgSFSHW2vrNlcNPDuJk=
+	b=LnG/GZ+w6YmWYpfhxhfhoTI6o3Co/BFsQKJHIuECzjNPfOr7uvamXlzFvgGhjY4mc
+	 x7SLJTVhO7V4pmf1CowqwdB1HCPZFA99f0LzqiEVvkFDga/weE4zh8rS0V7T/CdHVN
+	 BCPbrYmkMzcgk2DkHzPoTVydridU/MRnER10+Tzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgGGPWF (ORCPT
+        id S1729201AbgGGPWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34310 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgGGPWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:00 -0400
+        id S1729788AbgGGPWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4636C2065D;
-        Tue,  7 Jul 2020 15:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B655E20663;
+        Tue,  7 Jul 2020 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135319;
-        bh=tsP8O2XrM6avr/0AZZLaqustfwT7bO1HRrcl6qYXHwE=;
+        s=default; t=1594135322;
+        bh=8AF14UblYs3ptHNxNzaQdjEKUMpZrRcDcrOJjLDL8Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LinlGXMjS6ApCfhG8GVlCWYcP+sApGQF1RkRoxtR+iVDir9MIVtSQT1ZyRs/zXRAB
-         U6Uv16yaOXPKcG47ex3LijB86XW7/uYQtA/JtboMXnSoJ1PRBcWeRWmbwXtwfNIzUK
-         KlMVrI/hHmkb+ySnz4z4LNoZAXyjssHP6WXnk220=
+        b=fVBmU6435HkOiWF0yN652aHaKNZ4cpLVYSVSOXODCVpEEGYvf7W4FtN4gNux3gLnu
+         PsYYgS054QUEm/9rZ7paN9aaHD4t1fg2aPwiY/gKH1YLzKzstcBD8QL8hPJ710htiC
+         o/Nxtb194wjPMbOEWrKKKSnaIT/IyuFFd1krjsm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 5.4 59/65] dma-buf: Move dma_buf_release() from fops to dentry_ops
-Date:   Tue,  7 Jul 2020 17:17:38 +0200
-Message-Id: <20200707145755.318431154@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.4 60/65] irqchip/gic: Atomically update affinity
+Date:   Tue,  7 Jul 2020 17:17:39 +0200
+Message-Id: <20200707145755.366625112@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -62,135 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Semwal <sumit.semwal@linaro.org>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 4ab59c3c638c6c8952bf07739805d20eb6358a4d upstream.
+commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
 
-Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
-happens if the dma_buf_release() is called while the userspace is
-accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
-and dma_buf_release() releases the dmabuf object when the last reference
-to the struct file goes away.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-I discussed with Arnd Bergmann, and he suggested that rather than tying
-the dma_buf_release() to the file_operations' release(), we can tie it to
-the dentry_operations' d_release(), which will be called when the last ref
-to the dentry is removed.
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
 
-The path exercised by __fput() calls f_op->release() first, and then calls
-dput, which eventually calls d_op->d_release().
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
 
-In the 'normal' case, when no userspace access is happening via dma_buf
-pseudo fs, there should be exactly one fd, file, dentry and inode, so
-closing the fd will kill of everything right away.
+Drop the terminally broken code and replace it by a byte write.
 
-In the presented case, the dentry's d_release() will be called only when
-the dentry's last ref is released.
-
-Therefore, lets move dma_buf_release() from fops->release() to
-d_ops->d_release()
-
-Many thanks to Arnd for his FS insights :)
-
-[1]: https://lore.kernel.org/patchwork/patch/1238278/
-
-Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
-Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org> [5.3+]
-Cc: Arnd Bergmann <arnd@arndb.de>
-Reported-by: Charan Teja Reddy <charante@codeaurora.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-Tested-by: Charan Teja Reddy <charante@codeaurora.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200611114418.19852-1-sumit.semwal@linaro.org
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/dma-buf.c |   54 +++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 29 deletions(-)
+ drivers/irqchip/irq-gic.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -54,37 +54,11 @@ static char *dmabuffs_dname(struct dentr
- 			     dentry->d_name.name, ret > 0 ? name : "");
- }
- 
--static const struct dentry_operations dma_buf_dentry_ops = {
--	.d_dname = dmabuffs_dname,
--};
--
--static struct vfsmount *dma_buf_mnt;
--
--static int dma_buf_fs_init_context(struct fs_context *fc)
--{
--	struct pseudo_fs_context *ctx;
--
--	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
--	if (!ctx)
--		return -ENOMEM;
--	ctx->dops = &dma_buf_dentry_ops;
--	return 0;
--}
--
--static struct file_system_type dma_buf_fs_type = {
--	.name = "dmabuf",
--	.init_fs_context = dma_buf_fs_init_context,
--	.kill_sb = kill_anon_super,
--};
--
--static int dma_buf_release(struct inode *inode, struct file *file)
-+static void dma_buf_release(struct dentry *dentry)
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(str
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
  {
- 	struct dma_buf *dmabuf;
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
  
--	if (!is_dma_buf_file(file))
--		return -EINVAL;
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_d
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
 -
--	dmabuf = file->private_data;
-+	dmabuf = dentry->d_fsdata;
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
  
- 	BUG_ON(dmabuf->vmapping_counter);
- 
-@@ -110,9 +84,32 @@ static int dma_buf_release(struct inode
- 	module_put(dmabuf->owner);
- 	kfree(dmabuf->name);
- 	kfree(dmabuf);
-+}
-+
-+static const struct dentry_operations dma_buf_dentry_ops = {
-+	.d_dname = dmabuffs_dname,
-+	.d_release = dma_buf_release,
-+};
-+
-+static struct vfsmount *dma_buf_mnt;
-+
-+static int dma_buf_fs_init_context(struct fs_context *fc)
-+{
-+	struct pseudo_fs_context *ctx;
-+
-+	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->dops = &dma_buf_dentry_ops;
- 	return 0;
- }
- 
-+static struct file_system_type dma_buf_fs_type = {
-+	.name = "dmabuf",
-+	.init_fs_context = dma_buf_fs_init_context,
-+	.kill_sb = kill_anon_super,
-+};
-+
- static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- {
- 	struct dma_buf *dmabuf;
-@@ -412,7 +409,6 @@ static void dma_buf_show_fdinfo(struct s
- }
- 
- static const struct file_operations dma_buf_fops = {
--	.release	= dma_buf_release,
- 	.mmap		= dma_buf_mmap_internal,
- 	.llseek		= dma_buf_llseek,
- 	.poll		= dma_buf_poll,
+ 	return IRQ_SET_MASK_OK_DONE;
 
 
