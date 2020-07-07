@@ -2,207 +2,529 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF4CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC783C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C468B20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IQ2Ri285"
+	by mail.kernel.org (Postfix) with ESMTP id 9B95F20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594154426;
+	bh=3m9Ts8ZdNbvP0zw56jNmt12LNCN6IZhjuKJU2GPO4Uo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kYEzMlhLLpVJmwCgctgCMuhxXLFRXZAIMBGp7vLB60VhbSBeXkP6Vz6iGb7bexdzl
+	 vGhqFDwIaEit6hFRHmIlJuXVtgo/XLM4merTFyq4zouDzmSmMK/pYWAZYd8RWycxko
+	 C1m6KR4ESF8h3xhgDb7KmMhwf6x0A6sJT62LFmbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgGGUkK (ORCPT
+        id S1728958AbgGGUkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbgGGUkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:40:10 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5007C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 13:40:09 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e64so39736055iof.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6BcRRLzOR9a+EmqTy6ErKRyeDhziM18eSEgk9TnV5Yg=;
-        b=IQ2Ri285jvhwaFWJllN7Q9RHvfmiak2Yupr2qv/DT/f+pxd3w1HVP5xWzsWCSPuFda
-         VF5MBmEQHhhRva0nUZay4UpGEXn8CWI5lmUIndEXJaz6DbqnfRJwb1xLlHyxdRr52PST
-         lWdHUF9tLXdy55y6toJX8gYZck7SuqMGVMOBTL3QCSKRdQp6CrhEZPu9ZRpLPUHeIYZ9
-         AETpjxE475grhRKQ9wYVbKrSYCXCgo8L4fgLpm0c4JuZlO6Abi3lPQ/+AoABCPetJTGp
-         66spIEzwQWKJc2mPi8baE227fPgWFD+yhmTASzJxKHt6oxQglMxuyJq246/2+vM/lk7a
-         3Zhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6BcRRLzOR9a+EmqTy6ErKRyeDhziM18eSEgk9TnV5Yg=;
-        b=mQ9VuWykIkWlZ+z5hJ2KbOrEgyPMsO1PpbUBMtExDazifl2HKZrHpWvB8NeXIEjuNg
-         yTIDVFIOXifs2rMHP63VE4GPnYPm/YzrfvYvIBIzfmFyUrHZ5JR/Kxjroq63H61OQiBM
-         lq+YcF73gWi6vPArlsEYsTRjvvqOvHfcIFkYASAxDE52Upq/tpZi/TFV5IGvnYWxJMIO
-         AxoWeRtJ3GUqweuIAZYrqL2wNudnSUGjKVkJEbt+ANLP8cx3nlxDDPGOGCPPpLIDfRdT
-         jN1wCega3DTSKPguqhXbGwkTS0k3SAh7BktSjNP3p/I/OaqJehfVBxQMv+m1VGFd7RIN
-         A0Mw==
-X-Gm-Message-State: AOAM531wezTsTkrT7KR040tWZklPQKcOeKH3bKoHzXA2CC21cW7RctXv
-        TNF0My9HJ+fU/PBaIaEUyGwmJQ==
-X-Google-Smtp-Source: ABdhPJxebRGc83pzGSG/E6dbpIhDmfmgCpDogiz6BeHTBx5v4jcdBAvuJq2/4tx4nD3aGNga5j5iWw==
-X-Received: by 2002:a5e:c311:: with SMTP id a17mr3667434iok.12.1594154408972;
-        Tue, 07 Jul 2020 13:40:08 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id v4sm13400907ilo.44.2020.07.07.13.40.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 13:40:08 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshi.k@samsung.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
-        Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
- <20200706141002.GZ25523@casper.infradead.org>
- <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
- <20200706143208.GA25523@casper.infradead.org>
- <20200707151105.GA23395@test-zns>
- <20200707155237.GM25523@casper.infradead.org>
- <20200707202342.GA28364@test-zns>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
-Date:   Tue, 7 Jul 2020 14:40:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 16:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728493AbgGGUkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:40:25 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8ECF20663;
+        Tue,  7 Jul 2020 20:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594154422;
+        bh=3m9Ts8ZdNbvP0zw56jNmt12LNCN6IZhjuKJU2GPO4Uo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ynGCoRUb9wYF/dEEu7ENvzMl35bhUmKW1p7wgjyypz95x6WCwlAGtMxfkivZ6DzKH
+         YhNxuEXa7HJbck1hoLWSAKiB3yYpqd9AUktYD31PwSbuJ2gmAGhdEapbNiub8QL1cR
+         ELdAV/8j2qMebKQ9mu3R39/8MmcP7YwS+92SAYeg=
+Date:   Tue, 7 Jul 2020 15:45:48 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] mac80211: Use fallthrough pseudo-keyword
+Message-ID: <20200707204548.GA9320@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200707202342.GA28364@test-zns>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 2:23 PM, Kanchan Joshi wrote:
-> On Tue, Jul 07, 2020 at 04:52:37PM +0100, Matthew Wilcox wrote:
->> On Tue, Jul 07, 2020 at 08:41:05PM +0530, Kanchan Joshi wrote:
->>> On Mon, Jul 06, 2020 at 03:32:08PM +0100, Matthew Wilcox wrote:
->>>> On Mon, Jul 06, 2020 at 08:27:17AM -0600, Jens Axboe wrote:
->>>>> On 7/6/20 8:10 AM, Matthew Wilcox wrote:
->>>>>> On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
->>>>>>> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
->>>>>>>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
->>>>>>>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
->>>>>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
->>>>>>>>>>
->>>>>>>>>> For zone-append, block-layer will return zone-relative offset via ret2
->>>>>>>>>> of ki_complete interface. Make changes to collect it, and send to
->>>>>>>>>> user-space using cqe->flags.
->>>>>>
->>>>>>>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
->>>>>>>> address.
->>>
->>> Documentation (https://protect2.fireeye.com/url?k=297dbcbf-74aee030-297c37f0-0cc47a31ce52-632d3561909b91fc&q=1&u=https%3A%2F%2Fkernel.dk%2Fio_uring.pdf) mentioned cqe->flags can carry
->>> the metadata for the operation. I wonder if this should be called abuse.
->>>
->>>>>>> Yeah, it's not great either, but we have less leeway there in terms of
->>>>>>> how much space is available to pass back extra data.
->>>>>>>
->>>>>>>> What do you think to my idea of interpreting the user_data as being a
->>>>>>>> pointer to somewhere to store the address?  Obviously other things
->>>>>>>> can be stored after the address in the user_data.
->>>>>>>
->>>>>>> I don't like that at all, as all other commands just pass user_data
->>>>>>> through. This means the application would have to treat this very
->>>>>>> differently, and potentially not have a way to store any data for
->>>>>>> locating the original command on the user side.
->>>>>>
->>>>>> I think you misunderstood me.  You seem to have thought I meant
->>>>>> "use the user_data field to return the address" when I actually meant
->>>>>> "interpret the user_data field as a pointer to where userspace
->>>>>> wants the address stored".
->>>>>
->>>>> It's still somewhat weird to have user_data have special meaning, you're
->>>>> now having the kernel interpret it while every other command it's just
->>>>> an opaque that is passed through.
->>>>>
->>>>> But it could of course work, and the app could embed the necessary
->>>>> u32/u64 in some other structure that's persistent across IO. If it
->>>>> doesn't have that, then it'd need to now have one allocated and freed
->>>>> across the lifetime of the IO.
->>>>>
->>>>> If we're going that route, it'd be better to define the write such that
->>>>> you're passing in the necessary information upfront. In syscall terms,
->>>>> then that'd be something ala:
->>>>>
->>>>> ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
->>>>> 			off_t *offset, int flags);
->>>>>
->>>>> where *offset is copied out when the write completes. That removes the
->>>>> need to abuse user_data, with just providing the storage pointer for the
->>>>> offset upfront.
->>>>
->>>> That works for me!  In io_uring terms, would you like to see that done
->>>> as adding:
->>>>
->>>>        union {
->>>>                __u64   off;    /* offset into file */
->>>> +		__u64   *offp;	/* appending writes */
->>>>                __u64   addr2;
->>>>        };
->>> But there are peformance implications of this approach?
->>> If I got it right, the workflow is: - Application allocates 64bit of space,
->>> writes "off" into it and pass it
->>>  in the sqe->addr2
->>> - Kernel first reads sqe->addr2, reads the value to know the intended
->>>  write-location, and stores the address somewhere (?) to be used during
->>>  completion. Storing this address seems tricky as this may add one more
->>>  cacheline (in io_kiocb->rw)?
->>
->> io_kiocb is:
->>        /* size: 232, cachelines: 4, members: 19 */
->>        /* forced alignments: 1 */
->>        /* last cacheline: 40 bytes */
->> so we have another 24 bytes before io_kiocb takes up another cacheline.
->> If that's a serious problem, I have an idea about how to shrink struct
->> kiocb by 8 bytes so struct io_rw would have space to store another
->> pointer.
-> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
-> it must be placed within io_rw - I'll come to know once I get to
-> implement this. Please share the idea you have, it can come handy.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Except it doesn't, I'm not interested in adding per-request type fields
-to the generic part of it. Before we know it, we'll blow past the next
-cacheline.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-If we can find space in the kiocb, that'd be much better. Note that once
-the async buffered bits go in for 5.9, then there's no longer a 4-byte
-hole in struct kiocb.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/mac80211_hwsim.c |    2 +-
+ net/mac80211/cfg.c                    |    6 +++---
+ net/mac80211/chan.c                   |    2 +-
+ net/mac80211/ht.c                     |    4 ++--
+ net/mac80211/ibss.c                   |    4 ++--
+ net/mac80211/iface.c                  |   10 +++++-----
+ net/mac80211/key.c                    |    2 +-
+ net/mac80211/mesh.c                   |    4 ++--
+ net/mac80211/mesh_hwmp.c              |    2 +-
+ net/mac80211/mesh_plink.c             |    2 +-
+ net/mac80211/mlme.c                   |    4 ++--
+ net/mac80211/offchannel.c             |    4 ++--
+ net/mac80211/rx.c                     |    4 ++--
+ net/mac80211/tdls.c                   |    8 ++++----
+ net/mac80211/tx.c                     |   12 ++++++------
+ net/mac80211/util.c                   |   15 +++++++--------
+ net/mac80211/wme.c                    |    2 +-
+ 17 files changed, 43 insertions(+), 44 deletions(-)
 
->> ... we've just done an I/O.  Concern about an extra pointer access
->> seems misplaced?
-> 
-> I was thinking about both read-from (submission) and write-to
-> (completion) from user-space pointer, and all those checks APIs
-> (get_user, copy_from_user) perform.....but when seen against I/O (that
-> too direct), it does look small. Down the line it may matter for cached-IO
-> but I get your point. 
-
-Really don't think that matters at all.
-
--- 
-Jens Axboe
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 1356e8cbe617..9dd9d73f4484 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -4334,7 +4334,7 @@ static int __init init_mac80211_hwsim(void)
+ 			break;
+ 		case HWSIM_REGTEST_STRICT_ALL:
+ 			param.reg_strict = true;
+-			/* fall through */
++			fallthrough;
+ 		case HWSIM_REGTEST_DRIVER_REG_ALL:
+ 			param.reg_alpha2 = hwsim_alpha2s[0];
+ 			break;
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 9b360544ad6f..b4a74064675e 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -608,12 +608,12 @@ static int ieee80211_get_key(struct wiphy *wiphy, struct net_device *dev,
+ 	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
+ 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
+ 			     offsetof(typeof(kseq), aes_cmac));
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_128:
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_256:
+ 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
+ 			     offsetof(typeof(kseq), aes_gmac));
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_GCMP:
+ 	case WLAN_CIPHER_SUITE_GCMP_256:
+ 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
+@@ -2336,7 +2336,7 @@ static int ieee80211_scan(struct wiphy *wiphy,
+ 		 * for now fall through to allow scanning only when
+ 		 * beaconing hasn't been configured yet
+ 		 */
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		/*
+ 		 * If the scan has been forced (and the driver supports
+diff --git a/net/mac80211/chan.c b/net/mac80211/chan.c
+index e6e192f53e4e..6ff177fb2324 100644
+--- a/net/mac80211/chan.c
++++ b/net/mac80211/chan.c
+@@ -743,7 +743,7 @@ void ieee80211_recalc_smps_chanctx(struct ieee80211_local *local,
+ 		default:
+ 			WARN_ONCE(1, "Invalid SMPS mode %d\n",
+ 				  sdata->smps_mode);
+-			/* fall through */
++			fallthrough;
+ 		case IEEE80211_SMPS_OFF:
+ 			needed_static = sdata->needed_rx_chains;
+ 			needed_dynamic = sdata->needed_rx_chains;
+diff --git a/net/mac80211/ht.c b/net/mac80211/ht.c
+index e32906202575..3d62a80b5790 100644
+--- a/net/mac80211/ht.c
++++ b/net/mac80211/ht.c
+@@ -250,7 +250,7 @@ bool ieee80211_ht_cap_ie_to_sta_ht_cap(struct ieee80211_sub_if_data *sdata,
+ 	switch (sdata->vif.bss_conf.chandef.width) {
+ 	default:
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_20_NOHT:
+ 	case NL80211_CHAN_WIDTH_20:
+ 		bw = IEEE80211_STA_RX_BW_20;
+@@ -517,7 +517,7 @@ int ieee80211_send_smps_action(struct ieee80211_sub_if_data *sdata,
+ 	case IEEE80211_SMPS_AUTOMATIC:
+ 	case IEEE80211_SMPS_NUM_MODES:
+ 		WARN_ON(1);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_SMPS_OFF:
+ 		action_frame->u.action.u.ht_smps.smps_control =
+ 				WLAN_HT_SMPS_CONTROL_DISABLED;
+diff --git a/net/mac80211/ibss.c b/net/mac80211/ibss.c
+index 81d26fef41e9..53632c2f5217 100644
+--- a/net/mac80211/ibss.c
++++ b/net/mac80211/ibss.c
+@@ -791,7 +791,7 @@ ieee80211_ibss_process_chanswitch(struct ieee80211_sub_if_data *sdata,
+ 	case NL80211_CHAN_WIDTH_10:
+ 	case NL80211_CHAN_WIDTH_20_NOHT:
+ 		sta_flags |= IEEE80211_STA_DISABLE_HT;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_20:
+ 		sta_flags |= IEEE80211_STA_DISABLE_40MHZ;
+ 		break;
+@@ -1401,7 +1401,7 @@ ieee80211_ibss_setup_scan_channels(struct wiphy *wiphy,
+ 		break;
+ 	case NL80211_CHAN_WIDTH_80P80:
+ 		cf2 = chandef->center_freq2;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_80:
+ 		width = 80;
+ 		break;
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index f900c84fb40f..570f818384e8 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -978,7 +978,7 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata,
+ 	case NL80211_IFTYPE_P2P_DEVICE:
+ 		/* relies on synchronize_rcu() below */
+ 		RCU_INIT_POINTER(local->p2p_sdata, NULL);
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		cancel_work_sync(&sdata->work);
+ 		/*
+@@ -1048,7 +1048,7 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata,
+ 		if (!(sdata->u.mntr.flags & MONITOR_FLAG_ACTIVE))
+ 			break;
+ 
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		if (going_down)
+ 			drv_remove_interface(local, sdata);
+@@ -1497,7 +1497,7 @@ static void ieee80211_setup_sdata(struct ieee80211_sub_if_data *sdata,
+ 		type = NL80211_IFTYPE_AP;
+ 		sdata->vif.type = type;
+ 		sdata->vif.p2p = true;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		skb_queue_head_init(&sdata->u.ap.ps.bc_buf);
+ 		INIT_LIST_HEAD(&sdata->u.ap.vlans);
+@@ -1507,7 +1507,7 @@ static void ieee80211_setup_sdata(struct ieee80211_sub_if_data *sdata,
+ 		type = NL80211_IFTYPE_STATION;
+ 		sdata->vif.type = type;
+ 		sdata->vif.p2p = true;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_STATION:
+ 		sdata->vif.bss_conf.bssid = sdata->u.mgd.bssid;
+ 		ieee80211_sta_setup_sdata(sdata);
+@@ -1703,7 +1703,7 @@ static void ieee80211_assign_perm_addr(struct ieee80211_local *local,
+ 				goto out_unlock;
+ 			}
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		/* assign a new address if possible -- try n_addresses first */
+ 		for (i = 0; i < local->hw.wiphy->n_addresses; i++) {
+diff --git a/net/mac80211/key.c b/net/mac80211/key.c
+index 8f403c1bb908..9c2888004878 100644
+--- a/net/mac80211/key.c
++++ b/net/mac80211/key.c
+@@ -225,7 +225,7 @@ static int ieee80211_key_enable_hw_accel(struct ieee80211_key *key)
+ 		 */
+ 		if (sdata->hw_80211_encap)
+ 			return -EINVAL;
+-		/* Fall through */
++		fallthrough;
+ 
+ 	case WLAN_CIPHER_SUITE_AES_CMAC:
+ 	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index 5f1ca25b6c97..96f0323c0a3d 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1094,10 +1094,10 @@ ieee80211_mesh_process_chnswitch(struct ieee80211_sub_if_data *sdata,
+ 	switch (sdata->vif.bss_conf.chandef.width) {
+ 	case NL80211_CHAN_WIDTH_20_NOHT:
+ 		sta_flags |= IEEE80211_STA_DISABLE_HT;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_20:
+ 		sta_flags |= IEEE80211_STA_DISABLE_40MHZ;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_40:
+ 		sta_flags |= IEEE80211_STA_DISABLE_VHT;
+ 		break;
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index aa5150929996..c71bd612740d 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -1269,7 +1269,7 @@ void mesh_path_tx_root_frame(struct ieee80211_sub_if_data *sdata)
+ 		break;
+ 	case IEEE80211_PROACTIVE_PREQ_WITH_PREP:
+ 		flags |= IEEE80211_PREQ_PROACTIVE_PREP_FLAG;
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_PROACTIVE_PREQ_NO_PREP:
+ 		interval = ifmsh->mshcfg.dot11MeshHWMPactivePathToRootTimeout;
+ 		target_flags |= IEEE80211_PREQ_TO_FLAG |
+diff --git a/net/mac80211/mesh_plink.c b/net/mac80211/mesh_plink.c
+index 798e4b6b383f..15f2fc658f70 100644
+--- a/net/mac80211/mesh_plink.c
++++ b/net/mac80211/mesh_plink.c
+@@ -699,7 +699,7 @@ void mesh_plink_timer(struct timer_list *t)
+ 			break;
+ 		}
+ 		reason = WLAN_REASON_MESH_MAX_RETRIES;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_PLINK_CNF_RCVD:
+ 		/* confirm timer */
+ 		if (!reason)
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index b2a9d47cf86d..1c1b3f6bc415 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -533,7 +533,7 @@ static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
+ 	case IEEE80211_SMPS_AUTOMATIC:
+ 	case IEEE80211_SMPS_NUM_MODES:
+ 		WARN_ON(1);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_SMPS_OFF:
+ 		cap |= WLAN_HT_CAP_SM_PS_DISABLED <<
+ 			IEEE80211_HT_CAP_SM_PS_SHIFT;
+@@ -1529,7 +1529,7 @@ ieee80211_find_80211h_pwr_constr(struct ieee80211_sub_if_data *sdata,
+ 	switch (channel->band) {
+ 	default:
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_BAND_2GHZ:
+ 	case NL80211_BAND_60GHZ:
+ 		chan_increment = 1;
+diff --git a/net/mac80211/offchannel.c b/net/mac80211/offchannel.c
+index db3b8bf75656..7b842aa903c3 100644
+--- a/net/mac80211/offchannel.c
++++ b/net/mac80211/offchannel.c
+@@ -808,13 +808,13 @@ int ieee80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 		if (!sdata->vif.bss_conf.ibss_joined)
+ 			need_offchan = true;
+ #ifdef CONFIG_MAC80211_MESH
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_MESH_POINT:
+ 		if (ieee80211_vif_is_mesh(&sdata->vif) &&
+ 		    !sdata->u.mesh.mesh_id_len)
+ 			need_offchan = true;
+ #endif
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 	case NL80211_IFTYPE_AP_VLAN:
+ 	case NL80211_IFTYPE_P2P_GO:
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index a88ab6fb16f2..83a6e52ba033 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3710,7 +3710,7 @@ static void ieee80211_rx_handlers_result(struct ieee80211_rx_data *rx,
+ 		I802_DEBUG_INC(rx->sdata->local->rx_handlers_drop);
+ 		if (rx->sta)
+ 			rx->sta->rx_stats.dropped++;
+-		/* fall through */
++		fallthrough;
+ 	case RX_CONTINUE: {
+ 		struct ieee80211_rate *rate = NULL;
+ 		struct ieee80211_supported_band *sband;
+@@ -4726,7 +4726,7 @@ void ieee80211_rx_napi(struct ieee80211_hw *hw, struct ieee80211_sta *pubsta,
+ 			break;
+ 		default:
+ 			WARN_ON_ONCE(1);
+-			/* fall through */
++			fallthrough;
+ 		case RX_ENC_LEGACY:
+ 			if (WARN_ON(status->rate_idx >= sband->n_bitrates))
+ 				goto drop;
+diff --git a/net/mac80211/tdls.c b/net/mac80211/tdls.c
+index 4b0cff4a07bd..e01e4daeb8cd 100644
+--- a/net/mac80211/tdls.c
++++ b/net/mac80211/tdls.c
+@@ -239,7 +239,7 @@ static enum ieee80211_ac_numbers ieee80211_ac_from_wmm(int ac)
+ 	switch (ac) {
+ 	default:
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		return IEEE80211_AC_BE;
+ 	case 1:
+@@ -952,7 +952,7 @@ ieee80211_tdls_prep_mgmt_packet(struct wiphy *wiphy, struct net_device *dev,
+ 			set_sta_flag(sta, WLAN_STA_TDLS_INITIATOR);
+ 			sta->sta.tdls_initiator = false;
+ 		}
+-		/* fall-through */
++		fallthrough;
+ 	case WLAN_TDLS_SETUP_CONFIRM:
+ 	case WLAN_TDLS_DISCOVERY_REQUEST:
+ 		initiator = true;
+@@ -967,7 +967,7 @@ ieee80211_tdls_prep_mgmt_packet(struct wiphy *wiphy, struct net_device *dev,
+ 			clear_sta_flag(sta, WLAN_STA_TDLS_INITIATOR);
+ 			sta->sta.tdls_initiator = true;
+ 		}
+-		/* fall-through */
++		fallthrough;
+ 	case WLAN_PUB_ACTION_TDLS_DISCOVER_RES:
+ 		initiator = false;
+ 		break;
+@@ -1222,7 +1222,7 @@ int ieee80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
+ 		 * by the AP.
+ 		 */
+ 		drv_mgd_protect_tdls_discover(sdata->local, sdata);
+-		/* fall-through */
++		fallthrough;
+ 	case WLAN_TDLS_SETUP_CONFIRM:
+ 	case WLAN_PUB_ACTION_TDLS_DISCOVER_RES:
+ 		/* no special handling */
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index e9ce658141f5..92268501b757 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -1739,7 +1739,7 @@ static bool __ieee80211_tx(struct ieee80211_local *local,
+ 	case NL80211_IFTYPE_AP_VLAN:
+ 		sdata = container_of(sdata->bss,
+ 				     struct ieee80211_sub_if_data, u.ap);
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		vif = &sdata->vif;
+ 		break;
+@@ -2382,7 +2382,7 @@ int ieee80211_lookup_ra_sta(struct ieee80211_sub_if_data *sdata,
+ 		} else if (sdata->wdev.use_4addr) {
+ 			return -ENOLINK;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 	case NL80211_IFTYPE_OCB:
+ 	case NL80211_IFTYPE_ADHOC:
+@@ -2552,7 +2552,7 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
+ 		band = chanctx_conf->def.chan->band;
+ 		if (sdata->wdev.use_4addr)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		if (sdata->vif.type == NL80211_IFTYPE_AP)
+ 			chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
+@@ -2999,7 +2999,7 @@ void ieee80211_check_fast_xmit(struct sta_info *sta)
+ 			build.hdr_len = 30;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		fc |= cpu_to_le16(IEEE80211_FCTL_FROMDS);
+ 		/* DA BSSID SA */
+@@ -3710,7 +3710,7 @@ struct sk_buff *ieee80211_tx_dequeue(struct ieee80211_hw *hw,
+ 	case NL80211_IFTYPE_AP_VLAN:
+ 		tx.sdata = container_of(tx.sdata->bss,
+ 					struct ieee80211_sub_if_data, u.ap);
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		vif = &tx.sdata->vif;
+ 		break;
+@@ -4046,7 +4046,7 @@ static bool ieee80211_multicast_to_unicast(struct sk_buff *skb,
+ 			return false;
+ 		if (sdata->wdev.use_4addr)
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		/* check runtime toggle for this bss */
+ 		if (!sdata->bss->multicast_to_unicast)
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 21c94094a699..33dd337de1e9 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -2347,10 +2347,10 @@ int ieee80211_reconfig(struct ieee80211_local *local)
+ 		case NL80211_IFTYPE_ADHOC:
+ 			if (sdata->vif.bss_conf.ibss_joined)
+ 				WARN_ON(drv_join_ibss(local, sdata));
+-			/* fall through */
++			fallthrough;
+ 		default:
+ 			ieee80211_reconfig_stations(sdata);
+-			/* fall through */
++			fallthrough;
+ 		case NL80211_IFTYPE_AP: /* AP stations are handled later */
+ 			for (i = 0; i < IEEE80211_NUM_ACS; i++)
+ 				drv_conf_tx(local, sdata, i,
+@@ -2399,7 +2399,7 @@ int ieee80211_reconfig(struct ieee80211_local *local)
+ 			break;
+ 		case NL80211_IFTYPE_ADHOC:
+ 			changed |= BSS_CHANGED_IBSS;
+-			/* fall through */
++			fallthrough;
+ 		case NL80211_IFTYPE_AP:
+ 			changed |= BSS_CHANGED_SSID | BSS_CHANGED_P2P_PS;
+ 
+@@ -2414,8 +2414,7 @@ int ieee80211_reconfig(struct ieee80211_local *local)
+ 				if (rcu_access_pointer(sdata->u.ap.beacon))
+ 					drv_start_ap(local, sdata);
+ 			}
+-
+-			/* fall through */
++			fallthrough;
+ 		case NL80211_IFTYPE_MESH_POINT:
+ 			if (sdata->vif.bss_conf.enable_beacon) {
+ 				changed |= BSS_CHANGED_BEACON |
+@@ -2885,7 +2884,7 @@ void ieee80211_ie_build_he_6ghz_cap(struct ieee80211_sub_if_data *sdata,
+ 	case IEEE80211_SMPS_AUTOMATIC:
+ 	case IEEE80211_SMPS_NUM_MODES:
+ 		WARN_ON(1);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_SMPS_OFF:
+ 		cap |= u16_encode_bits(WLAN_HT_CAP_SM_PS_DISABLED,
+ 				       IEEE80211_HE_6GHZ_CAP_SM_PS);
+@@ -3196,7 +3195,7 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw, u32 vht_cap_info,
+ 		break;
+ 	case 0x01:
+ 		support_80_80 = false;
+-		/* fall through */
++		fallthrough;
+ 	case 0x02:
+ 	case 0x03:
+ 		ccf1 = ccfs2;
+@@ -3566,7 +3565,7 @@ u64 ieee80211_calculate_rx_timestamp(struct ieee80211_local *local,
+ 		break;
+ 	default:
+ 		WARN_ON(1);
+-		/* fall through */
++		fallthrough;
+ 	case RX_ENC_LEGACY: {
+ 		struct ieee80211_supported_band *sband;
+ 		int shift = 0;
+diff --git a/net/mac80211/wme.c b/net/mac80211/wme.c
+index 72920d82928c..2fb99325135a 100644
+--- a/net/mac80211/wme.c
++++ b/net/mac80211/wme.c
+@@ -198,7 +198,7 @@ u16 ieee80211_select_queue(struct ieee80211_sub_if_data *sdata,
+ 		sta = rcu_dereference(sdata->u.vlan.sta);
+ 		if (sta)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_AP:
+ 		ra = skb->data;
+ 		break;
 
