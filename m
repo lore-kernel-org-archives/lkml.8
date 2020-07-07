@@ -2,87 +2,172 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE81DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43895206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:51:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="m598dhiv"
+	by mail.kernel.org (Postfix) with ESMTP id AF8862075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594122756;
+	bh=sez30fKW/lNxoRpWJDNNdM5jZvgbAuapFH4HEtWh1I4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2v4XUFd9BHvGALLRC0uJNOeVcCneSlMchw9iz+QEh3sCfGhZXkMLYGaZX24H6pQQk
+	 RVUFmSd4Q0p/KEuRH1g4wYlZSXl2d6Y6Loinc67+kyBhKXKyNLm/93DxMvoDI7rVJq
+	 1sMV8FQ3mej2IIKn17ohAq9h3ear3yOkY7Cu8MAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGGLvH (ORCPT
+        id S1728296AbgGGLwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:51:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:16322 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726540AbgGGLvG (ORCPT
+        Tue, 7 Jul 2020 07:52:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51285 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgGGLwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:51:06 -0400
-X-UUID: 6ab93ad5c0504bb0a3ec9e4173deeb98-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3DMwV/Z8QcDuKhf5FKYuKYw/6Ttsn7FiYmhH2inyuNw=;
-        b=m598dhivIyoCn7FiBFuIc58LWXG6u95+ulaNEoVwAOdRRF2akGZ6x42B7UGAFNAt9Jt8y2yXjjZGi1BkHdFZtQ7jGTkUXIwNSOCdAm7/niV24oBxpH2m7UHzky0m9M8K35e5iN3+fIdYViyb6eaNpBK1tVDDCiH0NJkDh+j/kwY=;
-X-UUID: 6ab93ad5c0504bb0a3ec9e4173deeb98-20200707
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1135623474; Tue, 07 Jul 2020 19:51:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 19:50:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 19:50:59 +0800
-Message-ID: <1594122662.24451.2.camel@mtkswgap22>
-Subject: Re: [PATCH v7] Add basic SoC Support for Mediatek MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Tue, 7 Jul 2020 19:51:02 +0800
-In-Reply-To: <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
-         <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 7 Jul 2020 07:52:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 22so42976999wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:52:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sNRnMMERLaDAwkTiaLWq2/DYQfERHbRbW2PRebsMmsk=;
+        b=Okv/gs94m4Y9WUZNLUjp5ntM49U8vxRl8MbsUsILK4RoA1uSGXBxh0eXMlcofbjun+
+         euv4BWIByBfYPCtgZwUoztSEw8eJg1QC+9kjavHq9bPDwnUtPREWLsj1/jnfAf10ET2e
+         bUk6qxP1Gu5CFFOO1ZUIqteCGrO8PrCHGAjMuXdlKTOu1/QRqUeUoSOuoQWQSy4F+oy3
+         acl8Qi9Ac28ynoTfhnRQsVv0Z1PcboYzdHx7lsYvVWV3eyQuNT8YpwTQYFkMyGibxzbI
+         LaPl9gN317jyxCovFDH+tWsrDMnLRTooZ9P3km5c8BgOpBC3E9VATqq1bF+k1PxPyP8f
+         Q3kw==
+X-Gm-Message-State: AOAM530BCb76HguH6pYBYiAgyWEqO2cCu2UCgtHoIAsPeF5V9F1d7SZ2
+        xOYDaTQI0kacwrAfAk3MAfI=
+X-Google-Smtp-Source: ABdhPJx1SU5CWqhyJe8HpbJAvs4NhiE+c1yC8ANHKTFu23E0a1+VBH1Ime/1pXieVpzny4zX812wHg==
+X-Received: by 2002:a1c:8117:: with SMTP id c23mr3638451wmd.157.1594122753188;
+        Tue, 07 Jul 2020 04:52:33 -0700 (PDT)
+Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
+        by smtp.gmail.com with ESMTPSA id y7sm784462wrt.11.2020.07.07.04.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 04:52:32 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 13:52:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v4 11/11] mm/memory_hotplug: remove a wrapper for
+ alloc_migration_target()
+Message-ID: <20200707115231.GM5913@dhcp22.suse.cz>
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-12-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594107889-32228-12-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTA3IGF0IDEzOjQxICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBPbiBUaHUsIEp1bCAyLCAyMDIwIGF0IDI6NTcgUE0gSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBt
-ZWRpYXRlay5jb20+IHdyb3RlOg0KPiANCj4gPiBDaGFuZ2Ugc2luY2Ugdjc6DQo+ID4gQ29tbWl0
-ICJkdC1iaW5kaW5nczogcGluY3RybDogYWRkIGJpbmRpbmdzIGZvciBNZWRpYVRlayINCj4gPiAt
-LSBmaXggdHlwbyBhbmQgY2hhbmdlIG9yZGVyIG9mIHBhdGNoDQo+ID4gQ29tbWl0ICJjbGs6IG1l
-ZGlhdGVrOiBhZGQgVUFSVDAgY2xvY2sgc3VwcG9ydCINCj4gPiAtLSBhZGQgZml4ZXMgdGFnIGFu
-ZCByZWFsIG5hbWUNCj4gPiBDb21taXQgImFybTY0OiBkdHM6IGFkZCBkdHMgbm9kZXMgZm9yIE1U
-Njc3OSINCj4gPiAtLSBleHBvc2UgYWxsIHRocmVlIFVBUlRzIGluIHRoZSBkdHNpDQo+IA0KPiBP
-aCBJIHNlZSB0aGVyZSBhcmUgc3RpbGwgZGV2ZWxvcG1lbnQgb24gdGhpcyBwYXRjaCBzZXQgc28g
-SSB0b29rIG91dA0KPiB0aGUgcGF0Y2hlcyBJIGFwcGxpZWQgYWdhaW4uDQo+IA0KPiBXYWl0aW5n
-IGZvciB0aGUgZmluYWwgcmV2aWV3ZWQgdmVyc2lvbi4NCj4gDQpUaGFuayB5b3UgZm9yIHRha2lu
-ZyBhIGxvb2sgb3ZlciB0aGVzZSBzbyBxdWlja2x5IQ0KDQpHb3QgaXQsIEknbGwgc2VuZCBhIG5l
-d2VyIHZlcnNpb24uDQoNClRoYW5rcyENCg0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQo=
+On Tue 07-07-20 16:44:49, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> To calculate the correct node to migrate the page for hotplug, we need
+> to check node id of the page. Wrapper for alloc_migration_target() exists
+> for this purpose.
+> 
+> However, Vlastimil informs that all migration source pages come from
+> a single node. In this case, we don't need to check the node id for each
+> page and we don't need to re-set the target nodemask for each page by
+> using the wrapper. Set up the migration_target_control once and use it for
+> all pages.
 
+yes, memory offlining only operates on a single zone. Have a look at
+test_pages_in_a_zone().
+
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memory_hotplug.c | 46 ++++++++++++++++++++++------------------------
+>  1 file changed, 22 insertions(+), 24 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 86bc2ad..269e8ca 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1265,27 +1265,6 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+>  	return 0;
+>  }
+>  
+> -static struct page *new_node_page(struct page *page, unsigned long private)
+> -{
+> -	nodemask_t nmask = node_states[N_MEMORY];
+> -	struct migration_target_control mtc = {
+> -		.nid = page_to_nid(page),
+> -		.nmask = &nmask,
+> -		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+> -	};
+> -
+> -	/*
+> -	 * try to allocate from a different node but reuse this node if there
+> -	 * are no other online nodes to be used (e.g. we are offlining a part
+> -	 * of the only existing node)
+> -	 */
+> -	node_clear(mtc.nid, *mtc.nmask);
+> -	if (nodes_empty(*mtc.nmask))
+> -		node_set(mtc.nid, *mtc.nmask);
+> -
+> -	return alloc_migration_target(page, (unsigned long)&mtc);
+> -}
+> -
+>  static int
+>  do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+>  {
+> @@ -1345,9 +1324,28 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+>  		put_page(page);
+>  	}
+>  	if (!list_empty(&source)) {
+> -		/* Allocate a new page from the nearest neighbor node */
+> -		ret = migrate_pages(&source, new_node_page, NULL, 0,
+> -					MIGRATE_SYNC, MR_MEMORY_HOTPLUG);
+> +		nodemask_t nmask = node_states[N_MEMORY];
+> +		struct migration_target_control mtc = {
+> +			.nmask = &nmask,
+> +			.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+> +		};
+> +
+> +		/*
+> +		 * We have checked that migration range is on a single zone so
+> +		 * we can use the nid of the first page to all the others.
+> +		 */
+> +		mtc.nid = page_to_nid(list_first_entry(&source, struct page, lru));
+> +
+> +		/*
+> +		 * try to allocate from a different node but reuse this node
+> +		 * if there are no other online nodes to be used (e.g. we are
+> +		 * offlining a part of the only existing node)
+> +		 */
+> +		node_clear(mtc.nid, *mtc.nmask);
+> +		if (nodes_empty(*mtc.nmask))
+> +			node_set(mtc.nid, *mtc.nmask);
+> +		ret = migrate_pages(&source, alloc_migration_target, NULL,
+> +			(unsigned long)&mtc, MIGRATE_SYNC, MR_MEMORY_HOTPLUG);
+>  		if (ret) {
+>  			list_for_each_entry(page, &source, lru) {
+>  				pr_warn("migrating pfn %lx failed ret:%d ",
+> -- 
+> 2.7.4
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
