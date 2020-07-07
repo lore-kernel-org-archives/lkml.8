@@ -2,186 +2,161 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89885C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E01CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62A362075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343B6206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Qb0ZCKir"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jz2Yms7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgGGG2P (ORCPT
+        id S1727942AbgGGGay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgGGG2P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:28:15 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821CAC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:28:14 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so4363566pfm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 23:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eGXjfQahGJEMI3dFWEvZHra9f4CPaADa6kwDLG6Sz0U=;
-        b=Qb0ZCKirQkg/pyAtVAEC6B9WFBqOte+gOTfm6ZQjdZwhmUBGB2+XiS5S2ddzoczwUz
-         XyxiUhgm8JT4NcXfZolw43un2HQayIVDPk+L/muXIogcLMr4A9ttB6jfqvPljjNRosLc
-         Fl0BKy3VI0Q/4jkWy3FNJmHepQDgTAMhNnfqQAKs8AfmX0bkPT7BkscOUd9AmnWmSZzN
-         Tuvlg5+ViEHU6AVIwABE5VUFi6gLIERWWsPvLRLhbWApi1Tywf7dtixzL885EdC3tWJm
-         znrEJfdeKRtauxg1nJhgtVy4gbzjTKge2Mw2c1BjYHWM/NbLq38/5FEPJ7f7PIkth0sJ
-         LFTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eGXjfQahGJEMI3dFWEvZHra9f4CPaADa6kwDLG6Sz0U=;
-        b=HBLrmzQZULdVRA7nLP8+IpsvB83pHR3Tqd3ElikEmvaTcR/DiKKsmXYtzg8tAr6ggE
-         LCnjrBPzMqkb43bt1sQVQP7cp87a5huCCFNHtls+RhwA8HjPxe8Y3ncHuYuo9Ik62AtY
-         WrNfoHe2qYQytNhoGf0Xk/POHR7mV0FjpL1i3kxD7ZIESsqjusNtM17ArFYS6iN12uW+
-         9h+DC3AIdr5XRC9hx9AMghrvvniRuW8V4J89NuBFxDye/HCls3thnbruSCMrf1X0ePaO
-         4ODiNw5ODXg4P0rk+pLjX5DXdxk/0Ey+NCrksiPYgSTrPi43MXNKZV/RyNKCv3tW/jc3
-         7sPg==
-X-Gm-Message-State: AOAM530Un5OY66QmNTn6rUBYGJwEFZMu8/S1sfq0SxUpEw5LLwhKuPTs
-        KYRQKk64DlcS606U2VMKI8UM3A==
-X-Google-Smtp-Source: ABdhPJzTlPmc4fvi8qfUEFpH90MaEppPYMQ/O0VUx6imHli5jRS7GKutNv3Wd8FBrZ35ppS9bKW62w==
-X-Received: by 2002:a63:db57:: with SMTP id x23mr33353040pgi.178.1594103294073;
-        Mon, 06 Jul 2020 23:28:14 -0700 (PDT)
-Received: from Smcdef-MBP.local.net ([103.136.221.72])
-        by smtp.gmail.com with ESMTPSA id m12sm1362628pjf.17.2020.07.06.23.28.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jul 2020 23:28:13 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        shakeelb@google.com, Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v5.4.y, v4.19.y] mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
-Date:   Tue,  7 Jul 2020 14:27:54 +0800
-Message-Id: <20200707062754.8383-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Tue, 7 Jul 2020 02:30:54 -0400
+Received: from mail-vi1eur05on2063.outbound.protection.outlook.com ([40.107.21.63]:38033
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726869AbgGGGax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:30:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mFpszsi9cT6jr8M4YElpQivDPbuEJtXBdjtBaZYAnwdcB+5HC62BmPYX+k/5Wr9JOY8rDjl7riFqml/vDrogv2Qja1IE/mDI2JJnKpwCYBQq+0gbOx/u7HvGijFsI+FFa9t1HxNBakbwHe5ZBRkLNWNSmoepyTwHWlyB2QAOVVoKf20vnEnMj6PIeSAYbXMN5jLLUVBig1iPL5QXWgCObKzv+0CG1xyKKneSwSgZN6N2BhhLd5zdu7+kWgQw70r0lZBURHvSNmMPZZZbmCEfPFF2l2EdwDQu6ZCp2+sMsykzXuXLyGp2kcVsXZfb3sDa7dWuENAF42OBpLoJRRvYUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCl10eeCjyjMXKl3UEJMcM7cWfDth6F8YuhcJlqlxxM=;
+ b=CL/R/6JffNx63ZXoRIktJmz4Viy75yijNV6Ta3nkPVB/xesCUNdEKdmR8nK9pCJWRdXot7MBTiN/dKHyNFjYOXSmMmykcvGdKtTp53Vzbi9as6ywGLak2gOz35Q133PB+BJbmCGOWFOl+A/VRgBWrC+GvD9ZYbw2V+DKQ9wEYKpixcRYOHrItaWj8RxSUv/v4SLt9wyM/uDZf2oEH425g3fft5XLnX3RpZ8JA9/PGG+08tTu7c3eHzdK+mw/19df+lzQqFUR/C1Z3lUrMUbFA/cWNE25a5TdGKDx0vmy/Gvza7nvdOKMMl7sG9EsEvIhpuNEqWGmgi4u9j/GodE1iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCl10eeCjyjMXKl3UEJMcM7cWfDth6F8YuhcJlqlxxM=;
+ b=Jz2Yms7zStVFL7rJ+hM5MqCfy3r0lmccuYbcuLHbB6igdNBQXpF/lV5k6iLYHy1xhYS40WwWTCM+zk1jBcdadwN8AJIltBoTCPnkO/yKQuP8IS3KWCZBbvy1vq6UbcHGtlBAy/r5X0arELVYZ/VLIS1h5ExfUBJVvvDbnEM7lP0=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM5PR0401MB2484.eurprd04.prod.outlook.com (2603:10a6:203:36::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27; Tue, 7 Jul
+ 2020 06:30:50 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 06:30:50 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Pawel Laszczak <pawell@cadence.com>
+CC:     "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "jpawar@cadence.com" <jpawar@cadence.com>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "kurahul@cadence.com" <kurahul@cadence.com>,
+        "sparmar@cadence.com" <sparmar@cadence.com>
+Subject: Re: [PATCH 6/9] usb: cdns3: Added CDNS3_ID_PERIPHERAL and
+ CDNS3_ID_HOST
+Thread-Topic: [PATCH 6/9] usb: cdns3: Added CDNS3_ID_PERIPHERAL and
+ CDNS3_ID_HOST
+Thread-Index: AQHWT3AYVVVPDhft+UO/YATov584VKj7sXqA
+Date:   Tue, 7 Jul 2020 06:30:50 +0000
+Message-ID: <20200707063059.GE16073@b29397-desktop>
+References: <20200701062004.29908-1-pawell@cadence.com>
+ <20200701062004.29908-7-pawell@cadence.com>
+In-Reply-To: <20200701062004.29908-7-pawell@cadence.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: cadence.com; dkim=none (message not signed)
+ header.d=none;cadence.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4454d870-8bd3-4b41-5bbf-08d8223f4aa9
+x-ms-traffictypediagnostic: AM5PR0401MB2484:
+x-microsoft-antispam-prvs: <AM5PR0401MB2484C8C6AFE804128BC9700B8B660@AM5PR0401MB2484.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pfvUcWLoHIQDb2tHI47yv+8qzZMTWswTWSri+QheEqBk2kzv6PSF6t24HI6vKnRkbwhIR5wbcp0MJG4mplWMPBcAPSxNUb+WWKD7NkHacY50/diB4mZa7bO85YprFrxt3YPFcbFoCpdu0uGYUWbnEOO2nuYIub7TIsSx4NbbxRnTS8rFKBzt2ceCciUOx0VIlTRXOs0DjgsZYGK345P+qgn1yiBhQRbZxOAojCjRbcvtom8tDdNeyAtKCSKISxxcJRS91UQKnCVJ8ridh13U3zkx4DDRLe9TknNgPLeHBDZdlzN5C+a8cDpiBjDxOqivMaSnVHxBnu8rYNTOWJVpZg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(39860400002)(396003)(366004)(376002)(136003)(346002)(186003)(91956017)(76116006)(8676002)(6512007)(9686003)(86362001)(33656002)(478600001)(54906003)(71200400001)(6486002)(44832011)(316002)(2906002)(53546011)(26005)(7416002)(64756008)(66946007)(6506007)(66446008)(66476007)(66556008)(83380400001)(8936002)(6916009)(5660300002)(4326008)(33716001)(1076003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: GdhTDqfGOycraDOR+hiXESVs4UXfKmQnE217cY04AoKiYHr3w8zkarfY2VACFAkNLtQH7DaGX456I0iz9YaUDJvDb5bxcy9c1dixMMv97UDNJs1WmPfs45rAA6orqaBQugNkd6oaHaGpcdVFSbyVjI9YP/jYwtEOtteHflbet4Tw1r4TxEMy03YslKyhwSAGU1MAo/FBpk2cx0du90wGpVlzy7PVqIoWPnVa42ZHv24J6k6V1P43KKKlvUuiFisT6TUIt9r+/yd86bT0nTyTC4jlKGJMtUx4C76jBWchAttNQKvy/ZGBa8DAw3pvu1Q09a8z+keEFuk+thgOdPRtsE5Oc19FFBh16098sFElmBXlnSchpsUgR8jXNqQXII55P64Z681aHpHrVT2fKJG8D3/S6dajnvqq5S4MLVrS9wkJ7kdnA3jH3BJaxIqep/oqw56g6oPED1B8BdzkcNXgN4zrufiVtDrc7VZsbSGeYM8RYoHD8KlE0MR1rZwVs5Nz
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C596E9F0B24AAE43B287373CAF628AC3@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4454d870-8bd3-4b41-5bbf-08d8223f4aa9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 06:30:50.2637
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xO3wIt047czEJnpxQ6ojrBkNBV39wukOdOamR0WaD7EYNY+THqu1a2Xj4TwEBRsfrCL5Rw3qUrwAwnH8b0TSrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0401MB2484
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the kmem_cache refcount is greater than one, we should not
-mark the root kmem_cache as dying. If we mark the root kmem_cache
-dying incorrectly, the non-root kmem_cache can never be destroyed.
-It resulted in memory leak when memcg was destroyed. We can use the
-following steps to reproduce.
+On 20-07-01 08:20:01, Pawel Laszczak wrote:
+> Patch adds 2 definitions that make it easier to understand the code.
+>=20
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+>  drivers/usb/cdns3/drd.c | 4 ++--
+>  drivers/usb/cdns3/drd.h | 3 +++
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
+> index 6fe092c828b3..8e7673da905e 100644
+> --- a/drivers/usb/cdns3/drd.c
+> +++ b/drivers/usb/cdns3/drd.c
+> @@ -87,7 +87,7 @@ bool cdns3_is_host(struct cdns3 *cdns)
+>  {
+>  	if (cdns->dr_mode =3D=3D USB_DR_MODE_HOST)
+>  		return true;
+> -	else if (!cdns3_get_id(cdns))
+> +	else if (cdns3_get_id(cdns) =3D=3D CDNS3_ID_HOST)
+>  		return true;
+> =20
+>  	return false;
+> @@ -98,7 +98,7 @@ bool cdns3_is_device(struct cdns3 *cdns)
+>  	if (cdns->dr_mode =3D=3D USB_DR_MODE_PERIPHERAL)
+>  		return true;
+>  	else if (cdns->dr_mode =3D=3D USB_DR_MODE_OTG)
+> -		if (cdns3_get_id(cdns))
+> +		if (cdns3_get_id(cdns) =3D=3D CDNS3_ID_PERIPHERAL)
+>  			return true;
+> =20
+>  	return false;
+> diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
+> index 35b6d459ee58..3889fead9df1 100644
+> --- a/drivers/usb/cdns3/drd.h
+> +++ b/drivers/usb/cdns3/drd.h
+> @@ -153,6 +153,9 @@ struct cdns3_otg_common_regs {
+>  /* Only for CDNS3_CONTROLLER_V0 version */
+>  #define OVERRIDE_IDPULLUP_V0		BIT(24)
+> =20
+> +#define CDNS3_ID_PERIPHERAL		1
+> +#define CDNS3_ID_HOST			0
+> +
 
-  1) Use kmem_cache_create() to create a new kmem_cache named A.
-  2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
-     so the refcount of B is just increased.
-  3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
-     decrease the B's refcount but mark the B as dying.
-  4) Create a new memory cgroup and alloc memory from the kmem_cache
-     A. It leads to create a non-root kmem_cache for allocating.
-  5) When destroy the memory cgroup created in the step 4), the
-     non-root kmem_cache can never be destroyed.
+Instead of adding MACRO, I prefer adding comments at the code to indicate
+"ID=3D0" means it is host mode, "ID=3D1" means it is device mode.
 
-If we repeat steps 4) and 5), this will cause a lot of memory leak.
-So only when refcount reach zero, we mark the root kmem_cache as dying.
+--=20
 
-Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- mm/slab_common.c | 43 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 2 deletions(-)
-
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 8c1ffbf7de45..83ee6211aec7 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -258,6 +258,11 @@ static void memcg_unlink_cache(struct kmem_cache *s)
- 		list_del(&s->memcg_params.kmem_caches_node);
- 	}
- }
-+
-+static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
-+{
-+	return is_root_cache(s) && s->memcg_params.dying;
-+}
- #else
- static inline int init_memcg_params(struct kmem_cache *s,
- 				    struct kmem_cache *root_cache)
-@@ -272,6 +277,11 @@ static inline void destroy_memcg_params(struct kmem_cache *s)
- static inline void memcg_unlink_cache(struct kmem_cache *s)
- {
- }
-+
-+static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
-+{
-+	return false;
-+}
- #endif /* CONFIG_MEMCG_KMEM */
- 
- /*
-@@ -326,6 +336,13 @@ int slab_unmergeable(struct kmem_cache *s)
- 	if (s->refcount < 0)
- 		return 1;
- 
-+	/*
-+	 * If the kmem_cache is dying. We should also skip this
-+	 * kmem_cache.
-+	 */
-+	if (memcg_kmem_cache_dying(s))
-+		return 1;
-+
- 	return 0;
- }
- 
-@@ -944,8 +961,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 	if (unlikely(!s))
- 		return;
- 
--	flush_memcg_workqueue(s);
--
- 	get_online_cpus();
- 	get_online_mems();
- 
-@@ -955,6 +970,30 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 	if (s->refcount)
- 		goto out_unlock;
- 
-+#ifdef CONFIG_MEMCG_KMEM
-+	mutex_unlock(&slab_mutex);
-+
-+	put_online_mems();
-+	put_online_cpus();
-+
-+	flush_memcg_workqueue(s);
-+
-+	get_online_cpus();
-+	get_online_mems();
-+
-+	mutex_lock(&slab_mutex);
-+
-+	if (WARN(s->refcount,
-+		 "kmem_cache_destroy %s: Slab cache is still referenced\n",
-+		 s->name)) {
-+		/*
-+		 * Reset the dying flag setted by flush_memcg_workqueue().
-+		 */
-+		s->memcg_params.dying = false;
-+		goto out_unlock;
-+	}
-+#endif
-+
- 	err = shutdown_memcg_caches(s);
- 	if (!err)
- 		err = shutdown_cache(s);
--- 
-2.11.0
-
+Thanks,
+Peter Chen=
