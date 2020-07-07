@@ -2,85 +2,84 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C415C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E59C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81199206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2CA206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGGCVV (ORCPT
+        id S1727793AbgGGCVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:21:21 -0400
-Received: from mga07.intel.com ([134.134.136.100]:30154 "EHLO mga07.intel.com"
+        Mon, 6 Jul 2020 22:21:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:19817 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgGGCVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:21:21 -0400
-IronPort-SDR: q+yYQk3py6SreB3YnA4yB2GAJPF0gfBEyUmEMMlERsF8XIo6TnvOzdEduVikvQizjHQfw0Pxnw
- T9SvP3o0hfGA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="212501153"
+        id S1726681AbgGGCVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:21:44 -0400
+IronPort-SDR: 1bRoAO2++l66kcQS6O+mGl1IDJrNPUaZfXLU9jbC/98g3uzMfcpMCUu4cHEXJtTw0oi7PrTXcG
+ 2eDewj0XdwmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="209050411"
 X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="212501153"
+   d="scan'208";a="209050411"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:21:20 -0700
-IronPort-SDR: 1Tb4ZIn9NzcwMF4xQ2bPjw67O91GeE9Y169FBPjDXnsqgupoHxzuNpW7UHgtoTloBTsROnrXsH
- jSYcU1ake7WA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:21:43 -0700
+IronPort-SDR: /08WP0qn50HLBtdiMdTo6E6rcAb9CUZQan5fiYL8VajZmofS8j8m/KSlLR89117o4DRzTLyHuC
+ rKwpVW7HVggA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="297198340"
-Received: from pakumpul-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.16])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jul 2020 19:21:16 -0700
-Date:   Tue, 7 Jul 2020 05:21:14 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org, dhowells@redhat.com, peterhuewe@gmx.de
-Subject: [GIT PULL] tpmdd updates for Linux v5.8-rc5
-Message-ID: <20200707022114.GA112019@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+   d="scan'208";a="357633718"
+Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.238.156.127])
+  by orsmga001.jf.intel.com with ESMTP; 06 Jul 2020 19:21:38 -0700
+From:   Cathy Zhang <cathy.zhang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
+        kyung.min.park@intel.com, jpoimboe@redhat.com,
+        gregkh@linuxfoundation.org, ak@linux.intel.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, Cathy Zhang <cathy.zhang@intel.com>
+Subject: [PATCH v2 0/4] Expose new features for intel processor
+Date:   Tue,  7 Jul 2020 10:16:19 +0800
+Message-Id: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patchset is to expose two new features for intel
+processors which support them, like Sapphire Rapids.
+SERIALIZE is a faster serializing instruction which
+does not modify registers, arithmetic flags or memory,
+will not cause VM exit. TSX suspend load tracking
+instruction aims to give a way to choose which memory
+accesses do not need to be tracked in the TSX read set.
 
-I quote directly the commit message to explain this PR:
+Changelog:
+v2	Add kernel feature enumeration patch to fix build error
 
-    Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")
+Cathy Zhang (2):
+  x86: Expose SERIALIZE for supported cpuid
+  x86: Expose TSX Suspend Load Address Tracking
 
-    Removing IFX0102 from tpm_tis was not a right move because both tpm_tis
-    and tpm_infineon use the same device ID. Revert the commit and add a
-    remark about a bug caused by commit 93e1b7d42e1e ("[PATCH] tpm: add HID
-    module parameter").
+Ricardo Neri (1):
+  x86/cpufeatures: Add enumeration for SERIALIZE instruction
 
-A real fix requires quirks added to both drivers. It can probably wait
-until v5.9 as the bug has existed since 2006.
+Kyung Min Park (1):
+  x86/cpufeatures: Enumerate TSX suspend load address tracking
+    instructions
 
-/Jarkko
+ arch/x86/include/asm/cpufeatures.h | 2 ++
+ arch/x86/kvm/cpuid.c               | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-The following changes since commit 786a2aa281f4c4ba424ea8b8ea1e85ab62c4a57c:
+--
+1.8.3.1
 
-  Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102") (2020-07-07 04:25:17 +0300)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-v5.8-rc5
-
-for you to fetch changes up to 786a2aa281f4c4ba424ea8b8ea1e85ab62c4a57c:
-
-  Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102") (2020-07-07 04:25:17 +0300)
-
-----------------------------------------------------------------
-tpmdd updates for Linux v5.8-rc5
-
-----------------------------------------------------------------
