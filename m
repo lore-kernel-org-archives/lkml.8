@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14743C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4FB2083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E858B2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135434;
-	bh=B81D+fhpARexeCwfFnG4FKM5x7QIS06WWsHqzJSHRTo=;
+	s=default; t=1594135438;
+	bh=i4XSvbvtC7Ca7fy5r1SeCxDj3Kj1bHrfkY3BraejvUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bErzZ+cle/UpQgXxl3SLOVgQR8CBb3ZxAa/TAxiSvgqL8f0/HyWgfl5nd6Vn+NKhH
-	 80ZyQ18ME9NxuOlHdRB+0o8IHYlyitdV9p7gkassdtYi07gjhIS7h7MdI7qGdbH3Wd
-	 LBrckscRvsQsJ+E2GSEa5Rlp9085V3IoaRq7CBVw=
+	b=mLfF2D7graTyZjnfYR+SdmkuuNG9qXlL36BiQYptgXogKbcVfi31edfJ4e2KzR9Yb
+	 yp8U6NbCtUc7Uq6dHVMVqZ/pKPYowemTl+89w5eA18l4b/GOqiYeOD0DxuUpzsJhZv
+	 +tZSuJG74Oehkh1JrFT7u82lMWaqZOmjJcwMbXfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgGGPXw (ORCPT
+        id S1730021AbgGGPXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbgGGPXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:50 -0400
+        id S1728799AbgGGPXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A59206F6;
-        Tue,  7 Jul 2020 15:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 705902083B;
+        Tue,  7 Jul 2020 15:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135429;
-        bh=B81D+fhpARexeCwfFnG4FKM5x7QIS06WWsHqzJSHRTo=;
+        s=default; t=1594135431;
+        bh=i4XSvbvtC7Ca7fy5r1SeCxDj3Kj1bHrfkY3BraejvUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNrN0JwKUsqeUgs4cOZxrJgxz2HRgDal0GsEYF+G2sg/6yaxfAMpweulXlMucQcCe
-         LU2sKPsj96eJ3ClTXP/coxNOX1c5sWlJydsK4eO1zxF3wQH1zOl3m/BX7CdtSTM+Wa
-         MPf1FDOw95EH72uT4keDc86hkPjohwvVW4837MHM=
+        b=sVUYJYcHNDlyK3K58iJGH2YYP2wWKAbUa5N1AczNEwC+2ewH6diork8VMvmXHgQA0
+         Nuqb6m7g0SSl9QL6svkgBdbaVPPDf9WiumR/pd+tk0yTVcwmBIgHEz2ClJBMMMqRv8
+         CRMcX/Si/djKSdrYVd/h/MuoqQ8skPdzVRKwvLUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 038/112] nvme-multipath: fix bogus request queue reference put
-Date:   Tue,  7 Jul 2020 17:16:43 +0200
-Message-Id: <20200707145802.805079891@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 039/112] io_uring: fix current->mm NULL dereference on exit
+Date:   Tue,  7 Jul 2020 17:16:44 +0200
+Message-Id: <20200707145802.851894457@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,82 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit c31244669f57963b6ce133a5555b118fc50aec95 ]
+[ Upstream commit d60b5fbc1ce8210759b568da49d149b868e7c6d3 ]
 
-The mpath disk node takes a reference on the request mpath
-request queue when adding live path to the mpath gendisk.
-However if we connected to an inaccessible path device_add_disk
-is not called, so if we disconnect and remove the mpath gendisk
-we endup putting an reference on the request queue that was
-never taken [1].
+Don't reissue requests from io_iopoll_reap_events(), the task may not
+have mm, which ends up with NULL. It's better to kill everything off on
+exit anyway.
 
-Fix that to check if we ever added a live path (using
-NVME_NS_HEAD_HAS_DISK flag) and if not, clear the disk->queue
-reference.
+[  677.734670] RIP: 0010:io_iopoll_complete+0x27e/0x630
+...
+[  677.734679] Call Trace:
+[  677.734695]  ? __send_signal+0x1f2/0x420
+[  677.734698]  ? _raw_spin_unlock_irqrestore+0x24/0x40
+[  677.734699]  ? send_signal+0xf5/0x140
+[  677.734700]  io_iopoll_getevents+0x12f/0x1a0
+[  677.734702]  io_iopoll_reap_events.part.0+0x5e/0xa0
+[  677.734703]  io_ring_ctx_wait_and_kill+0x132/0x1c0
+[  677.734704]  io_uring_release+0x20/0x30
+[  677.734706]  __fput+0xcd/0x230
+[  677.734707]  ____fput+0xe/0x10
+[  677.734709]  task_work_run+0x67/0xa0
+[  677.734710]  do_exit+0x35d/0xb70
+[  677.734712]  do_group_exit+0x43/0xa0
+[  677.734713]  get_signal+0x140/0x900
+[  677.734715]  do_signal+0x37/0x780
+[  677.734717]  ? enqueue_hrtimer+0x41/0xb0
+[  677.734718]  ? recalibrate_cpu_khz+0x10/0x10
+[  677.734720]  ? ktime_get+0x3e/0xa0
+[  677.734721]  ? lapic_next_deadline+0x26/0x30
+[  677.734723]  ? tick_program_event+0x4d/0x90
+[  677.734724]  ? __hrtimer_get_next_event+0x4d/0x80
+[  677.734726]  __prepare_exit_to_usermode+0x126/0x1c0
+[  677.734741]  prepare_exit_to_usermode+0x9/0x40
+[  677.734742]  idtentry_exit_cond_rcu+0x4c/0x60
+[  677.734743]  sysvec_reschedule_ipi+0x92/0x160
+[  677.734744]  ? asm_sysvec_reschedule_ipi+0xa/0x20
+[  677.734745]  asm_sysvec_reschedule_ipi+0x12/0x20
 
-[1]:
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 1372 at lib/refcount.c:28 refcount_warn_saturate+0xa6/0xf0
-CPU: 1 PID: 1372 Comm: nvme Tainted: G           O      5.7.0-rc2+ #3
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1ubuntu1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0xa6/0xf0
-RSP: 0018:ffffb29e8053bdc0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8b7a2f4fc060 RCX: 0000000000000007
-RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8b7a3ec99980
-RBP: ffff8b7a2f4fc000 R08: 00000000000002e1 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-R13: fffffffffffffff2 R14: ffffb29e8053bf08 R15: ffff8b7a320e2da0
-FS:  00007f135d4ca800(0000) GS:ffff8b7a3ec80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005651178c0c30 CR3: 000000003b650005 CR4: 0000000000360ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- disk_release+0xa2/0xc0
- device_release+0x28/0x80
- kobject_put+0xa5/0x1b0
- nvme_put_ns_head+0x26/0x70 [nvme_core]
- nvme_put_ns+0x30/0x60 [nvme_core]
- nvme_remove_namespaces+0x9b/0xe0 [nvme_core]
- nvme_do_delete_ctrl+0x43/0x5c [nvme_core]
- nvme_sysfs_delete.cold+0x8/0xd [nvme_core]
- kernfs_fop_write+0xc1/0x1a0
- vfs_write+0xb6/0x1a0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x52/0x1a0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported-by: Anton Eidelman <anton@lightbitslabs.com>
-Tested-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/io_uring.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index d1cb65698288b..03bc3aba09871 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -691,6 +691,14 @@ void nvme_mpath_remove_disk(struct nvme_ns_head *head)
- 	kblockd_schedule_work(&head->requeue_work);
- 	flush_work(&head->requeue_work);
- 	blk_cleanup_queue(head->disk->queue);
-+	if (!test_bit(NVME_NSHEAD_DISK_LIVE, &head->flags)) {
-+		/*
-+		 * if device_add_disk wasn't called, prevent
-+		 * disk release to put a bogus reference on the
-+		 * request queue
-+		 */
-+		head->disk->queue = NULL;
-+	}
- 	put_disk(head->disk);
- }
- 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 63a456921903e..71d281f68ed83 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -858,6 +858,7 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+ 				 struct io_uring_files_update *ip,
+ 				 unsigned nr_args);
+ static int io_grab_files(struct io_kiocb *req);
++static void io_complete_rw_common(struct kiocb *kiocb, long res);
+ static void io_cleanup_req(struct io_kiocb *req);
+ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
+ 		       int fd, struct file **out_file, bool fixed);
+@@ -1697,6 +1698,14 @@ static void io_iopoll_queue(struct list_head *again)
+ 	do {
+ 		req = list_first_entry(again, struct io_kiocb, list);
+ 		list_del(&req->list);
++
++		/* shouldn't happen unless io_uring is dying, cancel reqs */
++		if (unlikely(!current->mm)) {
++			io_complete_rw_common(&req->rw.kiocb, -EAGAIN);
++			io_put_req(req);
++			continue;
++		}
++
+ 		refcount_inc(&req->refs);
+ 		io_queue_async_work(req);
+ 	} while (!list_empty(again));
 -- 
 2.25.1
 
