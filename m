@@ -2,52 +2,55 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B60C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F292BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DACD206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CA02078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135223;
-	bh=miJHj+Pb0feMSTpT/2VYBOZJEP5ZBQoJplkSCDqOLfE=;
+	s=default; t=1594135227;
+	bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KYgxsYcPoftQDB9uxVNixQv7EqtYg8VZGbVvbtDyuYKdHo7G1ymmg7opbKYtkPrJ8
-	 WlbuytfFMnw7Y3UXB5Zx4OMf1+10V3DJJy0hG28AMbNPj3NBpMWxynXr+kULF9M4FO
-	 DBBsdvydTa9FboPMc+0m72JyUc0bTgk7z5/KRUTY=
+	b=xQBpmS/b5ffTZ/zq3Vo7rBoIRVaZXLjRXbUoFeIIPouJfsFVS+w99zSIB+gQMWFr1
+	 OuhJR7Uh1ibzIFryQcPRRxMkwBOvAweZhoiD6i+B9D5ZhKTFTuPLB1tSwAJdga7o3R
+	 3NiX0GB1pREMLmSNd5JiFomZcvFiDfM88ZGaF7Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgGGPUV (ORCPT
+        id S1729512AbgGGPU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60172 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgGGPUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:13 -0400
+        id S1729503AbgGGPUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8FF1207BB;
-        Tue,  7 Jul 2020 15:20:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F15E3206CD;
+        Tue,  7 Jul 2020 15:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135212;
-        bh=miJHj+Pb0feMSTpT/2VYBOZJEP5ZBQoJplkSCDqOLfE=;
+        s=default; t=1594135217;
+        bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=We4Fxx8Kt62OI4Yl860dyDFfdQzYfF4DvBygBIZBoXnJWVOeMl70HIUro9kM6Fw1S
-         CZSGKoCwc81NTydtiVrbc/DKQ2QuUK023ocwTwVIlubtaqBA4s+ldqcqvP8vtVJhVz
-         9wGYTuL7si6dNd+zEarQ0jgUjXvUyuYAt+gAYd6Y=
+        b=JfHWovoPtAHXR1NFOhwmhr+9OQQJLeGkw/ADKM30g4ZORG/I2UspMsQrcVx76Ezz1
+         TWfLt/ywtSFmeKxq6xAJ+qaI2aSEoPkv6X7lxkeBs+nKLcxK+mm8uNKtgvE6oBgE1k
+         rba4lMnJcoQktkal3AtDWEFAOdQCzb5K6+vszuDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 18/65] kgdb: Avoid suspicious RCU usage warning
-Date:   Tue,  7 Jul 2020 17:16:57 +0200
-Message-Id: <20200707145753.341011958@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Alex Guzman <alex@guzman.io>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.4 20/65] tpm: Fix TIS locality timeout problems
+Date:   Tue,  7 Jul 2020 17:16:59 +0200
+Message-Id: <20200707145753.460530756@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,109 +63,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
+commit 7862840219058436b80029a0263fd1ef065fb1b3 upstream.
 
-At times when I'm using kgdb I see a splat on my console about
-suspicious RCU usage.  I managed to come up with a case that could
-reproduce this that looked like this:
+It has been reported that some TIS based TPMs are giving unexpected
+errors when using the O_NONBLOCK path of the TPM device. The problem
+is that some TPMs don't like it when you get and then relinquish a
+locality (as the tpm_try_get_ops()/tpm_put_ops() pair does) without
+sending a command.  This currently happens all the time in the
+O_NONBLOCK write path. Fix this by moving the tpm_try_get_ops()
+further down the code to after the O_NONBLOCK determination is made.
+This is safe because the priv->buffer_mutex still protects the priv
+state being modified.
 
-  WARNING: suspicious RCU usage
-  5.7.0-rc4+ #609 Not tainted
-  -----------------------------
-  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206275
+Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
+Reported-by: Mario Limonciello <Mario.Limonciello@dell.com>
+Tested-by: Alex Guzman <alex@guzman.io>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  other info that might help us debug this:
-
-    rcu_scheduler_active = 2, debug_locks = 1
-  3 locks held by swapper/0/1:
-   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-
-  stack backtrace:
-  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-  Hardware name: Google Cheza (rev3+) (DT)
-  Call trace:
-   dump_backtrace+0x0/0x1b8
-   show_stack+0x1c/0x24
-   dump_stack+0xd4/0x134
-   lockdep_rcu_suspicious+0xf0/0x100
-   find_task_by_pid_ns+0x5c/0x80
-   getthread+0x8c/0xb0
-   gdb_serial_stub+0x9d4/0xd04
-   kgdb_cpu_enter+0x284/0x7ac
-   kgdb_handle_exception+0x174/0x20c
-   kgdb_brk_fn+0x24/0x30
-   call_break_hook+0x6c/0x7c
-   brk_handler+0x20/0x5c
-   do_debug_exception+0x1c8/0x22c
-   el1_sync_handler+0x3c/0xe4
-   el1_sync+0x7c/0x100
-   rpmh_rsc_probe+0x38/0x420
-   platform_drv_probe+0x94/0xb4
-   really_probe+0x134/0x300
-   driver_probe_device+0x68/0x100
-   __device_attach_driver+0x90/0xa8
-   bus_for_each_drv+0x84/0xcc
-   __device_attach+0xb4/0x13c
-   device_initial_probe+0x18/0x20
-   bus_probe_device+0x38/0x98
-   device_add+0x38c/0x420
-
-If I understand properly we should just be able to blanket kgdb under
-one big RCU read lock and the problem should go away.  We'll add it to
-the beast-of-a-function known as kgdb_cpu_enter().
-
-With this I no longer get any splats and things seem to work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/char/tpm/tpm-dev-common.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 7d54c7c280544..2222f3225e53d 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -546,6 +546,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		arch_kgdb_ops.disable_hw_break(regs);
- 
- acquirelock:
-+	rcu_read_lock();
- 	/*
- 	 * Interrupts will be restored by the 'trap return' code, except when
- 	 * single stepping.
-@@ -602,6 +603,7 @@ return_normal:
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -620,6 +622,7 @@ return_normal:
- 		raw_spin_unlock(&dbg_master_lock);
- 		dbg_touch_watchdogs();
- 		local_irq_restore(flags);
-+		rcu_read_unlock();
- 
- 		goto acquirelock;
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -189,15 +189,6 @@ ssize_t tpm_common_write(struct file *fi
+ 		goto out;
  	}
-@@ -743,6 +746,7 @@ kgdb_restore:
- 	raw_spin_unlock(&dbg_master_lock);
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
-+	rcu_read_unlock();
  
- 	return kgdb_info[cpu].ret_state;
- }
--- 
-2.25.1
-
+-	/* atomic tpm command send and result receive. We only hold the ops
+-	 * lock during this period so that the tpm can be unregistered even if
+-	 * the char dev is held open.
+-	 */
+-	if (tpm_try_get_ops(priv->chip)) {
+-		ret = -EPIPE;
+-		goto out;
+-	}
+-
+ 	priv->response_length = 0;
+ 	priv->response_read = false;
+ 	*off = 0;
+@@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *fi
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
+-		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
+ 
++	/* atomic tpm command send and result receive. We only hold the ops
++	 * lock during this period so that the tpm can be unregistered even if
++	 * the char dev is held open.
++	 */
++	if (tpm_try_get_ops(priv->chip)) {
++		ret = -EPIPE;
++		goto out;
++	}
++
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
 
 
