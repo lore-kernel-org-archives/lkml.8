@@ -2,308 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5169C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96674C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0DA206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wB8imNzg"
+	by mail.kernel.org (Postfix) with ESMTP id 752E42075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594114825;
+	bh=ncpZrogq3J8lmjYVURRcrUwe28LiM7BV6dS0EhuvMYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IlYhha1qoUstsj4jz+6MgYbHQiKuRJRbRsnaG2CA7C3t7bAwVjIjyCh4+1Eqp9Tvb
+	 Joj37opDzVUpw9PO04MVErDzKSolAtrz9fEotXhSKqW0ncMUYbJD/3Jvq+3b77ztwY
+	 NEwWHB0igVS2DYSmPfK0qEpqURRJvPhtkX1+p12A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgGGJkV (ORCPT
+        id S1728260AbgGGJkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:40:21 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:12981 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgGGJkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:40:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594114820; x=1625650820;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=WZ5zfGhWL6WhFucGwSnIp365kYbsI6cDphU6OebIs8s=;
-  b=wB8imNzgQQQBUH4eKUV38wuXGAWwtDNBcXJSUR1oDdxDVmKj5j8UIYRZ
-   kDRA2nSsUZ7UZVPlRtnXjgSW4N9mxScXGlFqd+TeKUBk1McqFwk1bqCbq
-   h6Ph0LUyXUnnsMTGVcfT/8lR6iTmpM1ujGpizP0uq7b9c10id1VzKsG3/
-   c=;
-IronPort-SDR: eV0yAQ6NojJtkhqLrOEbUp8Zl8tL14BaPQqkLpKcVMLZCcBDhNfphlAaBq2zPZM2FqsI0aeRIT
- N4m5dWtI2sXQ==
-X-IronPort-AV: E=Sophos;i="5.75,323,1589241600"; 
-   d="scan'208";a="57903926"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Jul 2020 09:40:17 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 0B72FA2752;
-        Tue,  7 Jul 2020 09:40:04 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 09:40:04 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.203) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 09:39:47 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v13 4/8] mm/damon/schemes: Implement a debugfs interface
-Date:   Tue, 7 Jul 2020 11:38:01 +0200
-Message-ID: <20200707093805.4775-5-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200707093805.4775-1-sjpark@amazon.com>
-References: <20200707093805.4775-1-sjpark@amazon.com>
+        Tue, 7 Jul 2020 05:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgGGJkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:40:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748922065F;
+        Tue,  7 Jul 2020 09:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594114821;
+        bh=ncpZrogq3J8lmjYVURRcrUwe28LiM7BV6dS0EhuvMYs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qpoN0vyZtStKSEGEbjrGotpdOhig7Flj630Ebfzd7XzgvP3pkzPdr9qyKetD14bjC
+         4onI/J8co2fF4Z2iBwsMeP2PU5/c4EFBqjz7si14mxt7+zcBYu+BQbG+0UWT+0Vev/
+         F/yBgirTg64y7+pXStMAUrnp05wefaOurTN5TDUg=
+Date:   Tue, 7 Jul 2020 11:40:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Cathy Zhang <cathy.zhang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
+        kyung.min.park@intel.com, jpoimboe@redhat.com, ak@linux.intel.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v2 2/4] x86/cpufeatures: Enumerate TSX suspend load
+ address tracking instructions
+Message-ID: <20200707094019.GA2639362@kroah.com>
+References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
+ <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.203]
-X-ClientProxiedBy: EX13D36UWA002.ant.amazon.com (10.43.160.24) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Tue, Jul 07, 2020 at 10:16:21AM +0800, Cathy Zhang wrote:
+> Intel TSX suspend load tracking instructions aim to give a way to
+> choose which memory accesses do not need to be tracked in the TSX
+> read set. Add TSX suspend load tracking CPUID feature flag TSXLDTRK
+> for enumeration.
+> 
+> A processor supports Intel TSX suspend load address tracking if
+> CPUID.0x07.0x0:EDX[16] is present. Two instructions XSUSLDTRK, XRESLDTRK
+> are available when this feature is present.
+> 
+> The CPU feature flag is shown as "tsxldtrk" in /proc/cpuinfo.
+> 
+> Detailed information on the instructions and CPUID feature flag TSXLDTRK
+> can be found in the latest Intel Architecture Instruction Set Extensions
+> and Future Features Programming Reference and Intel 64 and IA-32
+> Architectures Software Developer's Manual.
+> 
+> Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
+> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index adf45cf..34b66d7 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -366,6 +366,7 @@
+>  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+>  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+>  #define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
+> +#define X86_FEATURE_TSX_LDTRK           (18*32+16) /* TSX Suspend Load Address Tracking */
 
-This commit implements a debugfs interface for the data access
-monitoring oriented memory management schemes.  It is supposed to be
-used by administrators and/or privileged user space programs.  Users can
-read and update the rules using ``<debugfs>/damon/schemes`` file.  The
-format is::
+No tabs?
 
-    <min/max size> <min/max access frequency> <min/max age> <action>
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- mm/damon.c | 172 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 170 insertions(+), 2 deletions(-)
-
-diff --git a/mm/damon.c b/mm/damon.c
-index c08b8c80c517..28b1e119e521 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -194,6 +194,29 @@ static void damon_destroy_task(struct damon_task *t)
- 	damon_free_task(t);
- }
- 
-+static struct damos *damon_new_scheme(
-+		unsigned long min_sz_region, unsigned long max_sz_region,
-+		unsigned int min_nr_accesses, unsigned int max_nr_accesses,
-+		unsigned int min_age_region, unsigned int max_age_region,
-+		enum damos_action action)
-+{
-+	struct damos *scheme;
-+
-+	scheme = kmalloc(sizeof(*scheme), GFP_KERNEL);
-+	if (!scheme)
-+		return NULL;
-+	scheme->min_sz_region = min_sz_region;
-+	scheme->max_sz_region = max_sz_region;
-+	scheme->min_nr_accesses = min_nr_accesses;
-+	scheme->max_nr_accesses = max_nr_accesses;
-+	scheme->min_age_region = min_age_region;
-+	scheme->max_age_region = max_age_region;
-+	scheme->action = action;
-+	INIT_LIST_HEAD(&scheme->list);
-+
-+	return scheme;
-+}
-+
- static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
- {
- 	list_add_tail(&s->list, &ctx->schemes_list);
-@@ -1477,6 +1500,145 @@ static ssize_t debugfs_monitor_on_write(struct file *file,
- 	return ret;
- }
- 
-+static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
-+{
-+	struct damos *s;
-+	int written = 0;
-+	int rc;
-+
-+	damon_for_each_scheme(s, c) {
-+		rc = snprintf(&buf[written], len - written,
-+				"%lu %lu %u %u %u %u %d\n",
-+				s->min_sz_region, s->max_sz_region,
-+				s->min_nr_accesses, s->max_nr_accesses,
-+				s->min_age_region, s->max_age_region,
-+				s->action);
-+		if (!rc)
-+			return -ENOMEM;
-+
-+		written += rc;
-+	}
-+	return written;
-+}
-+
-+static ssize_t debugfs_schemes_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	ssize_t len;
-+
-+	kbuf = kmalloc(count, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	len = sprint_schemes(ctx, kbuf, count);
-+	mutex_unlock(&ctx->kdamond_lock);
-+	if (len < 0)
-+		goto out;
-+	len = simple_read_from_buffer(buf, count, ppos, kbuf, len);
-+
-+out:
-+	kfree(kbuf);
-+	return len;
-+}
-+
-+static void free_schemes_arr(struct damos **schemes, ssize_t nr_schemes)
-+{
-+	ssize_t i;
-+
-+	for (i = 0; i < nr_schemes; i++)
-+		kfree(schemes[i]);
-+	kfree(schemes);
-+}
-+
-+/*
-+ * Converts a string into an array of struct damos pointers
-+ *
-+ * Returns an array of struct damos pointers that converted if the conversion
-+ * success, or NULL otherwise.
-+ */
-+static struct damos **str_to_schemes(const char *str, ssize_t len,
-+				ssize_t *nr_schemes)
-+{
-+	struct damos *scheme, **schemes;
-+	const int max_nr_schemes = 256;
-+	int pos = 0, parsed, ret;
-+	unsigned long min_sz, max_sz;
-+	unsigned int min_nr_a, max_nr_a, min_age, max_age;
-+	unsigned int action;
-+
-+	schemes = kmalloc_array(max_nr_schemes, sizeof(scheme),
-+			GFP_KERNEL);
-+	if (!schemes)
-+		return NULL;
-+
-+	*nr_schemes = 0;
-+	while (pos < len && *nr_schemes < max_nr_schemes) {
-+		ret = sscanf(&str[pos], "%lu %lu %u %u %u %u %u%n",
-+				&min_sz, &max_sz, &min_nr_a, &max_nr_a,
-+				&min_age, &max_age, &action, &parsed);
-+		if (ret != 7)
-+			break;
-+		if (action >= DAMOS_ACTION_LEN) {
-+			pr_err("wrong action %d\n", action);
-+			goto fail;
-+		}
-+
-+		pos += parsed;
-+		scheme = damon_new_scheme(min_sz, max_sz, min_nr_a, max_nr_a,
-+				min_age, max_age, action);
-+		if (!scheme)
-+			goto fail;
-+
-+		schemes[*nr_schemes] = scheme;
-+		*nr_schemes += 1;
-+	}
-+	return schemes;
-+fail:
-+	free_schemes_arr(schemes, *nr_schemes);
-+	return NULL;
-+}
-+
-+static ssize_t debugfs_schemes_write(struct file *file, const char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	struct damos **schemes;
-+	ssize_t nr_schemes = 0, ret = count;
-+	int err;
-+
-+	kbuf = user_input_str(buf, count, ppos);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	schemes = str_to_schemes(kbuf, ret, &nr_schemes);
-+	if (!schemes) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond) {
-+		ret = -EBUSY;
-+		goto unlock_out;
-+	}
-+
-+	err = damon_set_schemes(ctx, schemes, nr_schemes);
-+	if (err)
-+		ret = err;
-+	else
-+		nr_schemes = 0;
-+unlock_out:
-+	mutex_unlock(&ctx->kdamond_lock);
-+	free_schemes_arr(schemes, nr_schemes);
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
- static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
- {
- 	struct damon_task *t;
-@@ -1695,6 +1857,12 @@ static const struct file_operations pids_fops = {
- 	.write = debugfs_pids_write,
- };
- 
-+static const struct file_operations schemes_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_schemes_read,
-+	.write = debugfs_schemes_write,
-+};
-+
- static const struct file_operations record_fops = {
- 	.owner = THIS_MODULE,
- 	.read = debugfs_record_read,
-@@ -1711,10 +1879,10 @@ static struct dentry *debugfs_root;
- 
- static int __init damon_debugfs_init(void)
- {
--	const char * const file_names[] = {"attrs", "record",
-+	const char * const file_names[] = {"attrs", "record", "schemes",
- 		"pids", "monitor_on"};
- 	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
--		&pids_fops, &monitor_on_fops};
-+		&schemes_fops, &pids_fops, &monitor_on_fops};
- 	int i;
- 
- 	debugfs_root = debugfs_create_dir("damon", NULL);
--- 
-2.17.1
+:(
 
