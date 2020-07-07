@@ -2,110 +2,154 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B33DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1901FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3495321532
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE5A21532
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="apf3Li20"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="U3RQQpYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGGUPP (ORCPT
+        id S1728809AbgGGUPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:15:15 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49507 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728067AbgGGUPO (ORCPT
+        Tue, 7 Jul 2020 16:15:23 -0400
+Received: from mail.efficios.com ([167.114.26.124]:42648 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgGGUPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:15:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594152913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DYtZMNoSH5tT3xKArGRPbFktJPFGX2LErV9OGvxddAA=;
-        b=apf3Li20M8Lr959frlWMsrts4PNcgfb2qhLxUnhJ0fi2UQOeb+XlKj0dDfrQWnvVTvLO4S
-        f9DZ4Hb59Y/pyooPqAsjF4heipHXCctzB43GAz3zxmkpqboL8XQsIPMMDg1P3LeSH69jPc
-        HCF1zAYQU3DCE4ZLqJpGGAn3nrFjwls=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-cUH1IXlXMUSU-zpRbubvOg-1; Tue, 07 Jul 2020 16:15:11 -0400
-X-MC-Unique: cUH1IXlXMUSU-zpRbubvOg-1
-Received: by mail-qt1-f200.google.com with SMTP id r25so31513433qtj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:15:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DYtZMNoSH5tT3xKArGRPbFktJPFGX2LErV9OGvxddAA=;
-        b=jD5G5y2VrW25WrG6224yc79mVGDPLueG2pP7PlzYXfb3l1iXJfBcIF/epXzj0MTIwx
-         UyPoFM8hZ0syz3QXHW0pKd422WwEuhovAiiPbqLDgVaRbRiDRqa/aGqEs53RLRBsqhDY
-         AVCvNvadPL82JJjOmbkkOOhDZAVHCyPHt4iOuB04gfTlrNCJMP860/2C8gq0J9fLrfRn
-         5s+fWmQZltNLy1TnWJHy2cz/LXwZCng3xlsnXkLarXKwqmV2e0AoJVMt+zEPlJuErR5S
-         QD/4EDqkKtmCXTaZvr2lacJfUno8KbHx04zMxk/RTPktUrY96quzJdGOFMbIBlr7YjUm
-         WX6A==
-X-Gm-Message-State: AOAM533nsuE8IioeQbQXIjCso8FBtLx9MI8YeGSQQItVLO/f4WxE3vWo
-        PVRiKPDGRUc2oTIDxW7yArjdcPwdyT9vYlAUQ+xY5yQcliHe64cb4hCeZLpqRbjhmGmo57RkBFr
-        ZSziTNWgW38iDA7t8yrvL32Nl
-X-Received: by 2002:a37:7ec1:: with SMTP id z184mr52466868qkc.185.1594152911004;
-        Tue, 07 Jul 2020 13:15:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJymaqFNwY67jxYXAjVi4pHOd20KFZ9k9uKRFyhRphB+5xxP+YZ4ehh2D+MYuYBMhFJYol+BhA==
-X-Received: by 2002:a37:7ec1:: with SMTP id z184mr52466842qkc.185.1594152910791;
-        Tue, 07 Jul 2020 13:15:10 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id v12sm27518581qtj.32.2020.07.07.13.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 13:15:10 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 16:15:08 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200707201508.GH88106@xz-x1>
-References: <20200601115957.1581250-1-peterx@redhat.com>
- <20200601115957.1581250-3-peterx@redhat.com>
- <20200702230849.GL3575@linux.intel.com>
- <20200703184122.GF6677@xz-x1>
- <20200707061732.GI5208@linux.intel.com>
- <20200707195009.GE88106@xz-x1>
- <20200707195658.GK20096@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200707195658.GK20096@linux.intel.com>
+        Tue, 7 Jul 2020 16:15:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A04446B43;
+        Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yOIvdI2ckLgJ; Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3C0716948;
+        Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3C0716948
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594152921;
+        bh=1PCRlMxH36DCjUQDGqFs23OHDpCLLV7B6FKEQGwHg9I=;
+        h=From:To:Date:Message-Id;
+        b=U3RQQpYODAIWV6N38klr6NfyC1fV3+l3Av308zbg70xc3QDe0nTj23gdbeNuHtgtY
+         Amdqp9NXbqk9WmsroOWGddLT8p21CMAeFZiTsMbVqlaDNgkiJDyjC/0cnyzdx2VebP
+         i2DPEb/9685UgVnp8oFVpec0vkH7ewAOZi1aJTQMFuBTWRIvDN48IPf1LxR4x9aA2r
+         4d+rL8TtvNKdOfbecGLAOr1oCCLt7akQWKG2U+8low/fxiQe1jdaHRxcMiFz8Z4qX7
+         UpFIt7KioAeRNFzLchYIo8p9l2LRb+emo6gFkfbRs8oIMwliWOwMF68tNRCC6dj7kK
+         0OueWy1Vc2sMw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id KSuWrz_Dvd2W; Tue,  7 Jul 2020 16:15:21 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 25E2968E5;
+        Tue,  7 Jul 2020 16:15:19 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>, stable@vger.kernel.org
+Subject: [PATCH for 5.8] sched: Fix unreliable rseq cpu_id for new tasks
+Date:   Tue,  7 Jul 2020 16:15:05 -0400
+Message-Id: <20200707201505.2632-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:56:58PM -0700, Sean Christopherson wrote:
-> > > It's a single line of code, and there's more than one
-> > > "shouldn't" in the above.
-> > 
-> > If you want, I can both set it and add the comment.  Thanks,
-> 
-> Why bother with the comment?  It'd be wrong in the sense that the as_id is
-> always valid/accurate, even if npages == 0.
+While integrating rseq into glibc and replacing glibc's sched_getcpu
+implementation with rseq, glibc's tests discovered an issue with
+incorrect __rseq_abi.cpu_id field value right after the first time
+a newly created process issues sched_setaffinity.
 
-Sorry I'm confused.. when npages==0, why as_id field is meaningful?  Even if
-the id field is meaningless after the slot is successfully removed, or am I
-wrong?
+For the records, it triggers after building glibc and running tests, and
+then issuing:
 
-My understanding is that after your dynamic slot work, we'll only have at most
-one extra memslot that was just removed, and that slot should be meaningless as
-a whole.  Feel free to correct me.
+  for x in {1..2000} ; do posix/tst-affinity-static  & done
 
+and shows up as:
+
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+
+This is caused by the scheduler invoking __set_task_cpu() directly from
+sched_fork() and wake_up_new_task(), thus bypassing rseq_migrate() which
+is done by set_task_cpu().
+
+Add the missing rseq_migrate() to both functions. The only other direct
+use of __set_task_cpu() is done by init_idle(), which does not involve a
+user-space task.
+
+Based on my testing with the glibc test-case, just adding rseq_migrate()
+to wake_up_new_task() is sufficient to fix the observed issue. Also add
+it to sched_fork() to keep things consistent.
+
+The reason why this never triggered so far with the rseq/basic_test
+selftest is unclear.
+
+The current use of sched_getcpu(3) does not typically require it to be
+always accurate. However, use of the __rseq_abi.cpu_id field within rseq
+critical sections requires it to be accurate. If it is not accurate, it
+can cause corruption in the per-cpu data targeted by rseq critical
+sections in user-space.
+
+Link: https://sourceware.org/pipermail/libc-alpha/2020-July/115816.html
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Tested-By: Florian Weimer <fweimer@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Neel Natu <neelnatu@google.com>
+Cc: linux-api@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.18+
+---
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ca5db40392d4..86a855bd4d90 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2962,6 +2962,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	 * Silence PROVE_RCU.
+ 	 */
+ 	raw_spin_lock_irqsave(&p->pi_lock, flags);
++	rseq_migrate(p);
+ 	/*
+ 	 * We're setting the CPU for the first time, we don't migrate,
+ 	 * so use __set_task_cpu().
+@@ -3026,6 +3027,7 @@ void wake_up_new_task(struct task_struct *p)
+ 	 * as we're not fully set-up yet.
+ 	 */
+ 	p->recent_used_cpu = task_cpu(p);
++	rseq_migrate(p);
+ 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
+ #endif
+ 	rq = __task_rq_lock(p, &rf);
 -- 
-Peter Xu
+2.17.1
 
