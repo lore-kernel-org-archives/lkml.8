@@ -2,138 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7993EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F409C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52527206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202EC20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kXnMCEke"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw7yjM26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgGGVtu (ORCPT
+        id S1728907AbgGGVvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        Tue, 7 Jul 2020 17:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgGGVtt (ORCPT
+        with ESMTP id S1726273AbgGGVvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:49:49 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E448C08C5E2
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:49:49 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so20622441pgb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:49:49 -0700 (PDT)
+        Tue, 7 Jul 2020 17:51:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2963CC061755;
+        Tue,  7 Jul 2020 14:51:13 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z24so26910604ljn.8;
+        Tue, 07 Jul 2020 14:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Mpd18shi8GLEcLMxPZWWvNdFFRedl4Y7uuQSPmBzhFo=;
-        b=kXnMCEke8ckvQzbnSwGYSKdBvP77PeU0ZTB8dUWQKCYfEmsKqGvVCAIFkLFUqw/J9k
-         zPdyXNQfxd5evbDSecLwG7iNEVK+rkYwTE/Bx5FW1DBAZPW6/pgjeG6j1nk8racRlVeK
-         F7IJi3FYMrPxxpgm8Ao9AgHxdjZ9CjEJAEof2KeYWlkD87KrCWwfRdXFO0+m0TrbZkC7
-         6UZpU3xpfuhO6rrx0MoEquHkD2V6l3GYnCk58rXNBW1yzz4hLvchS44ukh0D6/51blCw
-         sHCPDVqeVgzbrREIxCySaJSN1v/+mtaL19mvi9+2QJVAVsjSUQvbXxr8mjwXoy63tymT
-         YvIw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
+        b=dw7yjM26eD+SivZGQRsSZDI86YkEQwqjUt12OuUAE6YanGKEv//efPK8MbwCtGMxK2
+         Ou/3KrvoV5egqoRVXl0ZMhc7zEG+Oc5OThr9rsr5Pmbxaacgr+Rju+tujny9dBUAHF4R
+         x+/HgM0jgPC+wPSgQLeUNeGi2lSCY9wthNyQwpmUOW0SBMnpKys1XgXGRXTC/IUyJi5p
+         lc29CMXgRNek4RhD3nEECJyf966d2FW6xU3pCXXPRPZxeJ7TXHfbM5twqhQTkQDaQMr1
+         GS1mpzEQx2qk+hM0o1tAV2gvEvQgmYUwIsQ/QjXk7gx03csnqzzp8BSgm0sViAMPfE19
+         Npyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mpd18shi8GLEcLMxPZWWvNdFFRedl4Y7uuQSPmBzhFo=;
-        b=IKM4nlMco51DqZAwwjo4rWaPbnWgtcXGutJ8Od5JbAqbFruLbNYsgeSUns3A+ELh3+
-         bUikuWRZN6itTGu36OvgnhKzqoiC+cITxV/C766mJUZbSDGvJdMWlKQPav60eqtIqP5u
-         wdsXEzLv1Wi9Jn73NmiDOp1qzRKLaJ82Qrtv4cBq5bj7vrka1c+1OjUTJ1hJiECd75sk
-         NLz5qPe64GjSvubCkA7i+IIJA5JHrjT2kB0/23iQdIGir8lkmn6wasjjWtsNNaZ0PC+6
-         4Vpb2nVFSj3uncJ6HMBQI5eqK2/LxkQBQndIciIbai5IU45EDDgQHbwgWpLz4L7UGxe4
-         473A==
-X-Gm-Message-State: AOAM5303SRq4Q8oFpLt1Kuz75sL7bJaUJfOLYrnMCYkUqEa6YnYGwbnd
-        2FiuYqLWoZCTAow52fmACs0KQQ==
-X-Google-Smtp-Source: ABdhPJxeP51izVsbYdKGLkHwWWCPzaEWOyEa3CCdyZ/nZhUjxXxfcCCV2AbikppoE4JtYZqnFgHPLg==
-X-Received: by 2002:a62:8489:: with SMTP id k131mr51423400pfd.4.1594158588710;
-        Tue, 07 Jul 2020 14:49:48 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id m16sm24965238pfd.101.2020.07.07.14.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 14:49:48 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:49:42 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, Alex Elder <elder@linaro.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in FIELD_FIT
-Message-ID: <20200707214942.GA1723912@google.com>
-References: <20200707211642.1106946-1-ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
+        b=r3GsmxeQmgiut4kByvB1KIqNB1CjD86R//3LcU/kCcTqfO3KSbXdNjVqFvqM4e+kN5
+         hJaGFR/6h287zqa/j8hXrA13zilbhEX7w1qNVrNSC+V7SsN9BaIVmQefYOh212DO9kVR
+         vq3gWrN2TYieK+QebH38g7Sy58sYaB+odl6gnNG+inZeNxUP+nVILmNURW/9vEknh4of
+         nFccUfgtVi5nkiThd8D4q9JKgm/MNfJLDV+F9udoadh/anHd0EUkmzT8DZUIwyVUlS4g
+         62sJuxu0dHLZI8hZn7LowTBo+ul3eKUcVTQFiO7EG0ZmNYGLh/+x5wOEI0c82hmSNIts
+         EeKQ==
+X-Gm-Message-State: AOAM5327HgIixxBUsZLFoMrq75aa66o4LnUOTTPhLOS01JXbfih6jwP1
+        +65mLK3LoJdJyxR+KPTZZtFAeDAYiKGJyyaw+MI=
+X-Google-Smtp-Source: ABdhPJyIqM6oobh1dSUh7r7X71tuzYBiuigwuPWRQWYnubENwrIRTWrX9CzJ9+Ebw6KRfrWkbLadPtj7KITj1K0fIbo=
+X-Received: by 2002:a2e:880e:: with SMTP id x14mr20930708ljh.218.1594158671507;
+ Tue, 07 Jul 2020 14:51:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707211642.1106946-1-ndesaulniers@google.com>
+References: <20200707211359.29906-1-cphealy@gmail.com>
+In-Reply-To: <20200707211359.29906-1-cphealy@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 7 Jul 2020 18:51:00 -0300
+Message-ID: <CAOMZO5CWv7S4iWLWMxQwRs_8qfVRGVgMX3YTkr8H01=6L_V25g@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add node for CAAM
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 02:16:41PM -0700, Nick Desaulniers wrote:
-> From: Jakub Kicinski <kuba@kernel.org>
-> 
-> When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
-> compiler to deduce a case where _val can only have the value of -1 at
-> compile time. Specifically,
-> 
-> /* struct bpf_insn: _s32 imm */
-> u64 imm = insn->imm; /* sign extend */
-> if (imm >> 32) { /* non-zero only if insn->imm is negative */
->   /* inlined from ur_load_imm_any */
->   u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
->   if (__builtin_constant_p(__imm) && __imm > 255)
->     compiletime_assert_XXX()
-> 
-> This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
-> checks that a given value is representable in one byte (interpreted as
-> unsigned).
-> 
-> FIELD_FIT() should return true or false at runtime for whether a value
-> can fit for not. Don't break the build over a value that's too large for
-> the mask. We'd prefer to keep the inlining and compiler optimizations
-> though we know this case will always return false.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
-> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-> Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  include/linux/bitfield.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 48ea093ff04c..4e035aca6f7e 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -77,7 +77,7 @@
->   */
->  #define FIELD_FIT(_mask, _val)						\
->  	({								\
-> -		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
-> +		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
->  		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
->  	})
->  
+Hi Chris,
 
-I confirmied that this fixes the issue. Thanks for sending the patch!
+On Tue, Jul 7, 2020 at 6:15 PM Chris Healy <cphealy@gmail.com> wrote:
+>
+> From: Andrey Smirnov <andrew.smirnov@gmail.com>
+>
+> Add node for CAAM device in NXP Vybrid SoC.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
+>
+> v2:
+> - fixup commit to show that this patch is from Andrey Smirnov.
 
-Sami
+We usually put this information below the --- line.
+
+Maybe Shawn could fix it while applying it.
+
+Other that that:
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
