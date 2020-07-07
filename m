@@ -2,158 +2,99 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D34AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8945C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E982065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134680;
-	bh=pp7LbVfNg0KlEpeRGoaUoP4Ctzj9GX+/9aexR1AWft8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bT2zZRnZ1ZYXYRE3atyz/zjWxopCLSFbzogT2U6mJn4L6vHFXJp9g+VOKt165Xx8U
-	 qju7O1rHYeMcD0f2WCCTjtHegnOMhxuBmUXfPFRiAS2fHXBRsoMwJfNikGjgG7ZRUK
-	 ixyXd5ioH9tQ06DxMquoYYAB5iD9Dppm+kr75wP8=
+	by mail.kernel.org (Postfix) with ESMTP id 8A8972065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgGGPLS (ORCPT
+        id S1728674AbgGGPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Jul 2020 11:11:21 -0400
+Received: from smtp8.emailarray.com ([65.39.216.67]:34512 "EHLO
+        smtp8.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728661AbgGGPLS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgGGPLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:11:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8870B2078A;
-        Tue,  7 Jul 2020 15:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134674;
-        bh=pp7LbVfNg0KlEpeRGoaUoP4Ctzj9GX+/9aexR1AWft8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o4PpI5CbeGKfz9XcyTe+wV3UjhvLKatIDEsAJRean9GIw5gxwphwAoipUK71WI7Ns
-         xzdTD2niQKeoj2BOGm67xBSaC83MBSYptQz43Mrv7ipe1JJI40dbq6j3Gel+V96W0m
-         1v3obVIPPTpK5FVmMbl36DgWgXTcnyQWUlzXU7sE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shile Zhang <shile.zhang@nokia.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/19] sched/rt: Show the sched_rr_timeslice SCHED_RR timeslice tuning knob in milliseconds
-Date:   Tue,  7 Jul 2020 17:10:12 +0200
-Message-Id: <20200707145747.972946789@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
-References: <20200707145747.493710555@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: (qmail 99413 invoked by uid 89); 7 Jul 2020 15:11:12 -0000
+Received: from unknown (HELO localhost) (amxlbW9uQGZsdWdzdmFtcC5jb21AMTYzLjExNC4xMzIuMw==) (POLARISLOCAL)  
+  by smtp8.emailarray.com with SMTP; 7 Jul 2020 15:11:12 -0000
+Date:   Tue, 7 Jul 2020 08:11:09 -0700
+From:   Jonathan Lemon <jonathan.lemon@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dma-mapping: add a new dma_need_sync API
+Message-ID: <20200707151109.qui5uzzzq4dihfie@bsd-mbp>
+References: <20200629130359.2690853-1-hch@lst.de>
+ <20200629130359.2690853-2-hch@lst.de>
+ <20200706194227.vfhv5o4lporxjxmq@bsd-mbp.dhcp.thefacebook.com>
+ <20200707064730.GA23602@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707064730.GA23602@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@nokia.com>
+On Tue, Jul 07, 2020 at 08:47:30AM +0200, Christoph Hellwig wrote:
+> On Mon, Jul 06, 2020 at 12:42:27PM -0700, Jonathan Lemon wrote:
+> > On Mon, Jun 29, 2020 at 03:03:56PM +0200, Christoph Hellwig wrote:
+> > > Add a new API to check if calls to dma_sync_single_for_{device,cpu} are
+> > > required for a given DMA streaming mapping.
+> > > 
+> > > +::
+> > > +
+> > > +	bool
+> > > +	dma_need_sync(struct device *dev, dma_addr_t dma_addr);
+> > > +
+> > > +Returns %true if dma_sync_single_for_{device,cpu} calls are required to
+> > > +transfer memory ownership.  Returns %false if those calls can be skipped.
+> > 
+> > Hi Christoph -
+> > 
+> > Thie call above is for a specific dma_addr.  For correctness, would I
+> > need to check every addr, or can I assume that for a specific memory
+> > type (pages returned from malloc), that the answer would be identical?
+> 
+> You need to check every mapping.  E.g. this API pairs with a
+> dma_map_single/page call.  For S/G mappings you'd need to call it for
+> each entry, although if you have a use case for that we really should
+> add a dma_sg_need_sync helper instea of open coding the scatterlist walk.
 
-[ Upstream commit 975e155ed8732cb81f55c021c441ae662dd040b5 ]
+My use case is setting up a pinned memory area, and caching the dma
+mappings.  I'd like to bypass storing the DMA addresses if they aren't
+needed.  For example:
 
-We added the 'sched_rr_timeslice_ms' SCHED_RR tuning knob in this commit:
+setup()
+{
+    if (dma_need_sync(dev, addr, len)) {
+        kvmalloc_array(...)
+        cache_dma_mappings(...)
+    }
 
-  ce0dbbbb30ae ("sched/rt: Add a tuning knob to allow changing SCHED_RR timeslice")
 
-... which name suggests to users that it's in milliseconds, while in reality
-it's being set in milliseconds but the result is shown in jiffies.
+dev_get_dma(page)
+{
+    if (!cache)
+        return page_to_phys(page)
 
-This is obviously confusing when HZ is not 1000, it makes it appear like the
-value set failed, such as HZ=100:
+    return dma_cache_lookup(...)
 
-  root# echo 100 > /proc/sys/kernel/sched_rr_timeslice_ms
-  root# cat /proc/sys/kernel/sched_rr_timeslice_ms
-  10
 
-Fix this to be milliseconds all around.
 
-Signed-off-by: Shile Zhang <shile.zhang@nokia.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1485612049-20923-1-git-send-email-shile.zhang@nokia.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/sched/sysctl.h | 1 +
- kernel/sched/core.c          | 5 +++--
- kernel/sched/rt.c            | 1 +
- kernel/sysctl.c              | 2 +-
- 4 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index c9e4731cf10b8..7fc36ebc5de33 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -81,6 +81,7 @@ extern unsigned int sysctl_sched_cfs_bandwidth_slice;
- extern unsigned int sysctl_sched_autogroup_enabled;
- #endif
- 
-+extern int sysctl_sched_rr_timeslice;
- extern int sched_rr_timeslice;
- 
- extern int sched_rr_handler(struct ctl_table *table, int write,
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 14a87c1f3a3ac..4a0a754f24c87 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8266,8 +8266,9 @@ int sched_rr_handler(struct ctl_table *table, int write,
- 	/* make sure that internally we keep jiffies */
- 	/* also, writing zero resets timeslice to default */
- 	if (!ret && write) {
--		sched_rr_timeslice = sched_rr_timeslice <= 0 ?
--			RR_TIMESLICE : msecs_to_jiffies(sched_rr_timeslice);
-+		sched_rr_timeslice =
-+			sysctl_sched_rr_timeslice <= 0 ? RR_TIMESLICE :
-+			msecs_to_jiffies(sysctl_sched_rr_timeslice);
- 	}
- 	mutex_unlock(&mutex);
- 	return ret;
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 801b4ec407023..5ee5740635f36 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -9,6 +9,7 @@
- #include <linux/irq_work.h>
- 
- int sched_rr_timeslice = RR_TIMESLICE;
-+int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
- 
- static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index c2dddd335d064..ecbb1b764a82e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -412,7 +412,7 @@ static struct ctl_table kern_table[] = {
- 	},
- 	{
- 		.procname	= "sched_rr_timeslice_ms",
--		.data		= &sched_rr_timeslice,
-+		.data		= &sysctl_sched_rr_timeslice,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= sched_rr_handler,
+The reason for doing it this way is that the page in question may be
+backed by either system memory, or device memory such as a GPU.  For the
+latter, the GPU provides a table of DMA addresses where data may be
+accessed, so I'm unable to use the dma_map_page() API.
 -- 
-2.25.1
-
-
-
+Jonathan
