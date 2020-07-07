@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3577C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A112078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAEB20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135641;
-	bh=OPqoMn+/06zTJ/IhQ4HFgXBDX7x8RWNi3teDAPSeLTI=;
+	s=default; t=1594135648;
+	bh=Hzd4mdpfs9i93+btfq6vbDL4GqORE4KZfetCqu8IKOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEhm5gHu9/aXnuxZdbYIYrB57PcOypb400o0+iyousCmuKhDS9z5N+/iVKh1x2ROa
-	 y7LmCfT6myAepv1XcuW94onaOgLFwyWm0R9jm/+lO/PSOuMUMF0OG67Yuh+/2dTLff
-	 9XzUGrVHdiP3DNojndqGRaHOq4ZnLlyOBGXugvIc=
+	b=DUlIQ/dwMkogxWh0E+2tbqen0HglUKju4sQ1F4kt3+uTFgJgK33wPuvCMUJzN08Mu
+	 Ej4o2GOj4h6MweF435HMSC12m6XP2SjOxH1C0SMb7uGebLW2HydjJ67SQjdINwFRjS
+	 cKLAzuERmXuJYGKYBodKrcmQje0thESm1OcvWwOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgGGP1U (ORCPT
+        id S1729566AbgGGP10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbgGGP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:27:13 -0400
+        id S1730355AbgGGP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:27:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB9C2083B;
-        Tue,  7 Jul 2020 15:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0730B20663;
+        Tue,  7 Jul 2020 15:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135633;
-        bh=OPqoMn+/06zTJ/IhQ4HFgXBDX7x8RWNi3teDAPSeLTI=;
+        s=default; t=1594135635;
+        bh=Hzd4mdpfs9i93+btfq6vbDL4GqORE4KZfetCqu8IKOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=trQR4ks0uSSRNm3b9n3zGFpmcgGUjM1CQHosT2wbCsRgAnzTyJ3K4dGOlYKuXzoYp
-         WZZw6M9gM9CtfLdEEwEaOMpAn+8kZZJWe/0LQy8SlkJFUoLuH+uH51b+LLNlFp0IOa
-         y7cq3oOEXVeLM9bQw0TkE0X8ejUH7iqHShNvexHE=
+        b=IMrnIz0svDOYVdD9rYfxGStVcaI8jxhh72xv8ZqG3qjfLLPY6JDUnXjV5zz/emPX+
+         lNL42sZxx4ZPQTwzeezLgMl0Jm+HLZ7fGlL5pmLNq8JOF/WRuygXjr+ElRpZR3Fo0M
+         dueVXFe3AtOCJwBGW9yYIYd4qw5r3s5evKeJyYo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.7 095/112] hwmon: (pmbus) Fix page vs. register when accessing fans
-Date:   Tue,  7 Jul 2020 17:17:40 +0200
-Message-Id: <20200707145805.496172289@linuxfoundation.org>
+        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 5.7 096/112] thermal/drivers/cpufreq_cooling: Fix wrong frequency converted from power
+Date:   Tue,  7 Jul 2020 17:17:41 +0200
+Message-Id: <20200707145805.543763207@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,63 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kundrát <jan.kundrat@cesnet.cz>
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-commit b4c8af4c2a226fc9c25e1decbd26fdab1b0993ee upstream.
+commit 371a3bc79c11b707d7a1b7a2c938dc3cc042fffb upstream.
 
-Commit 16358542f32f ("hwmon: (pmbus) Implement multi-phase support")
-added support for multi-phase pmbus devices. However, when calling
-pmbus_add_sensor() for fans, the patch swapped the `page` and `reg`
-attributes. As a result, the fan speeds were reported as 0 RPM on my device.
+The function cpu_power_to_freq is used to find a frequency and set the
+cooling device to consume at most the power to be converted. For example,
+if the power to be converted is 80mW, and the em table is as follow.
+struct em_cap_state table[] = {
+	/* KHz     mW */
+	{ 1008000, 36, 0 },
+	{ 1200000, 49, 0 },
+	{ 1296000, 59, 0 },
+	{ 1416000, 72, 0 },
+	{ 1512000, 86, 0 },
+};
+The target frequency should be 1416000KHz, not 1512000KHz.
 
-Signed-off-by: Jan Kundrát <jan.kundrat@cesnet.cz>
-Fixes: 16358542f32f ("hwmon: (pmbus) Implement multi-phase support")
-Cc: stable@vger.kernel.org # v5.7+
-Link: https://lore.kernel.org/r/449bc9e6c0e4305581e45905ce9d043b356a9932.1592904387.git.jan.kundrat@cesnet.cz
-[groeck: Fixed references to offending commit]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200619090825.32747-1-finley.xiao@rock-chips.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pmbus/pmbus_core.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/cpufreq_cooling.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -1869,7 +1869,7 @@ static int pmbus_add_fan_ctrl(struct i2c
- 	struct pmbus_sensor *sensor;
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -123,12 +123,12 @@ static u32 cpu_power_to_freq(struct cpuf
+ {
+ 	int i;
  
- 	sensor = pmbus_add_sensor(data, "fan", "target", index, page,
--				  PMBUS_VIRT_FAN_TARGET_1 + id, 0xff, PSC_FAN,
-+				  0xff, PMBUS_VIRT_FAN_TARGET_1 + id, PSC_FAN,
- 				  false, false, true);
+-	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
+-		if (power > cpufreq_cdev->em->table[i].power)
++	for (i = cpufreq_cdev->max_level; i >= 0; i--) {
++		if (power >= cpufreq_cdev->em->table[i].power)
+ 			break;
+ 	}
  
- 	if (!sensor)
-@@ -1880,14 +1880,14 @@ static int pmbus_add_fan_ctrl(struct i2c
- 		return 0;
+-	return cpufreq_cdev->em->table[i + 1].frequency;
++	return cpufreq_cdev->em->table[i].frequency;
+ }
  
- 	sensor = pmbus_add_sensor(data, "pwm", NULL, index, page,
--				  PMBUS_VIRT_PWM_1 + id, 0xff, PSC_PWM,
-+				  0xff, PMBUS_VIRT_PWM_1 + id, PSC_PWM,
- 				  false, false, true);
- 
- 	if (!sensor)
- 		return -ENOMEM;
- 
- 	sensor = pmbus_add_sensor(data, "pwm", "enable", index, page,
--				  PMBUS_VIRT_PWM_ENABLE_1 + id, 0xff, PSC_PWM,
-+				  0xff, PMBUS_VIRT_PWM_ENABLE_1 + id, PSC_PWM,
- 				  true, false, false);
- 
- 	if (!sensor)
-@@ -1929,7 +1929,7 @@ static int pmbus_add_fan_attributes(stru
- 				continue;
- 
- 			if (pmbus_add_sensor(data, "fan", "input", index,
--					     page, pmbus_fan_registers[f], 0xff,
-+					     page, 0xff, pmbus_fan_registers[f],
- 					     PSC_FAN, true, true, true) == NULL)
- 				return -ENOMEM;
- 
+ /**
 
 
