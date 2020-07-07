@@ -2,611 +2,256 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB31C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84215C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9592075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594141558;
-	bh=6P8AQjZsw2rWcd5VxBUc/vKoLIY3ZeAMqgyJ7FSaYqA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XqwZwqw5cMHbvosUJv1ae47KGjqdvrlERARl5KvOV/FTw6hZqwLZVv/FaycTh9iaH
-	 8wZbADRCzrZNGPDGczmyFAPYi09UZa3zysis8KNHGoV+mdNKR5XIhtKXEMFxyTbeZz
-	 Oj+fdfEF7o1Htt5aVQ/Pfa2JovH4POot3qbkzQS8=
+	by mail.kernel.org (Postfix) with ESMTP id 57466206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz7acAXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGGRF5 (ORCPT
+        id S1728254AbgGGRJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgGGRF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:05:56 -0400
-Received: from embeddedor (unknown [200.39.26.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFE420738;
-        Tue,  7 Jul 2020 17:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594141555;
-        bh=6P8AQjZsw2rWcd5VxBUc/vKoLIY3ZeAMqgyJ7FSaYqA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uQATyXe3hE6SK6n4/LAtPRCiIyNIRNk5bsrLIHt2HWP/wF1QitnRHAwjjI813G1+2
-         endwOhSZxhESYS6ZG11QGOLKpUzq4jurnRsX0oyhNs0LJYw98eopWHlmnt8ICY5Ax1
-         IfeKbuvoq1W8c2f4W1ugRcWePDIhB5y2GboMSEoA=
-Date:   Tue, 7 Jul 2020 12:11:21 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] watchdog: Use fallthrough pseudo-keyword
-Message-ID: <20200707171121.GA13472@embeddedor>
+        Tue, 7 Jul 2020 13:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbgGGRJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 13:09:10 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F0EC061755;
+        Tue,  7 Jul 2020 10:09:10 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id e8so16529857ljb.0;
+        Tue, 07 Jul 2020 10:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=fW8qIZMYPQcc3OyuYOdgmdNlsp/pl4qWLU5HddWAHF4=;
+        b=Rz7acAXbi5DEiGxlBsUH1qFLpLJ/crtgC/gCB9a8cLmVSHvAF9getxURh8MDpQd101
+         mO6jzWMVQqXPxEtiOdLUX1qRPAJ+/I4jdF+X82a3heeDiyF5WXkYkd/wqL/bUcwDSJGI
+         ggr+zeoWmWhRo2FkisOjiTd1hwsfwBBJ+mF/BzO4Ca+i+XDqQ56lTWHW7pQK8N0lkZqt
+         YlI3ymoAS8SSYFOPipibX0RVuYGlPVlRrEtcV8h1L9h8kRhh9XA1lCu0+8aJ4IQHYtAg
+         VfejyhBaBSam7XYUK0o8qUedxFcGaDAWoMd/gwbsNkW+J2CjwQ0GIE9LtC0gczQDpP0e
+         SZNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=fW8qIZMYPQcc3OyuYOdgmdNlsp/pl4qWLU5HddWAHF4=;
+        b=ba7up5Ct9O4zvqwb1JzNodZG2tC2q4qpX+HKi813+wU7hU5Natp70FOjjWeMtW1ohq
+         GO2AWfwunsXJv1iTX4I1brUYDkS/IlxK0QyZ/cdnF3oVumL3Ul+ogU57w0xZAPqAihGm
+         8ohzBeut10BZrsT43PLcU0E1TdIBX/mLaZPs0d4W5BLvpJCW3AOfHPNkEznVpUsNjG07
+         5FU8ey1FTrkJuGpYlZnYCz51rRzdWwfPpWXR1jJgVGswJDFF2FWRT4tS4Bb0YhrZH0tb
+         1HNEvGrVvm8qozZza7jQHChGgJ1w3XlK17M2tcS1TCKjDZuhVCdnZcTABln0KyeIgUS+
+         NHCw==
+X-Gm-Message-State: AOAM533CNdm8i+US5/PLbZVB5fbkiKiU1Zo5Emmq4IAJuXp1maa+95Cw
+        OX2tl7G4JSav7Q9LyoPVkRk=
+X-Google-Smtp-Source: ABdhPJxiQQCsFbuYSx5DTEsdZGV4SNWi6C9n6tKEUDeJDvohtgdJPwcKfbQLkBYwoaVqEEwVTHHWzw==
+X-Received: by 2002:a2e:880e:: with SMTP id x14mr20497394ljh.218.1594141748764;
+        Tue, 07 Jul 2020 10:09:08 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id j2sm277201lji.115.2020.07.07.10.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 10:09:08 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200706142616.25192-4-sorganov@gmail.com>
+        <20200706152721.3j54m73bm673zlnj@skbuf> <874kqksdrb.fsf@osv.gnss.ru>
+        <20200707063651.zpt6bblizo5r3kir@skbuf> <87sge371hv.fsf@osv.gnss.ru>
+        <20200707164329.pm4p73nzbsda3sfv@skbuf>
+Date:   Tue, 07 Jul 2020 20:09:07 +0300
+In-Reply-To: <20200707164329.pm4p73nzbsda3sfv@skbuf> (Vladimir Oltean's
+        message of "Tue, 7 Jul 2020 19:43:29 +0300")
+Message-ID: <87sge345ho.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+Vladimir Oltean <olteanv@gmail.com> writes:
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> On Tue, Jul 07, 2020 at 07:07:08PM +0300, Sergey Organov wrote:
+>> Vladimir Oltean <olteanv@gmail.com> writes:
+>> >
+>> > What do you mean 'no ticking', and what do you mean by 'non-initialized
+>> > clock' exactly? I don't know if the fec driver is special in any way, do
+>> > you mean that multiple runs of $(phc_ctl /dev/ptp0 get) from user space
+>> > all return 0? That is not at all what is to be expected, I think. The
+>> > PHC is always ticking. Its time is increasing.
+>> 
+>> That's how it is right now. My point is that it likely shouldn't. Why is
+>> it ticking when nobody needs it? Does it draw more power due to that?
+>> 
+>> > What would be that initialization procedure that makes it tick, and
+>> > who is doing it (and when)?
+>> 
+>> The user space code that cares, obviously. Most probably some PTP stack
+>> daemon. I'd say that any set clock time ioctl() should start the clock,
+>> or yet another ioctl() that enables/disables the clock, whatever.
+>> 
+>
+> That ioctl doesn't exist, at least not in PTP land. This also addresses
+> your previous point.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/watchdog/advantechwdt.c   |    2 +-
- drivers/watchdog/alim1535_wdt.c   |    2 +-
- drivers/watchdog/alim7101_wdt.c   |    2 +-
- drivers/watchdog/ar7_wdt.c        |    3 +--
- drivers/watchdog/ath79_wdt.c      |    2 +-
- drivers/watchdog/eurotechwdt.c    |    2 +-
- drivers/watchdog/f71808e_wdt.c    |    4 ++--
- drivers/watchdog/gef_wdt.c        |    2 +-
- drivers/watchdog/geodewdt.c       |    2 +-
- drivers/watchdog/ib700wdt.c       |    2 +-
- drivers/watchdog/it8712f_wdt.c    |    2 +-
- drivers/watchdog/ixp4xx_wdt.c     |    2 +-
- drivers/watchdog/m54xx_wdt.c      |    2 +-
- drivers/watchdog/machzwd.c        |    2 +-
- drivers/watchdog/mv64x60_wdt.c    |    2 +-
- drivers/watchdog/nv_tco.c         |    2 +-
- drivers/watchdog/pc87413_wdt.c    |    2 +-
- drivers/watchdog/pcwd.c           |    2 +-
- drivers/watchdog/pcwd_pci.c       |    2 +-
- drivers/watchdog/pcwd_usb.c       |    2 +-
- drivers/watchdog/rc32434_wdt.c    |    2 +-
- drivers/watchdog/riowd.c          |    2 +-
- drivers/watchdog/sa1100_wdt.c     |    2 +-
- drivers/watchdog/sb_wdog.c        |    2 +-
- drivers/watchdog/sbc60xxwdt.c     |    2 +-
- drivers/watchdog/sbc7240_wdt.c    |    2 +-
- drivers/watchdog/sbc_fitpc2_wdt.c |    2 +-
- drivers/watchdog/sc520_wdt.c      |    2 +-
- drivers/watchdog/sch311x_wdt.c    |    2 +-
- drivers/watchdog/smsc37b787_wdt.c |    2 +-
- drivers/watchdog/w83877f_wdt.c    |    2 +-
- drivers/watchdog/w83977f_wdt.c    |    2 +-
- drivers/watchdog/wafer5823wdt.c   |    2 +-
- drivers/watchdog/watchdog_dev.c   |    2 +-
- drivers/watchdog/wdt.c            |    2 +-
- drivers/watchdog/wdt285.c         |    2 +-
- drivers/watchdog/wdt977.c         |    2 +-
- drivers/watchdog/wdt_pci.c        |    2 +-
- 38 files changed, 39 insertions(+), 40 deletions(-)
+struct timespec ts;
+...
+clock_settime(clkid, &ts)
 
-diff --git a/drivers/watchdog/advantechwdt.c b/drivers/watchdog/advantechwdt.c
-index 0e4c18a2aa42..554fe85da50e 100644
---- a/drivers/watchdog/advantechwdt.c
-+++ b/drivers/watchdog/advantechwdt.c
-@@ -177,7 +177,7 @@ static long advwdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (advwdt_set_heartbeat(new_timeout))
- 			return -EINVAL;
- 		advwdt_ping();
--		/* fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
-index 42338c7d4540..bfb9a91ca1df 100644
---- a/drivers/watchdog/alim1535_wdt.c
-+++ b/drivers/watchdog/alim1535_wdt.c
-@@ -220,7 +220,7 @@ static long ali_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 			return -EINVAL;
- 		ali_keepalive();
- 	}
--		/* fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/alim7101_wdt.c b/drivers/watchdog/alim7101_wdt.c
-index 5af0358f4390..4ff7f5afb7aa 100644
---- a/drivers/watchdog/alim7101_wdt.c
-+++ b/drivers/watchdog/alim7101_wdt.c
-@@ -279,7 +279,7 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		timeout = new_timeout;
- 		wdt_keepalive();
- 	}
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/ar7_wdt.c b/drivers/watchdog/ar7_wdt.c
-index c087027ffd5d..ff37dc91057d 100644
---- a/drivers/watchdog/ar7_wdt.c
-+++ b/drivers/watchdog/ar7_wdt.c
-@@ -235,8 +235,7 @@ static long ar7_wdt_ioctl(struct file *file,
- 		ar7_wdt_update_margin(new_margin);
- 		ar7_wdt_kick(1);
- 		spin_unlock(&wdt_lock);
--		/* Fall through */
--
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		if (put_user(margin, (int *)arg))
- 			return -EFAULT;
-diff --git a/drivers/watchdog/ath79_wdt.c b/drivers/watchdog/ath79_wdt.c
-index d6dff97c280b..0f18f06a21b6 100644
---- a/drivers/watchdog/ath79_wdt.c
-+++ b/drivers/watchdog/ath79_wdt.c
-@@ -215,8 +215,8 @@ static long ath79_wdt_ioctl(struct file *file, unsigned int cmd,
- 		err = ath79_wdt_set_timeout(t);
- 		if (err)
- 			break;
-+		fallthrough;
- 
--		/* fallthrough */
- 	case WDIOC_GETTIMEOUT:
- 		err = put_user(timeout, p);
- 		break;
-diff --git a/drivers/watchdog/eurotechwdt.c b/drivers/watchdog/eurotechwdt.c
-index f5ffa7be066e..2418ebb707bd 100644
---- a/drivers/watchdog/eurotechwdt.c
-+++ b/drivers/watchdog/eurotechwdt.c
-@@ -286,7 +286,7 @@ static long eurwdt_ioctl(struct file *file,
- 		eurwdt_timeout = time;
- 		eurwdt_set_timeout(time);
- 		spin_unlock(&eurwdt_lock);
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(eurwdt_timeout, p);
-diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-index a3c44d75d80e..d7a00e678b9a 100644
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -629,7 +629,7 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
- 
- 		if (new_options & WDIOS_ENABLECARD)
- 			return watchdog_start();
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_KEEPALIVE:
- 		watchdog_keepalive();
-@@ -643,7 +643,7 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
- 			return -EINVAL;
- 
- 		watchdog_keepalive();
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(watchdog.timeout, uarg.i);
-diff --git a/drivers/watchdog/gef_wdt.c b/drivers/watchdog/gef_wdt.c
-index f6541d1b65e3..df5406aa7d25 100644
---- a/drivers/watchdog/gef_wdt.c
-+++ b/drivers/watchdog/gef_wdt.c
-@@ -201,7 +201,7 @@ static long gef_wdt_ioctl(struct file *file, unsigned int cmd,
- 		if (get_user(timeout, (int __user *)argp))
- 			return -EFAULT;
- 		gef_wdt_set_timeout(timeout);
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		if (put_user(gef_wdt_timeout, (int __user *)argp))
-diff --git a/drivers/watchdog/geodewdt.c b/drivers/watchdog/geodewdt.c
-index 9914a4283cb2..83418924e30a 100644
---- a/drivers/watchdog/geodewdt.c
-+++ b/drivers/watchdog/geodewdt.c
-@@ -185,7 +185,7 @@ static long geodewdt_ioctl(struct file *file, unsigned int cmd,
- 
- 		if (geodewdt_set_heartbeat(interval))
- 			return -EINVAL;
--	/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 
-diff --git a/drivers/watchdog/ib700wdt.c b/drivers/watchdog/ib700wdt.c
-index 2b65ea9451d1..a0ddedc362fc 100644
---- a/drivers/watchdog/ib700wdt.c
-+++ b/drivers/watchdog/ib700wdt.c
-@@ -214,7 +214,7 @@ static long ibwdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (ibwdt_set_heartbeat(new_margin))
- 			return -EINVAL;
- 		ibwdt_ping();
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
-diff --git a/drivers/watchdog/it8712f_wdt.c b/drivers/watchdog/it8712f_wdt.c
-index 2fed40d14007..9b89d2f09568 100644
---- a/drivers/watchdog/it8712f_wdt.c
-+++ b/drivers/watchdog/it8712f_wdt.c
-@@ -303,7 +303,7 @@ static long it8712f_wdt_ioctl(struct file *file, unsigned int cmd,
- 
- 		superio_exit();
- 		it8712f_wdt_ping();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		if (put_user(margin, p))
- 			return -EFAULT;
-diff --git a/drivers/watchdog/ixp4xx_wdt.c b/drivers/watchdog/ixp4xx_wdt.c
-index 09886616fd21..aae29dcfaf11 100644
---- a/drivers/watchdog/ixp4xx_wdt.c
-+++ b/drivers/watchdog/ixp4xx_wdt.c
-@@ -136,7 +136,7 @@ static long ixp4xx_wdt_ioctl(struct file *file, unsigned int cmd,
- 
- 		heartbeat = time;
- 		wdt_enable();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		ret = put_user(heartbeat, (int *)arg);
-diff --git a/drivers/watchdog/m54xx_wdt.c b/drivers/watchdog/m54xx_wdt.c
-index 60ed6252e5f4..f388a769dbd3 100644
---- a/drivers/watchdog/m54xx_wdt.c
-+++ b/drivers/watchdog/m54xx_wdt.c
-@@ -155,7 +155,7 @@ static long m54xx_wdt_ioctl(struct file *file, unsigned int cmd,
- 
- 		heartbeat = time;
- 		wdt_enable();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		ret = put_user(heartbeat, (int *)arg);
-diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
-index 80ff94688487..743377c5b173 100644
---- a/drivers/watchdog/machzwd.c
-+++ b/drivers/watchdog/machzwd.c
-@@ -171,7 +171,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
- 	switch (n) {
- 	case WD1:
- 		zf_writew(COUNTER_1, new);
--		/* fall through */
-+		fallthrough;
- 	case WD2:
- 		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
- 	default:
-diff --git a/drivers/watchdog/mv64x60_wdt.c b/drivers/watchdog/mv64x60_wdt.c
-index 0bc72dd69b70..894aa63488d3 100644
---- a/drivers/watchdog/mv64x60_wdt.c
-+++ b/drivers/watchdog/mv64x60_wdt.c
-@@ -222,7 +222,7 @@ static long mv64x60_wdt_ioctl(struct file *file,
- 		if (get_user(timeout, (int __user *)argp))
- 			return -EFAULT;
- 		mv64x60_wdt_set_timeout(timeout);
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		if (put_user(mv64x60_wdt_timeout, (int __user *)argp))
-diff --git a/drivers/watchdog/nv_tco.c b/drivers/watchdog/nv_tco.c
-index d7a560e348d5..d15ad8583a59 100644
---- a/drivers/watchdog/nv_tco.c
-+++ b/drivers/watchdog/nv_tco.c
-@@ -250,7 +250,7 @@ static long nv_tco_ioctl(struct file *file, unsigned int cmd,
- 		if (tco_timer_set_heartbeat(new_heartbeat))
- 			return -EINVAL;
- 		tco_timer_keepalive();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, p);
- 	default:
-diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
-index 73fbfc99083b..2d4504302c9e 100644
---- a/drivers/watchdog/pc87413_wdt.c
-+++ b/drivers/watchdog/pc87413_wdt.c
-@@ -433,7 +433,7 @@ static long pc87413_ioctl(struct file *file, unsigned int cmd,
- 			return -EINVAL;
- 		timeout = new_timeout;
- 		pc87413_refresh();
--		/* fall through - and return the new timeout... */
-+		fallthrough;	/* and return the new timeout */
- 	case WDIOC_GETTIMEOUT:
- 		new_timeout = timeout * 60;
- 		return put_user(new_timeout, uarg.i);
-diff --git a/drivers/watchdog/pcwd.c b/drivers/watchdog/pcwd.c
-index 7a0587fdc52c..e86fa7f8351d 100644
---- a/drivers/watchdog/pcwd.c
-+++ b/drivers/watchdog/pcwd.c
-@@ -651,7 +651,7 @@ static long pcwd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 			return -EINVAL;
- 
- 		pcwd_keepalive();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, argp);
-diff --git a/drivers/watchdog/pcwd_pci.c b/drivers/watchdog/pcwd_pci.c
-index 81508a42a90c..54d86fcb1837 100644
---- a/drivers/watchdog/pcwd_pci.c
-+++ b/drivers/watchdog/pcwd_pci.c
-@@ -542,7 +542,7 @@ static long pcipcwd_ioctl(struct file *file, unsigned int cmd,
- 
- 		pcipcwd_keepalive();
- 	}
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, p);
-diff --git a/drivers/watchdog/pcwd_usb.c b/drivers/watchdog/pcwd_usb.c
-index 2f44af1831d0..79efca47cebb 100644
---- a/drivers/watchdog/pcwd_usb.c
-+++ b/drivers/watchdog/pcwd_usb.c
-@@ -452,7 +452,7 @@ static long usb_pcwd_ioctl(struct file *file, unsigned int cmd,
- 
- 		usb_pcwd_keepalive(usb_pcwd_device);
- 	}
--		/* fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, p);
-diff --git a/drivers/watchdog/rc32434_wdt.c b/drivers/watchdog/rc32434_wdt.c
-index aee3c2efd565..e74802f3a32e 100644
---- a/drivers/watchdog/rc32434_wdt.c
-+++ b/drivers/watchdog/rc32434_wdt.c
-@@ -230,7 +230,7 @@ static long rc32434_wdt_ioctl(struct file *file, unsigned int cmd,
- 			return -EFAULT;
- 		if (rc32434_wdt_set(new_timeout))
- 			return -EINVAL;
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return copy_to_user(argp, &timeout, sizeof(int)) ? -EFAULT : 0;
- 	default:
-diff --git a/drivers/watchdog/riowd.c b/drivers/watchdog/riowd.c
-index 1b9a6dc8f982..7008596a575f 100644
---- a/drivers/watchdog/riowd.c
-+++ b/drivers/watchdog/riowd.c
-@@ -134,7 +134,7 @@ static long riowd_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 			return -EINVAL;
- 		riowd_timeout = (new_margin + 59) / 60;
- 		riowd_writereg(p, riowd_timeout, WDTO_INDEX);
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(riowd_timeout * 60, (int __user *)argp);
-diff --git a/drivers/watchdog/sa1100_wdt.c b/drivers/watchdog/sa1100_wdt.c
-index 9b93be00109f..27846c6bdfb0 100644
---- a/drivers/watchdog/sa1100_wdt.c
-+++ b/drivers/watchdog/sa1100_wdt.c
-@@ -127,7 +127,7 @@ static long sa1100dog_ioctl(struct file *file, unsigned int cmd,
- 
- 		pre_margin = oscr_freq * time;
- 		writel_relaxed(readl_relaxed(OSCR) + pre_margin, OSMR3);
--		/*fall through*/
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		ret = put_user(pre_margin / oscr_freq, p);
-diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
-index da2dad00d473..504be461f992 100644
---- a/drivers/watchdog/sb_wdog.c
-+++ b/drivers/watchdog/sb_wdog.c
-@@ -202,7 +202,7 @@ static long sbwdog_ioctl(struct file *file, unsigned int cmd,
- 		timeout = time;
- 		sbwdog_set(user_dog, timeout);
- 		sbwdog_pet(user_dog);
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		/*
-diff --git a/drivers/watchdog/sbc60xxwdt.c b/drivers/watchdog/sbc60xxwdt.c
-index f2cbe6d880a8..a947a63fb44a 100644
---- a/drivers/watchdog/sbc60xxwdt.c
-+++ b/drivers/watchdog/sbc60xxwdt.c
-@@ -265,7 +265,7 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		timeout = new_timeout;
- 		wdt_keepalive();
- 	}
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/sbc7240_wdt.c b/drivers/watchdog/sbc7240_wdt.c
-index 520b8dd77ed4..d640b26e18a6 100644
---- a/drivers/watchdog/sbc7240_wdt.c
-+++ b/drivers/watchdog/sbc7240_wdt.c
-@@ -195,7 +195,7 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (wdt_set_timeout(new_timeout))
- 			return -EINVAL;
- 	}
--	/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, (int __user *)arg);
- 	default:
-diff --git a/drivers/watchdog/sbc_fitpc2_wdt.c b/drivers/watchdog/sbc_fitpc2_wdt.c
-index 1b20b33879c4..04483d6453d6 100644
---- a/drivers/watchdog/sbc_fitpc2_wdt.c
-+++ b/drivers/watchdog/sbc_fitpc2_wdt.c
-@@ -154,7 +154,7 @@ static long fitpc2_wdt_ioctl(struct file *file, unsigned int cmd,
- 
- 		margin = time;
- 		wdt_enable();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		ret = put_user(margin, (int *)arg);
-diff --git a/drivers/watchdog/sc520_wdt.c b/drivers/watchdog/sc520_wdt.c
-index fbe79bcc9297..e66e6b905964 100644
---- a/drivers/watchdog/sc520_wdt.c
-+++ b/drivers/watchdog/sc520_wdt.c
-@@ -321,7 +321,7 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 		wdt_keepalive();
- 	}
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/sch311x_wdt.c b/drivers/watchdog/sch311x_wdt.c
-index 83949a385f62..d8b77fe10eba 100644
---- a/drivers/watchdog/sch311x_wdt.c
-+++ b/drivers/watchdog/sch311x_wdt.c
-@@ -295,7 +295,7 @@ static long sch311x_wdt_ioctl(struct file *file, unsigned int cmd,
- 		if (sch311x_wdt_set_heartbeat(new_timeout))
- 			return -EINVAL;
- 		sch311x_wdt_keepalive();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/smsc37b787_wdt.c b/drivers/watchdog/smsc37b787_wdt.c
-index 43de56acd767..7463df479d11 100644
---- a/drivers/watchdog/smsc37b787_wdt.c
-+++ b/drivers/watchdog/smsc37b787_wdt.c
-@@ -474,7 +474,7 @@ static long wb_smsc_wdt_ioctl(struct file *file,
- 			return -EINVAL;
- 		timeout = new_timeout;
- 		wb_smsc_wdt_set_timeout(timeout);
--		/* fall through - and return the new timeout... */
-+		fallthrough;	/* and return the new timeout */
- 	case WDIOC_GETTIMEOUT:
- 		new_timeout = timeout;
- 		if (unit == UNIT_MINUTE)
-diff --git a/drivers/watchdog/w83877f_wdt.c b/drivers/watchdog/w83877f_wdt.c
-index 6b3b667e6f23..5772cc5d3780 100644
---- a/drivers/watchdog/w83877f_wdt.c
-+++ b/drivers/watchdog/w83877f_wdt.c
-@@ -289,7 +289,7 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		timeout = new_timeout;
- 		wdt_keepalive();
- 	}
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 	default:
-diff --git a/drivers/watchdog/w83977f_wdt.c b/drivers/watchdog/w83977f_wdt.c
-index 5212e68c6b01..fd64ae77780a 100644
---- a/drivers/watchdog/w83977f_wdt.c
-+++ b/drivers/watchdog/w83977f_wdt.c
-@@ -422,7 +422,7 @@ static long wdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 			return -EINVAL;
- 
- 		wdt_keepalive();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, uarg.i);
-diff --git a/drivers/watchdog/wafer5823wdt.c b/drivers/watchdog/wafer5823wdt.c
-index a6925847f76f..a8a1ed215e1e 100644
---- a/drivers/watchdog/wafer5823wdt.c
-+++ b/drivers/watchdog/wafer5823wdt.c
-@@ -174,7 +174,7 @@ static long wafwdt_ioctl(struct file *file, unsigned int cmd,
- 		timeout = new_timeout;
- 		wafwdt_stop();
- 		wafwdt_start();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, p);
- 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 7e4cd34a8c20..0c9c50f0f5eb 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -776,7 +776,7 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
- 		err = watchdog_ping(wdd);
- 		if (err < 0)
- 			break;
--		/* fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		/* timeout == 0 means that we don't know the timeout */
- 		if (wdd->timeout == 0) {
-diff --git a/drivers/watchdog/wdt.c b/drivers/watchdog/wdt.c
-index f9054cb0f8e2..a9e40b5c633e 100644
---- a/drivers/watchdog/wdt.c
-+++ b/drivers/watchdog/wdt.c
-@@ -389,7 +389,7 @@ static long wdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (wdt_set_heartbeat(new_heartbeat))
- 			return -EINVAL;
- 		wdt_ping();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, p);
- 	default:
-diff --git a/drivers/watchdog/wdt285.c b/drivers/watchdog/wdt285.c
-index e60993d0767e..110249e5f642 100644
---- a/drivers/watchdog/wdt285.c
-+++ b/drivers/watchdog/wdt285.c
-@@ -168,7 +168,7 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
- 		soft_margin = new_margin;
- 		reload = soft_margin * (mem_fclk_21285 / 256);
- 		watchdog_ping();
--		/* Fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		ret = put_user(soft_margin, int_arg);
- 		break;
-diff --git a/drivers/watchdog/wdt977.c b/drivers/watchdog/wdt977.c
-index 066a4fb4d75b..c9b8e863f70f 100644
---- a/drivers/watchdog/wdt977.c
-+++ b/drivers/watchdog/wdt977.c
-@@ -398,7 +398,7 @@ static long wdt977_ioctl(struct file *file, unsigned int cmd,
- 			return -EINVAL;
- 
- 		wdt977_keepalive();
--		/* Fall through */
-+		fallthrough;
- 
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(timeout, uarg.i);
-diff --git a/drivers/watchdog/wdt_pci.c b/drivers/watchdog/wdt_pci.c
-index e528024faa41..c3254ba5ace6 100644
---- a/drivers/watchdog/wdt_pci.c
-+++ b/drivers/watchdog/wdt_pci.c
-@@ -426,7 +426,7 @@ static long wdtpci_ioctl(struct file *file, unsigned int cmd,
- 		if (wdtpci_set_heartbeat(new_heartbeat))
- 			return -EINVAL;
- 		wdtpci_ping();
--		/* fall through */
-+		fallthrough;
- 	case WDIOC_GETTIMEOUT:
- 		return put_user(heartbeat, p);
- 	default:
+That's the starting point of my own code, and I bet it's there in PTP
+for Linux, as well as in PTPD, as I fail to see how it could possibly
+work without it.
 
+>
+>> >
+>> >> > Whatever the default value of the clock may be, it's bound to be
+>> >> > confusing for some reason, _if_ the reason why you're investigating it
+>> >> > in the first place is a driver bug. Also, I don't really see how your
+>> >> > change to use Jan 1st 1970 makes it any less confusing.
+>> >> 
+>> >> When I print the clocks in application, I see seconds and milliseconds
+>> >> part since epoch. With this patch seconds count from 0, that simply
+>> >> match uptime. Easy to tell from any other (malfunctioning) clock.
+>> >> 
+>> >
+>> > It doesn't really match uptime (CLOCK_MONOTONIC). Instead, it is just
+>> > initialized with zero. If you have fec built as module and you insmod it
+>> > after a few days of uptime, it will not track CLOCK_MONOTONIC at all.
+>> >
+>> > Not to say that there's anything wrong with initializing it with 0. It's
+>> > just that I don't see why it would be objectively better.
+>> 
+>> Well, it would have been better for me in my particular quest to find
+>> the problem, so it rather needs to be shown where initializing with
+>> kernel time is objectively better.
+>> 
+>> Moreover, everything else being equal, 0 is always better, just because
+>> of simplicity.
+>> 
+>> >
+>> >> Here is the description of confusion and improvement. I spent half a day
+>> >> not realizing that I sometimes get timestamps from the wrong PTP clock.
+>> >
+>> > There is a suite of tests in tools/testing/selftests/ptp/ which is
+>> > useful in debugging problems like this.
+>> >
+>> > Alternatively, you can write to each individual clock using $(phc_ctl
+>> > /dev/ptpN set 0) and check your timestamps again. If the timestamps
+>> > don't nudge, it's clear that the timestamps you're getting are not from
+>> > the PHC you've written to. Much simpler.
+>> 
+>> Maybe. Once you do figure there is another clock in the system and/or
+>> that that clock is offending. In my case /that/ was the hard part, not
+>> changing that offending clock, once found, to whatever.
+>> 
+>
+> And my point was that you could have been in a different situation, when
+> all of your clocks could have been ticking in 1970, so this wouldn't
+> have been a distiguishing point. So this argument is poor. Using
+> phc_ctl, or scripts around that, is much more dynamic.
+>
+>> >
+>> >> Part of the problem is that kernel time at startup, when it is used for
+>> >> initialization of the PTP clock, is in fact somewhat random, and it
+>> >> could be off by a few seconds.
+>> >
+>> > Yes, the kernel time at startup is exactly random (not traceable to any
+>> > clock reference). And so is the PHC.
+>> >
+>> >> Now, when in application I get time stamp
+>> >> that is almost right, and then another one that is, say, 9 seconds off,
+>> >> what should I think? Right, that I drive PTP clock wrongly.
+>> >> 
+>> >> Now, when one of those timestamps is almost 0, I see immediately I got
+>> >> time from wrong PTP clock, rather than wrong time from correct PTP
+>> >> clock.
+>> >> 
+>> >
+>> > There are 2 points to be made here:
+>> >
+>> > 1. There are simpler ways to debug your issue than to leave a patch in
+>> >    the kernel, like the "phc_ctl set 0" I mentioned above. This can be
+>> >    considered a debugging patch which is also going to have consequences
+>> >    for the other users of the driver, if applied. We need to consider
+>> >    whether the change in behavior is useful in general.
+>> 
+>> This does not apply to my particular case as I explained above, and then
+>> ease with debug is just a nice side-effect of code simplification.
+>> 
+>> >
+>> > 2. There are boards out there which don't have any battery-backed RTC,
+>> >    so CLOCK_REALTIME could be ticking in Jan 1970 already, and therefore
+>> >    the PHC would be initialized with a time in 1970. Or your GM might be
+>> >    configured to be ticking in Jan 1970 (there are some applications
+>> >    that only require the network to be synchronized, but not for the
+>> >    time to be traceable to TAI). How does your change make a difference
+>> >    to eliminate confusion there, when all of your clocks are going to be
+>> >    in 1970? It doesn't make a net difference. Bottom line, a clock
+>> >    initialized with 0 doesn't mean it's special in any way. You _could_
+>> >    make that change in your debugging environment, and it _could_ be
+>> >    useful to your debugging, but if it's not universally useful, I
+>> >    wouldn't try to patch the kernel with this change.
+>> 
+>> If there is nothing special about any value, 0 is the value to choose,
+>> because of simplicity. Once again, I only explained debugging advantages
+>> because you've asked about it. It's just a nice side-effect, as it
+>> often happens to be when one keeps things as simple as possible.
+>> 
+>> > Please note that, although my comments appear to be in disagreement with
+>> > your idea, they are in fact not at all. It's just that, if there's a a
+>> > particular answer to "what time to initialize a PHC with" that is more
+>> > favourable than the rest (even though the question itself is a bit
+>> > irrelevant overall), then that answer ought to be enforced kernel-wide,
+>> > I think.
+>> 
+>> As everybody, I believe in a set of generic programming principles that
+>> are not to be violated lightly. KISS is one of the principles I believe,
+>> and trying to be clever with no apparent reason is one way of violating
+>> it.
+>> 
+>> Overall, here is my argument: 0 is simpler than kernel time, so how is
+>> it useful to initialize PTP with kernel time that is as wrong as a value
+>> for PTP time as 0?
+>> 
+>
+> And overall, my argument is: you are making a user-visible change, for
+> basically no strong reason, other than the fact that you like zero
+> better. You're trying to reduce confusion, not increase it, right?
+
+No, not to increase, and I believe there is no way to increase it by
+using the value that at least some of the drivers already use.
+
+> I agree with the basic fact that zero is a simpler and more consistent
+> value to initialize a PHC with, than the system time. As I've already
+> shown to you, I even attempted to make a similar change to the ptp_qoriq
+> driver which was rejected. So I hoped that you could bring some better
+> arguments than "I believe 0 is simpler". Since no value is right, no
+> value is wrong either, so why make a change in the first place? The only
+> value in _changing_ to zero would be if all drivers were changed to use
+> it consistently, IMO.
+>
+> But I will stop here and let the PTP maintainer make a choice. I only
+> intervened because I knew what the default answer was going to be.
+
+Thanks, so will I, as I won't care much either way, just wanted to make
+life of somebody who might travel my path less painful. That person is
+not who is already fluent in all the different opportunities to debug
+PTP clocks, for sure.
+
+Thanks,
+-- Sergey
