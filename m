@@ -2,99 +2,79 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA27206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bS2w02uS"
+	by mail.kernel.org (Postfix) with ESMTP id 1E2F620708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594146623;
+	bh=xTRNX+tombqeYkaSwvGumK40pfLh5dWiBc6gh61ysqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0BbMiL9glY3B21bJmZrCdrhWI++IoLhJA6znnK4tXhmUqNtQBugkGkyFV33i6WIzw
+	 g04brLsyuC0Ou/01WG+dMt26uHXJq673biETal+EtUaqHx5XDm4kscZZ0tcKkOizfp
+	 tE/pq41mHh9avU5t7qm5nHfw0pFRkDwlm53vxmrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgGGS2T (ORCPT
+        id S1728418AbgGGSaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgGGS2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:28:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 738D1C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=HdjdBEuc09gbzMxr+upySCFBU+l5DWJracRk3eLkb5k=; b=bS2w02uSm9hW3I8+AMkkcpCEbn
-        XN8pQCM13CWfkQ5uQ4ppHLpxPdZxCOI0PdbNq4Cc9uqWreqM3RSOwm/765ebRg7mHq0DgcUrBxWXj
-        ZkwSeHfiVnrmqwB4gdgmDvdG+A941vlG2CSLf5OYI+2O6BEbvTX8mUCfFKpD+sV0MnoSEtEoLmcUu
-        3zBMEV/xD3Lda8CQ427aiFG1pFyXh5q4ucuFJCquMmqi9uQx/yEnDB2A1ujfwyVLlvml+/kiFKkEF
-        dkzfYpdcARrhYT1Rw+HRlkT2shnPNGRgf7eKmU+mVe2Xvoq6fGs7Koa+5l0CiOuiCM+7BSBOc2+fC
-        ZOcMbgJg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jssKE-0005ig-5g; Tue, 07 Jul 2020 18:28:15 +0000
-Subject: Re: [PATCH] ASoC: amd: fixed kernel warnings
-To:     Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        alsa-devel@alsa-project.org
-Cc:     perex@perex.cz, Alexander.Deucher@amd.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1594147044-25582-1-git-send-email-Vijendar.Mukunda@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9f2cde61-590d-6a68-295b-62f026f729b3@infradead.org>
-Date:   Tue, 7 Jul 2020 11:28:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 14:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728149AbgGGSaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 14:30:21 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41180206F6;
+        Tue,  7 Jul 2020 18:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594146621;
+        bh=xTRNX+tombqeYkaSwvGumK40pfLh5dWiBc6gh61ysqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0YrtAj7tQ/yq/2V3gsl6Ih2gYIDovZiLEolwSX/XiOdfmF9uZ63hV0ipmstb1K+jt
+         WQsXiCGOQbtbEtlYZsEYtG28/Y5T27RMjPb6GRbnDJJIvn8sDGfJsPlUKtriUJbTMF
+         XqFUn8bzlgICV3qF40EiAbWfT5TODneOvdBlDJ2A=
+Date:   Tue, 7 Jul 2020 13:35:48 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH][next] Input: Use fallthrough pseudo-keyword
+Message-ID: <20200707183548.GA1280@embeddedor>
+References: <20200707180857.GA30600@embeddedor>
+ <20200707182654.GF3273837@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <1594147044-25582-1-git-send-email-Vijendar.Mukunda@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707182654.GF3273837@dtor-ws>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 11:37 AM, Vijendar Mukunda wrote:
-> This patch will fix unused variables kernel warnings when
-> CONFIG_ACPI is disabled.
+On Tue, Jul 07, 2020 at 11:26:54AM -0700, Dmitry Torokhov wrote:
+> On Tue, Jul 07, 2020 at 01:08:57PM -0500, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
->  sound/soc/amd/renoir/rn-pci-acp3x.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/sound/soc/amd/renoir/rn-pci-acp3x.c b/sound/soc/amd/renoir/rn-pci-acp3x.c
-> index 165c93f..b943e59 100644
-> --- a/sound/soc/amd/renoir/rn-pci-acp3x.c
-> +++ b/sound/soc/amd/renoir/rn-pci-acp3x.c
-> @@ -168,8 +168,10 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
->  {
->  	struct acp_dev_data *adata;
->  	struct platform_device_info pdevinfo[ACP_DEVS];
-> +#if defined(CONFIG_ACPI)
->  	acpi_handle handle;
->  	acpi_integer dmic_status;
-> +#endif
->  	unsigned int irqflags;
->  	int ret, index;
->  	u32 addr;
+> Applied, thank you.
 > 
 
+Thanks, Dmitry.
 
--- 
-~Randy
+--
+Gustavo
