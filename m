@@ -2,43 +2,46 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64B7206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A0020720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="bduq4eqm"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="AzcwjOqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGGVXI (ORCPT
+        id S1729104AbgGGVXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:23:08 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:40679 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbgGGVXH (ORCPT
+        Tue, 7 Jul 2020 17:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728877AbgGGVXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:23:07 -0400
+        Tue, 7 Jul 2020 17:23:09 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24171C08C5E1;
+        Tue,  7 Jul 2020 14:23:09 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E2A3723E3E;
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2DE6C23E3B;
         Tue,  7 Jul 2020 23:23:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594156985;
+        t=1594156984;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MaA+UOQdGrnPbXdEAips7ac3VqRoV6MIg8BZpXkFNGc=;
-        b=bduq4eqmCWCSlXaqLCPdAhzrnDw2q9EdOWa5BfxNXtb9p+tB0yNgVYnShfOoTXcOQTko4C
-        EtN8zb0XX1DGqC/qoXIjiDSQB0ZWtNXtAaRijyCo8b3A1yI96MwQPeAPgITNJjdDsDbbPL
-        ueHVF8PQ+yMukn4BHVV1cROF1md96eY=
+        bh=84ne4nXHSEC8l7CIFcYailprO/l8iEq22QSMWXO6DMc=;
+        b=AzcwjOqPY6GlP0+OvjJ/tOANwWJD6lzvhglmVGQX+AdlUbOrQUILBIEl85LlZKL6vuRlTG
+        7f+AKQbAruV8lXKyjxztuqDLK5M42XoWYyi9zOVqh6iRB99pfD7bpN5FR6DJWc78QlmIVo
+        uJfBVMQkxH+vUp+qVgeGo/orBWkwUwY=
 From:   Michael Walle <michael@walle.cc>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "David S . Miller" <davem@davemloft.net>,
@@ -51,9 +54,9 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         Russell King - ARM Linux admin <linux@armlinux.org.uk>,
         Ioana Ciornei <ioana.ciornei@nxp.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net-next v5 2/4] net: dsa: felix: (re)use already existing constants
-Date:   Tue,  7 Jul 2020 23:21:29 +0200
-Message-Id: <20200707212131.15690-3-michael@walle.cc>
+Subject: [PATCH net-next v5 1/4] net: phy: add USXGMII link partner ability constants
+Date:   Tue,  7 Jul 2020 23:21:28 +0200
+Message-Id: <20200707212131.15690-2-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200707212131.15690-1-michael@walle.cc>
 References: <20200707212131.15690-1-michael@walle.cc>
@@ -65,112 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there are USXGMII constants available, drop the old definitions
-and reuse the generic ones.
+The constants are taken from the USXGMII Singleport Copper Interface
+specification. The naming are based on the SGMII ones, but with an MDIO_
+prefix.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/net/dsa/ocelot/felix_vsc9959.c | 45 +++++++-------------------
- 1 file changed, 12 insertions(+), 33 deletions(-)
+ include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index 19614537b1ba..4310b1527022 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -10,35 +10,15 @@
- #include <soc/mscc/ocelot.h>
- #include <net/pkt_sched.h>
- #include <linux/iopoll.h>
-+#include <linux/mdio.h>
- #include <linux/pci.h>
- #include "felix.h"
- 
- #define VSC9959_VCAP_IS2_CNT		1024
- #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
- #define VSC9959_VCAP_PORT_CNT		6
--
--/* TODO: should find a better place for these */
--#define USXGMII_BMCR_RESET		BIT(15)
--#define USXGMII_BMCR_AN_EN		BIT(12)
--#define USXGMII_BMCR_RST_AN		BIT(9)
--#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
--#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
--#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
--#define USXGMII_ADVERTISE_FDX		BIT(12)
--#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
--#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
--#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
--#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
--
- #define VSC9959_TAS_GCL_ENTRY_MAX	63
- 
--enum usxgmii_speed {
--	USXGMII_SPEED_10	= 0,
--	USXGMII_SPEED_100	= 1,
--	USXGMII_SPEED_1000	= 2,
--	USXGMII_SPEED_2500	= 4,
--};
--
- static const u32 vsc9959_ana_regmap[] = {
- 	REG(ANA_ADVLEARN,			0x0089a0),
- 	REG(ANA_VLANMASK,			0x0089a4),
-@@ -787,11 +767,10 @@ static void vsc9959_pcs_config_usxgmii(struct phy_device *pcs,
- {
- 	/* Configure device ability for the USXGMII Replicator */
- 	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_ADVERTISE,
--		      USXGMII_ADVERTISE_SPEED(USXGMII_SPEED_2500) |
--		      USXGMII_ADVERTISE_LNKS(1) |
-+		      MDIO_LPA_USXGMII_2500FULL |
-+		      MDIO_LPA_USXGMII_LINK |
- 		      ADVERTISE_SGMII |
--		      ADVERTISE_LPACK |
--		      USXGMII_ADVERTISE_FDX);
-+		      ADVERTISE_LPACK);
+diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
+index 4bcb41c71b8c..784723072578 100644
+--- a/include/uapi/linux/mdio.h
++++ b/include/uapi/linux/mdio.h
+@@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int prtad, int devad)
+ 	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
  }
  
- static void vsc9959_pcs_config(struct ocelot *ocelot, int port,
-@@ -1005,8 +984,8 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
- 		return;
- 
- 	pcs->autoneg = true;
--	pcs->autoneg_complete = USXGMII_BMSR_AN_CMPL(status);
--	pcs->link = USXGMII_BMSR_LNKS(status);
-+	pcs->autoneg_complete = status & BMSR_ANEGCOMPLETE;
-+	pcs->link = status & BMSR_LSTATUS;
- 
- 	if (!pcs->link || !pcs->autoneg_complete)
- 		return;
-@@ -1015,24 +994,24 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
- 	if (lpa < 0)
- 		return;
- 
--	switch (USXGMII_LPA_SPEED(lpa)) {
--	case USXGMII_SPEED_10:
-+	switch (lpa & MDIO_LPA_USXGMII_SPD_MASK) {
-+	case MDIO_LPA_USXGMII_10:
- 		pcs->speed = SPEED_10;
- 		break;
--	case USXGMII_SPEED_100:
-+	case MDIO_LPA_USXGMII_100:
- 		pcs->speed = SPEED_100;
- 		break;
--	case USXGMII_SPEED_1000:
-+	case MDIO_LPA_USXGMII_1000:
- 		pcs->speed = SPEED_1000;
- 		break;
--	case USXGMII_SPEED_2500:
-+	case MDIO_LPA_USXGMII_2500:
- 		pcs->speed = SPEED_2500;
- 		break;
- 	default:
- 		break;
- 	}
- 
--	if (USXGMII_LPA_DUPLEX(lpa))
-+	if (lpa & MDIO_LPA_USXGMII_FULL_DUPLEX)
- 		pcs->duplex = DUPLEX_FULL;
- 	else
- 		pcs->duplex = DUPLEX_HALF;
++/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
++#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop supported */
++#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
++#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
++#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full duplex */
++#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex and speed bits */
++#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
++#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
++#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
++#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
++#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
++#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
++#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
++#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
++#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
++#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
++#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
++#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
++#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
++#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
++#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
++#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
++#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
++#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
++#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with copper-side partner */
++
+ #endif /* _UAPI__LINUX_MDIO_H__ */
 -- 
 2.20.1
 
