@@ -3,127 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381E6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C351D20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2152620708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgGGBhK (ORCPT
+        id S1727916AbgGGBiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:37:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727072AbgGGBhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:37:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0EF84EC9F1C7CE8ABEBA;
-        Tue,  7 Jul 2020 09:37:07 +0800 (CST)
-Received: from [10.174.178.63] (10.174.178.63) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 7 Jul 2020 09:37:03 +0800
-From:   "liwei (GF)" <liwei391@huawei.com>
-Subject: Re: [PATCH 0/4] arm64: kgdb/kdb: Fix single-step debugging issues
-To:     Doug Anderson <dianders@chromium.org>
-CC:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
-References: <20200509214159.19680-1-liwei391@huawei.com>
- <CAD=FV=Xv6xgj_M9tYjHzmW4UZD2RdH2c5=dagNybSkdfBabYZw@mail.gmail.com>
- <a20ee677-495b-9336-a329-eabd50dd1cad@huawei.com>
- <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
-Message-ID: <06b7a4c6-80a4-1695-75af-b4a66ed1b849@huawei.com>
-Date:   Tue, 7 Jul 2020 09:37:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jul 2020 21:38:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:3039 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgGGBiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 21:38:51 -0400
+IronPort-SDR: Odkbv3dVhoA0LfDOXX4suN/M90b1oBI0SIFoTn3JVx9QUeJfzNYsiVeEZ8d6R/mjwe0kLwij9h
+ OqzbSSeIO9cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="135771121"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="135771121"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 18:38:50 -0700
+IronPort-SDR: N6EhlS0iUivgj4zya6xZwoTiqdEPatwNqUtTnrXwjEXBdm2xzppeYyL9TdOyuMD52XFk7nOG/S
+ M2M8A6fMbY3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="388353713"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Jul 2020 18:38:47 -0700
+Date:   Mon, 6 Jul 2020 18:38:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+Message-ID: <20200707013847.GA5208@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200627174335.GC15585@zn.tnic>
+ <20200629152718.GA12312@linux.intel.com>
+ <20200704014349.GB129411@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.63]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200704014349.GB129411@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
-
-On 2020/6/30 5:20, Doug Anderson wrote:
-> Wei,
+On Sat, Jul 04, 2020 at 04:43:49AM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jun 29, 2020 at 08:27:19AM -0700, Sean Christopherson wrote:
+> > On Sat, Jun 27, 2020 at 07:43:35PM +0200, Borislav Petkov wrote:
+> > > And you could do similar sanity checks in the other ioctl functions.
+> > 
+> > Ya, as above, SGX_ENCL_INITIALIZED can be checked here.
+> > 
+> > SGX_ENCL_DEAD is actually already checked in in the top level sgx_ioctl(),
+> > i.e. the check in sgx_encl_add_page() can technically be flat out dropped.
+> > 
+> > I say "technically" because I'm a bit torn over SGX_ENCL_DEAD; encl->lock
+> > must be held to SGX_ENCL_DEAD (the page fault and reclaim flows rely on
+> > this), but as it stands today only ioctl() paths (guarded by SGX_ENCL_IOCTL)
+> > and sgx_release() (makes the ioctls() unreachable) set SGX_ENCL_DEAD.
+> > 
+> > So it's safe to check SGX_ENCL_DEAD from ioctl() context without holding
+> > encl->lock, at least in the current code base, but it feels weird/sketchy.
+> > 
+> > In the end I don't think I have a strong opinion.  Removing the technically
+> > unnecessary DEAD check in sgx_encl_add_page() is the simplest change, so it
+> > may make sense to do that and nothing more for initial upstreaming.  Long
+> > term, I fully expect we'll add paths that set SGX_ENCL_DEAD outside of
+> > ioctl() context, e.g. to handle EPC OOM, but it wouldn't be a bad thing to
+> > have a standalone commit in a future series to add DEAD checks (under
+> > encl->lock) in the ADD and INIT flows.
 > 
-> On Sat, May 16, 2020 at 1:20 AM liwei (GF) <liwei391@huawei.com> wrote:
->>
->> Hi Douglas,
->>
->> On 2020/5/14 8:34, Doug Anderson wrote:
->>> Hi,
->>>
->>> On Sat, May 9, 2020 at 6:49 AM Wei Li <liwei391@huawei.com> wrote:
->>>>
->>>> This patch set is to fix several issues of single-step debugging
->>>> in kgdb/kdb on arm64.
->>>>
->>>> It seems that these issues have been shelved a very long time,
->>>> but i still hope to solve them, as the single-step debugging
->>>> is an useful feature.
->>>>
->>>> Note:
->>>> Based on patch "arm64: cacheflush: Fix KGDB trap detection",
->>>> https://www.spinics.net/lists/arm-kernel/msg803741.html
->>>>
->>>> Wei Li (4):
->>>>   arm64: kgdb: Fix single-step exception handling oops
->>>>   arm64: Extract kprobes_save_local_irqflag() and
->>>>     kprobes_restore_local_irqflag()
->>>>   arm64: kgdb: Fix single-stepping into the irq handler wrongly
->>>>   arm64: kgdb: Set PSTATE.SS to 1 to reenable single-step
->>>>
->>>>  arch/arm64/include/asm/debug-monitors.h |  6 ++++++
->>>>  arch/arm64/kernel/debug-monitors.c      | 28 ++++++++++++++++++++++++-
->>>>  arch/arm64/kernel/kgdb.c                | 16 +++++++++++---
->>>>  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
->>>>  4 files changed, 48 insertions(+), 30 deletions(-)
->>>
->>> Just an overall note that I'm very happy that you posted this patch
->>> series!  It's always been a thorn in my side that stepping and
->>> breakpoints were so broken on arm64 and I'm really excited that you're
->>> fixing them.  Now I'll have to get in the habit of using kgdb for more
->>> than just debugging crashes and maybe I can use it more for exploring
->>> how functions work more.  :-)
->>>> I'll also note that with your patch series I'm even seeing the "call"
->>> feature of gdb working now.  That has always been terribly broken for
->>> me.
->>>
->> Thanks for reviewing and testing this series.
->> Enjoy exploring the kernel with kgdb/kdb! :-)
-> 
-> I'm curious to know if you plan another spin.  The feedback you
-> received was fairly minor so it hopefully shouldn't be too hard.  I'd
-> very much like to get your patches landed and I'd be happy to try to
-> address the feedback and spin them myself if you're no longer
-> available for it.
-> 
+> AFAIK nonne of th ioctl's should not need SGX_ENCL_DEAD check.
 
-Sorry for the long delay. I was busy on a project and missed some mail.
-I did receive some feedback about typo or coding style before, so i was expecting
-more comment about the logic or people just don't care about these. After all,
-this issue has lived a very long time.
+I can't tell if the double negative was intended, but I took a peek at your
+current master and see that you removed the SGX_ENCL_DEAD check in
+sgx_ioctl().  That check needs to stay, e.g. if EEXTEND fails we absolutely
+need to prevent any further operations on the enclave.
 
-It's a good news to hear that Will has plan to solve these issues, i will
-follow that to do my bit.
-Before that, i can send the next version in this week.
-
-
-Thanks,
-Wei
+The above was calling out that additional checks on SGX_ENCL_DEAD after
+acquiring encl->lock are not necessary because SGX_ENCL_DEAD can only be
+set when the ioctls() are no longer reachable or from within an ioctl(),
+which provides exclusivity via SGX_ENCL_IOCTL.
