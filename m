@@ -2,161 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45BEA2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F10206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="NY41Kgrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgGGIpG (ORCPT
+        id S1727995AbgGGIq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:45:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726467AbgGGIpF (ORCPT
+        Tue, 7 Jul 2020 04:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGIq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:45:05 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0678Ve6c104150;
-        Tue, 7 Jul 2020 04:45:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx67-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 04:44:57 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0678XoAT110196;
-        Tue, 7 Jul 2020 04:44:50 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 04:44:49 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0678iVx4002463;
-        Tue, 7 Jul 2020 08:44:42 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 322hd81mdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 08:44:42 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0678idwq49741930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 08:44:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6511BA404D;
-        Tue,  7 Jul 2020 08:44:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87860A4057;
-        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.29.12])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v4 0/2] s390: virtio: let arch validate VIRTIO features
-Date:   Tue,  7 Jul 2020 10:44:35 +0200
-Message-Id: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_05:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- suspectscore=1 bulkscore=0 clxscore=1015 cotscore=-2147483648 spamscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007070062
+        Tue, 7 Jul 2020 04:46:57 -0400
+X-Greylist: delayed 1842 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Jul 2020 01:46:56 PDT
+Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D322FC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+        bh=EA/3cNstrWMDO33kM+6w6yj9HV+JpNqfCcL3vex3MqA=; b=NY41KgrkrgsH2VNw4Wic5NBxK9
+        c433IFDrijCmG1B8UIlMAmnn6z5XT/rSqRN/mWZetxCKQPZpPI+GQPmNaRVCa+aRIIJHMa+jiETQX
+        mr1BcuChG5I87In8K454cVqCgL5qxPMDnrBZ3c39F9zoBAVEPLXk+MNzFS94+07pP8anA941E6ou0
+        QN7Hp8M0IFTRmOegfKWxLNg4oipRcjKN4iNMfw1OWj7lM8sH5Yzi5BQGJDef+4CF95vsX3PM+u0D1
+        PJ+d1A8Famx0l00G7jd+937pJ+Yvnn7SUhs86TVTWNrpJAl8WlLkxV+ix9QdoGFrWcIvwcqHpm0VX
+        0AbvaWrA==;
+Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jsilv-00036X-9u; Tue, 07 Jul 2020 10:16:11 +0200
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.94)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jsils-007vhX-RV; Tue, 07 Jul 2020 10:16:08 +0200
+Date:   Tue, 7 Jul 2020 10:16:08 +0200
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: use 16KB kernel stack on 64-bit
+Message-ID: <20200707081608.GA1889963@aurel32.net>
+Mail-Followup-To: Andreas Schwab <schwab@suse.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <mvmeepoddt1.fsf@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mvmeepoddt1.fsf@suse.de>
+User-Agent: Mutt/1.14.0 (2020-05-02)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 2020-07-06 14:32, Andreas Schwab wrote:
+> With the current 8KB stack size there are frequent overflows in a 64-bit
+> configuration.
+> 
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> ---
+>  arch/riscv/include/asm/thread_info.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+> index 1dd12a0cbb2b..464a2bbc97ea 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -12,7 +12,11 @@
+>  #include <linux/const.h>
+>  
+>  /* thread information allocation */
+> +#ifdef CONFIG_64BIT
+> +#define THREAD_SIZE_ORDER	(2)
+> +#else
+>  #define THREAD_SIZE_ORDER	(1)
+> +#endif
+>  #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
+>  
+>  #ifndef __ASSEMBLY__
+> -- 
+> 2.26.2
 
-I changed the patch subject to reflect the content, becoming more
-general.
 
-1) I removed the ack from Christian and Jason even far as
-   I understand they gave it for the functionality more than for the
-   implementation.
-   @Jason, @Christian, please can I get back your acked-by with these changes?
-
-2) previous patch had another name:
-   [PATCH v3 0/1] s390: virtio: let arch choose to accept devices without IOMMU feature
-   id: Message-Id: <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
-
-3) The new version generalize the validation of the features by the
-   architecture, making it not IOMMU_PLATFORM specific anymore inside
-   virtio.c
-
-   The architecture specific code for s390 is now testing the virtio
-   features.
-
-4) Since I reworked the patch I also moved the arch specific code
-   from arch/s390/mm/init.c to arch/s390/kernel/to uv.c
-
-5) Finaly, I splitted the patch into generic virtio and arch
-   specific code.
-
-Regards,
-Pierre
-
-Pierre Morel (2):
-  virtio: let arch validate VIRTIO features
-  s390: virtio: PV needs VIRTIO I/O device protection
-
- arch/s390/kernel/uv.c         | 25 +++++++++++++++++++++++++
- drivers/virtio/virtio.c       | 19 +++++++++++++++++++
- include/linux/virtio_config.h |  1 +
- 3 files changed, 45 insertions(+)
+Following the discussion on the mailing list, I have been trying this
+patch on my system for a few days, and it indeed seems more stable. I
+just wonder if you should Cc stable@ so that it is backported in older
+kernel versions.
 
 -- 
-2.25.1
-
-Changelog
-
-to v4:
-
-- separate virtio and arch code
-  (Pierre)
-
-- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
-  (Heiko)
-
-- moved validation inside the arch code
-  (Connie)
-
-- moved the call to arch validation before VIRTIO_F_1 test
-  (Michael)
-
-to v3:
-
-- add warning
-  (Connie, Christian)
-
-- add comment
-  (Connie)
-
-- change hook name
-  (Halil, Connie)
-
-to v2:
-
-- put the test in virtio_finalize_features()
-  (Connie)
-
-- put the test inside VIRTIO core
-  (Jason)
-
-- pass a virtio device as parameter
-  (Halil)
-
-
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                 http://www.aurel32.net
