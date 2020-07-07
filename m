@@ -2,56 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B1F20773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8420720771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135282;
-	bh=m3Bg9p0WjwVIantLqzPG6EBi0zosw5xGhOVnfB8M3xI=;
+	s=default; t=1594135287;
+	bh=r0JF99QEAtEw+I92VoXVLZ4LdURu9+ZSm+HVxctuxSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjc7FQ/stoaU5+hoQz7dwKIgmEkzeALRntFHit6FwMxWEkMDtKzelaeuxlpfO/Yu+
-	 Q+hfeVmrJLgS/3tETAPLf5svPGrOM5WAsiEDWnf74NxHlxlNu4rBNvnD19NNaklyRL
-	 38UIxa1FmmpsfRAkuMh4C/pGUjgm2E0UWUtVmIQQ=
+	b=FQ+bwVx9z8EH44nGXVeRVTv3xzWCDDew9vvNEl97GiHUl5nIVzfa9KSQOkYIea+Ca
+	 ka7gLrJ/AdOE8i9ntX8Ku/mx/Efnqeb0/rndHAaAFO1Cjw6ZHrOLNb7YfCWbFNXzqT
+	 ptKPp6pFQH4pMFKS4ifNfRWomcY7M7MovjaJV/Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgGGPVV (ORCPT
+        id S1729714AbgGGPV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33446 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728333AbgGGPVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:15 -0400
+        id S1728653AbgGGPVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 428072065D;
-        Tue,  7 Jul 2020 15:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA2E20771;
+        Tue,  7 Jul 2020 15:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135274;
-        bh=m3Bg9p0WjwVIantLqzPG6EBi0zosw5xGhOVnfB8M3xI=;
+        s=default; t=1594135282;
+        bh=r0JF99QEAtEw+I92VoXVLZ4LdURu9+ZSm+HVxctuxSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EjTREqHSPSkwk2dWBHReB7OffPl2ZmRy9u3O3ETDDCeiRSQnFNYYGDkYw3vFXUp5/
-         aCu5U6HFbZCvbqn8cAFOPtHYaSEpM56jJZy7H9tOhWFMIpNhrPGRKEKMcpTlbS4+HK
-         LNpyvTt4IW6p1awsZ+j1BbT7Kr1TB3d6pCQS+sWo=
+        b=OcUd4Z/r5oyQzd4PN7Xe/4Hy99A+nA27+jxhPeGfW9CgSXEnL4vaOmg4WNq4CmxjM
+         63Fsb35Jab/0mrK5TRPXfnuoTdeNF8IclZMGLVqAA1YD8q945NfbOU5nBYtqZw6r0/
+         hjI1meuxJy8CPBJT0RMJJe7lvGFSAxUS46xWG0WU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 43/65] samples/vfs: avoid warning in statx override
-Date:   Tue,  7 Jul 2020 17:17:22 +0200
-Message-Id: <20200707145754.536471575@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 46/65] spi: spi-fsl-dspi: Fix external abort on interrupt in resume or exit paths
+Date:   Tue,  7 Jul 2020 17:17:25 +0200
+Message-Id: <20200707145754.689637140@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -64,61 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit c3eeaae9fd736b7f2afbda8d3cbb1cbae06decf3 ]
+commit 3d87b613d6a3c6f0980e877ab0895785a2dde581 upstream.
 
-Something changed recently to uncover this warning:
+If shared interrupt comes late, during probe error path or device remove
+(could be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+dspi_interrupt() will access registers with the clock being disabled.
+This leads to external abort on non-linefetch on Toradex Colibri VF50
+module (with Vybrid VF5xx):
 
-  samples/vfs/test-statx.c:24:15: warning: `struct foo' declared inside parameter list will not be visible outside of this definition or declaration
-     24 | #define statx foo
-        |               ^~~
+    $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
 
-Which is due the use of "struct statx" (here, "struct foo") in a function
-prototype argument list before it has been defined:
+    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+    Internal error: : 1008 [#1] ARM
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+    Backtrace:
+      (regmap_mmio_read32le)
+      (regmap_mmio_read)
+      (_regmap_bus_reg_read)
+      (_regmap_read)
+      (regmap_read)
+      (dspi_interrupt)
+      (free_irq)
+      (devm_irq_release)
+      (release_nodes)
+      (devres_release_all)
+      (device_release_driver_internal)
 
- int
- # 56 "/usr/include/x86_64-linux-gnu/bits/statx-generic.h"
-    foo
- # 56 "/usr/include/x86_64-linux-gnu/bits/statx-generic.h" 3 4
-          (int __dirfd, const char *__restrict __path, int __flags,
-            unsigned int __mask, struct
- # 57 "/usr/include/x86_64-linux-gnu/bits/statx-generic.h"
-                                       foo
- # 57 "/usr/include/x86_64-linux-gnu/bits/statx-generic.h" 3 4
-                                             *__restrict __buf)
-   __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2, 5)));
+The resource-managed framework should not be used for shared interrupt
+handling, because the interrupt handler might be called after releasing
+other resources and disabling clocks.
 
-Add explicit struct before #include to avoid warning.
+Similar bug could happen during suspend - the shared interrupt handler
+could be invoked after suspending the device.  Each device sharing this
+interrupt line should disable the IRQ during suspend so handler will be
+invoked only in following cases:
+1. None suspended,
+2. All devices resumed.
 
-Fixes: f1b5618e013a ("vfs: Add a sample program for the new mount API")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: David Howells <dhowells@redhat.com>
-Link: http://lkml.kernel.org/r/202006282213.C516EA6@keescook
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622110543.5035-3-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- samples/vfs/test-statx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-fsl-dspi.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/samples/vfs/test-statx.c b/samples/vfs/test-statx.c
-index a3d68159fb510..507f09c38b49f 100644
---- a/samples/vfs/test-statx.c
-+++ b/samples/vfs/test-statx.c
-@@ -23,6 +23,8 @@
- #include <linux/fcntl.h>
- #define statx foo
- #define statx_timestamp foo_timestamp
-+struct statx;
-+struct statx_timestamp;
- #include <sys/stat.h>
- #undef statx
- #undef statx_timestamp
--- 
-2.25.1
-
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -901,6 +901,8 @@ static int dspi_suspend(struct device *d
+ 	struct spi_controller *ctlr = dev_get_drvdata(dev);
+ 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+ 
++	if (dspi->irq)
++		disable_irq(dspi->irq);
+ 	spi_controller_suspend(ctlr);
+ 	clk_disable_unprepare(dspi->clk);
+ 
+@@ -921,6 +923,8 @@ static int dspi_resume(struct device *de
+ 	if (ret)
+ 		return ret;
+ 	spi_controller_resume(ctlr);
++	if (dspi->irq)
++		enable_irq(dspi->irq);
+ 
+ 	return 0;
+ }
+@@ -1108,8 +1112,8 @@ static int dspi_probe(struct platform_de
+ 		goto poll_mode;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+-			       IRQF_SHARED, pdev->name, dspi);
++	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
++				   IRQF_SHARED, pdev->name, dspi);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+ 		goto out_clk_put;
+@@ -1122,7 +1126,7 @@ poll_mode:
+ 		ret = dspi_request_dma(dspi, res->start);
+ 		if (ret < 0) {
+ 			dev_err(&pdev->dev, "can't get dma channels\n");
+-			goto out_clk_put;
++			goto out_free_irq;
+ 		}
+ 	}
+ 
+@@ -1134,11 +1138,14 @@ poll_mode:
+ 	ret = spi_register_controller(ctlr);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+-		goto out_clk_put;
++		goto out_free_irq;
+ 	}
+ 
+ 	return ret;
+ 
++out_free_irq:
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ out_clk_put:
+ 	clk_disable_unprepare(dspi->clk);
+ out_ctlr_put:
+@@ -1154,6 +1161,8 @@ static int dspi_remove(struct platform_d
+ 
+ 	/* Disconnect from the SPI framework */
+ 	dspi_release_dma(dspi);
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ 	clk_disable_unprepare(dspi->clk);
+ 	spi_unregister_controller(dspi->ctlr);
+ 
 
 
