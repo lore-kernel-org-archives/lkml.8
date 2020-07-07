@@ -2,109 +2,173 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84286C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81BE7204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135889;
-	bh=NBfZR347CX3NjXV8lpgwwhncpWpFn2IdfEY6lIHKI78=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8holizFMJu3A8+3v7XewzL7D7WPfNmi6lRm9jy5AbQ74MJHNaogmdMcMT1M/E15y
-	 XScpYqu1zrFvk9dGSUcRK2a66bPsRes72Y70P9Uk1ud/KNA6yGf2D7zI82NRZygdOz
-	 eQgbB+hhmOwQbvdQMVpkmqZQRqGjE/Sz/5EMi0bc=
+	by mail.kernel.org (Postfix) with ESMTP id 5D36B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G+VWkqkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgGGPb2 (ORCPT
+        id S1729823AbgGGPbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728757AbgGGPXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F1920663;
-        Tue,  7 Jul 2020 15:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135382;
-        bh=NBfZR347CX3NjXV8lpgwwhncpWpFn2IdfEY6lIHKI78=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXu0ue5batlgQsKVVoyBTl0bFHmF9bRTiUNLF22wyvT11onk77K5W3At5ZdK2hAKF
-         0lIxqYN7dC7OVDySqj5i485rAAqGG0YAHklHhwZpa8DGdE1eQJ+6Q9w+1s9pJEUK3Q
-         2c44mxIQiuAl9qTwfrWQ+SVNAdygufZ8I2jdGLv8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guchun Chen <guchun.chen@amd.com>,
-        John Clements <John.Clements@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 019/112] drm/amdgpu: fix kernel page fault issue by ras recovery on sGPU
-Date:   Tue,  7 Jul 2020 17:16:24 +0200
-Message-Id: <20200707145801.910328468@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
-References: <20200707145800.925304888@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jul 2020 11:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730246AbgGGPba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:31:30 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B41C08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:31:30 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id v26so6506230vkn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k9pD5UhiE599Tk9wmQP354KMod/Tb87VcByMMuwvg3k=;
+        b=G+VWkqkqtjaLmPcbE4Vr+ciMMRNHr+VCxIoF6KeYJNsyLUH8ifsFw42bsVUuCQcL2v
+         4h8B6RVOb0A7JHYxkMMPFot6aNEHIX4sO1KFmTN9HVLhhirhuN/5M7I9phPJxLAU7aez
+         9P7ONjtIUTLRxZSOQviFEN8aNFPBqxVoZEhGU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k9pD5UhiE599Tk9wmQP354KMod/Tb87VcByMMuwvg3k=;
+        b=bZxu1szZQ+TIlXC+WHm8MnZsUdpuMxUlfVHgwuJcHUZAIh19fgHlgbr9dwsMxkO9om
+         bxjcmVz6FLlQAykQQLyfWdtigFte99vRtp09gk2b8pnMy4tkmlNuwAQqEDhoa+Nj6WZH
+         4LT4+UQypAIqckJfFdwf49mq1qTJBagZEhMs++LzlKm7T2zNnGw7VPZ8Ntd2FfsbZqxy
+         dLoaR+JJCeQT0DoF4t1/mcBtBx/w7rgORIAEvHI2QJDWgAkfJ88JxrzejPiOE+4ibK5O
+         VRD8ZCumLoCB21tyVoR1VNkSpFvVGyKrMYvBuhi+U84S/TXgTVM/ZjL/0LJ1rP9T7FjD
+         zelg==
+X-Gm-Message-State: AOAM530WnI0ggKoeYhlJ/16vJv+FalySpyxXpdjkicHixz0J+MeBPvBQ
+        izzK0LCYI37BKj0xNaQreqMuwT22xzc2cM53XAzLmA==
+X-Google-Smtp-Source: ABdhPJzywIHzvHEbshbYh1BPf/R2VSON3B3el7elCV5+s8tTIaZ0pNfM6hRiiIO9NHAG6kQxEZ1i9zEbDrKxhAAT9zg=
+X-Received: by 2002:a1f:418f:: with SMTP id o137mr37478018vka.25.1594135888939;
+ Tue, 07 Jul 2020 08:31:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200706210717.1210639-1-abhishekpandit@chromium.org>
+ <20200706140715.v2.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <20200707142859.GB55434@kroah.com>
+In-Reply-To: <20200707142859.GB55434@kroah.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 7 Jul 2020 08:31:18 -0700
+Message-ID: <CANFp7mUgJScOn1xJFqqK82UkRsQ7GpsEJ7Ai9gptZjCRtf+JJw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        rafael.j.wysocki@intel.com, Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
-
-[ Upstream commit 12c17b9d62663c14a5343d6742682b3e67280754 ]
-
-When running ras uncorrectable error injection and triggering GPU
-reset on sGPU, below issue is observed. It's caused by the list
-uninitialized when accessing.
-
-[   80.047227] BUG: unable to handle page fault for address: ffffffffc0f4f750
-[   80.047300] #PF: supervisor write access in kernel mode
-[   80.047351] #PF: error_code(0x0003) - permissions violation
-[   80.047404] PGD 12c20e067 P4D 12c20e067 PUD 12c210067 PMD 41c4ee067 PTE 404316061
-[   80.047477] Oops: 0003 [#1] SMP PTI
-[   80.047516] CPU: 7 PID: 377 Comm: kworker/7:2 Tainted: G           OE     5.4.0-rc7-guchchen #1
-[   80.047594] Hardware name: System manufacturer System Product Name/TUF Z370-PLUS GAMING II, BIOS 0411 09/21/2018
-[   80.047888] Workqueue: events amdgpu_ras_do_recovery [amdgpu]
-
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
-Reviewed-by: John Clements <John.Clements@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index b0aa4e1ed4df7..cd18596b47d33 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -1444,9 +1444,10 @@ static void amdgpu_ras_do_recovery(struct work_struct *work)
- 	struct amdgpu_hive_info *hive = amdgpu_get_xgmi_hive(adev, false);
- 
- 	/* Build list of devices to query RAS related errors */
--	if  (hive && adev->gmc.xgmi.num_physical_nodes > 1) {
-+	if  (hive && adev->gmc.xgmi.num_physical_nodes > 1)
- 		device_list_handle = &hive->device_list;
--	} else {
-+	else {
-+		INIT_LIST_HEAD(&device_list);
- 		list_add_tail(&adev->gmc.xgmi.head, &device_list);
- 		device_list_handle = &device_list;
- 	}
--- 
-2.25.1
+Hi Greg,
 
 
+On Tue, Jul 7, 2020 at 7:29 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jul 06, 2020 at 02:07:17PM -0700, Abhishek Pandit-Subedi wrote:
+> > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > correctly if device_set_wakeup_capable is called after the device is
+> > created. This can happen for several reasons (driver sets wakeup after
+> > device is created, wakeup is changed on parent device, etc) and it seems
+> > reasonable to emit a changed event when adding or removing attributes on
+> > the device.
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
+> >
+> > Changes in v2:
+> > - Add newline at end of bt_dev_err
+> >
+> >  drivers/base/power/sysfs.c | 21 ++++++++++++++++++++-
+> >  1 file changed, 20 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > index 24d25cf8ab1487..d57e8e7f175ebf 100644
+> > --- a/drivers/base/power/sysfs.c
+> > +++ b/drivers/base/power/sysfs.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /* sysfs entries for device PM */
+> >  #include <linux/device.h>
+> > +#include <linux/kobject.h>
+> >  #include <linux/string.h>
+> >  #include <linux/export.h>
+> >  #include <linux/pm_qos.h>
+> > @@ -739,12 +740,30 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> >
+> >  int wakeup_sysfs_add(struct device *dev)
+> >  {
+> > -     return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +     int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +
+> > +     if (!ret) {
+> > +             int tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> > +
+> > +             if (tmp)
+> > +                     dev_err(dev,
+> > +                             "Error in uevent for wakeup_sysfs_add: %d\n",
+> > +                             tmp);
+> > +     }
+> > +
+> > +     return ret;
+> >  }
+>
+> Shouldn't the above function look like this instead to be simpler:
+>
+> int wakeup_sysfs_add(struct device *dev)
+> {
+>         int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+>
+>         if (ret)
+>                 return ret;
+>
+>         return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> }
+>
+>
+> >
+> >  void wakeup_sysfs_remove(struct device *dev)
+> >  {
+> > +     int tmp;
+>
+> Use 'ret' like the above function had, to be consistent.
+>
+> > +
+> >       sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +
+> > +     tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> > +     if (tmp)
+> > +             dev_err(dev, "Error in uevent for wakeup_sysfs_remove: %d\n",
+>
+> nit, use __func__ to describe a function name, if you really want it.
+> Why do you need to send a message for this error, will that really ever
+> happen?
+>
 
+Looking through kobject_uevent, it does look like the errors are
+unlikely to be seen (-ENOMEM, -ENOENT) and probably don't need to be
+logged.
+Will apply the suggestions above and send a v3.
+
+Thanks,
+Abhishek
+
+> thanks,
+>
+> greg k-h
