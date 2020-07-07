@@ -2,51 +2,126 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A13EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E59E7206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3864520578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594104101;
+	bh=RJd5gU31yiOjajLt/tJJ7V/CSWnm1xiLjteER4WNP0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TUuHoB68bbXhDpjaGLdvDjwcYxsy0JP7tiBZcMf2fGq7hcTnIndn6siNTEy0Msgj6
+	 0laIBr2wdlOUuu/Xo+Ar4T8ad/1nAuMJdhAPiXmGXSuhCrqrsfq5IUSPhy9ErdbEiJ
+	 1nOrr/XF38S1EirfbPOqzfReF+SGj1qvc70sgNUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgGGGlZ (ORCPT
+        id S1728243AbgGGGlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:41:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:57326 "EHLO verein.lst.de"
+        Tue, 7 Jul 2020 02:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgGGGlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:41:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8D51F68AFE; Tue,  7 Jul 2020 08:41:22 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 08:41:22 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Robin Murphy <robin.murphy@arm.com>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH] iommu: Remove unused IOMMU_SYS_CACHE_ONLY flag
-Message-ID: <20200707064122.GA23444@lst.de>
-References: <20200703162548.19953-1-will@kernel.org>
+        id S1726788AbgGGGlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:41:40 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70B0F206F6;
+        Tue,  7 Jul 2020 06:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594104099;
+        bh=RJd5gU31yiOjajLt/tJJ7V/CSWnm1xiLjteER4WNP0A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tONDhxf0QBJIM3f4VpihR47KunOjYPZ2jhFLTiV/wO/aflKiNmzVw6hAhqO8R/uIz
+         Xlm1CiyD2g7ETZ5vfugzQD0D7Oy2DpcUXhX7bI7e6GzcAmTReWVA6Yr/NMj2N3HKdr
+         VlWXtkBAG8D1E2VzGhNobzBmSCqlD2Qa9oJHvwB8=
+Received: by mail-ot1-f44.google.com with SMTP id 5so31526784oty.11;
+        Mon, 06 Jul 2020 23:41:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531Ot67Xdx01O/LKjA+Fc09UoQPCxjpQxtj8o4sMs+0wIFq0r0xF
+        dwbl8Kblq/eR6oS870Bj3UlHEfm61TiAoN5Qg0w=
+X-Google-Smtp-Source: ABdhPJwhDbsC77VdApD0Yu5jlF0o1Fbg6FB0JcBCaZr0l4MwXzKW782eArC4YsN/3RFShEqWA4n7wSNLntLdwVfHkGM=
+X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr47348216otf.77.1594104098794;
+ Mon, 06 Jul 2020 23:41:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703162548.19953-1-will@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200706172609.25965-1-atish.patra@wdc.com>
+In-Reply-To: <20200706172609.25965-1-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 7 Jul 2020 09:41:27 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXG5OxRod_-Z5K55XLXDda2ahfezm0yaRbv=82JmrFRZxw@mail.gmail.com>
+Message-ID: <CAMj1kXG5OxRod_-Z5K55XLXDda2ahfezm0yaRbv=82JmrFRZxw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/11] Add UEFI support for RISC-V
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 05:25:48PM +0100, Will Deacon wrote:
-> The IOMMU_SYS_CACHE_ONLY flag was never exposed via the DMA API and
-> has no in-tree users. Remove it.
+On Mon, 6 Jul 2020 at 20:26, Atish Patra <atish.patra@wdc.com> wrote:
+>
+> This series adds UEFI support for RISC-V.
+>
+> Linux kernel: 5.8-rc4
+> U-Boot: master
+> OpenSBI: master
+>
+> Patch 1-6 are preparatory patches that fixes some of the geric efi and riscv issues.
+>
+> Patch 7-9 adds the efi stub support for RISC-V which was reviewed few months back.
+> https://www.spinics.net/lists/linux-efi/msg19144.html
+>
+> Patch 10 just renames arm-init code so that it can be used across different
+> architectures. Patch 11 adds the runtime services for RISC-V.
+>
+> The patches can also be found in following git repo.
+> https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v2
+>
+> The patches have been verified on Qemu using bootefi command in U-Boot for both
+> RV32 and RV64.
+>
+> For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
+> beyond 1G of physical memory for RV32.
+>
+> EDK2 can boot quite far into Linux with current series. Currently, we are seeing
+> some traps from drivers (spi/network). At first glance, they don't seem to be
+> caused by efi. I thought it is better to get some early feedback on the series
+> while EDK2 issue is being debugged.
+>
+> That's why uefi runtime services are not actually well tested in RISC-V.
+> Any suggestions to test the efi run time services are appreciated.
+>
+> Changes from v1->v2:
+> 1. Removed patch 1 as it is already taken into efi-tree.
+> 2. Fixed compilation issues with patch 9.
+> 3. Moved few function prototype declaration to header file to keep kbuild happy.
+>
+> Changes from previous version:
+> 1. Added full ioremap support.
+> 2. Added efi runtime services support.
+> 3. Fixes mm issues
+>
 
-Looks good,
+Hi Atish,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This all looks reasonable to me, so I think we can merge this once you
+can confirm that the runtime services actually work.
+
+Could you explain how you are dealing with the memory map? Are memory
+nodes in DT ignored entirely as they should be? What about memory
+reservations?
+
+In any case, I will take the first patch as a fix, so it should turn
+up in mainline in 1~2 weeks.
+
+Thanks,
+Ard.
