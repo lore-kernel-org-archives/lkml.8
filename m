@@ -2,88 +2,101 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F97C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B353B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F94D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZH/mXKVi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PCXTGsWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgGGHkD (ORCPT
+        id S1728179AbgGGHkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:40:03 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20900 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726946AbgGGHkD (ORCPT
+        Tue, 7 Jul 2020 03:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgGGHkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:40:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594107602; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ynmxLQggstB9XGLc/Af3iGhS0qhtnRihyG/QMgVXDzg=; b=ZH/mXKVid+2aln2UCx++v694JxfeOsNh3FknaSAAaz43bM5NwqKsgIcjQW8u/DNhQcADEZYr
- FeWHmuCxvqQoqc8a2BaBeIF7l+UrN7eQ0bZPfEcbSzNlTCPgljiGXy1xIaKxVtWWv+Ir66z+
- xifWIt8UMuMswnZy5lwfi9ELQDU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f0426d2c9789fa9061ff8fb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 07:40:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B300EC43387; Tue,  7 Jul 2020 07:40:01 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E56FC433C8;
-        Tue,  7 Jul 2020 07:39:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E56FC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sivaprak@codeaurora.org, srichara@codeaurora.org,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Subject: [PATCH V2] pinctrl: qcom: ipq8074: route gpio interrupts to APPS
-Date:   Tue,  7 Jul 2020 13:09:48 +0530
-Message-Id: <1594107588-17055-1-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 Jul 2020 03:40:32 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85618C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 00:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5z5P6kkBRDwV4ACNzzQRP/E27ooFknK0lrMgzBi/ZKE=; b=PCXTGsWAFuuB8lH46eW6r9kT+l
+        xpf8ahMVydHMXt9AZ4KdMi4QTVHu95SzE5g32Biwn+KGaWA+48+RpaqM6qNPzLB/mUaM3MV2UN6RV
+        4/ubjv8UOCwwQPN97Uz1bkN+nWtdvCVQOXK9I2zgUIn/GrrLCfC30CrGHac9JFtfynRIIJPf3fFe4
+        sGtVjQqLk0yzhZHz+np6J9y3tWfkamm3OamuNORWT52KLG8Hq//ucNOmCCSF/exaOokgU94e8KSBq
+        wFouMqNTyl8hG04RuxCbePY/YQE/KPhhBJk7sMdOe/cBCvhO8C2diEqa+jd4XQXFkmDl1EMfUUErs
+        BklzN2JQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsiD4-0004dU-Ae; Tue, 07 Jul 2020 07:40:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96C3D3006D0;
+        Tue,  7 Jul 2020 09:40:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 80A42213C912F; Tue,  7 Jul 2020 09:40:07 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 09:40:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com, wei.w.wang@intel.com
+Subject: Re: [PATCH V3 13/23] perf/x86/intel/lbr: Factor out
+ intel_pmu_store_lbr
+Message-ID: <20200707074007.GI4800@hirez.programming.kicks-ass.net>
+References: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
+ <1593780569-62993-14-git-send-email-kan.liang@linux.intel.com>
+ <20200703195024.GI2483@worktop.programming.kicks-ass.net>
+ <bf63dee4-d25f-89d8-1893-572d84cfa667@linux.intel.com>
+ <ddfcd90f-ca77-edf4-09b8-183efb2ae2f2@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddfcd90f-ca77-edf4-09b8-183efb2ae2f2@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set target proc as APPS to route the gpio interrupts to APPS
+On Mon, Jul 06, 2020 at 06:29:58PM -0400, Liang, Kan wrote:
+> On 7/3/2020 4:59 PM, Liang, Kan wrote:
+> > On 7/3/2020 3:50 PM, Peter Zijlstra wrote:
 
-Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-ipq8074.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > If I'm not mistaken, this correctly deals with LBR_FORMAT_INFO, so can't
+> > > we also use the intel_pmu_arch_lbr_read() function for that case?
+> > 
+> 
+> There is another more severe issue which prevents sharing the read of Arch
+> LBR with LBR_FORMAT_INFO. Sorry I missed it.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-index 0edd41c..aec68b1 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-@@ -50,6 +50,7 @@
- 		.intr_enable_bit = 0,		\
- 		.intr_status_bit = 0,		\
- 		.intr_target_bit = 5,		\
-+		.intr_target_kpss_val = 3,	\
- 		.intr_raw_status_bit = 4,	\
- 		.intr_polarity_bit = 1,		\
- 		.intr_detection_bit = 2,	\
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+No worries, I too missed it.
 
+> For the legacy LBR, the youngest branch is stored in TOS MSR. The next
+> youngest is in (TOS - 1)...
+> 
+> For Arch LBR and LBR PEBS, the youngest branch is always in entry 0. The
+> next youngest is in entry 1...
+> 
+> The growth of the legacy LBR is in a reversed order of Arch LBR and LBR
+> PEBS. The legacy LBR also relies on TOS. I'm afraid we cannot use the
+> intel_pmu_arch_lbr_read() function for LBR_FORMAT_INFO.
+> 
+> I think I will only send a patch to support NO_{CYCLES,FLAGS} for all LBR
+> formats.
+
+Thanks!
