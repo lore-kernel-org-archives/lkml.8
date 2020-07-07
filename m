@@ -2,152 +2,92 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F688C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C457FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D389206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB2E20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcVEGPS1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHd7BhR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgGGAfX (ORCPT
+        id S1726852AbgGGAim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36764 "EHLO
+        Mon, 6 Jul 2020 20:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgGGAfW (ORCPT
+        with ESMTP id S1725942AbgGGAil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:35:22 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E313EC061755;
-        Mon,  6 Jul 2020 17:35:22 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id md7so2611057pjb.1;
-        Mon, 06 Jul 2020 17:35:22 -0700 (PDT)
+        Mon, 6 Jul 2020 20:38:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C17DC061755;
+        Mon,  6 Jul 2020 17:38:41 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id p1so6740914pls.4;
+        Mon, 06 Jul 2020 17:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=FRRksZf5+/NEkcn7a9u2MMQqVbOUSJFEbYbaDeSC7yM=;
-        b=fcVEGPS17mlzUdipLWykzrVBUNoqyCYO+bI2yUhaB0fiuPKU2foIUV/xOU29yZqVao
-         1dyJJjw2c7WMOTSmFYl8eH3SnefFcx2yINL27vZ2/84bIXRFhEwdJ0lfILDFHMTpTb7e
-         qKSuvOl10W+kY+tOXf/QBZi9a9cWYh+62OnHgpzFyOiOXIo7UVCIVsTzBC6PEaCq/Z3t
-         KJOb1j0ZBIJV1nhKEjw01kcspJ/jjnIwHIWEcu1jBFoZYMHnLGcak4n3bv58IKyU0qlF
-         Lggzm84VjbzROrlmpU4N0S7WPg1LP7edjTnVAdXaStwrfb88Adcu3F0b/3A5GyG/W+7W
-         0kaw==
+         :content-disposition:in-reply-to;
+        bh=4tvS8IktrWs5/Kk8tqKJKsgBXlSc0oDziPVJdcObJ2g=;
+        b=UHd7BhR8vH9lj/THHnyhQidKZiopTRTIpPeQ3iTW6XnSoBW5db3keAqzdlEVV4nwiO
+         ua5d1Ksm+qwpHOiKLH+6lGp+/3I8GysmBcbTe5p8aunqomzjNMepIDT1Ql5RJw/HC3g3
+         ptuLPtyCTL1oDETmmHEJqJV5QR3jwcGp5Ca9XqcfU6rf2F0ZcNOVS6F+5atLLMz2FdZX
+         ju1JwaE5w+XD5Q/zezWF/1rNxh6D2tdI08dvMPszjQoAh0caSXRZk6BjtWrNCYg2iU6K
+         nT1A1cX4eSca2GDbkF+kgy3s/JGUd6NREl6KK2dgr1f/15rtdku0tkJpXUVsT1qBp8T/
+         MGxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FRRksZf5+/NEkcn7a9u2MMQqVbOUSJFEbYbaDeSC7yM=;
-        b=FU15JDAjeBwOZXuoAtBZ1mHvWaSL0U8+HK6S9o9r9qmr0KKqmL3P63T7JiopipmYAI
-         iIIbXH583vMnp9yGuoplOgyO+gTvUlT13yxwGw7lUCdjlSjOVzxOodfA1vH8wWh8mc+9
-         yb0API2i3Rc5dMwbk2atZI6ZjSqhry9sGR3Mg3ZMmmrtY+6HhZx/POmuO2HQPkq0T1Wu
-         k5HnTjoSVz4UbNqHWpaPn/KfqFKddMtHU/Wq5XIZ1uJCawLIQ02O7AfQve7FIztm2ux/
-         dagEVP2WMI/sKb2kO6lUnaw6COg3mbTw677dW9xt27VN3qUYum5/nMOKMpX4Q7ql5b20
-         xwpg==
-X-Gm-Message-State: AOAM532CMbwt5pxntthlzKoh3us6tPT4ZGxcqvZrQ8yQSfkCX7OTYOjY
-        zd0Juz/bNOThT5x/v+lwGwfZaX87
-X-Google-Smtp-Source: ABdhPJwDSh89ci7TZe1EYVyzJ+XrBVDcqUbQNYmH6Agq9krjdTYApBdBbbeL2aa2NrfiTKlY9PKe/Q==
-X-Received: by 2002:a17:90a:1f87:: with SMTP id x7mr1627805pja.101.1594082122460;
-        Mon, 06 Jul 2020 17:35:22 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id e15sm19702448pgt.17.2020.07.06.17.35.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jul 2020 17:35:22 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 09:35:15 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: linux-next: Tree for Jul 6 (mm/memory_failure.c)
-Message-ID: <20200707003500.GA27886@js1304-desktop>
-References: <20200706174001.2d316826@canb.auug.org.au>
- <d458c18d-9c5e-9c45-0d65-e317571b6d56@infradead.org>
+         :mime-version:content-disposition:in-reply-to;
+        bh=4tvS8IktrWs5/Kk8tqKJKsgBXlSc0oDziPVJdcObJ2g=;
+        b=dNT40ESVIP/cIb3gdNf3oeN0OS73iVjmWyaX/5Txg5SsUgws2ytXrjBJ0waKbnsh5m
+         TYkNlf8z+vMFi4+2uusZ8/5SPRVLayh8XAmAIoCSBjr/hf269tjOJ8Qyeu2dtuqVwDN+
+         rxcRSVfc2JfLu5voWD4vezhfChUr9FoqAZtg4JPcV/dfICzCgfd0oFsJrK54Uo0LFOUl
+         a2Qs5rovsmomcCqoMhn2q6lLq/mibR/6bEs6CqMNz8bCAAyOLcG2LzMqVqoDJXnUkr5C
+         Nsh22srfgZ0bBuz0GCZ1BeU3JwXOKhN6fae7Oll1HEgizjARpfgs7y0XrJahSRDODtah
+         kyKQ==
+X-Gm-Message-State: AOAM5325R1h6MtPRH+1k1vZ4l6YO+b7+2j01cK6mzUMbjhc6egLBHtFY
+        yAdmmiBl286xcMAKfVRnHzk=
+X-Google-Smtp-Source: ABdhPJwsvweceG0eHRZ5WNlqqS/WpPHANTYjAUVhSiywwAC4RcJqj2SuwmNC3qiXWb0Spsg9mblSDQ==
+X-Received: by 2002:a17:902:7c8b:: with SMTP id y11mr41154211pll.53.1594082320903;
+        Mon, 06 Jul 2020 17:38:40 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id h1sm12524182pgn.41.2020.07.06.17.38.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 17:38:40 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 17:38:38 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: elantech: remove redundant assignments to
+ variable error
+Message-ID: <20200707003838.GA3273837@dtor-ws>
+References: <20200603140431.131347-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d458c18d-9c5e-9c45-0d65-e317571b6d56@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200603140431.131347-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:59:06AM -0700, Randy Dunlap wrote:
-> On 7/6/20 12:40 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200703:
-> > 
+On Wed, Jun 03, 2020 at 03:04:31PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> on i386:
+> The variable error is being initialized with a value that is
+> never read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
 > 
-> when CONFIG_MIGRATION is not set/enabled:
-> 
-> ../mm/memory-failure.c: In function ‘new_page’:
-> ../mm/memory-failure.c:1688:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
->   return alloc_migration_target(p, (unsigned long)&mtc);
->          ^~~~~~~~~~~~~~~~~~~~~~
-> 
-> 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Hello,
+Applied, thank you.
 
-Thanks for reporting.
-
-Below is the fix for this error.
-Andrew, Could you squash this fix into the patch,
-"mm-migrate-make-a-standard-target-allocation-function.patch"?
-
-Thanks.
-
-
-------------------->8-------------------
-From 5fac269125dfb2d03e38a75319305e0e70b23a4b Mon Sep 17 00:00:00 2001
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Date: Tue, 7 Jul 2020 09:16:58 +0900
-Subject: [PATCH] mm/migrate: fix for
- mm-migrate-make-a-standard-target-allocation-function.patch in mm tree
-
-new_page_nodemask() is renamed to alloc_migration_target in
-mm-migrate-make-a-standard-target-allocation-function.patch, but,
-one declaration for !CONFIG_MIGRATION case is missed. This patch fixes it.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/migrate.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index 5e9c866..cc56f0d 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -60,8 +60,8 @@ static inline int migrate_pages(struct list_head *l, new_page_t new,
- 		free_page_t free, unsigned long private, enum migrate_mode mode,
- 		int reason)
- 	{ return -ENOSYS; }
--static inline struct page *new_page_nodemask(struct page *page,
--		int preferred_nid, nodemask_t *nodemask)
-+static inline struct page *alloc_migration_target(struct page *page,
-+		unsigned long private)
- 	{ return NULL; }
- static inline int isolate_movable_page(struct page *page, isolate_mode_t mode)
- 	{ return -EBUSY; }
 -- 
-2.7.4
-
+Dmitry
