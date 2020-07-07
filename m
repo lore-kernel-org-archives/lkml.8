@@ -2,108 +2,139 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2205C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA59C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08F720708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wz+x6l/j"
+	by mail.kernel.org (Postfix) with ESMTP id 64DC320758
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgGGDiU (ORCPT
+        id S1728231AbgGGDi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:38:20 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52643 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727871AbgGGDiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:38:20 -0400
-X-UUID: 512f442de6224b6b8b21880f38524bff-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=orN+U9b8rBcb3cgnPPXbg0k2d4sfceTMwEf/l9coVVs=;
-        b=Wz+x6l/jsyBe+FBkiPN2hT8GqrSImQDn0f2JcxNqRlPWZCbRcikFzRxh/J3wfHdni5y+Y96ad9XQ380/b8IreF1N6ewNatev8QcH6gbwDLyLqRm9AtMHx2NBD8/8sT9BA3YnSOeX3Tct5/JC4ezX+Y840t3FB7WpAhJJnHILfKk=;
-X-UUID: 512f442de6224b6b8b21880f38524bff-20200707
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 988155038; Tue, 07 Jul 2020 11:38:17 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 11:38:13 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 11:38:14 +0800
-Message-ID: <1594093094.20820.8.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6779 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Tue, 7 Jul 2020 11:38:14 +0800
-In-Reply-To: <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
-References: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
-         <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
-         <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
-         <1594092631.20820.4.camel@mtkswgap22>
-         <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 6 Jul 2020 23:38:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:51716 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727871AbgGGDiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:38:25 -0400
+IronPort-SDR: DGwDBL7wDYHPWeoltRn8VYAQyUqmTIVMYbrUHkeHns5g/dGIfDriaYNL+crHLbzA5LmKfldDZ2
+ JbUnQntzBB5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232394687"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="232394687"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 20:38:25 -0700
+IronPort-SDR: jmGptrlNDI66DjBNA4P8MA0fdMsxVL0D6NnH5kn0f2VkWsSH6e+fOYbITqtD+ed/PZd/CqRF/W
+ fktHPLci+lSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="427314193"
+Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
+  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 20:38:14 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     x86@kernel.org, linux-sgx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v35 02/24] x86/cpufeatures: x86/msr: Add Intel SGX Launch Control hardware bits
+Date:   Tue,  7 Jul 2020 06:37:25 +0300
+Message-Id: <20200707033747.142828-3-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BAB8E2C131F09C2E8A131E9F69B010D851F56200AC2906895C4A3E2A86C556E62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTA2IGF0IDIwOjMyIC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+
-IE9uIDcvNi8yMCA4OjMwIFBNLCBOZWFsIExpdSB3cm90ZToNCj4gPiBIaSBSYW5keSwNCj4gPiAN
-Cj4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KPiA+IA0KPiA+IE9uIE1vbiwgMjAyMC0wNy0w
-NiBhdCAwOToxMyAtMDcwMCwgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiA+PiBPbiA3LzYvMjAgMjoy
-OCBBTSwgTmVhbCBMaXUgd3JvdGU6DQo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVk
-aWF0ZWsvZGV2YXBjL0tjb25maWcgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9kZXZhcGMvS2NvbmZp
-Zw0KPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4+IGluZGV4IDAwMDAwMDAuLmIwZjdk
-MGUNCj4gPj4+IC0tLSAvZGV2L251bGwNCj4gPj4+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
-L2RldmFwYy9LY29uZmlnDQo+ID4+PiBAQCAtMCwwICsxLDE3IEBADQo+ID4+PiArY29uZmlnIE1U
-S19ERVZBUEMNCj4gPj4+ICsJdHJpc3RhdGUgIk1lZGlhdGVrIERldmljZSBBUEMgU3VwcG9ydCIN
-Cj4gPj4+ICsJaGVscA0KPiA+Pj4gKwkgIERldmljZSBBUEMgaXMgYSBIVyBJUCBjb250cm9sbGlu
-ZyBpbnRlcm5hbCBkZXZpY2Ugc2VjdXJpdHkuDQo+ID4+DQo+ID4+IHByZWZlcmFibHk6ICAgICAg
-ICAgICAgICAgcy9IVy9oYXJkd2FyZS8NCj4gPj4NCj4gPj4+ICsJICBNZWRpYVRlayBidXMgZnJh
-YnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+Pg0K
-PiA+PiAJICAgICAgICAgICAgICAgZmFicmljDQo+ID4+DQo+ID4+PiArCSAgcHJvdGVjdGlvbiB0
-byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPj4+
-ICsJICBidXMgbWFzdGVycy4NCj4gPj4+ICsJICBEZXZpY2UgQVBDIHByZXZlbnRzIG1hbGljaW91
-cyBhY2Nlc3MgdG8gaW50ZXJuYWwgZGV2aWNlcy4NCj4gPj4+ICsNCj4gPj4+ICtjb25maWcgREVW
-QVBDX01UNjc3OQ0KPiA+Pj4gKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2Nzc5IERldmljZSBBUEMg
-ZHJpdmVyIg0KPiA+Pj4gKwlzZWxlY3QgTVRLX0RFVkFQQw0KPiA+Pj4gKwloZWxwDQo+ID4+PiAr
-CSAgU2F5IHllcyBoZXJlIHRvIGVuYWJsZSBzdXBwb3J0IE1lZGlhdGVrIE1UNjc3OSBEZXZpY2Ug
-QVBDIGRyaXZlci4NCj4gPj4NCj4gPj4gCSAgICAgICAgICAgICAgICAgICAgICAgICBzdXBwb3J0
-IGZvciBNZWRpYXRlaw0KPiA+Pg0KPiA+Pj4gKwkgIFRoaXMgZHJpdmVyIG1haW5seSB1c2VkIHRv
-IGhhbmRsZSB0aGUgdmlvbGF0aW9uIHdpdGggMSBERVZBUEMgQU8vUERzLg0KPiA+Pg0KPiA+PiAJ
-ICBUaGlzIGRyaXZlciBpcyBtYWlubHkgdXNlZCAgICAgICAgICAgICAgICAgICAgICAgICAgIF5e
-Xl5eXl5eXl5eXl5eXl4NCj4gPj4NCj4gPj4gCSAgICAgICAgICAgICAgICAgICAgICBXaGF0IGlz
-IHRoYXQgbWVhbmluZ2xlc3Mgc3RyaW5nIG9mIGNoYXJzPyBeXl5eXl5eDQo+ID4gDQo+ID4gSSBk
-aWQgbm90IHNlZSBhbnkgbWVhbmluZ2xlc3Mgc3RyaW5nIG9mIGNoYXJzIGZyb20gbXkgb3JpZ2lu
-YWwgcGF0Y2guDQo+ID4gSXMgdGhlcmUgc29tZXRoaW5nIHdyb25nPw0KPiANCj4gVG8gc29tZW9u
-ZSB3aG8gaXMgcmVhZGluZyB0aGUgS2NvbmZpZyBoZWxwIHRleHQgYnV0IGlzIHVuZmFtaWxpYXIg
-d2l0aCB0aGlzIGRldmljZSwNCj4gSSB3b3VsZCBzYXkgdGhhdCAgICAgICAgIjEgREVWQVBDIEFP
-L1BEcyIgICAgICAgICAgICAgICAgICAgIGlzIG5vdCBoZWxwZnVsIGF0IGFsbC4NCg0KR290IGl0
-LCBJJ2xsIHRyeSB0byBtYWtlIGl0IG1vcmUgcmVhZGFibGUuDQoNCj4gDQo+ID4gWzFdIGh0dHBz
-Oi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC83LzYvMTY4
-X187ISFDVFJOS0E5d01nMEFSYnchMHBBbVZxVXJ0REVEUFQtUWtRRU5Yc28tX3VtT3oybmJlLURE
-SWxNYjFzRXNENTdCYUt0RFpGNDdRRlRmTVNQLSQgDQo+ID4gDQo+ID4+DQo+ID4+PiArCSAgVGhl
-IHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBhcmUgbG9nZ2VkIGZvciBmdXJ0aGVyIGFuYWx5c2lzIG9y
-DQo+ID4+DQo+ID4+IAkgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXMNCj4gPj4NCj4gPj4+
-ICsJICBjb3VudGVybWVhc3VyZXMuDQo+ID4+DQo+ID4+IHRoYW5rcy4NCj4gPiANCj4gDQo+IA0K
-PiB0aGFua3MuDQoNCg==
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+
+Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
+Launch Control.
+
+Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
+SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
+called enclaves, are always signed. All enclaves signed with the public key
+are unconditionally allowed to initialize. [1]
+
+Add FEAT_CTL_SGX_LC_ENABLED, which informs whether the aformentioned MSRs
+are writable or not. If the bit is off, the public key MSRs are read-only
+for the OS.
+
+If the MSRs are read-only, the platform must provide a launch enclave (LE).
+LE can create cryptographic tokens for other enclaves that they can pass
+together with their signature to the ENCLS(EINIT) opcode, which is used
+to initialize enclaves.
+
+Linux is unlikely to support the locked configuration because it takes away
+the control of the launch decisions from the kernel.
+
+[1] Intel SDM: 38.1.4 Intel SGX Launch Control Configuration
+
+Reviewed-by: Borislav Petkov <bp@alien8.de>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/include/asm/msr-index.h   | 7 +++++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 545ac3e0e269..0a4541e4f076 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -352,6 +352,7 @@
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
+ #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
+ #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
++#define X86_FEATURE_SGX_LC		(16*32+30) /* Software Guard Extensions Launch Control */
+ 
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 18e08da19f16..3d7c89a8533f 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -582,6 +582,7 @@
+ #define FEAT_CTL_LOCKED				BIT(0)
+ #define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
+ #define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
++#define FEAT_CTL_SGX_LC_ENABLED			BIT(17)
+ #define FEAT_CTL_SGX_ENABLED			BIT(18)
+ #define FEAT_CTL_LMCE_ENABLED			BIT(20)
+ 
+@@ -602,6 +603,12 @@
+ #define MSR_IA32_UCODE_WRITE		0x00000079
+ #define MSR_IA32_UCODE_REV		0x0000008b
+ 
++/* Intel SGX Launch Enclave Public Key Hash MSRs */
++#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
++#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
++#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
++#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
++
+ #define MSR_IA32_SMM_MONITOR_CTL	0x0000009b
+ #define MSR_IA32_SMBASE			0x0000009e
+ 
+-- 
+2.25.1
 
