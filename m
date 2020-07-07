@@ -2,139 +2,147 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E89C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48DE20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DBC20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134573;
-	bh=3FhL2ZRnBBx7Z10NkIE51qlwGEHzyJGWX2u13X8SHzk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PV1Jyyag4VU4ReRCL17ILFBy2y9nhi1RkxqKnr0Pe/vF2j1NSlXtC3f4RXyNSOAeL
-	 B9DxlqoL+Rg5UOdWVx+8E45ODuGYOUOoPd204bIv2PuvnhC7uUIZexFUtWiH4GIfOY
-	 O4QcYki2znlty6D702z8AzXRmczER3RStEyQBqAM=
+	s=default; t=1594134629;
+	bh=GL5nhFaRBauCRdVfxtFt481dnkBXq785LVUnOEJ2fbU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NL/tSpDXq+TZzkYkurJOQfLNuOFeRK7IALsnizBhWiEJgRk/h3RjHp8CfCy/vuTCi
+	 wqHTqDikdJAt2N8N/2+/vc6ShaK9kEfWwUXV9wKMTXloqPsRMlLP7qLoRTFR3oX7FT
+	 9QyN+e2Ks5XyZFIpagNf7irfHR1tGMknsNadRP2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgGGPJc (ORCPT
+        id S1728316AbgGGPK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:09:32 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54912 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgGGPJc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:09:32 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o8so43642898wmh.4;
-        Tue, 07 Jul 2020 08:09:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LyPt8pjQ2hYzxgcpGlgQLq9YypxpQ46IFjPp9/Hk1tY=;
-        b=HMvYV6DfxQ/z55h/jUgu6uIGa8UE8X+MQaaczH4kl6vP8QxstJBMFGMndNxMNpqqVU
-         lOyavX08bLueKPx0DA1/aifJPpTvjyUqaFXd/g/+MQxzrwWsjPCM05mUaa8nV20DI4cZ
-         0NC+qY5DNZCXFAgqZmjU+5lD9ZHIX2QrRSlCrKqIwxJXrZz/ZGNzWJe06cu9FWvPwnhL
-         T7NTywem7MmunrDj4BBPYuasuZpcv+SIVTSLh2sBr+tApwKmSqO1zF4U2elZDZGG0nTm
-         hiGt5szh/rDJMW2rNUUV/OTAQFNlIwGqFsoig8fUdaYwnyWm8jzY8OkCQGridItSH+GM
-         t5rA==
-X-Gm-Message-State: AOAM5322ge6tiQ2Gb1Bbw2lKlNjvdlplHRP9ARHVi6SpPjGxCEy9jBai
-        AsvnTRhKmrcHIPsFkaDYXb90Co3T7imWJGN7yBA=
-X-Google-Smtp-Source: ABdhPJzW0YR6fYlxQOLIgcuUjDm8eADQDlJqMhbvCMgroXw5W0/wpybst044K6xPwzuVMMY0hs32B2Xk6bSK4DXu/u0=
-X-Received: by 2002:a1c:7d56:: with SMTP id y83mr4948838wmc.154.1594134570063;
- Tue, 07 Jul 2020 08:09:30 -0700 (PDT)
+        Tue, 7 Jul 2020 11:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbgGGPK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:10:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D0C2065D;
+        Tue,  7 Jul 2020 15:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594134627;
+        bh=GL5nhFaRBauCRdVfxtFt481dnkBXq785LVUnOEJ2fbU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=unekjo5WJ5jtAHmc0BJHYS2nrU9SEqaQ44nQ0lWyzKMbe8YvzAdHc194rKRzcDQzu
+         AiZu8o2Bskcn2T0/UVydiKuzE678WWYLeSJ3/be8cGu5V7Ya3ztZB/Jli2XypnMy4A
+         MKS4302bN6P6VfQRgZUq6BrV0nzq6R+NZi9N0ong=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/19] btrfs: cow_file_range() num_bytes and disk_num_bytes are same
+Date:   Tue,  7 Jul 2020 17:10:04 +0200
+Message-Id: <20200707145747.560292041@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
+References: <20200707145747.493710555@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20200702185344.913492689@goodmis.org> <20200702185704.401148804@goodmis.org>
-In-Reply-To: <20200702185704.401148804@goodmis.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 8 Jul 2020 00:09:18 +0900
-Message-ID: <CAM9d7cjboXGg+iMOA4BQo=E01iLGcJNB1MyPJ4doPP1XeGVJRA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/15] tools lib traceevent: Add support for more
- printk format specifiers
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 3:57 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
->
-> The printk format specifiers used in event's print format files extend
-> the standard printf formats. There are a lot of new options related to
-> printing pointers and kernel specific structures. Currently trace-cmd
-> does not support many of them.
->
-> Support for these new printk specifiers is added to the pretty_print()
-> function:
->  - UUID/GUID address: %pU[bBlL]
->  - Raw buffer as a hex string: %*ph[CDN]
->
-> These are improved:
->  - MAC address: %pMF, %pM and %pmR
->  - IPv4 adderss: %p[Ii]4[hnbl]
->
-> Function pretty_print() is refactored. The logic for printing pointers
-> %p[...] is moved to its own function.
->
-> Link: https://lore.kernel.org/linux-trace-devel/20200515053754.3695335-1-tz.stoyanov@gmail.com
-> Link: http://lore.kernel.org/linux-trace-devel/20200625100516.365338-7-tz.stoyanov@gmail.com
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207605
-> Reported-by: Johannes Berg <johannes@sipsolutions.net>
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
-[SNIP]
-> +static int parse_ip4_print_args(struct tep_handle *tep,
-> +                               const char *ptr, bool *reverse)
-> +{
-> +       int ret = 0;
-> +
-> +       *reverse = false;
-> +
-> +       /* hnbl */
-> +       switch (*ptr) {
-> +       case 'h':
-> +               if (tep->file_bigendian)
-> +                       *reverse = false;
-> +               else
-> +                       *reverse = true;
-> +               ret++;
-> +       break;
+From: Anand Jain <Anand.Jain@oracle.com>
 
-Indentation is broken..
+[ Upstream commit 3752d22fcea160cc2493e34f5e0e41cdd7fdd921 ]
 
-> +       case 'l':
-> +               *reverse = true;
-> +               ret++;
-> +       break;
+This patch deletes local variable disk_num_bytes as its value
+is same as num_bytes in the function cow_file_range().
 
-Ditto.
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/inode.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-Thanks
-Namhyung
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 972475eeb2dd0..ef8ed0cd8075a 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -926,7 +926,6 @@ static noinline int cow_file_range(struct inode *inode,
+ 	u64 alloc_hint = 0;
+ 	u64 num_bytes;
+ 	unsigned long ram_size;
+-	u64 disk_num_bytes;
+ 	u64 cur_alloc_size;
+ 	u64 blocksize = root->sectorsize;
+ 	struct btrfs_key ins;
+@@ -942,7 +941,6 @@ static noinline int cow_file_range(struct inode *inode,
+ 
+ 	num_bytes = ALIGN(end - start + 1, blocksize);
+ 	num_bytes = max(blocksize,  num_bytes);
+-	disk_num_bytes = num_bytes;
+ 
+ 	/* if this is a small write inside eof, kick off defrag */
+ 	if (num_bytes < 64 * 1024 &&
+@@ -969,16 +967,15 @@ static noinline int cow_file_range(struct inode *inode,
+ 		}
+ 	}
+ 
+-	BUG_ON(disk_num_bytes >
+-	       btrfs_super_total_bytes(root->fs_info->super_copy));
++	BUG_ON(num_bytes > btrfs_super_total_bytes(root->fs_info->super_copy));
+ 
+ 	alloc_hint = get_extent_allocation_hint(inode, start, num_bytes);
+ 	btrfs_drop_extent_cache(inode, start, start + num_bytes - 1, 0);
+ 
+-	while (disk_num_bytes > 0) {
++	while (num_bytes > 0) {
+ 		unsigned long op;
+ 
+-		cur_alloc_size = disk_num_bytes;
++		cur_alloc_size = num_bytes;
+ 		ret = btrfs_reserve_extent(root, cur_alloc_size,
+ 					   root->sectorsize, 0, alloc_hint,
+ 					   &ins, 1, 1);
+@@ -1033,7 +1030,7 @@ static noinline int cow_file_range(struct inode *inode,
+ 				goto out_drop_extent_cache;
+ 		}
+ 
+-		if (disk_num_bytes < cur_alloc_size)
++		if (num_bytes < cur_alloc_size)
+ 			break;
+ 
+ 		/* we're not doing compressed IO, don't unlock the first
+@@ -1050,8 +1047,10 @@ static noinline int cow_file_range(struct inode *inode,
+ 					     start + ram_size - 1, locked_page,
+ 					     EXTENT_LOCKED | EXTENT_DELALLOC,
+ 					     op);
+-		disk_num_bytes -= cur_alloc_size;
+-		num_bytes -= cur_alloc_size;
++		if (num_bytes < cur_alloc_size)
++			num_bytes = 0;
++		else
++			num_bytes -= cur_alloc_size;
+ 		alloc_hint = ins.objectid + ins.offset;
+ 		start += cur_alloc_size;
+ 	}
+-- 
+2.25.1
 
 
-> +       case 'n':
-> +       case 'b':
-> +               ret++;
-> +               /* fall through */
-> +       default:
-> +               *reverse = false;
-> +               break;
-> +       }
-> +
-> +       return ret;
->  }
+
