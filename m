@@ -2,111 +2,236 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D409C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3376F206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594122026;
-	bh=3rOu6zQTuzN/64VgOaN5FFa2W8skbKpgjFiXBosXTH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y66gv8bgNsv2NoGjdf6B7mdvktXSOEgGcl2JkR/9CgKCF9HLJlxbHPqYVdNLhPdJh
-	 onj0SQc6brjGU1ez/5ht8POCbLrvWZ9nqf3c/n225+TDboL0u/T6J+rO9zKuwc3whr
-	 zhJM9aIvJpL4raIJSxCK3ZOxyEKTl33fgAUVfNeQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4EA8B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGGLkZ (ORCPT
+        id S1727916AbgGGLk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:40:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39437 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGLkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:40:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q5so44762215wru.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:40:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TYzmEtg/Kj0i964ThN6Qo6tqP9/EQZBPoedHzLNj/F8=;
-        b=GJC9OL0+i9DWAo9bwdhhGi/e+ozTBfQUBo7HrNeg84olo4fj2YN5F0orLV1azTlJdq
-         mpTygsJXI18tUeENhZFm1LmDZW5No7mAgqXZ91m3KHVkxsF095bP2vyA0/jLNQBQRDzH
-         IYJtVJ+LAlRFY6XiJ2LE8grRzIktLfD4vr1ft1Gi4Gz5QcviRYfk7ZKLOK/6J9rv7BRM
-         c1DZ7+vT3YpKy+spRQb8hxKg9JUlqrzTmWgxi0eeIyyyz3S1obk7FTfaZGybjJWcp1tf
-         LyZ/caQAg3MDvJ3Cbqg1aKw9OFtRcdsFAOusAHK6XAxCnNLiXaAbIw2M3ojaKph+7ti4
-         B2jA==
-X-Gm-Message-State: AOAM53330ZCLZ8TGdN3ojMz1gve1yNKowAZbMGBqQ4KpaxglyVl2z0sd
-        Xb0aewRoDAZ9TrBeWFCIGTw=
-X-Google-Smtp-Source: ABdhPJyCUpFQXAvN1uQvadCMYh7ObchD7W+fGup6uatezxdeECrMSV3cMOD/yD3txHQVZXAAdSHPgg==
-X-Received: by 2002:a5d:650e:: with SMTP id x14mr56294076wru.187.1594122021224;
-        Tue, 07 Jul 2020 04:40:21 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id o9sm650992wrs.1.2020.07.07.04.40.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 04:40:20 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 13:40:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
- allocation for migration
-Message-ID: <20200707114019.GI5913@dhcp22.suse.cz>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
+        Tue, 7 Jul 2020 07:40:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:42870 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgGGLk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:40:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A658F1FB;
+        Tue,  7 Jul 2020 04:40:57 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57B1B3F71E;
+        Tue,  7 Jul 2020 04:40:56 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 12:40:50 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     tjoseph@cadence.com, robh@kernel.org, bhelgaas@google.com,
+        thierry.reding@gmail.com, toan@os.amperecomputing.com,
+        ley.foon.tan@intel.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: controller: convert to
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200707114050.GA15666@e121166-lin.cambridge.arm.com>
+References: <20200602171601.17630-1-zhengdejin5@gmail.com>
+ <20200707113117.GA15536@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <20200707113117.GA15536@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-07-20 16:44:43, Joonsoo Kim wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Tue, Jul 07, 2020 at 12:31:17PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, Jun 03, 2020 at 01:16:01AM +0800, Dejin Zheng wrote:
+> > Use devm_platform_ioremap_resource_byname() to simplify codes.
+> > it contains platform_get_resource_byname() and devm_ioremap_resource().
+> > 
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> > v1 -> v2:
+> > 	- Discard changes to the file drivers/pci/controller/pcie-xilinx-nwl.c
+> > 	  Due to my mistakes, my patch will modify pcie-xilinx-nwl.c,
+> > 	  but it still need to use the res variable, but
+> > 	  devm_platform_ioremap_resource_byname() funtion can't assign a
+> > 	  value to the variable res. kbuild test robot report it. Thanks
+> > 	  very much for kbuild test robot <lkp@intel.com>.
+> > 
+> >  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 3 +--
+> >  drivers/pci/controller/cadence/pcie-cadence-host.c | 3 +--
+> >  drivers/pci/controller/pci-tegra.c                 | 8 +++-----
+> >  drivers/pci/controller/pci-xgene.c                 | 3 +--
+> >  drivers/pci/controller/pcie-altera-msi.c           | 3 +--
+> >  drivers/pci/controller/pcie-altera.c               | 9 +++------
+> >  drivers/pci/controller/pcie-mediatek.c             | 4 +---
+> >  drivers/pci/controller/pcie-rockchip.c             | 5 ++---
+> >  8 files changed, 13 insertions(+), 25 deletions(-)
 > 
-> In mm/migrate.c, THP allocation for migration is called with the provided
-> gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
-> would be conflict with the intention of the GFP_TRANSHUGE.
+> Applied to pci/dwc with Rob and Gustavo's tags (next time please
+> carry them over and send v2 in-reply-to v1 so that I can follow
+> it), thanks.
+
+Moved to pci/misc since it is not really dwc related, apologies.
+
+Lorenzo
+
+> Lorenzo
 > 
-> GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
-> behaviour by well defined manner since overhead of THP allocation is
-> quite large and the whole system could suffer from it. So, they deals
-> with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAIM
-> and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
-> that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
-
-GFP_TRANSHUGE* is not a carved in stone design. Their primary reason to
-exist is to control how hard to try for different allocation
-paths/configurations because their latency expectations might be
-largerly different. It is mostly the #PF path which aims to be as
-lightweight as possible I believe nobody simply considered migration to be
-very significant to even care. And I am still not sure it matters but
-I would tend to agree that a consistency here is probably a very minor
-plus.
-
-Your changelog is slightly misleading in that regard because it suggests
-that this is a real problem while it doesn't present any actual data.
-It would be really nice to make the effective change really stand out.
-We are only talking about __GFP_RECLAIM_KSWAPD here. So the only
-difference is that the migration won't wake up kswapd now.
-
-All that being said the changelog should be probably more explicit about
-the fact that this is solely done for consistency and be honest that the
-runtime effect is not really clear. This would help people reading it in
-future.
--- 
-Michal Hocko
-SUSE Labs
+> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > index 1c15c8352125..74ffa03fde5f 100644
+> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > @@ -408,8 +408,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+> >  
+> >  	pcie->is_rc = false;
+> >  
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
+> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+> >  	if (IS_ERR(pcie->reg_base)) {
+> >  		dev_err(dev, "missing \"reg\"\n");
+> >  		return PTR_ERR(pcie->reg_base);
+> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > index 8c2543f28ba0..dcc460a54875 100644
+> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > @@ -225,8 +225,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> >  	rc->device_id = 0xffff;
+> >  	of_property_read_u32(np, "device-id", &rc->device_id);
+> >  
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> > -	pcie->reg_base = devm_ioremap_resource(dev, res);
+> > +	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+> >  	if (IS_ERR(pcie->reg_base)) {
+> >  		dev_err(dev, "missing \"reg\"\n");
+> >  		return PTR_ERR(pcie->reg_base);
+> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> > index e3e917243e10..3e608383df66 100644
+> > --- a/drivers/pci/controller/pci-tegra.c
+> > +++ b/drivers/pci/controller/pci-tegra.c
+> > @@ -1462,7 +1462,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+> >  {
+> >  	struct device *dev = pcie->dev;
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> > -	struct resource *pads, *afi, *res;
+> > +	struct resource *res;
+> >  	const struct tegra_pcie_soc *soc = pcie->soc;
+> >  	int err;
+> >  
+> > @@ -1486,15 +1486,13 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+> >  		}
+> >  	}
+> >  
+> > -	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
+> > -	pcie->pads = devm_ioremap_resource(dev, pads);
+> > +	pcie->pads = devm_platform_ioremap_resource_byname(pdev, "pads");
+> >  	if (IS_ERR(pcie->pads)) {
+> >  		err = PTR_ERR(pcie->pads);
+> >  		goto phys_put;
+> >  	}
+> >  
+> > -	afi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "afi");
+> > -	pcie->afi = devm_ioremap_resource(dev, afi);
+> > +	pcie->afi = devm_platform_ioremap_resource_byname(pdev, "afi");
+> >  	if (IS_ERR(pcie->afi)) {
+> >  		err = PTR_ERR(pcie->afi);
+> >  		goto phys_put;
+> > diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+> > index d1efa8ffbae1..1431a18eb02c 100644
+> > --- a/drivers/pci/controller/pci-xgene.c
+> > +++ b/drivers/pci/controller/pci-xgene.c
+> > @@ -355,8 +355,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
+> >  	if (IS_ERR(port->csr_base))
+> >  		return PTR_ERR(port->csr_base);
+> >  
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> > -	port->cfg_base = devm_ioremap_resource(dev, res);
+> > +	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+> >  	if (IS_ERR(port->cfg_base))
+> >  		return PTR_ERR(port->cfg_base);
+> >  	port->cfg_addr = res->start;
+> > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> > index 16d938920ca5..613e19af71bd 100644
+> > --- a/drivers/pci/controller/pcie-altera-msi.c
+> > +++ b/drivers/pci/controller/pcie-altera-msi.c
+> > @@ -228,8 +228,7 @@ static int altera_msi_probe(struct platform_device *pdev)
+> >  	mutex_init(&msi->lock);
+> >  	msi->pdev = pdev;
+> >  
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
+> > -	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
+> > +	msi->csr_base = devm_platform_ioremap_resource_byname(pdev, "csr");
+> >  	if (IS_ERR(msi->csr_base)) {
+> >  		dev_err(&pdev->dev, "failed to map csr memory\n");
+> >  		return PTR_ERR(msi->csr_base);
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 24cb1c331058..7200e40ffa26 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -696,17 +696,14 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+> >  {
+> >  	struct device *dev = &pcie->pdev->dev;
+> >  	struct platform_device *pdev = pcie->pdev;
+> > -	struct resource *cra;
+> > -	struct resource *hip;
+> >  
+> > -	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+> > -	pcie->cra_base = devm_ioremap_resource(dev, cra);
+> > +	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
+> >  	if (IS_ERR(pcie->cra_base))
+> >  		return PTR_ERR(pcie->cra_base);
+> >  
+> >  	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> > -		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
+> > -		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
+> > +		pcie->hip_base =
+> > +			devm_platform_ioremap_resource_byname(pdev, "Hip");
+> >  		if (IS_ERR(pcie->hip_base))
+> >  			return PTR_ERR(pcie->hip_base);
+> >  	}
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index ebfa7d5a4e2d..d8e38276dbe3 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -905,7 +905,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+> >  			       int slot)
+> >  {
+> >  	struct mtk_pcie_port *port;
+> > -	struct resource *regs;
+> >  	struct device *dev = pcie->dev;
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> >  	char name[10];
+> > @@ -916,8 +915,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+> >  		return -ENOMEM;
+> >  
+> >  	snprintf(name, sizeof(name), "port%d", slot);
+> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> > -	port->base = devm_ioremap_resource(dev, regs);
+> > +	port->base = devm_platform_ioremap_resource_byname(pdev, name);
+> >  	if (IS_ERR(port->base)) {
+> >  		dev_err(dev, "failed to map port%d base\n", slot);
+> >  		return PTR_ERR(port->base);
+> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> > index c53d1322a3d6..904dec0d3a88 100644
+> > --- a/drivers/pci/controller/pcie-rockchip.c
+> > +++ b/drivers/pci/controller/pcie-rockchip.c
+> > @@ -45,9 +45,8 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> >  			return -EINVAL;
+> >  	}
+> >  
+> > -	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > -					    "apb-base");
+> > -	rockchip->apb_base = devm_ioremap_resource(dev, regs);
+> > +	rockchip->apb_base =
+> > +		devm_platform_ioremap_resource_byname(pdev, "apb-base");
+> >  	if (IS_ERR(rockchip->apb_base))
+> >  		return PTR_ERR(rockchip->apb_base);
+> >  
+> > -- 
+> > 2.25.0
+> > 
