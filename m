@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D6F206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53934206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135187;
-	bh=Btfjam2wLgFNouJPmbBUN1e7q5RQh6MsXcHYqdw3HQo=;
+	s=default; t=1594135189;
+	bh=zf+acchBvmWz+dfLqoQTn9oqkEE+4yFBrlZPW0GgMsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWbCayMIZydxvIVYk51qL2DMrtKu6UgbpVTS76fkO5gM6Bp8PBQcbbhwBf59bbSk2
-	 ExaM6dbLhYy4gY3JXvdPsoa29uXpPZRzlPB/aLb+vcCLqSFvxz4y54SKEKCjoReIlp
-	 6rG5ZnkX1WXMe/uf8XKQjaIPZwsnMVQHxIPeIdoE=
+	b=F5bNOzc/beBruZgBkUOB7TsBkV4CB+AxyL06M3TfTCu+pptLWkbcXZhOC7LRraGUY
+	 LM/qfnzr9XF6U+01wVwt/WFrQZrWnkl4LM+A2zFa451wvCA+n0opMlKWWtv9tq1H8I
+	 73v8p+L2QPql4MtsWKohxuPPo/8fkiAgr6A31VyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgGGPTo (ORCPT
+        id S1728357AbgGGPTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59452 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgGGPTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:41 -0400
+        id S1729398AbgGGPTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0AC220663;
-        Tue,  7 Jul 2020 15:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 492212065D;
+        Tue,  7 Jul 2020 15:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135181;
-        bh=Btfjam2wLgFNouJPmbBUN1e7q5RQh6MsXcHYqdw3HQo=;
+        s=default; t=1594135183;
+        bh=zf+acchBvmWz+dfLqoQTn9oqkEE+4yFBrlZPW0GgMsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLe4jaiBPNtK7OMT8g6iqDZyPOZCZ3PMhpZQPnZ4ilF8CofJ4Y24yqwoqbitVs8bZ
-         6G1dBelPVhTU6MbUEz3JNvwjrlUK44E6hjr6wwS+NXBOsgI3ZHEVZBtoE3Dsu1B91B
-         d/IO8nvBA7CR0u44C8auirR+FQgi0X3O5+2GppJk=
+        b=pEjjMq2IkTFi8kHXvyM/EBQic395iRVqt+BHS26AEvaIKDpEQC2O6XIkoylr4P567
+         bf9vXhAv+PVwLqyxJF5RHZogMqAEBmetd5sEuaQXDFom4+CGsapXqxoRyx+WUrgeU1
+         L9LtqngT5j8OWKDiVKOsFY6w+IXjaufaONn69Uow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
         Steve French <stfrench@microsoft.com>,
         Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 4.19 31/36] SMB3: Honor lease disabling for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:17:23 +0200
-Message-Id: <20200707145750.649697828@linuxfoundation.org>
+Subject: [PATCH 4.19 32/36] cifs: Fix the target file was deleted when rename failed.
+Date:   Tue,  7 Jul 2020 17:17:24 +0200
+Message-Id: <20200707145750.699595706@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -60,30 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-commit ad35f169db6cd5a4c5c0a5a42fb0cad3efeccb83 upstream.
+commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2 upstream.
 
-Fixes: 3e7a02d47872 ("smb3: allow disabling requesting leases")
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org>
+When xfstest generic/035, we found the target file was deleted
+if the rename return -EACESS.
+
+In cifs_rename2, we unlink the positive target dentry if rename
+failed with EACESS or EEXIST, even if the target dentry is positived
+before rename. Then the existing file was deleted.
+
+We should just delete the target file which created during the
+rename.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Reviewed-by: Aurelien Aptel <aaptel@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/inode.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4601,6 +4601,7 @@ cifs_construct_tcon(struct cifs_sb_info
- 	vol_info->nocase = master_tcon->nocase;
- 	vol_info->nohandlecache = master_tcon->nohandlecache;
- 	vol_info->local_lease = master_tcon->local_lease;
-+	vol_info->no_lease = master_tcon->no_lease;
- 	vol_info->resilient = master_tcon->use_resilient;
- 	vol_info->persistent = master_tcon->use_persistent;
- 	vol_info->no_linux_ext = !master_tcon->unix_ext;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1783,6 +1783,7 @@ cifs_rename2(struct inode *source_dir, s
+ 	FILE_UNIX_BASIC_INFO *info_buf_target;
+ 	unsigned int xid;
+ 	int rc, tmprc;
++	bool new_target = d_really_is_negative(target_dentry);
+ 
+ 	if (flags & ~RENAME_NOREPLACE)
+ 		return -EINVAL;
+@@ -1859,8 +1860,13 @@ cifs_rename2(struct inode *source_dir, s
+ 	 */
+ 
+ unlink_target:
+-	/* Try unlinking the target dentry if it's not negative */
+-	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
++	/*
++	 * If the target dentry was created during the rename, try
++	 * unlinking it if it's not negative
++	 */
++	if (new_target &&
++	    d_really_is_positive(target_dentry) &&
++	    (rc == -EACCES || rc == -EEXIST)) {
+ 		if (d_is_dir(target_dentry))
+ 			tmprc = cifs_rmdir(target_dir, target_dentry);
+ 		else
 
 
