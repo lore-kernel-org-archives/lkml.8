@@ -2,104 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D34C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87FF2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136023;
-	bh=MyqIBmbktvH5KAoEP+GVoOvvqEC07GsCMyrNj3Ff8AA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxkzIBbScKRP32yq6rxpMYWHDMB4XkJflbMJf1URF1aZLQX+QyAdFe+9uOdk2+4Uo
-	 Ds1X63jb1PH60pm55RSq5t5Esnj/RtGzulEcAk9cVKP22ePBCjm117Kh19i55EKWum
-	 g4UN2J+1K6qvA9obGLjGqejONi6Hww6PbWLllufw=
+	by mail.kernel.org (Postfix) with ESMTP id 83D6020663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a30Zm0xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgGGPdm (ORCPT
+        id S1730084AbgGGPdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbgGGPUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83B5206CD;
-        Tue,  7 Jul 2020 15:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135220;
-        bh=MyqIBmbktvH5KAoEP+GVoOvvqEC07GsCMyrNj3Ff8AA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9fY4ti2XO8C1kMVZd5+0ztEHRI+qIpKBDbYR4CAJ1N363dMvXduBLOQCNAGO/7Wa
-         PORutxWSSq3UuE4Ea6BKQgeepN51sdenvsq5l0NTL5IkgArxHuk++6kM4OJBkxd0pz
-         hRTSW2ZSPLszXdr9Sg53jnAvRalxHtxMuWs7L2qo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Andersson <pipatron@gmail.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 03/65] EDAC/amd64: Read back the scrub rate PCI register on F15h
-Date:   Tue,  7 Jul 2020 17:16:42 +0200
-Message-Id: <20200707145752.594697885@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-References: <20200707145752.417212219@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jul 2020 11:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728651AbgGGPdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:33:45 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC4EC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=u+eV/Vt9JPFkjgSC7N8EDNEv2OCJ2IDe/eB3wX/AnBs=; b=a30Zm0xlb5E85J1xhQac/tdmK8
+        ZayXBB0v3stbD0fr8xoc1BLj3H3+1MHN+NYM2D9uVn6b2aKpWG8/dnu/YUJqif1+D3Oa085AyhfWa
+        e133Q3MgF+Jas8moPItUFjdDZ9UUFA2gKIvhTmqgbVyPzHZu4B4+UqWUIOJJLpkgl4pJJgPFhIE8U
+        h/6HI/jgPiiaJC2KQxV18tB9DgkC5OfaP3zh0Zt+lyvPzsMS1tA31zYXKjvWlbtIZpuJqG948a6LU
+        natX/r8SiI/6kpCuc6Pfxs2hex6s/+zufLDJuE6eEHRdCG7VA0d/MEcX6l42quUbaVdrqN4JfIqDy
+        KXpwncZA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jspbF-0005Iy-Pw; Tue, 07 Jul 2020 15:33:41 +0000
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
+ Inclusive Terminology
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
+ <202007062234.A90F922DF@keescook> <20200707064921.GA9411@linux.ibm.com>
+ <20200707093727.22aa39e2@oasis.local.home>
+ <CY4PR13MB117519F548B125CB2F10F50FFD660@CY4PR13MB1175.namprd13.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c4aec17f-3ac9-ce17-a131-b186a9b595dd@infradead.org>
+Date:   Tue, 7 Jul 2020 08:33:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CY4PR13MB117519F548B125CB2F10F50FFD660@CY4PR13MB1175.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On 7/7/20 8:24 AM, Bird, Tim wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Steven Rostedt
+>>
+>> On Tue, 7 Jul 2020 09:49:21 +0300
+>> Mike Rapoport <rppt@linux.ibm.com> wrote:
+>>
+>>>> But that's all fine. The change is easy to do and is more descriptive
+>>>> even if I can't find terms that don't collide with my internal grammar
+>>>> checker. ;)
+>>>
+>>> How about yeslist and nolist? ;-)
+>>
+>> I was thinking good-list / bad-list.
+>>
+>> /me that has been doing a lot of git bisect lately...
+> 
+> I think it depends on the context.  I'd prefer a grammatically awkward verb that described
+> the action more specifically, than a grammatically nicer generic term.  In other words,
+> yes/no, good/bad don't mean that much to me, unless it's obvious from context
+> what the effect will be.  With something like allow/deny, I have a pretty clear mental
+> model of what the code is going to do.
 
-[ Upstream commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 ]
+That matches what I was about to say:
+Just using yes/no does not tell someone what they are saying yes or no about.
+It should be more descriptive, like allow/block.
 
-Commit:
-
-  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-
-added support for F15h, model 0x60 CPUs but in doing so, missed to read
-back SCRCTRL PCI config register on F15h CPUs which are *not* model
-0x60. Add that read so that doing
-
-  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
-
-can show the previously set DRAM scrub rate.
-
-Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-Reported-by: Anders Andersson <pipatron@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> #v4.4..
-Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/edac/amd64_edac.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index ad7d2bce91cd8..125a44d5a69e3 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -265,6 +265,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
- 
- 		if (pvt->model == 0x60)
- 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
-+		else
-+			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
- 		break;
- 
- 	case 0x17:
 -- 
-2.25.1
-
-
+~Randy
 
