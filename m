@@ -2,322 +2,184 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B246C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73795C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D121C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5B4206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UbrWcG/+"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="mYLGVIHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGGBSR (ORCPT
+        id S1727789AbgGGB0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgGGBSQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:18:16 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2944C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 18:18:15 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id z187so31129653pgd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:18:15 -0700 (PDT)
+        Mon, 6 Jul 2020 21:26:48 -0400
+Received: from mail-mw2nam12on2089.outbound.protection.outlook.com ([40.107.244.89]:27996
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727079AbgGGB0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 21:26:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hf0j2tBH7v+rVPHLygGY0vzHpYTU+FiualdtZPHUnbkcRSb2fzAgRBe7qzl+2a/FP5QGeP+N79Rxm8C75WUO8I+mzOaJTMWpSAyRSt+fURKoFtdhVKvco7Oms88HHBe7YiHOVWVzMwJCELGnYJKw2oWpPxxhahP4HfJY3XZF1p9cJBC80zydtZRKC/esofCvYfQWPW4GqwzkYJ7eSVne5ZoXcLT3dpmd5XgfHFOQ+g1/VfQwfDKYf4BYW3PcWIwKSE51XS6EfmGLH2uolVpfvgUu1Q7BYt4V7JXIGe+OBRKvdobqnHHINW1LU3cJAKf6DurHCMDSEcLSWma1E5vCyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HO0bo3pKu6aYSJT5HkhB2sawkWmgS5FPFZRIISIpRhI=;
+ b=ea9WY26ZhmIeU+xJbsviszPAG7G2yHJlfjTART+pErncV3SMmJQQU/mFIO37X/0M+mXYQXL9oV2POmUgXtgQLefY1sZyha4v0v5bPb/2GMRXga+u/mK+tO4drkCyrKR0jb9QhLiGRrQSrhPHpagiOfX0FjLnxK2AeYANNH6lwALl+u8O57FMxIskhZcI7STTkbjlyasxaSASqI97BU7kVMXobbiI/gQ9HcyKDM2qlh+arf6xtfaPqcMKUdTQjXK/SWk7C45HmSW3ZwNBI5KBc9OQt8HdkatIsb7Wz/Tb/P0yTCg3yOeB/AHQKv8TzgdyiEvj49SEf+Jd60x/nuYUKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hnqLuWnU7xP7jdH7qZvwDPac6qy5QlB6ZHfWq3VtuGM=;
-        b=UbrWcG/+LQo8ynb4zNVBf+2mstbeXnYCzFnrnKHSppYlGAKSeoHCoAIhFFdzSAnSzw
-         sj2ZnFARKxdoMgAmb5QQS1ToodQE2mZA5mgMQUO5r7kIAHu2IH/5aApFUYim3pzJ+XHh
-         P2PQ3M0FUJ1JrWklqwxR4iPPXHuXIJDGEgvSuLw7sbWX8DQvkgDmwEhXCgJ5pysqjDS5
-         IZTn7E7lVootrRpkqOJeSSPVpUYk8GEYd65z0RSdQAHT4fywKulI1vBh021ft7Uw6Ngr
-         X2CZpsD18RG3OYIc/ex91R+ziJj+Ydmf/NGlA7oJs1bKSXRCs7BPVMN80Xhx67g/7Jwl
-         yjug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hnqLuWnU7xP7jdH7qZvwDPac6qy5QlB6ZHfWq3VtuGM=;
-        b=qDK2EaGqwSY6H1WHsPqie9RAFhcmDuV2NNGZViT+yKisqajsPoLbSScCRl296sEI/W
-         axu9a1jR1DK2S0r8oqynJ6fA3cx9+/BtekqbxSgSS4Z6er61dQe9n/pzjVJAr6OGmOo0
-         lIbHxgHLf7MhzXMR5kO+WBQam/xogGkPE34xylrEklgSY/HCc9X1Wb8u5udcF1wO+trf
-         ErMTyfTUBlwArvyQv1DG+Cuw/eIgJYXpFrNlgxwrWnk0hDmQfaVdprZ28Wt7Q6UDRzw2
-         gB1PUdcqDngOxKDmn2uKTltmQrTJmG/VC9AYxVH9zGU8al3RyS/toGVbd62UxQJSbzNF
-         4t6g==
-X-Gm-Message-State: AOAM532Do3UF2sB0kTuRmmfctzIKVSMOqNBWt4qLE5GcB4nUX3tAtK7I
-        4iMJAxREVGQkse34Sp4UgtvD+LnQwJ7tPCF5
-X-Google-Smtp-Source: ABdhPJwy3IzchcSjilaHW/BpvUXmhI8VHGwwJS6gO5K6IzUfx37sjfluQhvwg4V9Uk+bUpvr91NlAOdbvHP4oOyX
-X-Received: by 2002:a62:7847:: with SMTP id t68mr39347337pfc.112.1594084695374;
- Mon, 06 Jul 2020 18:18:15 -0700 (PDT)
-Date:   Tue,  7 Jul 2020 01:18:10 +0000
-In-Reply-To: <20200707011810.2508233-1-linchuyuan@google.com>
-Message-Id: <20200707011810.2508233-2-linchuyuan@google.com>
-Mime-Version: 1.0
-References: <20200707011810.2508233-1-linchuyuan@google.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v3 1/1] hwmon:max6697: Allows max6581 to create tempX_offset attributes
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net
-Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
-        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HO0bo3pKu6aYSJT5HkhB2sawkWmgS5FPFZRIISIpRhI=;
+ b=mYLGVIHGiffBmu58JXpzb68jKljl7c2w+kxYTjg4q7R7NhOpm0Cy2hkabNqsDznT6o8WrmT5dUVq9yKkOqXlWuXATHYz4fYwD8sZJUMkRjKvSRzDcZFDf1ieSPXewC98L7Mqcj6xMXxMSgYrlYGy0trgUf5S8AhcIe52UB9jZ2w=
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
+ by BY5PR11MB3975.namprd11.prod.outlook.com (2603:10b6:a03:184::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Tue, 7 Jul
+ 2020 01:26:37 +0000
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::3d7d:dfc1:b35d:63d1]) by BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::3d7d:dfc1:b35d:63d1%7]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 01:26:37 +0000
+From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+To:     Tejun Heo <tj@kernel.org>
+CC:     "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "bfields@redhat.com" <bfields@redhat.com>,
+        "cl@rock-chips.com" <cl@rock-chips.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mm-commits@vger.kernel.org" <mm-commits@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?u9i4tDogW1BBVENIIHYzXSBrdGhyZWFkOiBXb3JrIGNvdWxkIG5vdCBiZSBx?=
+ =?gb2312?Q?ueued_when_worker_being_destroyed?=
+Thread-Topic: [PATCH v3] kthread: Work could not be queued when worker being
+ destroyed
+Thread-Index: AQHWU0RdRSc2HNZSQE6NBVT1UPI6TKj6paKAgACto/Q=
+Date:   Tue, 7 Jul 2020 01:26:37 +0000
+Message-ID: <BYAPR11MB26326F16BC261A7AB78B9D3FFF660@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200705013018.7375-1-qiang.zhang@windriver.com>,<20200706145945.GB5603@mtj.thefacebook.com>
+In-Reply-To: <20200706145945.GB5603@mtj.thefacebook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=windriver.com;
+x-originating-ip: [60.247.85.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c6a0f1dd-f332-4322-2b1a-08d82214cb35
+x-ms-traffictypediagnostic: BY5PR11MB3975:
+x-microsoft-antispam-prvs: <BY5PR11MB3975DAF32382594596895AFCFF660@BY5PR11MB3975.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tNbcuXCTvufpSCZIK5HTyZoNuhEKla2+nPEKhLoaZ6ByCMlyl+OFgqAX8+MHuoManzgPfgIZ4Vp4TNQ+J3rw6El3cD5cpeeL5MHzI4iGu2WxKUi9LLdiRF9r3HYEmW2pH9YBdl+Nz5vhef+z6ePKXIV5+08KN9+fr8N9kGte3VvDeKsxy5stqDtU+A+Lu5XTdQStjcNgZNGX3/5Ciq67PDZi2fhsUFbRvl4nT7pXvTy2X/cDyR2ZlHq5vxmC2Ryu2AShWHlmoJ3xkkeIXiao2X0Y82NG3AdlRWcApiIfWJjQpul0ZZxkvxo0MPpaWLF7/xOQDbExAK4Sa5Q+TmTjYg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(136003)(396003)(346002)(366004)(376002)(7696005)(26005)(186003)(52536014)(478600001)(45080400002)(2906002)(83380400001)(224303003)(4326008)(8936002)(6916009)(33656002)(316002)(6506007)(54906003)(9686003)(55016002)(76116006)(66556008)(91956017)(66476007)(71200400001)(66946007)(66446008)(64756008)(86362001)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JQYgIIYSY03L21M0yp/MBOwLlvGWB1zuxK7E5TKc1de/QbrGCotqCZBNaL7szX7tWg/KhOUyXXnvLun+68ue+7kHnPM9S16gRawjvj6L0PAE7jhoIelnfvKhiqFZ36SrJJvX0bQeETolvY9OS9z1Qc23UtYOSi6Lbl+V7ryUj65YqyNQcu6fzd9z0+tz6nztlYD6k6rqDhFCdExEr56Qei7Suw04sjbpkHenz0UGnUgpyK37z8Poh4ewFXcTItxAW/UCz7SR+Ebdo18sXKhY+kHTt/RXhs/6cSXVuaDJZx6bDgNH1xH/TiKnZoxyGvQw/FG4N1EG2eOcCWPJYZf4RhyNaohIlznBbGSd/j/5LTyC0d4ofqTo/VdfoH3ohcdhmcutnq8aiOp0Qh5vXbjiWrgjNHGbr/oiwnEZWbbb/7Bz3DJPnZWzwEc5OU2kUBlWdYkyvG6ICyoGQaLD1K89jX+Km8K4d8DfXBERTSiVhFk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6a0f1dd-f332-4322-2b1a-08d82214cb35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 01:26:37.3316
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JJ8lIp5EOsSbJTZVJqUbjCJEPkKgvpdwLbNLRYjjhhP8Ctb5Bll4YZc0BR6Eg0dbwPNA5KraH9loQaHZz3Q1xKAhRHIuZxpzz4jp6S7Icb0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3975
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Testing:
-echo 16250 > temp2_offset
-cat temp2_offset
-16250
-
-echo 17500 > temp3_offset
-cat temp3_offset
-17500
-cat temp4_offset
-0
-cat temp2_offset
-17500
-
-echo 0 > temp2_offset
-cat temp2_offset
-0
-cat temp3_offset
-17500
-
-echo -0 > temp2_offset
-cat temp2_offset
-0
-
-echo -100000 > temp2_offset
-cat temp2_input
-4875
-
-echo 10000 > temp2_offset
-cat temp2_input
-47125
-
-echo -2000 > temp2_offset
-cat temp2_input
-34875
-
-echo -0 > temp2_offset
-cat temp2_input
-37000
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/max6697.c | 92 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 88 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 64122eb38060..6b213e146fbe 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -57,6 +57,9 @@ static const u8 MAX6697_REG_CRIT[] = {
- #define MAX6581_REG_IDEALITY_SELECT	0x4c
- #define MAX6581_REG_OFFSET		0x4d
- #define MAX6581_REG_OFFSET_SELECT	0x4e
-+#define MAX6581_OFFSET_MIN		-31750
-+#define MAX6581_OFFSET_MAX		31750
-+
- 
- #define MAX6697_CONV_TIME		156	/* ms per channel, worst case */
- 
-@@ -172,6 +175,11 @@ static const struct max6697_chip_data max6697_chip_data[] = {
- 	},
- };
- 
-+static inline int max6581_offset_to_millic(int val)
-+{
-+	return val & (1 << 7) ? (val | 0xffffff00) * 250 : val * 250;
-+}
-+
- static struct max6697_data *max6697_update_device(struct device *dev)
- {
- 	struct max6697_data *data = dev_get_drvdata(dev);
-@@ -317,6 +325,61 @@ static ssize_t temp_store(struct device *dev,
- 	return ret < 0 ? ret : count;
- }
- 
-+static ssize_t offset_store(struct device *dev,
-+			    struct device_attribute *devattr, const char *buf,
-+			    size_t count)
-+{
-+	int val, ret, index, select;
-+	struct max6697_data *data;
-+	long temp;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client, MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return select;
-+	ret = kstrtol(buf, 10, &temp);
-+	if (ret < 0)
-+		return ret;
-+	/* disable the offset for channel */
-+	if (temp == 0) {
-+		ret = i2c_smbus_write_byte_data(data->client, MAX6581_REG_OFFSET_SELECT,
-+						select & ~(1 << (index - 1)));
-+		return ret < 0 ? ret : count;
-+	}
-+	temp = clamp_val(temp, MAX6581_OFFSET_MIN, MAX6581_OFFSET_MAX);
-+	val = DIV_ROUND_CLOSEST(temp, 250);
-+	mutex_lock(&data->update_lock);
-+	ret = i2c_smbus_write_byte_data(data->client, MAX6581_REG_OFFSET_SELECT,
-+					select | (1 << (index - 1)));
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_smbus_write_byte_data(data->client, MAX6581_REG_OFFSET, val);
-+	mutex_unlock(&data->update_lock);
-+	return ret < 0 ? ret : count;
-+}
-+
-+static ssize_t offset_show(struct device *dev, struct device_attribute *devattr,
-+			   char *buf)
-+{
-+	struct max6697_data *data;
-+	int select, ret, index;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client, MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return select;
-+	if (select & (1 << (index - 1))) {
-+		ret = i2c_smbus_read_byte_data(data->client, MAX6581_REG_OFFSET);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		return sprintf(buf, "%d\n", 0);
-+	}
-+	return sprintf(buf, "%d\n", max6581_offset_to_millic(ret));
-+}
-+
- static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_max, temp, 0, MAX6697_TEMP_MAX);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_crit, temp, 0, MAX6697_TEMP_CRIT);
-@@ -375,6 +438,15 @@ static SENSOR_DEVICE_ATTR_RO(temp6_fault, alarm, 5);
- static SENSOR_DEVICE_ATTR_RO(temp7_fault, alarm, 6);
- static SENSOR_DEVICE_ATTR_RO(temp8_fault, alarm, 7);
- 
-+/* There is no offset for local temperature so starting from temp2 */
-+static SENSOR_DEVICE_ATTR_RW(temp2_offset, offset, 1);
-+static SENSOR_DEVICE_ATTR_RW(temp3_offset, offset, 2);
-+static SENSOR_DEVICE_ATTR_RW(temp4_offset, offset, 3);
-+static SENSOR_DEVICE_ATTR_RW(temp5_offset, offset, 4);
-+static SENSOR_DEVICE_ATTR_RW(temp6_offset, offset, 5);
-+static SENSOR_DEVICE_ATTR_RW(temp7_offset, offset, 6);
-+static SENSOR_DEVICE_ATTR_RW(temp8_offset, offset, 7);
-+
- static DEVICE_ATTR(dummy, 0, NULL, NULL);
- 
- static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
-@@ -383,8 +455,8 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct max6697_data *data = dev_get_drvdata(dev);
- 	const struct max6697_chip_data *chip = data->chip;
--	int channel = index / 6;	/* channel number */
--	int nr = index % 6;		/* attribute index within channel */
-+	int channel = index / 8;	/* channel number */
-+	int nr = index % 7;		/* attribute index within channel */
- 
- 	if (channel >= chip->channels)
- 		return 0;
-@@ -393,6 +465,10 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 		return 0;
- 	if (nr == 5 && !(chip->have_fault & (1 << channel)))
- 		return 0;
-+	/* offset reg is only supported on max6581 remote channels */
-+	if (nr == 6)
-+		if (data->type != max6581 || channel == 0)
-+			return 0;
- 
- 	return attr->mode;
- }
-@@ -409,6 +485,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp1_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp1_crit_alarm.dev_attr.attr,
- 	&dev_attr_dummy.attr,
-+	&dev_attr_dummy.attr,
- 
- 	&sensor_dev_attr_temp2_input.dev_attr.attr,
- 	&sensor_dev_attr_temp2_max.dev_attr.attr,
-@@ -416,6 +493,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp2_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp2_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp2_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp2_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp3_input.dev_attr.attr,
- 	&sensor_dev_attr_temp3_max.dev_attr.attr,
-@@ -423,6 +501,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp3_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp3_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp3_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp3_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp4_input.dev_attr.attr,
- 	&sensor_dev_attr_temp4_max.dev_attr.attr,
-@@ -430,6 +509,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp4_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp4_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp4_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp4_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp5_input.dev_attr.attr,
- 	&sensor_dev_attr_temp5_max.dev_attr.attr,
-@@ -437,6 +517,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp5_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp5_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp5_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp5_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp6_input.dev_attr.attr,
- 	&sensor_dev_attr_temp6_max.dev_attr.attr,
-@@ -444,6 +525,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp6_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp6_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp6_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp6_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp7_input.dev_attr.attr,
- 	&sensor_dev_attr_temp7_max.dev_attr.attr,
-@@ -451,6 +533,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp7_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp7_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp7_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp7_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp8_input.dev_attr.attr,
- 	&sensor_dev_attr_temp8_max.dev_attr.attr,
-@@ -458,6 +541,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp8_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp8_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp8_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp8_offset.dev_attr.attr,
- 	NULL
- };
- 
-@@ -494,8 +578,8 @@ static void max6697_get_config_of(struct device_node *node,
- 	}
- 	prop = of_get_property(node, "transistor-ideality", &len);
- 	if (prop && len == 2 * sizeof(u32)) {
--			pdata->ideality_mask = be32_to_cpu(prop[0]);
--			pdata->ideality_value = be32_to_cpu(prop[1]);
-+		pdata->ideality_mask = be32_to_cpu(prop[0]);
-+		pdata->ideality_value = be32_to_cpu(prop[1]);
- 	}
- }
- 
--- 
-2.27.0.383.g050319c2ae-goog
-
+SSdtIHZlcnkgc29ycnkgdGhhdCB0aGVyZSBhcmUgc29tZSBwcm9ibGVtcyB3aXRoIG15IGNoYW5n
+ZS4NCmFzIGZvbGxvd3M6DQoNClsgICAgMS4yMDMzMDBdIGxvb3A6IG1vZHVsZSBsb2FkZWQNClsg
+ICAgMS4yMDQ1OTldIG1lZ2FzYXM6IDA3LjcxNC4wNC4wMC1yYzENClsgICAgMS4yMTExMjRdIHNw
+aV9xdXAgNzhiNzAwMC5zcGk6IElOOmJsb2NrOjE2LCBmaWZvOjY0LCBPVVQ6YmxvY2s6MTYsIGZp
+Zm86NjQNClsgICAgMS4yMTE1MDldIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0t
+LQ0KWyAgICAxLjIxNzIzOF0gV0FSTklORzogQ1BVOiAwIFBJRDogMSBhdCBrZXJuZWwva3RocmVh
+ZC5jOjgxOQ0Ka3RocmVhZF9xdWV1ZV93b3JrKzB4OTAvMHhhMA0KWyAgICAxLjIyMTgzMl0gTW9k
+dWxlcyBsaW5rZWQgaW46DQpbICAgIDEuMjI5NTU0XSBDUFU6IDAgUElEOiAxIENvbW06IHN3YXBw
+ZXIvMCBOb3QgdGFpbnRlZA0KNS44LjAtcmMzLW5leHQtMjAyMDA3MDYgIzENClsgICAgMS4yMzI2
+ODNdIEhhcmR3YXJlIG5hbWU6IFF1YWxjb21tIFRlY2hub2xvZ2llcywgSW5jLiBBUFEgODAxNiBT
+QkMgKERUKQ0KWyAgICAxLjI0MDIzN10gcHN0YXRlOiA0MDAwMDA4NSAoblpjdiBkYUlmIC1QQU4g
+LVVBTyBCVFlQRT0tLSkNClsgICAgMS4yNDY5MThdIHBjIDoga3RocmVhZF9xdWV1ZV93b3JrKzB4
+OTAvMHhhMA0KWyAgICAxLjI1MjIxMV0gbHIgOiBrdGhyZWFkX3F1ZXVlX3dvcmsrMHgyYy8weGEw
+DQpbICAgIDEuMjU2NzIyXSBzcCA6IGZmZmY4MDAwMTAwMmJhNTANClsgICAgMS4yNjEwNjFdIHgy
+OTogZmZmZjgwMDAxMDAyYmE1MCB4Mjg6IGZmZmYwMDAwM2I4NjgwMDANClsgICAgMS4yNjQzNjNd
+IHgyNzogZmZmZjAwMDAzZmNmNjNjMCB4MjY6IGZmZmYwMDAwM2I4Njg2ODANClsgICAgMS4yNjk3
+NDRdIHgyNTogZmZmZjAwMDAzYjg2ODQwMCB4MjQ6IGZmZmYwMDAwM2QxMTY4MTANClsgICAgMS4y
+NzUwMzldIHgyMzogZmZmZjgwMDAxMjAyNTMwNCB4MjI6IGZmZmYwMDAwM2I4NjgzYmMNClsgICAg
+MS4yODAzMzVdIHgyMTogMDAwMDAwMDAwMDAwMDAwMCB4MjA6IGZmZmYwMDAwM2I4NjgzZjgNClsg
+ICAgMS4yODU2MzBdIHgxOTogZmZmZjAwMDAzYjg2ODNiOCB4MTg6IDAwMDAwMDAwMDAwMDAwMDAN
+ClsgICAgMS4yOTA5MjVdIHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4MTY6IGZmZmY4MDAwMTExNjc0
+MjANClsgICAgMS4yOTYyMjBdIHgxNTogZmZmZjAwMDAwZWI5MDQ4MCB4MTQ6IDAwMDAwMDAwMDAw
+MDAyNjcNClsgICAgMS4zMDE1MTVdIHgxMzogMDAwMDAwMDAwMDAwMDAwNCB4MTI6IDAwMDAwMDAw
+MDAwMDAwMDANClsgICAgMS4zMDY4MTBdIHgxMTogMDAwMDAwMDAwMDAwMDAwMCB4MTA6IDAwMDAw
+MDAwMDAwMDAwMDMNClsgICAgMS4zMTIxMDVdIHg5IDogZmZmZjAwMDAzZmNiYWMxMCB4OCA6IGZm
+ZmYwMDAwM2ZjYmEyNDANClsgICAgMS4zMTc0MDBdIHg3IDogZmZmZjAwMDAzYmMzYzgwMCB4NiA6
+IDAwMDAwMDAwMDAwMDAwMDMNClsgICAgMS4zMjI2OTZdIHg1IDogMDAwMDAwMDAwMDAwMDAwMCB4
+NCA6IDAwMDAwMDAwMDAwMDAwMDANClsgICAgMS4zMjc5OTFdIHgzIDogZmZmZjAwMDAzYjg2ODNi
+YyB4MiA6IDAwMDAwMDAwMDAwMDAwMDENClsgICAgMS4zMzMyODVdIHgxIDogMDAwMDAwMDAwMDAw
+MDAwMCB4MCA6IDAwMDAwMDAwMDAwMDAwMDANClsgICAgMS4zMzg1ODNdIENhbGwgdHJhY2U6DQpb
+ICAgIDEuMzQzODc1XSAga3RocmVhZF9xdWV1ZV93b3JrKzB4OTAvMHhhMA0KWyAgICAxLjM0NjA1
+MF0gIHNwaV9zdGFydF9xdWV1ZSsweDUwLzB4NzgNClsgICAgMS4zNTAyMTNdICBzcGlfcmVnaXN0
+ZXJfY29udHJvbGxlcisweDQ1OC8weDgyMA0KWyAgICAxLjM1Mzg2MF0gIGRldm1fc3BpX3JlZ2lz
+dGVyX2NvbnRyb2xsZXIrMHg0NC8weGEwDQpbICAgIDEuMzU4NjM4XSAgc3BpX3F1cF9wcm9iZSsw
+eDVkOC8weDYzOA0KWyAgICAxLjM2MzIzNV0gIHBsYXRmb3JtX2Rydl9wcm9iZSsweDU0LzB4YTgN
+ClsgICAgMS4zNjcwNTNdICByZWFsbHlfcHJvYmUrMHhkOC8weDMyMA0KWyAgICAxLjM3MTEzM10g
+IGRyaXZlcl9wcm9iZV9kZXZpY2UrMHg1OC8weGI4DQpbICAgIDEuMzc0Nzc5XSAgZGV2aWNlX2Ry
+aXZlcl9hdHRhY2grMHg3NC8weDgwDQpbICAgIDEuMzc4Njg1XSAgX19kcml2ZXJfYXR0YWNoKzB4
+NTgvMHhlMA0KWyAgICAxLjM4Mjc2Nl0gIGJ1c19mb3JfZWFjaF9kZXYrMHg3MC8weGMwDQpbICAg
+IDEuMzg2NTgzXSAgZHJpdmVyX2F0dGFjaCsweDI0LzB4MzANClsgICAgMS4zOTAzMTddICBidXNf
+YWRkX2RyaXZlcisweDE0Yy8weDFmMA0KWyAgICAxLjM5NDEzN10gIGRyaXZlcl9yZWdpc3Rlcisw
+eDY0LzB4MTIwDQpbICAgIDEuMzk3Njk2XSAgX19wbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIrMHg0
+OC8weDU4DQpbICAgIDEuNDAxNTE5XSAgc3BpX3F1cF9kcml2ZXJfaW5pdCsweDFjLzB4MjgNClsg
+ICAgMS40MDYzNzhdICBkb19vbmVfaW5pdGNhbGwrMHg1NC8weDFhMA0KWyAgICAxLjQxMDM3Ml0g
+IGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4MWQ0LzB4MjU0DQpbICAgIDEuNDE0MTA2XSAga2VybmVs
+X2luaXQrMHgxNC8weDExMA0KWyAgICAxLjQxODYxNl0gIHJldF9mcm9tX2ZvcmsrMHgxMC8weDM0
+DQpbICAgIDEuNDIxOTE4XSAtLS1bIGVuZCB0cmFjZSA0YjU5ZjMyNzYyM2M5ZTEwIF0tLS0NClsg
+ICAgMS40MjY1MjZdIHNwaV9xdXAgNzhiOTAwMC5zcGk6IElOOmJsb2NrOjE2LCBmaWZvOjY0LCBP
+VVQ6YmxvY2s6MTYsIGZpZm86NjQNClsgICAgMS40MzA3MjFdIC0tLS0tLS0tLS0tLVsgY3V0IGhl
+cmUgXS0tLS0tLS0tLS0tLQ0KWyAgICAxLjQzNzM3NF0gV0FSTklORzogQ1BVOiAwIFBJRDogMSBh
+dCBrZXJuZWwva3RocmVhZC5jOjgxOQ0KDQp3aGVuIGluICJzcGlfaW5pdF9xdWV1ZSIgZnVuYyA6
+DQoia3RocmVhZF9pbml0X3dvcmtlcigmY3Rsci0+a3dvcmtlcik7ICAgICAod29ya2VyLT50YXNr
+ID0gTlVMTCkNCiBjdGxyLT5rd29ya2VyX3Rhc2sgPSBrdGhyZWFkX3J1bihrdGhyZWFkX3dvcmtl
+cl9mbiwgJmN0bHItPmt3b3JrZXIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICIlcyIsIGRldl9uYW1lKCZjdGxyLT5kZXYpKTsgIg0KDQogaW4gInNwaV9zdGFydF9x
+dWV1ZSIgZnVuYzoNCiAia3RocmVhZF9xdWV1ZV93b3JrKCZjdGxyLT5rd29ya2VyLCAmY3Rsci0+
+cHVtcF9tZXNzYWdlcyk7Ig0KDQogQmVjYXN1ZSB0aGUga3RocmVhZF93b3JrZXJfZm4gaXMgbm90
+IGJlZ2luIHJ1bm5pbmcsICBpZiBxdWV1ZSB3b3JrIHRvIHdvcmtlciwNCiB0aGUgIiF3b3JrZXIt
+PnRhc2siID0gdHJ1ZSwgdHJpZ2dlciBXQVJOLg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fDQq3orz+yMs6IFRlanVuIEhlbyA8aHRlanVuQGdtYWlsLmNvbT4gtPqx
+7SBUZWp1biBIZW8gPHRqQGtlcm5lbC5vcmc+DQq3osvNyrG85DogMjAyMMTqN9TCNsjVIDIyOjU5
+DQrK1bz+yMs6IFpoYW5nLCBRaWFuZw0Ks63LzTogYmVuLmRvb2tzQGNvZGV0aGluay5jby51azsg
+YmZpZWxkc0ByZWRoYXQuY29tOyBjbEByb2NrLWNoaXBzLmNvbTsgcGV0ZXJ6QGluZnJhZGVhZC5v
+cmc7IHBtbGFkZWtAc3VzZS5jb207IGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc7IG1tLWNvbW1p
+dHNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrW98ziOiBS
+ZTogW1BBVENIIHYzXSBrdGhyZWFkOiBXb3JrIGNvdWxkIG5vdCBiZSBxdWV1ZWQgd2hlbiB3b3Jr
+ZXIgYmVpbmcgZGVzdHJveWVkDQoNCk9uIFN1biwgSnVsIDA1LCAyMDIwIGF0IDA5OjMwOjE4QU0g
+KzA4MDAsIHFpYW5nLnpoYW5nQHdpbmRyaXZlci5jb20gd3JvdGU6DQo+IEZyb206IFpoYW5nIFFp
+YW5nIDxxaWFuZy56aGFuZ0B3aW5kcml2ZXIuY29tPg0KPg0KPiBCZWZvcmUgdGhlIHdvcmsgaXMg
+cHV0IGludG8gdGhlIHF1ZXVlIG9mIHRoZSB3b3JrZXIgdGhyZWFkLA0KPiB0aGUgc3RhdGUgb2Yg
+dGhlIHdvcmtlciB0aHJlYWQgbmVlZHMgdG8gYmUgZGV0ZWN0ZWQsYmVjYXVzZQ0KPiB0aGUgd29y
+a2VyIHRocmVhZCBtYXkgYmUgaW4gdGhlIGRlc3RydWN0aW9uIHN0YXRlIGF0IHRoaXMgdGltZS4N
+Cj4NCj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgUWlhbmcgPHFpYW5nLnpoYW5nQHdpbmRyaXZlci5j
+b20+DQo+IFN1Z2dlc3RlZC1ieTogUGV0ciBNbGFkZWsgPHBtbGFkZWtAc3VzZS5jb20+DQo+IFJl
+dmlld2VkLWJ5OiBQZXRyIE1sYWRlayA8cG1sYWRla0BzdXNlLmNvbT4NCg0KQW5kcmV3IGFscmVh
+ZHkgYnJvdWdodCB0aGlzIHVwIGJ1dCBjYW4geW91IHBsZWFzZSBwcm92aWRlIHNvbWUgY29udGV4
+dCBvbg0Kd2h5IHlvdSdyZSBtYWtpbmcgdGhpcyBjaGFuZ2U/DQoNClRoYW5rcy4NCg0KLS0NCnRl
+anVuDQo=
