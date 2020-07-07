@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92304C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A79F320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACD620663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135369;
-	bh=K0CLogGZWlodpjrfwb0pe+ZZdvaZn1MTmQelP12Mxfc=;
+	s=default; t=1594135372;
+	bh=1bVL+RD9lYL+5n5EXLBlUfEMkbGwPAMAFNwzlZV6uf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxIxlQMH/3dDpKIj2tyRvurTuq+0YI/63ZD+DJKJqG3zwOlVIURE+b8Kjjtlfa+JG
-	 MvTwcdeZaDej7s8iZ0Zw4Dz0J3Xtx3oa5RDVhY8LCQc2Dv6lJ0jiMUaNxOI6Rkhoo9
-	 UWx1/FomgM/syLhIirKa7Kj0mMU/W+iLtJv6y+OM=
+	b=Y+kJFFret7rhKsa5iDGmEEwwgW4kgIint1eYogQerbP0CdOF6kT3zBHgkdzH5T93T
+	 d6cOtCPW9jdSY2CMLFhfA6KLr0KEOYg8Alb8w43PrGYffs/RgXrti+7VvxLM+bKWUa
+	 k9fW7sJYhIuUkiqIaBZ2wX8GuVr6ouLPYAmC3T2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgGGPWs (ORCPT
+        id S1729916AbgGGPWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35256 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729884AbgGGPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:38 -0400
+        id S1729047AbgGGPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352BE206E2;
-        Tue,  7 Jul 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE502078A;
+        Tue,  7 Jul 2020 15:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135357;
-        bh=K0CLogGZWlodpjrfwb0pe+ZZdvaZn1MTmQelP12Mxfc=;
+        s=default; t=1594135367;
+        bh=1bVL+RD9lYL+5n5EXLBlUfEMkbGwPAMAFNwzlZV6uf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rymcV+IViFngStWOJ//HpIFVM+8FJuL4d68lziuJu2Cb+z7DdIRelW9BMRGyCA0+9
-         RLiZLAUn4RRWJGzdBYfGzZ2LMustFuW1Paluykzc1yolbB1IRd+uUKmJezbQq2EZBQ
-         8thBuSsIqCAMPERXYQ/4S1ahY4F/zBEB3k1PGhD4=
+        b=zWE+qz3cdUcf+l+rElZJ35h3CWnibZvRG7m8XO0rNLpRjfgUSTz9mSVxmUqjhHmiz
+         DKcCgF4QdYON5TCPsCCyOcq/FKLi/AXVQ2FL5MTMYliGexKbOY3hyZ4D79WKYWI2z+
+         VCWqpWuz3Dm92xijM2mLoKEU3PJs6ZgjeTCMlfLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Hyeongseok.Kim" <Hyeongseok@gmail.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
+        stable@vger.kernel.org,
+        syzbot+75139a7d2605236b0b7f@syzkaller.appspotmail.com,
+        Jon Maloy <jmaloy@redhat.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 001/112] exfat: Set the unused characters of FileName field to the value 0000h
-Date:   Tue,  7 Jul 2020 17:16:06 +0200
-Message-Id: <20200707145801.001010596@linuxfoundation.org>
+Subject: [PATCH 5.7 013/112] tipc: fix kernel WARNING in tipc_msg_append()
+Date:   Tue,  7 Jul 2020 17:16:18 +0200
+Message-Id: <20200707145801.626805944@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,43 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hyeongseok.Kim <Hyeongseok@gmail.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit 4ba6ccd695f5ed3ae851e59b443b757bbe4557fe ]
+[ Upstream commit c9aa81faf19115fc2e732e7f210b37bb316987ff ]
 
-Some fsck tool complain that padding part of the FileName field
-is not set to the value 0000h. So let's maintain filesystem cleaner,
-as exfat's spec. recommendation.
+syzbot found the following issue:
 
-Signed-off-by: Hyeongseok.Kim <Hyeongseok@gmail.com>
-Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+WARNING: CPU: 0 PID: 6808 at include/linux/thread_info.h:150 check_copy_size include/linux/thread_info.h:150 [inline]
+WARNING: CPU: 0 PID: 6808 at include/linux/thread_info.h:150 copy_from_iter include/linux/uio.h:144 [inline]
+WARNING: CPU: 0 PID: 6808 at include/linux/thread_info.h:150 tipc_msg_append+0x49a/0x5e0 net/tipc/msg.c:242
+Kernel panic - not syncing: panic_on_warn set ...
+
+This happens after commit 5e9eeccc58f3 ("tipc: fix NULL pointer
+dereference in streaming") that tried to build at least one buffer even
+when the message data length is zero... However, it now exposes another
+bug that the 'mss' can be zero and the 'cpy' will be negative, thus the
+above kernel WARNING will appear!
+The zero value of 'mss' is never expected because it means Nagle is not
+enabled for the socket (actually the socket type was 'SOCK_SEQPACKET'),
+so the function 'tipc_msg_append()' must not be called at all. But that
+was in this particular case since the message data length was zero, and
+the 'send <= maxnagle' check became true.
+
+We resolve the issue by explicitly checking if Nagle is enabled for the
+socket, i.e. 'maxnagle != 0' before calling the 'tipc_msg_append()'. We
+also reinforce the function to against such a negative values if any.
+
+Reported-by: syzbot+75139a7d2605236b0b7f@syzkaller.appspotmail.com
+Fixes: c0bceb97db9e ("tipc: add smart nagle feature")
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/exfat/dir.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/tipc/msg.c    | 4 ++--
+ net/tipc/socket.c | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 4b91afb0f0515..349ca0c282c2c 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -430,10 +430,12 @@ static void exfat_init_name_entry(struct exfat_dentry *ep,
- 	ep->dentry.name.flags = 0x0;
- 
- 	for (i = 0; i < EXFAT_FILE_NAME_LEN; i++) {
--		ep->dentry.name.unicode_0_14[i] = cpu_to_le16(*uniname);
--		if (*uniname == 0x0)
--			break;
--		uniname++;
-+		if (*uniname != 0x0) {
-+			ep->dentry.name.unicode_0_14[i] = cpu_to_le16(*uniname);
-+			uniname++;
-+		} else {
-+			ep->dentry.name.unicode_0_14[i] = 0x0;
-+		}
- 	}
+diff --git a/net/tipc/msg.c b/net/tipc/msg.c
+index 93966321f8929..560d7a4c0ffff 100644
+--- a/net/tipc/msg.c
++++ b/net/tipc/msg.c
+@@ -239,14 +239,14 @@ int tipc_msg_append(struct tipc_msg *_hdr, struct msghdr *m, int dlen,
+ 		hdr = buf_msg(skb);
+ 		curr = msg_blocks(hdr);
+ 		mlen = msg_size(hdr);
+-		cpy = min_t(int, rem, mss - mlen);
++		cpy = min_t(size_t, rem, mss - mlen);
+ 		if (cpy != copy_from_iter(skb->data + mlen, cpy, &m->msg_iter))
+ 			return -EFAULT;
+ 		msg_set_size(hdr, mlen + cpy);
+ 		skb_put(skb, cpy);
+ 		rem -= cpy;
+ 		total += msg_blocks(hdr) - curr;
+-	} while (rem);
++	} while (rem > 0);
+ 	return total - accounted;
  }
  
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index d6b67d07d22ec..62fc871a8d673 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -1574,7 +1574,8 @@ static int __tipc_sendstream(struct socket *sock, struct msghdr *m, size_t dlen)
+ 			break;
+ 		send = min_t(size_t, dlen - sent, TIPC_MAX_USER_MSG_SIZE);
+ 		blocks = tsk->snd_backlog;
+-		if (tsk->oneway++ >= tsk->nagle_start && send <= maxnagle) {
++		if (tsk->oneway++ >= tsk->nagle_start && maxnagle &&
++		    send <= maxnagle) {
+ 			rc = tipc_msg_append(hdr, m, send, maxnagle, txq);
+ 			if (unlikely(rc < 0))
+ 				break;
 -- 
 2.25.1
 
