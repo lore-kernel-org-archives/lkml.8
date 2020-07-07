@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B18AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB622078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C9D206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135213;
-	bh=IKRcYbDIFHiIBRV8TpFGBWYGnR6Vj1rFMLD4iE/uvww=;
+	s=default; t=1594135216;
+	bh=Q1eotnea0vt85xAFAB4A7x6GFSgzVSoSnC1Rq1oBMqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HW5r64HT8PVI43r8ODZQ125iJ4mgfYKBZtsZrzRsfWAhKzNBG75c/T9jlaH1BaYdW
-	 Y2hcVUQyOvHvMSiogJVB/8E6a2xh2wJml78OqhWyr9mJ3kfJXOZw6ZxnSa1c+gWPcb
-	 ltLDb1u8bkepkp0cIEqAwVlR/wRZJzOEYO5MLvKo=
+	b=ataZPAquWTR4/Wq/HGUmtNb7Pjswjua3XF+/sPArnYzVkli/cnNbOI6iel07mUAc6
+	 82WM8O0ZB5He+Cun+rFvLcvJMGsb5e1XoFkn8HHIFrP0psk2JstaQoTFxuQXgRlZne
+	 dxj343R2QLPP7j7jjCBSCJrroymcj0Ktsph+bhCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgGGPUM (ORCPT
+        id S1728603AbgGGPUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59732 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgGGPTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:55 -0400
+        id S1729086AbgGGPUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0F52065D;
-        Tue,  7 Jul 2020 15:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F141A20773;
+        Tue,  7 Jul 2020 15:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135194;
-        bh=IKRcYbDIFHiIBRV8TpFGBWYGnR6Vj1rFMLD4iE/uvww=;
+        s=default; t=1594135204;
+        bh=Q1eotnea0vt85xAFAB4A7x6GFSgzVSoSnC1Rq1oBMqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/gEFadkt2IeOzhPSikGLfnkNW34+z5L8CsNyGN4ZHMLaz+vuhAAY0y61k7AKs8D4
-         2TR0KN2dIKbTXpQuASSfgBNoQDYpVtt8dcH3yv3Qc3CT4yyFp+4lhy1XOOXHNCHzcC
-         0IOXulRQJ5E+Oe5uSH9aveAzoRI4zdn/8KXGcNmc=
+        b=lJjBLxhSFRrw8Hrhr0WGGxHa5eAKs1zHhwP3nQXWoajaavMdxvraKxp0oGxezzuSM
+         e/MZO/4c2tehl6WyxphHitAGdiv+YjJ6tB+Yjd0sPregdcPf8E6wnhjdCphIqE69NH
+         fbnkFg7L9oN80RinmgjFZJhEp+qs22YfGjgmf2H4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kees Kook <keescook@chromium.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 11/65] tools lib traceevent: Handle __attribute__((user)) in field names
-Date:   Tue,  7 Jul 2020 17:16:50 +0200
-Message-Id: <20200707145752.996517502@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 15/65] nvme-multipath: fix deadlock between ana_work and scan_work
+Date:   Tue,  7 Jul 2020 17:16:54 +0200
+Message-Id: <20200707145753.192373916@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -68,96 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-[ Upstream commit 74621d929d944529a5e2878a84f48bfa6fb69a66 ]
+[ Upstream commit 489dd102a2c7c94d783a35f9412eb085b8da1aa4 ]
 
-Commit c61f13eaa1ee1 ("gcc-plugins: Add structleak for more stack
-initialization") added "__attribute__((user))" to the user when
-stackleak detector is enabled. This now appears in the field format of
-system call trace events for system calls that have user buffers. The
-"__attribute__((user))" breaks the parsing in libtraceevent. That needs
-to be handled.
+When scan_work calls nvme_mpath_add_disk() this holds ana_lock
+and invokes nvme_parse_ana_log(), which may issue IO
+in device_add_disk() and hang waiting for an accessible path.
+While nvme_mpath_set_live() only called when nvme_state_is_live(),
+a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaewon Kim <jaewon31.kim@samsung.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kees Kook <keescook@chromium.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200324200956.663647256@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+In order to recover and complete the IO ana_work on the same ctrl
+should be able to update the path state and remove NVME_NS_ANA_PENDING.
+
+The deadlock occurs because scan_work keeps holding ana_lock,
+so ana_work hangs [1].
+
+Fix:
+Now nvme_mpath_add_disk() uses nvme_parse_ana_log() to obtain a copy
+of the ANA group desc, and then calls nvme_update_ns_ana_state() without
+holding ana_lock.
+
+[1]:
+kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  io_schedule+0x16/0x40
+kernel:  do_read_cache_page+0x438/0x830
+kernel:  read_cache_page+0x12/0x20
+kernel:  read_dev_sector+0x27/0xc0
+kernel:  read_lba+0xc1/0x220
+kernel:  efi_partition+0x1e6/0x708
+kernel:  check_partition+0x154/0x244
+kernel:  rescan_partitions+0xae/0x280
+kernel:  __blkdev_get+0x40f/0x560
+kernel:  blkdev_get+0x3d/0x140
+kernel:  __device_add_disk+0x388/0x480
+kernel:  device_add_disk+0x13/0x20
+kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
+kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
+kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
+kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
+kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
+kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
+kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x249/0x400
+kernel:  kthread+0x104/0x140
+
+kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  schedule_preempt_disabled+0xe/0x10
+kernel:  __mutex_lock.isra.0+0x182/0x4f0
+kernel:  ? __switch_to_asm+0x34/0x70
+kernel:  ? select_task_rq_fair+0x1aa/0x5c0
+kernel:  ? kvm_sched_clock_read+0x11/0x20
+kernel:  ? sched_clock+0x9/0x10
+kernel:  __mutex_lock_slowpath+0x13/0x20
+kernel:  mutex_lock+0x2e/0x40
+kernel:  nvme_read_ana_log+0x3a/0x100 [nvme_core]
+kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x4d/0x400
+kernel:  kthread+0x104/0x140
+kernel:  ? process_one_work+0x380/0x380
+kernel:  ? kthread_park+0x80/0x80
+kernel:  ret_from_fork+0x35/0x40
+
+Fixes: 0d0b660f214d ("nvme: add ANA support")
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 39 +++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 4bc3e1b906652..798284f511f16 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1444,6 +1444,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 	enum tep_event_type type;
- 	char *token;
- 	char *last_token;
-+	char *delim = " ";
- 	int count = 0;
- 	int ret;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 7cc0ec180d555..18f0a05c74b56 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -639,26 +639,34 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
+ }
+ DEVICE_ATTR_RO(ana_state);
  
-@@ -1504,13 +1505,49 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 					field->flags |= TEP_FIELD_IS_POINTER;
+-static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
++static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
+ 		struct nvme_ana_group_desc *desc, void *data)
+ {
+-	struct nvme_ns *ns = data;
++	struct nvme_ana_group_desc *dst = data;
  
- 				if (field->type) {
--					ret = append(&field->type, " ", last_token);
-+					ret = append(&field->type, delim, last_token);
- 					free(last_token);
- 					if (ret < 0)
- 						goto fail;
- 				} else
- 					field->type = last_token;
- 				last_token = token;
-+				delim = " ";
-+				continue;
-+			}
+-	if (ns->ana_grpid == le32_to_cpu(desc->grpid)) {
+-		nvme_update_ns_ana_state(desc, ns);
+-		return -ENXIO; /* just break out of the loop */
+-	}
++	if (desc->grpid != dst->grpid)
++		return 0;
+ 
+-	return 0;
++	*dst = *desc;
++	return -ENXIO; /* just break out of the loop */
+ }
+ 
+ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ {
+ 	if (nvme_ctrl_use_ana(ns->ctrl)) {
++		struct nvme_ana_group_desc desc = {
++			.grpid = id->anagrpid,
++			.state = 0,
++		};
 +
-+			/* Handle __attribute__((user)) */
-+			if ((type == TEP_EVENT_DELIM) &&
-+			    strcmp("__attribute__", last_token) == 0 &&
-+			    token[0] == '(') {
-+				int depth = 1;
-+				int ret;
-+
-+				ret = append(&field->type, " ", last_token);
-+				ret |= append(&field->type, "", "(");
-+				if (ret < 0)
-+					goto fail;
-+
-+				delim = " ";
-+				while ((type = read_token(&token)) != TEP_EVENT_NONE) {
-+					if (type == TEP_EVENT_DELIM) {
-+						if (token[0] == '(')
-+							depth++;
-+						else if (token[0] == ')')
-+							depth--;
-+						if (!depth)
-+							break;
-+						ret = append(&field->type, "", token);
-+						delim = "";
-+					} else {
-+						ret = append(&field->type, delim, token);
-+						delim = " ";
-+					}
-+					if (ret < 0)
-+						goto fail;
-+					free(last_token);
-+					last_token = token;
-+				}
- 				continue;
- 			}
- 			break;
+ 		mutex_lock(&ns->ctrl->ana_lock);
+ 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
+-		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
++		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
+ 		mutex_unlock(&ns->ctrl->ana_lock);
++		if (desc.state) {
++			/* found the group desc: update */
++			nvme_update_ns_ana_state(&desc, ns);
++		}
+ 	} else {
+ 		ns->ana_state = NVME_ANA_OPTIMIZED; 
+ 		nvme_mpath_set_live(ns);
 -- 
 2.25.1
 
