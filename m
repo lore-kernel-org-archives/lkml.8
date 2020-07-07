@@ -2,124 +2,199 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A88C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 576382078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhKd6Ea+"
+	by mail.kernel.org (Postfix) with ESMTP id 9F0C82085B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135457;
+	bh=aTGjenq/tu0G7rMwGC06gN5xtWY1BhX/OfIMCVEvxSQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VePGVHknD30c2IsLEisnHsO+VEvWztwuh4oFEdWL/0HDtTbjQ4TKB4hYm8Z50T5a1
+	 5UyBQokdYmte7j8wQvOygIccO2q3E26Iq7Egxz9qA7IKg5eEUahU3zv+F5u2nxDU5x
+	 ObOQkJgvJYdu5aZEACKOAtBx8U+7ZtpYdSUL46w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgGGPYL (ORCPT
+        id S1728346AbgGGPYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Jul 2020 11:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730042AbgGGPYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbgGGPYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:03 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B41C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:24:03 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 80so38478917qko.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Txgzoid44mqUrO9velpnvNnz2jII+44h3kdWBj9Cc4=;
-        b=DhKd6Ea+KrKdh3mxPFxa58dg9l3ChgyupBfwMp6hpUaKFKyTmjRsMo9nBZYfcGRz+E
-         RNnS00Snbrv9MRHdVkLMxAr3D4nQCFXxCZEdS0Au2PYimd2d9l0cyT0gij1BO+CuH2ms
-         PLEtRAafi8TyWezJn8Rt6xLQQ0vwZUZF1T+JpURMgO1AUUp6bNUf9mTmr7YgZ6wdw1Lv
-         EfDpvFqSCcnTJtlNskKECRHBaC8pHDhMmErXmMPxlfM99Ezh82KTZZnJR3hXZyweB8Cf
-         CUHYjR+QOLll2iVMY6cH6H2Tibx+OYd3ql4ciOg2spcnO+c7LfUc4H5bKbiV8jFISjOZ
-         ZI8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Txgzoid44mqUrO9velpnvNnz2jII+44h3kdWBj9Cc4=;
-        b=WEDpgwkN3HuD4Ksc/EXkB5z/GR+nmazGsDg1LLFI4PJNU/4N54DTa3GnMoro0JQ7OJ
-         RgXCp5eTulN5ZqbMqy+BQpFSBcoCJ4xkvgP4ycf+dUqe/F/TNPnvnuVL+ifmdXkolkOl
-         sh1dHDMiQMFahFzD672QcMIlmCKf0fmDF7pNUJgLTfTS/fkZq42Oc73OhJwYczZ+1FAF
-         OiGNWOKpwoHpAQPc2139RJbZUbiFW+zhGrat2ZqNOvvudkQXo8xSImjoojNYwREoYLQ0
-         AK9zMsfojQ2kySuNjoyXQ4ybHPngz1zA5/xxKBpM1dgd8M8PoQ/NKPTAb50O6fQIauHO
-         I+0A==
-X-Gm-Message-State: AOAM532d8jTBKarHDUaF2t3/BsHznjZBNzGdkfkoNdhcQZMzB65BURAi
-        96Dk18FppdhhNZAzDOXJugIpwck2qRwbPCqH718=
-X-Google-Smtp-Source: ABdhPJwbplgzxlBYHXfTN2xECGmsIRTvhHTgN5d35KPNchNTQmeaGxVUXVAUD6N02REyY+wBPKN9gY1hZ/mjUn/jjVI=
-X-Received: by 2002:a37:4289:: with SMTP id p131mr22832369qka.28.1594135442792;
- Tue, 07 Jul 2020 08:24:02 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8387C20874;
+        Tue,  7 Jul 2020 15:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594135450;
+        bh=aTGjenq/tu0G7rMwGC06gN5xtWY1BhX/OfIMCVEvxSQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pWyHLBRrmxDDSMX2+0Z581Ta12s4vMO7BhpkZT1WLi2S+Hmty6zpYcOBZfzLPcWv1
+         /+9EYgcRTKVj3gWjmhSAQECi4a1ufOO2ghe/X/a9SLZQen3lPVFDaIlWDTRYBjZgb/
+         4b90e9kX5QOkq1MDebbMGCblXvcDn/2/Xxc5INeg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 045/112] task_work: teach task_work_add() to do signal_wake_up()
+Date:   Tue,  7 Jul 2020 17:16:50 +0200
+Message-Id: <20200707145803.144105968@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
+References: <20200707145800.925304888@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
- <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com> <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
-In-Reply-To: <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Tue, 7 Jul 2020 18:23:46 +0300
-Message-ID: <CAOJsxLFnY=4v6UQigyiZKTMTQXKakVOKf6KA+bCkMe-XVY6sqA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial objects
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Oleg Nesterov <oleg@redhat.com>
 
-(Sorry for the delay, I missed your response.)
+[ Upstream commit e91b48162332480f5840902268108bb7fb7a44c7 ]
 
-On Fri, Jul 3, 2020 at 12:38 PM xunlei <xlpang@linux.alibaba.com> wrote:
->
-> On 2020/7/2 PM 7:59, Pekka Enberg wrote:
-> > On Thu, Jul 2, 2020 at 11:32 AM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
-> >> The node list_lock in count_partial() spend long time iterating
-> >> in case of large amount of partial page lists, which can cause
-> >> thunder herd effect to the list_lock contention, e.g. it cause
-> >> business response-time jitters when accessing "/proc/slabinfo"
-> >> in our production environments.
-> >
-> > Would you have any numbers to share to quantify this jitter? I have no
->
-> We have HSF RT(High-speed Service Framework Response-Time) monitors, the
-> RT figures fluctuated randomly, then we deployed a tool detecting "irq
-> off" and "preempt off" to dump the culprit's calltrace, capturing the
-> list_lock cost up to 100ms with irq off issued by "ss", this also caused
-> network timeouts.
+So that the target task will exit the wait_event_interruptible-like
+loop and call task_work_run() asap.
 
-Thanks for the follow up. This sounds like a good enough motivation
-for this patch, but please include it in the changelog.
+The patch turns "bool notify" into 0,TWA_RESUME,TWA_SIGNAL enum, the
+new TWA_SIGNAL flag implies signal_wake_up().  However, it needs to
+avoid the race with recalc_sigpending(), so the patch also adds the
+new JOBCTL_TASK_WORK bit included in JOBCTL_PENDING_MASK.
 
-> > objections to this approach, but I think the original design
-> > deliberately made reading "/proc/slabinfo" more expensive to avoid
-> > atomic operations in the allocation/deallocation paths. It would be
-> > good to understand what is the gain of this approach before we switch
-> > to it. Maybe even run some slab-related benchmark (not sure if there's
-> > something better than hackbench these days) to see if the overhead of
-> > this approach shows up.
->
-> I thought that before, but most atomic operations are serialized by the
-> list_lock. Another possible way is to hold list_lock in __slab_free(),
-> then these two counters can be changed from atomic to long.
->
-> I also have no idea what's the standard SLUB benchmark for the
-> regression test, any specific suggestion?
+TODO: once this patch is merged we need to change all current users
+of task_work_add(notify = true) to use TWA_RESUME.
 
-I don't know what people use these days. When I did benchmarking in
-the past, hackbench and netperf were known to be slab-allocation
-intensive macro-benchmarks. Christoph also had some SLUB
-micro-benchmarks, but I don't think we ever merged them into the tree.
+Cc: stable@vger.kernel.org # v5.7
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/sched/jobctl.h |  4 +++-
+ include/linux/task_work.h    |  5 ++++-
+ kernel/signal.c              | 10 +++++++---
+ kernel/task_work.c           | 16 ++++++++++++++--
+ 4 files changed, 28 insertions(+), 7 deletions(-)
 
-- Pekka
+diff --git a/include/linux/sched/jobctl.h b/include/linux/sched/jobctl.h
+index fa067de9f1a94..d2b4204ba4d34 100644
+--- a/include/linux/sched/jobctl.h
++++ b/include/linux/sched/jobctl.h
+@@ -19,6 +19,7 @@ struct task_struct;
+ #define JOBCTL_TRAPPING_BIT	21	/* switching to TRACED */
+ #define JOBCTL_LISTENING_BIT	22	/* ptracer is listening for events */
+ #define JOBCTL_TRAP_FREEZE_BIT	23	/* trap for cgroup freezer */
++#define JOBCTL_TASK_WORK_BIT	24	/* set by TWA_SIGNAL */
+ 
+ #define JOBCTL_STOP_DEQUEUED	(1UL << JOBCTL_STOP_DEQUEUED_BIT)
+ #define JOBCTL_STOP_PENDING	(1UL << JOBCTL_STOP_PENDING_BIT)
+@@ -28,9 +29,10 @@ struct task_struct;
+ #define JOBCTL_TRAPPING		(1UL << JOBCTL_TRAPPING_BIT)
+ #define JOBCTL_LISTENING	(1UL << JOBCTL_LISTENING_BIT)
+ #define JOBCTL_TRAP_FREEZE	(1UL << JOBCTL_TRAP_FREEZE_BIT)
++#define JOBCTL_TASK_WORK	(1UL << JOBCTL_TASK_WORK_BIT)
+ 
+ #define JOBCTL_TRAP_MASK	(JOBCTL_TRAP_STOP | JOBCTL_TRAP_NOTIFY)
+-#define JOBCTL_PENDING_MASK	(JOBCTL_STOP_PENDING | JOBCTL_TRAP_MASK)
++#define JOBCTL_PENDING_MASK	(JOBCTL_STOP_PENDING | JOBCTL_TRAP_MASK | JOBCTL_TASK_WORK)
+ 
+ extern bool task_set_jobctl_pending(struct task_struct *task, unsigned long mask);
+ extern void task_clear_jobctl_trapping(struct task_struct *task);
+diff --git a/include/linux/task_work.h b/include/linux/task_work.h
+index bd9a6a91c097e..0fb93aafa4785 100644
+--- a/include/linux/task_work.h
++++ b/include/linux/task_work.h
+@@ -13,7 +13,10 @@ init_task_work(struct callback_head *twork, task_work_func_t func)
+ 	twork->func = func;
+ }
+ 
+-int task_work_add(struct task_struct *task, struct callback_head *twork, bool);
++#define TWA_RESUME	1
++#define TWA_SIGNAL	2
++int task_work_add(struct task_struct *task, struct callback_head *twork, int);
++
+ struct callback_head *task_work_cancel(struct task_struct *, task_work_func_t);
+ void task_work_run(void);
+ 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 284fc1600063b..d5feb34b5e158 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2529,9 +2529,6 @@ bool get_signal(struct ksignal *ksig)
+ 	struct signal_struct *signal = current->signal;
+ 	int signr;
+ 
+-	if (unlikely(current->task_works))
+-		task_work_run();
+-
+ 	if (unlikely(uprobe_deny_signal()))
+ 		return false;
+ 
+@@ -2544,6 +2541,13 @@ bool get_signal(struct ksignal *ksig)
+ 
+ relock:
+ 	spin_lock_irq(&sighand->siglock);
++	current->jobctl &= ~JOBCTL_TASK_WORK;
++	if (unlikely(current->task_works)) {
++		spin_unlock_irq(&sighand->siglock);
++		task_work_run();
++		goto relock;
++	}
++
+ 	/*
+ 	 * Every stopped thread goes here after wakeup. Check to see if
+ 	 * we should notify the parent, prepare_signal(SIGCONT) encodes
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 825f28259a19a..5c0848ca1287d 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -25,9 +25,10 @@ static struct callback_head work_exited; /* all we need is ->next == NULL */
+  * 0 if succeeds or -ESRCH.
+  */
+ int
+-task_work_add(struct task_struct *task, struct callback_head *work, bool notify)
++task_work_add(struct task_struct *task, struct callback_head *work, int notify)
+ {
+ 	struct callback_head *head;
++	unsigned long flags;
+ 
+ 	do {
+ 		head = READ_ONCE(task->task_works);
+@@ -36,8 +37,19 @@ task_work_add(struct task_struct *task, struct callback_head *work, bool notify)
+ 		work->next = head;
+ 	} while (cmpxchg(&task->task_works, head, work) != head);
+ 
+-	if (notify)
++	switch (notify) {
++	case TWA_RESUME:
+ 		set_notify_resume(task);
++		break;
++	case TWA_SIGNAL:
++		if (lock_task_sighand(task, &flags)) {
++			task->jobctl |= JOBCTL_TASK_WORK;
++			signal_wake_up(task, 0);
++			unlock_task_sighand(task, &flags);
++		}
++		break;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
+
+
