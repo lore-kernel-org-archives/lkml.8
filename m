@@ -2,126 +2,77 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E975C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46A9020720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829DA2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgGGVda (ORCPT
+        id S1729186AbgGGVer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:33:30 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35118 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgGGVd3 (ORCPT
+        Tue, 7 Jul 2020 17:34:47 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:44493 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728357AbgGGVer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:33:29 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 39D6A1C0C0A; Tue,  7 Jul 2020 23:33:27 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 23:33:26 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 17/36] cxgb4: use correct type for all-mask IP
- address comparison
-Message-ID: <20200707213326.GB11158@amd>
-References: <20200707145749.130272978@linuxfoundation.org>
- <20200707145749.959174058@linuxfoundation.org>
+        Tue, 7 Jul 2020 17:34:47 -0400
+Received: from [78.134.117.153] (port=57056 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jsvEh-000Gqt-Ju; Tue, 07 Jul 2020 23:34:43 +0200
+Subject: Re: [PATCH V2] clk: vc5: Add memory check to prevent oops
+To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, aford@beaconembedded.com,
+        charles.stevens@logicpd.com, Marek Vasut <marek.vasut@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200706203727.18380-1-aford173@gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <128e24e8-ae83-0b0f-8771-28a67f6d8586@lucaceresoli.net>
+Date:   Tue, 7 Jul 2020 23:34:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
-Content-Disposition: inline
-In-Reply-To: <20200707145749.959174058@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200706203727.18380-1-aford173@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Adam,
 
---Bn2rw/3z4jIqBvZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/07/20 22:37, Adam Ford wrote:
+> When getting the names of the child nodes, kasprintf is used to
+> allocate memory which is used to create the string for the node
+> name.  Unfortunately, there is no memory check to determine
+> if this allocation fails, it may cause an error when trying
+> to get child node name.
+> 
+> This patch will check if the memory allocation fails, and returns
+> and -NOMEM error instead of blindly moving on.
 
-Hi!
+s/-NOMEM/-ENOMEM/
 
-> From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
->=20
-> [ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
->=20
-> Use correct type to check for all-mask exact match IP addresses.
->=20
-> Fixes following sparse warnings due to big endian value checks
-> against 0xffffffff in is_addr_all_mask():
-> cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
-> cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
-> cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
-> cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
-> cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
+With this possibly fixed:
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/=
-net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-> index 7dddb9e748b81..86745f33a252d 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-> @@ -810,16 +810,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
->  		struct in_addr *addr;
-> =20
->  		addr =3D (struct in_addr *)ipmask;
-> -		if (addr->s_addr =3D=3D 0xffffffff)
-> +		if (ntohl(addr->s_addr) =3D=3D 0xffffffff)
-
-Endianity does not really matter for ~0, but can compiler figure it
-out?
-
-would it be better to do these tests as=20
-
-      if (foo =3D=3D htonl(0xffffffff))
-
-to make it clear to the compiler?
-
-Thanks,
-								Pavel
-
->  	} else if (family =3D=3D AF_INET6) {
->  		struct in6_addr *addr6;
-> =20
->  		addr6 =3D (struct in6_addr *)ipmask;
-> -		if (addr6->s6_addr32[0] =3D=3D 0xffffffff &&
-> -		    addr6->s6_addr32[1] =3D=3D 0xffffffff &&
-> -		    addr6->s6_addr32[2] =3D=3D 0xffffffff &&
-> -		    addr6->s6_addr32[3] =3D=3D 0xffffffff)
-> +		if (ntohl(addr6->s6_addr32[0]) =3D=3D 0xffffffff &&
-> +		    ntohl(addr6->s6_addr32[1]) =3D=3D 0xffffffff &&
-> +		    ntohl(addr6->s6_addr32[2]) =3D=3D 0xffffffff &&
-> +		    ntohl(addr6->s6_addr32[3]) =3D=3D 0xffffffff)
->  			return true;
->  	}
->  	return false;
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Bn2rw/3z4jIqBvZU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8E6iYACgkQMOfwapXb+vJLpACdEj/Y83rAxd9brW1nECrg00xp
-ZhIAn1OLUasoKxmEd9olKPWbXPxy/3UR
-=t1HC
------END PGP SIGNATURE-----
-
---Bn2rw/3z4jIqBvZU--
+-- 
+Luca
