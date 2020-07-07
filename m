@@ -2,139 +2,125 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E69EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFED420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3DC20702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="h6Jm5q8R"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W7I/bYA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGGKsR (ORCPT
+        id S1728014AbgGGKsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:48:17 -0400
-Received: from mail.efficios.com ([167.114.26.124]:49338 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgGGKsR (ORCPT
+        Tue, 7 Jul 2020 06:48:32 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44450 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGKsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:48:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BDF6C2603;
-        Tue,  7 Jul 2020 06:48:15 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id WrIAjRWZrLYx; Tue,  7 Jul 2020 06:48:15 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 7D2D926D0;
-        Tue,  7 Jul 2020 06:48:15 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7D2D926D0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594118895;
-        bh=SEZo62sgXX1yjYgPrkJmMf2plZSVRbldxmKP5S78mc8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=h6Jm5q8RePncs+Ip0THH4GjA7d46906VsncUVa1anyOa/5IUi5dIYyPPJjQbysmjL
-         ewAHda1Bqf6QC6KM83ljnlZyu/Xeo8tlFNRggaIt713ilezDvIpJxcTTJVbmweovAa
-         QdJImFlAOypo2xt0I1KMHScNvbsCTB1ReCAO08LgPyhutgm+t7LAZqwHa1GQkp5V23
-         HbfSMc7pAsS/5sm/oxF9e7VO4yEfwXB86WrxzSYgysXs/J8/XY6tHNGzaq3FaG+04E
-         vyZ3NXbNZkL9wP3kTf6yi3AaFxpAwk7wqG5/gQ4QHwI8H4zimIHPFx4pLAH5TamWUA
-         aiI7M29Z5xubA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id f5Bw7qcXPthX; Tue,  7 Jul 2020 06:48:15 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 6C0F726C9;
-        Tue,  7 Jul 2020 06:48:15 -0400 (EDT)
-Date:   Tue, 7 Jul 2020 06:48:15 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>
-Message-ID: <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87fta3zstr.fsf@mid.deneb.enyo.de>
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com> <20200706204913.20347-4-mathieu.desnoyers@efficios.com> <87fta3zstr.fsf@mid.deneb.enyo.de>
-Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce
- RSEQ_FLAG_RELIABLE_CPU_ID
+        Tue, 7 Jul 2020 06:48:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067AlXf7075713;
+        Tue, 7 Jul 2020 05:47:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594118854;
+        bh=T+nHlhZOidYOCH29bUqU/Pu9XpetYy0kEACSndhggaU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=W7I/bYA4P+vOJYQQssbhsAL3EojexiAa+4hA8Ips/b9sVXRZ/lf/JiINNDnpVcyce
+         H9Ag4yjTH4rD48TwtCQnQEMC68gIMgROVFVlMQv/fuv2rMJPGwM3tBNQb9sa95Twlg
+         sMzpFHxXjUXoh1/9xLoHvg3Ag5nFJR5SnOGcWFNI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067AlXG4099736
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jul 2020 05:47:33 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
+ 2020 05:47:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 7 Jul 2020 05:47:33 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067AlVc2096354;
+        Tue, 7 Jul 2020 05:47:31 -0500
+Subject: Re: [PATCH 21/28] ASoC: ti: omap-mcbsp-st: Remove set, but unused
+ variable 'w'
+To:     Lee Jones <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Samuel Ortiz <samuel.ortiz@nokia.com>,
+        <linux-omap@vger.kernel.org>
+References: <20200707101642.1747944-1-lee.jones@linaro.org>
+ <20200707101642.1747944-22-lee.jones@linaro.org>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <61d554e7-0579-3c6c-b9e1-30b135d5927c@ti.com>
+Date:   Tue, 7 Jul 2020 13:48:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-Thread-Index: cnNSSEN40kq5dPdzDK9Vrs4pN+iz1g==
+In-Reply-To: <20200707101642.1747944-22-lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 7, 2020, at 3:29 AM, Florian Weimer fw@deneb.enyo.de wrote:
+Hi Lee,
 
-> * Mathieu Desnoyers:
-> 
->> commit 93b585c08d16 ("Fix: sched: unreliable rseq cpu_id for new tasks")
->> addresses an issue with cpu_id field of newly created processes. Expose
->> a flag which can be used by user-space to query whether the kernel
->> implements this fix.
->>
->> Considering that this issue can cause corruption of user-space per-cpu
->> data updated with rseq, it is recommended that user-space detects
->> availability of this fix by using the RSEQ_FLAG_RELIABLE_CPU_ID flag
->> either combined with registration or on its own before using rseq.
-> 
-> Presumably, the intent is that glibc uses RSEQ_FLAG_RELIABLE_CPU_ID to
-> register the rseq area.  That will surely prevent glibc itself from
-> activating rseq on broken kernels.  But if another rseq library
-> performs registration and has not been updated to use
-> RSEQ_FLAG_RELIABLE_CPU_ID, we still end up with an active rseq area
-> (and incorrect CPU IDs from sched_getcpu in glibc).  So further glibc
-> changes will be needed.  I suppose we could block third-party rseq
-> registration with a registration of a hidden rseq area (not
-> __rseq_abi).  But then the question is if any of the third-party rseq
-> users are expecting the EINVAL error code from their failed
-> registration.
-> 
-> The rseq registration state machine is quite tricky already, and the
-> need to use RSEQ_FLAG_RELIABLE_CPU_ID would make it even more
-> complicated.  Even if we implemented all the changes, it's all going
-> to be essentially dead, untestable code in a few months, when the
-> broken kernels are out of circulation.  It does not appear to be good
-> investment to me.
+On 07/07/2020 13.16, Lee Jones wrote:
+> Looks like 'w' has remained unchecked since the driver's inception.
+>=20
+> Fixes the following W=3D1 kernel build warning(s):
+>=20
+>  sound/soc/ti/omap-mcbsp-st.c: In function =E2=80=98omap_mcbsp_st_chgai=
+n=E2=80=99:
+>  sound/soc/ti/omap-mcbsp-st.c:145:6: warning: variable =E2=80=98w=E2=80=
+=99 set but not used [-Wunused-but-set-variable]
+>=20
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
+> Cc: Samuel Ortiz <samuel.ortiz@nokia.com>
+> Cc: linux-omap@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  sound/soc/ti/omap-mcbsp-st.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/sound/soc/ti/omap-mcbsp-st.c b/sound/soc/ti/omap-mcbsp-st.=
+c
+> index 5a32b54bbf3bb..643ef7eb68fc8 100644
+> --- a/sound/soc/ti/omap-mcbsp-st.c
+> +++ b/sound/soc/ti/omap-mcbsp-st.c
+> @@ -142,10 +142,9 @@ static void omap_mcbsp_st_fir_write(struct omap_mc=
+bsp *mcbsp, s16 *fir)
+> =20
+>  static void omap_mcbsp_st_chgain(struct omap_mcbsp *mcbsp)
+>  {
+> -	u16 w;
+>  	struct omap_mcbsp_st_data *st_data =3D mcbsp->st_data;
+> =20
+> -	w =3D MCBSP_ST_READ(mcbsp, SSELCR);
+> +	MCBSP_ST_READ(mcbsp, SSELCR);
 
-Those are very good points. One possibility we have would be to let
-glibc do the rseq registration without the RSEQ_FLAG_RELIABLE_CPU_ID
-flag. On kernels with the bug present, the cpu_id field is still good
-enough for typical uses of sched_getcpu() which does not appear to
-have a very strict correctness requirement on returning the right
-cpu number.
+The read can be removed at the same time.
 
-Then libraries and applications which require a reliable cpu_id field
-could check this on their own by calling rseq with the
-RSEQ_FLAG_RELIABLE_CPU_ID flag. This would not make the state more
-complex in __rseq_abi, and let each rseq user decide about its own fate:
-whether it uses rseq or keeps using an rseq-free fallback.
+>  	MCBSP_ST_WRITE(mcbsp, SGAINCR, ST_CH0GAIN(st_data->ch0gain) |
+>  		       ST_CH1GAIN(st_data->ch1gain));
+>=20
 
-I am still tempted to allow combining RSEQ_FLAG_REGISTER | RSEQ_FLAG_RELIABLE_CPU_ID
-for applications which would not be using glibc, and want to check this flag on
-thread registration.
+- P=C3=A9ter
 
-Thoughts ?
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
