@@ -2,173 +2,131 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3588C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E958EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDF82075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594162288;
-	bh=qIo6PpemCQ+WG0zoOl3DhnPnPq5fufAVnvuCuXl7avY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=xEwrqGYpdvwUzcdgdA1+OTmk9aMMDu6BbgQQzfRfwbnrJwCUCflI/8oAkKTaG5jni
-	 BylE3I/qiWz+LhTNDkhB+sEaFcGMk4mJF6x96BgtA+VzSQ+by99pV369EBGwSA043T
-	 kJlP3y6ZHv5AR+6ibbwSOrnKs+Da2LpsoidpOIWo=
+	by mail.kernel.org (Postfix) with ESMTP id BBE132075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NpsvY7u/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgGGWv0 (ORCPT
+        id S1729740AbgGGWvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgGGWvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:51:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE6882077D;
-        Tue,  7 Jul 2020 22:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594162282;
-        bh=qIo6PpemCQ+WG0zoOl3DhnPnPq5fufAVnvuCuXl7avY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=vft7wP4CGTu/pzkjM310cWRe9nFX1kueTyt1f6M2IB30J2j1PpTPgpsoiGegnaYlj
-         881JZtwKyNQerDXnE5Eff3Ao4RRD5V2rUIoj913s1rZys6ycR/YsU6Y1ZgvorjPp9v
-         /Np+mb1EDtvMlz6TfBXgbsMv6vAE7D9WNVTuF1kM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B5C6C35234B0; Tue,  7 Jul 2020 15:51:22 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 15:51:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
+        Tue, 7 Jul 2020 18:51:01 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41545 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729725AbgGGWu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:50:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594162257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sstMP5NBLNFJ42p1Ptb1NInEyGUfT5YQOxqtWfaqyuo=;
+        b=NpsvY7u/q+2YHLjf6ZVoXH4/C5vUnIIkPRvINlyFHy6rUzo6AT3IWrz+Ej+7xnc/6LZBVf
+        qgr38d/5keY9NmVnPCGWoGRz11G/qMg+EJ+0uAhnwWTPqWPaPpaFQcmdE5vwPMqvxcT28M
+        YyDDRg/CFjuiFIW/tY9HbzELBdFvVNE=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-WrKF4Q5nNbSZhUGY_hSsYw-1; Tue, 07 Jul 2020 18:50:56 -0400
+X-MC-Unique: WrKF4Q5nNbSZhUGY_hSsYw-1
+Received: by mail-qv1-f70.google.com with SMTP id j4so28053839qvt.20
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:50:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sstMP5NBLNFJ42p1Ptb1NInEyGUfT5YQOxqtWfaqyuo=;
+        b=izua8GP01oIlwok7eIe3SavVVcpYwlhq3yICQPjYAN111oNOvfdWP1VCN1unmsF9oP
+         80CsLEN41eTBCg01mdSJmkyKwm6Lu23PvMMHwAXqdfH57NEUmq75RIva1YfLDTuZyybo
+         nmvNNJNxW6eQVvPkoEmTKOAljjvH1BbQ71AZG/+s7MRLe/bmDe2I8G5g88mfiJEG+4wh
+         utVcT4/eSfN2qOjKOybWNF2hOfgRRYJYmzOr2x6oIDTKa9sRMReHxqBxy2r31foap7bG
+         0fIqsXjlYmbF98rf5yCSc0XtBS8XVW3yIsFemTKIaYNzME/CEfyCdH56T3p2aAppY9R7
+         Wviw==
+X-Gm-Message-State: AOAM531X0e/CWYOrKYYZd2fuDvUNIQgJeIuH8GFrxycC5j64LfFAUeGc
+        EFAVe3SJ3o40h+EpBOlOux+mYPgUIGPL9PV743cJcGEYIorA3R4oLC+DRa5hYwpjetMDdZ6XD34
+        L6RZuQrJ6Vl6PmVdVN8Mcf6Eh
+X-Received: by 2002:ae9:ea13:: with SMTP id f19mr48305844qkg.331.1594162255793;
+        Tue, 07 Jul 2020 15:50:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+fZbbr5VZat1rrRmd+D1Dar1PUsYOv9odYsqMkgw6s9ZuUOa/fKMkRQzzNbqSPEglj8MNYA==
+X-Received: by 2002:ae9:ea13:: with SMTP id f19mr48305824qkg.331.1594162255589;
+        Tue, 07 Jul 2020 15:50:55 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id j16sm26267642qtp.92.2020.07.07.15.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        peterx@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
         Will Deacon <will@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matt Turner <mattst88@gmail.com>, kernel-team@android.com,
-        Marco Elver <elver@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
- CLANG_LTO=y
-Message-ID: <20200707225122.GJ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200630173734.14057-1-will@kernel.org>
- <20200630173734.14057-19-will@kernel.org>
- <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
- <20200702072301.GA15963@willie-the-truck>
- <20200706160023.GB10992@arm.com>
- <20200706163455.GV9247@paulmck-ThinkPad-P72>
- <20200706170556.GE10992@arm.com>
- <20200706173628.GZ9247@paulmck-ThinkPad-P72>
- <20200707102915.GI10992@arm.com>
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+Subject: [PATCH v5 19/25] mm/sh: Use general page fault accounting
+Date:   Tue,  7 Jul 2020 18:50:15 -0400
+Message-Id: <20200707225021.200906-20-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200707225021.200906-1-peterx@redhat.com>
+References: <20200707225021.200906-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707102915.GI10992@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 11:29:15AM +0100, Dave Martin wrote:
-> On Mon, Jul 06, 2020 at 10:36:28AM -0700, Paul E. McKenney wrote:
-> > On Mon, Jul 06, 2020 at 06:05:57PM +0100, Dave Martin wrote:
+Use the general page fault accounting by passing regs into handle_mm_fault().
+It naturally solve the issue of multiple page fault accounting when page fault
+retry happened.
 
-[ . . . ]
+CC: Yoshinori Sato <ysato@users.sourceforge.jp>
+CC: Rich Felker <dalias@libc.org>
+CC: linux-sh@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/sh/mm/fault.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-> > > The underlying problem here seems to be that the necessary ordering
-> > > rule is not part of what passes for the C memory model prior to C11.
-> > > If we want to control the data flow, don't we have to wrap the entire
-> > > dereference in a macro?
-> > 
-> > Yes, exactly.  Because we are relying on things that are not guaranteed
-> > by the C memory model, we need to pay attention to the implementations.
-> > As I have said elsewhere, the price of control dependencies is eternal
-> > vigilance.
-> > 
-> > And this also applies, to a lesser extent, to address and data
-> > dependencies, which are also not well supported by the C standard.
-> > 
-> > There is one important case in which the C memory model -does- support
-> > control dependencies, and that is when the dependent write is a normal
-> > C-language write that is not involved in a data race.  In that case,
-> > if the compiler broke the control dependency, it might have introduced
-> > a data race, which it is forbidden to do.  However, this rule can also
-> > be broken when the compiler knows too much, as it might be able to prove
-> > that breaking the dependency won't introduce a data race.  In that case,
-> > according to the standard, it is free to break the dependency.
-> 
-> Which only matters because the C abstract machine may not match reality.
-> 
-> LTO has no bearing on the abstract machine though.
-> 
-> If specific compiler options etc. can be added to inhibit the
-> problematic optimisations, that would be ideal.  I guess that can't
-> happen overnight though.
+diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
+index 3c0a11827f7e..482668a2f6d3 100644
+--- a/arch/sh/mm/fault.c
++++ b/arch/sh/mm/fault.c
+@@ -482,22 +482,13 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
+ 	 * make sure we exit gracefully rather than endlessly redo
+ 	 * the fault.
+ 	 */
+-	fault = handle_mm_fault(vma, address, flags, NULL);
++	fault = handle_mm_fault(vma, address, flags, regs);
+ 
+ 	if (unlikely(fault & (VM_FAULT_RETRY | VM_FAULT_ERROR)))
+ 		if (mm_fault_error(regs, error_code, address, fault))
+ 			return;
+ 
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			tsk->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+-				      regs, address);
+-		} else {
+-			tsk->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+-				      regs, address);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			flags |= FAULT_FLAG_TRIED;
+ 
+-- 
+2.26.2
 
-Sadly, I must agree.
-
-> > > > > > We likely won't realise if/when this goes wrong, other than impossible to
-> > > > > > debug, subtle breakage that crops up seemingly randomly. Ideally, we'd be
-> > > > > > able to detect this sort of thing happening at build time, and perhaps
-> > > > > > even prevent it with compiler options or annotations, but none of that is
-> > > > > > close to being available and I'm keen to progress the LTO patches in the
-> > > > > > meantime because they are a requirement for CFI.
-> > > > > 
-> > > > > My concern was not so much why LTO makes things dangerous, as why !LTO
-> > > > > makes things safe...
-> > > > 
-> > > > Because ignorant compilers are safe compilers!  ;-)
-> > > 
-> > > AFAICT ignorance is no gurantee of ordering in general -- the compiler
-> > > is free to speculatively invent knowledge any place that the language
-> > > spec allows it to.  !LTO doesn't stop this happening.
-> > 
-> > Agreed, according to the standard, the compiler has great freedom.
-> > 
-> > We have two choices: (1) Restrict ourselves to live within the confines of
-> > the standard or (2) Pay continued close attention to the implementation.
-> > We have made different choices at different times, but for many ordering
-> > situations we have gone with door #2.
-> > 
-> > Me, I have been working to get the standard to better support our
-> > use case.  This is at best slow going.  But don't take my word for it,
-> > ask Will.
-> 
-> I can believe it.  They want to enable optimisations rather than prevent
-> them...
-
-Right in one!  ;-)
-
-> > > Hopefully some of the knowledge I invented in my reply is valid...
-> > 
-> > It is.  It is just that there are multiple valid strategies, and the
-> > Linux kernel is currently taking a mixed-strategy approach.
-> 
-> Ack.  The hope that there is a correct way to fix everything dies
-> hard ;)
-
-Either that, or one slowly degrades ones definition of "correct".  :-/
-
-> Life was cosier before I started trying to reason about language specs.
-
-Same here!
-
-							Thanx, Paul
