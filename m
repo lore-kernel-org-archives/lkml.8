@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4850C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B33020663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A7F20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135962;
-	bh=aWpgFlCBzK5h+/+1sHuWwv/hk8yVyQu8bgqP+H5I9mQ=;
+	s=default; t=1594135969;
+	bh=0qalr7sIiMTBZq9KLn36jOZE90c4K1KFip6Z3LVqhJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFTp5SkRZhTOmF98oXfWMnP6fkNBkpHaIAlrZEkbU5Kn+qB1N5vDBewG43U19/rTG
-	 SynpyYxsJRVrgYT7lU+u/F8FywdJyvJXKkPS13XQIHL7BaU/RjUEuOXmuDIL27LJa5
-	 BlXAwJLkwZuGeoB/9GG1jkdgvbCCoImmuWrDuZIo=
+	b=2KEei7AEEVLzjfWQbEY0xREM9oWiGtd0fD7mGzg5N30kAdX+YlAnf0mDNjZQNicuW
+	 SwAPbTbJzHD7NfqZrXVdUhrpbO2K2ZZJrPwZciXv93dGQA21GQxROuAonQeO2RxCey
+	 qTsD1aYsjaAWTyMXUVX/O236fD1SbG9gaTkwHTF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbgGGPcl (ORCPT
+        id S1730037AbgGGPcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34236 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgGGPVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:54 -0400
+        id S1728655AbgGGPVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC8032065D;
-        Tue,  7 Jul 2020 15:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6CB20663;
+        Tue,  7 Jul 2020 15:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135314;
-        bh=aWpgFlCBzK5h+/+1sHuWwv/hk8yVyQu8bgqP+H5I9mQ=;
+        s=default; t=1594135304;
+        bh=0qalr7sIiMTBZq9KLn36jOZE90c4K1KFip6Z3LVqhJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVV6JmpM6MyeIeWsEE276z06XvSXwwRaUkkqz5JmosPcN7btzlFWxlFv0VYUwpK/L
-         ptCjcH7QG/Z8Zj3x5giJIgFO1G2X6DzVtRUNSugdATcMXJK9v9g9KNIR5UUiwo4XBR
-         luJfBRjR+RGNWmvkL2P/ZHyxq8AZkeBevJ5KVftg=
+        b=wbzf1eMNwIMdzKJtgh6Zq5U0hUifGAWsWT9OWtgYGWW6j/Gk69N8rbfof3T+7cX1O
+         E1KE29hyHAEeljdOXXnye3KuwIeMawbJqnncsZjYQ5CezlbOsYkYt7a+DnRE2EUxHT
+         92wy0MO1uGNuTZADgc1ynLz1oRYo5LbiXwPFs10Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 57/65] drm/amdgpu: use %u rather than %d for sclk/mclk
-Date:   Tue,  7 Jul 2020 17:17:36 +0200
-Message-Id: <20200707145755.215913352@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>
+Subject: [PATCH 5.4 53/65] cifs: Fix the target file was deleted when rename failed.
+Date:   Tue,  7 Jul 2020 17:17:32 +0200
+Message-Id: <20200707145755.031759759@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -59,42 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-commit beaf10efca64ac824240838ab1f054dfbefab5e6 upstream.
+commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2 upstream.
 
-Large clock values may overflow and show up as negative.
+When xfstest generic/035, we found the target file was deleted
+if the rename return -EACESS.
 
-Reported by prOMiNd on IRC.
+In cifs_rename2, we unlink the positive target dentry if rename
+failed with EACESS or EEXIST, even if the target dentry is positived
+before rename. Then the existing file was deleted.
 
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+We should just delete the target file which created during the
+rename.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/inode.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -2101,7 +2101,7 @@ static ssize_t amdgpu_hwmon_show_sclk(st
- 	if (r)
- 		return r;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1791,6 +1791,7 @@ cifs_rename2(struct inode *source_dir, s
+ 	FILE_UNIX_BASIC_INFO *info_buf_target;
+ 	unsigned int xid;
+ 	int rc, tmprc;
++	bool new_target = d_really_is_negative(target_dentry);
  
--	return snprintf(buf, PAGE_SIZE, "%d\n", sclk * 10 * 1000);
-+	return snprintf(buf, PAGE_SIZE, "%u\n", sclk * 10 * 1000);
- }
+ 	if (flags & ~RENAME_NOREPLACE)
+ 		return -EINVAL;
+@@ -1867,8 +1868,13 @@ cifs_rename2(struct inode *source_dir, s
+ 	 */
  
- static ssize_t amdgpu_hwmon_show_sclk_label(struct device *dev,
-@@ -2131,7 +2131,7 @@ static ssize_t amdgpu_hwmon_show_mclk(st
- 	if (r)
- 		return r;
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", mclk * 10 * 1000);
-+	return snprintf(buf, PAGE_SIZE, "%u\n", mclk * 10 * 1000);
- }
- 
- static ssize_t amdgpu_hwmon_show_mclk_label(struct device *dev,
+ unlink_target:
+-	/* Try unlinking the target dentry if it's not negative */
+-	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
++	/*
++	 * If the target dentry was created during the rename, try
++	 * unlinking it if it's not negative
++	 */
++	if (new_target &&
++	    d_really_is_positive(target_dentry) &&
++	    (rc == -EACCES || rc == -EEXIST)) {
+ 		if (d_is_dir(target_dentry))
+ 			tmprc = cifs_rmdir(target_dir, target_dentry);
+ 		else
 
 
