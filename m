@@ -2,222 +2,124 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91061C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5899EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE1E20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34034206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XyYCfoXM"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TpFD7cKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgGGTem (ORCPT
+        id S1728183AbgGGTfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGTel (ORCPT
+        Tue, 7 Jul 2020 15:35:20 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:33185 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726805AbgGGTfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:34:41 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C3FC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 12:34:41 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l6so39295743qkc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xVt2YK5fz9oFkXUBAkGsBYne4Pd79jtYdQyRepPOP4E=;
-        b=XyYCfoXM1r+N8DwUWlmvDPLAfgaaXeOLfy8C4mRQZYkYvPG6MAbu06xw7R2KfFrbf2
-         QpPdS9/4cRY8r7GCHNdjwKLcFvlmDAW1zk8eI2EGfl27V61Wp2IgJZDOkB2Wtg9Yi+Lw
-         tpavHoYcteHAqlcmnGtrYxOIuFGQPDUReDUUC/KYUdABDh0KTVeT0xmR1nUk/BBdTQUK
-         Ahpn+v3vPLCsce+dJFsewCeqrtt5r2pSMiewHfeJ9MyW5qS7hstGyz9m9o9vk9JRx/EY
-         AKGQ1B/NO92bS7DUmzTH47kc23GpDWSIbymOwI5Y/VaqT2bd5zL199G52/+/3yv36PPF
-         ARHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xVt2YK5fz9oFkXUBAkGsBYne4Pd79jtYdQyRepPOP4E=;
-        b=fqPE94ZNEp3S8vTgVKrcXVc7LWYZxsydULojxo3zNyyzkStuxiyThpTxQcm3GvKZNg
-         2WvrFfHEtGZTG2iPbIJv2kFmepcnsetBKEozNllSahMfBhckTaduPPG5PS25aRT1B3Ih
-         Z//3qvJq/qYbbx3fKW/DidJccja14F1XvDM5nV1zjFUOXObRmc82/0PBsDIOfSSIi2g8
-         NVRRyGYAO3B7RYh4DqdoByJyCo0qy1gydaS5tSqHMw6LOuUEQu05RQpMr8GlrW9EyKwm
-         FvlqjLsyJ/QIiXAmLD/Pt29teD18aQAkHaori40SOgfnGy+UfzxPzYl7jpii8nRCq1F9
-         nc4g==
-X-Gm-Message-State: AOAM530hv/mQSQXWC3jeQxaBFxeCtxXA1ZwOoHCOJ2wdWwadjhPcKqTb
-        Xezsq4Q2IjguQLhZYzy6jJNoaektl6nDvQ==
-X-Google-Smtp-Source: ABdhPJxWnRfHlcB33n2WqGOiUJ8zUyEBAGcI/XOi8NRXNTu75pauGmptq+erFObPZ0B0CEYsYn8y+w==
-X-Received: by 2002:ae9:e809:: with SMTP id a9mr52315940qkg.315.1594150480267;
-        Tue, 07 Jul 2020 12:34:40 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l31sm22808139qtc.33.2020.07.07.12.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 12:34:39 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 15:34:37 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Uriel Guajardo <urielguajardo@google.com>
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        catalin.marinas@arm.com, akpm@linux-foundation.org,
-        rdunlap@infradead.org, masahiroy@kernel.org, 0x7f454c46@gmail.com,
-        krzk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] kunit: kmemleak integration
-Message-ID: <20200707193437.GB992@lca.pw>
-References: <20200706211309.3314644-1-urielguajardojr@gmail.com>
- <20200706211309.3314644-3-urielguajardojr@gmail.com>
- <20200706213905.GA1916@lca.pw>
- <CAG30EeeV0c8vQCdtqPBUNMiN--0K+j5xE+PMwW-godhX1qqwQg@mail.gmail.com>
- <20200706231730.GA2613@lca.pw>
- <CAG30EeeJL_LUpZdBYpi4TRhw8pzBxhSrVF-4j1g3z22-ZXTGrw@mail.gmail.com>
+        Tue, 7 Jul 2020 15:35:19 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id stN2jdgqMudYLstN5jGBlk; Tue, 07 Jul 2020 21:35:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1594150516; bh=UOPB1MiDbf2BNt8huZ0O3vNz4hwNVClrWHPizzmlF6U=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=TpFD7cKY6Hc/29uAfk2e1LQcauw9XVNA3Y0xQcxRHpGmKEESaSC+9GLnz7zNeOA5v
+         AIvLXXDIiH+oqOZ9Lsy34a3NlYZaCJrqLaBF85W8IkJcSdwp0JdIVdW9r6Un5XWnXw
+         sAuI1ILMgBDSQCssXNJXdqjddwAd4oAuMX6eZldxgKFJ3lTHiBC0C7QQwzWcdG2xK/
+         3OZvQCj7d9wtTKuD8LYkGt9wy4avseaSBe2my61TxZ8wysZqcEmNT67lTIxvpZDMRf
+         FHikiise4P4oBwYQ1uVCGDDPh8Qcov2bYhcV8d+6EuDOE5XMW+JyBNUXt8W7DiZ1ds
+         0Y2eURCC1bd3w==
+Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
+ sensor capture
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
+ <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
+ <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
+ <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
+Date:   Tue, 7 Jul 2020 21:35:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG30EeeJL_LUpZdBYpi4TRhw8pzBxhSrVF-4j1g3z22-ZXTGrw@mail.gmail.com>
+In-Reply-To: <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfEbKQ3MlxCTk+8kIzmdPmM9lsK3d2NWLAz8lS/LdblDynfg33nR4irTd97JEL1AAPqUF3Ry/Saa3Zn45IMAxwA7KFqlZ8xch9juTFQzB/8WZisg8h463
+ ByFDJTrjCK5kf6QSaNpQjcCNZ94yl+uaBRnWV/5J2UEclZBPnN3rQ9w3aNpSrxy4nkjQC6UDcSLrmm8PO/fHx7RRy/eKteBwJlyDT/EuUEK/1jcixSGARCeG
+ /3csdj7NYjZobrOgekpYl7XK7W2z6qso/HZJkCloxjFyjL6jrsihCVpzjFMDIvEwx1/yVY96GMcYI/WMNfBcKe+Oew5sAJji0BLV1zHu2RYOvem49Fzjbiq4
+ ubNz6unUPQTq05a7Wjp4pdF76pjqKaP/ctzW8f4dkCic7QdsU2SCDVtGlyaA+iSg5OSTM1qnFkn89rjudpUAoUPgAFGbd83cOYC3V9lX9gXjfrWorHgFaeL5
+ YXqMf+hH2kUah4wUjenKI8NLcX39C1erUNClXs3VH37tfr0ch6AHmwY2d/y266Jd7i3+aEdZP3Jz+I0ap/Q7k1rqFeVE3rkX5gwetNZixsYIkO0L3H5bIxk5
+ 6ylMQ3awwEoh6TzbxCcc26+YpHYOQLSzMjUTt4/GOT++a20CmOEUsmkxfc4cBIDuLqK931We0WC8jHSQ4iQvWJ2q
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:26:52PM -0500, Uriel Guajardo wrote:
-> On Mon, Jul 6, 2020 at 6:17 PM Qian Cai <cai@lca.pw> wrote:
-> >
-> > On Mon, Jul 06, 2020 at 05:48:21PM -0500, Uriel Guajardo wrote:
-> > > On Mon, Jul 6, 2020 at 4:39 PM Qian Cai <cai@lca.pw> wrote:
-> > > >
-> > > > On Mon, Jul 06, 2020 at 09:13:09PM +0000, Uriel Guajardo wrote:
-> > > > > From: Uriel Guajardo <urielguajardo@google.com>
-> > > > >
-> > > > > Integrate kmemleak into the KUnit testing framework.
-> > > > >
-> > > > > Kmemleak will now fail the currently running KUnit test case if it finds
-> > > > > any memory leaks.
-> > > > >
-> > > > > The minimum object age for reporting is set to 0 msecs so that leaks are
-> > > > > not ignored if the test case finishes too quickly.
-> > > > >
-> > > > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> > > > > ---
-> > > > >  include/linux/kmemleak.h | 11 +++++++++++
-> > > > >  lib/Kconfig.debug        | 26 ++++++++++++++++++++++++++
-> > > > >  lib/kunit/test.c         | 36 +++++++++++++++++++++++++++++++++++-
-> > > > >  mm/kmemleak.c            | 27 +++++++++++++++++++++------
-> > > > >  4 files changed, 93 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/include/linux/kmemleak.h b/include/linux/kmemleak.h
-> > > > > index 34684b2026ab..0da427934462 100644
-> > > > > --- a/include/linux/kmemleak.h
-> > > > > +++ b/include/linux/kmemleak.h
-> > > > > @@ -35,6 +35,10 @@ extern void kmemleak_free_part_phys(phys_addr_t phys, size_t size) __ref;
-> > > > >  extern void kmemleak_not_leak_phys(phys_addr_t phys) __ref;
-> > > > >  extern void kmemleak_ignore_phys(phys_addr_t phys) __ref;
-> > > > >
-> > > > > +extern ssize_t kmemleak_write(struct file *file,
-> > > > > +                           const char __user *user_buf,
-> > > > > +                           size_t size, loff_t *ppos);
-> > > > > +
-> > > > >  static inline void kmemleak_alloc_recursive(const void *ptr, size_t size,
-> > > > >                                           int min_count, slab_flags_t flags,
-> > > > >                                           gfp_t gfp)
-> > > > > @@ -120,6 +124,13 @@ static inline void kmemleak_ignore_phys(phys_addr_t phys)
-> > > > >  {
-> > > > >  }
-> > > > >
-> > > > > +static inline ssize_t kmemleak_write(struct file *file,
-> > > > > +                                  const char __user *user_buf,
-> > > > > +                                  size_t size, loff_t *ppos)
-> > > > > +{
-> > > > > +     return -1;
-> > > > > +}
-> > > > > +
-> > > > >  #endif       /* CONFIG_DEBUG_KMEMLEAK */
-> > > > >
-> > > > >  #endif       /* __KMEMLEAK_H */
-> > > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > > > > index 21d9c5f6e7ec..e9c492cb3f4d 100644
-> > > > > --- a/lib/Kconfig.debug
-> > > > > +++ b/lib/Kconfig.debug
-> > > > > @@ -602,6 +602,32 @@ config DEBUG_KMEMLEAK_MEM_POOL_SIZE
-> > > > >         fully initialised, this memory pool acts as an emergency one
-> > > > >         if slab allocations fail.
-> > > > >
-> > > > > +config DEBUG_KMEMLEAK_MAX_TRACE
-> > > > > +     int "Kmemleak stack trace length"
-> > > > > +     depends on DEBUG_KMEMLEAK
-> > > > > +     default 16
-> > > > > +
-> > > > > +config DEBUG_KMEMLEAK_MSECS_MIN_AGE
-> > > > > +     int "Minimum object age before reporting in msecs"
-> > > > > +     depends on DEBUG_KMEMLEAK
-> > > > > +     default 0 if KUNIT
-> > > > > +     default 5000
-> > > > > +
-> > > > > +config DEBUG_KMEMLEAK_SECS_FIRST_SCAN
-> > > > > +     int "Delay before first scan in secs"
-> > > > > +     depends on DEBUG_KMEMLEAK
-> > > > > +     default 60
-> > > > > +
-> > > > > +config DEBUG_KMEMLEAK_SECS_SCAN_WAIT
-> > > > > +     int "Delay before subsequent auto scans in secs"
-> > > > > +     depends on DEBUG_KMEMLEAK
-> > > > > +     default 600
-> > > > > +
-> > > > > +config DEBUG_KMEMLEAK_MAX_SCAN_SIZE
-> > > > > +     int "Maximum size of scanned block"
-> > > > > +     depends on DEBUG_KMEMLEAK
-> > > > > +     default 4096
-> > > > > +
-> > > >
-> > > > Why do you make those configurable? I don't see anywhere you make use of
-> > > > them except DEBUG_KMEMLEAK_MSECS_MIN_AGE?
-> > > >
-> > >
-> > > That's correct. Strictly speaking, only DEBUG_KMEMLEAK_MSECS_MIN_AGE
-> > > is used to set a default when KUnit is configured.
-> > >
-> > > There is no concrete reason why these other variables need to be
-> > > configurable. At the time of writing this, it seemed to make the most
-> > > sense to configure the other configuration options, given that I was
-> > > already going to make MSECS_MIN_AGE configurable. It can definitely be
-> > > taken out.
-> > >
-> > > > Even then, how setting DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 not giving too
-> > > > many false positives? Kmemleak simply does not work that instantly.
-> > > >
-> > >
-> > > I did not experience this issue, but I see your point.
-> > >
-> > > An alternative that I was thinking about -- and one that is not in
-> > > this patch -- is to wait DEBUG_KMEMLEAK_MSECS_MIN_AGE after each test
-> > > case in a test suite, while leaving kmemleak's default value as is. I
-> > > was hesitant to do this initially because many KUnit test cases run
-> > > quick, so this may result in a lot of time just waiting. But if we
-> > > leave it configurable, the user can change this as needed and deal
-> > > with the possible false positives.
-> >
-> > I doubt that is good idea. We don't really want people to start
-> > reporting those false positives to the MLs just because some kunit tests
-> > starts to flag them. It is wasting everyone's time. Reports from
-> > DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 are simply trustful. I don't think there
-> > is a way around. Kmemleak was designed to have a lot of
-> > waitings/re-scans to be useful not even mentioning kfree_rcu() etc until
-> > it is redesigned...
+On 07/07/2020 21:25, Sowjanya Komatineni wrote:
 > 
-> I agree with your statement about false positives.
-> Is your suggestion to not make MSECS_MIN_AGE configurable and have
-> KUnit wait after each test case? Or are you saying that this will not
-> work entirely?
-> It seems like kmemleak should be able to work in some fashion under
-> KUnit, since it has specific documentation over testing parts of code
-> (https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html#testing-specific-sections-with-kmemleak).
+> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
+>>
+>>
+>> On 7/6/20 2:10 AM, Hans Verkuil wrote:
+>>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
+>>>> +{
+>>>> +	struct tegra_vi_channel *chan;
+>>>> +
+>>>> +	list_for_each_entry(chan, &vi->vi_chans, list) {
+>>>> +		video_unregister_device(&chan->video);
+>>>> +		mutex_lock(&chan->video_lock);
+>>>> +		vb2_queue_release(&chan->queue);
+>>> No need for this since this is done in vb2_fop_release().
+>>>
+>>> In fact, vb2_queue_release should never be called by drivers. Just using
+>>> vb2_fop_release or __vb2_fop_release is sufficient.
+>>>
+>>> The confusion is due to the fact that the name suggests that vb2_queue_release
+>>> has to be balanced with vb2_queue_init, but that's not the case. Perhaps
+>>> vb2_queue_stop or something like that might be a better name. I'll have to
+>>> think about this since I see that a lot of drivers do this wrong.
+>>>
+>>>> +		mutex_unlock(&chan->video_lock);
+>>>> +		v4l2_async_notifier_unregister(&chan->notifier);
+>>>> +		v4l2_async_notifier_cleanup(&chan->notifier);
+>>>> +	}
+>>>> +}
+>>>> +
+>>
+>> vb2_queue_release() here is called to stop streaming a head before media links are removed in case of when driver unbind happens while
+>> userspace application holds video device with active streaming in progress.
+>>
+>> Without vb2_queue_release() here streaming will be active during the driver unbind and by the time vb2_queue_release() happens from
+>> vb2_fop_release(), async notifiers gets unregistered and media links will be removed which causes channel stop stream to crash as we can't
+>> retrieve sensor subdev  thru media entity pads to execute s_stream on subdev.
+>>
+> I think we don't need async notifier unbind. Currently media links are removed during unbind so during notifier unregister all subdevs gets
+> unbind and links removed.
+> 
+> media_device_unregister during video device release callback takes care of media entity unregister and removing links.
+> 
+> So, will try by removing notifier unbind along with removing vb2_queue_release during cleanup.
+> 
 
-It is going to be tough. It is normal that sometimes when there is a
-leak. It needs to rescan a few times to make sure it is stable.
-Sometimes, even the real leaks will take quite a while to show up.
+I actually wonder if vb2_queue_release shouldn't be called from video_unregister_device.
+
+I'll look into this tomorrow.
+
+Regards,
+
+	Hans
