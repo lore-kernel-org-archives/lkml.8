@@ -2,100 +2,104 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A41C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB785C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5AD8206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CED2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgGGXWu convert rfc822-to-8bit (ORCPT
+        id S1728947AbgGGX2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:22:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28074 "EHLO mga11.intel.com"
+        Tue, 7 Jul 2020 19:28:48 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42926 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbgGGXWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 19:22:50 -0400
-IronPort-SDR: lZkFD65E97SteZoRrFourilKfIAnP4jH0dtuN2c6Tzq/GMKJgQlOHeoHOhcTOdLYBgIKyY7Ma3
- 8Jkhce6t8AVQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="145815777"
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="145815777"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 16:22:49 -0700
-IronPort-SDR: /Zfn1dSq66WUIWinMNrhLgK16Eyc5Cyut4pmkp+9KyUvx+Ad50/AXjrPVPOKD6gGJCI9T2+q6l
- A7GFZhm5L/FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="315679889"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jul 2020 16:22:49 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Jul 2020 16:22:48 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.75]) with mapi id 14.03.0439.000;
- Tue, 7 Jul 2020 16:22:48 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Zhang, Cathy" <cathy.zhang@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Park, Kyung Min" <kyung.min.park@intel.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v2 0/4] Expose new features for intel processor
-Thread-Topic: [PATCH v2 0/4] Expose new features for intel processor
-Thread-Index: AQHWVAVd4KVPELN4skGDK6ti02I26aj8waJw
-Date:   Tue, 7 Jul 2020 23:22:47 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F68AC87@ORSMSX115.amr.corp.intel.com>
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
-In-Reply-To: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        id S1728201AbgGGX2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 19:28:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3EEC200988;
+        Wed,  8 Jul 2020 01:28:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 10CE220000C;
+        Wed,  8 Jul 2020 01:28:37 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 30F76402C8;
+        Wed,  8 Jul 2020 07:28:26 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, oleksandr.suvorov@toradex.com,
+        aford173@gmail.com, andreas@kemnade.info, hverkuil-cisco@xs4all.nl,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] gpio: mxc: Support module build
+Date:   Wed,  8 Jul 2020 07:25:21 +0800
+Message-Id: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Cathy Zhang (2):
->  x86: Expose SERIALIZE for supported cpuid
->  x86: Expose TSX Suspend Load Address Tracking
+Change config to tristate, add module device table, module author,
+description and license to support module build for i.MX GPIO driver.
 
-Having separate patches for adding the X86_FEATURE bits
-is fine (provides space in the commit log to document what each
-is for). In this case it also preserves the "Author" of each.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/gpio/Kconfig    | 2 +-
+ drivers/gpio/gpio-mxc.c | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-But you should combine patches 3 & 4 into a single patch. Making
-two patches to each add one bit to the KVM cpuid code just looks
-like you are trying to inflate your patch count.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 05e0801..4d09ec5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -397,7 +397,7 @@ config GPIO_MVEBU
+ 	select REGMAP_MMIO
+ 
+ config GPIO_MXC
+-	def_bool y
++	tristate "i.MX GPIO support"
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	select GPIO_GENERIC
+ 	select GENERIC_IRQ_CHIP
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 64278a4..643f4c55 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -15,6 +15,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/syscore_ops.h>
+@@ -158,6 +159,7 @@ static const struct of_device_id mxc_gpio_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7d-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, mxc_gpio_dt_ids);
+ 
+ /*
+  * MX2 has one interrupt *for all* gpio ports. The list is used
+@@ -604,3 +606,7 @@ static int __init gpio_mxc_init(void)
+ 	return platform_driver_register(&mxc_gpio_driver);
+ }
+ subsys_initcall(gpio_mxc_init);
++
++MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
++MODULE_DESCRIPTION("i.MX GPIO Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
 
--Tony
