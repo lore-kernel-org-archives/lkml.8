@@ -6,128 +6,69 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE45C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1EA9206E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD2F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:51:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLBEODPs"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="orQ7RC9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGGGvL (ORCPT
+        id S1728296AbgGGGvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:51:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37886 "EHLO
+        Tue, 7 Jul 2020 02:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgGGGvL (ORCPT
+        with ESMTP id S1727850AbgGGGvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:51:11 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5121C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:51:10 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id b205so8884881vkb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 23:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xXgupdXA13SemXIJULZNi3Uv4xboNIJK7PMX6qC0QAM=;
-        b=XLBEODPsuANKzyq+teqF8KFcLcyQLfahz0Cbk0bOxnw10eabiG8SZIM5UPlMDkKNG+
-         ZffTE4R8GqikDZ1cnYgeAf3ew08g0HMWDApK7ZTqjd/9L06kxQM6H8VzGzs05iVuFb8U
-         4eDDAYqA9BUTLedjHjS0fV5vWj8PSQAciEMesmJjyXW68IwLybBhKKKIc/P0Wt6HJ0AL
-         H2jeal7tde5hQUoAO2ve0H31JnOi4UnyqPCZRls76NrJtFAc0sfsOhZJwlcpOFsCaEVt
-         q3sd2lEn7c657YXvBsNysS3YT7QKL44EyXFdVx6IQ7EkaNGzmTqCv15rKel5lQwu/kwR
-         iNMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xXgupdXA13SemXIJULZNi3Uv4xboNIJK7PMX6qC0QAM=;
-        b=atnH5XlcG5d752rtZ2rL35ChDt7IF2BEguABYbyzB+/KT+eF0dYlO/7cUncpeDlAfb
-         WiVw3Vb/Mhyew5/zDA+ldWGJuYZLoz1X+3P011aVmJO2AxsEEBR+XjU5HDvwglvt6vVp
-         Q3NMB83tJ02ntD8XHimHoXgB1M+SJhm1b0JS3V+om+f9nCtcGEDSRoiaR0aeKVRSD+sT
-         xKtvH3B+TjF4aTszC6KTxycUulzEa2sV74F77WTu/QMxnmn3oDh87dUZAgcNH8lSTg6T
-         cWyupKsLQy6dOK7Mma0aX6floDZVGBDYXGgzpOKsOG62GYRzULrLA5wZzj68QpZuRtVg
-         Vz4A==
-X-Gm-Message-State: AOAM532kCWXg7ksCTcSPef5HlDHfI2z2wi8+HtJ2EqzZc77O8d6QrVv7
-        TdOSh/xZ5Cv9I9gy7bMW4LZ+XZdhMFXRfSYoUFgEtC1sUww=
-X-Google-Smtp-Source: ABdhPJx/ngRs8wf6AZDaf4csTy/f0/0edFzdOiOJtkv+XKUN71UxOD/yrZ+ZRDRk8Q7fcs2omZUbguAwqAfF52DWsAk=
-X-Received: by 2002:a05:6122:32f:: with SMTP id d15mr6663531vko.101.1594104670001;
- Mon, 06 Jul 2020 23:51:10 -0700 (PDT)
+        Tue, 7 Jul 2020 02:51:13 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CD7C061755;
+        Mon,  6 Jul 2020 23:51:13 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1Cl33l59z9sDX;
+        Tue,  7 Jul 2020 16:51:10 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1594104671;
+        bh=oOXgPAgmimC+5OE9S4VzNRBLBVUe1Z5iRWSG3SmsNnU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=orQ7RC9s4UsZ5RZwELngkGP6M3YB0Jzi4XZFS5CBwtWWfBtjZ9dcUYXpNqEirOwdp
+         dAMeUjR7JdOTAiGz9fr1Vs6i06qhy53bvEEZ7mIJc9QlnFSlR9q0R6z90spkoAGcMb
+         qhH3IjcYuJEwPexfZnCSt7DXJFeSQ/jjdsFuIuDjnKwJZwAWERgpPbq1GaJ1ClZ+3u
+         ioq9wspTfzA5OnDHoB1+oo0Y/zdpqx/O5SsJ88Rel32NI0kw74XYyGNeTHPE9mgYHZ
+         IzttUCk1UeHIhsfwql9id9OC71X+BQA5A86fPuKFkRl16yT7cBlrGO3z8b3Vi+VnNw
+         sZsIqfkFBwpXg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@ozlabs.org
+Cc:     linux-arch@vger.kernel.org, hughd@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] selftests/powerpc: Update the stack expansion test
+In-Reply-To: <8f6c5175-32ce-34a2-873d-b5fb3a5d7c4c@csgroup.eu>
+References: <20200703141327.1732550-1-mpe@ellerman.id.au> <20200703141327.1732550-3-mpe@ellerman.id.au> <8f6c5175-32ce-34a2-873d-b5fb3a5d7c4c@csgroup.eu>
+Date:   Tue, 07 Jul 2020 16:53:23 +1000
+Message-ID: <87eepn4xzw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200701124702.908713-1-lee.jones@linaro.org>
-In-Reply-To: <20200701124702.908713-1-lee.jones@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 7 Jul 2020 08:50:33 +0200
-Message-ID: <CAPDyKFqV6MamFv7-X4hXF39_OZ7UhVF6BQ12eH=+7GfwULTzQA@mail.gmail.com>
-Subject: Re: [PATCH 00/15] Clean-up MMC's W=1 build warnings
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 14:47, Lee Jones <lee.jones@linaro.org> wrote:
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Le 03/07/2020 =C3=A0 16:13, Michael Ellerman a =C3=A9crit=C2=A0:
+>> Update the stack expansion load/store test to take into account the
+>> new allowance of 4096 bytes below the stack pointer.
 >
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
+> [I didn't receive patch 2, don't know why, hence commenting patch 2 here.]
 >
-> After these patches are applied, the build system no longer
-> complains about any W=0 nor W=1 level warnings in drivers/mmc.
->
-> Hurrah!
->
-> Lee Jones (15):
->   mmc: core: quirks: Mark fixups as __maybe_unused
->   mmc: core: sdio_io: Provide description for sdio_set_host_pm_flags()'s
->     'flag' arg
->   mmc: core: regulator: Add missing documetation for 'mmc' and 'ios'
->   mmc: host: sdhci-s3c: Provide documentation for missing struct
->     properties
->   mmc: host: mtk-sd: Demote msdc_recheck_sdio_irq() function header
->   mmc: host: atmel-mci: Provide 2 new and correct 1 existing property
->     description
->   mmc: core: queue: Correct misspelling of 'mq' in mmc_init_request()'s
->     docs
->   mmc: host: dw_mmc-exynos: Add kerneldoc descriptions of for 'dev' args
->   mmc: host: rtsx_pci_sdmmc: Remove set but unused variable 'err'
->   mmc: host: rtsx_usb_sdmmc: Remove set but unused variable 'err'
->   mmc: host: sdhci-of-arasan: Correct formatting and provide missing
->     function arg(s)
->   mmc: host: sdhci-msm: Staticify local function
->     sdhci_msm_dump_vendor_regs()
->   mmc: host: sdhci-msm: Demote faux kerneldoc header down to basic
->     comment block
->   mmc: host: cqhci: Demote faux kerneldoc header down to basic comment
->     block
->   mmc: host: sdhci-iproc: Tell the compiler that ACPI functions may not
->     be used
->
->  drivers/mmc/core/queue.c           | 2 +-
->  drivers/mmc/core/quirks.h          | 6 +++---
->  drivers/mmc/core/regulator.c       | 2 ++
->  drivers/mmc/core/sdio_io.c         | 1 +
->  drivers/mmc/host/atmel-mci.c       | 4 +++-
->  drivers/mmc/host/cqhci.c           | 2 +-
->  drivers/mmc/host/dw_mmc-exynos.c   | 2 ++
->  drivers/mmc/host/mtk-sd.c          | 3 +--
->  drivers/mmc/host/rtsx_pci_sdmmc.c  | 4 ++--
->  drivers/mmc/host/rtsx_usb_sdmmc.c  | 5 ++---
->  drivers/mmc/host/sdhci-iproc.c     | 2 +-
->  drivers/mmc/host/sdhci-msm.c       | 4 ++--
->  drivers/mmc/host/sdhci-of-arasan.c | 3 ++-
->  drivers/mmc/host/sdhci-s3c.c       | 4 ++++
->  14 files changed, 27 insertions(+), 17 deletions(-)
->
-> --
-> 2.25.1
->
+> Shouldn't patch 2 carry a fixes tag and be Cced to stable for=20
+> application to previous kernel releases ?
 
-Applied for next (except patch12, which I already had a patch for), thanks!
+Yes it should.
 
-Kind regards
-Uffe
+cheers
