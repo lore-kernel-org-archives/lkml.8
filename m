@@ -2,336 +2,140 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A02C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0D920775
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134240;
-	bh=U1v8FiFfaAG1xHKJRh9l1If5Ky4VNWSIX5wh2EvBYAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I6bNKOUmYNBrZKHhYZceDE4g1bZ8DExY10PIszMU5RpnUCK6twYKpmROCMbFisTjy
-	 DP2Mk7w9etGOvNd5f5J0EmAGTQcxkQS0PgzP2I3bEuNa5veYh7tOMnQxPciogiUWA3
-	 EivKthN19Q37O9XrvzT3KG0bca9RhNdM0WLzm0W0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B04F206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="juPMhYDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgGGPD7 (ORCPT
+        id S1728179AbgGGPEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:03:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36563 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbgGGPD7 (ORCPT
+        Tue, 7 Jul 2020 11:04:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:41920 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgGGPEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:03:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 17so46826731wmo.1;
-        Tue, 07 Jul 2020 08:03:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+ePnKsXdtJIiVGFTS040+botc48WuZMYi76zUxj+BQ=;
-        b=j5SQf9VyayB7zEyCiSkpmZmDWwliY1CjUwuIyQvD+CKEpvrRzDNEL3sMOQsxjQDfGA
-         ImTXwOrjMstdNLx5jxPuFTDjX6qsq6xB8yYNuFB9Xu5nAoqenTNnqPTgLdFNxIFH77pp
-         Q/UtlRyELwgPDTc1bYmYJrXfmhVtOrdHYupgBscXmD6bUWVsbL33rgQasT7nMWBfw2Ya
-         91sUh4y2hMklKOh7fyla2m5cJ1+UbpnNpSp1hLjDH5HffL4XAtErAtPp9rwGRyMTZBIh
-         SF/u66dGeu3d2vWr3l327ZwtVAq71jEFdsDFPYjEQQz1tWTLkv0Q/WJgTm1Chtw0Rm9O
-         MQ4g==
-X-Gm-Message-State: AOAM5312VJrHNLmPX4OVjurl+wZZ5gV1dA7U97f6GiTKq8zRTACYfMa+
-        E8hQO3Uq8zBmdMiaObpDURYF8ytTtiC5Mk3ZdNI=
-X-Google-Smtp-Source: ABdhPJy8uOUcKRruQ530QKIET0Jzm7cGz/LfY0TABYgWSxmly7wFDc7TpzO3xgTuGXOmawqc+0/1cVIsmSCgbe5MJ58=
-X-Received: by 2002:a1c:7d56:: with SMTP id y83mr4919018wmc.154.1594134235720;
- Tue, 07 Jul 2020 08:03:55 -0700 (PDT)
+        Tue, 7 Jul 2020 11:04:40 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200707150438euoutp02a415f7276da239357e84cd734307dd95~fgK4sufLY0055300553euoutp02K
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:04:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200707150438euoutp02a415f7276da239357e84cd734307dd95~fgK4sufLY0055300553euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594134278;
+        bh=FTWBgSiQtF0ed1VCSck4DM2K0jkOrJ4+MQW7TYZuyB0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=juPMhYDQHFTkyTJ/BvUhMvGn8NbPIpEPi9sycWWyv7K3YIFsKwd64bIGPupJBD3y5
+         D45HdXR6PzKyBE2TMMwSTjumpzlNXFYkZonCpXQ0c0szpoRFj7y+i8+XFZTTZLsYeZ
+         7PNatz/Bm++6KQaA16mR3zS02znbFyczawMmpJRk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200707150438eucas1p2318735a3509334865cbbeacaef3acbed~fgK4Ti_H31374913749eucas1p2h;
+        Tue,  7 Jul 2020 15:04:38 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id A5.C4.06456.60F840F5; Tue,  7
+        Jul 2020 16:04:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200707150437eucas1p2c085b63bad068a32748d149579e67dbe~fgK4A9Kve1373413734eucas1p2k;
+        Tue,  7 Jul 2020 15:04:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200707150437eusmtrp2a81281ea1ec00732187da092a41d35c0~fgK4APMao1541015410eusmtrp2N;
+        Tue,  7 Jul 2020 15:04:37 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-bd-5f048f06c387
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 79.59.06017.50F840F5; Tue,  7
+        Jul 2020 16:04:37 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200707150436eusmtip20f381b51ddf04859b0b2a43db4fd1802~fgK2rCApt1489614896eusmtip2O;
+        Tue,  7 Jul 2020 15:04:36 +0000 (GMT)
+Subject: Re: [PATCH v7 07/36] drm: exynos: use common helper for a
+ scatterlist contiguity check
+From:   Andrzej Hajda <a.hajda@samsung.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org
+Message-ID: <1618dbcb-f17c-3713-2c98-487802f9d409@samsung.com>
+Date:   Tue, 7 Jul 2020 17:04:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702185344.913492689@goodmis.org> <20200702185704.092654084@goodmis.org>
-In-Reply-To: <20200702185704.092654084@goodmis.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 8 Jul 2020 00:03:44 +0900
-Message-ID: <CAM9d7cizjF+fbK7YzmsBDgrx__4YAOsmEq67D3sWET8FF+YdFA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/15] tools lib traceevent: Add interface for options
- to plugins
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8e25b060-2901-6d8d-f5ee-9f7cc0f02b77@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjuOzeP1uo4q71llI0I7eqoHyeMmdLlIAb1o34Yasc8OGlbtqOW
+        9WNiUZZ0HdISKYlMTdfK2zRFadTERlpmoWVNsUwj6TJnmWRtnkn+e973fZ73eZ+Pj8bl3eRS
+        Ol2fKRj0vFZJBRH1jonO9dQlIjly4ouMvdDRjrEPzFaS7fZ8pdiKyicYW9IaxY51D2Bs9eBr
+        kn35sJhizZ0tGGt5/C6AffTtA8maTSPUtnlc1Y0qxNnG+0nOVdCGcTW3jdzbqUGcM/WUIa6p
+        N5fiLtbeRZy7evmewISgramCNj1bMGxUHwzSfL64MqMPO37OtjgXFWPnUSANzGbIM1vI8yiI
+        ljPlCLqcblwqxhBMjnwKkAo3AmtDacCMpGrIgaRBGYKB3ya/5KuXZflJ+lghDA8X2t9TPkwx
+        EfCnpncaL2RqEZwq3OkT4EwhBoP1LbhvIGPU4KqbnLYgmFVwf+js9KJFTBJYR2yYxAmG9usf
+        CB8OZKLhucWEfBhnVoBttBiXsALyxipI6VRPADjy4yW8HSpNrbiEQ+BzW60/zjL423jT/xpG
+        cJWfnk4DTD6CuvuNfkEU9HX89iagvQYRYH24UWrHQM/UG+RrAzMfekaDpRPmw9X6a7jUlkH+
+        GbnEXgmuZ3X+hQoofe6hLiNl0axgRbPCFM0KU/TftwQRd5FCyBJ1aYKo0gvHNoi8TszSp204
+        dERXjbx/zTnV9qMBebpS7IihkXKeTMMTyXKSzxZzdHYENK5cKIt95kySy1L5nBOC4UiyIUsr
+        iHYUShNKhWzTrZFEOZPGZwqHBSFDMMxMMTpwaS7K6wt3RjT3400WY6WRfBX9q3l/Z6g77IXZ
+        Er9OkelQN8XFWDISWtJSkraJJ+0fsz/e+9OlWrs/fFdN203b097I1TVzC05axx3slajdRxUF
+        HUKCZkFOYmppWVgXqHckkwdM2n0HdXvr23eNEodit8w5lzM8LH53Ti5Rxd053P/DqCREDa9a
+        gxtE/h8gdCgWZwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xe7qs/SzxBtdbjSx6z51kstg4Yz2r
+        xZWv79ksVq4+ymSxYL+1xZcrD5ksNj2+xmpxedccNosZ5/cxWaw9cpfd4uCHJ6wWMya/ZHPg
+        8Vgzbw2jx/ZvD1g97ncfZ/LYvKTe4/a/x8wek28sZ/TYfbOBzaNvyypGj8+b5AI4o/RsivJL
+        S1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyXvUpFtxhqujc
+        LtbAOIepi5GTQ0LARGLNs2OMXYxcHEICSxklOta/ZYZIiEvsng9jC0v8udbFBmILCbxllHi8
+        tAzEFhZIlJh98zzYIDYBTYm/m2+ygQwSEdjCKPFsxWGwqcwC05kkbnb9YIVY8YtR4v2p02Bj
+        eQXsJO5v/c0OYrMIqEhseNbOCmKLCsRJLN8ynx2iRlDi5MwnLCA2p4C9xIW1kxlBbGYBM4l5
+        mx8yQ9jyEtvfzoGyxSWavqxkncAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5x
+        aV66XnJ+7iZGYCxvO/Zzyw7GrnfBhxgFOBiVeHgzElnihVgTy4orcw8xSnAwK4nwOp09HSfE
+        m5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cA0k1cSb2hqaG5haWhubG5sZqEkztshcDBGSCA9
+        sSQ1OzW1ILUIpo+Jg1OqgTHr1ruVyxr+Cy51qV5jEvvraQ7XT8dFyQaP2F5Y3Ymq6X1couun
+        r7jhcdGza7qMf90312Qv3fA6fFWca2IOQ8jjexc2Ld+x95rS29RTaT8TrG3DHG7q3v+p01X/
+        hjPGcJFQ98zoW/vedvzNKA9cstKikV+H4dy9u2kb67RZHu0SjiiYvm3mhXtKLMUZiYZazEXF
+        iQCoWcUo+wIAAA==
+X-CMS-MailID: 20200707150437eucas1p2c085b63bad068a32748d149579e67dbe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103657eucas1p24bff92408adbd4715130fb47595a6187
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103657eucas1p24bff92408adbd4715130fb47595a6187
+References: <20200619103636.11974-1-m.szyprowski@samsung.com>
+        <CGME20200619103657eucas1p24bff92408adbd4715130fb47595a6187@eucas1p2.samsung.com>
+        <20200619103636.11974-8-m.szyprowski@samsung.com>
+        <8e25b060-2901-6d8d-f5ee-9f7cc0f02b77@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 3:57 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+
+On 07.07.2020 11:35, Andrzej Hajda wrote:
+> Hi,
 >
-> From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
->
-> Add tep_plugin_add_option() and tep_plugin_print_options() to lib traceevent
-> library that allows plugins to have their own options. For example, the
-> function plugin by default does not print the parent, as it uses the parent
-> to do the indenting. The "parent" option is created by the function plugin
-> that will print the parent of the function like it does in the trace file.
->
-> The tep_plugin_print_options() will print out the list of options that a
-> plugin has defined.
->
-> Link: http://lore.kernel.org/linux-trace-devel/20190802110101.14759-3-tz.stoyanov@gmail.com
-> Link: http://lore.kernel.org/linux-trace-devel/20200625100516.365338-5-tz.stoyanov@gmail.com
->
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  tools/lib/traceevent/event-parse.h  |   2 +
->  tools/lib/traceevent/event-plugin.c | 172 ++++++++++++++++++++++++++++
->  2 files changed, 174 insertions(+)
->
-> diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-> index 776c7c24ee79..02c0438527de 100644
-> --- a/tools/lib/traceevent/event-parse.h
-> +++ b/tools/lib/traceevent/event-parse.h
-> @@ -406,7 +406,9 @@ char **tep_plugin_list_options(void);
->  void tep_plugin_free_options_list(char **list);
->  int tep_plugin_add_options(const char *name,
->                            struct tep_plugin_option *options);
-> +int tep_plugin_add_option(const char *name, const char *val);
->  void tep_plugin_remove_options(struct tep_plugin_option *options);
-> +void tep_plugin_print_options(struct trace_seq *s);
->  void tep_print_plugins(struct trace_seq *s,
->                         const char *prefix, const char *suffix,
->                         const struct tep_plugin_list *list);
-> diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-> index b53d9a53bcf9..e8f4329ba8e0 100644
-> --- a/tools/lib/traceevent/event-plugin.c
-> +++ b/tools/lib/traceevent/event-plugin.c
-> @@ -13,6 +13,7 @@
->  #include <sys/stat.h>
->  #include <unistd.h>
->  #include <dirent.h>
-> +#include <errno.h>
->  #include "event-parse.h"
->  #include "event-parse-local.h"
->  #include "event-utils.h"
-> @@ -247,6 +248,166 @@ void tep_plugin_remove_options(struct tep_plugin_option *options)
->         }
->  }
->
-> +static void parse_option_name(char **option, char **plugin)
-> +{
-> +       char *p;
-> +
-> +       *plugin = NULL;
-> +
-> +       if ((p = strstr(*option, ":"))) {
-> +               *plugin = *option;
-> +               *p = '\0';
-> +               *option = strdup(p + 1);
-> +               if (!*option)
-> +                       return;
+> On 19.06.2020 12:36, Marek Szyprowski wrote:
+>> Use common helper for checking the contiguity of the imported dma-buf.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-It needs to pass the error somehow..
+Just fixing my signature :)
 
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-> +       }
-> +}
-> +
-> +static struct tep_plugin_option *
-> +find_registered_option(const char *plugin, const char *option)
-> +{
-> +       struct registered_plugin_options *reg;
-> +       struct tep_plugin_option *op;
-> +       const char *op_plugin;
-> +
-> +       for (reg = registered_options; reg; reg = reg->next) {
-> +               for (op = reg->options; op->name; op++) {
-> +                       if (op->plugin_alias)
-> +                               op_plugin = op->plugin_alias;
-> +                       else
-> +                               op_plugin = op->file;
-> +
-> +                       if (plugin && strcmp(plugin, op_plugin) != 0)
-> +                               continue;
-> +                       if (strcmp(option, op->name) != 0)
-> +                               continue;
-> +
-> +                       return op;
-> +               }
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +static int process_option(const char *plugin, const char *option, const char *val)
-> +{
-> +       struct tep_plugin_option *op;
-> +
-> +       op = find_registered_option(plugin, option);
-> +       if (!op)
-> +               return 0;
-> +
-> +       return update_option_value(op, val);
-> +}
-> +
-> +/**
-> + * tep_plugin_add_option - add an option/val pair to set plugin options
-> + * @name: The name of the option (format: <plugin>:<option> or just <option>)
-> + * @val: (optiona) the value for the option
+Regards
+Andrzej
 
-Typo.
-
-> + *
-> + * Modify a plugin option. If @val is given than the value of the option
-> + * is set (note, some options just take a boolean, so @val must be either
-> + * "1" or "0" or "true" or "false").
-> + */
-> +int tep_plugin_add_option(const char *name, const char *val)
-> +{
-> +       struct trace_plugin_options *op;
-> +       char *option_str;
-> +       char *plugin;
-> +
-> +       option_str = strdup(name);
-> +       if (!option_str)
-> +               return -ENOMEM;
-> +
-> +       parse_option_name(&option_str, &plugin);
-> +
-> +       /* If the option exists, update the val */
-> +       for (op = trace_plugin_options; op; op = op->next) {
-> +               /* Both must be NULL or not NULL */
-> +               if ((!plugin || !op->plugin) && plugin != op->plugin)
-> +                       continue;
-> +               if (plugin && strcmp(plugin, op->plugin) != 0)
-> +                       continue;
-> +               if (strcmp(op->option, option_str) != 0)
-> +                       continue;
-> +
-> +               /* update option */
-> +               free(op->value);
-> +               if (val) {
-> +                       op->value = strdup(val);
-> +                       if (!op->value)
-> +                               goto out_free;
-> +               } else
-> +                       op->value = NULL;
-> +
-> +               /* plugin and option_str don't get freed at the end */
-> +               free(plugin);
-> +               free(option_str);
-> +
-> +               plugin = op->plugin;
-> +               option_str = op->option;
-> +               break;
-> +       }
-> +
-> +       /* If not found, create */
-> +       if (!op) {
-> +               op = malloc(sizeof(*op));
-> +               if (!op)
-> +                       return -ENOMEM;
-
-goto out_free ?
-
-> +               memset(op, 0, sizeof(*op));
-> +               op->next = trace_plugin_options;
-> +               trace_plugin_options = op;
-
-I think it's better doing this after setting the value below..
-
-> +
-> +               op->plugin = plugin;
-> +               op->option = option_str;
-> +
-> +               if (val) {
-> +                       op->value = strdup(val);
-> +                       if (!op->value)
-> +                               goto out_free;
-
-The option_str will be freed and op will have a dangling pointer..
-
-> +               }
-> +       }
-> +
-> +       return process_option(plugin, option_str, val);
-> + out_free:
-> +       free(option_str);
-
-Why not free plugin too?
-
-Thanks
-Namhyung
-
-
-> +       return -ENOMEM;
-> +}
-> +
-> +static void print_op_data(struct trace_seq *s, const char *name,
-> +                         const char *op)
-> +{
-> +       if (op)
-> +               trace_seq_printf(s, "%8s:\t%s\n", name, op);
-> +}
-> +
-> +/**
-> + * tep_plugin_print_options - print out the registered plugin options
-> + * @s: The trace_seq descriptor to write the plugin options into
-> + *
-> + * Writes a list of options into trace_seq @s.
-> + */
-> +void tep_plugin_print_options(struct trace_seq *s)
-> +{
-> +       struct registered_plugin_options *reg;
-> +       struct tep_plugin_option *op;
-> +
-> +       for (reg = registered_options; reg; reg = reg->next) {
-> +               if (reg != registered_options)
-> +                       trace_seq_printf(s, "============\n");
-> +               for (op = reg->options; op->name; op++) {
-> +                       if (op != reg->options)
-> +                               trace_seq_printf(s, "------------\n");
-> +                       print_op_data(s, "file", op->file);
-> +                       print_op_data(s, "plugin", op->plugin_alias);
-> +                       print_op_data(s, "option", op->name);
-> +                       print_op_data(s, "desc", op->description);
-> +                       print_op_data(s, "value", op->value);
-> +                       trace_seq_printf(s, "%8s:\t%d\n", "set", op->set);
-> +               }
-> +       }
-> +}
-> +
->  /**
->   * tep_print_plugins - print out the list of plugins loaded
->   * @s: the trace_seq descripter to write to
-> @@ -273,6 +434,7 @@ load_plugin(struct tep_handle *tep, const char *path,
->             const char *file, void *data)
->  {
->         struct tep_plugin_list **plugin_list = data;
-> +       struct tep_plugin_option *options;
->         tep_plugin_load_func func;
->         struct tep_plugin_list *list;
->         const char *alias;
-> @@ -297,6 +459,16 @@ load_plugin(struct tep_handle *tep, const char *path,
->         if (!alias)
->                 alias = file;
->
-> +       options = dlsym(handle, TEP_PLUGIN_OPTIONS_NAME);
-> +       if (options) {
-> +               while (options->name) {
-> +                       ret = update_option(alias, options);
-> +                       if (ret < 0)
-> +                               goto out_free;
-> +                       options++;
-> +               }
-> +       }
-> +
->         func = dlsym(handle, TEP_PLUGIN_LOADER_NAME);
->         if (!func) {
->                 warning("could not find func '%s' in plugin '%s'\n%s\n",
-> --
-> 2.26.2
->
->
