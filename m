@@ -2,66 +2,89 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD881C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD808C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C086D2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972BF206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgGGKeo (ORCPT
+        id S1728006AbgGGKgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:34:44 -0400
-Received: from verein.lst.de ([213.95.11.211]:58212 "EHLO verein.lst.de"
+        Tue, 7 Jul 2020 06:36:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:38584 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgGGKen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:34:43 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C93F068B05; Tue,  7 Jul 2020 12:34:39 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 12:34:39 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Song Liu <song@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/16] init: remove the bstat helper
-Message-ID: <20200707103439.GA2812@lst.de>
-References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-2-hch@lst.de> <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com>
+        id S1725874AbgGGKga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:36:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 575EEC0A;
+        Tue,  7 Jul 2020 03:36:30 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 089BC3F71E;
+        Tue,  7 Jul 2020 03:36:28 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 11:36:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] PCI: qcom: Fix runtime PM imbalance on error
+Message-ID: <20200707103617.GA14581@e121166-lin.cambridge.arm.com>
+References: <20200707055000.9453-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200707055000.9453-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 04:25:41PM -0700, Song Liu wrote:
-> Hi Christoph,
+On Tue, Jul 07, 2020 at 01:50:00PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
 > 
-> On Mon, Jun 15, 2020 at 5:53 AM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > The only caller of the bstat function becomes cleaner and simpler when
-> > open coding the function.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
 > 
-> Thanks for the set. md parts of the set look good to me.
+> Changelog:
 > 
-> How should we route this set, as it touches multiple subsystems?
+> v2: - Remove redundant brackets.
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-Good question as there is no really applicable tree.  One option
-would the vfs tree as it toucheѕ some VFS stuff, and the follow on
-series that depends on it is all about VFS bits.  Alternatively I
-could set up a tree just for these bits.  The important bit is that
-it doesn't go into the -mm tree as the usual catchall, as I have
-more stuff that depends on it and requires a git tree.
+Applied to pci/runtime-pm, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 138e1a2d21cc..12abdfbff5ca 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1339,10 +1339,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  
+>  	pm_runtime_enable(dev);
+>  	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0) {
+> -		pm_runtime_disable(dev);
+> -		return ret;
+> -	}
+> +	if (ret < 0)
+> +		goto err_pm_runtime_put;
+>  
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+> -- 
+> 2.17.1
+> 
