@@ -2,112 +2,92 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DD9C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 520682080D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655D42080D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgGGPyT (ORCPT
+        id S1728713AbgGGPyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:54:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53134 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728029AbgGGPyR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:54:17 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067FWtcB066589;
-        Tue, 7 Jul 2020 11:53:54 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324s7163h6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 11:53:54 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067FeF8Y016662;
-        Tue, 7 Jul 2020 15:53:52 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 322hd7uk99-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 15:53:52 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067Fro4R65732814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 15:53:50 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E73364C050;
-        Tue,  7 Jul 2020 15:53:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8CF24C04A;
-        Tue,  7 Jul 2020 15:53:47 +0000 (GMT)
-Received: from [9.85.70.197] (unknown [9.85.70.197])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 15:53:47 +0000 (GMT)
-Subject: Re: [PATCH 2/2] selftest/cpuidle: Add support for cpuidle latency
- measurement
-To:     Shuah Khan <skhan@linuxfoundation.org>, rjw@rjwysocki.net,
-        daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, srivatsa@csail.mit.edu,
-        shuah@kernel.org, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20200707152917.10652-1-psampat@linux.ibm.com>
- <20200707152917.10652-3-psampat@linux.ibm.com>
- <bf016b30-18e6-69fd-afc5-5319ebd6a890@linuxfoundation.org>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Message-ID: <77f3c7a1-bfb0-d6ff-67e1-1854e390016e@linux.ibm.com>
-Date:   Tue, 7 Jul 2020 21:23:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 11:54:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54716 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728029AbgGGPya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:54:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A7D85AC9F;
+        Tue,  7 Jul 2020 15:54:29 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH] brcmfmac: set timeout value when configuring power save
+Date:   Tue,  7 Jul 2020 17:54:10 +0200
+Message-Id: <20200707155410.12123-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <bf016b30-18e6-69fd-afc5-5319ebd6a890@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_08:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- malwarescore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- cotscore=-2147483648 impostorscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007070113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[..snip..]
->> +
->> +ins_mod()
->> +{
->> +    if [ ! -f "$MODULE" ]; then
->> +        printf "$MODULE module does not exist. Exitting\n"
->> +        exit 2
->
-> Please use ksft_skip code to indicate the test is being skipped.
->
-Sure thing I'll use ksft_skip exit code instead.
->> +    fi
->> +    printf "Inserting $MODULE module\n\n"
->> +    insmod $MODULE
->> +    if [ $? != 0 ]; then
->> +        printf "Insmod $MODULE failed\n"
->> +        exit 2
->
-> This is fine since you expect to be able to load the module.
->
-Thanks for the review.
-Pratik
+Set the timeout value as per cfg80211's set_power_mgmt() request. If the
+requested value value is left undefined we set it to 2 seconds, the
+maximum supported value.
 
-[..snip..]
->>
->
-> thanks,
-> -- Shuah
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+
+Note: I got the 2 seconds value from the Raspberry Pi downstream kernel.
+
+ .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index a757abd7a599..15578c6e87cd 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -84,6 +84,8 @@
+ 
+ #define BRCMF_ND_INFO_TIMEOUT		msecs_to_jiffies(2000)
+ 
++#define BRCMF_PS_MAX_TIMEOUT_MS		2000
++
+ #define BRCMF_ASSOC_PARAMS_FIXED_SIZE \
+ 	(sizeof(struct brcmf_assoc_params_le) - sizeof(u16))
+ 
+@@ -2941,6 +2943,14 @@ brcmf_cfg80211_set_power_mgmt(struct wiphy *wiphy, struct net_device *ndev,
+ 		else
+ 			bphy_err(drvr, "error (%d)\n", err);
+ 	}
++
++	if ((u32)timeout > BRCMF_PS_MAX_TIMEOUT_MS)
++		timeout = BRCMF_PS_MAX_TIMEOUT_MS;
++
++	err = brcmf_fil_iovar_int_set(ifp, "pm2_sleep_ret", timeout);
++	if (err)
++		bphy_err(drvr, "Unable to set pm timeout, (%d)\n", err);
++
+ done:
+ 	brcmf_dbg(TRACE, "Exit\n");
+ 	return err;
+-- 
+2.27.0
 
