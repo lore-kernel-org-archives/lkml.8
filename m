@@ -2,128 +2,84 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B2920663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gP+Wl4DJ"
+	by mail.kernel.org (Postfix) with ESMTP id DB04320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGGDIi (ORCPT
+        id S1728133AbgGGDJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgGGDIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:08:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3C9C08C5DF
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 20:08:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x9so2484901plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 20:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mAgioibrvE891f5K7HmCJlPOrtHJXNuC1DkC4uszNXM=;
-        b=gP+Wl4DJKDJ3UySQvm6ehWCx/RKB143fnyHUuQ0t9BRhhXM335BMaeWAeNXiPHFS+A
-         yuJXG+rXHT/me7lsV8JRFhJGr0PHF+YCM9CfQH6E2adRJBk43IvCMRwvvBVl3/3Ixm3I
-         fq54xhOeSkABkDAJr2DPslruFRUcT0nLWUjG0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mAgioibrvE891f5K7HmCJlPOrtHJXNuC1DkC4uszNXM=;
-        b=KdeoUCMa7LZpHiSUzAiIveErV3IQxlqpzExKNA5qs4MevA3+pDTg5RIdUYBnjDLvtZ
-         ZvsE+h/shmMCyFGgUuoE9x231/WoOSUadCSpizQokF1J5ebUgQEtJkvvD/a7z5TL5Bfa
-         uN/2sCcV6bpTNrBhV5uAbjRUxZeNSF2uiJ8sUE1cv4l+UJeddvQr3rfxQZYHTSPr+zK6
-         QeFx0yMEDfArj9h+nRcT5CRUnCUvvdkrZlzimcML2yUexFvah1iKoTc+Uwz2/mTtr7Hl
-         h4wGq+z52MuxNgePyYNO3uB+ZMqJF1DVvh/jO6UUryOaLp/erVFz0qFKP9WHMOc5ofAX
-         H3+A==
-X-Gm-Message-State: AOAM533BhKTUENW3fHeUg/sR7bRVsTLjkQ1aOk2U1BNYhgz7TQCsXnAu
-        CKDLEhW0zoHGevx1ATiw9f6ZSg==
-X-Google-Smtp-Source: ABdhPJy83Oe1nEfdDuQGPzOU8w+tiZ5G3NUxNgvI9H4y2E5D1RYyMkaPmU7mTa1I6i1BJx5hBV9wHA==
-X-Received: by 2002:a17:902:b204:: with SMTP id t4mr45161895plr.132.1594091317238;
-        Mon, 06 Jul 2020 20:08:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f14sm20750527pgj.62.2020.07.06.20.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 20:08:36 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 20:08:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v10 9/9] ima: add FIRMWARE_PARTIAL_READ support
-Message-ID: <202007061950.F6B3D9E6A@keescook>
-References: <20200706232309.12010-1-scott.branden@broadcom.com>
- <20200706232309.12010-10-scott.branden@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706232309.12010-10-scott.branden@broadcom.com>
+        Mon, 6 Jul 2020 23:09:16 -0400
+Received: from smtp25.cstnet.cn ([159.226.251.25]:56310 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726961AbgGGDJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:09:16 -0400
+Received: from ubuntu.localdomain (unknown [124.16.136.99])
+        by APP-05 (Coremail) with SMTP id zQCowAA3hSRR5wNfQg+nAw--.53614S2;
+        Tue, 07 Jul 2020 11:09:06 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] input: misc: remove needless check before usb_free_coherent()
+Date:   Tue,  7 Jul 2020 11:09:05 +0800
+Message-Id: <20200707030905.3123-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: zQCowAA3hSRR5wNfQg+nAw--.53614S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWrZw4UGr47GFWDGr4kZwb_yoWkXrXEv3
+        yUuF9xuryq9F4Ykr4UKwnxZr95tr4I9ws7urn8tFW5XFWIg3s0vr1UXFZ0yw4DXa9rWFW5
+        t3s2grWFkw4rWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb28YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r48MxAIw28I
+        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+        87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jxXocUUUUU=
+X-Originating-IP: [124.16.136.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwIKA102YlrYZQAAsi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:23:09PM -0700, Scott Branden wrote:
-> Add FIRMWARE_PARTIAL_READ support for integrity
-> measurement on partial reads of firmware files.
+usb_free_coherent() is safe with NULL addr and this check is
+not required.
 
-Hi,
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/input/misc/cm109.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Several versions ago I'd suggested that the LSM infrastructure handle
-the "full read" semantics so that individual LSMs don't need to each
-duplicate the same efforts. As it happens, only IMA is impacted (SELinux
-ignores everything except modules, and LoadPin only cares about origin
-not contents).
-
-Next is the problem that enum kernel_read_file_id is an object
-TYPE enum, not a HOW enum. (And it seems I missed the addition of
-READING_FIRMWARE_PREALLOC_BUFFER, which may share a similar problem.)
-That it's a partial read doesn't change _what_ you're reading: that's an
-internal API detail. What happens when I attempt to do a partial read of
-a kexec image? I'll use kernel_pread_file() and pass READING_KEXEC_IMAGE,
-but the LSMs will have no idea it's a partial read.
-
-Finally, what keeps the contents of the file from changing between the
-first call (which IMA will read the entire file for) and the next reads
-which will bypass IMA? I'd suggested that the open file must have writes
-disabled on it (as execve() does).
-
-So, please redesign this:
-- do not add an enum
-- make the file unwritable for the life of having the handle open
-- make the "full read" happen as part of the first partial read so the
-  LSMs don't have to reimplement everything
-
--Kees
-
+diff --git a/drivers/input/misc/cm109.c b/drivers/input/misc/cm109.c
+index c09b9628ad34..e413801f0491 100644
+--- a/drivers/input/misc/cm109.c
++++ b/drivers/input/misc/cm109.c
+@@ -663,12 +663,8 @@ static const struct usb_device_id cm109_usb_table[] = {
+ static void cm109_usb_cleanup(struct cm109_dev *dev)
+ {
+ 	kfree(dev->ctl_req);
+-	if (dev->ctl_data)
+-		usb_free_coherent(dev->udev, USB_PKT_LEN,
+-				  dev->ctl_data, dev->ctl_dma);
+-	if (dev->irq_data)
+-		usb_free_coherent(dev->udev, USB_PKT_LEN,
+-				  dev->irq_data, dev->irq_dma);
++	usb_free_coherent(dev->udev, USB_PKT_LEN, dev->ctl_data, dev->ctl_dma);
++	usb_free_coherent(dev->udev, USB_PKT_LEN, dev->irq_data, dev->irq_dma);
+ 
+ 	usb_free_urb(dev->urb_irq);	/* parameter validation in core/urb */
+ 	usb_free_urb(dev->urb_ctl);	/* parameter validation in core/urb */
 -- 
-Kees Cook
+2.17.1
+
