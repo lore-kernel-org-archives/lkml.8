@@ -2,112 +2,172 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD166C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A92B206E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDE920720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JUlGvPcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgGGTQv (ORCPT
+        id S1728831AbgGGTQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Jul 2020 15:16:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27603 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728777AbgGGTQv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 15:16:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:5637 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728765AbgGGTQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:16:48 -0400
-IronPort-SDR: 6e7S4q1D08GVjPfiCeLpiuMApsxKkbeRiqZVj+PXD657wxirBBpY1/yB79aEb2tnmWNEsUj30c
- BRLeDQ4decsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165753023"
-X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="165753023"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:48 -0700
-IronPort-SDR: km60dOIGm5xcgKnAlBr+qZBwznoVojTY5p/0SwipIgZzmE9WsSpzXZBrTPO6k1r2aF5rFRVIfA
- Ch+yd3D9xIEg==
-X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="388601674"
-Received: from mrtorger-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.77.62])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:46 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>,
-        Mihai Serban <mihai.serban@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 10/10] ASoC: codecs: ak4458: Remove set but never checked variable 'ret'
-Date:   Tue,  7 Jul 2020 14:16:15 -0500
-Message-Id: <20200707191615.98296-11-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707191615.98296-1-pierre-louis.bossart@linux.intel.com>
-References: <20200707191615.98296-1-pierre-louis.bossart@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594149409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=bRhrqkREzp0r3NeHnhZi/lkFWagM7LgdiEAL4cl4rAI=;
+        b=JUlGvPcrzzWGAbXYTEn5d1DYjWIvdxz2cJdl6nHUcqUWvBy3JaJSKc7h+HoPUzRKHXJlNA
+        p6uOhpQ+I8GCxtAYU33Uk0L26ofU1005FJFjLcIxatBRs6b6xbgyzkUSqccAfarkYoHc3e
+        D7Q0xOHRwhiPZxFJGuN6aGnhKmdVoEk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-g_1x2jlQPCqcbYUnqS7Vyw-1; Tue, 07 Jul 2020 15:16:44 -0400
+X-MC-Unique: g_1x2jlQPCqcbYUnqS7Vyw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68E27107ACCA;
+        Tue,  7 Jul 2020 19:16:43 +0000 (UTC)
+Received: from llong.com (ovpn-118-81.rdu2.redhat.com [10.10.118.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F3F1CC0067;
+        Tue,  7 Jul 2020 19:16:36 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Date:   Tue,  7 Jul 2020 15:16:29 -0400
+Message-Id: <20200707191629.13911-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+Depending on the workloads, the following circular locking dependency
+warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+lock) may show up:
 
-Looks as though the result of snd_soc_update_bits() has never been checked.
+======================================================
+WARNING: possible circular locking dependency detected
+5.0.0-rc1+ #60 Tainted: G        W
+------------------------------------------------------
+fsfreeze/4346 is trying to acquire lock:
+0000000026f1d784 (fs_reclaim){+.+.}, at:
+fs_reclaim_acquire.part.19+0x5/0x30
 
-Fixes the following W=1 kernel build warning(s):
+but task is already holding lock:
+0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
 
- sound/soc/codecs/ak4458.c: In function ‘ak4458_set_dai_mute’:
- sound/soc/codecs/ak4458.c:408:16: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+which lock already depends on the new lock.
+  :
+ Possible unsafe locking scenario:
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
-Cc: Mihai Serban <mihai.serban@nxp.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_internal);
+                               lock(fs_reclaim);
+                               lock(sb_internal);
+  lock(fs_reclaim);
+
+ *** DEADLOCK ***
+
+4 locks held by fsfreeze/4346:
+ #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+ #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+ #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+ #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+
+stack backtrace:
+Call Trace:
+ dump_stack+0xe0/0x19a
+ print_circular_bug.isra.10.cold.34+0x2f4/0x435
+ check_prev_add.constprop.19+0xca1/0x15f0
+ validate_chain.isra.14+0x11af/0x3b50
+ __lock_acquire+0x728/0x1200
+ lock_acquire+0x269/0x5a0
+ fs_reclaim_acquire.part.19+0x29/0x30
+ fs_reclaim_acquire+0x19/0x20
+ kmem_cache_alloc+0x3e/0x3f0
+ kmem_zone_alloc+0x79/0x150
+ xfs_trans_alloc+0xfa/0x9d0
+ xfs_sync_sb+0x86/0x170
+ xfs_log_sbcount+0x10f/0x140
+ xfs_quiesce_attr+0x134/0x270
+ xfs_fs_freeze+0x4a/0x70
+ freeze_super+0x1af/0x290
+ do_vfs_ioctl+0xedc/0x16c0
+ ksys_ioctl+0x41/0x80
+ __x64_sys_ioctl+0x73/0xa9
+ do_syscall_64+0x18f/0xd23
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This is a false positive as all the dirty pages are flushed out before
+the filesystem can be frozen.
+
+One way to avoid this splat is to add GFP_NOFS to the affected allocation
+calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
+This shouldn't matter unless the system is really running out of memory.
+In that particular case, the filesystem freeze operation may fail while
+it was succeeding previously.
+
+Without this patch, the command sequence below will show that the lock
+dependency chain sb_internal -> fs_reclaim exists.
+
+ # fsfreeze -f /home
+ # fsfreeze --unfreeze /home
+ # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+
+After applying the patch, such sb_internal -> fs_reclaim lock dependency
+chain can no longer be found. Because of that, the locking dependency
+warning will not be shown.
+
+Suggested-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- sound/soc/codecs/ak4458.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_super.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index f180cb5dfe4f..39ae089dcd1d 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -405,7 +405,7 @@ static int ak4458_set_dai_mute(struct snd_soc_dai *dai, int mute)
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..0797a96b83d6 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -913,11 +913,21 @@ xfs_fs_freeze(
+ 	struct super_block	*sb)
  {
- 	struct snd_soc_component *component = dai->component;
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
--	int nfs, ndt, ret, reg;
-+	int nfs, ndt, reg;
- 	int ats;
+ 	struct xfs_mount	*mp = XFS_M(sb);
++	unsigned int		flags;
++	int			ret;
  
- 	nfs = ak4458->fs;
-@@ -416,14 +416,14 @@ static int ak4458_set_dai_mute(struct snd_soc_dai *dai, int mute)
- 	ndt = att_speed[ats] / (nfs / 1000);
++	/*
++	 * The filesystem is now frozen far enough that memory reclaim
++	 * cannot safely operate on the filesystem. Hence we need to
++	 * set a GFP_NOFS context here to avoid recursion deadlocks.
++	 */
++	flags = memalloc_nofs_save();
+ 	xfs_stop_block_reaping(mp);
+ 	xfs_save_resvblks(mp);
+ 	xfs_quiesce_attr(mp);
+-	return xfs_sync_sb(mp, true);
++	ret = xfs_sync_sb(mp, true);
++	memalloc_nofs_restore(flags);
++	return ret;
+ }
  
- 	if (mute) {
--		ret = snd_soc_component_update_bits(component, AK4458_01_CONTROL2,  0x01, 1);
-+		snd_soc_component_update_bits(component, AK4458_01_CONTROL2,  0x01, 1);
- 		mdelay(ndt);
- 		if (ak4458->mute_gpiod)
- 			gpiod_set_value_cansleep(ak4458->mute_gpiod, 1);
- 	} else {
- 		if (ak4458->mute_gpiod)
- 			gpiod_set_value_cansleep(ak4458->mute_gpiod, 0);
--		ret = snd_soc_component_update_bits(component, AK4458_01_CONTROL2, 0x01, 0);
-+		snd_soc_component_update_bits(component, AK4458_01_CONTROL2, 0x01, 0);
- 		mdelay(ndt);
- 	}
- 
+ STATIC int
 -- 
-2.25.1
+2.18.1
 
