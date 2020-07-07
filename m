@@ -2,161 +2,130 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3075A204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135835;
-	bh=2ZNNi2geWKQy6z4LM6BHlQI2VVnnJCfcD3MR22KGryc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEALM9IVukRvNW4wnKxDV58ofNSQaNmyZVOdOWd3JS/ZI3VQhI89FAke9vX5uOmBM
-	 LOvc9I3mQVPA7N63v7FAWlFQ3de7QUgdrTa6x4O7k7KEWQwW19NAfMJsvDqNUmZ1wb
-	 IWRqcTO8VNmyXZ7CIR8Ht6NB1juDzcqPud9gnpCk=
+	by mail.kernel.org (Postfix) with ESMTP id BD43B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgGGPac (ORCPT
+        id S1730230AbgGGPag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbgGGPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729592AbgGGPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:10 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD74207D0;
-        Tue,  7 Jul 2020 15:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135452;
-        bh=2ZNNi2geWKQy6z4LM6BHlQI2VVnnJCfcD3MR22KGryc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0s2KL7/RzkEETxZudWzUtJ8oPnk+cVQDDlBFIBgHHvZ1bMQfVheN11r/dh5FIIbSc
-         ylFef4JRHu3l5lU1eKgXqTfWcIRfSqbt4X0rAF58qkqKLfFAbkpjLCj4sFgiZ0+vsQ
-         ijX+1FRInubWhIU805eoZ7+5Xql6i8hnmhTsxyho=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 046/112] io_uring: use signal based task_work running
-Date:   Tue,  7 Jul 2020 17:16:51 +0200
-Message-Id: <20200707145803.190649104@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
-References: <20200707145800.925304888@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.kernel.org (Postfix) with ESMTPSA id B76F3207CD;
+        Tue,  7 Jul 2020 15:24:08 +0000 (UTC)
+Date:   Tue, 7 Jul 2020 11:24:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Subject: Re: [PATCH v2 05/15] tools lib traceevent: Introduced new
+ traceevent API, for adding new plugins directories.
+Message-ID: <20200707112407.746cca77@oasis.local.home>
+In-Reply-To: <CAM9d7chfvJwodpVrHGc5E2J80peRojmYV_fD8x3cpn9HFRUw2g@mail.gmail.com>
+References: <20200702185344.913492689@goodmis.org>
+        <20200702185704.248123446@goodmis.org>
+        <CAM9d7chfvJwodpVrHGc5E2J80peRojmYV_fD8x3cpn9HFRUw2g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+On Wed, 8 Jul 2020 00:06:38 +0900
+Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > +/**
+> > + * tep_add_plugin_path - Add a new plugin directory.
+> > + * @tep: Trace event handler.
+> > + * @path: Path to a directory. All files with extension .so in that  
+> 
+> Is the extension (".so") fixed?  I think a new API has the suffix argument
+> which may change it... ?
 
-[ Upstream commit ce593a6c480a22acba08795be313c0c6d49dd35d ]
+So this should add a "suffix" argument? NULL for ".so"?
 
-Since 5.7, we've been using task_work to trigger async running of
-requests in the context of the original task. This generally works
-great, but there's a case where if the task is currently blocked
-in the kernel waiting on a condition to become true, it won't process
-task_work. Even though the task is woken, it just checks whatever
-condition it's waiting on, and goes back to sleep if it's still false.
+> 
+> 
+> > + *       directory will be loaded as plugins.
+> > + *@prio: Load priority of the plugins in that directory.
+> > + *
+> > + * Returns -1 in case of an error, 0 otherwise.
+> > + */
+> > +int tep_add_plugin_path(struct tep_handle *tep, char *path,
+> > +                       enum tep_plugin_load_priority prio)
+> > +{
+> > +       struct tep_plugins_dir *dir;
+> > +
+> > +       if (!tep || !path)
+> > +               return -1;
+> > +
+> > +       dir = calloc(1, sizeof(*dir));
+> > +       if (!dir)
+> > +               return -1;
+> > +
+> > +       dir->path = strdup(path);  
+> 
+> It needs to check the return value..
 
-This is a problem if that very condition only becomes true when that
-task_work is run. An example of that is the task registering an eventfd
-with io_uring, and it's now blocked waiting on an eventfd read. That
-read could depend on a completion event, and that completion event
-won't get trigged until task_work has been run.
+Yes it does indeed.
 
-Use the TWA_SIGNAL notification for task_work, so that we ensure that
-the task always runs the work when queued.
+BTW, since these patches are already in trace-cmd.git, would be OK if
+we just write patches on top of this series to address your concerns.
+This way, we would be also adding them to trace-cmd.git as well.
 
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/io_uring.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+I eventually want a separate libraries repo on kernel.org that this
+lives in and remove it from the tools/lib directory of the kernel.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 71d281f68ed83..51362a619fd50 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4136,6 +4136,21 @@ struct io_poll_table {
- 	int error;
- };
- 
-+static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb,
-+				int notify)
-+{
-+	struct task_struct *tsk = req->task;
-+	int ret;
-+
-+	if (req->ctx->flags & IORING_SETUP_SQPOLL)
-+		notify = 0;
-+
-+	ret = task_work_add(tsk, cb, notify);
-+	if (!ret)
-+		wake_up_process(tsk);
-+	return ret;
-+}
-+
- static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
- 			   __poll_t mask, task_work_func_t func)
- {
-@@ -4159,13 +4174,13 @@ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
- 	 * of executing it. We can't safely execute it anyway, as we may not
- 	 * have the needed state needed for it anyway.
- 	 */
--	ret = task_work_add(tsk, &req->task_work, true);
-+	ret = io_req_task_work_add(req, &req->task_work, TWA_SIGNAL);
- 	if (unlikely(ret)) {
- 		WRITE_ONCE(poll->canceled, true);
- 		tsk = io_wq_get_task(req->ctx->io_wq);
--		task_work_add(tsk, &req->task_work, true);
-+		task_work_add(tsk, &req->task_work, 0);
-+		wake_up_process(tsk);
- 	}
--	wake_up_process(tsk);
- 	return 1;
- }
- 
-@@ -6260,19 +6275,20 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 	do {
- 		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq,
- 						TASK_INTERRUPTIBLE);
-+		/* make sure we run task_work before checking for signals */
- 		if (current->task_works)
- 			task_work_run();
--		if (io_should_wake(&iowq, false))
--			break;
--		schedule();
- 		if (signal_pending(current)) {
--			ret = -EINTR;
-+			ret = -ERESTARTSYS;
- 			break;
- 		}
-+		if (io_should_wake(&iowq, false))
-+			break;
-+		schedule();
- 	} while (1);
- 	finish_wait(&ctx->wait, &iowq.wq);
- 
--	restore_saved_sigmask_unless(ret == -EINTR);
-+	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 
- 	return READ_ONCE(rings->cq.head) == READ_ONCE(rings->cq.tail) ? ret : 0;
- }
--- 
-2.25.1
+-- Steve
 
 
+> 
+> > +       dir->prio = prio;
+> > +       dir->next = tep->plugins_dir;
+> > +       tep->plugins_dir = dir;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +void tep_free_plugin_paths(struct tep_handle *tep)
+> > +{
+> > +       struct tep_plugins_dir *dir;
+> > +
+> > +       if (!tep)
+> > +               return;
+> > +
+> > +       dir = tep->plugins_dir;
+> > +       while (dir) {
+> > +               tep->plugins_dir = tep->plugins_dir->next;
+> > +               free(dir->path);
+> > +               free(dir);
+> > +               dir = tep->plugins_dir;
+> > +       }
+> > +}
+> > +
+> >  void
+> >  tep_unload_plugins(struct tep_plugin_list *plugin_list, struct tep_handle *tep)
+> >  {
+> > --
+> > 2.26.2
+> >
+> >  
 
