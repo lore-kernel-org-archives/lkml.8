@@ -2,128 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC27CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B03BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A552320723
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D234C2070C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgGGC6v (ORCPT
+        id S1728014AbgGGDAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:58:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28240 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgGGC6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:58:51 -0400
-IronPort-SDR: UOm8xvynWn5G3eQAGxe84qd2pAaa3wZNADUuDT8YxvanhebbaeZZmPMLLkC7cZEuBoR4Onem04
- 6ZyroDGXYCIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145031398"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="145031398"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:58:50 -0700
-IronPort-SDR: Wbuws6KtAJ2FM5ntGD5gG81OGOw57tT/gRnzf/9OXTVI13xqM4o/577POvgZIJeyK78BEoA2y0
- ohYHxM7BZLYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="314143078"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.4.18]) ([10.238.4.18])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 19:58:46 -0700
-Subject: Re: [LKP] [x86, sched] 1567c3e346: vm-scalability.median -15.8%
- regression
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>,
-        kernel test robot <oliver.sang@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
-References: <20200306051916.GA23395@xsang-OptiPlex-9020>
- <a5b0b58d-54a9-0f06-c822-3087346a0ae8@linux.intel.com>
- <1587018059.32139.22.camel@suse.cz>
- <fdcab17c-91aa-fba0-65d1-c08af6f50842@linux.intel.com>
-Message-ID: <f8fc9530-432f-0b5d-0109-916a01c65bda@linux.intel.com>
-Date:   Tue, 7 Jul 2020 10:58:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 6 Jul 2020 23:00:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7379 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727094AbgGGDAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:00:13 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 93175E51EB2E6213805D;
+        Tue,  7 Jul 2020 11:00:08 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Jul 2020 10:59:59 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH v2] drm/hisilicon: Fixed the warning: Assignment of 0/1 to bool variable
+Date:   Tue, 7 Jul 2020 10:58:21 +0800
+Message-ID: <1594090701-45741-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <fdcab17c-91aa-fba0-65d1-c08af6f50842@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fixed the following warning:
+hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
+hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
 
+v2:
+using the pci_dev.msi_enabled instead of priv->msi_enabled.
 
-On 6/12/2020 4:11 PM, Xing Zhengjun wrote:
-> Hi Giovanni,
-> 
->     I test the regression, it still existed in v5.7.  Do you have time 
-> to take a look at this? Thanks.
-> 
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 6 +++---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h | 1 -
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Ping...
-
-> ========================================================================================= 
-> 
-> tbox_group/testcase/rootfs/kconfig/compiler/runtime/debug-setup/size/test/cpufreq_governor/ucode: 
-> 
-> 
-> lkp-hsw-4ex1/vm-scalability/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/test/8T/anon-cow-seq/performance/0x16 
-> 
-> 
-> commit:
->    2a4b03ffc69f2dedc6388e9a6438b5f4c133a40d
->    1567c3e3467cddeb019a7b53ec632f834b6a9239
->    v5.7-rc1
->    v5.7
-> 
-> 2a4b03ffc69f2ded 1567c3e3467cddeb019a7b53ec6                    v5.7-rc1 
->                         v5.7
-> ---------------- --------------------------- --------------------------- 
-> ---------------------------
->           %stddev     %change         %stddev     %change %stddev     
-> %change         %stddev
->               \          |                \          |                \ 
->          |                \
->      211462           -16.0%     177702           -15.0%     179809      
-> -15.1%     179510        vm-scalability.median
->        5.34 ±  9%      -3.1        2.23 ± 11%      -2.9        2.49 ± 
-> 5%      -2.7        2.61 ± 11%  vm-scalability.median_stddev%
->    30430671           -16.3%   25461360           -15.5%   25707029      
-> -15.5%   25701713        vm-scalability.throughput
->   7.967e+09           -11.1%  7.082e+09           -11.1%  7.082e+09      
-> -11.1%  7.082e+09        vm-scalability.workload
-> 
-> 
-> 
-> On 4/16/2020 2:20 PM, Giovanni Gherdovich wrote:
->> On Thu, 2020-04-16 at 14:10 +0800, Xing Zhengjun wrote:
->>> Hi Giovanni,
->>>
->>>     1567c3e346("x86, sched: Add support for frequency invariance") has
->>> been merged into Linux mainline v5.7-rc1 now. Do you have time to take a
->>> look at this? Thanks.
->>>
->>
->> Apologies, this slipped under my radar. I'm on it, thanks.
->>
->>
->> Giovanni Gherdovich
->>
-> 
-
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 249c298..83c7bb5 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -254,7 +254,7 @@ static int hibmc_unload(struct drm_device *dev)
+ 
+ 	if (dev->irq_enabled)
+ 		drm_irq_uninstall(dev);
+-	if (priv->msi_enabled)
++	if (dev->pdev->msi_enabled)
+ 		pci_disable_msi(dev->pdev);
+ 
+ 	hibmc_kms_fini(priv);
+@@ -294,12 +294,12 @@ static int hibmc_load(struct drm_device *dev)
+ 		goto err;
+ 	}
+ 
+-	priv->msi_enabled = 0;
++	dev->pdev->msi_enabled = 0;
+ 	ret = pci_enable_msi(dev->pdev);
+ 	if (ret) {
+ 		DRM_WARN("enabling MSI failed: %d\n", ret);
+ 	} else {
+-		priv->msi_enabled = 1;
++		dev->pdev->msi_enabled = 1;
+ 		ret = drm_irq_install(dev, dev->pdev->irq);
+ 		if (ret)
+ 			DRM_WARN("install irq failed: %d\n", ret);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index 6097687..a683763 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -25,7 +25,6 @@ struct hibmc_drm_private {
+ 	void __iomem   *fb_map;
+ 	unsigned long  fb_base;
+ 	unsigned long  fb_size;
+-	bool msi_enabled;
+ 
+ 	/* drm */
+ 	struct drm_device  *dev;
 -- 
-Zhengjun Xing
+2.7.4
+
