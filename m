@@ -2,133 +2,113 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E99AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D47AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF73207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD4E2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BHX0Pfz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgGGRAP (ORCPT
+        id S1728447AbgGGRAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47718 "EHLO
+        Tue, 7 Jul 2020 13:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbgGGRAL (ORCPT
+        with ESMTP id S1728414AbgGGRAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:00:11 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA65C08C5EE
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:00:11 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jsqwt-0004FR-U5; Tue, 07 Jul 2020 19:00:03 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jsqws-00038s-Rt; Tue, 07 Jul 2020 19:00:02 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     kernel@pengutronix.de, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH v7 2/3] tty: new helper function tty_get_icount()
-Date:   Tue,  7 Jul 2020 18:59:57 +0200
-Message-Id: <20200707165958.16522-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
-References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
+        Tue, 7 Jul 2020 13:00:21 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2DBC08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:00:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z13so45977526wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=RUaEwyKvFjoxearYOG6fMQLvpfWQmIWguMJ3lRmxBVw=;
+        b=BHX0Pfz5ri1Yh4Zy3V9YuC2N1RtNm45e9Ar7i578AOR1KRiV5jYkft9+A766/PAQ2c
+         BXsRdtubnvJ4IEC5r++wfb7GHwWVhOEbTT17AFkiRPQhCD+yCI38G7MKFPZZWxzqkW1X
+         LLwTYDap24JWG+LLnP6MJSaTo0jt968sPzeiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=RUaEwyKvFjoxearYOG6fMQLvpfWQmIWguMJ3lRmxBVw=;
+        b=NQxikXOjZ0aHjyZBcVFTIfc2uHCaW4kCae38Kkz1/AJJq2MEvFcrN+/t1idi0xWCc+
+         /NhBz0n3TzdWWSVn2TlIcWpHjmu8AcnxGVrfd3Plq2if2BND6lKXU4Oz1W+hBaKdb3fL
+         LNqUWydY6WGpZEqQrWy36mQWl70yuRgCXAQtzMNXw4avOrXYhdDEz9xXn4o29HgB1aAx
+         H33G/PifTvKzFxBuDPpG2P3HWqCg3bP9OLxx3iOpM9pq+1VFFUQRJVLpiLTzVC+1BtdU
+         LnZM74cfXeAo+qA/qXm4uNbJ6uqOBB7vq+8etXxlhOlAbxtAEqjlfdNCibV/ncSm2Hx7
+         JJkg==
+X-Gm-Message-State: AOAM532pNCIz3WR9MN71+pjVpml8GcJC/NqmPSrn8zahLBb6Sul2aefv
+        eg8hKWkQr3oDiqd9BNkeAxlBdQV/jM9nimZCu25gkt3T3ARQO6i3L/j5v/oBie/cBe46VGRb9Po
+        zhcld8V38CjsYXss2QeKqIYZm6I0eYrefg60tBnheuwRnC7pIS74l1wHsHuLzrNj4NV5mj4Hpd2
+        sFwHc=
+X-Google-Smtp-Source: ABdhPJwLbfD6yQlRb8xFVABJpE3v8ufetL+QEFMMaNpg6b6pRNGIoB3Ta6t6OvScYlvpaZ5fGrzoWw==
+X-Received: by 2002:adf:f54b:: with SMTP id j11mr55222080wrp.206.1594141219553;
+        Tue, 07 Jul 2020 10:00:19 -0700 (PDT)
+Received: from [192.168.1.237] (ip68-5-85-189.oc.oc.cox.net. [68.5.85.189])
+        by smtp.gmail.com with ESMTPSA id w2sm1669608wrs.77.2020.07.07.10.00.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 10:00:18 -0700 (PDT)
+Subject: Re: [PATCH][next] scsi: lpfc: fix inconsistent indenting
+To:     Colin King <colin.king@canonical.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200707150018.823350-1-colin.king@canonical.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <e4686e05-e06e-93d1-e332-f6403b7eab9b@broadcom.com>
+Date:   Tue, 7 Jul 2020 10:00:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200707150018.823350-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For a given struct tty_struct this yields the corresponding statistics
-about sent and received characters (and some more) which is needed to
-implement an LED trigger for tty devices.
+On 7/7/2020 8:00 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Fix smatch warning:
+> drivers/scsi/lpfc/lpfc_sli.c:15156 lpfc_cq_poll_hdler() warn: inconsistent
+> indenting
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_sli.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+> index e17675381cb8..92fc6527e7ee 100644
+> --- a/drivers/scsi/lpfc/lpfc_sli.c
+> +++ b/drivers/scsi/lpfc/lpfc_sli.c
+> @@ -15153,7 +15153,7 @@ static int lpfc_cq_poll_hdler(struct irq_poll *iop, int budget)
+>   {
+>   	struct lpfc_queue *cq = container_of(iop, struct lpfc_queue, iop);
+>   
+> -	 __lpfc_sli4_hba_process_cq(cq, LPFC_IRQ_POLL);
+> +	__lpfc_sli4_hba_process_cq(cq, LPFC_IRQ_POLL);
+>   
+>   	return 1;
+>   }
 
-The new function is then used to simplify tty_tiocgicount().
+Reviewed-by: James Smart <james.smart@broadcom.com>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/tty/tty_io.c | 29 +++++++++++++++++++++++++----
- include/linux/tty.h  |  2 ++
- 2 files changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 05d42f226304..6decc3ae1fb1 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2488,15 +2488,36 @@ static int tty_tiocmset(struct tty_struct *tty, unsigned int cmd,
- 	return tty->ops->tiocmset(tty, set, clear);
- }
- 
-+/**
-+ *	tty_get_icount		-	get tty statistics
-+ *	@tty: tty device
-+ *	@icount: output parameter
-+ *
-+ *	Gets a copy of the tty's icount statistics.
-+ *
-+ *	Locking: none (up to the driver)
-+ */
-+int tty_get_icount(struct tty_struct *tty,
-+		   struct serial_icounter_struct *icount)
-+{
-+	memset(icount, 0, sizeof(*icount));
-+
-+	if (tty->ops->get_icount)
-+		return tty->ops->get_icount(tty, icount);
-+	else
-+		return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(tty_get_icount);
-+
- static int tty_tiocgicount(struct tty_struct *tty, void __user *arg)
- {
--	int retval = -EINVAL;
- 	struct serial_icounter_struct icount;
--	memset(&icount, 0, sizeof(icount));
--	if (tty->ops->get_icount)
--		retval = tty->ops->get_icount(tty, &icount);
-+	int retval;
-+
-+	retval = tty_get_icount(tty, &icount);
- 	if (retval != 0)
- 		return retval;
-+
- 	if (copy_to_user(arg, &icount, sizeof(icount)))
- 		return -EFAULT;
- 	return 0;
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index c867d6fe67c4..3ac812b347de 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -497,6 +497,8 @@ extern void tty_unthrottle(struct tty_struct *tty);
- extern int tty_throttle_safe(struct tty_struct *tty);
- extern int tty_unthrottle_safe(struct tty_struct *tty);
- extern int tty_do_resize(struct tty_struct *tty, struct winsize *ws);
-+extern int tty_get_icount(struct tty_struct *tty,
-+			  struct serial_icounter_struct *icount);
- extern int is_current_pgrp_orphaned(void);
- extern void tty_hangup(struct tty_struct *tty);
- extern void tty_vhangup(struct tty_struct *tty);
--- 
-2.27.0
+-- james
 
