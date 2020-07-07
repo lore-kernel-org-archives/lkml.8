@@ -2,148 +2,148 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F37C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5E1206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PcHiiOi7"
+	by mail.kernel.org (Postfix) with ESMTP id 7CF50206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594116383;
+	bh=LSAwXfc/2RqGoJUtC+qfHeEypaEoTfCtZhmcGwAA760=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WTh1N+EjtIM3278vmDqewcqQxQJ2wBXKXDeVHHqhCq28jG2CMYPv/0vWPZ9UxHnk1
+	 7Zvh2ulvotrwb+k40axrLVsnYVc65xAXHE1bYTcvovZv5rVL6Hm+xD5qNcSmKHr2nL
+	 aaDJm9vaHSWfmW37Nek77QWjmwZEqd9gwRnAeVUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgGGKEK (ORCPT
+        id S1727826AbgGGKGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:04:10 -0400
-Received: from mail-bn8nam11on2083.outbound.protection.outlook.com ([40.107.236.83]:6245
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726946AbgGGKEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:04:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jcVTsJ+D0TzGUdWJePN2xnivDUBMaEq8w9Gr/M01YcUd3jZT0mJkEgmEK6eKXXtWSYf1XEeNqJ8gG2Ea2IrI6oUM/R9jLr5R+4F7GJxFVRyeK8OLJV1jerFJKq2BQN+z3m2fk78KS43yvZcxnjUxp1qEgXHMZhCKw95itAPsjv4NIF0HsHz0lip1Xk0Q0aScLupjG6CQhrf3iAmbBACASmgDiuDqhKUtTCv77rygvgyZag06U4oIvIZU+hjOIpTtPrzcBHZ8/a2PsXlsRevPvQHlHxzYa0zFMPjsu9+zqwmzfJxDJgvTLwvNKiHNHbujs5Biz4LBMPKoQPG40ehIwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=Plo32HV1lsBhLJonhLqiYUI6UEes1cqIC9XlwSlKY+4zSEsJ1IJK3evnUmtoN+aI2cLIpHe8Q9EK6Uah9hErFv4AxGRrswI7yFXqMbAoUqagfIZ3HZr4myayOABDNQ7czAg7N1rmsmCMJ2FirtAkN9BhqJxyzcmoXybTPNFPMX8IcSPQYj3xno6PpsaFXie86djUGhm3mGL+3zd8R7/kLPniUiiZ9vcPnCA716fQHQhQL1VqsRlTBSX8GQ+x7FjzCbety+BGkFDImqdkWXDldnVjJGDmlUkar/jOoJcUxcVywhnYNoWO3kjLqF5zVVFvGDRLPlwdc2s2FsLidntSKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=PcHiiOi7f9nuE8n4u3i9A/MVj1pfk6S8M4vK30n5kCaI4hx1jIBcqWwsBxGbXsrYD1tkqfIEOASHy1mjCfjXD3II39Mnxd6MtK9IXtvmHkYkF55BqZaxlvX96YGT405Phu4Yf3ptQO7IiV/qxI3yXEBWMvGBok10DWa6QfZ286c=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
- by MWHPR12MB1440.namprd12.prod.outlook.com (2603:10b6:300:13::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27; Tue, 7 Jul
- 2020 10:04:06 +0000
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::25b9:83b0:4b17:2c63]) by MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::25b9:83b0:4b17:2c63%12]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
- 10:04:06 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] ACPI: APD: Add a fmw property is_raven
-Date:   Tue,  7 Jul 2020 15:33:00 +0530
-Message-Id: <20200707100320.24625-2-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200707100320.24625-1-akshu.agrawal@amd.com>
-References: <20200707100320.24625-1-akshu.agrawal@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR0101CA0027.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:d::13) To MWHPR12MB1599.namprd12.prod.outlook.com
- (2603:10b6:301:10::12)
+        Tue, 7 Jul 2020 06:06:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43049 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGKGW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:06:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j4so42099854wrp.10;
+        Tue, 07 Jul 2020 03:06:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=23vy72E5orNjWgQ+h1yoOH9UAR+rJOK6XwpQtfEVuLc=;
+        b=cM6Hk4G6jzpJ5zFxahoh6TPmcmrxFLaP5PsDQODAET9mLkjLnMBqYfH/2rQ9tsbEHi
+         DkyD5yctBc9KqqsWoAhor8mMEvIS7VCm66+4suh22CUwqOGd6LNpVOyvBTD0yTgxsiq+
+         bvfWvFggjV+W8byYu0TI/YJFYDmRoDQD+R1T3Py+fu8u2NWybY4YA5OT5jzuwRFYUz1o
+         3NEYsYfQfSXpXldORMWjVTELS34OCBCPwkYtrBkgGG3sJnsCdyyuRJucRchTEjzM/16+
+         biF6Po0/PRAt5UHYQvoddRzb+bcBXeeRNwtcHBMHZW6qr8brp6iOjcJbfgPReBx0y/eB
+         iJuw==
+X-Gm-Message-State: AOAM530I28oLydkuDKU+Mtsh46zQ4wCS8Co58SeJGZZuyJFjKftuVlPW
+        u4cmUd41IIljJHlp5MMYpzw=
+X-Google-Smtp-Source: ABdhPJx0BB5CJ8IRPP7wZcpFAKcEtqcXu8b2tEnM5FooOgxWlc7cYpH2HfZCoJcvFlnV/vCsrbagEg==
+X-Received: by 2002:a5d:43d2:: with SMTP id v18mr52161392wrr.196.1594116379745;
+        Tue, 07 Jul 2020 03:06:19 -0700 (PDT)
+Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
+        by smtp.gmail.com with ESMTPSA id d2sm279540wrs.95.2020.07.07.03.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 03:06:18 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 12:06:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        Kaly Xin <Kaly.Xin@arm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] mm/memory_hotplug: fix unpaired
+ mem_hotplug_begin/done
+Message-ID: <20200707100617.GD5913@dhcp22.suse.cz>
+References: <20200707055917.143653-1-justin.he@arm.com>
+ <20200707055917.143653-4-justin.he@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from akshu-HP-EliteBook-745-G2.mshome.net (122.167.38.75) by MAXPR0101CA0027.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:d::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Tue, 7 Jul 2020 10:04:04 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.167.38.75]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5c9d4b7c-571f-48af-1e60-08d8225d159f
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1440:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB144015045CC0713A4FA8B878F8660@MWHPR12MB1440.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0457F11EAF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /eeDS/JJJiUly6PH0MBN4FpErLX1ZWky9O20jU6NzUvj2vU+1WtUGJNH5OJ8j0UAzVDXXWNdxI1s/jrsR5gL05bECgDF6A7pbBTxNhvszM0rWEH6QhapKjB9teCjMlpOovbfgqu/d0JmoY7A/O30TD1RzSF0dbnuOMTu9/Zp2kTVOJAxbWDIQMDqWW3K/pGfpoMG9aNDkYlleIl95js0stBJh43y6igk1rMYYa2cBr5PhQ0I1aUwj6VO054b1xTdad3VogoKfaO4QBc6wy6W02F8UQv8M0pSXC9SB+TyAEzH5qOs0mrAXjkX21+t0qnS0uFFIwkeP4cwHJQW3RJZ66GjESRCWLXZhVTFHMbeZkljotjWdjLHx+aMT5LTddvN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(6666004)(5660300002)(8676002)(186003)(16526019)(44832011)(52116002)(36756003)(4326008)(316002)(66476007)(66556008)(6486002)(86362001)(26005)(54906003)(6506007)(956004)(2616005)(8936002)(66946007)(2906002)(6512007)(1076003)(478600001)(109986005)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: kZWq6gcVdZulKxDiT/37H6gL0L9nj4sad/WdPOgREOB3BY7EsFx8YTkpGoGJjHS98hz95s7neulsyeg0vPifz3N+icG1p1nMtH7PlTXGUQ8udafn21aX+UtAHaQYkX032+/5pngYQF5C1zb5/Zc1WcDtFkZb3re76fCRSt3mD7yRlD2UY+YV4P4qOXMVNIw9HK4GO8VY06QoeTL/0zyd+ye5E3qoz7wrmlcDL1QD92UD/oXex9ioaUObM9hA8OLdV7CMpEkNX49ZZI44C0xH2vwaYGVbIqLq/2MEdfbTKWJANIkcBpQ9h95Q60rSEpZle3h592PlneUYzh9GMUJ1U3wYIAbx8RWvREEKDckEkY1PH1wicmKA+xUgBuoBWgC9OGYorK9BLY6nCrV0c8eijjgSyT2M1weyyzjYTXS7IlOYOcZ3SYwuJgZW9iLvYsdvYulpEYIyBh45Zjdqe6XLi/Lk6eb5XVo6pjSff8/AVHs=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c9d4b7c-571f-48af-1e60-08d8225d159f
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2020 10:04:06.6626
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wSAo16uoJ8z0N38lbjN8ArGBAk6uVbsz4JqHCh91mQP5bN8f1TpMo9eGbhaZwu1TKnq7mfLV0tYHD0E06yanjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1440
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707055917.143653-4-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is slight difference in AMD RV based soc in misc
-clk architecture. The fmw property will help in differentiating
-the SoCs.
+On Tue 07-07-20 13:59:17, Jia He wrote:
+> When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
+> online at that time), mem_hotplug_begin/done is unpaired in such case.
+> 
+> Therefore a warning:
+>  Call Trace:
+>   percpu_up_write+0x33/0x40
+>   try_remove_memory+0x66/0x120
+>   ? _cond_resched+0x19/0x30
+>   remove_memory+0x2b/0x40
+>   dev_dax_kmem_remove+0x36/0x72 [kmem]
+>   device_release_driver_internal+0xf0/0x1c0
+>   device_release_driver+0x12/0x20
+>   bus_remove_device+0xe1/0x150
+>   device_del+0x17b/0x3e0
+>   unregister_dev_dax+0x29/0x60
+>   devm_action_release+0x15/0x20
+>   release_nodes+0x19a/0x1e0
+>   devres_release_all+0x3f/0x50
+>   device_release_driver_internal+0x100/0x1c0
+>   driver_detach+0x4c/0x8f
+>   bus_remove_driver+0x5c/0xd0
+>   driver_unregister+0x31/0x50
+>   dax_pmem_exit+0x10/0xfe0 [dax_pmem]
+> 
+> Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
+> Cc: stable@vger.kernel.org # v5.6+
+> Signed-off-by: Jia He <justin.he@arm.com>
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- drivers/acpi/acpi_apd.c               | 4 ++++
- include/linux/platform_data/clk-fch.h | 1 +
- 2 files changed, 5 insertions(+)
+Ups, I have missed that when reviewing that commit. Thanks for catching
+this up!
 
-diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-index 2d99e46add1a..d879ba28826c 100644
---- a/drivers/acpi/acpi_apd.c
-+++ b/drivers/acpi/acpi_apd.c
-@@ -82,6 +82,7 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
- static int fch_misc_setup(struct apd_private_data *pdata)
- {
- 	struct acpi_device *adev = pdata->adev;
-+	const union acpi_object *obj;
- 	struct platform_device *clkdev;
- 	struct fch_clk_data *clk_data;
- 	struct resource_entry *rentry;
-@@ -98,6 +99,9 @@ static int fch_misc_setup(struct apd_private_data *pdata)
- 	if (ret < 0)
- 		return -ENOENT;
- 
-+	acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj);
-+	clk_data->is_rv = obj->integer.value;
-+
- 	list_for_each_entry(rentry, &resource_list, node) {
- 		clk_data->base = devm_ioremap(&adev->dev, rentry->res->start,
- 					      resource_size(rentry->res));
-diff --git a/include/linux/platform_data/clk-fch.h b/include/linux/platform_data/clk-fch.h
-index 850ca776156d..b9f682459f08 100644
---- a/include/linux/platform_data/clk-fch.h
-+++ b/include/linux/platform_data/clk-fch.h
-@@ -12,6 +12,7 @@
- 
- struct fch_clk_data {
- 	void __iomem *base;
-+	u32 is_rv;
- };
- 
- #endif /* __CLK_FCH_H */
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memory_hotplug.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index da374cd3d45b..76c75a599da3 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1742,7 +1742,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>  	 */
+>  	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
+>  	if (rc)
+> -		goto done;
+> +		return rc;
+>  
+>  	/* remove memmap entry */
+>  	firmware_map_remove(start, start + size, "System RAM");
+> @@ -1766,9 +1766,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>  
+>  	try_offline_node(nid);
+>  
+> -done:
+>  	mem_hotplug_done();
+> -	return rc;
+> +	return 0;
+>  }
+>  
+>  /**
+> -- 
+> 2.17.1
+
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
