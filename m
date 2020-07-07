@@ -2,117 +2,155 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D515C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9249C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C52D206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D34206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="j2JrZAWl"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hp7gP/hQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGGAvm (ORCPT
+        id S1727124AbgGGAxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
+        Mon, 6 Jul 2020 20:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgGGAvm (ORCPT
+        with ESMTP id S1725892AbgGGAxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:51:42 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B69BC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 17:51:42 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g20so36739451edm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 17:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fP4OpLp0FjsIYxMifwNx7k+9nkUSsvv31ikh9HglHIY=;
-        b=j2JrZAWlwruxerUFy6eYB7r/b1mBHmiLW+tOmUbIJ6oIXT79vVI/tddFTHoQqA/Dag
-         rjKhpQqSsxsj79lP9td1HcHxhkVvqTbZyMu48pEGRTfEf2yuqs8Td7KOtlyzYNOKQGkF
-         FQ1ah6AkelWrfLcHEGS18zqKSL3HJ8vkSVaBiDFcK+L7Nl+nQbxs/CZ0W7RiQF1H1urJ
-         fwuLjrYyYSOw2TtMlD1lnj01RwHdCXmUU4cIA7QbmZDU9kGef5FVAHH9X7oWkHxfjbbz
-         cYrA5UiQqdYa6JRuXQy5WLFuuR/gudReKjl8b5QAANlchWmmAPaQAphPqomY8QuId3bw
-         8miA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fP4OpLp0FjsIYxMifwNx7k+9nkUSsvv31ikh9HglHIY=;
-        b=d336N2rXv8ZUTPF2bEZ4q3uDuEvM+MqVT5VAa5b98rACqOADlhfYxaFaRaauPFS/5h
-         8Q1ZaXkHyx1rt5mZ0+ncF6jTdf0mb/5e9c8tO2IEBcvTN+V4MXlmfkQB3wtT3PxgmBQf
-         jV1QC5++JW0vhhqVftYATnbJfaKHpqr0VDBbHf0GAFIR9j/lkCQMmN3vy85zU8CVQgfo
-         p2zdqTdsbYKejBvQ8ekfrTFHOp4wWCvI/mTlqMbe3spf5WOQEA1rAIHpSfI7n9S6+nIV
-         4DhC62I6FxG/wkBF5O3x8AxxAtMlPuFNMmUyVt8nNcR6OspmGmVejVXYCJijRp+VM6b5
-         rQ1Q==
-X-Gm-Message-State: AOAM531/p48OFPTPOs4GwXMujO0lMwtwkaylYW3ny+Mqnm3S0TM45kkx
-        Pz8a+Y6Y+WR2pePgvpwAG8oDF0EZBD6JXnMXJDRwVQ==
-X-Google-Smtp-Source: ABdhPJzp8OxMJ6XX57N3wsB50xwXQiNgeDUcSeD89047WHNDCTbtIajsV/i86EY+rHSRbixicaAeReheN7Jay3TZvaI=
-X-Received: by 2002:a50:fe16:: with SMTP id f22mr52368626edt.315.1594083100783;
- Mon, 06 Jul 2020 17:51:40 -0700 (PDT)
+        Mon, 6 Jul 2020 20:53:23 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C87C061755;
+        Mon,  6 Jul 2020 17:53:22 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B13p84yj7z9s1x;
+        Tue,  7 Jul 2020 10:53:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594083200;
+        bh=Q5Lf1YVW9NL+ZBJd5oxrN55AJbts6RvhRBUwzhHNCcs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hp7gP/hQIaIxePjQlddrYQ5zTVGLrKxmKzubCKW/Zs85RtL9G61QrFriZvkJl5bLm
+         uFVN6ZhlOxCzq0TF0uKkdnIQF5krRUGUu9jJqK131JKsa854MNEJoflhclJovI/iCd
+         9pRJirDRHfbgR/Mdgtwt//TaZGr9OZcdnuUh/rvREpYmjVD4pOlroKhavLrhhWGvm7
+         D70fTc0ry4Wf3vnp/WxTvuB2vmRPZJuRSGyjNVLzIuyQrW86PwcUCWGtiO1G56fQ8D
+         W8+wDKIBCpP/Ig6eOUna/a8WQR3muepFsUfcywCA9CZr6Uy1XhmNAc2o0PShjZ4Ptt
+         ao1tw8UaOjG6Q==
+Date:   Tue, 7 Jul 2020 10:53:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: linux-next: Tree for Jul 6 (mm/memory_failure.c)
+Message-ID: <20200707105319.217409ab@canb.auug.org.au>
+In-Reply-To: <20200707003500.GA27886@js1304-desktop>
+References: <20200706174001.2d316826@canb.auug.org.au>
+        <d458c18d-9c5e-9c45-0d65-e317571b6d56@infradead.org>
+        <20200707003500.GA27886@js1304-desktop>
 MIME-Version: 1.0
-References: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
- <20200630082509.puuzneiipalvrxup@gilmour.lan>
-In-Reply-To: <20200630082509.puuzneiipalvrxup@gilmour.lan>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Mon, 6 Jul 2020 17:51:29 -0700
-Message-ID: <CADaigPXSaZ8K2m_fyq2dFwf-X76LpYMagjXqA01b0ST6QYzE2g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] drm/vc4: Turn the TXP into a CRTC
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Bt80v1CvXV=K6Q+g4oLKLfr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 1:25 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi Eric,
->
-> On Thu, Jun 11, 2020 at 03:36:45PM +0200, Maxime Ripard wrote:
-> > Hi,
-> >
-> > This is another part of the rpi4 HDMI series that got promoted to a
-> > series of its own to try to reduce the main one.
-> >
-> > This rework is needed since the bcm2711 used in the rpi4 has a more
-> > complex routing in the HVS that doesn't allow to use a fairly simple
-> > mapping like what was used before.
-> >
-> > Since that mapping affects both the pixelvalves and the TXP, turning the
-> > TXP into a CRTC just like pixelvalves are allows to deal with the
-> > mapping in the CRTC states, which turns out to be pretty convenient.
-> >
-> > Let me know what you think,
-> > Maxime
-> >
-> > Changes from v3:
-> >   - Stripped the patches out of the main HDMI series
-> >   - Change the bind order of the HVS to avoid a compatible check
-> >   - Added Eric's tags
-> >   - Rebased on top of drm-misc-next
-> >
-> > Maxime Ripard (9):
-> >   drm/vc4: Reorder the bind order of the devices
-> >   drm/vc4: crtc: Move HVS setup code to the HVS driver
->
-> Could you review those two patches? You haven't reviewed them yet and
-> it's holding back the rest of the patches.
+--Sig_/Bt80v1CvXV=K6Q+g4oLKLfr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-LKML email workflow is the worst, the patches never came through to me
-so I didn't see them until you linked me the patchwork.  Patch 2,
-commit message should say "We'll need the HVS to be bound before the
-TXP", but other than that, r-b.
+Hi all,
+
+On Tue, 7 Jul 2020 09:35:15 +0900 Joonsoo Kim <js1304@gmail.com> wrote:
+>
+> On Mon, Jul 06, 2020 at 09:59:06AM -0700, Randy Dunlap wrote:
+> >=20
+> > on i386:
+> >=20
+> > when CONFIG_MIGRATION is not set/enabled:
+> >=20
+> > ../mm/memory-failure.c: In function =E2=80=98new_page=E2=80=99:
+> > ../mm/memory-failure.c:1688:9: error: implicit declaration of function =
+=E2=80=98alloc_migration_target=E2=80=99; did you mean =E2=80=98alloc_migra=
+te_target=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+> >   return alloc_migration_target(p, (unsigned long)&mtc);
+> >          ^~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Thanks for reporting.
+>=20
+> Below is the fix for this error.
+> Andrew, Could you squash this fix into the patch,
+> "mm-migrate-make-a-standard-target-allocation-function.patch"?
+>=20
+> Thanks.
+>=20
+>=20
+> ------------------->8------------------- =20
+> From 5fac269125dfb2d03e38a75319305e0e70b23a4b Mon Sep 17 00:00:00 2001
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Date: Tue, 7 Jul 2020 09:16:58 +0900
+> Subject: [PATCH] mm/migrate: fix for
+>  mm-migrate-make-a-standard-target-allocation-function.patch in mm tree
+>=20
+> new_page_nodemask() is renamed to alloc_migration_target in
+> mm-migrate-make-a-standard-target-allocation-function.patch, but,
+> one declaration for !CONFIG_MIGRATION case is missed. This patch fixes it.
+>=20
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  include/linux/migrate.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+> index 5e9c866..cc56f0d 100644
+> --- a/include/linux/migrate.h
+> +++ b/include/linux/migrate.h
+> @@ -60,8 +60,8 @@ static inline int migrate_pages(struct list_head *l, ne=
+w_page_t new,
+>  		free_page_t free, unsigned long private, enum migrate_mode mode,
+>  		int reason)
+>  	{ return -ENOSYS; }
+> -static inline struct page *new_page_nodemask(struct page *page,
+> -		int preferred_nid, nodemask_t *nodemask)
+> +static inline struct page *alloc_migration_target(struct page *page,
+> +		unsigned long private)
+>  	{ return NULL; }
+>  static inline int isolate_movable_page(struct page *page, isolate_mode_t=
+ mode)
+>  	{ return -EBUSY; }
+> --=20
+> 2.7.4
+>=20
+
+I have added that to linux-next today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Bt80v1CvXV=K6Q+g4oLKLfr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Dx38ACgkQAVBC80lX
+0GzBpwf/TGUIgs/Kd6fLMDYUq2Jne1llwy+V11XxKr0qjCuBLGV66Jq64I2QsjsB
+AwiAyQRWaS7MWWom4k0OU3ulFCCYyFDC4ojD/kx+9VFbZyWvaWGhgM7yC1n4LPu0
+XlyDxkBZDGm0IwBvSRI4BHzM61a6VF1dueUrwpgnTDyU2sJrNzTRwlqm5GEuy2yv
+doV9z55KFAoo2W14t+mVlvfeESJrUts+cNttK5Cn5NlU/a/d6jfe5ipRlDxeI5vt
+aNz/Odg8qAVr3FkHKwnHlYq1Vj6qcY/FzwKSo/lOA0fYXpJZehY1HsGyzZxFl8o2
+njmdZCi65cnEqXvbgr507B/Yabc/3A==
+=oiE+
+-----END PGP SIGNATURE-----
+
+--Sig_/Bt80v1CvXV=K6Q+g4oLKLfr--
