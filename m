@@ -2,110 +2,131 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F38BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC70206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E97B2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLGUD5CW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgGGQeR (ORCPT
+        id S1728350AbgGGQec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:34:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45550 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgGGQeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:34:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 59423B007;
-        Tue,  7 Jul 2020 16:34:07 +0000 (UTC)
-Subject: Re: [PATCH v4 10/11] mm/memory-failure: remove a wrapper for
- alloc_migration_target()
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-11-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <7a0c02ca-5354-2508-a8a1-ff80d413af59@suse.cz>
-Date:   Tue, 7 Jul 2020 17:00:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 12:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbgGGQeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 12:34:31 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DAD1C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:34:31 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mn17so5202068pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+s8uTpzOInwRzG7yF6uQj5b7go+jZCn77sviuWuu/rs=;
+        b=uLGUD5CW7JVOfR39yhs5ov3P2Dlb5A/9QeyNgi1JIHHI0guuxzhv8ObBEp2ARtpRxM
+         RotZk550MT4nE9vY0teDlr0KEHKY50A/q/fyADFvykvsdf0R+B7bl43jCvvAZIknstSA
+         HUZPzL70RfeWHxoNNsqYmlrQnVdk8nSwdlUuXxUBF4xT/N18PSXwVcrn4qQ2PEkqXo/X
+         tSKurmtfDJ7FuJHYd10SM/X1g1U7/MuY+Ak8x1BWrRIXzpWk7B9K8nEbZlsBRCSv8vcr
+         +h59kTyJLJHVVTrk8YXHo9v4gXwhNe26ozAYbfoOV4XTjUu6qsRTHn+8qmND1DDGw6YM
+         ihug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+s8uTpzOInwRzG7yF6uQj5b7go+jZCn77sviuWuu/rs=;
+        b=ReluvCDl2no6Alz/qCUGoqj+/yRdiZp6Kq8+PTEcw+scsbFBxxu5ilqqWBhCDim3D/
+         68MpwevaNFb/QByDdOh4VReHMZcOG3dkeF27IZjXllnbiPVuQ7P89pDC19ZNLHy+3qsb
+         X7GKzG0qxaKLxHAYi3xGfiP70QvGvQlFGWaxJdrIFwcrlDyMkT4QTWLCwMdK8Dc4N9RK
+         YoTfpkN/OdLj/MCaeeHuGhujRRa3D1XEKtgaRj7JttaioQuz3gqcIwwXANj2WS/DMOC6
+         vZF6y03KHexIXKkPnaC/QQYh5MtnOKuX/iPPB3vm292JYVWeVoFOKH4W5GC0EHBVGoqH
+         6kJg==
+X-Gm-Message-State: AOAM531sR62H7C8KryeieLVHfltT+nOqJ1b50TdljnDePkxwpDTYwwOA
+        m021qBKWSMHiSqG7IJo5oqE=
+X-Google-Smtp-Source: ABdhPJz9+XZnqCl8VLL87L5hv+VKWsXBu2Z9nSSYEd5x5VE66ZUS9/DknkO4i0g4hw3MORg0llSTnA==
+X-Received: by 2002:a17:90a:206a:: with SMTP id n97mr5173541pjc.94.1594139670759;
+        Tue, 07 Jul 2020 09:34:30 -0700 (PDT)
+Received: from blackclown ([103.88.82.137])
+        by smtp.gmail.com with ESMTPSA id s68sm3054324pjb.38.2020.07.07.09.34.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 09:34:29 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 22:04:14 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH 0/4] drm: core: Convert logging to drm_* functions.
+Message-ID: <cover.1594136880.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1594107889-32228-11-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> There is a well-defined standard migration target callback. Use it
-> directly.
-> 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  mm/memory-failure.c | 18 ++++++------------
->  1 file changed, 6 insertions(+), 12 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 609d42b6..3b89804 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1677,16 +1677,6 @@ int unpoison_memory(unsigned long pfn)
->  }
->  EXPORT_SYMBOL(unpoison_memory);
->  
-> -static struct page *new_page(struct page *p, unsigned long private)
-> -{
-> -	struct migration_target_control mtc = {
-> -		.nid = page_to_nid(p),
-> -		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> -	};
-> -
-> -	return alloc_migration_target(p, (unsigned long)&mtc);
-> -}
-> -
->  /*
->   * Safely get reference count of an arbitrary page.
->   * Returns 0 for a free page, -EIO for a zero refcount page
-> @@ -1793,6 +1783,10 @@ static int __soft_offline_page(struct page *page)
->  	const char *msg_page[] = {"page", "hugepage"};
->  	bool huge = PageHuge(page);
->  	LIST_HEAD(pagelist);
-> +	struct migration_target_control mtc = {
-> +		.nid = NUMA_NO_NODE,
-> +		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> +	};
->  
->  	/*
->  	 * Check PageHWPoison again inside page lock because PageHWPoison
-> @@ -1829,8 +1823,8 @@ static int __soft_offline_page(struct page *page)
->  	}
->  
->  	if (isolate_page(hpage, &pagelist)) {
-> -		ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
-> -					MIGRATE_SYNC, MR_MEMORY_FAILURE);
-> +		ret = migrate_pages(&pagelist, alloc_migration_target, NULL,
-> +			(unsigned long)&mtc, MIGRATE_SYNC, MR_MEMORY_FAILURE);
->  		if (!ret) {
->  			bool release = !huge;
->  
-> 
 
+This patchset converts logging to drm_* functions in drm core.
+
+The following functions have been converted to their respective
+DRM alternatives :
+dev_info()      --> drm_info()
+dev_err()       --> drm_err()
+dev_warn()      --> drm_warn()
+dev_err_once()  --> drm_err_once().
+
+Suraj Upadhyay (4):
+  drm: mipi-dsi: Convert logging to drm_* functions.
+  drm: mipi-dbi: Convert logging to drm_* functions.
+  drm: edid: Convert logging to drm_* functions.
+  drm: fb-helper: Convert logging to drm_* functions.
+
+ drivers/gpu/drm/drm_edid.c      |  7 +++----
+ drivers/gpu/drm/drm_fb_helper.c |  2 +-
+ drivers/gpu/drm/drm_mipi_dbi.c  |  4 ++--
+ drivers/gpu/drm/drm_mipi_dsi.c  | 15 +++++++--------
+ 4 files changed, 13 insertions(+), 15 deletions(-)
+
+--=20
+2.17.1
+
+
+
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8Eo/wACgkQ+gRsbIfe
+7451IRAApvuLP/V+UbhAWsY53dMQkKWHKyETrPZ/5yooQM5VN1yjjb47MC6DeRoQ
+VT61BXY5D53zAtqVuTerPs/ySce80Hjnvr4rsdoRe405bqu5DIqbbyq/K9VoR9Yy
+ueiWMZY8cO21LT+cPqq/9aRrCDzhpppmOCcgwar+3WR8Qi13PF2PZM9OrobdWZ+N
+aJWun4uaZS3qE3ZZibwsvX5b2U4vG5iEtuAiDq8wDsY0OBX1WEH3cpzYI0QW841H
+F0i9xdOIf+zofDGGzngAzp5UQut1GTttQsFE5B9AkWKx4s4WMhq/309YgXUK70nB
+/uap/6xzhYEuVRLwJwWzIrl+aLwNIgsN3iiqY/7NKe6rSH6PklPfErJn3AAT+N++
+xFFHYPLkRk7/XMw8XlW/WW7otISYBPxJ4T9UPKbSX4c8HewF97vcTkVkwCmSHc+5
+WWpoBDbNEnEECzMLjV7TAKTbkWM+24urBnGrT6f1fOeF2qSjeQE7DzIzxMW98cPk
+3HEp7jBHvsjzMl148dX4MTPjStGYZPoHKe99S2maoe0jBmSBkufrBNhETFjBWQOn
+xPjJWYghuuwNy+mXjAKbPhkBpKCpb3mnCXnFzbOIfxB7XfNoF4JGIwZL2Q2a50yL
+cXE6GGc/JyzeHM82yOhq8eypCYY7nrKqyED/r+IVARj4X/p7rsg=
+=Kzoh
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
