@@ -2,186 +2,84 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E222C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2871C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0937A20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="S6qsvSa7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="go7AXU4R"
+	by mail.kernel.org (Postfix) with ESMTP id 9DF012065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594117270;
+	bh=R3l7w7sSMwxmhD6/XB+NrMzrnx3QnVGQA0T4xmwnAb4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qmSk4yT2LTNiXyOLKt037a3qBjPXOu2vu03tdpb0HsyDYe3SNOEjDZZPeeTo6F/ja
+	 Ls41pDtNDL5v9u1tMVj736LIgpxlWtq++iFW5iK9/6fTnkEtJpV8YAJycj6tVQb5vR
+	 bQ6WXjH2tyieQAOhJIrBzFSSSMv2kW/wGQT0SvXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGGKUM (ORCPT
+        id S1728246AbgGGKVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:20:12 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:40011 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727871AbgGGKTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:19:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 9F308ACC;
-        Tue,  7 Jul 2020 06:19:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 07 Jul 2020 06:19:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=4hTmYwJWs3UiuN5nnPv+gaN3eG
-        DOSwKQFpI5Se/4Tg0=; b=S6qsvSa7vwbAhGWVbj2k/hnHW3c6IxoLUWewbt5Hkc
-        jg9S+dgZVYYBNE9tvf8h0xpjeI/Cie0+Ejo7qhJzUEt07Rd5okcFHHgrZq/9Bs80
-        14bM803jIhLnAlwZxzqVMHUUaKzZMrtNFiHqaUt26kW0C9lD8/8k3QMuCKl3yd1b
-        lp1hYN4NV+fVL7XcPMKjzJshpgyxmB5OjMG0YnqZmeKLWwdzZcx1XPE5XzmqFsOJ
-        dHWeUVT2gs7vEDqMzpVT9Wi7j1K8xtFrpF4dU9Lgv8DXvwzEHFi1Uslm8ww8OBeM
-        Do1AsIOlRlQybLutZNc+FOZRg/T+Y/2aygb4IzcYbTNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4hTmYwJWs3UiuN5nn
-        Pv+gaN3eGDOSwKQFpI5Se/4Tg0=; b=go7AXU4Rap0ZGn4ZsXOVv+GMktdWyS+uy
-        MlsVSvtOaczJnPHdE+rq13MxJKMI2nmMluWLM8V39YKJaJZhOpSAVswA3nRtwW2j
-        vxFLU/v7lTzCvVZeFc9WEtRKpeDezubZZ2W3fU2zsCrz97tmhePE3Ig1UuCwHOTj
-        J95bvVqvddYfgYUfGLutnZwNoWuk2fKhr7lP6OZKCSOxltab5LnAeU0/Ju05HQfN
-        u8K9nMSniP2+X9/PDmXdK0qYbaZLcv2m95R041F1mWvlaPPayzt/U7H/qTiY4nhc
-        wduZHgkAnu3zCGjEXMV32GO7pHeUnZXMnoVkIqNhyNspVyVVo948w==
-X-ME-Sender: <xms:JkwEX-ZTVMXnSASIHm0rU7JfceOYqC2_H9otGkzMIIhMtArfHaD7OA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgddvtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
-    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtthgvrh
-    hnpeejffehuddvvddvlefhgeelleffgfeijedvhefgieejtdeiueetjeetfeeukeejgeen
-    ucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:JkwEXxZ5Rtzbk20ijyipyvBGd8x3aK_QKdaSlnx3XzZ2ZB1XtjQgQQ>
-    <xmx:JkwEX4-qc8bWTW6Dcv5ilYOeqZNTM94FL1tF3YptJeAYsTsJQHMqtg>
-    <xmx:JkwEXwqFM-2QiKVCh2JIUvq6lHtXTRxX7ZGA9vX1We74PwKYw-riLA>
-    <xmx:J0wEX9dULmsWjLRV1GkF8IcR0A-T7K4jGKOfDgKHmG_5DH9VJxVoJbVGplM>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0B595328005E;
-        Tue,  7 Jul 2020 06:19:17 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] drm/vc4: dsi: Only register our component once a DSI device is attached
-Date:   Tue,  7 Jul 2020 12:19:12 +0200
-Message-Id: <20200707101912.571531-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
+        Tue, 7 Jul 2020 06:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbgGGKTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:19:46 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402F9206DF;
+        Tue,  7 Jul 2020 10:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594117168;
+        bh=R3l7w7sSMwxmhD6/XB+NrMzrnx3QnVGQA0T4xmwnAb4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=MeCQsaO5aZfTEGpDaMWARAHdZUqxdjXcW+aMPls5l8OmXIFJ3jdv57W7VshLELA1E
+         pCPXl6L1nAvgDBAY6u0qlrqvgipXsrARNcyloD7AAd/2+PHR7noB6U9NdhmUfsk0Vl
+         scaF1lxtQEu9irmyIIAjOQRa+dEZHWSQtN4t+M9A=
+Date:   Tue, 7 Jul 2020 12:19:25 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     srinivas.pandruvada@linux.intel.com,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Zhang Lixu <lixu.zhang@intel.com>, Even Xu <even.xu@intel.com>,
+        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
+        <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] HID: intel-ish-hid: Replace PCI_DEV_FLAGS_NO_D3 with
+ pci_save_state
+In-Reply-To: <20200629041648.19113-1-kai.heng.feng@canonical.com>
+Message-ID: <nycvar.YFH.7.76.2007071219140.15962@cbobk.fhfr.pm>
+References: <20200629041648.19113-1-kai.heng.feng@canonical.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the DSI driver is the last to probe, component_add will try to run all
-the bind callbacks straight away and return the error code.
+On Mon, 29 Jun 2020, Kai-Heng Feng wrote:
 
-However, since we depend on a power domain, we're pretty much guaranteed to
-be in that case on the BCM2711, and are just lucky on the previous SoCs
-since the v3d also depends on that power domain and is further in the probe
-order.
+> PCI_DEV_FLAGS_NO_D3 should not be used outside of PCI core.
+> 
+> Instead, we can use pci_save_state() to hint PCI core that the device
+> should stay at D0 during suspend. By doing so, PCI core will let the
+> upstream bridges also stays at D0 so the entire hierarchy is in the
+> correct power state as PCI spec mandates.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v3:
+>  - Use multi-line comments.
+> v2:
+>  - Wording change.
 
-In that case, the DSI host will not stick around in the system: the DSI
-bind callback will be executed, will not find any DSI device attached and
-will return EPROBE_DEFER, and we will then remove the DSI host and ask to
-be probed later on.
+Applied, thanks.
 
-But since that host doesn't stick around, DSI devices like the RaspberryPi
-touchscreen whose probe is not linked to the DSI host (unlike the usual DSI
-devices that will be probed through the call to mipi_dsi_host_register)
-cannot attach to the DSI host, and we thus end up in a situation where the
-DSI host cannot probe because the panel hasn't probed yet, and the panel
-cannot probe because the DSI host hasn't yet.
-
-In order to break this cycle, let's wait until there's a DSI device that
-attaches to the DSI host to register the component and allow to progress
-further.
-
-Suggested-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/gpu/drm/vc4/vc4_dsi.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-index eaf276978ee7..19aab4e7e209 100644
---- a/drivers/gpu/drm/vc4/vc4_dsi.c
-+++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-@@ -1246,10 +1246,12 @@ static ssize_t vc4_dsi_host_transfer(struct mipi_dsi_host *host,
- 	return ret;
- }
- 
-+static const struct component_ops vc4_dsi_ops;
- static int vc4_dsi_host_attach(struct mipi_dsi_host *host,
- 			       struct mipi_dsi_device *device)
- {
- 	struct vc4_dsi *dsi = host_to_dsi(host);
-+	int ret;
- 
- 	dsi->lanes = device->lanes;
- 	dsi->channel = device->channel;
-@@ -1284,6 +1286,12 @@ static int vc4_dsi_host_attach(struct mipi_dsi_host *host,
- 		return 0;
- 	}
- 
-+	ret = component_add(&dsi->pdev->dev, &vc4_dsi_ops);
-+	if (ret) {
-+		mipi_dsi_host_unregister(&dsi->dsi_host);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1662,7 +1670,6 @@ static int vc4_dsi_dev_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct vc4_dsi *dsi;
--	int ret;
- 
- 	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
- 	if (!dsi)
-@@ -1670,26 +1677,10 @@ static int vc4_dsi_dev_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, dsi);
- 
- 	dsi->pdev = pdev;
--
--	/* Note, the initialization sequence for DSI and panels is
--	 * tricky.  The component bind above won't get past its
--	 * -EPROBE_DEFER until the panel/bridge probes.  The
--	 * panel/bridge will return -EPROBE_DEFER until it has a
--	 * mipi_dsi_host to register its device to.  So, we register
--	 * the host during pdev probe time, so vc4 as a whole can then
--	 * -EPROBE_DEFER its component bind process until the panel
--	 * successfully attaches.
--	 */
- 	dsi->dsi_host.ops = &vc4_dsi_host_ops;
- 	dsi->dsi_host.dev = dev;
- 	mipi_dsi_host_register(&dsi->dsi_host);
- 
--	ret = component_add(&pdev->dev, &vc4_dsi_ops);
--	if (ret) {
--		mipi_dsi_host_unregister(&dsi->dsi_host);
--		return ret;
--	}
--
- 	return 0;
- }
- 
 -- 
-2.26.2
+Jiri Kosina
+SUSE Labs
 
