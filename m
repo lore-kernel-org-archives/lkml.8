@@ -2,195 +2,439 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7904BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A65C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599182065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62C5206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eatEtQTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgGGJr1 (ORCPT
+        id S1728204AbgGGJre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:47:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52948 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgGGJr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:47:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2E5D1AC2D;
-        Tue,  7 Jul 2020 09:47:25 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 11:47:24 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBba3RocmVhZA==?= =?utf-8?Q?=5D?= a90477f0c9:
- WARNING:at_kernel/kthread.c:#kthread_queue_work
-Message-ID: <20200707094724.GD4087@alley>
-References: <20200706093822.GC3874@shao2-debian>
- <BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
+        Tue, 7 Jul 2020 05:47:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49060 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726951AbgGGJrb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:47:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594115248;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HhregYdN+P/IVgyp6XA/13UYgTUXcNUVAnQLSL5XbIE=;
+        b=eatEtQTSh35piV5fIE6LCnYCg5jzQjtlEFZLQc+Y1QJRiW5/zvbbgK5spb5ohqQpX0Hg+y
+        CHvXK0JUoYNqwtGPLKbcUJ+RYiGEppnozNrHI1PQzEINPBhJzYDAFjxHsv9g1HLKpU3N+d
+        26cylkh1KWzvkpkCg93BA3G23IA5xcI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-02kPJQWKO3-yvLnR-dabfg-1; Tue, 07 Jul 2020 05:47:20 -0400
+X-MC-Unique: 02kPJQWKO3-yvLnR-dabfg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE3B9800406;
+        Tue,  7 Jul 2020 09:47:17 +0000 (UTC)
+Received: from [10.72.13.254] (ovpn-13-254.pek2.redhat.com [10.72.13.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F6AD5C1BB;
+        Tue,  7 Jul 2020 09:47:05 +0000 (UTC)
+Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
+ communication
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200702082143.25259-1-kishon@ti.com>
+ <20200702055026-mutt-send-email-mst@kernel.org>
+ <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
+ <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
+ <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
+ <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
+Date:   Tue, 7 Jul 2020 17:47:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-07-06 10:17:31, Zhang, Qiang wrote:
-> Hi , Petr Mladek
-> There some question for "Work could not be queued when worker being destroyed" patch,
-> 
-> when in "spi_init_queue" func :
-> "kthread_init_worker(&ctlr->kworker);     (worker->task = NULL)
->  ctlr->kworker_task = kthread_run(kthread_worker_fn, &ctlr->kworker,
->                                          "%s", dev_name(&ctlr->dev)); "
 
-I see. I have missed that there are some kthread_worker users that
-start the worker this way. They rely on the fact that
-worker->task is set also by kthread_worker_fn.
+On 2020/7/6 下午5:32, Kishon Vijay Abraham I wrote:
+> Hi Jason,
+>
+> On 7/3/2020 12:46 PM, Jason Wang wrote:
+>> On 2020/7/2 下午9:35, Kishon Vijay Abraham I wrote:
+>>> Hi Jason,
+>>>
+>>> On 7/2/2020 3:40 PM, Jason Wang wrote:
+>>>> On 2020/7/2 下午5:51, Michael S. Tsirkin wrote:
+>>>>> On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
+>>>>>> This series enhances Linux Vhost support to enable SoC-to-SoC
+>>>>>> communication over MMIO. This series enables rpmsg communication between
+>>>>>> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
+>>>>>>
+>>>>>> 1) Modify vhost to use standard Linux driver model
+>>>>>> 2) Add support in vring to access virtqueue over MMIO
+>>>>>> 3) Add vhost client driver for rpmsg
+>>>>>> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
+>>>>>>       rpmsg communication between two SoCs connected to each other
+>>>>>> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
+>>>>>>       between two SoCs connected via NTB
+>>>>>> 6) Add configfs to configure the components
+>>>>>>
+>>>>>> UseCase1 :
+>>>>>>
+>>>>>>     VHOST RPMSG                     VIRTIO RPMSG
+>>>>>>          +                               +
+>>>>>>          |                               |
+>>>>>>          |                               |
+>>>>>>          |                               |
+>>>>>>          |                               |
+>>>>>> +-----v------+                 +------v-------+
+>>>>>> |   Linux    |                 |     Linux    |
+>>>>>> |  Endpoint  |                 | Root Complex |
+>>>>>> |            <----------------->              |
+>>>>>> |            |                 |              |
+>>>>>> |    SOC1    |                 |     SOC2     |
+>>>>>> +------------+                 +--------------+
+>>>>>>
+>>>>>> UseCase 2:
+>>>>>>
+>>>>>>         VHOST RPMSG                                      VIRTIO RPMSG
+>>>>>>              +                                                 +
+>>>>>>              |                                                 |
+>>>>>>              |                                                 |
+>>>>>>              |                                                 |
+>>>>>>              |                                                 |
+>>>>>>       +------v------+                                   +------v------+
+>>>>>>       |             |                                   |             |
+>>>>>>       |    HOST1    |                                   |    HOST2    |
+>>>>>>       |             |                                   |             |
+>>>>>>       +------^------+                                   +------^------+
+>>>>>>              |                                                 |
+>>>>>>              |                                                 |
+>>>>>> +---------------------------------------------------------------------+
+>>>>>> |  +------v------+                                   +------v------+  |
+>>>>>> |  |             |                                   |             |  |
+>>>>>> |  |     EP      |                                   |     EP      |  |
+>>>>>> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+>>>>>> |  |             <----------------------------------->             |  |
+>>>>>> |  |             |                                   |             |  |
+>>>>>> |  |             |                                   |             |  |
+>>>>>> |  |             |  SoC With Multiple EP Instances   |             |  |
+>>>>>> |  |             |  (Configured using NTB Function)  |             |  |
+>>>>>> |  +-------------+                                   +-------------+  |
+>>>>>> +---------------------------------------------------------------------+
+>>>>>>
+>>>>>> Software Layering:
+>>>>>>
+>>>>>> The high-level SW layering should look something like below. This series
+>>>>>> adds support only for RPMSG VHOST, however something similar should be
+>>>>>> done for net and scsi. With that any vhost device (PCI, NTB, Platform
+>>>>>> device, user) can use any of the vhost client driver.
+>>>>>>
+>>>>>>
+>>>>>>        +----------------+  +-----------+  +------------+  +----------+
+>>>>>>        |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
+>>>>>>        +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
+>>>>>>                |                 |              |              |
+>>>>>>                |                 |              |              |
+>>>>>>                |                 |              |              |
+>>>>>> +-----------v-----------------v--------------v--------------v----------+
+>>>>>> |                            VHOST CORE                                |
+>>>>>> +--------^---------------^--------------------^------------------^-----+
+>>>>>>             |               |                    |                  |
+>>>>>>             |               |                    |                  |
+>>>>>>             |               |                    |                  |
+>>>>>> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
+>>>>>> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
+>>>>>> +----------------+  +-----------+  +---------------------+  +----------+
+>>>>>>
+>>>>>> This was initially proposed here [1]
+>>>>>>
+>>>>>> [1] -> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
+>>>>> I find this very interesting. A huge patchset so will take a bit
+>>>>> to review, but I certainly plan to do that. Thanks!
+>>>> Yes, it would be better if there's a git branch for us to have a look.
+>>> I've pushed the branch
+>>> https://github.com/kishon/linux-wip.git vhost_rpmsg_pci_ntb_rfc
+>>
+>> Thanks
+>>
+>>
+>>>> Btw, I'm not sure I get the big picture, but I vaguely feel some of the work is
+>>>> duplicated with vDPA (e.g the epf transport or vhost bus).
+>>> This is about connecting two different HW systems both running Linux and
+>>> doesn't necessarily involve virtualization.
+>>
+>> Right, this is something similar to VOP
+>> (Documentation/misc-devices/mic/mic_overview.rst). The different is the
+>> hardware I guess and VOP use userspace application to implement the device.
+> I'd also like to point out, this series tries to have communication between two
+> SoCs in vendor agnostic way. Since this series solves for 2 usecases (PCIe
+> RC<->EP and NTB), for the NTB case it directly plugs into NTB framework and any
+> of the HW in NTB below should be able to use a virtio-vhost communication
+>
+> #ls drivers/ntb/hw/
+> amd  epf  idt  intel  mscc
+>
+> And similarly for the PCIe RC<->EP communication, this adds a generic endpoint
+> function driver and hence any SoC that supports configurable PCIe endpoint can
+> use virtio-vhost communication
+>
+> # ls drivers/pci/controller/dwc/*ep*
+> drivers/pci/controller/dwc/pcie-designware-ep.c
+> drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> drivers/pci/controller/dwc/pci-layerscape-ep.c
 
-The proper solution is to start the worker using either
-kthread_create_worker() or kthread_create_worker_on_cpu().
-They set worker->task immediately.
 
-It means that more work is needed:
-
-1. Convert all users that start the kthread_worker via
-   kthread_worker_fn to use either kthread_create_worker()
-   or kthread_create_worker_on_cpu().
-
-2. Remove kthread_worker_fn declaration from include/linux/kthread.h
-   to prevent starting the worker the temporary way.
-
-   In the same patch, also the assignment to worker->task and
-   the FIXME might get removed from kthread_worker_fn().
+Thanks for those backgrounds.
 
 
-3. Finally, it should be safe to add the WARN_ON() into
-   queuing_blocked().
+>
+>>
+>>>    So there is no guest or host as in
+>>> virtualization but two entirely different systems connected via PCIe cable, one
+>>> acting as guest and one as host. So one system will provide virtio
+>>> functionality reserving memory for virtqueues and the other provides vhost
+>>> functionality providing a way to access the virtqueues in virtio memory. One is
+>>> source and the other is sink and there is no intermediate entity. (vhost was
+>>> probably intermediate entity in virtualization?)
+>>
+>> (Not a native English speaker) but "vhost" could introduce some confusion for
+>> me since it was use for implementing virtio backend for userspace drivers. I
+>> guess "vringh" could be better.
+> Initially I had named this vringh but later decided to choose vhost instead of
+> vringh. vhost is still a virtio backend (not necessarily userspace) though it
+> now resides in an entirely different system. Whatever virtio is for a frontend
+> system, vhost can be that for a backend system. vring can be for accessing
+> virtqueue and can be used either in frontend or backend.
 
-Best Regards,
-Petr
 
-> 
->  in "spi_start_queue" func:
->  "kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);"
-> 
->  Becasue the kthread_worker_fn is not begin running,  if queue work to worker,
->  the "!worker->task" = true, trigger WARN.
-> 
->  Are Need to add judgment " test_bit(KTHREAD_SHOULD_STOP,  &to_kthread(current)->flags) && WARN_ON(!worker->task)" in queuing_blocked func ?
-> 
->  Zhang Qiang
-> 
->  
-> 
-> 
-> ________________________________________
-> 发件人: kernel test robot <rong.a.chen@intel.com>
-> 发送时间: 2020年7月6日 17:38
-> 收件人: Zhang, Qiang
-> 抄送: lkp@lists.01.org
-> 主题: [kthread] a90477f0c9: WARNING:at_kernel/kthread.c:#kthread_queue_work
-> 
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: a90477f0c956621eb0dd69f0abfb6066ad8fbef7 ("kthread: work could not be queued when worker being destroyed")
-> https://github.com/hnaz/linux-mm master
-> 
-> in testcase: trinity
-> with following parameters:
-> 
->         runtime: 300s
-> 
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
-> 
-> 
-> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> +-------------------------------------------------+------------+------------+
-> |                                                 | 85c6127e06 | a90477f0c9 |
-> +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 6          | 0          |
-> | boot_failures                                   | 0          | 30         |
-> | WARNING:at_kernel/kthread.c:#kthread_queue_work | 0          | 30         |
-> | EIP:kthread_queue_work                          | 0          | 30         |
-> | BUG:kernel_hang_in_test_stage                   | 0          | 2          |
-> +-------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> [    5.554282] WARNING: CPU: 0 PID: 1 at kernel/kthread.c:817 kthread_queue_work+0xf8/0x120
-> [    5.556204] Modules linked in:
-> [    5.556204] CPU: 0 PID: 1 Comm: swapper Tainted: G S                5.8.0-rc3-00014-ga90477f0c9566 #1
-> [    5.556204] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [    5.556204] EIP: kthread_queue_work+0xf8/0x120
-> [    5.556204] Code: 00 59 e9 67 ff ff ff 8d 76 00 8b 4e 10 85 c9 75 a6 8d 4b 28 89 f2 89 d8 bf 01 00 00 00 e8 f0 f5 ff ff eb 93 8d b6 00 00 00 00 <0f> 0b 6a 00 31 c9 ba 01 00 00 00 b8 08 6c 64 c3 e8 f3 04 0b 00 5b
-> [    5.556204] EAX: 00000000 EBX: eeff538c ECX: 00000000 EDX: 00000001
-> [    5.556204] ESI: eeff53d0 EDI: 00000000 EBP: f5edde70 ESP: f5edde5c
-> [    5.556204] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010046
-> [    5.556204] CR0: 80050033 CR2: b7eda844 CR3: 038ae000 CR4: 000406d0
-> [    5.556204] Call Trace:
-> [    5.556204]  spi_start_queue+0x50/0x70
-> [    5.556204]  spi_register_controller+0x642/0xa80
-> [    5.556204]  ? kobject_get+0x54/0xf0
-> [    5.556204]  ? parport_pc_platform_probe+0x10/0x10
-> [    5.556204]  spi_bitbang_start+0x2f/0x70
-> [    5.556204]  ? parport_pc_platform_probe+0x10/0x10
-> [    5.556204]  butterfly_attach+0x164/0x2c0
-> [    5.556204]  ? driver_detach+0x30/0x30
-> [    5.556204]  port_check+0x1c/0x30
-> [    5.556204]  bus_for_each_dev+0x5a/0x90
-> [    5.556204]  __parport_register_driver+0x76/0xa0
-> [    5.556204]  ? driver_detach+0x30/0x30
-> [    5.556204]  ? spi_engine_driver_init+0x16/0x16
-> [    5.556204]  butterfly_init+0x19/0x1b
-> [    5.556204]  do_one_initcall+0x79/0x310
-> [    5.556204]  ? parse_args+0x70/0x420
-> [    5.556204]  ? rcu_read_lock_sched_held+0x2f/0x50
-> [    5.556204]  ? trace_initcall_level+0x95/0xc7
-> [    5.556204]  ? kernel_init_freeable+0x129/0x19f
-> [    5.556204]  kernel_init_freeable+0x148/0x19f
-> [    5.556204]  ? rest_init+0x100/0x100
-> [    5.556204]  kernel_init+0xd/0xf0
-> [    5.556204]  ret_from_fork+0x1c/0x28
-> [    5.556204] irq event stamp: 8620410
-> [    5.556204] hardirqs last  enabled at (8620409): [<c2675daa>] _raw_spin_unlock_irqrestore+0x2a/0x50
-> [    5.556204] hardirqs last disabled at (8620410): [<c2675bb4>] _raw_spin_lock_irqsave+0x14/0x40
-> [    5.556204] softirqs last  enabled at (8620262): [<c2677900>] __do_softirq+0x2e0/0x480
-> [    5.556204] softirqs last disabled at (8620249): [<c1023cf5>] call_on_stack+0x45/0x50
-> [    5.556204] ---[ end trace 184061a442b5fd6f ]---
-> 
-> 
-> To reproduce:
-> 
->         # build kernel
->         cd linux
->         cp config-5.8.0-rc3-00014-ga90477f0c9566 .config
->         make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
+Ok.
+
+
+>>
+>>>> Have you considered to implement these through vDPA?
+>>> IIUC vDPA only provides an interface to userspace and an in-kernel rpmsg driver
+>>> or vhost net driver is not provided.
+>>>
+>>> The HW connection looks something like https://pasteboard.co/JfMVVHC.jpg
+>>> (usecase2 above),
+>>
+>> I see.
+>>
+>>
+>>>    all the boards run Linux. The middle board provides NTB
+>>> functionality and board on either side provides virtio/vhost functionality and
+>>> transfer data using rpmsg.
+>>
+>> So I wonder whether it's worthwhile for a new bus. Can we use the existed
+>> virtio-bus/drivers? It might work as, except for the epf transport, we can
+>> introduce a epf "vhost" transport driver.
+> IMHO we'll need two buses one for frontend and other for backend because the
+> two components can then co-operate/interact with each other to provide a
+> functionality. Though both will seemingly provide similar callbacks, they are
+> both provide symmetrical or complimentary funcitonality and need not be same or
+> identical.
+>
+> Having the same bus can also create sequencing issues.
+>
+> If you look at virtio_dev_probe() of virtio_bus
+>
+> device_features = dev->config->get_features(dev);
+>
+> Now if we use same bus for both front-end and back-end, both will try to
+> get_features when there has been no set_features. Ideally vhost device should
+> be initialized first with the set of features it supports. Vhost and virtio
+> should use "status" and "features" complimentarily and not identically.
+
+
+Yes, but there's no need for doing status/features passthrough in epf 
+vhost drivers.b
+
+
+>
+> virtio device (or frontend) cannot be initialized before vhost device (or
+> backend) gets initialized with data such as features. Similarly vhost (backend)
+> cannot access virqueues or buffers before virtio (frontend) sets
+> VIRTIO_CONFIG_S_DRIVER_OK whereas that requirement is not there for virtio as
+> the physical memory for virtqueues are created by virtio (frontend).
+
+
+epf vhost drivers need to implement two devices: vhost(vringh) device 
+and virtio device (which is a mediated device). The vhost(vringh) device 
+is doing feature negotiation with the virtio device via RC/EP or NTB. 
+The virtio device is doing feature negotiation with local virtio 
+drivers. If there're feature mismatch, epf vhost drivers and do 
+mediation between them.
+
+
+>
+>> It will have virtqueues but only used for the communication between itself and
+>> uppter virtio driver. And it will have vringh queues which will be probe by
+>> virtio epf transport drivers. And it needs to do datacopy between virtqueue and
+>> vringh queues.
+>>
+>> It works like:
+>>
+>> virtio drivers <- virtqueue/virtio-bus -> epf vhost drivers <- vringh queue/epf>
+>>
+>> The advantages is that there's no need for writing new buses and drivers.
+> I think this will work however there is an addtional copy between vringh queue
+> and virtqueue,
+
+
+I think not? E.g in use case 1), if we stick to virtio bus, we will have:
+
+virtio-rpmsg (EP) <- virtio ring(1) -> epf vhost driver (EP) <- virtio 
+ring(2) -> virtio pci (RC) <-> virtio rpmsg (RC)
+
+What epf vhost driver did is to read from virtio ring(1) about the 
+buffer len and addr and them DMA to Linux(RC)?
+
+
+> in some cases adds latency because of forwarding interrupts
+> between vhost and virtio driver, vhost drivers providing features (which means
+> it has to be aware of which virtio driver will be connected).
+> virtio drivers (front end) generally access the buffers from it's local memory
+> but when in backend it can access over MMIO (like PCI EPF or NTB) or userspace.
+>> Does this make sense?
+> Two copies in my opinion is an issue but lets get others opinions as well.
+
+
+Sure.
+
+
+>
+> Thanks for your suggestions!
+
+
+You're welcome.
+
+Thanks
+
+
+>
+> Regards
+> Kishon
+>
+>> Thanks
+>>
+>>
+>>> Thanks
+>>> Kishon
+>>>
+>>>> Thanks
+>>>>
+>>>>
+>>>>>> Kishon Vijay Abraham I (22):
+>>>>>>      vhost: Make _feature_ bits a property of vhost device
+>>>>>>      vhost: Introduce standard Linux driver model in VHOST
+>>>>>>      vhost: Add ops for the VHOST driver to configure VHOST device
+>>>>>>      vringh: Add helpers to access vring in MMIO
+>>>>>>      vhost: Add MMIO helpers for operations on vhost virtqueue
+>>>>>>      vhost: Introduce configfs entry for configuring VHOST
+>>>>>>      virtio_pci: Use request_threaded_irq() instead of request_irq()
+>>>>>>      rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
+>>>>>>        reading messages
+>>>>>>      rpmsg: Introduce configfs entry for configuring rpmsg
+>>>>>>      rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
+>>>>>>      rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
+>>>>>>        rpmsg_internal.h
+>>>>>>      virtio: Add ops to allocate and free buffer
+>>>>>>      rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
+>>>>>>        virtio_free_buffer()
+>>>>>>      rpmsg: Add VHOST based remote processor messaging bus
+>>>>>>      samples/rpmsg: Setup delayed work to send message
+>>>>>>      samples/rpmsg: Wait for address to be bound to rpdev for sending
+>>>>>>        message
+>>>>>>      rpmsg.txt: Add Documentation to configure rpmsg using configfs
+>>>>>>      virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
+>>>>>>        device
+>>>>>>      PCI: endpoint: Add EP function driver to provide VHOST interface
+>>>>>>      NTB: Add a new NTB client driver to implement VIRTIO functionality
+>>>>>>      NTB: Add a new NTB client driver to implement VHOST functionality
+>>>>>>      NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
+>>>>>>
+>>>>>>     Documentation/driver-api/ntb.rst              |   11 +
+>>>>>>     Documentation/rpmsg.txt                       |   56 +
+>>>>>>     drivers/ntb/Kconfig                           |   18 +
+>>>>>>     drivers/ntb/Makefile                          |    2 +
+>>>>>>     drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
+>>>>>>     drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
+>>>>>>     drivers/ntb/ntb_virtio.h                      |   56 +
+>>>>>>     drivers/pci/endpoint/functions/Kconfig        |   11 +
+>>>>>>     drivers/pci/endpoint/functions/Makefile       |    1 +
+>>>>>>     .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
+>>>>>>     drivers/rpmsg/Kconfig                         |   10 +
+>>>>>>     drivers/rpmsg/Makefile                        |    3 +-
+>>>>>>     drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
+>>>>>>     drivers/rpmsg/rpmsg_core.c                    |    7 +
+>>>>>>     drivers/rpmsg/rpmsg_internal.h                |  136 ++
+>>>>>>     drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
+>>>>>>     drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
+>>>>>>     drivers/vhost/Kconfig                         |    1 +
+>>>>>>     drivers/vhost/Makefile                        |    2 +-
+>>>>>>     drivers/vhost/net.c                           |   10 +-
+>>>>>>     drivers/vhost/scsi.c                          |   24 +-
+>>>>>>     drivers/vhost/test.c                          |   17 +-
+>>>>>>     drivers/vhost/vdpa.c                          |    2 +-
+>>>>>>     drivers/vhost/vhost.c                         |  730 ++++++++++-
+>>>>>>     drivers/vhost/vhost_cfs.c                     |  341 +++++
+>>>>>>     drivers/vhost/vringh.c                        |  332 +++++
+>>>>>>     drivers/vhost/vsock.c                         |   20 +-
+>>>>>>     drivers/virtio/Kconfig                        |    9 +
+>>>>>>     drivers/virtio/Makefile                       |    1 +
+>>>>>>     drivers/virtio/virtio_pci_common.c            |   25 +-
+>>>>>>     drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
+>>>>>>     include/linux/mod_devicetable.h               |    6 +
+>>>>>>     include/linux/rpmsg.h                         |    6 +
+>>>>>>     {drivers/vhost => include/linux}/vhost.h      |  132 +-
+>>>>>>     include/linux/virtio.h                        |    3 +
+>>>>>>     include/linux/virtio_config.h                 |   42 +
+>>>>>>     include/linux/vringh.h                        |   46 +
+>>>>>>     samples/rpmsg/rpmsg_client_sample.c           |   32 +-
+>>>>>>     tools/virtio/virtio_test.c                    |    2 +-
+>>>>>>     39 files changed, 7083 insertions(+), 183 deletions(-)
+>>>>>>     create mode 100644 drivers/ntb/ntb_vhost.c
+>>>>>>     create mode 100644 drivers/ntb/ntb_virtio.c
+>>>>>>     create mode 100644 drivers/ntb/ntb_virtio.h
+>>>>>>     create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
+>>>>>>     create mode 100644 drivers/rpmsg/rpmsg_cfs.c
+>>>>>>     create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
+>>>>>>     create mode 100644 drivers/vhost/vhost_cfs.c
+>>>>>>     create mode 100644 drivers/virtio/virtio_pci_epf.c
+>>>>>>     rename {drivers/vhost => include/linux}/vhost.h (66%)
+>>>>>>
+>>>>>> -- 
+>>>>>> 2.17.1
+>>>>>>
+
