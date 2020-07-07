@@ -2,117 +2,104 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15FC20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA3320684
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nDpF4Boi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGGEJP (ORCPT
+        id S1727077AbgGGEKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:09:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17568 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725766AbgGGEJO (ORCPT
+        Tue, 7 Jul 2020 00:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgGGEKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:09:14 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06741rt4112843;
-        Tue, 7 Jul 2020 00:09:13 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32486cdutp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 00:09:13 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0673xPjL028027;
-        Tue, 7 Jul 2020 04:09:12 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 322hd922tf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 04:09:12 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06749Bs045678944
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 04:09:11 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A57BDAC062;
-        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93B8FAC05F;
-        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 04:09:11 +0000 (GMT)
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
+        Tue, 7 Jul 2020 00:10:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F184C061755;
+        Mon,  6 Jul 2020 21:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jx2Euu6X0Gk2ywXBVaInMxlmuC+nxVpXXbv+4Y+K5cU=; b=nDpF4Boi5/wsAnVgUXbTljU/rc
+        I+xcYCbqlI6v9CZyJvZ06zKKoilgJMwk7djybkbZyZFON9myGiXER+nfUG2SwR0rKim8uaHrrgOLS
+        imC64AJX98pOoSPEGqHcNI0lihGzFl3O++JXgDY7WFfJ2c7PUy5xp3rLF0UaOdexXQr1TygHKVPll
+        gIBNMc/YvnU/zQWd8j5eUy/lOGVO/LpnfNneBCfrCyf1JJ9j2z9yNYgQPgWeWq92+ekRmfEAnY75g
+        j9+KaVyFc4+lQS5lhOn4GGPOPV8aRH+ADISyyHspXdgNjUrHJVAkX49FGETbv4JKHqIifAVq2Z7oZ
+        d6y35umA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsewQ-0005Nx-60; Tue, 07 Jul 2020 04:10:46 +0000
+Date:   Tue, 7 Jul 2020 05:10:46 +0100
+From:   Matthew Wilcox <willy@infradead.org>
 To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
- <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
- <20200706230914.GC20770@linux.intel.com>
- <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
- <20200707022416.GC112019@linux.intel.com>
- <f3e0fb50-8617-da40-1456-158531a070cb@linux.ibm.com>
- <20200707040325.GB143804@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <85c27199-df55-eecc-855c-dedcea64f89e@linux.ibm.com>
-Date:   Tue, 7 Jul 2020 00:09:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v34 10/24] mm: Add vm_ops->mprotect()
+Message-ID: <20200707041046.GI25523@casper.infradead.org>
+References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
+ <20200707030204.126021-11-jarkko.sakkinen@linux.intel.com>
+ <20200707031424.GD25523@casper.infradead.org>
+ <20200707032254.GB5208@linux.intel.com>
+ <20200707032408.GE25523@casper.infradead.org>
+ <20200707040151.GA143804@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200707040325.GB143804@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_01:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 suspectscore=0 bulkscore=0 phishscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007070025
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707040151.GA143804@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 12:03 AM, Jarkko Sakkinen wrote:
-> On Mon, Jul 06, 2020 at 11:08:12PM -0400, Stefan Berger wrote:
->> On 7/6/20 10:24 PM, Jarkko Sakkinen wrote:
->>> On Mon, Jul 06, 2020 at 07:55:26PM -0400, Stefan Berger wrote:
->>>> On 7/6/20 7:09 PM, Jarkko Sakkinen wrote:
->>>>> On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
->>>>>> From: Stefan Berger <stefanb@linux.ibm.com>
->>>>>>
->>>>>> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
->>>>>> to get the event log from ACPI. If one is found, use it to get the
->>>>>> start and length of the log area. This allows non-UEFI systems, such
->>>>>> as SeaBIOS, to pass an event log when using a TPM2.
->>>>>>
->>>>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>>> Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
->>>>> way to test this?
->>>> Yes.
->>> Is the emulator bundled with QEMU or does it have to be installed
->>> separately?
->> It has to be installed separately. On Fedora 31 it would just be a `sudo dnf
->> -y install swtpm-tools` and you should be good to go with libvirt /
->> virt-manager.
-> Is there some packaging for Debian/Ubuntu available?
+On Tue, Jul 07, 2020 at 07:01:51AM +0300, Jarkko Sakkinen wrote:
+> On Tue, Jul 07, 2020 at 04:24:08AM +0100, Matthew Wilcox wrote:
+> > On Mon, Jul 06, 2020 at 08:22:54PM -0700, Sean Christopherson wrote:
+> > > On Tue, Jul 07, 2020 at 04:14:24AM +0100, Matthew Wilcox wrote:
+> > > > > +		if (vma->vm_ops && vma->vm_ops->mprotect) {
+> > > > > +			error = vma->vm_ops->mprotect(vma, nstart, tmp, prot);
+> > > > > +			if (error)
+> > > > > +				goto out;
+> > > > > +		}
+> > > 
+> > > Based on "... and then the vma owner can do whatever it needs to before
+> > > calling mprotect_fixup(), which is already not static", my interpretation
+> > > is that Matthew's intent was to do:
+> > > 
+> > > 		if (vma->vm_ops && vma->vm_ops->mprotect)
+> > > 			error =  = vma->vm_ops->mprotect(vma, nstart, tmp, prot);
+> > > 		else
+> > > 			error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
+> > > 		if (error)
+> > > 			goto out;
+> > > 
+> > > i.e. make .mprotect() a full replacement as opposed to a prereq hook.
+> > 
+> > Yes, it was.  I was just looking at the next patch to be sure this was
+> > how I'd been misunderstood.
+> 
+> I'm don't get this part. If mprotect_fixup is called in the tail of the
+> callback, why it has to be called inside the callback and not be called
+> after the callback?
 
-
-So far may not be available yet. I had *experimented* with a PPA once: 
-https://launchpad.net/~stefanberger/+archive/ubuntu/swtpm-focal
-
-
-
-> /Jarkko
-
+Because that's how every other VM operation works.  Look at your
+implementation of get_unmapped_area() for example.
 
