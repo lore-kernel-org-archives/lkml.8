@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9C8206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D484206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y6F9hlhl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QGMjHJlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgGGKRj (ORCPT
+        id S1728325AbgGGKRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
+        Tue, 7 Jul 2020 06:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgGGKRX (ORCPT
+        with ESMTP id S1728246AbgGGKRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:17:23 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6875C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so1414409wmm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:22 -0700 (PDT)
+        Tue, 7 Jul 2020 06:17:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8604DC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z13so44551976wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GL1MoJKxnZtWyOmgkHZ5ZdLcj+7xXQIgEe9rUvPd4fk=;
-        b=Y6F9hlhltdfKqf7rUHge+Z/I8Om08eU1SVFzRpv3TDOhmPvM9NURwqhOyyLVfI1Vb4
-         BqUBp0JbKvL5b8IjHEUFXRsWnP36t2lkN2REOpkuVSjdiuAe56EMv2KCjf7uDPtI0Lpi
-         jOTz+FHuWVueoCq7I7YD4Uv+TqF/FEaBTg8jla19QgpBMo1Pio0tYDrtAFkgsdqCz9N6
-         fpFI3yKqDfH1I/os94fMLiK9ei7oND1VEkkMLIUYq13l9KmD6P8SyzeiTXRJkr5e9v1H
-         JgC+/inW/oO6efg0baiUOq+sZeQQGGrv2ZIbVih4nL+lFEk2d1gDBg+PELv6YK8Oevnl
-         HEjA==
+        bh=EXLqTyUKMLj4M51ntYR1QA4V9xA1YrzmuNUETaX0PBA=;
+        b=QGMjHJlQ9LWikvX6Na5JwK9UPUmF/DNUlzfwClDFWUzxLNI3vHyW3hm6xlfswr2AV8
+         wkFMnZoIWoQ8W/vbLtLairtyr3oUjXlaXBn79y60eIPJCInMUGmqhIwj5oH14AoPyTuW
+         PpuseWJtIwwqJ+wYUvHy5dH0KlMSlu3UwlLaMIwhi5Ru3QdAjHI0pt0KyOvCYdK+XJuB
+         g5A8bJoPOmMZSw0D/+fiy6siWxtEreitU2khKnrX6y7K+Wbf/i7VhqyVGk1Vfn7qfBdZ
+         zdC4l9jK22GpHnEbOHuseblQoFf5gMl+OxkiwHcQ/RKvu1QoDmvGzarx+CMpe8vRPBXe
+         tr2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GL1MoJKxnZtWyOmgkHZ5ZdLcj+7xXQIgEe9rUvPd4fk=;
-        b=V/1hjkqbdfaAv6ds4yr/SlzaQlKd9dwU4qIvkuElF+eo/+Lwqeyd0NeLknAZmsB/le
-         rmHTlTbBAy6BR53WfcqxapQZyXmyPyPP40PUlVlBtxvKXPxn0SCno9PCcNYU24mzRlE+
-         iHSRey+UgI5APlYagPyMmOYFiQfeaxbU8FKde9xp5vPva2PyG2QRfVBaimNdKfn6EaaN
-         3aNWvUtHxfNik1oemgDT8KXnnbsiulVCxBi/jWicKTU70HPcgcPJvKgMWLTVL6lJBPQM
-         zTfSpZS/TGqij/1UoX7GQER6qUQTC015QvVjIZTQapnJjRWkp8D558HsEiqA7r1oaRH6
-         XBKw==
-X-Gm-Message-State: AOAM533MMRjP4hEgofuVs7xe7WnYK8Jok76P9S0K3hN/OCQm5XeUVtRo
-        PWAxD3HkG0PkweU7HT7BCT26JQ==
-X-Google-Smtp-Source: ABdhPJys3a86OxKV+EWBwNFIyLWi784LN6fGl3f7t0+dy9DQHj3SWrOybRjJElejQDlEqlUS/0V1dA==
-X-Received: by 2002:a7b:c208:: with SMTP id x8mr3446081wmi.49.1594117041183;
-        Tue, 07 Jul 2020 03:17:21 -0700 (PDT)
+        bh=EXLqTyUKMLj4M51ntYR1QA4V9xA1YrzmuNUETaX0PBA=;
+        b=dwAYJNAmcDrA/z6dZEcGjqE/uI7z5zU9cP8JaJ9QKfoo+N3q8gRYSOR0IOQhEX8BgH
+         oNY+c/ZpOGCLakvZtVZPgq6vdaDOfqcPnu2go9UO25Try+7N2Ur7Go3kJrffESJbP7uW
+         IwgP8RGUhNpN/84YzEltH2cj72nYeDxOmWg7y6GiucEEU/52SXR+CFBSCOUOI6dozagX
+         gezPjdsvFLKDgc7VkQMfWwsBVOjo0Ya2mUF667lBWIGVCmzNwPPnlXd5se0Jy9ayv5P1
+         J3ka/jdX0XzhFGIcGAaY244aQKYNQsCwuv0zLhsp4t/dNHevbkYgJEgCAyeG3Glqp11+
+         OPrg==
+X-Gm-Message-State: AOAM532ZvXddl1Bl7yao4o6Lfub4RAZHamr9k3oMznR5nb5qd/zcpWt/
+        uccHRejcZVZE/uyJHt9A6DtEcQ==
+X-Google-Smtp-Source: ABdhPJxqAC3BtmcDgPQdVNfB2mynSSt1Kjfhgyv7zPY1kPqaosnB4BBwP2w2zFQNZfEfX5SODLsnZw==
+X-Received: by 2002:adf:dfd1:: with SMTP id q17mr50235597wrn.94.1594117036243;
+        Tue, 07 Jul 2020 03:17:16 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.19
+        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:17:20 -0700 (PDT)
+        Tue, 07 Jul 2020 03:17:15 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH 27/28] ASoC: codecs: tlv320aic26: Demote seemingly unintentional kerneldoc header
-Date:   Tue,  7 Jul 2020 11:16:41 +0100
-Message-Id: <20200707101642.1747944-28-lee.jones@linaro.org>
+        Richard Purdie <richard@openedhand.com>
+Subject: [PATCH 23/28] ASoC: soc-ac97: Demote seemingly unintentional kerneldoc header
+Date:   Tue,  7 Jul 2020 11:16:37 +0100
+Message-Id: <20200707101642.1747944-24-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
 References: <20200707101642.1747944-1-lee.jones@linaro.org>
@@ -84,29 +83,28 @@ descriptions are provided.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/codecs/tlv320aic26.c:138: warning: Function parameter or member 'dai' not described in 'aic26_mute'
- sound/soc/codecs/tlv320aic26.c:138: warning: Function parameter or member 'mute' not described in 'aic26_mute'
+ sound/soc/soc-ac97.c:402: warning: Function parameter or member 'ops' not described in 'snd_soc_set_ac97_ops_of_reset'
+ sound/soc/soc-ac97.c:402: warning: Function parameter or member 'pdev' not described in 'snd_soc_set_ac97_ops_of_reset'
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Richard Purdie <richard@openedhand.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/codecs/tlv320aic26.c | 2 +-
+ sound/soc/soc-ac97.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tlv320aic26.c b/sound/soc/codecs/tlv320aic26.c
-index 032b397356438..4569bbc08acb3 100644
---- a/sound/soc/codecs/tlv320aic26.c
-+++ b/sound/soc/codecs/tlv320aic26.c
-@@ -131,7 +131,7 @@ static int aic26_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
+diff --git a/sound/soc/soc-ac97.c b/sound/soc/soc-ac97.c
+index 906106ed8ca14..af789552a9d4c 100644
+--- a/sound/soc/soc-ac97.c
++++ b/sound/soc/soc-ac97.c
+@@ -391,7 +391,7 @@ int snd_soc_set_ac97_ops(struct snd_ac97_bus_ops *ops)
  }
+ EXPORT_SYMBOL_GPL(snd_soc_set_ac97_ops);
  
 -/**
 +/*
-  * aic26_mute - Mute control to reduce noise when changing audio format
-  */
- static int aic26_mute(struct snd_soc_dai *dai, int mute)
+  * snd_soc_set_ac97_ops_of_reset - Set ac97 ops with generic ac97 reset functions
+  *
+  * This function sets the reset and warm_reset properties of ops and parses
 -- 
 2.25.1
 
