@@ -2,253 +2,114 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1878206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoD5s6Eq"
+	by mail.kernel.org (Postfix) with ESMTP id C7C44206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgGGRPT (ORCPT
+        id S1728491AbgGGRPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbgGGRPT (ORCPT
+        Tue, 7 Jul 2020 13:15:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64978 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728428AbgGGRPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:15:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA663C061755;
-        Tue,  7 Jul 2020 10:15:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so37969193wrs.0;
-        Tue, 07 Jul 2020 10:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zPaFNN0CwRIrxgMT/Hx12rk1w2uEgsV43cWtsFNawmA=;
-        b=OoD5s6EqQZLxfIp3I7A669VifnUn9Ibnc7LYMSzZ0tIPUiA9Tp+buHQWel8bB9NGk2
-         EGangoBXq+izJzkRL1SnU8OAXuEDSdrGvKiTIwg3pdycFDevybGoENDig+Lin5AzfxWn
-         rV61Zirbp/gFLfE4XdvxvCOlOODfeXWxT96BQOHVqZkX/J+llXtaJhvzMN3duDyx1vmF
-         UtnFxZDDLSvOdsxVgUzYyobE4n4F/ZgGwV+CqNdRYZAjF1GmtCkfutynvWYnuKPjn1wm
-         ymW3Rw/ZTEaVMH6waJzp/4nd8HMM7k76LkNaYVpT4umj4p1Z6H3JkI3G8/Hg1SfAn7v2
-         IxdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zPaFNN0CwRIrxgMT/Hx12rk1w2uEgsV43cWtsFNawmA=;
-        b=bBrUUUf2JVcBAHcp8P7U/l62YvlsVWBC4yA6G1YXFjf6RDy85RgK/ngcdPpsVUDluo
-         h3RcpreFKki1YTjUd2DiEMGhkr45E41Q1FJdzNTN8c1OBVAt+wkkNHkIIXshXQZbohPW
-         V1kpaa0w5zCh9RyX7ISKFZp3tU+5ms1r4laEs541Ny10MWIrUQsHHqLmpgBa0YCITRdi
-         ArK810IAF/RtcOP3T5WXsHvXbqF6nfHDBIcC35Q2rK1PbJDyTRGMvlemxXBJPKApR05Y
-         3P2EgZy7TcvtKIxCYyOgtU+K4u8ZnIcbByHTPGLN1h0Nlpfbee3ZrXjLO8Rcr0f4FvmX
-         rXLA==
-X-Gm-Message-State: AOAM531138zjzglc/zRSHI2yYLJ/zYv+Bfw/4D4XwOXW3Ohy7B8Jvm+9
-        qxhZaSponVLGhLKb6up4oag=
-X-Google-Smtp-Source: ABdhPJwhTIoqPYMMiP4fvG9oZ1gOVUngiaKMsqX034M6n5Y/X7x48Jlyu5WLxXmWUrCOj1WsUBIg7A==
-X-Received: by 2002:a5d:6683:: with SMTP id l3mr7880261wru.288.1594142117582;
-        Tue, 07 Jul 2020 10:15:17 -0700 (PDT)
-Received: from localhost.localdomain ([185.200.214.168])
-        by smtp.gmail.com with ESMTPSA id d132sm1872742wmd.35.2020.07.07.10.15.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 10:15:16 -0700 (PDT)
-From:   izabela.bakollari@gmail.com
-To:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        izabela.bakollari@gmail.com
-Subject: [PATCH net-next] dropwatch: Support monitoring of dropped frames
-Date:   Tue,  7 Jul 2020 19:15:15 +0200
-Message-Id: <20200707171515.110818-1-izabela.bakollari@gmail.com>
-X-Mailer: git-send-email 2.18.4
+        Tue, 7 Jul 2020 13:15:23 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067H1o7P061602;
+        Tue, 7 Jul 2020 13:15:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffe8vmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 13:15:08 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067H4GHY071319;
+        Tue, 7 Jul 2020 13:15:08 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffe8vkt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 13:15:07 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067H0M6H018460;
+        Tue, 7 Jul 2020 17:15:06 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 322hd7une1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 17:15:06 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067HF3IL53870778
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jul 2020 17:15:03 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF9CAA405B;
+        Tue,  7 Jul 2020 17:15:03 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98362A4065;
+        Tue,  7 Jul 2020 17:15:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 Jul 2020 17:15:03 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+        id 29A80E1477; Tue,  7 Jul 2020 19:15:03 +0200 (CEST)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jin Yao <yao.jin@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: add psw_idle and psw_idle_exit to list of idle symbols
+Date:   Tue,  7 Jul 2020 19:14:55 +0200
+Message-Id: <20200707171457.85707-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_09:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ impostorscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007070118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Izabela Bakollari <izabela.bakollari@gmail.com>
+Add the s390 idle functions so they don't show up in top when
+using software sampling.
 
-Dropwatch is a utility that monitors dropped frames by having userspace
-record them over the dropwatch protocol over a file. This augument
-allows live monitoring of dropped frames using tools like tcpdump.
-
-With this feature, dropwatch allows two additional commands (start and
-stop interface) which allows the assignment of a net_device to the
-dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-and receive them on the assigned interface, allowing tools like tcpdump
-to monitor for them.
-
-With this feature, create a dummy ethernet interface (ip link add dev
-dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-these new commands, and then monitor dropped frames in real time by
-running tcpdump -i dummy0.
-
-Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
 ---
- include/uapi/linux/net_dropmon.h |  3 ++
- net/core/drop_monitor.c          | 79 +++++++++++++++++++++++++++++++-
- 2 files changed, 80 insertions(+), 2 deletions(-)
+ tools/perf/util/symbol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
-index 67e31f329190..e8e861e03a8a 100644
---- a/include/uapi/linux/net_dropmon.h
-+++ b/include/uapi/linux/net_dropmon.h
-@@ -58,6 +58,8 @@ enum {
- 	NET_DM_CMD_CONFIG_NEW,
- 	NET_DM_CMD_STATS_GET,
- 	NET_DM_CMD_STATS_NEW,
-+	NET_DM_CMD_START_IFC,
-+	NET_DM_CMD_STOP_IFC,
- 	_NET_DM_CMD_MAX,
- };
- 
-@@ -93,6 +95,7 @@ enum net_dm_attr {
- 	NET_DM_ATTR_SW_DROPS,			/* flag */
- 	NET_DM_ATTR_HW_DROPS,			/* flag */
- 	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
-+	NET_DM_ATTR_IFNAME,			/* string */
- 
- 	__NET_DM_ATTR_MAX,
- 	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 8e33cec9fc4e..8049bff05abd 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -30,6 +30,7 @@
- #include <net/genetlink.h>
- #include <net/netevent.h>
- #include <net/flow_offload.h>
-+#include <net/sock.h>
- 
- #include <trace/events/skb.h>
- #include <trace/events/napi.h>
-@@ -46,6 +47,7 @@
-  */
- static int trace_state = TRACE_OFF;
- static bool monitor_hw;
-+struct net_device *interface;
- 
- /* net_dm_mutex
-  *
-@@ -220,9 +222,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	struct per_cpu_dm_data *data;
- 	unsigned long flags;
- 
--	local_irq_save(flags);
-+	spin_lock_irqsave(&data->lock, flags);
- 	data = this_cpu_ptr(&dm_cpu_data);
--	spin_lock(&data->lock);
- 	dskb = data->skb;
- 
- 	if (!dskb)
-@@ -255,6 +256,12 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 
- out:
- 	spin_unlock_irqrestore(&data->lock, flags);
-+
-+	if (interface && interface != skb->dev) {
-+		skb = skb_clone(skb, GFP_ATOMIC);
-+		skb->dev = interface;
-+		netif_receive_skb(skb);
-+	}
- }
- 
- static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
-@@ -1315,6 +1322,63 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
- 	return -EOPNOTSUPP;
- }
- 
-+static int net_dm_interface_start(struct net *net, const char *ifname)
-+{
-+	struct net_device *nd;
-+
-+	nd = dev_get_by_name(net, ifname);
-+
-+	if (nd) {
-+		interface = nd;
-+		dev_hold(interface);
-+	} else {
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
-+static int net_dm_interface_stop(struct net *net, const char *ifname)
-+{
-+	struct net_device *nd;
-+
-+	nd = dev_get_by_name(net, ifname);
-+
-+	if (nd) {
-+		interface = nd;
-+		dev_put(interface);
-+	} else {
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
-+static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct net *net = sock_net(skb->sk);
-+	char ifname[IFNAMSIZ];
-+	int rc;
-+
-+	memset(ifname, 0, IFNAMSIZ);
-+	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
-+
-+	switch (info->genlhdr->cmd) {
-+	case NET_DM_CMD_START_IFC:
-+		rc = net_dm_interface_start(net, ifname);
-+		if (rc)
-+			return rc;
-+		break;
-+	case NET_DM_CMD_STOP_IFC:
-+		if (interface) {
-+			rc = net_dm_interface_stop(net, interface->ifname);
-+			return rc;
-+		} else {
-+			return -ENODEV;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
- {
- 	void *hdr;
-@@ -1543,6 +1607,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
- 	[NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
- 	[NET_DM_ATTR_SW_DROPS]	= {. type = NLA_FLAG },
- 	[NET_DM_ATTR_HW_DROPS]	= {. type = NLA_FLAG },
-+	[NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
- };
- 
- static const struct genl_ops dropmon_ops[] = {
-@@ -1570,6 +1635,16 @@ static const struct genl_ops dropmon_ops[] = {
- 		.cmd = NET_DM_CMD_STATS_GET,
- 		.doit = net_dm_cmd_stats_get,
- 	},
-+	{
-+		.cmd = NET_DM_CMD_START_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
-+	{
-+		.cmd = NET_DM_CMD_STOP_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
- };
- 
- static int net_dm_nl_pre_doit(const struct genl_ops *ops,
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 5ddf84dcbae7..d33d24c61d24 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -666,6 +666,8 @@ static bool symbol__is_idle(const char *name)
+ 		"poll_idle",
+ 		"ppc64_runlatch_off",
+ 		"pseries_dedicated_idle_sleep",
++		"psw_idle",
++		"psw_idle_exit",
+ 		NULL
+ 	};
+ 	int i;
 -- 
-2.18.4
+2.17.1
 
