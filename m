@@ -2,99 +2,184 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8945C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B662C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8972065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7322065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594134687;
+	bh=tXgPE9b+fNC7S+SMte1ZUgnBKaxiTY7sLpEt0TqW93k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lAXfdMmY9B9yl9ztg/Z5AFJEG9P8A5CYbMgpufWpWwAUSXBHd2pNsNnj9jhJ7vBAZ
+	 jaiey2C3aD/G7SJXn1OcFDdLDhN23n8f/SeS6w7J8f9LJMyJIZ06K00RGBO2ArNDCJ
+	 /kIlUKDbIjsc1W2JKY3rM7L91Ar4iSfaBwAyrUbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgGGPLV (ORCPT
+        id S1728696AbgGGPL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:11:21 -0400
-Received: from smtp8.emailarray.com ([65.39.216.67]:34512 "EHLO
-        smtp8.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbgGGPLS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:11:18 -0400
-Received: (qmail 99413 invoked by uid 89); 7 Jul 2020 15:11:12 -0000
-Received: from unknown (HELO localhost) (amxlbW9uQGZsdWdzdmFtcC5jb21AMTYzLjExNC4xMzIuMw==) (POLARISLOCAL)  
-  by smtp8.emailarray.com with SMTP; 7 Jul 2020 15:11:12 -0000
-Date:   Tue, 7 Jul 2020 08:11:09 -0700
-From:   Jonathan Lemon <jonathan.lemon@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dma-mapping: add a new dma_need_sync API
-Message-ID: <20200707151109.qui5uzzzq4dihfie@bsd-mbp>
-References: <20200629130359.2690853-1-hch@lst.de>
- <20200629130359.2690853-2-hch@lst.de>
- <20200706194227.vfhv5o4lporxjxmq@bsd-mbp.dhcp.thefacebook.com>
- <20200707064730.GA23602@lst.de>
+        Tue, 7 Jul 2020 11:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728650AbgGGPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:11:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AECB20674;
+        Tue,  7 Jul 2020 15:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594134676;
+        bh=tXgPE9b+fNC7S+SMte1ZUgnBKaxiTY7sLpEt0TqW93k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qfHUdR+anyhdpIhNu2XBKi3EuTZdV/mNO5IaJ7wnkuEBSsgA2CaxHg+FKZ91J3xWK
+         DR/1ZVnysa+JvqzQ1dUN+T9rUVMx2tFwNjoyaHONSfS+Jae8Sc2phga/okxNZK+/Sp
+         Bs+42rEIpzqYhKDYzJ/8TH5VoQO4h9syii5eU9xY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/19] 4.4.230-rc1 review
+Date:   Tue,  7 Jul 2020 17:10:03 +0200
+Message-Id: <20200707145747.493710555@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707064730.GA23602@lst.de>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.230-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.230-rc1
+X-KernelTest-Deadline: 2020-07-09T14:57+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 08:47:30AM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 06, 2020 at 12:42:27PM -0700, Jonathan Lemon wrote:
-> > On Mon, Jun 29, 2020 at 03:03:56PM +0200, Christoph Hellwig wrote:
-> > > Add a new API to check if calls to dma_sync_single_for_{device,cpu} are
-> > > required for a given DMA streaming mapping.
-> > > 
-> > > +::
-> > > +
-> > > +	bool
-> > > +	dma_need_sync(struct device *dev, dma_addr_t dma_addr);
-> > > +
-> > > +Returns %true if dma_sync_single_for_{device,cpu} calls are required to
-> > > +transfer memory ownership.  Returns %false if those calls can be skipped.
-> > 
-> > Hi Christoph -
-> > 
-> > Thie call above is for a specific dma_addr.  For correctness, would I
-> > need to check every addr, or can I assume that for a specific memory
-> > type (pages returned from malloc), that the answer would be identical?
-> 
-> You need to check every mapping.  E.g. this API pairs with a
-> dma_map_single/page call.  For S/G mappings you'd need to call it for
-> each entry, although if you have a use case for that we really should
-> add a dma_sg_need_sync helper instea of open coding the scatterlist walk.
+This is the start of the stable review cycle for the 4.4.230 release.
+There are 19 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-My use case is setting up a pinned memory area, and caching the dma
-mappings.  I'd like to bypass storing the DMA addresses if they aren't
-needed.  For example:
+Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+Anything received after that time might be too late.
 
-setup()
-{
-    if (dma_need_sync(dev, addr, len)) {
-        kvmalloc_array(...)
-        cache_dma_mappings(...)
-    }
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.230-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.230-rc1
+
+Vasily Averin <vvs@virtuozzo.com>
+    netfilter: nf_conntrack_h323: lost .data_len definition for Q.931/ipv6
+
+Hauke Mehrtens <hauke@hauke-m.de>
+    MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+
+Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+    cifs: Fix the target file was deleted when rename failed.
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor persistent/resilient handle flags for multiuser mounts
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor 'seal' flag for multiuser mounts
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "ALSA: usb-audio: Improve frames size computation"
+
+Chris Packham <chris.packham@alliedtelesis.co.nz>
+    i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+
+Hou Tao <houtao1@huawei.com>
+    virtio-blk: free vblk-vqs in error path of virtblk_probe()
+
+Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+    hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
+
+Chu Lin <linchuyuan@google.com>
+    hwmon: (max6697) Make sure the OVERT mask is set correctly
+
+Shile Zhang <shile.zhang@nokia.com>
+    sched/rt: Show the 'sched_rr_timeslice' SCHED_RR timeslice tuning knob in milliseconds
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+
+Douglas Anderson <dianders@chromium.org>
+    kgdb: Avoid suspicious RCU usage warning
+
+Zqiang <qiang.zhang@windriver.com>
+    usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+
+Qian Cai <cai@lca.pw>
+    mm/slub: fix stack overruns with SLUB_STATS
+
+Borislav Petkov <bp@suse.de>
+    EDAC/amd64: Read back the scrub rate PCI register on F15h
+
+Hugh Dickins <hughd@google.com>
+    mm: fix swap cache node allocation mask
+
+Filipe Manana <fdmanana@suse.com>
+    btrfs: fix data block group relocation failure due to concurrent scrub
+
+Anand Jain <Anand.Jain@oracle.com>
+    btrfs: cow_file_range() num_bytes and disk_num_bytes are same
 
 
-dev_get_dma(page)
-{
-    if (!cache)
-        return page_to_phys(page)
+-------------
 
-    return dma_cache_lookup(...)
+Diffstat:
+
+ Makefile                               |  4 ++--
+ arch/mips/kernel/traps.c               |  1 +
+ crypto/af_alg.c                        | 26 +++++++++-----------
+ crypto/algif_aead.c                    |  9 +++----
+ crypto/algif_hash.c                    |  9 +++----
+ crypto/algif_skcipher.c                |  9 +++----
+ drivers/block/virtio_blk.c             |  1 +
+ drivers/edac/amd64_edac.c              |  2 ++
+ drivers/hwmon/acpi_power_meter.c       |  4 +++-
+ drivers/hwmon/max6697.c                |  7 +++---
+ drivers/i2c/algos/i2c-algo-pca.c       |  3 ++-
+ drivers/usb/misc/usbtest.c             |  1 +
+ fs/btrfs/inode.c                       | 36 ++++++++++++++++++++--------
+ fs/cifs/connect.c                      |  3 +++
+ fs/cifs/inode.c                        | 10 ++++++--
+ include/crypto/if_alg.h                |  4 ++--
+ include/linux/sched/sysctl.h           |  1 +
+ kernel/debug/debug_core.c              |  4 ++++
+ kernel/sched/core.c                    |  5 ++--
+ kernel/sched/rt.c                      |  1 +
+ kernel/sysctl.c                        |  2 +-
+ mm/slub.c                              |  3 ++-
+ mm/swap_state.c                        |  3 ++-
+ net/netfilter/nf_conntrack_h323_main.c |  1 +
+ sound/usb/card.h                       |  4 ----
+ sound/usb/endpoint.c                   | 43 ++++------------------------------
+ sound/usb/endpoint.h                   |  1 -
+ sound/usb/pcm.c                        |  2 --
+ 28 files changed, 95 insertions(+), 104 deletions(-)
 
 
-
-The reason for doing it this way is that the page in question may be
-backed by either system memory, or device memory such as a GPU.  For the
-latter, the GPU provides a table of DMA addresses where data may be
-accessed, so I'm unable to use the dma_map_page() API.
--- 
-Jonathan
