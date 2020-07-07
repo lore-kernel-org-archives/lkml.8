@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7F1206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1BC206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594085611;
-	bh=+dI00gMka0obVddGplP8HkwgjQmuKtBt2iNNRt04pzk=;
+	s=default; t=1594085616;
+	bh=0Y0CXgWgIGOuqURmwOT7L3TTrVG7g4ZNpBp5WtkSiLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYDmFFVtK8O+anq8B/vLE95+07K0klVA+LbdOjfZgAYKIgCbIOhIxclyRXT9h0LHa
-	 UlV35pF2D0lvU60QkbNH5CQuejEVFwqH4bD+PhquDM5SgfUsr7AsVJ9tj4+IBvP/k7
-	 EFuUJaUvHolou/smSJAtjYDdacCFB+Xp5vf59GN4=
+	b=K8+LdzmYZAbgiu0HWNSViFEy28NbP6ANAutS6IdvKA1H7xZOU/wWyoAyQU2koONLM
+	 /0VqqlxoNy1K9DctGt/wYdioy1RKE9JliEkwqZhs+MveaVU7wMuLpAD+O/yX/m8Ea9
+	 F7QOjd2lDBKlg97tK354Herwvdp5bPtWpol8d0Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgGGBda (ORCPT
+        id S1728152AbgGGBdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        Mon, 6 Jul 2020 21:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbgGGBdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:33:17 -0400
+        id S1727951AbgGGBdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 21:33:13 -0400
 Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2653206E6;
-        Tue,  7 Jul 2020 01:33:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F35220719;
+        Tue,  7 Jul 2020 01:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594085597;
-        bh=+dI00gMka0obVddGplP8HkwgjQmuKtBt2iNNRt04pzk=;
+        s=default; t=1594085592;
+        bh=0Y0CXgWgIGOuqURmwOT7L3TTrVG7g4ZNpBp5WtkSiLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwf9fs9NuvCDBV5GyyhLgoPg/oBJiCoAqXTxhhNuVTIacBjjbYb4i13w1Fe+9BUlv
-         4awN3Nc9IGQsVVMxKStlzgOAp1Rt6lKegbuErJ5FFlwHJQIm5++z4VE+vW5SDqfJPa
-         sp6R8Nx4FeuCFiwutQDtyMNpjnuN7YiiaKLKLcXo=
+        b=BLxw8cBFpzRywhX+mElFUlxLGAkfIPEkqJfhWc24QuS79dsMUuMu70WhrEAgHoFiw
+         L/tYtqkn1EDSWXfAwNCjlm7ShIGNh4MVzyAAhuLILfhxZ76kygYS/p2oCoXjYfDWMu
+         QtomQElslQ105vgjJ/XXYOyvlbM7TNrXoUXFgxNE=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -46,9 +46,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Anna-Maria Gleixner <anna-maria@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 7/9] timer: Spare timer softirq until next expiry
-Date:   Tue,  7 Jul 2020 03:32:51 +0200
-Message-Id: <20200707013253.26770-8-frederic@kernel.org>
+Subject: [PATCH 4/9] timers: Always keep track of next expiry
+Date:   Tue,  7 Jul 2020 03:32:48 +0200
+Message-Id: <20200707013253.26770-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200707013253.26770-1-frederic@kernel.org>
 References: <20200707013253.26770-1-frederic@kernel.org>
@@ -59,116 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the core timer infrastructure doesn't depend anymore on
-periodic base->clk increments, even when the CPU is not in NO_HZ mode,
-we can delay the timer softirqs until we have actual timers to expire.
+So far next expiry was only tracked while the CPU was in nohz_idle mode
+in order to cope with missing ticks that can't increment the base->clk
+periodically anymore.
 
-Some spurious softirqs can still remain since base->next_expiry doesn't
-keep track of canceled timers but we are still way ahead of the
-unconditional periodic softirqs (~15 times less of them with 1000 Hz
-and ~5 times less with 100 Hz).
+We are going to expand that logic beyond nohz in order to spare timers
+softirqs so do it unconditionally.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Anna-Maria Gleixner <anna-maria@linutronix.de>
 Cc: Juri Lelli <juri.lelli@redhat.com>
 ---
- kernel/time/timer.c | 49 ++++++++-------------------------------------
- 1 file changed, 8 insertions(+), 41 deletions(-)
+ kernel/time/timer.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index ffa2c956d968..cbc5ac7f772d 100644
+index acf7cb8c09f8..8a4138e47aa4 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1457,10 +1457,10 @@ static void expire_timers(struct timer_base *base, struct hlist_head *head)
+@@ -558,8 +558,22 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
+ 	 * timer is not deferrable. If the other CPU is on the way to idle
+ 	 * then it can't set base->is_idle as we hold the base lock:
+ 	 */
+-	if (!base->is_idle)
+-		return;
++	if (base->is_idle)
++		wake_up_nohz_cpu(base->cpu);
++}
++
++/*
++ * Enqueue the timer into the hash bucket, mark it pending in
++ * the bitmap and store the index in the timer flags.
++ */
++static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
++			  unsigned int idx)
++{
++	hlist_add_head(&timer->entry, base->vectors + idx);
++	__set_bit(idx, base->pending_map);
++	timer_set_idx(timer, idx);
++
++	trace_timer_start(timer, timer->expires, timer->flags);
+ 
+ 	/* Check whether this is the new first expiring timer: */
+ 	if (time_after_eq(timer->expires, base->next_expiry))
+@@ -578,21 +592,7 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
+ 	} else {
+ 		base->next_expiry = timer->expires;
  	}
+-	wake_up_nohz_cpu(base->cpu);
+-}
+ 
+-/*
+- * Enqueue the timer into the hash bucket, mark it pending in
+- * the bitmap and store the index in the timer flags.
+- */
+-static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
+-			  unsigned int idx)
+-{
+-	hlist_add_head(&timer->entry, base->vectors + idx);
+-	__set_bit(idx, base->pending_map);
+-	timer_set_idx(timer, idx);
+-
+-	trace_timer_start(timer, timer->expires, timer->flags);
+ 	trigger_dyntick_cpu(base, timer);
  }
  
--static int __collect_expired_timers(struct timer_base *base,
--				    struct hlist_head *heads)
-+static int collect_expired_timers(struct timer_base *base,
-+				  struct hlist_head *heads)
- {
--	unsigned long clk = base->clk;
-+	unsigned long clk = base->clk = base->next_expiry;
- 	struct hlist_head *vec;
- 	int i, levels = 0;
- 	unsigned int idx;
-@@ -1683,40 +1683,6 @@ void timer_clear_idle(void)
- 	 */
- 	base->is_idle = false;
+@@ -1490,7 +1490,6 @@ static int __collect_expired_timers(struct timer_base *base,
+ 	return levels;
  }
--
--static int collect_expired_timers(struct timer_base *base,
--				  struct hlist_head *heads)
--{
--	unsigned long now = READ_ONCE(jiffies);
--
--	/*
--	 * NOHZ optimization. After a long idle sleep we need to forward the
--	 * base to current jiffies. Avoid a loop by searching the bitfield for
--	 * the next expiring timer.
--	 */
--	if ((long)(now - base->clk) > 2) {
--		/*
--		 * If the next timer is ahead of time forward to current
--		 * jiffies, otherwise forward to the next expiry time:
--		 */
--		if (time_after(base->next_expiry, now)) {
--			/*
--			 * The call site will increment base->clk and then
--			 * terminate the expiry loop immediately.
--			 */
--			base->clk = now;
--			return 0;
--		}
--		base->clk = base->next_expiry;
--	}
--	return __collect_expired_timers(base, heads);
--}
--#else
--static inline int collect_expired_timers(struct timer_base *base,
--					 struct hlist_head *heads)
--{
--	return __collect_expired_timers(base, heads);
--}
- #endif
  
+-#ifdef CONFIG_NO_HZ_COMMON
  /*
-@@ -1749,7 +1715,7 @@ static inline void __run_timers(struct timer_base *base)
- 	struct hlist_head heads[LVL_DEPTH];
- 	int levels;
+  * Find the next pending bucket of a level. Search from level start (@offset)
+  * + @clk upwards and if nothing there, search from start of the level
+@@ -1582,6 +1581,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 	return next;
+ }
  
--	if (!time_after_eq(jiffies, base->clk))
-+	if (time_before(jiffies, base->next_expiry))
- 		return;
- 
- 	timer_base_lock_expiry(base);
-@@ -1762,7 +1728,8 @@ static inline void __run_timers(struct timer_base *base)
- 	 */
- 	base->must_forward_clk = false;
- 
--	while (time_after_eq(jiffies, base->clk)) {
-+	while (time_after_eq(jiffies, base->clk) &&
-+	       time_after_eq(jiffies, base->next_expiry)) {
++#ifdef CONFIG_NO_HZ_COMMON
+ /*
+  * Check, if the next hrtimer event is before the next timer wheel
+  * event:
+@@ -1787,6 +1787,7 @@ static inline void __run_timers(struct timer_base *base)
  
  		levels = collect_expired_timers(base, heads);
  		base->clk++;
-@@ -1797,12 +1764,12 @@ void run_local_timers(void)
++		base->next_expiry = __next_timer_interrupt(base);
  
- 	hrtimer_run_queues();
- 	/* Raise the softirq only if required. */
--	if (time_before(jiffies, base->clk)) {
-+	if (time_before(jiffies, base->next_expiry)) {
- 		if (!IS_ENABLED(CONFIG_NO_HZ_COMMON))
- 			return;
- 		/* CPU is awake, so check the deferrable base. */
- 		base++;
--		if (time_before(jiffies, base->clk))
-+		if (time_before(jiffies, base->next_expiry))
- 			return;
+ 		while (levels--)
+ 			expire_timers(base, heads + levels);
+@@ -2039,6 +2040,7 @@ static void __init init_timer_cpu(int cpu)
+ 		base->cpu = cpu;
+ 		raw_spin_lock_init(&base->lock);
+ 		base->clk = jiffies;
++		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
+ 		timer_base_init_expiry_lock(base);
  	}
- 	raise_softirq(TIMER_SOFTIRQ);
+ }
 -- 
 2.26.2
 
