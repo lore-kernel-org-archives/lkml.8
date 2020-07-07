@@ -2,145 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5004DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A018B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594132143;
-	bh=SeXjnrv0KQvcd5JrSwJuK4Z3XaoksQu7R84+qAENwuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YLSMUn1gmJpNgzC256+0IyPhd5Ztzm1aBd71/r5PGl93d01AxYWD/Pnqi7aChGBu6
-	 jAufi/9xFjwGVJ0H3gi6W64F5DBdrTZXLqrjvwuIHLDiutBXkP6sJwbTMrV9NDFGf2
-	 /NVwK95bJdP4mbIyr4by7rqcrYc7oy5YOXQVKMgc=
+	by mail.kernel.org (Postfix) with ESMTP id 2EBB820771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eig7ACSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgGGO3C (ORCPT
+        id S1728149AbgGGO3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgGGO3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:29:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7AAA2073E;
-        Tue,  7 Jul 2020 14:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594132141;
-        bh=SeXjnrv0KQvcd5JrSwJuK4Z3XaoksQu7R84+qAENwuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P4FBXdVCCTFVLNly8/ClwjMiwbxZo2+1v2fWs/GeevPXQR9aB6PotkQGnK9uDtI8n
-         Pj4Nw9OWHPnEpZtqW43oBirhBGSOHdjg+NHVJHuuJMvdG0gsH5QAiw7MASezJfgq7Q
-         J0CRRFVkt+M1awRqGwq2cUUTDo6vkfeMFo/+qWAo=
-Date:   Tue, 7 Jul 2020 16:28:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     linux-pm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        rafael.j.wysocki@intel.com, swboyd@chromium.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 1/1] power: Emit changed uevent on
- wakeup_sysfs_add/remove
-Message-ID: <20200707142859.GB55434@kroah.com>
-References: <20200706210717.1210639-1-abhishekpandit@chromium.org>
- <20200706140715.v2.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+        Tue, 7 Jul 2020 10:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGO3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:29:31 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D27C061755;
+        Tue,  7 Jul 2020 07:29:31 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id h22so42980634lji.9;
+        Tue, 07 Jul 2020 07:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=Or0lYQVNJ3ZFTvEKcGdp6AoYMkJnpUEvesCucB/s/eA=;
+        b=Eig7ACSNKBihkxVTkdaoPlJSPR9yhc5A1NgIfryFh+aZ1/OPt2JF7JxQ9qMEyRo0WC
+         JBnmuriXLXe07JxKRZmEq3I+j3Fnh9y6bdCe0b9aRUqpfUByxrQe+oAkuXqj7W4BEg1q
+         2GIYlJpL/9/DCgnQizPEUSwVzx/a75C27STAid79ScuTBY8VN+wd1Ro6TqLWcnFaOe1e
+         TaKd1Ne5LmiEzjkN9EsoMcTpEmouff7AWvIj7wF/TVwlb3n9Hhs6/QCfmLS+zzWB2v+Z
+         R+BTbLWr99QWhCTg0PEMIxUSV3x49yVfAVxyg3DylSjTM3ihrpIFX+svZ8SPwYbbzTcM
+         lWHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=Or0lYQVNJ3ZFTvEKcGdp6AoYMkJnpUEvesCucB/s/eA=;
+        b=Msf2mls/8xtgr0wdqajnuR0GdNcKhXArtN36q3EKw7WjDFPzaQyHf3ci0SWWBEl9q4
+         ttU2EvFVWTajUUIdSwBHE9AMwqYGah/6fcOWGecmk69pOEwjF2Ug2Me8Py4Nh7OMM19C
+         q+pxN7LqZfLUx4CWAYM/4wUNOA5WUhf59CajlXYTT9W9wbxDD8xJq5byxxQ7pTtRwAj+
+         tc+iwGG6+3BrH37SS5fObwGgVcs4+s3a+h0+mJD1GYidsLVKBrbdMNNVdoMhBV1Pv6m9
+         y4K3GwqDjcRapD0fk3dH94vmD8o52tb3Ng9vj+Rn0RZKU/rcThwTIvRcOodZk39yyiWh
+         Fxdg==
+X-Gm-Message-State: AOAM5307CdfLsqtOBh7tGKYhTabe6OdqN3Hf3t/C1rcfkkbHiABzFuf6
+        1SSXlSosf0Jq194YgF3fXz8=
+X-Google-Smtp-Source: ABdhPJz4sWveRvaDilxkO9hwX6+QdFoRWNRQHSqXz94U8JBhMiIIFwRF5pq38V9KwcotVknmy0Yr8g==
+X-Received: by 2002:a2e:8799:: with SMTP id n25mr24136611lji.416.1594132169997;
+        Tue, 07 Jul 2020 07:29:29 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id m15sm227262ljp.45.2020.07.07.07.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 07:29:29 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [EXT] [PATCH  2/5] net: fec: enable to use PPS feature without
+ time stamping
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200706142616.25192-3-sorganov@gmail.com>
+        <AM6PR0402MB360752A10C9529B13051C7F2FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+Date:   Tue, 07 Jul 2020 17:29:28 +0300
+In-Reply-To: <AM6PR0402MB360752A10C9529B13051C7F2FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+        (Andy Duan's message of "Tue, 7 Jul 2020 04:05:11 +0000")
+Message-ID: <871rln9z5j.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706140715.v2.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 02:07:17PM -0700, Abhishek Pandit-Subedi wrote:
-> Udev rules that depend on the power/wakeup attribute don't get triggered
-> correctly if device_set_wakeup_capable is called after the device is
-> created. This can happen for several reasons (driver sets wakeup after
-> device is created, wakeup is changed on parent device, etc) and it seems
-> reasonable to emit a changed event when adding or removing attributes on
-> the device.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Add newline at end of bt_dev_err
-> 
->  drivers/base/power/sysfs.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> index 24d25cf8ab1487..d57e8e7f175ebf 100644
-> --- a/drivers/base/power/sysfs.c
-> +++ b/drivers/base/power/sysfs.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* sysfs entries for device PM */
->  #include <linux/device.h>
-> +#include <linux/kobject.h>
->  #include <linux/string.h>
->  #include <linux/export.h>
->  #include <linux/pm_qos.h>
-> @@ -739,12 +740,30 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
->  
->  int wakeup_sysfs_add(struct device *dev)
->  {
-> -	return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +	int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +
-> +	if (!ret) {
-> +		int tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> +
-> +		if (tmp)
-> +			dev_err(dev,
-> +				"Error in uevent for wakeup_sysfs_add: %d\n",
-> +				tmp);
-> +	}
-> +
-> +	return ret;
->  }
+Andy Duan <fugang.duan@nxp.com> writes:
 
-Shouldn't the above function look like this instead to be simpler:
+> From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020 10:26 PM
+>> PPS feature could be useful even when hardware time stamping of network
+>> packets is not in use, so remove offending check for this condition from
+>> fec_ptp_enable_pps().
+>
+> If hardware time stamping of network packets is not in use, PPS is
+> based on local
+> clock, what is the use case ?
 
-int wakeup_sysfs_add(struct device *dev)
-{
-	int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+First, having special code to disable something that does no harm seems
+to be wrong idea in general. In this particular case, if PPS is not
+needed, it is still disabled by default, and one is still free not to
+use it.
 
-	if (ret)
-		return ret;
+Then, as I'm not aware of a rule that renders PPS based on local clock
+useless, I'm to assume it might be useful.
 
-	return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-}
+Finally, as an attempt to give direct answer to your question, suppose I
+have external device that is capable to time stamp PPS against known
+time scale (such as GPS system time) with high precision. Now I can get
+nice estimations of local time drifts and feed, say, "chrony", with the
+data to adjust my local clock accordingly.
 
-
->  
->  void wakeup_sysfs_remove(struct device *dev)
->  {
-> +	int tmp;
-
-Use 'ret' like the above function had, to be consistent.
-
-> +
->  	sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +
-> +	tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> +	if (tmp)
-> +		dev_err(dev, "Error in uevent for wakeup_sysfs_remove: %d\n",
-
-nit, use __func__ to describe a function name, if you really want it.
-Why do you need to send a message for this error, will that really ever
-happen?
-
-thanks,
-
-greg k-h
+Thanks,
+-- Sergey
