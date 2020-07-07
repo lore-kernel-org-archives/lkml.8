@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C8BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6207320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D908206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135321;
-	bh=I6QCAKGQQJ8wzfFob8w7MMgYMONcPCHm/3XWFx4Lo9E=;
+	s=default; t=1594135323;
+	bh=PP4vPcVc6oKV+IVd3pArqrJqOU60eDtrGsLUGpLvx6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8tf/9eaiN9tzYt3Gh7jD7JjaG6hKOpC+3htSuvN3Vg57XRc8jJpt5XcSdJK/CoOw
-	 QalT3C3LURi7S8YYSTKgw6Yh0R9jsCuSjafpHWpWtEhJnjWziyLgAqFKXlCnf0jnHZ
-	 /nfdA2Eyfy0QoQ/pWH1mrSp+hnpGBnZmABnmxHqs=
+	b=n9qffZXGOeRj4fRfW14U1OQ+WxoMzLVI1cqQWcwnO1JCQd4sP6QcbRyj4hBhiwmaK
+	 0ZabSQqEgklJl7OkmGZRwyyqDrYffK/skM7ErIQBSZ7+kVEcZbPOPm8Bes1NSC6QO1
+	 WbdYmgT8itqpgqWfK+MVhPPy6O4ksROTGYBVqJwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgGGPV4 (ORCPT
+        id S1729789AbgGGPWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgGGPVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:52 -0400
+        id S1729776AbgGGPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 494DF207BB;
-        Tue,  7 Jul 2020 15:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62CEC2065D;
+        Tue,  7 Jul 2020 15:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135311;
-        bh=I6QCAKGQQJ8wzfFob8w7MMgYMONcPCHm/3XWFx4Lo9E=;
+        s=default; t=1594135317;
+        bh=PP4vPcVc6oKV+IVd3pArqrJqOU60eDtrGsLUGpLvx6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bm/xWZc4Tg3auvLIgb/ES4iyi38I4wyL0v2k+ok1H409NiyPZSnHUCzqoF3Do4oem
-         ip5FKRekPaq/hLjNPfNZXG8gutAJoP8/PEu+ZqM+lDA1oymNDDzniOO/HiCKu2Pmtp
-         rA25SiZcvWdUe2ygiVuXYMkPakxibzjT3Epw1zfI=
+        b=ppWo/wF8sJcyAuHz3Q7QgSWP4HYWnuc/7sl/mthi8FxpCicUXuu9nJgSfIH/7REyM
+         Wy281Crw4mKcbKWSboRD7WJiiaP2CU0PLO0gUEoooYuExSyUFtSxfnmuv39BSwuQ39
+         8vVWvy8P3iBcjsltpKbagdcvy3NNH5+PJQcco8tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Roman Li <Roman.Li@amd.com>
-Subject: [PATCH 5.4 56/65] drm/amd/display: Only revalidate bandwidth on medium and fast updates
-Date:   Tue,  7 Jul 2020 17:17:35 +0200
-Message-Id: <20200707145755.168565034@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 58/65] drm/amdgpu/atomfirmware: fix vram_info fetching for renoir
+Date:   Tue,  7 Jul 2020 17:17:37 +0200
+Message-Id: <20200707145755.269878178@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,54 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 6eb3cf2e06d22b2b08e6b0ab48cb9c05a8e1a107 upstream.
+commit d7a6634a4cfba073ff6a526cb4265d6e58ece234 upstream.
 
-[Why]
-Changes that are fast don't require updating DLG parameters making
-this call unnecessary. Considering this is an expensive call it should
-not be done on every flip.
+Renoir uses integrated_system_info table v12.  The table
+has the same layout as v11 with respect to this data.  Just
+reuse the existing code for v12 for stable.
 
-DML touches clocks, p-state support, DLG params and a few other DC
-internal flags and these aren't expected during fast. A hang has been
-reported with this change when called on every flip which suggests that
-modifying these fields is not recommended behavior on fast updates.
+Fixes incorrectly reported vram info in the driver output.
 
-[How]
-Guard the validation to only happen if update type isn't FAST.
-
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1191
-Fixes: a24eaa5c51255b ("drm/amd/display: Revalidate bandwidth before commiting DC updates")
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Evan Quan <evan.quan@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2226,10 +2226,12 @@ void dc_commit_updates_for_stream(struct
- 
- 	copy_stream_update_to_stream(dc, context, stream, stream_update);
- 
--	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
--		DC_ERROR("Mode validation failed for stream update!\n");
--		dc_release_state(context);
--		return;
-+	if (update_type > UPDATE_TYPE_FAST) {
-+		if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
-+			DC_ERROR("Mode validation failed for stream update!\n");
-+			dc_release_state(context);
-+			return;
-+		}
- 	}
- 
- 	commit_planes_for_stream(
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c
+@@ -150,6 +150,7 @@ int amdgpu_atomfirmware_get_vram_width(s
+ 				(mode_info->atom_context->bios + data_offset);
+ 			switch (crev) {
+ 			case 11:
++			case 12:
+ 				mem_channel_number = igp_info->v11.umachannelnumber;
+ 				/* channel width is 64 */
+ 				return mem_channel_number * 64;
 
 
