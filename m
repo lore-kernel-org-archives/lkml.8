@@ -2,95 +2,138 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F98C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE46C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B0C206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDE7206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PaXUAVur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGGI0Z (ORCPT
+        id S1727938AbgGGI0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:26:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12658 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgGGI0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:26:25 -0400
-IronPort-SDR: cRGmLJiX0n/Do3G8nzfMU81smu2WkWmGfWAv48X2BjUyilnUXHYkiT832cwVz+smWIXiZ+Vryf
- GJaZxrfGcb8w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="147567898"
-X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
-   d="scan'208";a="147567898"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 01:26:24 -0700
-IronPort-SDR: AydWLUVT46cugw3UxVmdM8M0jl+24qxMomY1k50gvYxuYrKgvAo9aIvxqNZlcAxTBVup3TJqGw
- WzOWEh+yRwqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
-   d="scan'208";a="283376128"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 07 Jul 2020 01:26:24 -0700
-Date:   Tue, 7 Jul 2020 01:26:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
-Message-ID: <20200707082624.GB7417@linux.intel.com>
-References: <20200702174455.282252-1-mlevitsk@redhat.com>
- <20200702181606.GF3575@linux.intel.com>
- <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
- <20200707061105.GH5208@linux.intel.com>
- <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
- <20200707081444.GA7417@linux.intel.com>
- <e5da32da-6cb2-85b1-a12b-da796843d2bb@redhat.com>
+        Tue, 7 Jul 2020 04:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGI0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 04:26:42 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E207C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:26:42 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so32916926wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qBb3tk+qoeCqQNbIgsA1YmfvrIH4bftpey+P/QTf7zU=;
+        b=PaXUAVur/LkNIIW4gTLWzRAfCMGt4wNA3wl7zLKlKGszofmFes4VRd71LrL54Zy+dv
+         12Iu2sBGHK8msYfxPRn42uhZSwljXB2iVp0h55LeZLJLJf0mUG+vJ75Hi+R/AgU3S2pO
+         igIovoWYwgP2LEPD5jKj4nKc9e3dTr/LUzMbjEJuTgtq2r4emkA7IM+GUM5eK/C9pmuP
+         Ad1g+qf7IluAps2x+j5KiK1MNTzL28VnFaS9zfYaIBrKljP9JiKlPx3mYtRgilhw5USS
+         AlgC0z9bRI6dGzw8wBwGNp2VlEwvNGzJUdV/SMTqmC90z3BY5ttiCmMwhkmcrQiPKpyz
+         TzCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qBb3tk+qoeCqQNbIgsA1YmfvrIH4bftpey+P/QTf7zU=;
+        b=EaI5Ca+3ZIszFkkBMZqgZKTEsc8Hn5YsU7ErgNMPOD2bfIuy/DyOnbIs8+C8YX6ypu
+         /HEVHs8FReT+izktKiE2y+0nsyGSq1pBAHeYKJ+yqOOWhSyDK+RLc2MHn29Jgidwc0NM
+         eiVFLPJSEyrNm0rOXBlqUaYc8rBxYpBr231IZvGu/lA1UjD93Zi9WN9wHo+x2mwYxcD/
+         BetG2veDcVGmYZFOXrNFUFRP6MqSzSnjb/SZnSt7q47aRj4O9Hl9Easc4IjG5QYIl9AP
+         pydMCgqxDHBxUA6QV8qwFBPHmssAxey+f/736M7OIP/gyBJNYUcWgiWJFbesjmTde+J5
+         wwkg==
+X-Gm-Message-State: AOAM5327ujNrHAilef1HoRPGI8VkW4QSDojI8WZReaLErGlLwRyVMX8C
+        zmFWF2zEFIMSO2R5hxr0kWyP5Q==
+X-Google-Smtp-Source: ABdhPJxbXSBlQu+qcdR3pRtsP8xOQVgZTwMm3v38IA/dY0vx6B6HIdI+D2MPASrH+jGIIU4XWr3rCQ==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr51931970wrj.273.1594110400958;
+        Tue, 07 Jul 2020 01:26:40 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id 207sm66552wme.13.2020.07.07.01.26.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 01:26:40 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 09:26:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 1/1] crypto: ux500: hash: Add namespacing to hash_init()
+Message-ID: <20200707082638.GF3500@dell>
+References: <20200629123003.1014387-1-lee.jones@linaro.org>
+ <20200630041029.GA20892@gondor.apana.org.au>
+ <20200630070727.GD1179328@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e5da32da-6cb2-85b1-a12b-da796843d2bb@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630070727.GD1179328@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:17:14AM +0200, Paolo Bonzini wrote:
-> On 07/07/20 10:14, Sean Christopherson wrote:
-> >>> One oddity with this whole thing is that by passing through the MSR, KVM is
-> >>> allowing the guest to write bits it doesn't know about, which is definitely
-> >>> not normal.  It also means the guest could write bits that the host VMM
-> >>> can't.
-> >> That's true.  However, the main purpose of the kvm_spec_ctrl_valid_bits
-> >> check is to ensure that host-initiated writes are valid; this way, you
-> >> don't get a #GP on the next vmentry's WRMSR to MSR_IA32_SPEC_CTRL.
-> >> Checking the guest CPUID bit is not even necessary.
-> > Right, what I'm saying is that rather than try and decipher specs to
-> > determine what bits are supported, just throw the value at hardware and
-> > go from there.  That's effectively what we end up doing for the guest writes
-> > anyways.
+On Tue, 30 Jun 2020, Lee Jones wrote:
+> On Tue, 30 Jun 2020, Herbert Xu wrote:
+> > On Mon, Jun 29, 2020 at 01:30:03PM +0100, Lee Jones wrote:
+> > > A recent change to the Regulator consumer API (which this driver
+> > > utilises) add prototypes for the some suspend functions.  These
+> > > functions require including header file include/linux/suspend.h.
+> > > 
+> > > The following tree of includes affecting this driver will be
+> > > present:
+> > > 
+> > >    In file included from include/linux/elevator.h:6,
+> > >                     from include/linux/blkdev.h:288,
+> > >                     from include/linux/blk-cgroup.h:23,
+> > >                     from include/linux/writeback.h:14,
+> > >                     from include/linux/memcontrol.h:22,
+> > >                     from include/linux/swap.h:9,
+> > >                     from include/linux/suspend.h:5,
+> > >                     from include/linux/regulator/consumer.h:35,
+> > >                     from drivers/crypto/ux500/hash/hash_core.c:28:
+> > > 
+> > > include/linux/elevator.h pulls in include/linux/hashtable.h which
+> > > contains its own version of hash_init().  This confuses the build
+> > > system and results in the following error (amongst others):
+> > > 
+> > >  drivers/crypto/ux500/hash/hash_core.c:1362:19: error: passing argument 1 of '__hash_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
+> > >  1362 |  return hash_init(req);
+> > > 
+> > > Fix this by namespacing the local hash_init() such that the
+> > > source of confusion is removed.
+> > > 
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Cc: David S. Miller <davem@davemloft.net>
+> > > Cc: linux-crypto@vger.kernel.org
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > > 
+> > > Ideally this should go into v5.8's -rcs else it runs the risk of
+> > > breaking when Linus pulls everything in for v5.9-rc1.
 > 
-> Yes, it would prevent the #GP.
+> [...]
 > 
-> > Actually, the current behavior will break migration if there are ever legal
-> > bits that KVM doesn't recognize, e.g. guest writes a value that KVM doesn't
-> > allow and then migration fails when the destination tries to stuff the value
-> > into KVM.
+> > I have no objections to this patch.  However, I'd rather put
+> > it on a topic branch which you could pull rather than pushing
+> > it into 5.8 straight away.
 > 
-> Yes, unfortunately migration would also be broken if the target (and the
-> guest CPUID) is an older CPU.  But that's not something we can fix
-> without trapping all writes which would be unacceptably slow.
+> An immutable branch sounds like a sensible solution.  Thanks.
 
-Ah, true, the guest would need to be setting bits that weren't enumerated
-to it.
+Any movement on this Herbert?
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
