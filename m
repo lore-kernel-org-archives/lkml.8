@@ -2,205 +2,252 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00859C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B17C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02AC20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aW79YjoL";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Bl8Z6RQi"
+	by mail.kernel.org (Postfix) with ESMTP id 242CF20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgGGDiJ (ORCPT
+        id S1728204AbgGGDiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:38:09 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47822 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727792AbgGGDiI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:38:08 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0673UuGl021912;
-        Mon, 6 Jul 2020 20:36:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=zM5Z/kJnPMn11GQN+JHEZ5D7XjDLwzvJv2nHeheDT5E=;
- b=aW79YjoLo2Dc5sidTxqZ/1D1SgmrZMVyoPXQp64I770ueUvuzO/e6LZcMV7RBBoRQXr1
- CTIbbLT2x46NGb2dBpj+6/cq2xjIikMiasUcoiaC0p12S8KL6IIBajaBr6ZRmk8kaGB+
- f6GO+cAEoJy/mH/h+n8JbbI7YCRtGKQEV9Y= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 322n90jq3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 06 Jul 2020 20:36:49 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 6 Jul 2020 20:36:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OobX+SLnZRVGEpkIlbvxv8qhbwDINX9GWvxoOJvmn1QX+QIEfp6RODZLP0LbQdmk8sUX/N5rIxTiN2OYVAa+hE1bTo9vG5vXNMmqBFqDFhMscLpGjImE/5osYIP7DHjRDRu+9hI3yHVR/IVxIKIkAGCkDQgsP39hDMMo2DY4Ki44MOskUupv/jKF03uEbt/tI0mlMTcmcJfP0rKbiqv9J0/dkbVV0fohIeF8NXhqCFF8TYxmHOB38S6aCC+pUqUMssKdamjLckMrcRMQUMLjEY6PH4b5WAptbB+8FZ/KtERbD8Z/X1HtcziRJnDVtCp+TacdMnrN3Nu4aMfQ5rft4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zM5Z/kJnPMn11GQN+JHEZ5D7XjDLwzvJv2nHeheDT5E=;
- b=fG3LBjhOvKBpWOV93wMzIDWIDkoyvz4dvo3UEOFSJVgGpgdsZs/vU+T5AlmI/5bIOAIwwPpdVJXz9EhOgndiNiqLMTjEtGt3agSOAqJKINSiMCrPBjAOg3af7fwxEV6Qirry+G5GZMd4RZzrO2hKZrOxbYUl1Y6v5UbYMEUxOeO51nzbl1FbUBIqQuPUyzSVmhmMHAEAJwrG+7BoJ6IxV+o0qNhCzIfQ79NSX5GmZ3TkVLotx4zOJPJGiOGz9P6DSx4jh3q8Ze1IggdunWGHDxdq1LyWqYSYSKuNkUC6lZSCj5nyNRkRoPIvFcHqVjjspOZOd4/qmkTa0gz3GByn0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zM5Z/kJnPMn11GQN+JHEZ5D7XjDLwzvJv2nHeheDT5E=;
- b=Bl8Z6RQiO5spsyqktzppwNEDakAFmiL2g6+HjCn9R370hQBTLxIAaox0sdFcrYzpzj1Pxjxe+70Mvo4PscHicE4s5FWefdFtmwzjKPY4QV6KTSWIKW5EV8fgkXjgKw7/zZ1lfKkY8WsQAhTq1rgk2SuuT30M1akxn3RHDJLQIPc=
-Authentication-Results: hisilicon.com; dkim=none (message not signed)
- header.d=none;hisilicon.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2712.namprd15.prod.outlook.com (2603:10b6:a03:15c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Tue, 7 Jul
- 2020 03:36:34 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
- 03:36:34 +0000
-Date:   Mon, 6 Jul 2020 20:36:31 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v2] mm/hugetlb: avoid hardcoding while checking if cma is
- enable
-Message-ID: <20200707033631.GA164297@carbon.dhcp.thefacebook.com>
-References: <20200707031156.29932-1-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707031156.29932-1-song.bao.hua@hisilicon.com>
-X-ClientProxiedBy: BYAPR07CA0069.namprd07.prod.outlook.com
- (2603:10b6:a03:60::46) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 6 Jul 2020 23:38:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:7472 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbgGGDiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:38:12 -0400
+IronPort-SDR: eGGvtC+5uutnlZOlGggP5p41x7QSJt4J12KIske+0sBKvXGLU6V4DbPY28qV4mznaSv+5MIwds
+ QZZRKYu5Jx8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="149044521"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="149044521"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 20:38:12 -0700
+IronPort-SDR: FvQz/ZqtlajcX3G35bWe9Sf/lpcgZQw2RMuopzEoasusUD5UciD29A723hwZCrJpcOMdjWWAyQ
+ kXWe/ojwEWFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="427314166"
+Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
+  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 20:38:01 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     x86@kernel.org, linux-sgx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v35 01/24] x86/cpufeatures: x86/msr: Add Intel SGX hardware bits
+Date:   Tue,  7 Jul 2020 06:37:24 +0300
+Message-Id: <20200707033747.142828-2-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:2ff8) by BYAPR07CA0069.namprd07.prod.outlook.com (2603:10b6:a03:60::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Tue, 7 Jul 2020 03:36:33 +0000
-X-Originating-IP: [2620:10d:c090:400::5:2ff8]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b50db167-3568-4f55-df6c-08d82226f253
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2712:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB271244F4D1647FDDFE451DE9BE660@BYAPR15MB2712.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0457F11EAF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4Pniv55m15QT6sxBGGG9PF42jS44v7wN8S0KCwMmaH8hVEHOb2ExHTnAy/Cbq3p12/sahgYzEWfF3HXu6FcFjF9TLfGpC0uUSPut7mX+PvCCR2InIH1qPzvuRVrE5lrJ79WvjOVBJk9PlEfCfb0c7yb3vnp1gGtub92lzutFw8FEjShnjku0DfMsZiRv9bcA5IW0o3XUcZyFfo0b3NWIpoZYpgVDhiNyWOC9nV5epPHYxahbVlrCe3l9bbib0YaOLRmWylyw+JJGHfloqFJ5EzxQ3ZiqBjOXXWC/K59D2CjiZfNfYvSV76uTPJai9ictMGQTzrGO4LS9zX+MZNtH3Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(396003)(376002)(346002)(136003)(16526019)(186003)(6506007)(33656002)(7696005)(52116002)(5660300002)(6916009)(2906002)(86362001)(83380400001)(478600001)(9686003)(55016002)(8676002)(8936002)(54906003)(316002)(66556008)(1076003)(4326008)(66946007)(66476007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: IY0tBVjVjYHjPVZ5fd52YauEJxIedgKiRLj9crtQiPyeXDOZ5Nn42LeiFXyj6PXWj1aecoW8/XSJJx+B1xXmve516j+epwcuxfC7D7lr0CklVkDx1F/kA9tuAHz3jg4wuPEyvUguUlv1qjoBq6mk7TDr08WEYLaAJk/QxOQ1pr+sN+EWayRnC3Wkj4O3VigUeSe2rhQHOHZoe9wL84NVbDjbukSFFGrKRhjrA+moZ/Km7A/a/EochVjG/UYYTUSjf3yiSM1nVJ/waVbggJS8WlK7klibBRSB+/HrdFXguXEz4ZvJTVcLZwxM9ATqO9Fi943cHUOyGaAAUXIfk5ghsi57Jd5oC2BeLEqUqxGkBLIygWVusJiy+CuGkcI478qurBnrRO1WuKSbhyhF1dUwJcnqrZK1sFR7q/kaAhFef8fd5lk1/tot4Xr3XK9mnlY1pDyQYLmriG7w2oIeeLAqGqVt2N5aZc3bUFO6RvZaUdr6+aKLP6/9ojf7lMBLhU3JALMYeCbeBtoUGmIq1bpTVw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b50db167-3568-4f55-df6c-08d82226f253
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2020 03:36:34.4718
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eshC+uhNQPdIULYjusLbBSo4r7STVLre5QrxH3qT03IAhRJwNjGCSCpSzVzf7mwC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2712
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_01:2020-07-06,2020-07-06 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- adultscore=0 clxscore=1015 malwarescore=0 priorityscore=1501
- cotscore=-2147483648 phishscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=1 bulkscore=0 spamscore=0 impostorscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007070025
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 03:11:56PM +1200, Barry Song wrote:
-> hugetlb_cma[0] can be NULL due to various reasons, for example, node0 has
-> no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
-> enabled. gigantic pages might have been reserved on other nodes.
-> 
-> Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  -v2: add hugetlb_cma_enabled() helper to improve readability according to Roman
-> 
->  mm/hugetlb.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 57ece74e3aae..d5e98ed86bb9 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -2546,6 +2546,20 @@ static void __init gather_bootmem_prealloc(void)
->  	}
->  }
->  
-> +bool __init hugetlb_cma_enabled(void)
-> +{
-> +	if (IS_ENABLED(CONFIG_CMA)) {
-> +		int node;
-> +
-> +		for_each_online_node(node) {
-> +			if (hugetlb_cma[node])
-> +				return true;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Can you, please, change it to a more canonical
+Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
+CPU has SGX.
 
-#ifdef CONFIG_CMA
-bool __init hugetlb_cma_enabled(void)
-{
-	int node;
+Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
+which describe the level of SGX support available [1].
 
-	for_each_online_node(node)
-		if (hugetlb_cma[node])
-			return true;
+Add IA32_FEATURE_CONTROL.SGX_ENABLE. BIOS can use this bit to opt-in SGX
+before locking the feature control MSR [2].
 
-	return false;
-}
-#else
-bool __init hugetlb_cma_enabled(void)
-{
-	return false;
-}
-#endif
+[1] Intel SDM: 36.7.2 Intel® SGX Resource Enumeration Leaves
+[2] Intel SDM: 36.7.1 Intel® SGX Opt-In Configuration
 
-or maybe just 
+Reviewed-by: Borislav Petkov <bp@alien8.de>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeature.h        |  5 +++--
+ arch/x86/include/asm/cpufeatures.h       |  7 ++++++-
+ arch/x86/include/asm/disabled-features.h | 18 +++++++++++++++---
+ arch/x86/include/asm/msr-index.h         |  1 +
+ arch/x86/include/asm/required-features.h |  2 +-
+ arch/x86/kernel/cpu/common.c             |  4 ++++
+ 6 files changed, 30 insertions(+), 7 deletions(-)
 
-bool __init hugetlb_cma_enabled(void)
-{
-#ifdef CONFIG_CMA
-	int node;
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 59bf91c57aa8..efbdba5170a3 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -30,6 +30,7 @@ enum cpuid_leafs
+ 	CPUID_7_ECX,
+ 	CPUID_8000_0007_EBX,
+ 	CPUID_7_EDX,
++	CPUID_12_EAX,
+ };
+ 
+ #ifdef CONFIG_X86_FEATURE_NAMES
+@@ -89,7 +90,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
+ 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
+ 	   REQUIRED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
++	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
+ 
+ #define DISABLED_MASK_BIT_SET(feature_bit)				\
+ 	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
+@@ -112,7 +113,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
+ 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
+ 	   DISABLED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
++	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
+ 
+ #define cpu_has(c, bit)							\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9e77b0..545ac3e0e269 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -13,7 +13,7 @@
+ /*
+  * Defines x86 CPU feature bits
+  */
+-#define NCAPINTS			19	   /* N 32-bit words worth of info */
++#define NCAPINTS			20	   /* N 32-bit words worth of info */
+ #define NBUGINTS			1	   /* N 32-bit bug flags */
+ 
+ /*
+@@ -238,6 +238,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+ #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
++#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
+@@ -373,6 +374,10 @@
+ #define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
+ 
++/* Intel-defined SGX features, CPUID level 0x00000012:0 (EAX), word 19 */
++#define X86_FEATURE_SGX1		(19*32+ 0) /* SGX1 leaf functions */
++#define X86_FEATURE_SGX2		(19*32+ 1) /* SGX2 leaf functions */
++
+ /*
+  * BUG word(s)
+  */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index 4ea8584682f9..dbe534d5153f 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -28,13 +28,18 @@
+ # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
+ # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
+ # define DISABLE_PCID		0
++# define DISABLE_SGX1		0
++# define DISABLE_SGX2		0
+ #else
+ # define DISABLE_VME		0
+ # define DISABLE_K6_MTRR	0
+ # define DISABLE_CYRIX_ARR	0
+ # define DISABLE_CENTAUR_MCR	0
+ # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
+-#endif /* CONFIG_X86_64 */
++# define DISABLE_SGX1		(1<<(X86_FEATURE_SGX1 & 31))
++# define DISABLE_SGX2		(1<<(X86_FEATURE_SGX2 & 31))
++ #endif /* CONFIG_X86_64 */
++
+ 
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+ # define DISABLE_PKU		0
+@@ -56,6 +61,12 @@
+ # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
+ #endif
+ 
++#ifdef CONFIG_INTEL_SGX
++# define DISABLE_SGX	0
++#else
++# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
++#endif
++
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -68,7 +79,7 @@
+ #define DISABLED_MASK6	0
+ #define DISABLED_MASK7	(DISABLE_PTI)
+ #define DISABLED_MASK8	0
+-#define DISABLED_MASK9	(DISABLE_SMAP)
++#define DISABLED_MASK9	(DISABLE_SMAP|DISABLE_SGX)
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	0
+ #define DISABLED_MASK12	0
+@@ -78,6 +89,7 @@
+ #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	0
+-#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
++#define DISABLED_MASK19	(DISABLE_SGX1|DISABLE_SGX2)
++#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
+ 
+ #endif /* _ASM_X86_DISABLED_FEATURES_H */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e8370e64a155..18e08da19f16 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -582,6 +582,7 @@
+ #define FEAT_CTL_LOCKED				BIT(0)
+ #define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
+ #define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
++#define FEAT_CTL_SGX_ENABLED			BIT(18)
+ #define FEAT_CTL_LMCE_ENABLED			BIT(20)
+ 
+ #define MSR_IA32_TSC_ADJUST             0x0000003b
+diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
+index 6847d85400a8..039e58be2fe6 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -101,6 +101,6 @@
+ #define REQUIRED_MASK16	0
+ #define REQUIRED_MASK17	0
+ #define REQUIRED_MASK18	0
+-#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
++#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
+ 
+ #endif /* _ASM_X86_REQUIRED_FEATURES_H */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 95c090a45b4b..7aecf5d07c70 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -914,6 +914,10 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_D_1_EAX] = eax;
+ 	}
+ 
++	/* Additional Intel-defined SGX flags: level 0x00000012 */
++	if (c->cpuid_level >= 0x00000012)
++		c->x86_capability[CPUID_12_EAX] = cpuid_eax(0x00000012);
++
+ 	/* AMD-defined flags: level 0x80000001 */
+ 	eax = cpuid_eax(0x80000000);
+ 	c->extended_cpuid_level = eax;
+-- 
+2.25.1
 
-	for_each_online_node(node)
-		if (hugetlb_cma[node])
-			return true;
-#endif
-	return false;
-}
-
-?
-
-Please, feel free to add
-Acked-by: Roman Gushchin <guro@fb.com> after that.
-
-Thank you!
