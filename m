@@ -2,139 +2,157 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B01FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F58EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7A520675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594139300;
-	bh=upb+MiMjE+yhpC/DQQ/r/unIOjwPvDoKJjDDvM8RleQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CouCb8Cvv2MYgVQPS3JoOJzAL7WpaHaUXJpmKAFvHOFyQGoSS2Bk8YvwT61HK4S5g
-	 ExlNPg+fr2/YAWnZXtVfTUbXECzuBc65NTFOiwdmKAXQNydgkGcXrkkmAo81rcggCE
-	 UQyP2tbIeoVtTFRpWrPerlcpggfgo3fpFn8Epzq0=
+	by mail.kernel.org (Postfix) with ESMTP id 1827720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEpuudm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgGGQ2S (ORCPT
+        id S1728314AbgGGQ3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:28:18 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46180 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgGGQ2S (ORCPT
+        Tue, 7 Jul 2020 12:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgGGQ3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:28:18 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l63so33924109oih.13;
-        Tue, 07 Jul 2020 09:28:17 -0700 (PDT)
+        Tue, 7 Jul 2020 12:29:01 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DCBC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:29:01 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p3so20241690pgh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cLpFT30Q2wrhHA54qttjA8gJomi+1hYn+159UrQoFZg=;
+        b=DEpuudm/4MZv5D+pBETCrXPAcc5pEq0Tn39PHv9h9s9yiek57l85H6pNwvnRrWvFIo
+         9ETSoqtWaU/K2OdoBf/cI0ocSqzRNPjdM02muLHprNvlvZnEwsCfzkM5X73rdsGBUO7M
+         cM8cM/FYdZRpKjdEZ29mQv+2wRZ9z5V0wjUt4dLbU4+CGeyem9Ywjp41F8pJSLxhpAdi
+         foh8zI+7+6gJOjtVf5PUOIzDQDynN6GX5wgUzIwu2qFpLQIqGPrIoLZuKBZts1XorBx5
+         gIF/1D5di/wOJTKghjE4Ftdf1HVm7rxJV5zuvOKEA1uF1kP5HyxtGzKV1QF8FD/nC+xt
+         d2vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqA8J6CgHJ1oaRzYuw9U/pBjnnBjCWF7/6JXnD6SNeI=;
-        b=fAiVt3yqIgVL/Vd9TRAgthE4dRaHiCqRkxSnfarLUPMS4LYutAu8xdEPhJoA4bi1pw
-         ne+rdWwu/aQAaFAuqIVf6IhdMBWAy8XRlMOowocJ1sYWMhD0srRbqDv89rlbaN1lLCoD
-         XbGJ892l6I7pVFjPd1ngGQgTn/dGqaWpqXVZl4vhf8M47bXZdysOt/0C1mTkYbGxT7B8
-         xvqn1X1xssyxWuJTpJQZS5pwKr2e84+Cn2qinjANbazLFS6iUiph9U9GwLYdaVN2yn2N
-         7Wped44lTUlbjZ2Xt3V9lkaaWTm1VM0uLXkOpIazHk53EK/Hl3oD+xBUAgLekBUK3cER
-         X/wQ==
-X-Gm-Message-State: AOAM530Y4wubsuDnbmiZXxo9vUubteHb0wgrD+VSwvzdp37gXBro5BHr
-        GTZpZ4wFHZJn053oxSPBGllrVQJ75OdKc2vfBoo=
-X-Google-Smtp-Source: ABdhPJwWEu1nW2hVdT2oditOw+IT/F4slchce0IYqSxCLUtcrqN8q00tngKV7H/5HMxNHixTJq1zO157Gf900Ep315g=
-X-Received: by 2002:aca:f58a:: with SMTP id t132mr3798335oih.68.1594139296771;
- Tue, 07 Jul 2020 09:28:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cLpFT30Q2wrhHA54qttjA8gJomi+1hYn+159UrQoFZg=;
+        b=pjI2CX3v5nQi0T8K95x+NlT8PUgqIW/PD8dSGhsA0igka4zmPHp40ciz5wwTl6IXrZ
+         17HsXE3plaJLC4rdI4xF9WC+1QgLq7gu350P92XgNdKvrOU9apbwghwFwpIt7k2vjAWf
+         PDwRghnKrnnmkROpDt0BlfZrqEs3RzK3OPtR508xslud7QSC3QnDqJYB1xdzWg8GLyk6
+         Dge7SDTqgQWURMjfp8Vt4Tz08vkJ+q4O4BlXn+2CWmXIqxBs6uq8rPeF6VaYVjcAsouo
+         /D/bEup7qt5uCiG05e0pmDwGyN1UMSNR0ZmC3Za6VwZudAhr0o0RwJjrqlzr5mPzG38v
+         rvSA==
+X-Gm-Message-State: AOAM532M5zWOpPK7DLh19DI8LTfX2XWjDJKyMLiaR8QBHveU6zCGBJ4S
+        IzXdderIotuEhlqHXGRgyn8=
+X-Google-Smtp-Source: ABdhPJx3mJownrF7Uccn5h8F/aE8m3prj8aLp/p7HCftX8fEe/IpDWUoMZCFHCqPz8CQluKsVZQRDA==
+X-Received: by 2002:a63:ea02:: with SMTP id c2mr45591701pgi.66.1594139341076;
+        Tue, 07 Jul 2020 09:29:01 -0700 (PDT)
+Received: from blackclown ([103.88.82.137])
+        by smtp.gmail.com with ESMTPSA id q7sm23610785pfn.23.2020.07.07.09.28.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 09:29:00 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 21:58:48 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     srrj.967@gmail.com
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH 1/4] drm: mipi-dsi: Convert logging to drm_* functions.
+Message-ID: <feeec2816debcf4105ac22af1661fd2d491d02b9.1594136880.git.usuraj35@gmail.com>
+References: <cover.1594136880.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-References: <20200707162417.3514284-1-abhishekpandit@chromium.org> <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
-In-Reply-To: <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jul 2020 18:28:05 +0200
-Message-ID: <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1594136880.git.usuraj35@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
->
-> Udev rules that depend on the power/wakeup attribute don't get triggered
-> correctly if device_set_wakeup_capable is called after the device is
-> created. This can happen for several reasons (driver sets wakeup after
-> device is created, wakeup is changed on parent device, etc) and it seems
-> reasonable to emit a changed event when adding or removing attributes on
-> the device.
->
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
->
-> Changes in v4:
-> - Fix warning where returning from void and tested on device
->
-> Changes in v3:
-> - Simplified error handling
->
-> Changes in v2:
-> - Add newline at end of bt_dev_err
->
->  drivers/base/power/sysfs.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> index 24d25cf8ab1487..aeb58d40aac8de 100644
-> --- a/drivers/base/power/sysfs.c
-> +++ b/drivers/base/power/sysfs.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* sysfs entries for device PM */
->  #include <linux/device.h>
-> +#include <linux/kobject.h>
->  #include <linux/string.h>
->  #include <linux/export.h>
->  #include <linux/pm_qos.h>
-> @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
->
->  int wakeup_sysfs_add(struct device *dev)
->  {
-> -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+Convert logging errors from dev_err() to drm_err().
 
-So let me repeat the previous comment:
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/gpu/drm/drm_mipi_dsi.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-If you return an error here, it may confuse the caller to think that
-the operation has failed completely, whereas the merging of the
-attribute group has been successful already.
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 07102d8da58f..5dd475e82995 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -34,6 +34,7 @@
+ #include <linux/slab.h>
+ 
+ #include <drm/drm_dsc.h>
++#include <drm/drm_print.h>
+ #include <video/mipi_display.h>
+ 
+ /**
+@@ -155,19 +156,18 @@ static int mipi_dsi_device_add(struct mipi_dsi_device *dsi)
+ static struct mipi_dsi_device *
+ of_mipi_dsi_device_add(struct mipi_dsi_host *host, struct device_node *node)
+ {
+-	struct device *dev = host->dev;
+ 	struct mipi_dsi_device_info info = { };
+ 	int ret;
+ 	u32 reg;
+ 
+ 	if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
+-		dev_err(dev, "modalias failure on %pOF\n", node);
++		drm_err(host, "modalias failure on %pOF\n", node);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	ret = of_property_read_u32(node, "reg", &reg);
+ 	if (ret) {
+-		dev_err(dev, "device node %pOF has no valid reg property: %d\n",
++		drm_err(host, "device node %pOF has no valid reg property: %d\n",
+ 			node, ret);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -202,22 +202,21 @@ mipi_dsi_device_register_full(struct mipi_dsi_host *host,
+ 			      const struct mipi_dsi_device_info *info)
+ {
+ 	struct mipi_dsi_device *dsi;
+-	struct device *dev = host->dev;
+ 	int ret;
+ 
+ 	if (!info) {
+-		dev_err(dev, "invalid mipi_dsi_device_info pointer\n");
++		drm_err(host, "invalid mipi_dsi_device_info pointer\n");
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	if (info->channel > 3) {
+-		dev_err(dev, "invalid virtual channel: %u\n", info->channel);
++		drm_err(host, "invalid virtual channel: %u\n", info->channel);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	dsi = mipi_dsi_device_alloc(host);
+ 	if (IS_ERR(dsi)) {
+-		dev_err(dev, "failed to allocate DSI device %ld\n",
++		drm_err(host, "failed to allocate DSI device %ld\n",
+ 			PTR_ERR(dsi));
+ 		return dsi;
+ 	}
+@@ -228,7 +227,7 @@ mipi_dsi_device_register_full(struct mipi_dsi_host *host,
+ 
+ 	ret = mipi_dsi_device_add(dsi);
+ 	if (ret) {
+-		dev_err(dev, "failed to add DSI device %d\n", ret);
++		drm_err(host, "failed to add DSI device %d\n", ret);
+ 		kfree(dsi);
+ 		return ERR_PTR(ret);
+ 	}
+-- 
+2.17.1
 
-I don't think that an error can be returned at this point.
-
->  }
->
->  void wakeup_sysfs_remove(struct device *dev)
->  {
->         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
->  }
->
->  int pm_qos_sysfs_add_resume_latency(struct device *dev)
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
