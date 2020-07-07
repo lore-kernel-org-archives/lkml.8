@@ -2,115 +2,368 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A455320771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6BqCzfk"
+	by mail.kernel.org (Postfix) with ESMTP id C0DF4206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135194;
+	bh=5CPAhSAwQXF+M0Sy6Lk2qPm9hQakreBODcy+jje2OBE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1CCwtTW8SjZ69ijcHJU8Pjq/TaR6T8y3YMNui65jLjtgZFCrjkdZ8yeKc4Nl33zM0
+	 I74tF6L5VIX4uZnKxaN1x+QgHSlPk9J+h8h06f5SQvPe2dBa5B/yC/1hyj1e13/X7k
+	 YpaxrmxMaCsDTbtrxeHneQyc2PBuQTspTb7tfvSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgGGPTu (ORCPT
+        id S1729134AbgGGPTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Jul 2020 11:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729413AbgGGPTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgGGPTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72ABC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:19:44 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d10so4840510pll.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=er6hsFquLTNA8VKEn24uMWaKfe7q89cZ0TTNSo/x5mA=;
-        b=l6BqCzfkcZOUtekgBlMOFzEoQdcPcAs3uILNTs2Rc6zKFxOoXGcFngHlzIUen+l2w4
-         edX+VgvnoybDAbGyjcunBSFrklD07tDq6aGeqP36T1S52x9ayjBAvcRyx1a7/R638gd0
-         ORLlomrwFY14zy1yc/CdmTaAfT/e6qYBgxkh6k+LBJXzmmW2cJ0p3UoNPj92WsaEECrb
-         io+RbC0J9ko7yYmpjSmgkJ2BVCQZQFX2fzn5GwfzsZ2sBrl4Mjjvs7QJHaY2m9OKZuEJ
-         XZmBuGe90ONz69yyNEZMsSp5BTPtaXPo+hgi9b4QFn+2sDc20U3KcBoPpTXWeiombnq7
-         Lkrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=er6hsFquLTNA8VKEn24uMWaKfe7q89cZ0TTNSo/x5mA=;
-        b=pF0+x7oy7sCwvGZs3hC/Y+PKB3IyezAn+c+dCP9B0mkK1+MZSnTXdZF0UWt3n146/+
-         Yo49oVxHyh3APQqJBXbF7vl/hKALMqp5ewu2UyPQzC4CeooWaeaXALcpAMtPVLEmmRrK
-         b69cjNVV+cZmQgTqgOmYWHUyKDzbcy4W6PAZjpwJ+dXQ+4ey/sNu25FPB9xhO7iWBXKP
-         JQc1882NFnhLnSH8UmfX2uvNhVGRs8mxpj32D/VeJAeAYlAqPgIjR44cHPVJruNJRGqB
-         9BjL50mkqGVI0Gc7YSI4zeWaYXzkH1zoKBe6I/9Jzb4Gz/asPx+gYMmnjGRirabbUe5J
-         bIhw==
-X-Gm-Message-State: AOAM531c1ccRN3SZfCDwwSChQzWwg9R0z292ptTcRIJcP+EIWIwCK9dr
-        zHLu+rZY2ajrxVYKBpWm5qE=
-X-Google-Smtp-Source: ABdhPJyo++a00C0KC/2zJLhYAA5YUxExURUW/Hz4ihgCnIQ0sgWSzcjPi7pGghI+EUrRuc6m1A3O6A==
-X-Received: by 2002:a17:90a:222d:: with SMTP id c42mr5140691pje.126.1594135184400;
-        Tue, 07 Jul 2020 08:19:44 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id q24sm1295225pgg.3.2020.07.07.08.19.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 08:19:43 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 23:19:31 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 09/15] perf ftrace: add support for tracing option
- 'func_stack_trace'
-Message-ID: <20200707151931.ehgnhgl67cd73fjd@mail.google.com>
-References: <20200627133654.64863-1-changbin.du@gmail.com>
- <20200627133654.64863-10-changbin.du@gmail.com>
- <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8B9206E2;
+        Tue,  7 Jul 2020 15:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594135189;
+        bh=5CPAhSAwQXF+M0Sy6Lk2qPm9hQakreBODcy+jje2OBE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W5zwY2jEnEu8dUiSxGDwj6CLteQxIUJPe620Vedcck3/wfUjHqs78iwpAsPJTL1Ki
+         Hyfc00Qvp0XDkvj0mK1vGZxGWR2e9mpowQhbM1iTJ3C6CRZ2nqXJiG49DzWrMwI9QT
+         NUoxgiurnL8lM5JL9K7xaY6fN8450OSJEa13TSn0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/65] 5.4.51-rc1 review
+Date:   Tue,  7 Jul 2020 17:16:39 +0200
+Message-Id: <20200707145752.417212219@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.51-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.51-rc1
+X-KernelTest-Deadline: 2020-07-09T14:57+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:30:32PM +0900, Namhyung Kim wrote:
-> On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
-> >
-> > This adds support to display call trace for function tracer. To do this,
-> > just specify a '--func-call-graph' option.
-> 
-> What if it's used with -G option?  Also it might be used only with
-> the -T option..  How about showing a warning if it's missing.. ?
->
-All '--func-xxx' options are function tracer only. The warning message is a
-good idea.
+This is the start of the stable review cycle for the 5.4.51 release.
+There are 65 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-> Thanks
-> Namhyung
-> 
-> >
-> > $ sudo perf ftrace -T vfs_read --func-call-graph
-> >  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
-> >  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
-> >  => vfs_read
-> >  => ksys_read
-> >  => __x64_sys_read
-> >  => do_syscall_64
-> >  => entry_SYSCALL_64_after_hwframe
-> >  ...
-> >
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+Anything received after that time might be too late.
 
--- 
-Cheers,
-Changbin Du
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.51-rc1
+
+Peter Jones <pjones@redhat.com>
+    efi: Make it possible to disable efivar_ssdt entirely
+
+Hou Tao <houtao1@huawei.com>
+    dm zoned: assign max_io_len correctly
+
+Babu Moger <babu.moger@amd.com>
+    x86/resctrl: Fix memory bandwidth counter width for AMD
+
+Vlastimil Babka <vbabka@suse.cz>
+    mm, compaction: make capture control handling safe wrt interrupts
+
+Vlastimil Babka <vbabka@suse.cz>
+    mm, compaction: fully assume capture is not NULL in compact_zone_order()
+
+Marc Zyngier <maz@kernel.org>
+    irqchip/gic: Atomically update affinity
+
+Sumit Semwal <sumit.semwal@linaro.org>
+    dma-buf: Move dma_buf_release() from fops to dentry_ops
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu/atomfirmware: fix vram_info fetching for renoir
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu: use %u rather than %d for sclk/mclk
+
+Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+    drm/amd/display: Only revalidate bandwidth on medium and fast updates
+
+Hauke Mehrtens <hauke@hauke-m.de>
+    MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+
+Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+    MIPS: lantiq: xway: sysctrl: fix the GPHY clock alias names
+
+Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+    cifs: Fix the target file was deleted when rename failed.
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor 'handletimeout' flag for multiuser mounts
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor lease disabling for multiuser mounts
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor persistent/resilient handle flags for multiuser mounts
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor 'seal' flag for multiuser mounts
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "ALSA: usb-audio: Improve frames size computation"
+
+J. Bruce Fields <bfields@redhat.com>
+    nfsd: apply umask on fs without ACL support
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    spi: spi-fsl-dspi: Fix external abort on interrupt in resume or exit paths
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    i2c: mlxcpld: check correct size of maximum RECV_LEN packet
+
+Chris Packham <chris.packham@alliedtelesis.co.nz>
+    i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+
+Kees Cook <keescook@chromium.org>
+    samples/vfs: avoid warning in statx override
+
+Christoph Hellwig <hch@lst.de>
+    nvme: fix a crash in nvme_mpath_add_disk
+
+Sagi Grimberg <sagi@grimberg.me>
+    nvme: fix identify error status silent ignore
+
+Paul Aurich <paul@darkrain42.org>
+    SMB3: Honor 'posix' flag for multiuser mounts
+
+Hou Tao <houtao1@huawei.com>
+    virtio-blk: free vblk-vqs in error path of virtblk_probe()
+
+Chen-Yu Tsai <wens@csie.org>
+    drm: sun4i: hdmi: Remove extra HPD polling
+
+J. Bruce Fields <bfields@redhat.com>
+    nfsd: fix nfsdfs inode reference count leak
+
+J. Bruce Fields <bfields@redhat.com>
+    nfsd4: fix nfsdfs reference count loop
+
+J. Bruce Fields <bfields@redhat.com>
+    nfsd: clients don't need to break their own delegations
+
+J. Bruce Fields <bfields@redhat.com>
+    kthread: save thread function
+
+Dien Pham <dien.pham.ry@renesas.com>
+    thermal/drivers/rcar_gen3: Fix undefined temperature if negative
+
+Michael Kao <michael.kao@mediatek.com>
+    thermal/drivers/mediatek: Fix bank number settings on mt8183
+
+Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+    hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
+
+Chu Lin <linchuyuan@google.com>
+    hwmon: (max6697) Make sure the OVERT mask is set correctly
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: fix SGE queue dump destination buffer context
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: use correct type for all-mask IP address comparison
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: fix endian conversions for L4 ports in filters
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: parse TC-U32 key values and masks natively
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: use unaligned conversion for fetching timestamp
+
+Mark Zhang <markz@mellanox.com>
+    RDMA/counter: Query a counter before release
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix afs large storage transmission performance drop
+
+Chen Tao <chentao107@huawei.com>
+    drm/msm/dpu: fix error return code in dpu_encoder_init
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+
+James Bottomley <James.Bottomley@HansenPartnership.com>
+    tpm: Fix TIS locality timeout problems
+
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+    selftests: tpm: Use /bin/sh instead of /bin/bash
+
+Douglas Anderson <dianders@chromium.org>
+    kgdb: Avoid suspicious RCU usage warning
+
+Sagi Grimberg <sagi@grimberg.me>
+    nvme-multipath: fix bogus request queue reference put
+
+Anton Eidelman <anton@lightbitslabs.com>
+    nvme-multipath: fix deadlock due to head->lock
+
+Anton Eidelman <anton@lightbitslabs.com>
+    nvme-multipath: fix deadlock between ana_work and scan_work
+
+Sagi Grimberg <sagi@grimberg.me>
+    nvme: fix possible deadlock when I/O is blocked
+
+Keith Busch <kbusch@kernel.org>
+    nvme-multipath: set bdi capabilities once
+
+Christian Borntraeger <borntraeger@de.ibm.com>
+    s390/debug: avoid kernel warning on too large number of pages
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    tools lib traceevent: Handle __attribute__((user)) in field names
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    tools lib traceevent: Add append() function helper for appending strings
+
+Zqiang <qiang.zhang@windriver.com>
+    usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix race between incoming ACK parser and retransmitter
+
+Qian Cai <cai@lca.pw>
+    mm/slub: fix stack overruns with SLUB_STATS
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    mm/slub.c: fix corrupted freechain in deactivate_slab()
+
+Valentin Schneider <valentin.schneider@arm.com>
+    sched/debug: Make sd->flags sysctl read-only
+
+Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+    usbnet: smsc95xx: Fix use-after-free after removal
+
+Borislav Petkov <bp@suse.de>
+    EDAC/amd64: Read back the scrub rate PCI register on F15h
+
+Hugh Dickins <hughd@google.com>
+    mm: fix swap cache node allocation mask
+
+Jens Axboe <axboe@kernel.dk>
+    io_uring: make sure async workqueue is canceled on exit
+
+
+-------------
+
+Diffstat:
+
+ Documentation/filesystems/locking.rst              |   2 +
+ Makefile                                           |   4 +-
+ arch/mips/kernel/traps.c                           |   1 +
+ arch/mips/lantiq/xway/sysctrl.c                    |   8 +-
+ arch/s390/kernel/debug.c                           |   3 +-
+ arch/x86/kernel/cpu/resctrl/core.c                 |   2 +
+ arch/x86/kernel/cpu/resctrl/internal.h             |   3 +
+ arch/x86/kernel/cpu/resctrl/monitor.c              |   3 +-
+ crypto/af_alg.c                                    |  26 ++--
+ crypto/algif_aead.c                                |   9 +-
+ crypto/algif_hash.c                                |   9 +-
+ crypto/algif_skcipher.c                            |   9 +-
+ drivers/block/virtio_blk.c                         |   1 +
+ drivers/char/tpm/tpm-dev-common.c                  |  19 ++-
+ drivers/dma-buf/dma-buf.c                          |  54 ++++-----
+ drivers/edac/amd64_edac.c                          |   2 +
+ drivers/firmware/efi/Kconfig                       |  11 ++
+ drivers/firmware/efi/efi.c                         |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c   |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |   4 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c           |  10 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |   2 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   5 +-
+ drivers/hwmon/acpi_power_meter.c                   |   4 +-
+ drivers/hwmon/max6697.c                            |   7 +-
+ drivers/i2c/algos/i2c-algo-pca.c                   |   3 +-
+ drivers/i2c/busses/i2c-mlxcpld.c                   |   4 +-
+ drivers/infiniband/core/counters.c                 |   4 +-
+ drivers/irqchip/irq-gic.c                          |  14 +--
+ drivers/md/dm-zoned-target.c                       |   2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c     |   6 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c  |  25 ++--
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |   2 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c   |  30 ++---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c  |  18 +--
+ .../ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h    | 122 ++++++++++++-------
+ drivers/net/ethernet/chelsio/cxgb4/sge.c           |   2 +-
+ drivers/net/usb/smsc95xx.c                         |   2 +-
+ drivers/nvme/host/core.c                           |  13 +-
+ drivers/nvme/host/multipath.c                      |  45 +++++--
+ drivers/nvme/host/nvme.h                           |   2 +
+ drivers/spi/spi-fsl-dspi.c                         |  17 ++-
+ drivers/thermal/mtk_thermal.c                      |   5 +-
+ drivers/thermal/rcar_gen3_thermal.c                |   2 +-
+ drivers/usb/misc/usbtest.c                         |   1 +
+ fs/cifs/connect.c                                  |  10 +-
+ fs/cifs/inode.c                                    |  10 +-
+ fs/io_uring.c                                      |  63 ++++++++++
+ fs/locks.c                                         |   3 +
+ fs/nfsd/nfs4proc.c                                 |   2 +
+ fs/nfsd/nfs4state.c                                |  22 +++-
+ fs/nfsd/nfsctl.c                                   |  23 ++--
+ fs/nfsd/nfsd.h                                     |   5 +
+ fs/nfsd/nfssvc.c                                   |   6 +
+ fs/nfsd/vfs.c                                      |   6 +
+ include/crypto/if_alg.h                            |   4 +-
+ include/linux/fs.h                                 |   1 +
+ include/linux/kthread.h                            |   1 +
+ include/linux/sunrpc/svc.h                         |   1 +
+ kernel/debug/debug_core.c                          |   4 +
+ kernel/kthread.c                                   |  17 +++
+ kernel/sched/debug.c                               |   2 +-
+ mm/compaction.c                                    |  19 ++-
+ mm/slub.c                                          |  30 ++++-
+ mm/swap_state.c                                    |   4 +-
+ net/rxrpc/call_event.c                             |  29 ++---
+ samples/vfs/test-statx.c                           |   2 +
+ sound/usb/card.h                                   |   4 -
+ sound/usb/endpoint.c                               |  43 +------
+ sound/usb/endpoint.h                               |   1 -
+ sound/usb/pcm.c                                    |   2 -
+ tools/lib/traceevent/event-parse.c                 | 133 ++++++++++++---------
+ tools/testing/selftests/tpm2/test_smoke.sh         |   2 +-
+ tools/testing/selftests/tpm2/test_space.sh         |   2 +-
+ 74 files changed, 609 insertions(+), 362 deletions(-)
+
+
