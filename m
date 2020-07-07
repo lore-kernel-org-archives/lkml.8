@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4088C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0E620663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806192065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135386;
-	bh=eHe6y0CVgk2X4XbqPeMFpPp2xFnQjmkyetTp9z/A3j8=;
+	s=default; t=1594135391;
+	bh=gd92U56RmoV99eATKd4qvxZYYmO56fFyB+M5e7f5O3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSILMDaufOXdLiccizlLx1PnZpu94I1F0UHdADoUo7PoV/Kd6DgZ8T2rHiOrbeRwk
-	 NBfVx4a0fuiJNH+ufmZbMjga/QovNrLiO34H1wa4ouFsXGwFPbpHt/eCnCyxdbsSbj
-	 dxd4JbOq2StgVCgaOvEMSwuN+IN9rUqX30yyG2BU=
+	b=n794+nkPyxzXy9m0VbA6M4UBzWa5S8PAXZx3GXuc0T5CNp+deGc+2NAZy9i1ti7qA
+	 vd9qFBjsrf+U1n/ihrZj/Ewr1YNNQ1MYzRzDPAyJ08iiGc2J3ezv1B7NvtoVOQeCtN
+	 jv3xZ4ll2sLDbNCOFugIoMbDUGzAxLSEAZXRecFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbgGGPXF (ORCPT
+        id S1729949AbgGGPXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35792 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729923AbgGGPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:57 -0400
+        id S1729941AbgGGPXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE37206F6;
-        Tue,  7 Jul 2020 15:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 435A5206F6;
+        Tue,  7 Jul 2020 15:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135377;
-        bh=eHe6y0CVgk2X4XbqPeMFpPp2xFnQjmkyetTp9z/A3j8=;
+        s=default; t=1594135386;
+        bh=gd92U56RmoV99eATKd4qvxZYYmO56fFyB+M5e7f5O3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEHB1opDPipUrn2jRe1nnLMVuCHXEARISVdXPG+Q7cLK5EskEbncGdWY/pzcJZ5iL
-         BSCTW4GRKXRmHXb0LY4LY3tvWlX2zeuw5Ph3EuSZgshDhCLJrP02K96J2BWYL576XA
-         CUZWBPQ49npNulFvK8tXCUV7nQjNL3NLnnXHzrSU=
+        b=q3YBIg9VLYuXYEmaeU3uozl2TJozPSU8j9kqwfiHj/CU8OqiwkWIeckETrsn5rj5X
+         6GHvYgsHeoWPhZ8M+OAh+Gft9FmGUrqVZbvxmHf5q279BR+Hyuof7VKhObAWNa5/1C
+         0Wo7uhJ4PFZ+tcROSB+6g7irxFdJSZNkRVP6DCu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
-        John Clements <john.clements@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 017/112] drm/amdgpu: disable ras query and iject during gpu reset
-Date:   Tue,  7 Jul 2020 17:16:22 +0200
-Message-Id: <20200707145801.815558286@linuxfoundation.org>
+Subject: [PATCH 5.7 020/112] sched/debug: Make sd->flags sysctl read-only
+Date:   Tue,  7 Jul 2020 17:16:25 +0200
+Message-Id: <20200707145801.948953381@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,127 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Clements <john.clements@amd.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-[ Upstream commit 61380faa4b4cc577df8a7ff5db5859bac6b351f7 ]
+[ Upstream commit 9818427c6270a9ce8c52c8621026fe9cebae0f92 ]
 
-added flag to ras context to indicate if ras query functionality is ready
+Writing to the sysctl of a sched_domain->flags directly updates the value of
+the field, and goes nowhere near update_top_cache_domain(). This means that
+the cached domain pointers can end up containing stale data (e.g. the
+domain pointed to doesn't have the relevant flag set anymore).
 
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: John Clements <john.clements@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Explicit domain walks that check for flags will be affected by
+the write, but this won't be in sync with the cached pointers which will
+still point to the domains that were cached at the last sched_domain
+build.
+
+In other words, writing to this interface is playing a dangerous game. It
+could be made to trigger an update of the cached sched_domain pointers when
+written to, but this does not seem to be worth the trouble. Make it
+read-only.
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200415210512.805-3-valentin.schneider@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  3 +++
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c    | 24 +++++++++++++++++++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h    |  4 ++++
- 3 files changed, 28 insertions(+), 3 deletions(-)
+ kernel/sched/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index affde2de2a0db..59288653412db 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -4091,6 +4091,8 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
- 	need_full_reset = job_signaled = false;
- 	INIT_LIST_HEAD(&device_list);
- 
-+	amdgpu_ras_set_error_query_ready(adev, false);
-+
- 	dev_info(adev->dev, "GPU %s begin!\n",
- 		(in_ras_intr && !use_baco) ? "jobs stop":"reset");
- 
-@@ -4147,6 +4149,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
- 	/* block all schedulers and reset given job's ring */
- 	list_for_each_entry(tmp_adev, device_list_handle, gmc.xgmi.head) {
- 		if (tmp_adev != adev) {
-+			amdgpu_ras_set_error_query_ready(tmp_adev, false);
- 			amdgpu_device_lock_adev(tmp_adev, false);
- 			if (!amdgpu_sriov_vf(tmp_adev))
- 			                amdgpu_amdkfd_pre_reset(tmp_adev);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index ab379b44679cc..aa6148d12d5a4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -80,6 +80,20 @@ atomic_t amdgpu_ras_in_intr = ATOMIC_INIT(0);
- static bool amdgpu_ras_check_bad_page(struct amdgpu_device *adev,
- 				uint64_t addr);
- 
-+void amdgpu_ras_set_error_query_ready(struct amdgpu_device *adev, bool ready)
-+{
-+	if (adev)
-+		amdgpu_ras_get_context(adev)->error_query_ready = ready;
-+}
-+
-+bool amdgpu_ras_get_error_query_ready(struct amdgpu_device *adev)
-+{
-+	if (adev)
-+		return amdgpu_ras_get_context(adev)->error_query_ready;
-+
-+	return false;
-+}
-+
- static ssize_t amdgpu_ras_debugfs_read(struct file *f, char __user *buf,
- 					size_t size, loff_t *pos)
- {
-@@ -281,7 +295,7 @@ static ssize_t amdgpu_ras_debugfs_ctrl_write(struct file *f, const char __user *
- 	struct ras_debug_if data;
- 	int ret = 0;
- 
--	if (amdgpu_ras_intr_triggered()) {
-+	if (!amdgpu_ras_get_error_query_ready(adev)) {
- 		DRM_WARN("RAS WARN: error injection currently inaccessible\n");
- 		return size;
- 	}
-@@ -399,7 +413,7 @@ static ssize_t amdgpu_ras_sysfs_read(struct device *dev,
- 		.head = obj->head,
- 	};
- 
--	if (amdgpu_ras_intr_triggered())
-+	if (!amdgpu_ras_get_error_query_ready(obj->adev))
- 		return snprintf(buf, PAGE_SIZE,
- 				"Query currently inaccessible\n");
- 
-@@ -1896,8 +1910,10 @@ int amdgpu_ras_late_init(struct amdgpu_device *adev,
- 	}
- 
- 	/* in resume phase, no need to create ras fs node */
--	if (adev->in_suspend || adev->in_gpu_reset)
-+	if (adev->in_suspend || adev->in_gpu_reset) {
-+		amdgpu_ras_set_error_query_ready(adev, true);
- 		return 0;
-+	}
- 
- 	if (ih_info->cb) {
- 		r = amdgpu_ras_interrupt_add_handler(adev, ih_info);
-@@ -1909,6 +1925,8 @@ int amdgpu_ras_late_init(struct amdgpu_device *adev,
- 	if (r)
- 		goto sysfs;
- 
-+	amdgpu_ras_set_error_query_ready(adev, true);
-+
- 	return 0;
- cleanup:
- 	amdgpu_ras_sysfs_remove(adev, ras_block);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-index 55c3eceb390d4..e7df5d8429f82 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-@@ -334,6 +334,8 @@ struct amdgpu_ras {
- 	uint32_t flags;
- 	bool reboot;
- 	struct amdgpu_ras_eeprom_control eeprom_control;
-+
-+	bool error_query_ready;
- };
- 
- struct ras_fs_data {
-@@ -629,4 +631,6 @@ static inline void amdgpu_ras_intr_cleared(void)
- 
- void amdgpu_ras_global_ras_isr(struct amdgpu_device *adev);
- 
-+void amdgpu_ras_set_error_query_ready(struct amdgpu_device *adev, bool ready);
-+
- #endif
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 239970b991c03..0f4aaad236a9d 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -258,7 +258,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
+ 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
+ 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
+ 	/* &table[8] is terminator */
 -- 
 2.25.1
 
