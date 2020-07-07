@@ -2,124 +2,143 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8629BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF09C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BD6206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A3B20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d5jXKY0r"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DlxxICUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgGGHx6 (ORCPT
+        id S1728299AbgGGHzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:53:58 -0400
-Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:36122
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725766AbgGGHx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:53:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O4pyivyty2rp801+noXgj2CAz2fZz2Xxgk48VlE1NIxpM2ye2YY6upX1z3xQdzgMqnEeq1FUReQAvAjyW0D86VOLbajR53bV8z8wm5F3Q0sq2oj20mBH+9nWAJAI+JRs2NzuQeUGENEmrmcMfFnKKIsm81eSZTQIWEG/qllGBTgLvlFcsIj/oSJ32763JXOjODr5Jqs53jArnb/UK/XzusAPHngQB8feuZvO8dCjjMVx2FqLT2NFXkvD49R6ehP/Uhg7y9tp5IrlW8I+jpahlpd+EV1FGNFbhNf+pJWm7LUxHfYwtjDN6+1ITacfJ9kgoKQMKK3uVah+SfivFMy5Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHweeRCmoOcJB+WjGk8RrK5FzD7DSuXAgSjbuxXpm0A=;
- b=PZ99a6QxSl7y2P+6PRnyG0jJwDID9+u88Us3twx+/hs/atcIYIfUGF2FC6NPQejbmTHu/aiv16hwYK7MjXLZ4taHxsDaGJqQ7/YUxxSgICPvWPaX5HDzLUPiKqPrGWlModw4W6vRXeXitV2LuQAqd2mRc5LxUqaJSYL32sQ0Be2D0GXAGt+iLzG7NFUKW2S0FX46ANByCrZnm64OnSqhPH4wEjBqKb3sR4wDCyEgily/FVgcHww9+VYJk9eYbrVwjmQHUvWVJrbxDajBBHxvskgmT2CJTPR6OITtsBTpqXtsZ/QL17tYxKSrrVN8PDU7F814fPfGqzbdjM1ixeKDsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHweeRCmoOcJB+WjGk8RrK5FzD7DSuXAgSjbuxXpm0A=;
- b=d5jXKY0rbeGWuJItwZIXkQMw/IRxef6KYszlA4lk7LhoumE8T33YrnB019PSmMd3CNz5XEs6nnTbqeNa7/onVPKfwi+3XVSxmnLOLeykQNkAgKfqDmC/4x39NqsCtc0ZlKATX6EUPGE06DZxn2ZmdWwIFd/3W/vh26iJmwnas7U=
-Received: from AM0PR04MB6754.eurprd04.prod.outlook.com (2603:10a6:208:170::28)
- by AM0PR04MB6324.eurprd04.prod.outlook.com (2603:10a6:208:13f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 7 Jul
- 2020 07:53:54 +0000
-Received: from AM0PR04MB6754.eurprd04.prod.outlook.com
- ([fe80::41d8:c1a9:7e34:9987]) by AM0PR04MB6754.eurprd04.prod.outlook.com
- ([fe80::41d8:c1a9:7e34:9987%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
- 07:53:54 +0000
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     Michael Walle <michael@walle.cc>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: RE: [PATCH net-next v4 2/3] net: enetc: Initialize SerDes for SGMII
- and USXGMII protocols
-Thread-Topic: [PATCH net-next v4 2/3] net: enetc: Initialize SerDes for SGMII
- and USXGMII protocols
-Thread-Index: AQHWU+E9FWRJOkbrqUWzPMt++F8GBqj7vtLw
-Date:   Tue, 7 Jul 2020 07:53:54 +0000
-Message-ID: <AM0PR04MB67543C11443FC2AD56E9095696660@AM0PR04MB6754.eurprd04.prod.outlook.com>
-References: <20200706220255.14738-1-michael@walle.cc>
- <20200706220255.14738-3-michael@walle.cc>
-In-Reply-To: <20200706220255.14738-3-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: walle.cc; dkim=none (message not signed)
- header.d=none;walle.cc; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [82.76.66.138]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1e04250a-233e-4fa8-c38c-08d8224ae592
-x-ms-traffictypediagnostic: AM0PR04MB6324:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6324612021AF021E6ED18C7F96660@AM0PR04MB6324.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YzcfyAxHs9mpbOxSrkAI4udpkKbdgFgiCmBlINtW0Djx983t8VWM0DRoyXMNA3ewwKgstuPnUiAdhlPWxOHZHrO+l/Gh13KL1L/ZAW0JDran7Fq6w2Ge+J/WlkwfWi+opmmybSpiOtkgCHmySCYEk27P6iV44iX7y1DsIMzdBsEvxtS1wmwaFUdkIQKLeqGByaOzL6xOdVKfjE9sY8V7U3e4vWvVdeVdeWdaog/RJvN5Rte0tjUbNM+AaCRQ/Mc2JbHCv6hvDWa3qdkUnmZSZri5dac7tmup81vYVGxk+y3vJn/lonvF2GmY3drvbJ5V7QlgNaeAi7mr3Zt3WadVtw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6754.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(66446008)(64756008)(478600001)(26005)(6506007)(66946007)(66556008)(66476007)(4326008)(186003)(83380400001)(2906002)(110136005)(54906003)(9686003)(316002)(55016002)(76116006)(44832011)(4744005)(86362001)(5660300002)(8936002)(8676002)(52536014)(33656002)(71200400001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: +S+BeObyH/rhM+PDo6sIjpaGpXeXi3UaGR5kaJGHMOF+1nERiWNCZ0iE+2/xflF5Qj0saiLlZ0mjt7+/j2FoBxl3kKIeInyQqVi8YdfDODVZYwizhMpX4Ff4qn9Kvwjh0WULiTvyM1m4JVJp5xNaAmsYOSb+0b+TO5tRh/HCw1afdo0X/eNEi6+gTN6JcX88FKiivGIVJinIXi4PM+dZicYI6aX4hCh4D367TZmY53lqITjumOndiUD3b4VIO0mBAozMdzQybKJ266YUA04IZiSz/93K/ZVF3N7UFtwsLMhnmlWoCZnuRaxPB0wFQe4VpLErDT3ZtDNJc0CObe9/8Q8bliokon9wmG1KxPJ7DS3rr4cdB0YMEjgsZDh+LhbwUM6HavYI8oQOWAjQ5rRZhvnPkDudvgmu+fe6why30NA14MWeF027B8iTt1wDVwV823v8VKHNsZAXs/x9mRfYncpI79HMijzPQeSEhG9sgE8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jul 2020 03:55:41 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:52640 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGGHzl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 03:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594108541; x=1625644541;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=lWXuOgdJzu7ZoftoY9ZfH+vhGyJSift1pumj8qTxMo8=;
+  b=DlxxICUiS8asEbruiwPBK4ySfU2laqcE9rrvycGVPEFf98HxFPjTmpB5
+   rgx8ih22jbHxat3oyj8SCxab7h6/+wbOmKxGgfUQ44nOyH1JYnvRQpL7X
+   MKANeQphNFTH4Z+kysYv9CwjWJX46XTsBeRRJD1Ro/cgkwpdDsQB1mOqr
+   Q=;
+IronPort-SDR: IRl/32Dz3awjBrVXq3qQicAFvbbUbIPc/2bInKiQD/AYMiP27bWFxDIKfZCO3j/XBdtirzY2mj
+ NwOQWyh5i2Gw==
+X-IronPort-AV: E=Sophos;i="5.75,323,1589241600"; 
+   d="scan'208";a="57882562"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Jul 2020 07:55:35 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id D4EDBA19EB;
+        Tue,  7 Jul 2020 07:55:23 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 07:55:22 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.34) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 07:55:06 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <david@redhat.com>, <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v17 03/15] mm/damon: Implement region based sampling
+Date:   Tue, 7 Jul 2020 09:54:51 +0200
+Message-ID: <20200707075451.24606-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200706115322.29598-4-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6754.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e04250a-233e-4fa8-c38c-08d8224ae592
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 07:53:54.6710
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NT7iFQweBhF4qNW1Zj9zUcatCCsxI/BM9VqoCGB4X/FPpgwbIPXZY0nB+lNjYTgIIltgoVEi1xP1hTQ+DCaYsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6324
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D40UWA003.ant.amazon.com (10.43.160.29) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: Michael Walle <michael@walle.cc>
->Sent: Tuesday, July 7, 2020 1:03 AM
-[...]
->Subject: [PATCH net-next v4 2/3] net: enetc: Initialize SerDes for SGMII a=
-nd
->USXGMII protocols
->
->ENETC has ethernet MACs capable of SGMII, 2500BaseX and USXGMII. But in
->order to use these protocols some SerDes configurations need to be
->performed. The SerDes is configurable via an internal PCS PHY which is
->connected to an internal MDIO bus at address 0.
->
->This patch basically removes the dependency on bootloader regarding
->SerDes initialization.
->
->Signed-off-by: Michael Walle <michael@walle.cc>
+On Mon, 6 Jul 2020 13:53:10 +0200 SeongJae Park <sjpark@amazon.com> wrote:
 
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This commit implements DAMON's target address space independent high
+> level logics for basic access check and region based sampling.  This
+> doesn't work alone, but needs the target address space specific low
+> level pritimives implementation for the monitoring target address ranges
+> construction and the access check, though.  A reference implementation
+> of those will be provided by a later commit.  Nevertheless, users can
+> implement and use their own versions for their specific use cases.
+>
+[...]
+> +/**
+> + * damon_start() - Starts monitoring with given context.
+> + * @ctx:	monitoring context
+> + *
+> + * Return: 0 on success, negative error code otherwise.
+> + */
+> +int damon_start(struct damon_ctx *ctx)
+> +{
+> +	int err = -EBUSY;
+> +
+> +	mutex_lock(&ctx->kdamond_lock);
+> +	if (!ctx->kdamond) {
+> +		err = 0;
+> +		ctx->kdamond_stop = false;
+> +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
+
+Oops, this means 'kdamond_fn' could see the unset '->kdamond'.  I will use
+'kthread_create()' and 'wake_up_process()' in the next spin.
+
+> +		if (IS_ERR(ctx->kdamond))
+> +			err = PTR_ERR(ctx->kdamond);
+> +	}
+> +	mutex_unlock(&ctx->kdamond_lock);
+> +
+> +	return err;
+> +}
+
+So, the change would be something like below:
+
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -1464,9 +1464,11 @@ int damon_start(struct damon_ctx *ctx)
+        if (!ctx->kdamond) {
+                err = 0;
+                ctx->kdamond_stop = false;
+-               ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
++               ctx->kdamond = kthread_create(kdamond_fn, ctx, "kdamond");
+                if (IS_ERR(ctx->kdamond))
+                        err = PTR_ERR(ctx->kdamond);
++               else
++                       wake_up_process(ctx->kdamond);
+        }
+        mutex_unlock(&ctx->kdamond_lock);
+
+
+Thanks,
+SeongJae Park
