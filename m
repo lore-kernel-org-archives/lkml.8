@@ -2,93 +2,208 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1577C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C27C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A2820773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2AF2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eJZR57Yh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oGqcWcGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgGGRd3 (ORCPT
+        id S1728379AbgGGRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        Tue, 7 Jul 2020 13:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728191AbgGGRd3 (ORCPT
+        with ESMTP id S1727834AbgGGRdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:33:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52E1C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:33:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so46133647wrv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:33:28 -0700 (PDT)
+        Tue, 7 Jul 2020 13:33:53 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01217C061755;
+        Tue,  7 Jul 2020 10:33:53 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so17014793plo.7;
+        Tue, 07 Jul 2020 10:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c9Pf+frUb/qMKN1qCaZPERox37ZCJpz+B8FdrOvw8Ng=;
-        b=eJZR57YhUyn/zMwpsAHvIFkhb9hFkvj/ZlhzoHNfRdrvDihtRFAb5A7nmEygIrukPd
-         4MMAGRGLegHp4KrpPtN/J1rHcEcmTm63YDBdNMX9nJIfgs1J8/tmRZVDmcPJ0qIonVVa
-         C6OF0ZDEHZIiLLqdLiQAabpvi7qyrbFCMAU4U=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OG2UGSwTtZ3JhpHjOf9/K5Mq8nGQGxILirbLiIW7/lE=;
+        b=oGqcWcGzRQP3aQKmSSrH/bX1Vqjd9YWJebkVyo71vwBL5Eb/wsWmEczRasIBhPbV1E
+         M5q3e8MIbFsgK6VLQG2nRHs2BPFDj7QYWvlVigEVb8v2fsSQZWZmP+UJNqIR74jYR3iB
+         CIrh0ioE7wi9DHbES0JMF4R0ET1XGg2l+lfY+Q2ppedMJPSk901K1ULEOEoYkpoVWmpw
+         5yC9Jg61OiJtbFGJopPVjZitLETsWRTmvEN3beNquwv7h/y7nq+UReiC6JEEWfOEvMq9
+         sRIUgrsJGpZ5eVeWg1gdwOkUGiHfa+QBS5M/VUmSDKSPOZWXbOf1fU0t9B8uJUtz+0B/
+         CsmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c9Pf+frUb/qMKN1qCaZPERox37ZCJpz+B8FdrOvw8Ng=;
-        b=qCv7HRWOyHwPFF+cMPIVFYUs1VwPxr33cZoN4YsKvTGF1y78TIqVdaFAS4LERwzyaR
-         5I8RPIsczpRKDpR2jxB1BYCUYHkz6Su4iTfNzXhXfdespxEI/mJdVjtcpB5m/qZqYE7z
-         ErexpBr2I6n4YXQm3QLnr/6sYo2FBhgh3Qp1k1AWuPVYuYdAYYZKBVHh4XzG5ZkckiQ0
-         BzDK55Pkk8yFLU5+s6vaVjarv3exAagoJHwUVbeSUJRBLUWdCn9RudejOqtsOg5rPLlM
-         dGweZoFeEoX1m+8nltcxce2+iaAvda8PDzLU6lJF21iiQF/2CkrHmF9hq1Gh01iBrY03
-         YNwQ==
-X-Gm-Message-State: AOAM530aTAuQabDDw1BuoiL8Rk4PRwaTa5D80kqDNzo7fWFeL1A7+PqB
-        gIVc1uU1herEjO2Rhll8DyCs0A==
-X-Google-Smtp-Source: ABdhPJwCY1rsY8+YAy/uIC2hGIvV7PFLECFt4XiABJ+hbH7UG4usWnRSaGLAFUGG7tc8ZTY3RK21YA==
-X-Received: by 2002:adf:de07:: with SMTP id b7mr58959850wrm.302.1594143207314;
-        Tue, 07 Jul 2020 10:33:27 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id a2sm1802722wrn.68.2020.07.07.10.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 10:33:26 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 17:33:25 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/11] media: exynos4-is: Remove static driver data for
- S5PV210 FIMC variants
-Message-ID: <20200707173325.GA2621465@chromium.org>
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OG2UGSwTtZ3JhpHjOf9/K5Mq8nGQGxILirbLiIW7/lE=;
+        b=bXBWn9ST2rXTkHcsqfwjzOhd3mTVTKF4of6NQWXJs4oQhxtEbvvSh0e6VIWje4+66J
+         TI8YgfgRRWBER/WJMmj1nl7eS/0oicqUXsvIzuMhy1ns/R93LahR3DA2jW5iqvOS1qpt
+         HDjubhYaQMGLEZCcOsXt717JuasCJudUjk6uzU9AMpzcG20eOZwvxni6iWmxX4OZb6y5
+         j3gfAEQXIKdJ4CfgA2AaHxlF9Y+WDtJcYXmmq10qee2AWqIMOF0IALtNbszBLi1tFhbQ
+         SovQOifWt8ZH2xx6Dqn1rzsmq9g16ETJZNJQxvBvSDpid2w1ETX9JTWtzZkT+ciTVY10
+         xntQ==
+X-Gm-Message-State: AOAM531xL8oFfg6vvNIDWXMAQnnTygYHFomkEyMlXQv/uYk1mI1XVyjG
+        FBjabbK3lgtdlQ3xfyjzPzU=
+X-Google-Smtp-Source: ABdhPJw6mDbNYNk2zkHO904T8LdoKcgLU8JjL9z3qxqChr8Ge4i6nLV465YRGMqYh2nB2zT4RpFsUw==
+X-Received: by 2002:a17:90a:ce96:: with SMTP id g22mr5540446pju.9.1594143232494;
+        Tue, 07 Jul 2020 10:33:52 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id i21sm7383950pfa.18.2020.07.07.10.33.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 10:33:51 -0700 (PDT)
+Subject: Re: [PATCH net-next] dropwatch: Support monitoring of dropped frames
+To:     izabela.bakollari@gmail.com, nhorman@tuxdriver.com,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <8aa6bcfe-8117-0fc9-1bc5-9b6a600e0972@gmail.com>
+Date:   Tue, 7 Jul 2020 10:33:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200707171515.110818-1-izabela.bakollari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 07:26:40PM -0700, Jonathan Bakker wrote:
-> The S5PV210 platform only supports device tree based booting
-> where the FIMC variant data is parsed directly from
-> the device tree, hence the now unused static data can be removed.
+
+
+On 7/7/20 10:15 AM, izabela.bakollari@gmail.com wrote:
+> From: Izabela Bakollari <izabela.bakollari@gmail.com>
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Dropwatch is a utility that monitors dropped frames by having userspace
+> record them over the dropwatch protocol over a file. This augument
+> allows live monitoring of dropped frames using tools like tcpdump.
+> 
+> With this feature, dropwatch allows two additional commands (start and
+> stop interface) which allows the assignment of a net_device to the
+> dropwatch protocol. When assinged, dropwatch will clone dropped frames,
+> and receive them on the assigned interface, allowing tools like tcpdump
+> to monitor for them.
+> 
+> With this feature, create a dummy ethernet interface (ip link add dev
+> dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
+> these new commands, and then monitor dropped frames in real time by
+> running tcpdump -i dummy0.
+> 
+> Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
 > ---
->  drivers/media/platform/exynos4-is/fimc-core.c | 59 -------------------
->  1 file changed, 59 deletions(-)
+>  include/uapi/linux/net_dropmon.h |  3 ++
+>  net/core/drop_monitor.c          | 79 +++++++++++++++++++++++++++++++-
+>  2 files changed, 80 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
+> index 67e31f329190..e8e861e03a8a 100644
+> --- a/include/uapi/linux/net_dropmon.h
+> +++ b/include/uapi/linux/net_dropmon.h
+> @@ -58,6 +58,8 @@ enum {
+>  	NET_DM_CMD_CONFIG_NEW,
+>  	NET_DM_CMD_STATS_GET,
+>  	NET_DM_CMD_STATS_NEW,
+> +	NET_DM_CMD_START_IFC,
+> +	NET_DM_CMD_STOP_IFC,
+>  	_NET_DM_CMD_MAX,
+>  };
+>  
+> @@ -93,6 +95,7 @@ enum net_dm_attr {
+>  	NET_DM_ATTR_SW_DROPS,			/* flag */
+>  	NET_DM_ATTR_HW_DROPS,			/* flag */
+>  	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
+> +	NET_DM_ATTR_IFNAME,			/* string */
+>  
+>  	__NET_DM_ATTR_MAX,
+>  	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
+> diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+> index 8e33cec9fc4e..8049bff05abd 100644
+> --- a/net/core/drop_monitor.c
+> +++ b/net/core/drop_monitor.c
+> @@ -30,6 +30,7 @@
+>  #include <net/genetlink.h>
+>  #include <net/netevent.h>
+>  #include <net/flow_offload.h>
+> +#include <net/sock.h>
+>  
+>  #include <trace/events/skb.h>
+>  #include <trace/events/napi.h>
+> @@ -46,6 +47,7 @@
+>   */
+>  static int trace_state = TRACE_OFF;
+>  static bool monitor_hw;
+> +struct net_device *interface;
+>  
+>  /* net_dm_mutex
+>   *
+> @@ -220,9 +222,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+>  	struct per_cpu_dm_data *data;
+>  	unsigned long flags;
+>  
+> -	local_irq_save(flags);
+> +	spin_lock_irqsave(&data->lock, flags);
+>  	data = this_cpu_ptr(&dm_cpu_data);
+> -	spin_lock(&data->lock);
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+This change seems unrelated ?
 
-Best regards,
-Tomasz
+And also buggy, since data is essentially garbage when you call spin_lock_irqsave(&data->lock, flags);
+
+>  	dskb = data->skb;
+>  
+>  	if (!dskb)
+> @@ -255,6 +256,12 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+>  
+>  out:
+>  	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	if (interface && interface != skb->dev) {
+> +		skb = skb_clone(skb, GFP_ATOMIC);
+
+skb_clone() can return NULL
+
+> +		skb->dev = interface;
+> +		netif_receive_skb(skb);
+> +	}
+>  }
+>  
+>  static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
+> @@ -1315,6 +1322,63 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static int net_dm_interface_start(struct net *net, const char *ifname)
+> +{
+> +	struct net_device *nd;
+> +
+> +	nd = dev_get_by_name(net, ifname);
+> +
+> +	if (nd) {
+> +		interface = nd;
+> +		dev_hold(interface);
+> +	} else {
+> +		return -ENODEV;
+> +	}
+> +	return 0;
+> +}
+> +
+
+
+What happens after this monitoring is started, then the admin does :
+
+rmmod ifb
+
+
