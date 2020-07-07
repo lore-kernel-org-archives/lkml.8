@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77805C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4065A206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C822065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135266;
-	bh=mF+NvVN5NAtMW5RZRp6kYqnq2L/xSN0Wo+a1+EVBHcU=;
+	s=default; t=1594135269;
+	bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EULDlj/sksB41FRyvILbM27j685WPfJ+HZlbAugjWbGzUSDL1V0v9IyrhApwgXdn
-	 UIYUr4hkNG1Bgaq5EZ1/1HgsCeC2VxMR9SiMrR2bSNO45hSpZDYol3/RiyAbicREjI
-	 Q4BN3tsaGy27nOQCpDuPi5UAdt3pdh0tayNsADBk=
+	b=Ub9ih9tMdcZg6gpyLw1tJbRX+XUFeD+iuLScHznNPyOjTuQxTvvakGUEO2YcQSwow
+	 r9YAh3ULqrODNIJOmex1dLtSVMGSNx2AVqA18CGNI56k+sJ/zWiNpW1S5xvO7VAKHR
+	 EjCmX1C2TLyGRZB5Ag8yfI+VhmJ5FNDwniT7g/tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgGGPVE (ORCPT
+        id S1729661AbgGGPVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33010 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgGGPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:58 -0400
+        id S1729616AbgGGPVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E3A206F6;
-        Tue,  7 Jul 2020 15:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C273206E2;
+        Tue,  7 Jul 2020 15:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135258;
-        bh=mF+NvVN5NAtMW5RZRp6kYqnq2L/xSN0Wo+a1+EVBHcU=;
+        s=default; t=1594135260;
+        bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkyQ2PJL8ix4ldfA0ggE5szoeZOOXSxGnwTxwc9Kt3ttVTQ8BQ6IOJYi2+xMePCgY
-         AxyuSI/b32/dIyFN3CDlwzjF4XfZabcQKwAqhzvDXOpVF5k7BzK3j9rx1ydHiNLKxp
-         Vd1z/wjd/4lI+n7L/9UfQdcy7883NF5gtnhDvtvQ=
+        b=Kiq2fqcxaXJfQ/LwZBmU0/u+bKueKZ/mNy//tZgIiUC5P8QqCyH5NbRKO/d5/62w9
+         LkoQpUxICSAZEwo1FiRzpKDB63dHv7nl/JSHSqMw/z4xyucMM+/WrLYHq7I0+jK07r
+         IDxQR06oDsCiDENgEpiw6K+8WBSJ6AstATCnXTtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Glauber Costa <glauber@scylladb.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/65] mm/slub: fix stack overruns with SLUB_STATS
-Date:   Tue,  7 Jul 2020 17:16:46 +0200
-Message-Id: <20200707145752.794100576@linuxfoundation.org>
+Subject: [PATCH 5.4 08/65] rxrpc: Fix race between incoming ACK parser and retransmitter
+Date:   Tue,  7 Jul 2020 17:16:47 +0200
+Message-Id: <20200707145752.841736013@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -66,88 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
+[ Upstream commit 2ad6691d988c0c611362ddc2aad89e0fb50e3261 ]
 
-There is no need to copy SLUB_STATS items from root memcg cache to new
-memcg cache copies.  Doing so could result in stack overruns because the
-store function only accepts 0 to clear the stat and returns an error for
-everything else while the show method would print out the whole stat.
+There's a race between the retransmission code and the received ACK parser.
+The problem is that the retransmission loop has to drop the lock under
+which it is iterating through the transmission buffer in order to transmit
+a packet, but whilst the lock is dropped, the ACK parser can crank the Tx
+window round and discard the packets from the buffer.
 
-Then, the mismatch of the lengths returns from show and store methods
-happens in memcg_propagate_slab_attrs():
+The retransmission code then updated the annotations for the wrong packet
+and a later retransmission thought it had to retransmit a packet that
+wasn't there, leading to a NULL pointer dereference.
 
-	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-		buf = mbuf;
+Fix this by:
 
-max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
-in show_stat() later where a bounch of sprintf() would overrun the stack
-variable.  Fix it by always allocating a page of buffer to be used in
-show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+ (1) Moving the annotation change to before we drop the lock prior to
+     transmission.  This means we can't vary the annotation depending on
+     the outcome of the transmission, but that's fine - we'll retransmit
+     again later if it failed now.
 
-  # echo 1 > /sys/kernel/slab/fs_cache/shrink
-  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
-  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+ (2) Skipping the packet if the skb pointer is NULL.
 
-  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    number+0x421/0x6e0
-    vsnprintf+0x451/0x8e0
-    sprintf+0x9e/0xd0
-    show_stat+0x124/0x1d0
-    alloc_slowpath_show+0x13/0x20
-    __kmem_cache_create+0x47a/0x6b0
+The following oops was seen:
 
-  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
-   process_one_work+0x0/0xb90
+	BUG: kernel NULL pointer dereference, address: 000000000000002d
+	Workqueue: krxrpcd rxrpc_process_call
+	RIP: 0010:rxrpc_get_skb+0x14/0x8a
+	...
+	Call Trace:
+	 rxrpc_resend+0x331/0x41e
+	 ? get_vtime_delta+0x13/0x20
+	 rxrpc_process_call+0x3c0/0x4ac
+	 process_one_work+0x18f/0x27f
+	 worker_thread+0x1a3/0x247
+	 ? create_worker+0x17d/0x17d
+	 kthread+0xe6/0xeb
+	 ? kthread_delayed_work_timer_fn+0x83/0x83
+	 ret_from_fork+0x1f/0x30
 
-  this frame has 1 object:
-   [32, 72) 'lockdep_map'
-
-  Memory state around the buggy address:
-   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
-                                                         ^
-   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
-  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-  Call Trace:
-    __kmem_cache_create+0x6ac/0x6b0
-
-Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Glauber Costa <glauber@scylladb.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/rxrpc/call_event.c | 29 +++++++++++------------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 5c05a36bb746f..709e31002504c 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5648,7 +5648,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
- 		 */
- 		if (buffer)
- 			buf = buffer;
--		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
-+		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
-+			 !IS_ENABLED(CONFIG_SLUB_STATS))
- 			buf = mbuf;
- 		else {
- 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
+diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
+index 2a65ac41055f5..985fb89202d0c 100644
+--- a/net/rxrpc/call_event.c
++++ b/net/rxrpc/call_event.c
+@@ -248,7 +248,18 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
+ 		if (anno_type != RXRPC_TX_ANNO_RETRANS)
+ 			continue;
+ 
++		/* We need to reset the retransmission state, but we need to do
++		 * so before we drop the lock as a new ACK/NAK may come in and
++		 * confuse things
++		 */
++		annotation &= ~RXRPC_TX_ANNO_MASK;
++		annotation |= RXRPC_TX_ANNO_RESENT;
++		call->rxtx_annotations[ix] = annotation;
++
+ 		skb = call->rxtx_buffer[ix];
++		if (!skb)
++			continue;
++
+ 		rxrpc_get_skb(skb, rxrpc_skb_got);
+ 		spin_unlock_bh(&call->lock);
+ 
+@@ -262,24 +273,6 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
+ 
+ 		rxrpc_free_skb(skb, rxrpc_skb_freed);
+ 		spin_lock_bh(&call->lock);
+-
+-		/* We need to clear the retransmit state, but there are two
+-		 * things we need to be aware of: A new ACK/NAK might have been
+-		 * received and the packet might have been hard-ACK'd (in which
+-		 * case it will no longer be in the buffer).
+-		 */
+-		if (after(seq, call->tx_hard_ack)) {
+-			annotation = call->rxtx_annotations[ix];
+-			anno_type = annotation & RXRPC_TX_ANNO_MASK;
+-			if (anno_type == RXRPC_TX_ANNO_RETRANS ||
+-			    anno_type == RXRPC_TX_ANNO_NAK) {
+-				annotation &= ~RXRPC_TX_ANNO_MASK;
+-				annotation |= RXRPC_TX_ANNO_UNACK;
+-			}
+-			annotation |= RXRPC_TX_ANNO_RESENT;
+-			call->rxtx_annotations[ix] = annotation;
+-		}
+-
+ 		if (after(call->tx_hard_ack, seq))
+ 			seq = call->tx_hard_ack;
+ 	}
 -- 
 2.25.1
 
