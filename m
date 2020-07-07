@@ -2,121 +2,96 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA31C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B631A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F79206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blUs/jBj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TWVNHL3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGGAYR (ORCPT
+        id S1726852AbgGGA2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgGGAYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:24:16 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA0AC061755;
-        Mon,  6 Jul 2020 17:24:15 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id s21so19359142ilk.5;
-        Mon, 06 Jul 2020 17:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=VfPSKiDlwbdW5XR5+Adboy9m9ASBVezCedgkiWC3Kf8=;
-        b=blUs/jBjoeaD4aId8u3vk9IMIS4CjuhjiKF4xh4vEl5E26L7Yz1WqR22Zf3se+FfP9
-         tAC422b1UVkZ7D9DtCZUQCoPAsVxckmUTF/acfVJ/Pz+W+pL9JJMprDzl8eXmDkYxeBT
-         BR5PaMbW1vUqDATej1l2A3F6QmfBcMK/wtX8oJ3Hy/aiQAzrts1fOG+WsD27KXJT9sBJ
-         TJSOi8dmLc2k4mQ2wI6lSU+iOjPOZsfMkRq0LWbGmV1LtYl2hvBeP3qZh//F7dan2vvy
-         cIG2RbwrXZwcx/iV9T3kGxel5Zxh3Xewvazu2JNiD28TCjgJW7UtO873XETBwJFNcfsF
-         omqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=VfPSKiDlwbdW5XR5+Adboy9m9ASBVezCedgkiWC3Kf8=;
-        b=TwO9VJeRKscy1SPOOWybJZfVFZ6oFDTKMUAlh9F1QK49mFC9ykloG7mD+nwxXn2d4i
-         5IWG0Lh4XcUULoollwrlrkoTchdRynstOwsgkmWhRkpmgZNqS1UOlTFlyD7UrOUaJFcW
-         uiRL8xU11LZf2oF6Xm8Gjz47Sar7lM7ZchiDPtjktDH1h+Zy/6hP083LP8QJps8/1N8I
-         89o/owTBGJMt5F4HQyWpvDi1TwSq6to3j5zPXYG8Eb4L3A6AW8iQMPhJrQlVhJl2R7BG
-         dXBj+5l2wcV8ukqjlVTJcp5cE5Yk+9gzblDU3Gu0a6zam4JoBJ2NfvK195Stcgkh29hx
-         BEOw==
-X-Gm-Message-State: AOAM532gk67p2ZcPN0qqHn69Tk1TMB3vdHZ0l9G0Dw0lh4ZovvBs5+Rl
-        O6gb3xhu2bB+mlKI6ZbuX6zQ9Az+wtk9PRcmEBY=
-X-Google-Smtp-Source: ABdhPJxMOvIOyqWFqev9TtTG0SM8LjjtHnjhtS9fnd4C/4GFAxmWXWhi5DR6lto4azrt/de/3U0/5mWtfkGaZMutRE8=
-X-Received: by 2002:a92:c78d:: with SMTP id c13mr33303733ilk.85.1594081455336;
- Mon, 06 Jul 2020 17:24:15 -0700 (PDT)
+        Mon, 6 Jul 2020 20:28:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:42165 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbgGGA2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 20:28:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B13Dr6P5cz9s1x;
+        Tue,  7 Jul 2020 10:27:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594081678;
+        bh=cQkuvuDXVTNikfR9rypMMuYWn/Qt9xkPY1Y3fHHP+sk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TWVNHL3O2g8vW9CwWCti08wVl7BC3+BE2ImClNyC23D/GKnnbN9XEDKgP7Yap4HGq
+         0ZsD4GyvbChSHcc/iUhJFAmDUOpQ4/Q6I60kPuS/jCWiKy/PK02UKHqCST66sy/xu8
+         qgIXBg7S80ikYSAgDr7JEOL4VXwJ17CKkYmOupoxyxyPyJtyqoCxS1XfpnuyM9UXbf
+         6lxSLvEEdADp3C+kDmXZYzBOeVLiz0x1LlrD0cASArqnuQB3+XikoPz6bHMRwc311Z
+         0usEBtrsJjzPPQW8rXdiL2Jxp61qSpNQ1bdGLnV3uaK5uXKK82jnkLXSv6s33xAn+b
+         zR6MitfZSZ38w==
+Date:   Tue, 7 Jul 2020 10:27:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>
+Subject: linux-next: build failure after merge of the xfs tree
+Message-ID: <20200707102754.65254f1e@canb.auug.org.au>
 MIME-Version: 1.0
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Mon, 6 Jul 2020 17:24:04 -0700
-Message-ID: <CAFXsbZoOoOkgkxXNbG5JTXHdJiSoxu2OiHKHh39m3GfYE2jGcg@mail.gmail.com>
-Subject: [PATCH net-next v2] net: sfp: Unique GPIO interrupt names
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/78vVcTgeuWwIZD/fb3c.Pgv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dynamically generate a unique GPIO interrupt name, based on the
-device name and the GPIO name.  For example:
+--Sig_/78vVcTgeuWwIZD/fb3c.Pgv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-103:          0   sx1503q  12 Edge      sff2-los
-104:          0   sx1503q  13 Edge      sff2-tx-fault
+Hi all,
 
-The sffX indicates the SFP the los and tx-fault are associated with.
+After merging the xfs tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-Signed-off-by: Chris Healy <cphealy@gmail.com>
+ld: fs/xfs/xfs_buf_item.o: in function `.xfs_buf_dquot_iodone':
+xfs_buf_item.c:(.text+0x21a0): undefined reference to `.xfs_dquot_done'
 
-v2:
-- added net-next to PATCH part of subject line
-- switched to devm_kasprintf()
----
- drivers/net/phy/sfp.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Caused by commit
 
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index 73c2969f11a4..193a124c26c4 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -2239,6 +2239,7 @@ static int sfp_probe(struct platform_device *pdev)
-     const struct sff_data *sff;
-     struct i2c_adapter *i2c;
-     struct sfp *sfp;
-+    char *sfp_irq_name;
-     int err, i;
+  018dc1667913 ("xfs: use direct calls for dquot IO completion")
 
-     sfp = sfp_alloc(&pdev->dev);
-@@ -2349,12 +2350,16 @@ static int sfp_probe(struct platform_device *pdev)
-             continue;
-         }
+# CONFIG_XFS_QUOTA is not set
 
-+        sfp_irq_name = devm_kasprintf(sfp->dev, GFP_KERNEL,
-+                          "%s-%s", dev_name(sfp->dev),
-+                          gpio_of_names[i]);
-+
-         err = devm_request_threaded_irq(sfp->dev, sfp->gpio_irq[i],
-                         NULL, sfp_irq,
-                         IRQF_ONESHOT |
-                         IRQF_TRIGGER_RISING |
-                         IRQF_TRIGGER_FALLING,
--                        dev_name(sfp->dev), sfp);
-+                        sfp_irq_name, sfp);
-         if (err) {
-             sfp->gpio_irq[i] = 0;
-             sfp->need_poll = true;
--- 
-2.21.3
+I have used the xfs tree from next-20200706 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/78vVcTgeuWwIZD/fb3c.Pgv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8DwYoACgkQAVBC80lX
+0GyqUwgAkHSU+O1kJckMqxnfPa+2Y888f5hB/g8zdGEN1ejvnpd/9B0aYagn66cA
+f0p6g5Btnjd7NnngBAq6RHuKigV6wWcoXlmhw0O0j0X9j0+8Z987W9WxrwdPrixl
+eZfklF694lQn9jHPxxTNm0nbG+PVyadVSy1poFZddRXxwVR7G3o/l57J/m2Y7R6s
+7XVFyNB5en3kXzHknviZmsGl+usg+vih9TaZE3mWGuwj1yL9bujmjJS1F/zdLe8t
+gz5gmc10jMMvul8D4qyxQvXLHgXAxZTa2Xu6DAKEtxIEO5A8tigLDcwSuDxUJXe+
+znBY29Y1pqNty1E4GSr1NIkQRX4ySA==
+=XvtZ
+-----END PGP SIGNATURE-----
+
+--Sig_/78vVcTgeuWwIZD/fb3c.Pgv--
