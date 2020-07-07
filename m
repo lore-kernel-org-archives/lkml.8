@@ -2,72 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73655C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B976C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF3520720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594148488;
-	bh=yTAxqihv430USW9Qh1Hfg9Wp4VIfe9iWsjLd10DcD4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lZbzlKrtGeeAtTDwxsK5tHWWZy0UjxEZmOxtbxUYBQxS927E6EO6D6aEHe25xjmem
-	 G3+diBlbPqVT7Wz3oYy5jqAqBzj8fhmn/dO1ph+g879LjsPj2SnStJ5qc7ceRgcvRO
-	 7CWa7S6CQEvzRRCh+YgE2LTPg45E0YoPxHl3Athk=
+	by mail.kernel.org (Postfix) with ESMTP id 59D9D206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgGGTB1 (ORCPT
+        id S1728700AbgGGTDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 15:03:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:56074 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbgGGTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:01:26 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D677206CD;
-        Tue,  7 Jul 2020 19:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594148485;
-        bh=yTAxqihv430USW9Qh1Hfg9Wp4VIfe9iWsjLd10DcD4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Cx0gQyHstH9QznqMz6bmbgO+S4FeDt1zsNIW/PBoaBvg4/EfZmfApfEHxNPOj4r8u
-         heL7RXkJMZXbxqNcDH55IQUMgGuFkgak+A5qVJWtsc7LaG3nYz8n7IE+5IyfI4yUHs
-         KnuLhYV4Lg1mZ7wt0k4uoLJFgahZVwDzjMVagdm8=
-Date:   Tue, 7 Jul 2020 12:01:23 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me, baolin.wang7@gmail.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] nvme-pci: Use standard block status macro
-Message-ID: <20200707190123.GB1997220@dhcp-10-100-145-180.wdl.wdc.com>
-References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
- <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com>
+        id S1728067AbgGGTDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:03:23 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4B1Wzs0LHJz9tyY5;
+        Tue,  7 Jul 2020 21:03:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nLDw_LnQf98w; Tue,  7 Jul 2020 21:03:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4B1Wzr64nMz9tyXt;
+        Tue,  7 Jul 2020 21:03:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DACD28B7ED;
+        Tue,  7 Jul 2020 21:03:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EqsTOoR54YIs; Tue,  7 Jul 2020 21:03:20 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 51A3A8B7D7;
+        Tue,  7 Jul 2020 21:03:20 +0200 (CEST)
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
+ <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
+ <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
+ <8b751738-a9d1-8f55-8f9b-9264c8ac7ed8@csgroup.eu>
+Message-ID: <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu>
+Date:   Tue, 7 Jul 2020 21:02:58 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <8b751738-a9d1-8f55-8f9b-9264c8ac7ed8@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 10:49:24AM +0800, Baolin Wang wrote:
->  static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
-> @@ -844,7 +844,7 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
->  	if (dma_mapping_error(dev->dev, iod->meta_dma))
->  		return BLK_STS_IOERR;
->  	cmnd->rw.metadata = cpu_to_le64(iod->meta_dma);
-> -	return 0;
-> +	return BLK_STS_OK;
->  }
 
-This is fine, though it takes knowing that this value is 0 for the
-subsequent 'if (!ret)' check to make sense. Maybe those should change to
-'if (ret != BLK_STS_OK)' so the check uses the same symbol as the
-return, and will always work in the unlikely event that the defines
-are reordered.
+
+Le 07/07/2020 à 14:44, Christophe Leroy a écrit :
+> 
+> 
+> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
+>> Michael Ellerman <mpe@ellerman.id.au> writes:
+>>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>>>> Hi Michael,
+>>>>
+>>>> I see this patch is marked as "defered" in patchwork, but I can't see
+>>>> any related discussion. Is it normal ?
+>>>
+>>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+>>>
+>>> https://github.com/linuxppc/issues/issues/297
+>>>
+>>> So we should be able to pick it up for v5.9 hopefully.
+>>
+>> It seems to break the build with the kernel.org 4.9.4 compiler and
+>> corenet64_smp_defconfig:
+> 
+> Most likely a GCC bug ?
+> 
+> It seems the problem vanishes with patch 
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/173de3b659fa3a5f126a0eb170522cccd909950f.1594125164.git.christophe.leroy@csgroup.eu/ 
+> 
+
+Same kind of issue in signal_64.c now.
+
+The following patch fixes it: 
+https://patchwork.ozlabs.org/project/linuxppc-dev/patch/810bd8840ef990a200f58c9dea9abe767ca02a3a.1594146723.git.christophe.leroy@csgroup.eu/
+
+Christophe
