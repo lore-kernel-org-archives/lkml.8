@@ -2,120 +2,161 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A4920702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FabY7ftF"
+	by mail.kernel.org (Postfix) with ESMTP id A565120702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgGGFIl (ORCPT
+        id S1727876AbgGGFJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgGGFIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:08:41 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547ECC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 22:08:41 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id 72so5687426ple.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 22:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+UI95l1NjQtL84FXutDU4Ky6htelMt/W5RLSG30AOlc=;
-        b=FabY7ftFpQgr2PbvISTb0A6Y8y0eomX1VFrzE36jG7HJRpd0pIeXf6yMc8HbUp7U3H
-         ZlI0VyXp7rTYj2/QxG2KGhvd3uN7wZ7ZytMEWcHO2Dkr1sl0bXQ/wlQTN1AUOeOvTtAM
-         YndiBITGAm0w1aPbIwYyewqy5xvcau4jggaJR3sQEpxHUppqYz7HJslq1y8wy/5z3xuk
-         IASUg2A/w+NB3PNKgCXFyokEZ8UaMSxpGAjn9UlyiaZVBg4IXw8c28L59Mei3ZQ0CG6O
-         aDVbyHhcrQTHSY2OcNskZa5m6FCkRoOgoKkZ7nSB64gwFDJot+Ui5N4oXFQvuyHp1D0S
-         n3Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+UI95l1NjQtL84FXutDU4Ky6htelMt/W5RLSG30AOlc=;
-        b=GxNQCNYgf4MsljBgMJybf5pNJxePZ29IXP7drtt2v8O6GL2jvY1jM/MmjYwc8QcJ9+
-         8Hz7IXdiRs5A5B7wB0g0/m+3YOjYgmDFGKm5wXXr5ayAjpUrpM10nAeENBGk++uCAa22
-         QZhcaiR3b1N1bumkQQnJnDHP0CXmjbiWNvcANwqir5wKiahm8N/2AGqbfbqa70cphv65
-         dYGBCaMlwzRKEIg2bkjKTPoTrnKl5R5TagBL3tjlMHRIEtMmpyWnRNBAL1OEjgClzYWz
-         cK8vz6Our+P1NzG162d7428NESpA5cBht6VM3n7eRM8gn+zhAMa+YBWJDNwG82YYngBG
-         Rftw==
-X-Gm-Message-State: AOAM531MKpf9PN43mLOHSFhQchtQwN6kttjq3avbrkOZHik7lwfsFUGO
-        BxAOCIlEXOqL6Re1od1tO0l2MkZgKKM=
-X-Google-Smtp-Source: ABdhPJyNCgjyPVrDt9gQMwviLg7kAe7piMq3EJ2aEFfumscMwQafobSfVLxi9F1dEIy3LXZ7LNL6FQ==
-X-Received: by 2002:a17:90a:2d7:: with SMTP id d23mr2517517pjd.57.1594098520758;
-        Mon, 06 Jul 2020 22:08:40 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f2sm19775905pfb.184.2020.07.06.22.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 22:08:39 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 22:08:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom: remove ufs qmp phy driver
-Message-ID: <20200707050837.GN11847@yoga>
-References: <20200629145452.123035-1-vkoul@kernel.org>
- <20200629192416.GJ388985@builder.lan>
- <20200630045426.GO2599@vkoul-mobl>
+        Tue, 7 Jul 2020 01:09:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33299 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbgGGFJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 01:09:34 -0400
+IronPort-SDR: YWsy+C/S7ExO0UmKUYBTMLHHDTL7epyR7I7qngUxCv749/04iGMnAIofC1MFsSXEnrzdG0kqsh
+ qLgtSrV4JbdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="209061775"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="209061775"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 22:09:33 -0700
+IronPort-SDR: f/9beZVbR0NOrJqRH44hjU6uz7MqG9WCQj8U3OXBJ6uGDPbw6iCFWZHYWHRETebT/roATGJrv1
+ +UKH6K9vXAnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="314195913"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 22:09:32 -0700
+Date:   Mon, 6 Jul 2020 22:09:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "David P. Reed" <dpreed@deepplum.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu
+ on crash or panic
+Message-ID: <20200707050932.GF5208@linux.intel.com>
+References: <20200629214956.GA12962@linux.intel.com>
+ <20200704203809.76391-1-dpreed@deepplum.com>
+ <20200704203809.76391-3-dpreed@deepplum.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630045426.GO2599@vkoul-mobl>
+In-Reply-To: <20200704203809.76391-3-dpreed@deepplum.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29 Jun 21:54 PDT 2020, Vinod Koul wrote:
-
-> Hi Bjorn,
+On Sat, Jul 04, 2020 at 04:38:08PM -0400, David P. Reed wrote:
+> Fix: Mask undefined operation fault during emergency VMXOFF that must be
+> attempted to force cpu exit from VMX root operation.
+> Explanation: When a cpu may be in VMX root operation (only possible when
+> CR4.VMXE is set), crash or panic reboot tries to exit VMX root operation
+> using VMXOFF. This is necessary, because any INIT will be masked while cpu
+> is in VMX root operation, but that state cannot be reliably
+> discerned by the state of the cpu.
+> VMXOFF faults if the cpu is not actually in VMX root operation, signalling
+> undefined operation.
+> Discovered while debugging an out-of-tree x-visor with a race. Can happen
+> due to certain kinds of bugs in KVM.
 > 
-> On 29-06-20, 12:24, Bjorn Andersson wrote:
-> > On Mon 29 Jun 07:54 PDT 2020, Vinod Koul wrote:
-> > 
-> > > UFS QMP phy drivers are duplicate as we are supposed to use common QMP
-> > > phy driver which is working fine on various platforms. So remove the
-> > > unused driver
-> > > 
-> > 
-> > This describes the current state, but the UFS QMP driver had a purpose
-> > not that long ago and I would like the commit message to describe what
-> > changed and why it's now fine to remove the driver.
+> Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
+> Reported-by: David P. Reed <dpreed@deepplum.com>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: David P. Reed <dpreed@deepplum.com>
+> ---
+>  arch/x86/include/asm/virtext.h | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 > 
-> Would below look better, also feel free to suggest as you have the
-> more history on this :)
-> 
-> "UFS QMP driver is dedicated driver for QMP phy for UFS variant. We
-> also have a common QMP phy driver which works not only for UFS but
-> USB and PCIe as well, so retire this driver in favour of the common
-> driver"
-> 
+> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+> index 0ede8d04535a..0e0900eacb9c 100644
+> --- a/arch/x86/include/asm/virtext.h
+> +++ b/arch/x86/include/asm/virtext.h
+> @@ -30,11 +30,11 @@ static inline int cpu_has_vmx(void)
+>  }
+>  
+>  
+> -/* Disable VMX on the current CPU
+> +/* Exit VMX root mode and isable VMX on the current CPU.
+>   *
+>   * vmxoff causes a undefined-opcode exception if vmxon was not run
+> - * on the CPU previously. Only call this function if you know VMX
+> - * is enabled.
+> + * on the CPU previously. Only call this function if you know cpu
+> + * is in VMX root mode.
+>   */
+>  static inline void cpu_vmxoff(void)
+>  {
+> @@ -47,14 +47,22 @@ static inline int cpu_vmx_enabled(void)
+>  	return __read_cr4() & X86_CR4_VMXE;
+>  }
+>  
+> -/* Disable VMX if it is enabled on the current CPU
+> +/* Safely exit VMX root mode and disable VMX if VMX enabled
+> + * on the current CPU. Handle undefined-opcode fault
+> + * that can occur if cpu is not in VMX root mode, due
+> + * to a race.
+>   *
+>   * You shouldn't call this if cpu_has_vmx() returns 0.
+>   */
+>  static inline void __cpu_emergency_vmxoff(void)
+>  {
+> -	if (cpu_vmx_enabled())
+> -		cpu_vmxoff();
+> +	if (!cpu_vmx_enabled())
+> +		return;
+> +	asm volatile ("1:vmxoff\n\t"
+> +		      "2:\n\t"
+> +		      _ASM_EXTABLE(1b, 2b)
+> +		      ::: "cc", "memory");
+> +	cr4_clear_bits(X86_CR4_VMXE);
 
-How about:
+Open coding vmxoff doesn't make sense, and IMO is flat out wrong as it fixes
+flows that use __cpu_emergency_vmxoff() but leaves the same bug hanging
+around in emergency_vmx_disable_all() until the next patch.
 
-"The UFS specific QMP PHY driver started off supporting the 14nm and
-20nm hardware. With the 20nm support marked broken for a long time and
-the 14nm support added to the common QMP PHY, this driver has not been
-used in a while. So delete it."
+The reason I say it doesn't make sense is that there is no sane scenario
+where the generic vmxoff helper should _not_ eat the fault.  All other VMXOFF
+faults are mode related, i.e. any fault is guaranteed to be due to the
+!post-VMXON check unless we're magically in RM, VM86, compat mode, or at
+CPL>0.  Given that the whole point of this series is that it's impossible to
+determine whether or not the CPU if post-VMXON if CR4.VMXE=1 without taking a
+fault of some form, there's simply no way that anything except the hypervisor
+(in normal operation) can know the state of VMX.  And given that the only
+in-tree hypervisor (KVM) has its own version of vmxoff, that means there is
+no scenario in which cpu_vmxoff() can safely be used.  Case in point, after
+the next patch there are no users of cpu_vmxoff().
 
-Regards,
-Bjorn
+TL;DR: Just do fixup on cpu_vmxoff().
 
-> > 
-> > I'm happy with the patch itself (i.e. the removal of the driver) though.
-> 
-> Thanks
+>  }
+>  
+>  /* Disable VMX if it is supported and enabled on the current CPU
 > -- 
-> ~Vinod
+> 2.26.2
+> 
