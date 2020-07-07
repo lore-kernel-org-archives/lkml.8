@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF95C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A0E206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6207320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135319;
-	bh=Ab115TkOA/NphxriOV7UYBgYkgDPeYOkVp9yzBC6V0s=;
+	s=default; t=1594135321;
+	bh=I6QCAKGQQJ8wzfFob8w7MMgYMONcPCHm/3XWFx4Lo9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXpwtk7e3b3ii9N+v1NY8bcCLcFHFVU3xQwbmVEXliErB5sk8VQ9AsgslVAprmqhj
-	 eVd/wByetw2Tng2CyoDB81xvKTRLIZXIOr3qQGBkjpBB0tfLE1+lyzl2EkbYg4whgk
-	 UPCPmM3PhGrtKkUx6ZWVDxCnjFdA8mlODXU70o9s=
+	b=c8tf/9eaiN9tzYt3Gh7jD7JjaG6hKOpC+3htSuvN3Vg57XRc8jJpt5XcSdJK/CoOw
+	 QalT3C3LURi7S8YYSTKgw6Yh0R9jsCuSjafpHWpWtEhJnjWziyLgAqFKXlCnf0jnHZ
+	 /nfdA2Eyfy0QoQ/pWH1mrSp+hnpGBnZmABnmxHqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgGGPV6 (ORCPT
+        id S1729772AbgGGPV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbgGGPVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:50 -0400
+        id S1729229AbgGGPVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBFD206E2;
-        Tue,  7 Jul 2020 15:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494DF207BB;
+        Tue,  7 Jul 2020 15:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135309;
-        bh=Ab115TkOA/NphxriOV7UYBgYkgDPeYOkVp9yzBC6V0s=;
+        s=default; t=1594135311;
+        bh=I6QCAKGQQJ8wzfFob8w7MMgYMONcPCHm/3XWFx4Lo9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oE7Az6IJR1LhB7+cWD8aI34msYdUKMdoolD6ka9VbNahMTHHOX5GZSYn2amX2Q35u
-         qach66sxn+BJupY9TjeBAqc7TWkPROLMWK+o0ErT3adFb+OzjUneBBT0/3MQtUYOrO
-         PEbqaYnpg9MiMTkvJ6K43UgtLLNj5/QhguFzQd0U=
+        b=Bm/xWZc4Tg3auvLIgb/ES4iyi38I4wyL0v2k+ok1H409NiyPZSnHUCzqoF3Do4oem
+         ip5FKRekPaq/hLjNPfNZXG8gutAJoP8/PEu+ZqM+lDA1oymNDDzniOO/HiCKu2Pmtp
+         rA25SiZcvWdUe2ygiVuXYMkPakxibzjT3Epw1zfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.4 55/65] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
-Date:   Tue,  7 Jul 2020 17:17:34 +0200
-Message-Id: <20200707145755.121155589@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Roman Li <Roman.Li@amd.com>
+Subject: [PATCH 5.4 56/65] drm/amd/display: Only revalidate bandwidth on medium and fast updates
+Date:   Tue,  7 Jul 2020 17:17:35 +0200
+Message-Id: <20200707145755.168565034@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -59,68 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
+commit 6eb3cf2e06d22b2b08e6b0ab48cb9c05a8e1a107 upstream.
 
-This resolves the hazard between the mtc0 in the change_c0_status() and
-the mfc0 in configure_exception_vector(). Without resolving this hazard
-configure_exception_vector() could read an old value and would restore
-this old value again. This would revert the changes change_c0_status()
-did. I checked this by printing out the read_c0_status() at the end of
-per_cpu_trap_init() and the ST0_MX is not set without this patch.
+[Why]
+Changes that are fast don't require updating DLG parameters making
+this call unnecessary. Considering this is an expensive call it should
+not be done on every flip.
 
-The hazard is documented in the MIPS Architecture Reference Manual Vol.
-III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
-6.03 table 8.1 which includes:
+DML touches clocks, p-state support, DLG params and a few other DC
+internal flags and these aren't expected during fast. A hang has been
+reported with this change when called on every flip which suggests that
+modifying these fields is not recommended behavior on fast updates.
 
-   Producer | Consumer | Hazard
-  ----------|----------|----------------------------
-   mtc0     | mfc0     | any coprocessor 0 register
+[How]
+Guard the validation to only happen if update type isn't FAST.
 
-I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
-There the change_c0_status() function would activate the DSPen by
-setting ST0_MX in the c0_status register. This was reverted and then the
-system got a DSP exception when the DSP registers were saved in
-save_dsp() in the first process switch. The crash looks like this:
-
-[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
-[    0.113470] Rebooting in 1 seconds..
-
-We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
-not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
-kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
-did not happen.
-
-In the kernel I bisected this problem to commit 9012d011660e ("compiler:
-allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
-reverted it also happened after commit 172dcd935c34b ("MIPS: Always
-allocate exception vector for MIPSr2+").
-
-Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
-does similar changes to a different file. I am not sure if there are
-more places affected by this problem.
-
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1191
+Fixes: a24eaa5c51255b ("drm/amd/display: Revalidate bandwidth before commiting DC updates")
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/traps.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/dc/core/dc.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -2126,6 +2126,7 @@ static void configure_status(void)
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2226,10 +2226,12 @@ void dc_commit_updates_for_stream(struct
  
- 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
- 			 status_set);
-+	back_to_back_c0_hazard();
- }
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
  
- unsigned int hwrena;
+-	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
+-		DC_ERROR("Mode validation failed for stream update!\n");
+-		dc_release_state(context);
+-		return;
++	if (update_type > UPDATE_TYPE_FAST) {
++		if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
++			DC_ERROR("Mode validation failed for stream update!\n");
++			dc_release_state(context);
++			return;
++		}
+ 	}
+ 
+ 	commit_planes_for_stream(
 
 
