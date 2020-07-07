@@ -2,157 +2,119 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65997C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD06AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41FDC20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C8720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jy3DeQsa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CaAH029j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgGGVzi (ORCPT
+        id S1729234AbgGGV5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728396AbgGGVzh (ORCPT
+        Tue, 7 Jul 2020 17:57:20 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12494 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728517AbgGGV5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:55:37 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D4AC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:55:37 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e18so20626620pgn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PWRFmGx46oXClpA56PfylS5PdHmYWBhMzFkTVevOmLg=;
-        b=jy3DeQsaYA+CHIzTF6NLOTOtZmNtV8HrLGBcmDlZ3Q8JLdPM6n+cv3dGCybmrkF+O3
-         cE3mbaS8VH89ojXYY8yqpqzXUvM43P7bKTb+fKJhf1zlfkljbi/jmgDAyvzY7jv5LgWt
-         YODuttLOikCmMTBjDi2AmI9FdhZxzYzb3L40Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PWRFmGx46oXClpA56PfylS5PdHmYWBhMzFkTVevOmLg=;
-        b=qs6wwsenS7ohVsVfu6K0BepUzBqKbTKQt8TQCj937Zr89xZvj2fCNQNzh3Tpuneuoi
-         jacK5IIqYDdoMLL9K/imDct1CjGdxoyNjoQT8tMWB+2gB8XYPYs9JZ/gkm68DtldOyc+
-         7CDtOoaCoyuCKi7ePAkwln24dWCvt/jQYYHufJHcZ6MFp676VWw2srurGCW1Makpkd9k
-         cpWglXd8yISUQzk8zdXthDN4N+59ONbWRXJoTWs0Kb4y/AyxEfwS4+1s+shV4kW48B/s
-         K/hsmsB8WrSt3zzy0OeVdRiiuOr/D6k8dafodQb9ZibySoPCWwYybYteEwTxOIbn1/W+
-         ZQAA==
-X-Gm-Message-State: AOAM533lFOFT+QoRMYBdIaXV1O2SqUHFdSwJyx0D1sTcHnPVTYDL8N95
-        i2UzvaN3oGVH36ofXHmhkfKxgQ==
-X-Google-Smtp-Source: ABdhPJzW+RdKU6nokbOM5lacyrg+jNVbYm6SkVPThLayDH9UYiuWMqxlml96dZroXmP5i22U7WUVQA==
-X-Received: by 2002:a65:43c9:: with SMTP id n9mr45006765pgp.452.1594158936934;
-        Tue, 07 Jul 2020 14:55:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g18sm23742949pfk.40.2020.07.07.14.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 14:55:36 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:55:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from
- kernel_read_file() enums
-Message-ID: <202007071447.D96AA42ECE@keescook>
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <20200707081926.3688096-3-keescook@chromium.org>
- <0a5e2c2e-507c-9114-5328-5943f63d707e@broadcom.com>
+        Tue, 7 Jul 2020 17:57:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f04ef550000>; Tue, 07 Jul 2020 14:55:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jul 2020 14:57:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 14:57:19 -0700
+Received: from [10.2.50.36] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
+ 2020 21:57:18 +0000
+Subject: Re: [PATCH V3] mm/vmstat: Add events for THP migration without split
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     <linux-mm@kvack.org>, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "Hugh Dickins" <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1594080415-27924-1-git-send-email-anshuman.khandual@arm.com>
+ <20200707130406.21ce3d61a4cce25831abb2d1@linux-foundation.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <dfb0661f-60bc-92a4-9a10-3cf09342714c@nvidia.com>
+Date:   Tue, 7 Jul 2020 14:57:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a5e2c2e-507c-9114-5328-5943f63d707e@broadcom.com>
+In-Reply-To: <20200707130406.21ce3d61a4cce25831abb2d1@linux-foundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594158933; bh=UkjuVJX7qXH4aNelVrfrk3vUbsAK4xxYDBiu8YGtRZ8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CaAH029jU/ZygbHUlEeyaPeQXOxoPlgNNwtuI50UlNXAm6hjhNSjwIpfiVPUGchMl
+         iO/RuP4kZ/ABSyY7LCnlVUGN7otdsM1kAFeDVqNfmbzcn0G0PGPFtxpLssBWYdOxsc
+         yw8J6TeVnmAe9Jl1Ch1ATKJuEgWuwhosNiGg9p9Ac1i7kFSjtdBH+cDyyQWVsVSlXw
+         brIN7QyXVi5EzYO4bfEqYnBFl7IR7rcmJWdaU6E2DQgsnaa3Ci2/N/Gb2Q0knguFO/
+         FL2S+jfmg19kC0ZIathlvEr7PIiJRLL7oStSYeg2bGkrRJSNZfFXBAfYpOjLJRx9ej
+         HBIQ7khdtkhMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 09:42:02AM -0700, Scott Branden wrote:
-> On 2020-07-07 1:19 a.m., Kees Cook wrote:
-> > FIRMWARE_PREALLOC_BUFFER is a "how", not a "what", and confuses the LSMs
-> > that are interested in filtering between types of things. The "how"
-> > should be an internal detail made uninteresting to the LSMs.
-> > 
-> > Fixes: a098ecd2fa7d ("firmware: support loading into a pre-allocated buffer")
-> > Fixes: fd90bc559bfb ("ima: based on policy verify firmware signatures (pre-allocated buffer)")
-> > Fixes: 4f0496d8ffa3 ("ima: based on policy warn about loading firmware (pre-allocated buffer)")
-> > [...]
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 3f881a892ea7..95fc775ed937 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -2993,10 +2993,10 @@ static inline void i_readcount_inc(struct inode *inode)
-> >   #endif
-> >   extern int do_pipe_flags(int *, int);
-> > +/* This is a list of *what* is being read, not *how*. */
-> >   #define __kernel_read_file_id(id) \
-> >   	id(UNKNOWN, unknown)		\
-> >   	id(FIRMWARE, firmware)		\
-> With this change, I'm trying to figure out how the partial firmware read is
-> going to work on top of this reachitecture.
-> Is it going to be ok to add READING_PARTIAL_FIRMWARE here as that is a
-> "what"?
+On 2020-07-07 13:04, Andrew Morton wrote:
+> On Tue,  7 Jul 2020 05:36:55 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> Add following new vmstat events which will help in validating THP migration
+>> without split. Statistics reported through these new VM events will help in
+>> performance debugging.
+>>
+>> 1. THP_MIGRATION_SUCCESS
+>> 2. THP_MIGRATION_FAILURE
+>> 3. THP_MIGRATION_SPLIT
+>>
+>> In addition, these new events also update normal page migration statistics
+>> appropriately via PGMIGRATE_SUCCESS and PGMIGRATE_FAILURE. While here, this
+>> updates current trace event 'mm_migrate_pages' to accommodate now available
+>> THP statistics.
+> 
+> Patch looks straightforward enough.  It would be nice to see some
+> confirmation from others that these metrics are a desirable thing to
+> export.
 
-No, that's why I said you need to do the implementation within the API
-and not expect each LSM to implement their own (as I mentioned both
-times):
+Taking a peek now.
 
-https://lore.kernel.org/lkml/202005221551.5CA1372@keescook/
-https://lore.kernel.org/lkml/202007061950.F6B3D9E6A@keescook/
+> 
+>> ...
+>>
+>> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
+>> +	if (nr_thp_succeeded)
+>> +		count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
+>> +	if (nr_thp_failed)
+>> +		count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
+>> +	if (nr_thp_split)
+>> +		count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
+> 
+> Are these "if"s worthwhile to have?
 
-I will reply in the thread above.
+No, they are not. And there are a couple more pre-existing cases as well,
+right above what can be seen here (this patch just follows the local pattern)
+that should also be removed.
 
-> > -	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
-> My patch series gets rejected any time I make a change to the
-> kernel_read_file* region in linux/fs.h.
-> The requirement is for this api to move to another header file outside of
-> linux/fs.h
-> It seems the same should apply to your change.
 
-Well I'm hardly making the same level of changes, but yeah, sure, if
-that helps move things along, I can include that here.
 
-> Could you please add the following patch to the start of you patch series to
-> move the kernel_read_file* to its own include file?
-> https://patchwork.kernel.org/patch/11647063/
-
-https://lore.kernel.org/lkml/20200706232309.12010-2-scott.branden@broadcom.com/
-
-You've included it in include/linux/security.h and that should be pretty
-comprehensive, it shouldn't be needed in so many .c files.
-
+thanks,
 -- 
-Kees Cook
+John Hubbard
+NVIDIA
