@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13196C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24A02083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301952082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135419;
-	bh=n3zjhgWpEThfyQL9eTm3GLGW1EpXzK4Hw1QvJrxADik=;
+	s=default; t=1594135426;
+	bh=rzP5T9N3x3wQHrYUFrFJ1S2cJcZshoRH0ZUnfglc/HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/Q0clHQWUnUwtLxCDJzbuCoZTb37E0dhfxqioePKSAth0i+Z5d7CljgGqIuYOLcl
-	 /9G18LnaOZOcoDyQzUH/WRoU2/xznOE/0Rusb/tl6oIW01Ebx2CApe6tYU0Q/pW9sv
-	 VEmXib+XcAaLuP9IWb+5OG3J7JPXyw6ES5VSkuTI=
+	b=lPGa2mwlx4sNfJffSnaIyGfxFnO7XnVmTEiBEIcAO7ftXz8tYNSE+D5Tbo+WThiEt
+	 hcHyEQKHWF6uKSYT0/PmpMEwHI5gacClqGuzMiLJi9HCoMgMWwQly+LHcXfdy2ykRk
+	 hclOYRhOg+hKKt8fquODx9g6WNUC4yrHaToLNm1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgGGPXi (ORCPT
+        id S1730003AbgGGPXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729991AbgGGPXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:35 -0400
+        id S1729988AbgGGPXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BE120771;
-        Tue,  7 Jul 2020 15:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E4692065D;
+        Tue,  7 Jul 2020 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135414;
-        bh=n3zjhgWpEThfyQL9eTm3GLGW1EpXzK4Hw1QvJrxADik=;
+        s=default; t=1594135409;
+        bh=rzP5T9N3x3wQHrYUFrFJ1S2cJcZshoRH0ZUnfglc/HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQ99n9n1bUm+r4XTEqm+Qc/1WKpsGRPMOKLAuNW6kRF3vgu10DUk3Q4fTup7pgfiR
-         KosgzMBLuz9VYv7yFmvBd4ARzuSYWszPLEQ+qD9t4r1v2LbJeXowRJpRK8TPb/sh3H
-         mc9Unoz+7c2R1hG4NOteBRqYXRVkG0ch/QSMzUpQ=
+        b=VztxqMVw6JSrL+onrnDGW7Y1GoYFmFjg4oxROdADHlRGZVpP9La/HvQFiuaDlMT9Z
+         ilBZgWIfwtSmovKAljwc/r/8gS1yG/K6fs22dcjuyvlsLlReymrKcLs2osG0tJ13iS
+         uD1V0klzwOYhBlwHA3TqjGUnKNXmH0H8RV7/GNXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 024/112] mm/slub.c: fix corrupted freechain in deactivate_slab()
-Date:   Tue,  7 Jul 2020 17:16:29 +0200
-Message-Id: <20200707145802.139834419@linuxfoundation.org>
+Subject: [PATCH 5.7 009/112] drm/amd/display: Fix incorrectly pruned modes with deep color
+Date:   Tue,  7 Jul 2020 17:16:14 +0200
+Message-Id: <20200707145801.418588891@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -65,113 +62,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Stylon Wang <stylon.wang@amd.com>
 
-[ Upstream commit 52f23478081ae0dcdb95d1650ea1e7d52d586829 ]
+[ Upstream commit cbd14ae7ea934fd9d9f95103a0601a7fea243573 ]
 
-The slub_debug is able to fix the corrupted slab freelist/page.
-However, alloc_debug_processing() only checks the validity of current
-and next freepointer during allocation path.  As a result, once some
-objects have their freepointers corrupted, deactivate_slab() may lead to
-page fault.
+[Why]
+When "max bpc" is set to enable deep color, some modes are removed from
+the list if they fail validation on max bpc. These modes should be kept
+if they validates fine with lower bpc.
 
-Below is from a test kernel module when 'slub_debug=PUF,kmalloc-128
-slub_nomerge'.  The test kernel corrupts the freepointer of one free
-object on purpose.  Unfortunately, deactivate_slab() does not detect it
-when iterating the freechain.
+[How]
+- Retry with lower bpc in mode validation.
+- Same in atomic commit to apply working bpc, not necessarily max bpc.
 
-  BUG: unable to handle page fault for address: 00000000123456f8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ... ...
-  RIP: 0010:deactivate_slab.isra.92+0xed/0x490
-  ... ...
-  Call Trace:
-   ___slab_alloc+0x536/0x570
-   __slab_alloc+0x17/0x30
-   __kmalloc+0x1d9/0x200
-   ext4_htree_store_dirent+0x30/0xf0
-   htree_dirblock_to_tree+0xcb/0x1c0
-   ext4_htree_fill_tree+0x1bc/0x2d0
-   ext4_readdir+0x54f/0x920
-   iterate_dir+0x88/0x190
-   __x64_sys_getdents+0xa6/0x140
-   do_syscall_64+0x49/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Therefore, this patch adds extra consistency check in deactivate_slab().
-Once an object's freepointer is corrupted, all following objects
-starting at this object are isolated.
-
-[akpm@linux-foundation.org: fix build with CONFIG_SLAB_DEBUG=n]
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200331031450.12182-1-dongli.zhang@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Stylon Wang <stylon.wang@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 102 +++++++++++-------
+ 1 file changed, 64 insertions(+), 38 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 63bd39c476431..63f372366ec59 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -679,6 +679,20 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
- 	va_end(args);
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index f9f02e08054bc..b7e161f2a47d4 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -3797,8 +3797,7 @@ static void update_stream_scaling_settings(const struct drm_display_mode *mode,
+ 
+ static enum dc_color_depth
+ convert_color_depth_from_display_info(const struct drm_connector *connector,
+-				      const struct drm_connector_state *state,
+-				      bool is_y420)
++				      bool is_y420, int requested_bpc)
+ {
+ 	uint8_t bpc;
+ 
+@@ -3818,10 +3817,7 @@ convert_color_depth_from_display_info(const struct drm_connector *connector,
+ 		bpc = bpc ? bpc : 8;
+ 	}
+ 
+-	if (!state)
+-		state = connector->state;
+-
+-	if (state) {
++	if (requested_bpc > 0) {
+ 		/*
+ 		 * Cap display bpc based on the user requested value.
+ 		 *
+@@ -3830,7 +3826,7 @@ convert_color_depth_from_display_info(const struct drm_connector *connector,
+ 		 * or if this was called outside of atomic check, so it
+ 		 * can't be used directly.
+ 		 */
+-		bpc = min(bpc, state->max_requested_bpc);
++		bpc = min_t(u8, bpc, requested_bpc);
+ 
+ 		/* Round down to the nearest even number. */
+ 		bpc = bpc - (bpc & 1);
+@@ -3952,7 +3948,8 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	const struct drm_display_mode *mode_in,
+ 	const struct drm_connector *connector,
+ 	const struct drm_connector_state *connector_state,
+-	const struct dc_stream_state *old_stream)
++	const struct dc_stream_state *old_stream,
++	int requested_bpc)
+ {
+ 	struct dc_crtc_timing *timing_out = &stream->timing;
+ 	const struct drm_display_info *info = &connector->display_info;
+@@ -3982,8 +3979,9 @@ static void fill_stream_properties_from_drm_display_mode(
+ 
+ 	timing_out->timing_3d_format = TIMING_3D_FORMAT_NONE;
+ 	timing_out->display_color_depth = convert_color_depth_from_display_info(
+-		connector, connector_state,
+-		(timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420));
++		connector,
++		(timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420),
++		requested_bpc);
+ 	timing_out->scan_type = SCANNING_TYPE_NODATA;
+ 	timing_out->hdmi_vic = 0;
+ 
+@@ -4189,7 +4187,8 @@ static struct dc_stream_state *
+ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 		       const struct drm_display_mode *drm_mode,
+ 		       const struct dm_connector_state *dm_state,
+-		       const struct dc_stream_state *old_stream)
++		       const struct dc_stream_state *old_stream,
++		       int requested_bpc)
+ {
+ 	struct drm_display_mode *preferred_mode = NULL;
+ 	struct drm_connector *drm_connector;
+@@ -4274,10 +4273,10 @@ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 	*/
+ 	if (!scale || mode_refresh != preferred_refresh)
+ 		fill_stream_properties_from_drm_display_mode(stream,
+-			&mode, &aconnector->base, con_state, NULL);
++			&mode, &aconnector->base, con_state, NULL, requested_bpc);
+ 	else
+ 		fill_stream_properties_from_drm_display_mode(stream,
+-			&mode, &aconnector->base, con_state, old_stream);
++			&mode, &aconnector->base, con_state, old_stream, requested_bpc);
+ 
+ 	stream->timing.flags.DSC = 0;
+ 
+@@ -4800,16 +4799,54 @@ static void handle_edid_mgmt(struct amdgpu_dm_connector *aconnector)
+ 	create_eml_sink(aconnector);
  }
  
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
++static struct dc_stream_state *
++create_validate_stream_for_sink(struct amdgpu_dm_connector *aconnector,
++				const struct drm_display_mode *drm_mode,
++				const struct dm_connector_state *dm_state,
++				const struct dc_stream_state *old_stream)
 +{
-+	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
-+	    !check_valid_pointer(s, page, nextfree)) {
-+		object_err(s, page, freelist, "Freechain corrupt");
-+		freelist = NULL;
-+		slab_fix(s, "Isolate corrupted freechain");
-+		return true;
-+	}
++	struct drm_connector *connector = &aconnector->base;
++	struct amdgpu_device *adev = connector->dev->dev_private;
++	struct dc_stream_state *stream;
++	int requested_bpc = connector->state ? connector->state->max_requested_bpc : 8;
++	enum dc_status dc_result = DC_OK;
 +
-+	return false;
-+}
-+
- static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
- {
- 	unsigned int off;	/* Offset of last byte */
-@@ -1410,6 +1424,11 @@ static inline void inc_slabs_node(struct kmem_cache *s, int node,
- static inline void dec_slabs_node(struct kmem_cache *s, int node,
- 							int objects) {}
- 
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
-+{
-+	return false;
-+}
- #endif /* CONFIG_SLUB_DEBUG */
- 
- /*
-@@ -2093,6 +2112,14 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
- 		void *prior;
- 		unsigned long counters;
- 
-+		/*
-+		 * If 'nextfree' is invalid, it is possible that the object at
-+		 * 'freelist' is already corrupted.  So isolate all objects
-+		 * starting at 'freelist'.
-+		 */
-+		if (freelist_corrupted(s, page, freelist, nextfree))
++	do {
++		stream = create_stream_for_sink(aconnector, drm_mode,
++						dm_state, old_stream,
++						requested_bpc);
++		if (stream == NULL) {
++			DRM_ERROR("Failed to create stream for sink!\n");
 +			break;
++		}
 +
- 		do {
- 			prior = page->freelist;
- 			counters = page->counters;
++		dc_result = dc_validate_stream(adev->dm.dc, stream);
++
++		if (dc_result != DC_OK) {
++			DRM_DEBUG_KMS("Mode %dx%d (clk %d) failed DC validation with error %d\n",
++				      drm_mode->hdisplay,
++				      drm_mode->vdisplay,
++				      drm_mode->clock,
++				      dc_result);
++
++			dc_stream_release(stream);
++			stream = NULL;
++			requested_bpc -= 2; /* lower bpc to retry validation */
++		}
++
++	} while (stream == NULL && requested_bpc >= 6);
++
++	return stream;
++}
++
+ enum drm_mode_status amdgpu_dm_connector_mode_valid(struct drm_connector *connector,
+ 				   struct drm_display_mode *mode)
+ {
+ 	int result = MODE_ERROR;
+ 	struct dc_sink *dc_sink;
+-	struct amdgpu_device *adev = connector->dev->dev_private;
+ 	/* TODO: Unhardcode stream count */
+ 	struct dc_stream_state *stream;
+ 	struct amdgpu_dm_connector *aconnector = to_amdgpu_dm_connector(connector);
+-	enum dc_status dc_result = DC_OK;
+ 
+ 	if ((mode->flags & DRM_MODE_FLAG_INTERLACE) ||
+ 			(mode->flags & DRM_MODE_FLAG_DBLSCAN))
+@@ -4830,24 +4867,11 @@ enum drm_mode_status amdgpu_dm_connector_mode_valid(struct drm_connector *connec
+ 		goto fail;
+ 	}
+ 
+-	stream = create_stream_for_sink(aconnector, mode, NULL, NULL);
+-	if (stream == NULL) {
+-		DRM_ERROR("Failed to create stream for sink!\n");
+-		goto fail;
+-	}
+-
+-	dc_result = dc_validate_stream(adev->dm.dc, stream);
+-
+-	if (dc_result == DC_OK)
++	stream = create_validate_stream_for_sink(aconnector, mode, NULL, NULL);
++	if (stream) {
++		dc_stream_release(stream);
+ 		result = MODE_OK;
+-	else
+-		DRM_DEBUG_KMS("Mode %dx%d (clk %d) failed DC validation with error %d\n",
+-			      mode->hdisplay,
+-			      mode->vdisplay,
+-			      mode->clock,
+-			      dc_result);
+-
+-	dc_stream_release(stream);
++	}
+ 
+ fail:
+ 	/* TODO: error handling*/
+@@ -5170,10 +5194,12 @@ static int dm_encoder_helper_atomic_check(struct drm_encoder *encoder,
+ 		return 0;
+ 
+ 	if (!state->duplicated) {
++		int max_bpc = conn_state->max_requested_bpc;
+ 		is_y420 = drm_mode_is_420_also(&connector->display_info, adjusted_mode) &&
+ 				aconnector->force_yuv420_output;
+-		color_depth = convert_color_depth_from_display_info(connector, conn_state,
+-								    is_y420);
++		color_depth = convert_color_depth_from_display_info(connector,
++								    is_y420,
++								    max_bpc);
+ 		bpp = convert_dc_color_depth_into_bpc(color_depth) * 3;
+ 		clock = adjusted_mode->clock;
+ 		dm_new_connector_state->pbn = drm_dp_calc_pbn_mode(clock, bpp, false);
+@@ -7589,10 +7615,10 @@ static int dm_update_crtc_state(struct amdgpu_display_manager *dm,
+ 		if (!drm_atomic_crtc_needs_modeset(new_crtc_state))
+ 			goto skip_modeset;
+ 
+-		new_stream = create_stream_for_sink(aconnector,
+-						     &new_crtc_state->mode,
+-						    dm_new_conn_state,
+-						    dm_old_crtc_state->stream);
++		new_stream = create_validate_stream_for_sink(aconnector,
++							     &new_crtc_state->mode,
++							     dm_new_conn_state,
++							     dm_old_crtc_state->stream);
+ 
+ 		/*
+ 		 * we can have no stream on ACTION_SET if a display
 -- 
 2.25.1
 
