@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78915C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94262C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48ABB20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F1F2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135612;
-	bh=Fn40Bh6XmR023pbItA4RzWAlYFqihqakYIkoCXfnP6o=;
+	s=default; t=1594135615;
+	bh=8AF14UblYs3ptHNxNzaQdjEKUMpZrRcDcrOJjLDL8Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DiX+5A/O1u+rbwhayDjBad0BD+07MyVXn1IRgGKWppl4WdpEB109i7uK+wGMGQzGY
-	 +NSNlAMOhqo8yJ/uT51bfAQw61yTrMgRTlvEupnbBdbfq/yskaInOExPspRSdRbTDR
-	 v6YtqySAqkH31B+Peq0a83SY6p54leY4JznV4qn8=
+	b=PXuAt37VmOrduRQuQ17PUfPiarMo016LNasgHHjFXK5PqC58ttTxKpbf9khKzQy8q
+	 BhqmpWsiewfELYQIOQ+sOYCegcPDj0B6JqIX4Ewj8mWeh8MJ4C1XGz7DSCOi1CvUOy
+	 qem0LPnmRZaE0UXnkf/2JxxwP+VIKMNyEuUGBRP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgGGP0u (ORCPT
+        id S1730316AbgGGP0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730293AbgGGP0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:40 -0400
+        id S1730293AbgGGP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8815120663;
-        Tue,  7 Jul 2020 15:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C482083B;
+        Tue,  7 Jul 2020 15:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135600;
-        bh=Fn40Bh6XmR023pbItA4RzWAlYFqihqakYIkoCXfnP6o=;
+        s=default; t=1594135610;
+        bh=8AF14UblYs3ptHNxNzaQdjEKUMpZrRcDcrOJjLDL8Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Os3miBK/My1s6L7QZLQ2T6xx2OIv7HfgznVS+mRlwDsDlOinod3S3e0lytg9jqTJ0
-         rUdCrwrx/0yLwgIVDXVh+oPLfqeA+Wn1bTtNzkPptnPrULzRq+OkyyFZDvhn16YECO
-         djsFpn93MZ61C6G/ZEm7wNU9/i1jgzqCULKYbizE=
+        b=fEUICqB4agQQTC2M9DMJHLaGWYjObKncJiRjlgyujlT2MVerzGloXqlV1co2McN/+
+         slYSIcYQ6T74KeUMtiZcowXIHfclzQFUIw6LfecqNFSv0nwN6Ty8IUzOhP3VtS2nYt
+         tjtmZucdMWj9H/KAQu5b9qdef5ULL6jsPViXhrsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 105/112] drm/amdgpu: use %u rather than %d for sclk/mclk
-Date:   Tue,  7 Jul 2020 17:17:50 +0200
-Message-Id: <20200707145805.967772049@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.7 108/112] irqchip/gic: Atomically update affinity
+Date:   Tue,  7 Jul 2020 17:17:53 +0200
+Message-Id: <20200707145806.109095757@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -59,42 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit beaf10efca64ac824240838ab1f054dfbefab5e6 upstream.
+commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
 
-Large clock values may overflow and show up as negative.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-Reported by prOMiNd on IRC.
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
 
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
+
+Drop the terminally broken code and replace it by a byte write.
+
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
 Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -2590,7 +2590,7 @@ static ssize_t amdgpu_hwmon_show_sclk(st
- 	if (r)
- 		return r;
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(str
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
  
--	return snprintf(buf, PAGE_SIZE, "%d\n", sclk * 10 * 1000);
-+	return snprintf(buf, PAGE_SIZE, "%u\n", sclk * 10 * 1000);
- }
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_d
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
  
- static ssize_t amdgpu_hwmon_show_sclk_label(struct device *dev,
-@@ -2622,7 +2622,7 @@ static ssize_t amdgpu_hwmon_show_mclk(st
- 	if (r)
- 		return r;
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
+-
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
  
--	return snprintf(buf, PAGE_SIZE, "%d\n", mclk * 10 * 1000);
-+	return snprintf(buf, PAGE_SIZE, "%u\n", mclk * 10 * 1000);
- }
- 
- static ssize_t amdgpu_hwmon_show_mclk_label(struct device *dev,
+ 	return IRQ_SET_MASK_OK_DONE;
 
 
