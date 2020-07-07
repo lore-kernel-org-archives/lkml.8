@@ -2,132 +2,111 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E068206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ur/ID3tf"
+	by mail.kernel.org (Postfix) with ESMTP id 3376F206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594122026;
+	bh=3rOu6zQTuzN/64VgOaN5FFa2W8skbKpgjFiXBosXTH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y66gv8bgNsv2NoGjdf6B7mdvktXSOEgGcl2JkR/9CgKCF9HLJlxbHPqYVdNLhPdJh
+	 onj0SQc6brjGU1ez/5ht8POCbLrvWZ9nqf3c/n225+TDboL0u/T6J+rO9zKuwc3whr
+	 zhJM9aIvJpL4raIJSxCK3ZOxyEKTl33fgAUVfNeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGGLkW (ORCPT
+        id S1728178AbgGGLkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgGGLkV (ORCPT
+        Tue, 7 Jul 2020 07:40:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39437 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGLkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:40:21 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFB5C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:40:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b25so45902882ljp.6
+        Tue, 7 Jul 2020 07:40:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q5so44762215wru.6
         for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NlD5Coj6tItyyuvkckmXcC1NzYj94/V/Y7EED+OVWYo=;
-        b=ur/ID3tfSVMUmuYc56bPe6NPM1LH2sYj4bu4bhvgZAmORagv/bvqXunhRxwyqeod6L
-         SOm/cGGjOtiumCNKjq0K3oDIZWwDwqm95Dj83bqeIZD2Rtyf6YOKwx6sGcjHePyu7aUj
-         G1nKcmBmSiqLu18Io1vVZcf9ny8a+5q1hBkQjzbmra5VbcqKI8Q2Tq7ljTYr3gjOs0IY
-         bEFhHK2Swntv/N5IkEbC5vyIlSwff0Svb4JNTFaxeweXV1er6tXcsdYxwJ9zkC85J2wh
-         ViXR4KEJnfkEY8clR9ou0fiEewKDwfvy4M/9i+ZMwrzhbHf7z6Ls3fe8LzrJ5jnMHQy4
-         +m2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NlD5Coj6tItyyuvkckmXcC1NzYj94/V/Y7EED+OVWYo=;
-        b=FnEWLzkY9C4DAufkVHfTyl74vpo6qpmCsPG2qwOETnM+plxJOxijc5AdJ7lmxgkrhS
-         tsiOHo5/05wUJg0LOGNUiDDTIS9f6WSH1BQp8UHouW8s2Vk0psO3qRRFzSx5QgfVlzT8
-         VyxHr40XLLhmFsHLWIaEaqhQcC+3btEpvdX1NYt3rvAu1ftz/WJbiGtd6qzvVGH0mB8/
-         FHhaFF5mP8Lraou4cCKoKGJUfyzLBbGu5dE7o+oLXmFaiu0eQqF6v9rKXkS13PSBYYse
-         m/ycBnxfTrB9SOFyz94mUgaYAqLC+yu0wz412RZQvigv0ZglRwDWiZ6PCL4/dSzv046b
-         5Ckg==
-X-Gm-Message-State: AOAM530YVN/zIAfh8O5+CWIqEcD67mWb36ZxcA8BlcJNDNhTqV5OOfQJ
-        CFoPVTPhql33ELRFUc0LI7tJVc1aqUqt2focaU8=
-X-Google-Smtp-Source: ABdhPJzhH1+0xPd3Q4buxdjJqgwE4vDYVmSliZxyPTqVkoGiSg5XII9WREdm6ITrWaZ34HU1/VmklFDcrGbcJ8rh5yw=
-X-Received: by 2002:a2e:9746:: with SMTP id f6mr22572230ljj.68.1594122019940;
- Tue, 07 Jul 2020 04:40:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TYzmEtg/Kj0i964ThN6Qo6tqP9/EQZBPoedHzLNj/F8=;
+        b=GJC9OL0+i9DWAo9bwdhhGi/e+ozTBfQUBo7HrNeg84olo4fj2YN5F0orLV1azTlJdq
+         mpTygsJXI18tUeENhZFm1LmDZW5No7mAgqXZ91m3KHVkxsF095bP2vyA0/jLNQBQRDzH
+         IYJtVJ+LAlRFY6XiJ2LE8grRzIktLfD4vr1ft1Gi4Gz5QcviRYfk7ZKLOK/6J9rv7BRM
+         c1DZ7+vT3YpKy+spRQb8hxKg9JUlqrzTmWgxi0eeIyyyz3S1obk7FTfaZGybjJWcp1tf
+         LyZ/caQAg3MDvJ3Cbqg1aKw9OFtRcdsFAOusAHK6XAxCnNLiXaAbIw2M3ojaKph+7ti4
+         B2jA==
+X-Gm-Message-State: AOAM53330ZCLZ8TGdN3ojMz1gve1yNKowAZbMGBqQ4KpaxglyVl2z0sd
+        Xb0aewRoDAZ9TrBeWFCIGTw=
+X-Google-Smtp-Source: ABdhPJyCUpFQXAvN1uQvadCMYh7ObchD7W+fGup6uatezxdeECrMSV3cMOD/yD3txHQVZXAAdSHPgg==
+X-Received: by 2002:a5d:650e:: with SMTP id x14mr56294076wru.187.1594122021224;
+        Tue, 07 Jul 2020 04:40:21 -0700 (PDT)
+Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
+        by smtp.gmail.com with ESMTPSA id o9sm650992wrs.1.2020.07.07.04.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 04:40:20 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 13:40:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
+ allocation for migration
+Message-ID: <20200707114019.GI5913@dhcp22.suse.cz>
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
- <1594059372-15563-2-git-send-email-jrdr.linux@gmail.com> <4bafb184-6f07-2582-3d0f-86fb53dd30dc@suse.com>
-In-Reply-To: <4bafb184-6f07-2582-3d0f-86fb53dd30dc@suse.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 7 Jul 2020 17:10:08 +0530
-Message-ID: <CAFqt6zaWbEiozfkEuMvusxig15buuS1vjJaj4Q5okxNsRz_1vw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] xen/privcmd: Corrected error handling path
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 3:05 PM J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrot=
-e:
->
-> On 06.07.20 20:16, Souptick Joarder wrote:
-> > Previously, if lock_pages() end up partially mapping pages, it used
-> > to return -ERRNO due to which unlock_pages() have to go through
-> > each pages[i] till *nr_pages* to validate them. This can be avoided
-> > by passing correct number of partially mapped pages & -ERRNO separately=
-,
-> > while returning from lock_pages() due to error.
-> >
-> > With this fix unlock_pages() doesn't need to validate pages[i] till
-> > *nr_pages* for error scenario and few condition checks can be ignored.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: Paul Durrant <xadimgnik@gmail.com>
-> > ---
-> >   drivers/xen/privcmd.c | 31 +++++++++++++++----------------
-> >   1 file changed, 15 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> > index a250d11..33677ea 100644
-> > --- a/drivers/xen/privcmd.c
-> > +++ b/drivers/xen/privcmd.c
-> > @@ -580,13 +580,13 @@ static long privcmd_ioctl_mmap_batch(
-> >
-> >   static int lock_pages(
-> >       struct privcmd_dm_op_buf kbufs[], unsigned int num,
-> > -     struct page *pages[], unsigned int nr_pages)
-> > +     struct page *pages[], unsigned int nr_pages, unsigned int *pinned=
-)
-> >   {
-> >       unsigned int i;
-> > +     int page_count =3D 0;
->
-> Initial value shouldn't be needed, and ...
->
-> >
-> >       for (i =3D 0; i < num; i++) {
-> >               unsigned int requested;
-> > -             int pinned;
->
-> ... you could move the declaration here.
->
-> With that done you can add my
->
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+On Tue 07-07-20 16:44:43, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> In mm/migrate.c, THP allocation for migration is called with the provided
+> gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
+> would be conflict with the intention of the GFP_TRANSHUGE.
+> 
+> GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
+> behaviour by well defined manner since overhead of THP allocation is
+> quite large and the whole system could suffer from it. So, they deals
+> with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAIM
+> and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
+> that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
 
-Ok. But does it going make any difference other than limiting scope ?
+GFP_TRANSHUGE* is not a carved in stone design. Their primary reason to
+exist is to control how hard to try for different allocation
+paths/configurations because their latency expectations might be
+largerly different. It is mostly the #PF path which aims to be as
+lightweight as possible I believe nobody simply considered migration to be
+very significant to even care. And I am still not sure it matters but
+I would tend to agree that a consistency here is probably a very minor
+plus.
 
->
->
-> Juergen
+Your changelog is slightly misleading in that regard because it suggests
+that this is a real problem while it doesn't present any actual data.
+It would be really nice to make the effective change really stand out.
+We are only talking about __GFP_RECLAIM_KSWAPD here. So the only
+difference is that the migration won't wake up kswapd now.
+
+All that being said the changelog should be probably more explicit about
+the fact that this is solely done for consistency and be honest that the
+runtime effect is not really clear. This would help people reading it in
+future.
+-- 
+Michal Hocko
+SUSE Labs
