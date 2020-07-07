@@ -2,214 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A27A20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1A120738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135007;
-	bh=YKZ97IGbHOb4vj0ONqehGCGdrnnN72YK/J361llD+eo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OQLYFamwr3I+p3o4/u6b00IgJ0/iLBt75KQbjTCYNk/bzNk4ioC5bjCrjxHQGDnJA
-	 66zRb2G5th/KMYc3PoZtgjVXERr3duV3YKvOypLRVztvyRIEBM8ZZPO255DwIKq88J
-	 lB4XBM3p3KqW+4MCoAApTr9Wm2VnyulyznErLK38=
+	s=default; t=1594135010;
+	bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JXHrrh1OzdpK9fr1gFQ7Rl8W6utO2s75ZL/z9EbvhpUFlB6Iyt9MmTKAHntfV7SES
+	 caQFIAf3bc1mLZ0/Yv6isKuGR0pIUoanwUqoBgQCzdanmbXObfPfJTUzRnJlrMl23D
+	 ztT7Ie333Fc7vXvu7bjIbTOgLwErVuaFc+GWiynY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgGGPQq (ORCPT
+        id S1729100AbgGGPQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbgGGPQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:43 -0400
+        id S1729083AbgGGPQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A7A2065D;
-        Tue,  7 Jul 2020 15:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3415620663;
+        Tue,  7 Jul 2020 15:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135002;
-        bh=YKZ97IGbHOb4vj0ONqehGCGdrnnN72YK/J361llD+eo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jK4U1E4fmuzoY/Wa0mCtL3rUetDmDS3B+UekAowfKe7MkuNGCOkyBW28RSPvYbDje
-         jBN9KJTJIFx62uxGhVYbHTbCu9OK+ntatE2yBXZjc9tMrXqT1om816qHNPXQyKlkqa
-         m67Lu55hc3s0vYstat+aEANtSvpKJOpe2J1Ysom8=
+        s=default; t=1594135004;
+        bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y7NdC5nL1tVjxCtHwC2tytJA3nGIFRWgYjq1T+wriVpsiRflI7vNxIuxMi9YdR31F
+         a7LlzREOiAUvOz+tJir+NvxsY3dWXOonLSQf0wxXt/C6iGeLS0n9DB3t+qxpe6CSfj
+         GhN1P7QMje8uVztzviKPVrEosjCL9Gu5aJiuLaHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/27] 4.14.188-rc1 review
-Date:   Tue,  7 Jul 2020 17:15:27 +0200
-Message-Id: <20200707145748.944863698@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 18/27] i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
+Date:   Tue,  7 Jul 2020 17:15:45 +0200
+Message-Id: <20200707145749.827942938@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
+In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
+References: <20200707145748.944863698@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.188-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.188-rc1
-X-KernelTest-Deadline: 2020-07-09T14:57+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.188 release.
-There are 27 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-Anything received after that time might be too late.
+[ Upstream commit cd217f2300793a106b49c7dfcbfb26e348bc7593 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.188-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
+low, this differs to the PCA9564 which uses 90h for this indication.
+Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
 
-thanks,
+Based on looking through the PCA9564 and PCA9665 datasheets this should
+be safe for both chips. The PCA9564 should not return 0x78 for any valid
+state and the PCA9665 should not return 0x90.
 
-greg k-h
+Fixes: eff9ec95efaa ("i2c-algo-pca: Add PCA9665 support")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--------------
-Pseudo-Shortlog of commits:
+diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
+index e370804ec8bc6..3a9db4626cb60 100644
+--- a/drivers/i2c/algos/i2c-algo-pca.c
++++ b/drivers/i2c/algos/i2c-algo-pca.c
+@@ -326,7 +326,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
+ 			DEB2("BUS ERROR - SDA Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
+-		case 0x90: /* Bus error - SCL stuck low */
++		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
++		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
+ 			DEB2("BUS ERROR - SCL Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
+-- 
+2.25.1
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.188-rc1
-
-Peter Jones <pjones@redhat.com>
-    efi: Make it possible to disable efivar_ssdt entirely
-
-Hou Tao <houtao1@huawei.com>
-    dm zoned: assign max_io_len correctly
-
-Marc Zyngier <maz@kernel.org>
-    irqchip/gic: Atomically update affinity
-
-Hauke Mehrtens <hauke@hauke-m.de>
-    MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
-
-Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-    cifs: Fix the target file was deleted when rename failed.
-
-Paul Aurich <paul@darkrain42.org>
-    SMB3: Honor persistent/resilient handle flags for multiuser mounts
-
-Paul Aurich <paul@darkrain42.org>
-    SMB3: Honor 'seal' flag for multiuser mounts
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "ALSA: usb-audio: Improve frames size computation"
-
-J. Bruce Fields <bfields@redhat.com>
-    nfsd: apply umask on fs without ACL support
-
-Chris Packham <chris.packham@alliedtelesis.co.nz>
-    i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-
-Hou Tao <houtao1@huawei.com>
-    virtio-blk: free vblk-vqs in error path of virtblk_probe()
-
-Chen-Yu Tsai <wens@csie.org>
-    drm: sun4i: hdmi: Remove extra HPD polling
-
-Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-    hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
-
-Chu Lin <linchuyuan@google.com>
-    hwmon: (max6697) Make sure the OVERT mask is set correctly
-
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-    cxgb4: parse TC-U32 key values and masks natively
-
-Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-    cxgb4: use unaligned conversion for fetching timestamp
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
-
-Douglas Anderson <dianders@chromium.org>
-    kgdb: Avoid suspicious RCU usage warning
-
-Zqiang <qiang.zhang@windriver.com>
-    usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-
-Qian Cai <cai@lca.pw>
-    mm/slub: fix stack overruns with SLUB_STATS
-
-Dongli Zhang <dongli.zhang@oracle.com>
-    mm/slub.c: fix corrupted freechain in deactivate_slab()
-
-Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-    usbnet: smsc95xx: Fix use-after-free after removal
-
-Borislav Petkov <bp@suse.de>
-    EDAC/amd64: Read back the scrub rate PCI register on F15h
-
-Hugh Dickins <hughd@google.com>
-    mm: fix swap cache node allocation mask
-
-Filipe Manana <fdmanana@suse.com>
-    btrfs: fix data block group relocation failure due to concurrent scrub
-
-Anand Jain <Anand.Jain@oracle.com>
-    btrfs: cow_file_range() num_bytes and disk_num_bytes are same
-
-Filipe Manana <fdmanana@suse.com>
-    btrfs: fix a block group ref counter leak after failure to remove block group
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/mips/kernel/traps.c                           |   1 +
- crypto/af_alg.c                                    |  26 ++---
- crypto/algif_aead.c                                |   9 +-
- crypto/algif_hash.c                                |   9 +-
- crypto/algif_skcipher.c                            |   9 +-
- drivers/block/virtio_blk.c                         |   1 +
- drivers/edac/amd64_edac.c                          |   2 +
- drivers/firmware/efi/Kconfig                       |  11 ++
- drivers/firmware/efi/efi.c                         |   2 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   5 +-
- drivers/hwmon/acpi_power_meter.c                   |   4 +-
- drivers/hwmon/max6697.c                            |   7 +-
- drivers/i2c/algos/i2c-algo-pca.c                   |   3 +-
- drivers/irqchip/irq-gic.c                          |  14 +--
- drivers/md/dm-zoned-target.c                       |   2 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c  |  18 +--
- .../ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h    | 122 ++++++++++++++-------
- drivers/net/ethernet/chelsio/cxgb4/sge.c           |   2 +-
- drivers/net/usb/smsc95xx.c                         |   2 +-
- drivers/usb/misc/usbtest.c                         |   1 +
- fs/btrfs/extent-tree.c                             |  19 ++--
- fs/btrfs/inode.c                                   |  35 ++++--
- fs/cifs/connect.c                                  |   3 +
- fs/cifs/inode.c                                    |  10 +-
- fs/nfsd/vfs.c                                      |   6 +
- include/crypto/if_alg.h                            |   4 +-
- kernel/debug/debug_core.c                          |   4 +
- mm/slub.c                                          |  30 ++++-
- mm/swap_state.c                                    |   3 +-
- sound/usb/card.h                                   |   4 -
- sound/usb/endpoint.c                               |  43 +-------
- sound/usb/endpoint.h                               |   1 -
- sound/usb/pcm.c                                    |   2 -
- 34 files changed, 239 insertions(+), 179 deletions(-)
 
 
