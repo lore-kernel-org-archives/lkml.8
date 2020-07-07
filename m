@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6854C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1148204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD59820663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136066;
-	bh=0Er6uxMfKgSExs7P3eRG8nd9FTqEqobIt6HXk9xwKEw=;
+	s=default; t=1594136080;
+	bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctfTjNKpBmBP8hHUXQUoeJuuY6T0TRfoQK0LGB21zMiGouV59Ai5eWdmFTjDua2RU
-	 0d8F4QLqSCKiXEZwV0PYrgx8Z228YAtnUBFnUF087ZhTYYq9W5kzgr8xfpQecJsa+p
-	 RvOgQj+VgG1Z/J7hXRugGR6fGVTRWZvX3z58pntA=
+	b=PP1zoaV3tpawuj0zWh2YEz9MkYtki6hsva/PAZ4YUYzEt/vx29t6aSLCRpkmawJln
+	 kGi53Q4p9eW22lWR6eicZaWOLcPnxM9BGKtTWTO9OLAkLj01seJAcTIksMlnKWRSJG
+	 oWl4P1L56y4f4TYSBb7w0SCIVQkS3dnxz+FdmmcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgGGPS7 (ORCPT
+        id S1729529AbgGGPej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbgGGPSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:55 -0400
+        id S1728422AbgGGPSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE4220674;
-        Tue,  7 Jul 2020 15:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A2C320663;
+        Tue,  7 Jul 2020 15:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135135;
-        bh=0Er6uxMfKgSExs7P3eRG8nd9FTqEqobIt6HXk9xwKEw=;
+        s=default; t=1594135120;
+        bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JdnziE5ubtelOj6913r1rkdxdKndrIkXaxzNRWZVreCWBt+S+RYCFPO4y6K4EEBol
-         /+PJ1fdU1vhRGQ0i0y/V8NIcFU3VvwrfHiU0frCN+R3ITTs7bKAT/027ovamrTNYNa
-         6cgBdSm1nvnJUxTBGsQjJFudMEmJlHOHXS+irbjQ=
+        b=ar7FmcmYcrkQ8UQPPhVGDLohC/EA/lYvw1Ah2kCperHp879ZpjV8gD7JHidG/5xOj
+         VIDy/D6TqnYSdG/dfGJnpJ0zW9m0+4U7pmUcGaO2/BW1QoImRmwTCgFeJukKiObC93
+         6b1drxb5keWsyO55A+Byvy8w8UFK0HijCFzyT12A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/36] mm/slub.c: fix corrupted freechain in deactivate_slab()
-Date:   Tue,  7 Jul 2020 17:16:57 +0200
-Message-Id: <20200707145749.388708047@linuxfoundation.org>
+Subject: [PATCH 4.19 19/36] hwmon: (max6697) Make sure the OVERT mask is set correctly
+Date:   Tue,  7 Jul 2020 17:17:11 +0200
+Message-Id: <20200707145750.053560653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -65,113 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Chu Lin <linchuyuan@google.com>
 
-[ Upstream commit 52f23478081ae0dcdb95d1650ea1e7d52d586829 ]
+[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
 
-The slub_debug is able to fix the corrupted slab freelist/page.
-However, alloc_debug_processing() only checks the validity of current
-and next freepointer during allocation path.  As a result, once some
-objects have their freepointers corrupted, deactivate_slab() may lead to
-page fault.
+Per the datasheet for max6697, OVERT mask and ALERT mask are different.
+For example, the 7th bit of OVERT is the local channel but for alert
+mask, the 6th bit is the local channel. Therefore, we can't apply the
+same mask for both registers. In addition to that, the max6697 driver
+is supposed to be compatibale with different models. I manually went over
+all the listed chips and made sure all chip types have the same layout.
 
-Below is from a test kernel module when 'slub_debug=PUF,kmalloc-128
-slub_nomerge'.  The test kernel corrupts the freepointer of one free
-object on purpose.  Unfortunately, deactivate_slab() does not detect it
-when iterating the freechain.
+Testing;
+    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
+    I used iotool to read the reg value back to verify. I only tested this
+    change on max6581.
 
-  BUG: unable to handle page fault for address: 00000000123456f8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ... ...
-  RIP: 0010:deactivate_slab.isra.92+0xed/0x490
-  ... ...
-  Call Trace:
-   ___slab_alloc+0x536/0x570
-   __slab_alloc+0x17/0x30
-   __kmalloc+0x1d9/0x200
-   ext4_htree_store_dirent+0x30/0xf0
-   htree_dirblock_to_tree+0xcb/0x1c0
-   ext4_htree_fill_tree+0x1bc/0x2d0
-   ext4_readdir+0x54f/0x920
-   iterate_dir+0x88/0x190
-   __x64_sys_getdents+0xa6/0x140
-   do_syscall_64+0x49/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Reference:
+https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
 
-Therefore, this patch adds extra consistency check in deactivate_slab().
-Once an object's freepointer is corrupted, all following objects
-starting at this object are isolated.
-
-[akpm@linux-foundation.org: fix build with CONFIG_SLAB_DEBUG=n]
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200331031450.12182-1-dongli.zhang@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/hwmon/max6697.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index b94ba8d35a025..473e0a8afb802 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -645,6 +645,20 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
- 	va_end(args);
- }
+diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
+index 221fd14920576..6df28fe0577da 100644
+--- a/drivers/hwmon/max6697.c
++++ b/drivers/hwmon/max6697.c
+@@ -47,8 +47,9 @@ static const u8 MAX6697_REG_CRIT[] = {
+  * Map device tree / platform data register bit map to chip bit map.
+  * Applies to alert register and over-temperature register.
+  */
+-#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
++#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+ 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
++#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
  
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
-+{
-+	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
-+	    !check_valid_pointer(s, page, nextfree)) {
-+		object_err(s, page, freelist, "Freechain corrupt");
-+		freelist = NULL;
-+		slab_fix(s, "Isolate corrupted freechain");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
- {
- 	unsigned int off;	/* Offset of last byte */
-@@ -1328,6 +1342,11 @@ static inline void inc_slabs_node(struct kmem_cache *s, int node,
- static inline void dec_slabs_node(struct kmem_cache *s, int node,
- 							int objects) {}
+ #define MAX6697_REG_STAT(n)		(0x44 + (n))
  
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
-+{
-+	return false;
-+}
- #endif /* CONFIG_SLUB_DEBUG */
+@@ -587,12 +588,12 @@ static int max6697_init_chip(struct max6697_data *data,
+ 		return ret;
  
- /*
-@@ -2013,6 +2032,14 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
- 		void *prior;
- 		unsigned long counters;
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
+-					MAX6697_MAP_BITS(pdata->alert_mask));
++				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
+ 	if (ret < 0)
+ 		return ret;
  
-+		/*
-+		 * If 'nextfree' is invalid, it is possible that the object at
-+		 * 'freelist' is already corrupted.  So isolate all objects
-+		 * starting at 'freelist'.
-+		 */
-+		if (freelist_corrupted(s, page, freelist, nextfree))
-+			break;
-+
- 		do {
- 			prior = page->freelist;
- 			counters = page->counters;
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
+-				MAX6697_MAP_BITS(pdata->over_temperature_mask));
++			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
