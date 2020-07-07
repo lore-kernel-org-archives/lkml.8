@@ -7,69 +7,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E12C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0CBC206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132DA2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TiDsFIcm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J1XcyxDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGGKRQ (ORCPT
+        id S1728253AbgGGKRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41390 "EHLO
+        Tue, 7 Jul 2020 06:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgGGKRE (ORCPT
+        with ESMTP id S1728126AbgGGKRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:17:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67292C08C5DF
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id w3so33431975wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:03 -0700 (PDT)
+        Tue, 7 Jul 2020 06:17:06 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC01C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so45915033wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j306gyjagAnal9NO9hxv+ks7W0GYhjttqc5twDw7Zos=;
-        b=TiDsFIcm82IMvKsBQX6/HNIU30n+rKxa8eOMBrBbtxHEawE+hUYaWGDqNZoQzgpzb4
-         wpE/sDK5PJm5+ErIRCpPTGSUTLT2mQ4GwVCK9zcD8joRnlHa/IE4X6h8QBtW5pgd3UOg
-         2JBLfOVGlUI+hRpujRyLnkTE2sf9blsqOfFszV7jUptZQ9MVIcjeN+ARhm+N6nVTdjrv
-         5xPaYCX979M0/5uJ3eAAy0fUcI3h2hXJxoeADLr1m0Ju4iJ9a//jAnT8D9VglIw9PoGn
-         5ti+fmywLzKuP10a61cwSFPawXqydZJ/TEqUsZT3Ruw+bpOLVIRvfRrdqIg5PO9hU9hN
-         hwHw==
+        bh=tfKAHOC4Bqa/g3TTN2zyTgayqsyKLptRGMeCLeLAzGA=;
+        b=J1XcyxDnRmpZz0W4IPrMVJKymtJ07od5/Ui2uKeAXQgpc0qotceonG0/oloTEdbH7s
+         h9+dfh0LSbVUcJW+pc/XyHocqcTsyqzJb8LmBvxq6MpxjTnaT9VZNdirDOfgB5bWoWDq
+         niIIONlBk6sA9+rBm5/Zf0rtNPutp2de6yaHctV6VNL88YoptrE7bzN9P2c95z9yX8TU
+         WwB1XVGi9t17KxFLcrnyiAgHFMMynYQSuE2RBzJTnvTVRfnVq3tEgvIXuDERBUvrzOkJ
+         JpljX451HY8DEy3VySwa2mAmhxKDg2TS61UqmnWH5Dn1LD8i/9kIhADrwvWC7PFYhZae
+         S8bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j306gyjagAnal9NO9hxv+ks7W0GYhjttqc5twDw7Zos=;
-        b=DKrlVUHdFM/now1Z/AVyRuD8N4gzZlycvDzB12nkhxRoR24Jm1iExgxrUMd4SiwpPX
-         L1kP5fTMnbZNTBUCFAIVxRGdMYYcNMdP/sr6X5IV5X3lC5fHL8icHXwYsa62bnaQFYjq
-         1HJWKGV69TCG6CGQpNa1rRWXmTwxz+KQkv/HJf01zcB2IjOQTcxjpqWt1YyoLRRT8ftE
-         OnDzoYOhZ3g8AUhwC5ataLKbp+dN4FR39rHUQw/vyvxFKanWAobZ+/4vaaxLwgaXjaUG
-         DLNOWvFJv560ScWM1xzXKTMEYDNyTWtHo/Zse6gWQTwk5nVOxDGEpWj8CmrcQc0zHCEX
-         zdow==
-X-Gm-Message-State: AOAM530F6fQ7RE2TNQwjlOOnmuVNzLta9YQkZBBhvn/tIyUHHPuNJXdl
-        YBNfsMh4MbdcBnphHMcqpU/wqQ==
-X-Google-Smtp-Source: ABdhPJw5fQ+cD4J6acJX9hjTuDH1yBuLxCoSudpJcORTNYjASKSRDv3BMPijf/xqeQ+Ze5JdnB5tow==
-X-Received: by 2002:a7b:c4d7:: with SMTP id g23mr3603144wmk.17.1594117022067;
-        Tue, 07 Jul 2020 03:17:02 -0700 (PDT)
+        bh=tfKAHOC4Bqa/g3TTN2zyTgayqsyKLptRGMeCLeLAzGA=;
+        b=DisTR3bd5GxsInsDogX7M2W9ebRjW5vbIo3hZoiq3FqvTqDRZJLiBpaPgYn2dHCJRp
+         8aa2HMU2/65qgVw0nx9dCr00pweXLNwoEYVxqJpelbsItcgzZDjnXJOwXyJYvjiQxzGz
+         3lWRBezSjEZajenIEwafmtjllQKqDuZ1k+DwB43EVLvjQ9pDTJgI8tNRRSotPOSbF61E
+         +1vz+G88nqocMwos/nUZ2sX6mOhKucfVcLMREFo0vyJDEE9ASag/Djs3GHEy/XuqR8Gi
+         0QIG9RcaPYAOlMmYGJxbdfPPKogtzttyFNne9f5Z33f5MnHSx3upOx3663PRyvohG9XA
+         l72A==
+X-Gm-Message-State: AOAM533qgbPG5D5LCg9kSONdzaC5kP80gAHRK2P79YPAzUg2mCWjKBZa
+        VM68ysEUehst0a0oQOk2I/miyw==
+X-Google-Smtp-Source: ABdhPJzZOEjZmejJdYRsgb4UUUE3sZTs8G1LEoJTOp7Viz61ZnkIYUsK9D/hnCyJv8g4p3iI/k5fcQ==
+X-Received: by 2002:a05:600c:2249:: with SMTP id a9mr3274840wmm.163.1594117024429;
+        Tue, 07 Jul 2020 03:17:04 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.01
+        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:17:01 -0700 (PDT)
+        Tue, 07 Jul 2020 03:17:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 11/28] ASoC: pxa: pxa-ssp: Demote seemingly unintentional kerneldoc header
-Date:   Tue,  7 Jul 2020 11:16:25 +0100
-Message-Id: <20200707101642.1747944-12-lee.jones@linaro.org>
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 13/28] ASoC: qcom: qdsp6: q6asm: Provide documentation for WMA 'codec_profile'
+Date:   Tue,  7 Jul 2020 11:16:27 +0100
+Message-Id: <20200707101642.1747944-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
 References: <20200707101642.1747944-1-lee.jones@linaro.org>
@@ -80,34 +81,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the only use of kerneldoc in the sourcefile and full
-descriptions are not provided.
-
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/pxa/pxa-ssp.c:186: warning: Function parameter or member 'ssp' not described in 'pxa_ssp_set_scr'
+ sound/soc/qcom/qdsp6/q6asm.c:924: warning: Function parameter or member 'codec_profile' not described in 'q6asm_open_write'
 
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/pxa/pxa-ssp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/qcom/qdsp6/q6asm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/pxa/pxa-ssp.c b/sound/soc/pxa/pxa-ssp.c
-index 6a72cc1665b7c..d1e09ade0190d 100644
---- a/sound/soc/pxa/pxa-ssp.c
-+++ b/sound/soc/pxa/pxa-ssp.c
-@@ -178,7 +178,7 @@ static int pxa_ssp_resume(struct snd_soc_component *component)
- #define pxa_ssp_resume	NULL
- #endif
- 
--/**
-+/*
-  * ssp_set_clkdiv - set SSP clock divider
-  * @div: serial clock rate divider
-  */
+diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+index ae4b2cabdf2d6..58720b18fc8c8 100644
+--- a/sound/soc/qcom/qdsp6/q6asm.c
++++ b/sound/soc/qcom/qdsp6/q6asm.c
+@@ -915,6 +915,7 @@ static int q6asm_ac_send_cmd_sync(struct audio_client *ac, struct apr_pkt *pkt)
+  *
+  * @ac: audio client pointer
+  * @format: audio sample format
++ * @codec_profile: profile to use when WMA
+  * @bits_per_sample: bits per sample
+  *
+  * Return: Will be an negative value on error or zero on success
 -- 
 2.25.1
 
