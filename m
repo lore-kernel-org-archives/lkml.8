@@ -2,189 +2,342 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC937C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9971DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B91AF206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671AA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UWYVic96"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HwtUr+jC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgGGRS2 (ORCPT
+        id S1728609AbgGGRSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
+        Tue, 7 Jul 2020 13:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgGGRS1 (ORCPT
+        with ESMTP id S1728036AbgGGRSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:18:27 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55926C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:18:27 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id p25so15141808vsg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:18:27 -0700 (PDT)
+        Tue, 7 Jul 2020 13:18:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1B9C08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:18:30 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x8so16109844plm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=74Xd65ujs50AwKytINLgt7qtTa7IevS/aqZRV1i9Rd8=;
-        b=UWYVic96pOSZRZsRmw2D0xW579eTy1JPNBw9lI+/tOGAhV3ymR2VcORJIdFnYMXlx/
-         Pyh7l5oLPF9TOnZJYezcZKg0Et63e+3Ah4oPnZkC/aFt8IXpEP/Dw63qRvAoiZeMGyTl
-         BkYS5dtdJ+VAfBgPrKdTozMDQ4weGwZxX/96E=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8cY0UjCqQW+XSyCWIjc/cIyKo3bTfjDtS/okyB/bgKU=;
+        b=HwtUr+jCHgdVdQ/4DQ+mnArfTxmKtDKFK+/dWGDL2hTzGtliqnCvqDjZpUfrNAv3OK
+         V0JhsNG/ymULp48sJeuBFYFpZm2cOZvvC05IOQsz4hS3wtspfm0pqZale2pUORJKSzVW
+         eG3m6ZIg3foorBvtflPR1PabbzK8xB5PpY5cE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=74Xd65ujs50AwKytINLgt7qtTa7IevS/aqZRV1i9Rd8=;
-        b=Er+/WR9erMtf3E+LHrBTbAzdv0HVedIz+aT0/+va/31EpesQ1NJ1AHv7L/eXv1GtxE
-         OLXXVsgu4qCCQ+wZjSsbheNKf9mKegZk9cG08STIu9vSKb/9dQLePLXIvq1husv7kCLZ
-         M5Zqvrlah6WpbNXeYtDuCvXppAfBWthOQkgioGfkE94vvya/TItqql8St+l9augszzys
-         TBiXAx2Tv9dKr4rLpamFK1qb4AStFLQl7ifJvS32lMes3xPDRK1ogvSrKxf7suwK6fJr
-         rsc6AffkHUsHFt0BgKGGi/+aK7W/yT04iSRSTb+dJ5oqQRihyNmfwS5YHEYJb1pYrm/b
-         BRdw==
-X-Gm-Message-State: AOAM530JIr2A5L6G4YsvgVK7CqIkwwg0FWZg5yDS3HByTXVp4jliIs6T
-        fl/nLaGSVHBBpQdJh0WNvpRtFgcLHtC4kqnvW24Wmw==
-X-Google-Smtp-Source: ABdhPJwk+V71z2wv/WQnTefFWymSCRO53UNKZiBT8TehImzf1AUUKNg93mkz/cBBz2gO3h2NY5EkhH6PKev8387kkUo=
-X-Received: by 2002:a67:6e05:: with SMTP id j5mr32408546vsc.196.1594142306552;
- Tue, 07 Jul 2020 10:18:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8cY0UjCqQW+XSyCWIjc/cIyKo3bTfjDtS/okyB/bgKU=;
+        b=pW+TonQrm7h3VIMPzh0en4LKigFmD1I51vn6w45zBGbk3SeOceX8kISlv6zyI7UEts
+         +YlK+Bm6bNnqHaV82xhKKhtSWD+XHelNAMP0BzM1nA90YAtdOqjZVEC8k/YRpwwHKb60
+         DcEd5QzsokxlRvM06mWnKiZ0m6r3uG5XlfmxbcexsHodRgYuYKnTvPazVZcHDOjWdtBS
+         D5HYlMz8OatGNrEc/Rl5pi/vkiieRWujoscvt8R1o5USrEg/P+yGsYb3QaxhEdMO1Fkj
+         T59InDy+cgS0dvLTkQnXW5bXm88hK4zBNFUooo6BCOtaL5Y29x4C2AkKVhIQ+WIzbxhP
+         Xa4Q==
+X-Gm-Message-State: AOAM531btLtl5y/GB12rTsMMMJvSNSagN3x/gVuNqWo7tdr0y2NE/+WE
+        CdVGxawkZgjikLYnVYgbfWeaWA==
+X-Google-Smtp-Source: ABdhPJxGK0bs1Msv9keoWPtVbcaPgpRLF8GJdwuI1T+wvmJQfbWZ1ep2ADN/b+nXgvZNdJNUpND+cA==
+X-Received: by 2002:a17:90a:ab96:: with SMTP id n22mr5486082pjq.52.1594142309941;
+        Tue, 07 Jul 2020 10:18:29 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id 16sm2924230pjb.48.2020.07.07.10.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 10:18:29 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     kvalo@codeaurora.org, ath10k@lists.infradead.org
+Cc:     saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-wireless@vger.kernel.org, pillair@codeaurora.org,
+        kuabhs@google.com, Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] ath10k: Keep track of which interrupts fired, don't poll them
+Date:   Tue,  7 Jul 2020 10:17:34 -0700
+Message-Id: <20200707101712.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
-References: <20200707162417.3514284-1-abhishekpandit@chromium.org>
- <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
- <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
- <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com> <CAJZ5v0iVXbxHzV0Y_y5idkoS4DdF+cXQ6kmA0bWWHWZ-TVv8wg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iVXbxHzV0Y_y5idkoS4DdF+cXQ6kmA0bWWHWZ-TVv8wg@mail.gmail.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 7 Jul 2020 10:18:15 -0700
-Message-ID: <CANFp7mXEB4ckWKRDDqUdmBBrbk00CW_pOX+1zmo_AgywtHZ+Nw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sounds good to me. Patch v5 incoming after compile-test.
+If we have a per CE (Copy Engine) IRQ then we have no summary
+register.  Right now the code generates a summary register by
+iterating over all copy engines and seeing if they have an interrupt
+pending.
 
-Thanks
-Abhishek
+This has a problem.  Specifically if _none_ if the Copy Engines have
+an interrupt pending then they might go into low power mode and
+reading from their address space will cause a full system crash.  This
+was seen to happen when two interrupts went off at nearly the same
+time.  Both were handled by a single call of ath10k_snoc_napi_poll()
+but, because there were two interrupts handled and thus two calls to
+napi_schedule() there was still a second call to
+ath10k_snoc_napi_poll() which ran with no interrupts pending.
 
-On Tue, Jul 7, 2020 at 10:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Jul 7, 2020 at 6:48 PM Abhishek Pandit-Subedi
-> <abhishekpandit@chromium.org> wrote:
-> >
-> > Hi Rafael,
-> >
-> > (resent in plain text)
-> >
-> > On Tue, Jul 7, 2020 at 9:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
-> > > <abhishekpandit@chromium.org> wrote:
-> > > >
-> > > > Udev rules that depend on the power/wakeup attribute don't get triggered
-> > > > correctly if device_set_wakeup_capable is called after the device is
-> > > > created. This can happen for several reasons (driver sets wakeup after
-> > > > device is created, wakeup is changed on parent device, etc) and it seems
-> > > > reasonable to emit a changed event when adding or removing attributes on
-> > > > the device.
-> > > >
-> > > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > > > ---
-> > > >
-> > > > Changes in v4:
-> > > > - Fix warning where returning from void and tested on device
-> > > >
-> > > > Changes in v3:
-> > > > - Simplified error handling
-> > > >
-> > > > Changes in v2:
-> > > > - Add newline at end of bt_dev_err
-> > > >
-> > > >  drivers/base/power/sysfs.c | 9 ++++++++-
-> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > > > index 24d25cf8ab1487..aeb58d40aac8de 100644
-> > > > --- a/drivers/base/power/sysfs.c
-> > > > +++ b/drivers/base/power/sysfs.c
-> > > > @@ -1,6 +1,7 @@
-> > > >  // SPDX-License-Identifier: GPL-2.0
-> > > >  /* sysfs entries for device PM */
-> > > >  #include <linux/device.h>
-> > > > +#include <linux/kobject.h>
-> > > >  #include <linux/string.h>
-> > > >  #include <linux/export.h>
-> > > >  #include <linux/pm_qos.h>
-> > > > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> > > >
-> > > >  int wakeup_sysfs_add(struct device *dev)
-> > > >  {
-> > > > -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > > > +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > > > +
-> > > > +       if (ret)
-> > > > +               return ret;
-> > > > +
-> > > > +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> > >
-> > > So let me repeat the previous comment:
-> > >
-> > > If you return an error here, it may confuse the caller to think that
-> > > the operation has failed completely, whereas the merging of the
-> > > attribute group has been successful already.
-> > >
-> > > I don't think that an error can be returned at this point.
-> > >
-> >
-> > The caller looks at the return code and just logs that an error
-> > occurred (no other action). It's also unlikely for kobject_uevent to
-> > fail (I saw mostly -ENOMEM and an -ENOENT when the kobj wasn't in the
-> > correct set).
-> >
-> > Call site:
-> >     int ret = wakeup_sysfs_add(dev);
-> >
-> >     if (ret)
-> >         dev_info(dev, "Wakeup sysfs attributes not added\n");
->
-> Yes, which is confusing, because the wakeup attributes may in fact
-> have been added.  Which is my point.
->
-> >
-> > So I'm ok with either keeping this as-is (caller isn't getting
-> > confused, just logging) or swallowing the return of kobject_uevent.
->
-> I would just ignore the return value of kobject_uevent() along the
-> lines of wakeup_sysfs_remove() below.
->
-> Thanks!
->
-> > > >  }
-> > > >
-> > > >  void wakeup_sysfs_remove(struct device *dev)
-> > > >  {
-> > > >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > > > +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> > > >  }
-> > > >
-> > > >  int pm_qos_sysfs_add_resume_latency(struct device *dev)
-> > > > --
-> > > > 2.27.0.212.ge8ba1cc988-goog
-> > > >
+Instead of iterating over all the copy engines, let's just keep track
+of the IRQs that fire.  Then we can effectively generate our own
+summary without ever needing to read the Copy Engines.
+
+Tested-on: WCN3990 SNOC WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+This patch continues work to try to squash all instances of the crash
+we've been seeing while reading CE registers and hopefully this patch
+addresses the true root of the issue.
+
+The first patch that attempted to address these problems landed as
+commit 8f9ed93d09a9 ("ath10k: Wait until copy complete is actually
+done before completing").  After that Rakesh Pillai posted ("ath10k:
+Add interrupt summary based CE processing") [1] and this patch is
+based atop that one.  Both of those patches significantly reduced the
+instances of problems but didn't fully eliminate them.  Crossing my
+fingers that they're all gone now.
+
+[1] https://lore.kernel.org/r/1593193967-29897-1-git-send-email-pillair@codeaurora.org
+
+ drivers/net/wireless/ath/ath10k/ce.c   | 84 ++++++++++----------------
+ drivers/net/wireless/ath/ath10k/ce.h   | 14 ++---
+ drivers/net/wireless/ath/ath10k/snoc.c | 18 ++++--
+ drivers/net/wireless/ath/ath10k/snoc.h |  1 +
+ 4 files changed, 51 insertions(+), 66 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 1e16f263854a..84ec80c6d08f 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -481,38 +481,6 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+ }
+ 
+-static bool ath10k_ce_engine_int_status_check(struct ath10k *ar, u32 ce_ctrl_addr,
+-					      unsigned int mask)
+-{
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+-
+-	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
+-}
+-
+-u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar)
+-{
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+-	struct ath10k_ce_pipe *ce_state;
+-	struct ath10k_ce *ce;
+-	u32 irq_summary = 0;
+-	u32 ctrl_addr;
+-	u32 ce_id;
+-
+-	ce = ath10k_ce_priv(ar);
+-
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state = &ce->ce_states[ce_id];
+-		ctrl_addr = ce_state->ctrl_addr;
+-		if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
+-						      wm_regs->cc_mask)) {
+-			irq_summary |= BIT(ce_id);
+-		}
+-	}
+-
+-	return irq_summary;
+-}
+-EXPORT_SYMBOL(ath10k_ce_gen_interrupt_summary);
+-
+ /*
+  * Guts of ath10k_ce_send.
+  * The caller takes responsibility for any needed locking.
+@@ -1399,45 +1367,55 @@ static void ath10k_ce_per_engine_handler_adjust(struct ath10k_ce_pipe *ce_state)
+ 	ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
+ }
+ 
+-int ath10k_ce_disable_interrupts(struct ath10k *ar)
++void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+ 	struct ath10k_ce_pipe *ce_state;
+ 	u32 ctrl_addr;
+-	int ce_id;
+ 
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state  = &ce->ce_states[ce_id];
+-		if (ce_state->attr_flags & CE_ATTR_POLL)
+-			continue;
++	ce_state  = &ce->ce_states[ce_id];
++	if (ce_state->attr_flags & CE_ATTR_POLL)
++		return;
+ 
+-		ctrl_addr = ath10k_ce_base_address(ar, ce_id);
++	ctrl_addr = ath10k_ce_base_address(ar, ce_id);
+ 
+-		ath10k_ce_copy_complete_intr_disable(ar, ctrl_addr);
+-		ath10k_ce_error_intr_disable(ar, ctrl_addr);
+-		ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
+-	}
++	ath10k_ce_copy_complete_intr_disable(ar, ctrl_addr);
++	ath10k_ce_error_intr_disable(ar, ctrl_addr);
++	ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
++}
++EXPORT_SYMBOL(ath10k_ce_disable_interrupt);
+ 
+-	return 0;
++void ath10k_ce_disable_interrupts(struct ath10k *ar)
++{
++	int ce_id;
++
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		ath10k_ce_disable_interrupt(ar, ce_id);
+ }
+ EXPORT_SYMBOL(ath10k_ce_disable_interrupts);
+ 
+-void ath10k_ce_enable_interrupts(struct ath10k *ar)
++void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+-	int ce_id;
+ 	struct ath10k_ce_pipe *ce_state;
+ 
++	ce_state  = &ce->ce_states[ce_id];
++	if (ce_state->attr_flags & CE_ATTR_POLL)
++		return;
++
++	ath10k_ce_per_engine_handler_adjust(ce_state);
++}
++EXPORT_SYMBOL(ath10k_ce_enable_interrupt);
++
++void ath10k_ce_enable_interrupts(struct ath10k *ar)
++{
++	int ce_id;
++
+ 	/* Enable interrupts for copy engine that
+ 	 * are not using polling mode.
+ 	 */
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state  = &ce->ce_states[ce_id];
+-		if (ce_state->attr_flags & CE_ATTR_POLL)
+-			continue;
+-
+-		ath10k_ce_per_engine_handler_adjust(ce_state);
+-	}
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		ath10k_ce_enable_interrupt(ar, ce_id);
+ }
+ EXPORT_SYMBOL(ath10k_ce_enable_interrupts);
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index a440aaf74aa4..666ce384a1d8 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -255,12 +255,13 @@ int ath10k_ce_cancel_send_next(struct ath10k_ce_pipe *ce_state,
+ /*==================CE Interrupt Handlers====================*/
+ void ath10k_ce_per_engine_service_any(struct ath10k *ar);
+ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id);
+-int ath10k_ce_disable_interrupts(struct ath10k *ar);
++void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id);
++void ath10k_ce_disable_interrupts(struct ath10k *ar);
++void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id);
+ void ath10k_ce_enable_interrupts(struct ath10k *ar);
+ void ath10k_ce_dump_registers(struct ath10k *ar,
+ 			      struct ath10k_fw_crash_data *crash_data);
+ 
+-u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar);
+ void ath10k_ce_alloc_rri(struct ath10k *ar);
+ void ath10k_ce_free_rri(struct ath10k *ar);
+ 
+@@ -376,12 +377,9 @@ static inline u32 ath10k_ce_interrupt_summary(struct ath10k *ar)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+ 
+-	if (!ar->hw_params.per_ce_irq)
+-		return CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_GET(
+-			ce->bus_ops->read32((ar), CE_WRAPPER_BASE_ADDRESS +
+-			CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS));
+-	else
+-		return ath10k_ce_gen_interrupt_summary(ar);
++	return CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_GET(
++		ce->bus_ops->read32((ar), CE_WRAPPER_BASE_ADDRESS +
++		CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS));
+ }
+ 
+ /* Host software's Copy Engine configuration. */
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 354d49b1cd45..2fc4dcbab70a 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2018 The Linux Foundation. All rights reserved.
+  */
+ 
++#include <linux/bits.h>
+ #include <linux/clk.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -1158,7 +1159,9 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	ath10k_snoc_irq_disable(ar);
++	ath10k_ce_disable_interrupt(ar, ce_id);
++	set_bit(ce_id, ar_snoc->pending_ce_irqs);
++
+ 	napi_schedule(&ar->napi);
+ 
+ 	return IRQ_HANDLED;
+@@ -1167,20 +1170,25 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ {
+ 	struct ath10k *ar = container_of(ctx, struct ath10k, napi);
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	int done = 0;
++	int ce_id;
+ 
+ 	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
+ 		napi_complete(ctx);
+ 		return done;
+ 	}
+ 
+-	ath10k_ce_per_engine_service_any(ar);
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		if (test_and_clear_bit(ce_id, ar_snoc->pending_ce_irqs)) {
++			ath10k_ce_per_engine_service(ar, ce_id);
++			ath10k_ce_enable_interrupt(ar, ce_id);
++		}
++
+ 	done = ath10k_htt_txrx_compl_task(ar, budget);
+ 
+-	if (done < budget) {
++	if (done < budget)
+ 		napi_complete(ctx);
+-		ath10k_snoc_irq_enable(ar);
+-	}
+ 
+ 	return done;
+ }
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.h b/drivers/net/wireless/ath/ath10k/snoc.h
+index a3dd06f6ac62..5095d1893681 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.h
++++ b/drivers/net/wireless/ath/ath10k/snoc.h
+@@ -78,6 +78,7 @@ struct ath10k_snoc {
+ 	unsigned long flags;
+ 	bool xo_cal_supported;
+ 	u32 xo_cal_data;
++	DECLARE_BITMAP(pending_ce_irqs, CE_COUNT_MAX);
+ };
+ 
+ static inline struct ath10k_snoc *ath10k_snoc_priv(struct ath10k *ar)
+-- 
+2.27.0.383.g050319c2ae-goog
+
