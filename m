@@ -2,116 +2,210 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AA420702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC44320702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NfXW8gw1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDoHvPLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgGGF4U (ORCPT
+        id S1728137AbgGGF5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
+        Tue, 7 Jul 2020 01:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgGGF4U (ORCPT
+        with ESMTP id S1727928AbgGGF5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:56:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A01C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 22:56:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d194so16120874pga.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 22:56:20 -0700 (PDT)
+        Tue, 7 Jul 2020 01:57:12 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D26C061755;
+        Mon,  6 Jul 2020 22:57:12 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so4332623pfm.4;
+        Mon, 06 Jul 2020 22:57:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZbV4l21xdzW71xXZzlMAZD+NRBjos3envDGwppLzulM=;
-        b=NfXW8gw1ujyflsQLwzIJUJl6yv/6tCYaWdIMXKgCTt4z3Ww0mFNBeIgOPWXnJj2bT6
-         lv1hrqRXfKZADzlSMJTcecsBSJnaZ8lAlqmmL9nFCKuUyP2jIIRFMK2t3hUUbLKt6Xa3
-         4z6GvTlG1zXHnw88+cl0MNX0328JZYODTKYZk=
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=I7ns89tYStKSD19MEHznyG2I9XSfuUkGKtpU/r5MMac=;
+        b=PDoHvPLxNl6TaF6PxvEjhtHK8f4JDz/IfWer/E1UJubzsbNLxzT7qZt1VpGsjA5ZKf
+         eNpJQ995yfHQzT7jv59geBsJ6xN1reEX4Bk0eQRaZP89L0yz7bhxQfhv8pmhq0Von0oW
+         f7KUtjSv/p+roRH7gJm10UCz5d32YK4AdVoNfDi4gc7MgSjHxrWGt6oI4s4qFEfNnW1Z
+         dDzbVG7MfDKvZs5afxztEsaDNlwmiN96s4+aPiTnfI5w16SKqSCJAG58cbc/MEe5roCM
+         pL98oqdNzB6kMRypLiGnKY8LcS8OP2a/Y2pvipFvK4GX73hdO99Jcq99JWm8Mp7mY12i
+         gnnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZbV4l21xdzW71xXZzlMAZD+NRBjos3envDGwppLzulM=;
-        b=ksfRTghjpB7MsHg6OExCSHM2sfu4CJ9jY8MGKawFiE1RxgpvhSCLShxadaPzLEohAm
-         ZpYyGOuX+fxAuY7WcOmzaf8Tt4RHS+8kKiUttk4zo+o56PGbfRGxv6H49f1lFjMLtyDb
-         khJLiJBn44Eo+n8Qd/erNThPrVDRekWiFsl1HnI9sWglf9kl8rVjbyO82qqGgslFQF9J
-         QayKwSfy4meIUpjNO8YPm54XIda9HJL+ogyPIiTCfDIMOAgtjxv6xi7dmFHRtWGiWzKJ
-         pljg4yXpSwRUKCesCRkoEBVTY+hycFpUF8vxWhualquvA1c9o8R9GDSH7oBN/Rd3bVQW
-         9TJg==
-X-Gm-Message-State: AOAM533u6cnOFUjJtHM/n+F4DryAO9B3hTkHm3ePeob+4ddL4nC41Yum
-        DIN2/z2L2BDubTvxV2rzn8MRlJnD3kM=
-X-Google-Smtp-Source: ABdhPJzsiNlWqzzBSxLtFN4h9Kxieuvtd0hdAy5D91AwU2e7ZloJSYe7rbLvC6DMYZd+jw9XnsRtkQ==
-X-Received: by 2002:aa7:860f:: with SMTP id p15mr11390619pfn.59.1594101379542;
-        Mon, 06 Jul 2020 22:56:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y27sm21531713pgc.56.2020.07.06.22.56.18
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=I7ns89tYStKSD19MEHznyG2I9XSfuUkGKtpU/r5MMac=;
+        b=KICtlbvcQqQcMT3dUh2I1HEosHy2wr9y+WMb90z2OCp/mau3h9WX+MV+SJfhm2gul/
+         L8UO3iNcTlpqFM5iER3LPZiQR8vxsWs/CP+Gl3sJIau5Dbxo8NLvb0X/iiogFaGUHJgC
+         qNJnX9gPgY/5vdSz9wYAosdc4UvR66v8/9XjYEtSZnfktvuYVC2s0i+boFu53kwyY+pX
+         SOF8j6XUi/hTkSo6eM6gppdfbG1mAhusWW5fRZ6RVpPPfLt/7BApYyTZum66CERPgZqG
+         SrL11UwrUkyj/VAWXNMyrtPnMv+nv3Xj+E7rF/lyTDAOERLJ25bXoNXevzCzxBNc5fiy
+         rJlw==
+X-Gm-Message-State: AOAM530eFM6JPv+/ElvYvA2Qn/6bl5dUuiuK0BrWBnmRMCmgM2qdRY+v
+        IF1PogrYCeOKrKEOBQKo6ghGKyjw
+X-Google-Smtp-Source: ABdhPJzgoP//jHra6cbNRfSfL58k0z7LGnKGSFV6r4z5xdDumbyO9o0SKdBgLzyJp/37ixgJbLb9wA==
+X-Received: by 2002:a65:6246:: with SMTP id q6mr43272321pgv.133.1594101431561;
+        Mon, 06 Jul 2020 22:57:11 -0700 (PDT)
+Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
+        by smtp.gmail.com with ESMTPSA id u74sm21211889pgc.58.2020.07.06.22.57.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 22:56:18 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 22:56:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Message-ID: <202007062234.A90F922DF@keescook>
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
+        Mon, 06 Jul 2020 22:57:11 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 15:57:06 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+To:     linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+In-Reply-To: <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
+Message-Id: <1594101082.hfq9x5yact.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:29:46AM -0700, Andy Lutomirski wrote:
-> Is most contexts where 'whitelist' or 'blacklist' might be used, a
-> descriptive phrase could be used instead.  For example, a seccomp
-> filter could have a 'list of allowed syscalls' or a 'list of
-> disallowed syscalls', and just lists could be the 'allowed' or
-> 'accepted' lists and the 'disallowed', 'rejected', or 'blocked' lists.
-> If a single word replacement for 'whitelist' or 'blacklist' is needed,
-> 'allowlist', 'blocklist', or 'denylist' could be used.
+Excerpts from Waiman Long's message of July 7, 2020 4:39 am:
+> On 7/6/20 12:35 AM, Nicholas Piggin wrote:
+>> v3 is updated to use __pv_queued_spin_unlock, noticed by Waiman (thank y=
+ou).
+>>
+>> Thanks,
+>> Nick
+>>
+>> Nicholas Piggin (6):
+>>    powerpc/powernv: must include hvcall.h to get PAPR defines
+>>    powerpc/pseries: move some PAPR paravirt functions to their own file
+>>    powerpc: move spinlock implementation to simple_spinlock
+>>    powerpc/64s: implement queued spinlocks and rwlocks
+>>    powerpc/pseries: implement paravirt qspinlocks for SPLPAR
+>>    powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
+>>      lock hint
+>>
+>>   arch/powerpc/Kconfig                          |  13 +
+>>   arch/powerpc/include/asm/Kbuild               |   2 +
+>>   arch/powerpc/include/asm/atomic.h             |  28 ++
+>>   arch/powerpc/include/asm/paravirt.h           |  89 +++++
+>>   arch/powerpc/include/asm/qspinlock.h          |  91 ++++++
+>>   arch/powerpc/include/asm/qspinlock_paravirt.h |   7 +
+>>   arch/powerpc/include/asm/simple_spinlock.h    | 292 +++++++++++++++++
+>>   .../include/asm/simple_spinlock_types.h       |  21 ++
+>>   arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
+>>   arch/powerpc/include/asm/spinlock_types.h     |  17 +-
+>>   arch/powerpc/lib/Makefile                     |   3 +
+>>   arch/powerpc/lib/locks.c                      |  12 +-
+>>   arch/powerpc/platforms/powernv/pci-ioda-tce.c |   1 +
+>>   arch/powerpc/platforms/pseries/Kconfig        |   5 +
+>>   arch/powerpc/platforms/pseries/setup.c        |   6 +-
+>>   include/asm-generic/qspinlock.h               |   4 +
+>>   16 files changed, 577 insertions(+), 322 deletions(-)
+>>   create mode 100644 arch/powerpc/include/asm/paravirt.h
+>>   create mode 100644 arch/powerpc/include/asm/qspinlock.h
+>>   create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
+>>   create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
+>>   create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
+>>
+> This patch looks OK to me.
 
-Yup. See:
-https://lore.kernel.org/lkml/202007041703.51F4059CA@keescook/
-specifically the terminology for seccomp is already "allow-list" and
-"deny-list":
-https://github.com/mkerrisk/man-pages/commit/462ce23d491904a0b46252dc97c8cb42391c093e (last year)
-https://github.com/seccomp/libseccomp/commit/0e762521d604612bb4dca8867d4a428a5e6cae54 (last month)
+Thanks for reviewing and testing.
 
-> Second, I realize that I grew up thinking that 'whitelist' and
-> 'blacklist' are the common terms for lists of things to be accepted
-> and rejected and that this biases my perception of what sounds good,
-> but writing a seccomp "denylist" or "blocklist" doesn't seem to roll
-> off the tongue.  Perhaps this language would be better:
+> I had run some microbenchmark on powerpc system with or w/o the patch.
+>=20
+> On a 2-socket 160-thread SMT4 POWER9 system (not virtualized):
+>=20
+> 5.8.0-rc4
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 160, Min/Mean/Max =3D 77,665/90,153/106,895
+> Threads =3D 160, Total Rate =3D 1,441,759 op/s; Percpu Rate =3D 9,011 op/=
+s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 160, Min/Mean/Max =3D 47,879/53,807/63,689
+> Threads =3D 160, Total Rate =3D 860,192 op/s; Percpu Rate =3D 5,376 op/s
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 80, Min/Mean/Max =3D 242,907/319,514/463,161
+> Threads =3D 80, Total Rate =3D 2,555 kop/s; Percpu Rate =3D 32 kop/s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 80, Min/Mean/Max =3D 146,161/187,474/259,270
+> Threads =3D 80, Total Rate =3D 1,498 kop/s; Percpu Rate =3D 19 kop/s
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 40, Min/Mean/Max =3D 646,639/1,000,817/1,455,205
+> Threads =3D 40, Total Rate =3D 4,001 kop/s; Percpu Rate =3D 100 kop/s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 40, Min/Mean/Max =3D 402,165/597,132/814,555
+> Threads =3D 40, Total Rate =3D 2,388 kop/s; Percpu Rate =3D 60 kop/s
+>=20
+> 5.8.0-rc4-qlock+
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 160, Min/Mean/Max =3D 123,835/124,580/124,587
+> Threads =3D 160, Total Rate =3D 1,992 kop/s; Percpu Rate =3D 12 kop/s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 160, Min/Mean/Max =3D 254,210/264,714/276,784
+> Threads =3D 160, Total Rate =3D 4,231 kop/s; Percpu Rate =3D 26 kop/s
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 80, Min/Mean/Max =3D 599,715/603,397/603,450
+> Threads =3D 80, Total Rate =3D 4,825 kop/s; Percpu Rate =3D 60 kop/s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 80, Min/Mean/Max =3D 492,687/525,224/567,456
+> Threads =3D 80, Total Rate =3D 4,199 kop/s; Percpu Rate =3D 52 kop/s
+>=20
+> Running locktest with spinlock [runtime =3D 10s, load =3D 1]
+> Threads =3D 40, Min/Mean/Max =3D 1,325,623/1,325,628/1,325,636
+> Threads =3D 40, Total Rate =3D 5,299 kop/s; Percpu Rate =3D 132 kop/s
+>=20
+> Running locktest with rwlock [runtime =3D 10s, r% =3D 50%, load =3D 1]
+> Threads =3D 40, Min/Mean/Max =3D 1,249,731/1,292,977/1,342,815
+> Threads =3D 40, Total Rate =3D 5,168 kop/s; Percpu Rate =3D 129 kop/s
+>=20
+> On systems on large number of cpus, qspinlock lock is faster and more fai=
+r.
+>=20
+> With some tuning, we may be able to squeeze out more performance.
 
-I have struggled with this as well. The parts of speech change, and my
-grammar senses go weird. whitelist = adjective noun. allow-list = verb
-noun. verbing the adj/noun combo feels okay, but verbing a verb/noun is
-weird.
+Yes, powerpc could certainly get more performance out of the slow
+paths, and then there are a few parameters to tune.
 
-And just using "allowed" and "denied" doesn't impart whether it refers
-to a _single_ instance or a _list_ of instances.
+We don't have a good alternate patching for function calls yet, but
+that would be something to do for native vs pv.
 
-But that's all fine. The change is easy to do and is more descriptive
-even if I can't find terms that don't collide with my internal grammar
-checker. ;)
+And then there seem to be one or two tunable parameters we could
+experiment with.
 
--- 
-Kees Cook
+The paravirt locks may need a bit more tuning. Some simple testing
+under KVM shows we might be a bit slower in some cases. Whether this
+is fairness or something else I'm not sure. The current simple pv
+spinlock code can do a directed yield to the lock holder CPU, whereas=20
+the pv qspl here just does a general yield. I think we might actually
+be able to change that to also support directed yield. Though I'm
+not sure if this is actually the cause of the slowdown yet.
+
+Thanks,
+Nick
