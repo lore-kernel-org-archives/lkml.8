@@ -2,268 +2,176 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB71C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6010206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4671F206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594142174;
-	bh=KuPhIChcd5d2pA3EN3g9po5r6K9nZj7oa0RmXAtMtSE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=nebxFoIEMGw+364w6VxB12cVIQsZcubDl3jk5vPi/RjKwG//FD3u6xAJg9ln7nIoa
-	 KQtjuBjRY3D0xuUszMaa+w3Ima9dlFFfjoMkz2CmTqWakbqV2QWoK5snwJ5QhXm5hP
-	 mzG87DFST0l2lHGlcu1g7xh8yUP3cK95YAGT/VrM=
+	s=default; t=1594142205;
+	bh=S+LIhpvc5j7Usk+mnHJUWylvioZ/DAfiKNR/5zD03bs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IfgoR/uHSuO4re9pQcMKq61nmcrRaudEbU0XqQBk9GGpW1PgK/J3zOzMpbaafuE8r
+	 vUgQGaaHB/mnhK9qmcyGfd6Oh90INNIn9aQmbD/9gUR9bCCa9i5jujD+dBDnR4kzCK
+	 4KzfQW31tmyLKbeVXUDssLrUElemW9wAIt0d68VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgGGRQN (ORCPT
+        id S1728572AbgGGRQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbgGGRQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:16:13 -0400
-Received: from embeddedor (unknown [200.39.26.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AC0206C3;
-        Tue,  7 Jul 2020 17:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594142172;
-        bh=KuPhIChcd5d2pA3EN3g9po5r6K9nZj7oa0RmXAtMtSE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qrt7ul4igFpJVTT6a3LWoNq/j48ahr2xfMzjDjgULPOga9eEHah8BlYbt6UDoVf1+
-         mbkX9Ev4iqUUgrXhLmocHU0hsUTIhrcqFCqfyd/G0C0OSwduFNK/vUKzDwZBB8mt4Q
-         fA6o2m4p2ZuNQg8VBvj9Er3F//jJqB09po7SMshk=
-Date:   Tue, 7 Jul 2020 12:21:38 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] net/sched: Use fallthrough pseudo-keyword
-Message-ID: <20200707172138.GA27126@embeddedor>
+        Tue, 7 Jul 2020 13:16:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37235 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727886AbgGGRQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 13:16:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id w17so27027483otl.4;
+        Tue, 07 Jul 2020 10:16:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TUdKoU1H+z8qeBTxQdM+SPgy95nTHPoa7jpopZEDv8Y=;
+        b=Pf6FMT5LyEMitO9qDPArxDr4uMH/z/aW3bgwB682VenojpZ1OL3XD4exe5l3VC99rM
+         b8KeATINejGg2ywbQa75nwXG+kjYfGOIHpN+jIIF9dsmkgQ8usP2utRu/MuteJVJKnl/
+         BjaQRfr/LQipscWjSUNq93QvZm5q9gy25mHYMfZdwlrVvMFOexza0nu3A5/Km2il6r3j
+         T0GqLb3OqGY6ZKDS+2r/5GAlsFdybpwcY9jDK8lr9J/TRiegRQtpI9gQVcUnClsnnCu7
+         /Xl8GNEgBjIyoGOetVldvar/UgMsHtq4BI1MTAtqNCn4Z7z80cK8uCHjohq8gO3UitAs
+         wb2w==
+X-Gm-Message-State: AOAM531x+oKnoQQT+oNWQzSrWfcHD7rmG2ZvegSdZ5BAXccEppmjXmtf
+        c6+DDfLx7xH41Iz0sWRRheOwOZKtNnzXf3Eqthc=
+X-Google-Smtp-Source: ABdhPJx8HATaz0zjRx9gs1OrA241/fnh2U+zL02uEuN+UC4P7Dh1KnovbuqHuDqumPh5Ub2BG0nc5bCvGslWULqn6lk=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr9944178oth.262.1594142202516;
+ Tue, 07 Jul 2020 10:16:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200707162417.3514284-1-abhishekpandit@chromium.org>
+ <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+ <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com> <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com>
+In-Reply-To: <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jul 2020 19:16:31 +0200
+Message-ID: <CAJZ5v0iVXbxHzV0Y_y5idkoS4DdF+cXQ6kmA0bWWHWZ-TVv8wg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+On Tue, Jul 7, 2020 at 6:48 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> Hi Rafael,
+>
+> (resent in plain text)
+>
+> On Tue, Jul 7, 2020 at 9:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
+> > <abhishekpandit@chromium.org> wrote:
+> > >
+> > > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > > correctly if device_set_wakeup_capable is called after the device is
+> > > created. This can happen for several reasons (driver sets wakeup after
+> > > device is created, wakeup is changed on parent device, etc) and it seems
+> > > reasonable to emit a changed event when adding or removing attributes on
+> > > the device.
+> > >
+> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > ---
+> > >
+> > > Changes in v4:
+> > > - Fix warning where returning from void and tested on device
+> > >
+> > > Changes in v3:
+> > > - Simplified error handling
+> > >
+> > > Changes in v2:
+> > > - Add newline at end of bt_dev_err
+> > >
+> > >  drivers/base/power/sysfs.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > > index 24d25cf8ab1487..aeb58d40aac8de 100644
+> > > --- a/drivers/base/power/sysfs.c
+> > > +++ b/drivers/base/power/sysfs.c
+> > > @@ -1,6 +1,7 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > >  /* sysfs entries for device PM */
+> > >  #include <linux/device.h>
+> > > +#include <linux/kobject.h>
+> > >  #include <linux/string.h>
+> > >  #include <linux/export.h>
+> > >  #include <linux/pm_qos.h>
+> > > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> > >
+> > >  int wakeup_sysfs_add(struct device *dev)
+> > >  {
+> > > -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > +
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> >
+> > So let me repeat the previous comment:
+> >
+> > If you return an error here, it may confuse the caller to think that
+> > the operation has failed completely, whereas the merging of the
+> > attribute group has been successful already.
+> >
+> > I don't think that an error can be returned at this point.
+> >
+>
+> The caller looks at the return code and just logs that an error
+> occurred (no other action). It's also unlikely for kobject_uevent to
+> fail (I saw mostly -ENOMEM and an -ENOENT when the kobj wasn't in the
+> correct set).
+>
+> Call site:
+>     int ret = wakeup_sysfs_add(dev);
+>
+>     if (ret)
+>         dev_info(dev, "Wakeup sysfs attributes not added\n");
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+Yes, which is confusing, because the wakeup attributes may in fact
+have been added.  Which is my point.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/sched/act_csum.c     |    3 ++-
- net/sched/act_ct.c       |    2 +-
- net/sched/sch_cbq.c      |    2 +-
- net/sched/sch_drr.c      |    2 +-
- net/sched/sch_ets.c      |    2 +-
- net/sched/sch_fq_codel.c |    2 +-
- net/sched/sch_fq_pie.c   |    2 +-
- net/sched/sch_hfsc.c     |    2 +-
- net/sched/sch_htb.c      |    2 +-
- net/sched/sch_multiq.c   |    2 +-
- net/sched/sch_prio.c     |    2 +-
- net/sched/sch_qfq.c      |    2 +-
- net/sched/sch_sfb.c      |    2 +-
- net/sched/sch_sfq.c      |    2 +-
- 14 files changed, 15 insertions(+), 14 deletions(-)
+>
+> So I'm ok with either keeping this as-is (caller isn't getting
+> confused, just logging) or swallowing the return of kobject_uevent.
 
-diff --git a/net/sched/act_csum.c b/net/sched/act_csum.c
-index cb8608f0a77a..9035355e867f 100644
---- a/net/sched/act_csum.c
-+++ b/net/sched/act_csum.c
-@@ -598,7 +598,8 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
- 		if (!tcf_csum_ipv6(skb, update_flags))
- 			goto drop;
- 		break;
--	case cpu_to_be16(ETH_P_8021AD): /* fall through */
-+	case cpu_to_be16(ETH_P_8021AD):
-+		fallthrough;
- 	case cpu_to_be16(ETH_P_8021Q):
- 		if (skb_vlan_tag_present(skb) && !orig_vlan_tag_present) {
- 			protocol = skb->protocol;
-diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-index e9f3576cbf71..bdb526ae644b 100644
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -783,7 +783,7 @@ static int ct_nat_execute(struct sk_buff *skb, struct nf_conn *ct,
- 			}
- 		}
- 		/* Non-ICMP, fall thru to initialize if needed. */
--		/* fall through */
-+		fallthrough;
- 	case IP_CT_NEW:
- 		/* Seen it before?  This can happen for loopback, retrans,
- 		 * or local packets.
-diff --git a/net/sched/sch_cbq.c b/net/sched/sch_cbq.c
-index 39b427dc7512..b2130df933a7 100644
---- a/net/sched/sch_cbq.c
-+++ b/net/sched/sch_cbq.c
-@@ -250,7 +250,7 @@ cbq_classify(struct sk_buff *skb, struct Qdisc *sch, int *qerr)
- 		case TC_ACT_STOLEN:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		case TC_ACT_RECLASSIFY:
-diff --git a/net/sched/sch_drr.c b/net/sched/sch_drr.c
-index 07a2b0b35495..dde564670ad8 100644
---- a/net/sched/sch_drr.c
-+++ b/net/sched/sch_drr.c
-@@ -324,7 +324,7 @@ static struct drr_class *drr_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_STOLEN:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_ets.c b/net/sched/sch_ets.c
-index a87e9159338c..c1e84d1eeaba 100644
---- a/net/sched/sch_ets.c
-+++ b/net/sched/sch_ets.c
-@@ -397,7 +397,7 @@ static struct ets_class *ets_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-index 436160be9c18..87e4806b4b45 100644
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -99,7 +99,7 @@ static unsigned int fq_codel_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return 0;
- 		}
-diff --git a/net/sched/sch_fq_pie.c b/net/sched/sch_fq_pie.c
-index fb760cee824e..f98c74018805 100644
---- a/net/sched/sch_fq_pie.c
-+++ b/net/sched/sch_fq_pie.c
-@@ -102,7 +102,7 @@ static unsigned int fq_pie_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return 0;
- 		}
-diff --git a/net/sched/sch_hfsc.c b/net/sched/sch_hfsc.c
-index 433f2190960f..0f5f121404f3 100644
---- a/net/sched/sch_hfsc.c
-+++ b/net/sched/sch_hfsc.c
-@@ -1136,7 +1136,7 @@ hfsc_classify(struct sk_buff *skb, struct Qdisc *sch, int *qerr)
- 		case TC_ACT_STOLEN:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
-index 8184c87da8be..ba37defaca7a 100644
---- a/net/sched/sch_htb.c
-+++ b/net/sched/sch_htb.c
-@@ -239,7 +239,7 @@ static struct htb_class *htb_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_STOLEN:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_multiq.c b/net/sched/sch_multiq.c
-index 1330ad224931..5c27b4270b90 100644
---- a/net/sched/sch_multiq.c
-+++ b/net/sched/sch_multiq.c
-@@ -43,7 +43,7 @@ multiq_classify(struct sk_buff *skb, struct Qdisc *sch, int *qerr)
- 	case TC_ACT_QUEUED:
- 	case TC_ACT_TRAP:
- 		*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--		/* fall through */
-+		fallthrough;
- 	case TC_ACT_SHOT:
- 		return NULL;
- 	}
-diff --git a/net/sched/sch_prio.c b/net/sched/sch_prio.c
-index 647941702f9f..3eabb871a1d5 100644
---- a/net/sched/sch_prio.c
-+++ b/net/sched/sch_prio.c
-@@ -46,7 +46,7 @@ prio_classify(struct sk_buff *skb, struct Qdisc *sch, int *qerr)
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_qfq.c b/net/sched/sch_qfq.c
-index 0b05ac7c848e..6335230a971e 100644
---- a/net/sched/sch_qfq.c
-+++ b/net/sched/sch_qfq.c
-@@ -699,7 +699,7 @@ static struct qfq_class *qfq_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_STOLEN:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return NULL;
- 		}
-diff --git a/net/sched/sch_sfb.c b/net/sched/sch_sfb.c
-index 4074c50ac3d7..da047a37a3bf 100644
---- a/net/sched/sch_sfb.c
-+++ b/net/sched/sch_sfb.c
-@@ -265,7 +265,7 @@ static bool sfb_classify(struct sk_buff *skb, struct tcf_proto *fl,
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return false;
- 		}
-diff --git a/net/sched/sch_sfq.c b/net/sched/sch_sfq.c
-index 5a6def5e4e6d..cae5dbbadc1c 100644
---- a/net/sched/sch_sfq.c
-+++ b/net/sched/sch_sfq.c
-@@ -186,7 +186,7 @@ static unsigned int sfq_classify(struct sk_buff *skb, struct Qdisc *sch,
- 		case TC_ACT_QUEUED:
- 		case TC_ACT_TRAP:
- 			*qerr = NET_XMIT_SUCCESS | __NET_XMIT_STOLEN;
--			/* fall through */
-+			fallthrough;
- 		case TC_ACT_SHOT:
- 			return 0;
- 		}
+I would just ignore the return value of kobject_uevent() along the
+lines of wakeup_sysfs_remove() below.
 
+Thanks!
+
+> > >  }
+> > >
+> > >  void wakeup_sysfs_remove(struct device *dev)
+> > >  {
+> > >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > > +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> > >  }
+> > >
+> > >  int pm_qos_sysfs_add_resume_latency(struct device *dev)
+> > > --
+> > > 2.27.0.212.ge8ba1cc988-goog
+> > >
