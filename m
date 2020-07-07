@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B2620771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F74620663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135115;
-	bh=ubO0Us93WcsR+oiR6YXvKi7C+dvY9iYxVE5FbwHNg24=;
+	s=default; t=1594135119;
+	bh=5U1H1AKYY4hW52vQBYwss1xVcLPoJ/65EiK7ZaTYNH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uyspea62sKdqQxO6xBe0pq4kFs42mi/wpchbpa+6R7tOcSdJMwBP60E33Fez/rKxC
-	 dQ+vCKWXj4vPNgd0EorwTF3xvS15PjUnPWLXDV9dPNF6aR8oFdM/MAE7IRf7PyjGjv
-	 T9cnfz0v86XpkisYZOONoipnF6qF7fE266KRf7KM=
+	b=bJJ3SGRFbX20y6PPd1mV2l81pkychgIvnQiMlFkHiG+eD9FG8qGmrX8vIxHLBZ33Z
+	 5W8Z3gewKlq9H6BKBUEpHjegplCJiGqMmpybMYbqdhxjIrqDzei9nMAZ0TX8eLQmMM
+	 KfN3WAFFdfayxHdv2van1klzr7ppQJVE/YSi6vtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgGGPSb (ORCPT
+        id S1728456AbgGGPSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgGGPS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:28 -0400
+        id S1729214AbgGGPSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D18B20773;
-        Tue,  7 Jul 2020 15:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8235520738;
+        Tue,  7 Jul 2020 15:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135107;
-        bh=ubO0Us93WcsR+oiR6YXvKi7C+dvY9iYxVE5FbwHNg24=;
+        s=default; t=1594135115;
+        bh=5U1H1AKYY4hW52vQBYwss1xVcLPoJ/65EiK7ZaTYNH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFCgn7ltnFNwNz81JdYSiEylRbtp1zjyHSOcNibooYI6DdSaDx8Zx9x4Tx5yhjTnT
-         jcIQd4T4DVQEQylyQ2vt87LoNOiVkVl1y7K6fCRR+efyugVIFYPpbBGzYoiYvMc4sd
-         AtT3R6m8tXgeYxMvPdt59WlY+46ekgdZdZmHbQAM=
+        b=puUAVVKEZKz+cTn4K4VIhUu/jNg8WTL1/bjWJe4GOq14+rL8T9EiY3LmO8Bvq6bCm
+         /AG/T3BDBITiJ2ELD2wd6As2vPBGJeHBN47Dbn1i/xOO/TUYDbjMODaqSo1pSDYFPW
+         /JfWvEuWs6E5yrU4JNBUK1Whk8SlbRKtGNn+VslQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Tao <chentao107@huawei.com>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/36] drm/msm/dpu: fix error return code in dpu_encoder_init
-Date:   Tue,  7 Jul 2020 17:17:06 +0200
-Message-Id: <20200707145749.796668809@linuxfoundation.org>
+Subject: [PATCH 4.19 17/36] cxgb4: use correct type for all-mask IP address comparison
+Date:   Tue,  7 Jul 2020 17:17:09 +0200
+Message-Id: <20200707145749.959174058@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -60,34 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Tao <chentao107@huawei.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit aa472721c8dbe1713cf510f56ffbc56ae9e14247 ]
+[ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
 
-Fix to return negative error code -ENOMEM with the use of
-ERR_PTR from dpu_encoder_init.
+Use correct type to check for all-mask exact match IP addresses.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Chen Tao <chentao107@huawei.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes following sparse warnings due to big endian value checks
+against 0xffffffff in is_addr_all_mask():
+cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
+
+Fixes: 3eb8b62d5a26 ("cxgb4: add support to create hash-filters via tc-flower offload")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index ec3fd67378c18..19e2753ffe07c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2412,7 +2412,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+index 7dddb9e748b81..86745f33a252d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+@@ -810,16 +810,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
+ 		struct in_addr *addr;
  
- 	dpu_enc = devm_kzalloc(dev->dev, sizeof(*dpu_enc), GFP_KERNEL);
- 	if (!dpu_enc)
--		return ERR_PTR(ENOMEM);
-+		return ERR_PTR(-ENOMEM);
+ 		addr = (struct in_addr *)ipmask;
+-		if (addr->s_addr == 0xffffffff)
++		if (ntohl(addr->s_addr) == 0xffffffff)
+ 			return true;
+ 	} else if (family == AF_INET6) {
+ 		struct in6_addr *addr6;
  
- 	rc = drm_encoder_init(dev, &dpu_enc->base, &dpu_encoder_funcs,
- 			drm_enc_mode, NULL);
+ 		addr6 = (struct in6_addr *)ipmask;
+-		if (addr6->s6_addr32[0] == 0xffffffff &&
+-		    addr6->s6_addr32[1] == 0xffffffff &&
+-		    addr6->s6_addr32[2] == 0xffffffff &&
+-		    addr6->s6_addr32[3] == 0xffffffff)
++		if (ntohl(addr6->s6_addr32[0]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[1]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[2]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[3]) == 0xffffffff)
+ 			return true;
+ 	}
+ 	return false;
 -- 
 2.25.1
 
