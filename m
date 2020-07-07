@@ -2,127 +2,195 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D283BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FED206E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ru7o1usU"
+	by mail.kernel.org (Postfix) with ESMTP id 584F2206E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgGGG4i (ORCPT
+        id S1728206AbgGGG4q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:56:38 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:49395 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgGGG4i (ORCPT
+        Tue, 7 Jul 2020 02:56:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:41351 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgGGG4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:56:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594104997; x=1625640997;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=dYTenh+4o/E5myW1JLq36hnqWz98bpD2JBziT4XX3pU=;
-  b=Ru7o1usUeqF5LoH3R/DjTHwCXMxyclt4tKiyb2S0UopGQqm1OFCNex8g
-   Ls2zyLOOT7TlnSoXfE0Ip5Adr0AEZ/84YTZceuqFAwu50v9d6oP6tpXXL
-   Drtjpzt1ChNL+uyHJWA8duljW5TZbqwi2ta0v77oG35cytCK/evrww3du
-   M=;
-IronPort-SDR: 6J3coRccikdW1T9bSDb8H9lL3PtPOgswF22QI0fS3hcrC5A7Wn4q495t7lL19LXA0m8OpNz9kb
- fx29I08i9XKQ==
-X-IronPort-AV: E=Sophos;i="5.75,321,1589241600"; 
-   d="scan'208";a="40386945"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 07 Jul 2020 06:56:35 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id EC10DA1F51;
-        Tue,  7 Jul 2020 06:56:34 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 06:56:34 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.145) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 06:56:30 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <torvalds@linux-foundation.org>,
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        Chris Mason <clm@fb.clm>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-Date:   Tue, 7 Jul 2020 08:56:12 +0200
-Message-ID: <20200707065612.8239-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com> (raw)
+        Tue, 7 Jul 2020 02:56:45 -0400
+Received: from 'smile.earth' ([95.89.3.2]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MuDHR-1kl4Cd22Jx-00uZw4 for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020
+ 08:56:42 +0200
+X-Virus-Scanned: amavisd at 'smile.earth'
+From:   Hans-Peter Jansen <hpj@urpla.net>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: AMD PCI Bridge: Hardware error from APEI
+Date:   Tue, 07 Jul 2020 08:56:41 +0200
+Message-ID: <10516708.ThPc60jCtT@xrated>
+In-Reply-To: <2559180.cUrjzdZFCD@xrated>
+References: <2559180.cUrjzdZFCD@xrated>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D30UWC004.ant.amazon.com (10.43.162.4) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+X-Provags-ID: V03:K1:kcYo/tcWNJaFf8DR/oBHbSDRK2TVLijqVPS2PJuiXrPVYXmjDFf
+ AfSPpboaHvRh9Kfjv1PTH0BwHEA4e4dffGiX3Ci2C8ypXTXfBKclRL7lW788DpqjUO/WCFU
+ qhAAD06iCuaVmaSRAxLFFi5nyZdTaLApYSoqrNwxkomh625/qvjG6NCBWg2Sh2q4SwQ8kR9
+ qcoNnGV66MC88/lZDflqQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:w7nxatLIY3s=:YV3LO3kY6JTb0tmedQnDAQ
+ BXBqLpEvEn25QgGQFpJb1srN4jJ00OSsQSL4WhP1uEVt5R+EzGZY/NWFXKNe5jB+nYanGIdZ2
+ OZC2yBMceAYLPSaosWj9jIC+izJBBRJvheKY3GU1BcmtZb3MNIe+vPIGqhnxs+AvWLHGsFFIK
+ PQObnbjNZTdZHQInTFXHDFcB0rjSvX1vK3oTepNRwe99e/PrbcfdUXTKrNVpG4XSzNw69zhNn
+ AqmsfKqn1k04o3aTc9Lx06SPvIWmhf9061zmQ7975mwIPFB7WvykjqBrIlCeZPG0EYo8fn8OP
+ UeAajkj/rdFv6tCYEqFsb/tu0AD8A0qdZhbVQugeujK/lSoLQKAl3/KQmIPoUt9lLPNWW4ZNs
+ 1roBqainejzPVaTmHrVTDriCLk+xugpn/njotNZfFvHKpOhQVU3YA+ef3WaASBbRAQEtuUC/4
+ lmi7KS4gY18XDh/Th/rfhbFBXxAerEEFnLEgeZ2oFMkQalS6jFNe4d0KTkGD0mSpJiBaa6dqj
+ DQSiMKB2863rJhCt9y+3NMMjPWwLv+s/T8Zb15g63lQWjoitEEc19PZveVleG+pecGXoJJV/j
+ yi2TBDbtv/uS1e9o51kCs5h/FDBIjkfz2BW1wp/GtbmJl8KkNl+acK+Mvi1mg1uUGPykRTd5F
+ QPCvBHSFJNL4xKMiAU01sI9yRS2q79YWou5Nn8z+ibOJlAmIXfebtNIPx4EYnf0hNBAv12sN4
+ ywFSRqVmOg0leNTjpxQSsXFv81Sgn3Cmq8f5zNm8f9wn35BdImty56TGrZplYic0wgDI8Ecdo
+ QrSbzsZO5yG5zPWtm7st9B3HtSqp8ftepeylagl7uTm9oXeKQE2qbSdFQWhOEWO0SWD4Rph
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Sat, 04 Jul 2020 13:02:51 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Recent events have prompted a Linux position statement on inclusive
-> terminology. Given that Linux maintains a coding-style and its own
-> idiomatic set of terminology here is a proposal to answer the call to
-> replace non-inclusive terminology.
-
-I'm glad to see this patch.
-
+Am Samstag, 27. Juni 2020, 20:23:35 CEST schrieben Sie:
+> Dear hacker from the order of the penguins,
 > 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Chris Mason <clm@fb.clm>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Acked-by: SeongJae Park <sjpark@amazon.de>
-
-> ---
->  Documentation/process/coding-style.rst          |   12 ++++
->  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
->  Documentation/process/index.rst                 |    1 
->  3 files changed, 77 insertions(+)
->  create mode 100644 Documentation/process/inclusive-terminology.rst
+> we're facing a disturbing issue here after swapping a motherboard of a
+> mission critical system:
 > 
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index 2657a55c6f12..4b15ab671089 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
->  problem, which is called the function-growth-hormone-imbalance syndrome.
->  See chapter 6 (Functions).
->  
-> +For symbol names, avoid introducing new usage of the words 'slave' and
-> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
-> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
-> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
-> +'denylist'.
+> Jun 27 20:05:29 server kernel: {10}[Hardware Error]: Hardware error from
+> APEI Generic Hardware Error Source: 4 Jun 27 20:05:29 server kernel:
+> {10}[Hardware Error]: It has been corrected by h/w and requires no further
+> action Jun 27 20:05:29 server kernel: {10}[Hardware Error]: event severity:
+> corrected Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  Error 0,
+> type: corrected Jun 27 20:05:29 server kernel: {10}[Hardware Error]: 
+> fru_text: PcieError Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  
+> section_type: PCIe error Jun 27 20:05:29 server kernel: {10}[Hardware
+> Error]:   port_type: 4, root port Jun 27 20:05:29 server kernel:
+> {10}[Hardware Error]:   version: 0.2 Jun 27 20:05:29 server kernel:
+> {10}[Hardware Error]:   command: 0x0407, status: 0x0010 Jun 27 20:05:29
+> server kernel: {10}[Hardware Error]:   device_id: 0000:60:03.1 Jun 27
+> 20:05:29 server kernel: {10}[Hardware Error]:   slot: 19
+> Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   secondary_bus: 0x62
+> Jun 27 20:05:29 server kernel: {10}[Hardware Error]:   vendor_id: 0x1022,
+> device_id: 0x1453 Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  
+> class_code: 060400 Jun 27 20:05:29 server kernel: {10}[Hardware Error]:  
+> bridge: secondary_status: 0x2000, control: 0x0012 Jun 27 20:05:29 server
+> kernel: pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask:
+> 0x00006000 Jun 27 20:05:29 server kernel: pcieport 0000:60:03.1: AER:   
+> [12] Timeout Jun 27 20:05:29 server kernel: pcieport 0000:60:03.1: AER:
+> aer_layer=Data Link Layer, aer_agent=Transmitter ID
+> 
+> 
+> Jun 27 20:05:51 server kernel: {11}[Hardware Error]: Hardware error from
+> APEI Generic Hardware Error Source: 4 Jun 27 20:05:51 server kernel:
+> {11}[Hardware Error]: It has been corrected by h/w and requires no further
+> action Jun 27 20:05:51 server kernel: {11}[Hardware Error]: event severity:
+> corrected Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  Error 0,
+> type: corrected Jun 27 20:05:51 server kernel: {11}[Hardware Error]: 
+> fru_text: PcieError Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  
+> section_type: PCIe error Jun 27 20:05:51 server kernel: {11}[Hardware
+> Error]:   port_type: 4, root port Jun 27 20:05:51 server kernel:
+> {11}[Hardware Error]:   version: 0.2 Jun 27 20:05:51 server kernel:
+> {11}[Hardware Error]:   command: 0x0407, status: 0x0010 Jun 27 20:05:51
+> server kernel: {11}[Hardware Error]:   device_id: 0000:60:03.1 Jun 27
+> 20:05:51 server kernel: {11}[Hardware Error]:   slot: 19
+> Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   secondary_bus: 0x62
+> Jun 27 20:05:51 server kernel: {11}[Hardware Error]:   vendor_id: 0x1022,
+> device_id: 0x1453 Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  
+> class_code: 060400 Jun 27 20:05:51 server kernel: {11}[Hardware Error]:  
+> bridge: secondary_status: 0x2000, control: 0x0012 Jun 27 20:05:51 server
+> kernel: pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask:
+> 0x00006000 Jun 27 20:05:51 server kernel: pcieport 0000:60:03.1: AER:   
+> [12] Timeout Jun 27 20:05:51 server kernel: pcieport 0000:60:03.1: AER:
+> aer_layer=Data Link Layer, aer_agent=Transmitter ID
+> 
+> 
+> 60:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 17h (Models
+> 00h-0fh) PCIe GPP Bridge (prog-if 00 [Normal decode]) Flags: bus master,
+> fast devsel, latency 0, IRQ 44, NUMA node 3 Bus: primary=60, secondary=62,
+> subordinate=62, sec-latency=0 I/O behind bridge: None
+>         Memory behind bridge: e3600000-e36fffff [size=1M]
+>         Prefetchable memory behind bridge: None
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [58] Express Root Port (Slot+), MSI 00
+>         Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [c0] Subsystem: Advanced Micro Devices, Inc. [AMD]
+> Family 17h (Models 00h-0fh) PCIe GPP Bridge Capabilities: [c8]
+> HyperTransport: MSI Mapping Enable+ Fixed+ Capabilities: [100] Vendor
+> Specific Information: ID=0001 Rev=1 Len=010 <?> Capabilities: [150]
+> Advanced Error Reporting
+>         Capabilities: [270] #19
+>         Capabilities: [2a0] Access Control Services
+>         Capabilities: [370] L1 PM Substates
+>         Capabilities: [380] Downstream Port Containment
+>         Capabilities: [3c4] #23
+>         Kernel driver in use: pcieport
+> 
+> It's probably related to a satellite receiver card, since it only appeared
+> after plugging:
+> 
+> 62:00.0 Multimedia controller: Digital Devices GmbH Max
+>         Subsystem: Digital Devices GmbH Max S8 4/8
+>         Flags: bus master, fast devsel, latency 0, IRQ 161, NUMA node 3
+>         Memory at e3600000 (64-bit, non-prefetchable) [size=64K]
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [70] MSI: Enable- Count=1/2 Maskable- 64bit+
+>         Capabilities: [90] Express Endpoint, MSI 00
+>         Capabilities: [100] Vendor Specific Information: ID=0000 Rev=0
+> Len=00c <?> Kernel driver in use: ddbridge
+>         Kernel modules: ddbridge
+> 
+> Specs:
+> ASUS KNPA-U16 with an AMD EPYC 7261, 2x32 GB Kingston KSM26RD4/32MEI
+> (officially supported RAM modules)
+>
+> openSUSE 15.1, Kernel 5.7.5
 
-I have submitted a couple of patches for automated encouragement of the the
-inclusive terms and those merged in the -next tree[1,2] now.  Nonetheless, the
-version says only "please consider using 'denylist' and 'allowlist' instead of
-'blacklist' and 'whitelist'" for now.  I think we could add more terms in there
-based on this discussion.  I could do that after this patch is merged, or you
-could do that yourself in the next spin of this patch.  Please do whatever you
-feel comfort.
+Not sure, how to proceed with this one?
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=7d0bea01dec27195d95d929c1ee49a4a74dd6671
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=95a94258ceb27052f00b7e51588a128d20bf05ed
+After 9½ days uptime, it cumulated about 34,000 incidents:
+
+2020-07-07T08:31:37.275535+02:00 tyrex kernel: [822744.211956] {34202}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 4
+2020-07-07T08:31:37.275557+02:00 tyrex kernel: [822744.211969] {34202}[Hardware Error]: It has been corrected by h/w and requires no further action
+2020-07-07T08:31:37.275559+02:00 tyrex kernel: [822744.211977] {34202}[Hardware Error]: event severity: corrected
+2020-07-07T08:31:37.275567+02:00 tyrex kernel: [822744.211983] {34202}[Hardware Error]:  Error 0, type: corrected
+2020-07-07T08:31:37.275569+02:00 tyrex kernel: [822744.211989] {34202}[Hardware Error]:  fru_text: PcieError
+2020-07-07T08:31:37.275570+02:00 tyrex kernel: [822744.211995] {34202}[Hardware Error]:   section_type: PCIe error
+2020-07-07T08:31:37.275571+02:00 tyrex kernel: [822744.212001] {34202}[Hardware Error]:   port_type: 4, root port
+2020-07-07T08:31:37.275573+02:00 tyrex kernel: [822744.212006] {34202}[Hardware Error]:   version: 0.2
+2020-07-07T08:31:37.275574+02:00 tyrex kernel: [822744.212012] {34202}[Hardware Error]:   command: 0x0407, status: 0x0010
+2020-07-07T08:31:37.275615+02:00 tyrex kernel: [822744.212019] {34202}[Hardware Error]:   device_id: 0000:60:03.1
+2020-07-07T08:31:37.275631+02:00 tyrex kernel: [822744.212024] {34202}[Hardware Error]:   slot: 19
+2020-07-07T08:31:37.275634+02:00 tyrex kernel: [822744.212029] {34202}[Hardware Error]:   secondary_bus: 0x62
+2020-07-07T08:31:37.275636+02:00 tyrex kernel: [822744.212035] {34202}[Hardware Error]:   vendor_id: 0x1022, device_id: 0x1453
+2020-07-07T08:31:37.275637+02:00 tyrex kernel: [822744.212041] {34202}[Hardware Error]:   class_code: 060400
+2020-07-07T08:31:37.275639+02:00 tyrex kernel: [822744.212046] {34202}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0012
+2020-07-07T08:31:37.275661+02:00 tyrex kernel: [822744.212148] pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask: 0x00006000
+2020-07-07T08:31:37.275664+02:00 tyrex kernel: [822744.212158] pcieport 0000:60:03.1: AER:    [12] Timeout               
+2020-07-07T08:31:37.275667+02:00 tyrex kernel: [822744.212167] pcieport 0000:60:03.1: AER: aer_layer=Data Link Layer, aer_agent=Transmitter ID
+2020-07-07T08:31:43.167444+02:00 tyrex kernel: [822750.099749] pcieport 0000:60:03.1: AER: aer_status: 0x00001000, aer_mask: 0x00006000
+2020-07-07T08:31:43.167474+02:00 tyrex kernel: [822750.099765] pcieport 0000:60:03.1: AER:    [12] Timeout               
+2020-07-07T08:31:43.167476+02:00 tyrex kernel: [822750.099773] pcieport 0000:60:03.1: AER: aer_layer=Data Link Layer, aer_agent=Transmitter ID
+
+Needless so say, that this is no permanent solution.
+
+Any ideas anybody?
+
+In fact, with 25 years of build and operation experience of Linux based 
+systems and servers, I wouldn't have expected such amount of hassle with 
+setting up commodity hardware in 2020. It almost feels as if diverging 
+forces are dominating hardware, BIOS, firmware, and kernel developers 
+more than ever before..
+
+Certainly, one could argue that the decision for a low end AMD EPYC based 
+system was a courageous one.
+
+Pete
 
 
-Thanks,
-SeongJae Park
