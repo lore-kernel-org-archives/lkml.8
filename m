@@ -2,78 +2,123 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4721BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0E62065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E967206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZDuwFQky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgGGJtS (ORCPT
+        id S1727916AbgGGJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:49:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:35272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgGGJtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:49:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA528C0A;
-        Tue,  7 Jul 2020 02:49:16 -0700 (PDT)
-Received: from [10.163.86.118] (unknown [10.163.86.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA2B63F718;
-        Tue,  7 Jul 2020 02:49:14 -0700 (PDT)
-Subject: Re: [PATCH] vmalloc: Removing incorrect logs when vmalloc failed
-To:     Tian Tao <tiantao6@hisilicon.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1594113232-32193-1-git-send-email-tiantao6@hisilicon.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <5e7885ef-081e-0682-7be7-40eb7712d2c7@arm.com>
-Date:   Tue, 7 Jul 2020 15:18:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 7 Jul 2020 05:49:56 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39089 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725941AbgGGJtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594115394;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HE0YCKlLU9F99TG9T+Hhh+hBQwUhwm8N1RW6a+ShOK4=;
+        b=ZDuwFQkysDQgBqEo+lepexzEwlhxXcQ/JwrNeF+H5YRLAlHdBMtcPQDB+uxm44Fd9nmKIB
+        QX+WDEq8r+FzK2h1aZS5TN74ZUnU/LcLmY5BaDBJH/o+Vw5IL89Dctjlm4IkJ+H/x9ckYF
+        MoeNeLt4FYlPhjzutbecAeQUt7gTNrk=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-mO4XhNlbO8uVBB5TndDr2A-1; Tue, 07 Jul 2020 05:49:53 -0400
+X-MC-Unique: mO4XhNlbO8uVBB5TndDr2A-1
+Received: by mail-wr1-f70.google.com with SMTP id i12so47907068wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 02:49:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HE0YCKlLU9F99TG9T+Hhh+hBQwUhwm8N1RW6a+ShOK4=;
+        b=bOxh5YZ1Au89fgKIL6VZfSoYq2mc1X4wyYwWvak3jLtzyDTxgaDIIT6RH6J7IRWW17
+         GAPzs9bUNz9O+8fJ8xOWKfns5rvOFjRxerZoJnBLjF31Cvo28WDvR3tJSctLM9YqpAL6
+         OElnNU1P38y42OGTgeCYNVbTgOnGm3MvPp6BwUu/30hTfxmkWN1rycGrAZOBdp+MwUj5
+         qlPQPany6Bu+PwSq5T/KVxqvbGPqpn3ee42KcmH/vTvs7jLBTqLYwAxZFSdS+1x9TO+g
+         xYpngpt0870HLuppeHakQufXaEmqyu/13WeZ8XLtsEyflys+h7x5zb3lPmdRZTeNOlt/
+         +G0w==
+X-Gm-Message-State: AOAM5322KGFKD5+Hjw8xG7piRYYBAPe48dA8Z7keV1FqQ+8DRg5TaX3h
+        cJQY6aoYRCkonx8TBkOTyi/yFogR6qqC+6aky7mSBWbcy5Z0S4AS8J4UqR5+SbBdKkreKctF1Tf
+        E64aM5mMufL86jSRwZsfMoAa4
+X-Received: by 2002:adf:e7c2:: with SMTP id e2mr56651325wrn.179.1594115391985;
+        Tue, 07 Jul 2020 02:49:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx833zL/K0cNEjUfxy2wssoAehJsLXM23AeWFK29RZHs/YmUnXxRgtM3f+w/l4wfBu5MefiCw==
+X-Received: by 2002:adf:e7c2:: with SMTP id e2mr56651300wrn.179.1594115391755;
+        Tue, 07 Jul 2020 02:49:51 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e95f:9718:ec18:4c46? ([2001:b07:6468:f312:e95f:9718:ec18:4c46])
+        by smtp.gmail.com with ESMTPSA id 1sm354662wmf.21.2020.07.07.02.49.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 02:49:51 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] selftests: pidfd: do not use ksft_exit_skip after
+ ksft_set_plan
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, keescook@chromium.org
+References: <20200623001547.22255-1-pbonzini@redhat.com>
+ <20200623001547.22255-5-pbonzini@redhat.com>
+ <20200623204441.phngiwlj2idonpe6@wittgenstein>
+ <9ddfac6e-473d-1856-3ab7-ff61ccf11ac6@redhat.com>
+ <f0b60da1-ce3f-da53-9ffc-94fea233181a@linuxfoundation.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <2e98d690-2202-4183-5b49-942f29b0a955@redhat.com>
+Date:   Tue, 7 Jul 2020 11:49:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1594113232-32193-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <f0b60da1-ce3f-da53-9ffc-94fea233181a@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 07/07/2020 02:43 PM, Tian Tao wrote:
-> It is not possible to increase size with vmalloc=<size> in arm64
-> architecture and it will mislead.however vmalloc return failure
-> is a rare occurrence in 'many architectures including arm64'.
-
-But there is a chance that vmalloc() might work on architectures
-that support 'vmalloc=' command line i.e after a change and this
-information here might be helpful in those cases.
-
+On 06/07/20 22:55, Shuah Khan wrote:
+> On 6/24/20 12:21 AM, Paolo Bonzini wrote:
+>> On 23/06/20 22:44, Christian Brauner wrote:
+>>>>       ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
+>>>>       if (ret < 0) {
+>>>> -        if (errno == ENOSYS)
+>>>> -            ksft_exit_skip(
+>>>> +        if (errno == ENOSYS) {
+>>>> +            ksft_test_result_skip(
+>>>>                   "%s test: pidfd_send_signal() syscall not
+>>>> supported\n",
+>>>>                   test_name);
+>>> If pidfd_send_signal() is not supported, you're falling through and then
+>>> you're reporting:
+>>>
+>>> ok 5 # SKIP pidfd_send_signal check for support test:
+>>> pidfd_send_signal() syscall not supported
+>>> ok 6 pidfd_send_signal check for support test: pidfd_send_signal()
+>>> syscall is supported. Tests can be executed
+>>
+>> You're right, this needs a "return".
+>>
 > 
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> ---
->  mm/vmalloc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Hi Paulo,
 > 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 89e83d3..c7b5a9a 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -1238,8 +1238,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  	}
->  
->  	if (!(gfp_mask & __GFP_NOWARN) && printk_ratelimit())
-> -		pr_warn("vmap allocation for size %lu failed: use vmalloc=<size> to increase size\n",
-> -			size);
-> +		pr_warn("vmap allocation for size %lu failed\n", size);
->  
->  	kmem_cache_free(vmap_area_cachep, va);
->  	return ERR_PTR(-EBUSY);
-> 
+> I am applying the rest of the patches in this series except this one.
+> Please send v3 for this.
+
+Thanks, I was actually going to send everything but you're making it
+even simpler.  I'll send v3 of this patch only.
+
+Paolo
+
