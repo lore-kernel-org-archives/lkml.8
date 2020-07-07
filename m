@@ -5,51 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B64F20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1AC20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135137;
-	bh=jcT4x3sOkEfC37eVwUQ/OPxOH2St/0use41/zQWHQvI=;
+	s=default; t=1594135142;
+	bh=dCuLJOqRd3sNS23NFUSbVc6Vx6twg8IVoAgQxgC0bX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iwjrW+vbunugw1/CJfMxMmyJYd8EkD8oVlq+t6ytKa8eyI4bHyspYMpNINZvJRJqZ
-	 h5fQfHjFvspYyzGWg1Nd1CTZAcBqghY6DyL1Cifr07rrZtb3/46up9hzipbhnx5PgX
-	 +tfrnYZnXZAu2yVkvDZlrap0+wD1/du8Q9/Pf/Ak=
+	b=HD/nRg0VMJjZRM0qXpxhETM9Ggx712cPEeEE0XcvfU6s5yNDT4mvuYR9sr65gDLmW
+	 U5KJPUchqq/jatqJAois7WVL+NgYU7FWKHNBAFqbV0+fTB0QbwiRl3qr87WiXkq7+m
+	 FDQKL+33AET+ZSrZ27HJP7lUhEwvjArz1IQuL72c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGGPS4 (ORCPT
+        id S1727777AbgGGPTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58408 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729274AbgGGPSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:53 -0400
+        id S1728232AbgGGPS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C4220773;
-        Tue,  7 Jul 2020 15:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F3620663;
+        Tue,  7 Jul 2020 15:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135132;
-        bh=jcT4x3sOkEfC37eVwUQ/OPxOH2St/0use41/zQWHQvI=;
+        s=default; t=1594135137;
+        bh=dCuLJOqRd3sNS23NFUSbVc6Vx6twg8IVoAgQxgC0bX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jamigCiKHc/xapXC8m9S4+wZvj+Vmy0sFSHC3feOETRHAePeuRuH1k3TnP3zFyjAN
-         kqn01/c+BcFCpim0EWMQiVsRqDccfNP3RoKTqy1lYZbj4/1i5YBsrlxZ3V/d8ZBsG1
-         9AN3nnWIUHmqILZGJr3XrN1JsiGC/kA/Kj7SgN6A=
+        b=1F2I2JNJ+PBWB2KU55ywGskClz6KQ2O5Y1LGdyRrolAsIW8k0lV8jkX86dmFl37wL
+         4hddHR2OuTkccMbFdD5cmZETyHoRTqfxqye6uQRmDV+X8fZI4+FZf/90OwuvgbwFqR
+         I1EFOIscadn2BuBKJMimTxy400kwuHKKSz4t8PK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com,
-        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Glauber Costa <glauber@scylladb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/36] usbnet: smsc95xx: Fix use-after-free after removal
-Date:   Tue,  7 Jul 2020 17:16:56 +0200
-Message-Id: <20200707145749.348169173@linuxfoundation.org>
+Subject: [PATCH 4.19 06/36] mm/slub: fix stack overruns with SLUB_STATS
+Date:   Tue,  7 Jul 2020 17:16:58 +0200
+Message-Id: <20200707145749.450549779@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -62,47 +66,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit b835a71ef64a61383c414d6bf2896d2c0161deca ]
+[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
 
-Syzbot reports an use-after-free in workqueue context:
+There is no need to copy SLUB_STATS items from root memcg cache to new
+memcg cache copies.  Doing so could result in stack overruns because the
+store function only accepts 0 to clear the stat and returns an error for
+everything else while the show method would print out the whole stat.
 
-BUG: KASAN: use-after-free in mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
- mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
- __smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:217 [inline]
- smsc95xx_mdio_read+0x583/0x870 drivers/net/usb/smsc95xx.c:278
- check_carrier+0xd1/0x2e0 drivers/net/usb/smsc95xx.c:644
- process_one_work+0x777/0xf90 kernel/workqueue.c:2274
- worker_thread+0xa8f/0x1430 kernel/workqueue.c:2420
- kthread+0x2df/0x300 kernel/kthread.c:255
+Then, the mismatch of the lengths returns from show and store methods
+happens in memcg_propagate_slab_attrs():
 
-It looks like that smsc95xx_unbind() is freeing the structures that are
-still in use by the concurrently running workqueue callback. Thus switch
-to using cancel_delayed_work_sync() to ensure the work callback really
-is no longer active.
+	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
+		buf = mbuf;
 
-Reported-by: syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
+in show_stat() later where a bounch of sprintf() would overrun the stack
+variable.  Fix it by always allocating a page of buffer to be used in
+show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+
+  # echo 1 > /sys/kernel/slab/fs_cache/shrink
+  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
+  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+
+  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    number+0x421/0x6e0
+    vsnprintf+0x451/0x8e0
+    sprintf+0x9e/0xd0
+    show_stat+0x124/0x1d0
+    alloc_slowpath_show+0x13/0x20
+    __kmem_cache_create+0x47a/0x6b0
+
+  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
+   process_one_work+0x0/0xb90
+
+  this frame has 1 object:
+   [32, 72) 'lockdep_map'
+
+  Memory state around the buggy address:
+   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
+                                                         ^
+   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
+   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ==================================================================
+  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    __kmem_cache_create+0x6ac/0x6b0
+
+Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Glauber Costa <glauber@scylladb.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index 6e971628bb50a..c3389bd87c654 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -1338,7 +1338,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
- 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
- 
- 	if (pdata) {
--		cancel_delayed_work(&pdata->carrier_check);
-+		cancel_delayed_work_sync(&pdata->carrier_check);
- 		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
- 		kfree(pdata);
- 		pdata = NULL;
+diff --git a/mm/slub.c b/mm/slub.c
+index 473e0a8afb802..882a1e0ae89c8 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5610,7 +5610,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
+ 		 */
+ 		if (buffer)
+ 			buf = buffer;
+-		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
++		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
++			 !IS_ENABLED(CONFIG_SLUB_STATS))
+ 			buf = mbuf;
+ 		else {
+ 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
 -- 
 2.25.1
 
