@@ -2,147 +2,132 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3145BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B59C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F27E20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D15D20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Jh3wspYX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbPHDEVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgGGWKf (ORCPT
+        id S1729196AbgGGWLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39596 "EHLO
+        Tue, 7 Jul 2020 18:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgGGWKf (ORCPT
+        with ESMTP id S1728764AbgGGWLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:10:35 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9FFC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:10:34 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so43906869eje.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:10:34 -0700 (PDT)
+        Tue, 7 Jul 2020 18:11:33 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6621CC061755;
+        Tue,  7 Jul 2020 15:11:33 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id i3so33015721qtq.13;
+        Tue, 07 Jul 2020 15:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NBcJfpgDgiWvp70CuwEdpKyzck2zYub7uFOUpyKCkM4=;
-        b=Jh3wspYXTE7ZYRuNOwvWQorpJTftbYNJqBLUKdQIqpcI2eREUlbHWwZSeozLxt0mZK
-         Ixbw6a9E0H1GWJTpBxBKZo/novwLgoBl3Qllh07hodbmjaap4SvK/tOn9U84kC0B1IpN
-         CjECFkQ793lI6uBmu/t6a91wG+JQNLmfVUDGCq39duN8Y1UTgZxzNzWIr5IV1dBc+fC6
-         JHNx9kvC6qthEr81Rqp/U53VtwS4iMp2ZejJy5hoZ+7qBmMmhF4O8ts4XrNS6A9DWqc8
-         zlH31p9WJ7qwfNQj4NKfx+Qz6FAE+i1/uXkAB1sCIZTqi453fFIxkipaOIGf7Yd5PS36
-         XKsA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xy9G4OGBzN14/6tq289iIZpWrMB6jBijjEQf6wY1dhQ=;
+        b=LbPHDEVLdQoiUZFqiu7OHTpaJdG/SZ+It/oqO2Dt64ru/aa5pf/8DvDRmH+Ur12loI
+         +GRbd2591j5Ged2yr6pWHnlU+mAZxtl3/hUyf0urDhOdNHoIDNcTFlZwxUV4a5SszcOa
+         5DB6cFnHGPBVvxtpFUpki9RyaIYVS41mWc1OUkwRiudc9D7VLmRR5dmJxAaPv4pkjB9m
+         oTq6O3mtx4LHu2O0FpELIyNoncGAGoFuS34H5Y/gRfPMH3NH9kkgpSSsChcCDRpuus0E
+         2zv99AIQUfvFqCSxgMqo9NB2iooPrJE/XWPAxmMOXRpMF3xYs4+AQ5GmqYr9OBHGMsni
+         BgaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NBcJfpgDgiWvp70CuwEdpKyzck2zYub7uFOUpyKCkM4=;
-        b=SsadXHJ9Uq+IULO/njJfnOT6/TOJQAJ3R99Vqu8YW4oP64pnIxiBBGMdOwktof+ySi
-         3J0ALcTzq/PqQOxe25i3kLNlfexzhMZa29EmIeJ7lU1wyCEIw7gmWpdxZlNhEH/jjC16
-         3PTJdv4oQS4J3QDUBAwbC7crVUA4PhGTurSFHsdNZHd12b8WzHqhOF95afAhaQ0I3AJ4
-         tl5s7MiNa/bRUQpXoeDjHJdAzqiF+I4r/Iklc4Rux8lADjINoimco4flpkya37zYEoyr
-         RcmSZ5cdE0VrmbVbO29BBTsMQTBlXxP9mA/VIsijVcV+R22FbdtAkNkdjmbrTKlQSAAH
-         W5CA==
-X-Gm-Message-State: AOAM532ohWM6FejuuNL6gokOwDRdcJbc9+efUuX8sCT4yQ1seCFIRdaX
-        lR8OPjfRZr+UI/OewlO9CkFqj4F1kihMHvgtz5R7SQ==
-X-Google-Smtp-Source: ABdhPJzLtJxDRTcMSFchyABLauV8q4dPkKqfUWNolgasMSmhXzspz37EpBiZTg6Tc2uAbgdOewLspH9Pqq5vD6jQDQw=
-X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr48741223ejb.124.1594159833654;
- Tue, 07 Jul 2020 15:10:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200706011947.184166-1-justin.he@arm.com> <20200706011947.184166-4-justin.he@arm.com>
- <0b015717-b5e1-451d-9fc3-ad665ed1054a@redhat.com>
-In-Reply-To: <0b015717-b5e1-451d-9fc3-ad665ed1054a@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 Jul 2020 15:10:22 -0700
-Message-ID: <CAPcyv4gYq=jHDniKGvg2zMGqojw4bR6X90DfXKS6fZzLRzZWJA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Xy9G4OGBzN14/6tq289iIZpWrMB6jBijjEQf6wY1dhQ=;
+        b=SWfNB0cLDTY3eTEMvxVit302IkrYtI72D1hylaZzGmSlEN6h02W5Zkmu13ZtH0sMTj
+         jZGz+tfyZlPL+ynz6jZdA5iIlwKCUAd6mk7ICxceojH2GVEjWepvLMcbWP54BkHjxYR7
+         qP44JtVzoejT5OquEeyUHAX+ryHcvDR6V+T32noe44RkLW5TZ8Y6CyzL9avvtrh6glPq
+         duco/eBferzMHik98WjmXa0O6auyiryRt3Wpx45gerpcK2UKKkQPOAeIoobMDj/q81fi
+         4uhywarCY2idaMzGzp1nAtCfcWrgtpVZ4tBMVxGyyMD3u5JG/ib4qr4M6awY/z6StJLq
+         Odkw==
+X-Gm-Message-State: AOAM533lBdT8W/Q5sXDuS5W3UBBvTJO8Kw60B1W9np0IQQ+Va8W3SsR9
+        1sgMHokU0n0GapagYGJHo1w=
+X-Google-Smtp-Source: ABdhPJxpHcuxJwRbskwJch1SOb6DiRp87yFjhqLbqz5Rgxtb1H7uOa4RM2l7vYjqp2KdbsCQoxpb0Q==
+X-Received: by 2002:ac8:430b:: with SMTP id z11mr56717266qtm.73.1594159892580;
+        Tue, 07 Jul 2020 15:11:32 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o5sm29469514qtb.26.2020.07.07.15.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 15:11:32 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 7 Jul 2020 18:11:30 -0400
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Kaly Xin <Kaly.Xin@arm.com>,
-        Michal Hocko <mhocko@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v6 4/8] init: add support for zstd compressed kernel
+Message-ID: <20200707221130.GB1591079@rani.riverdale.lan>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+ <20200707034604.1539157-5-nickrterrell@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200707034604.1539157-5-nickrterrell@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 12:50 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 06.07.20 03:19, Jia He wrote:
-> > When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
-> > online at that time), mem_hotplug_begin/done is unpaired in such case.
-> >
-> > Therefore a warning:
-> >  Call Trace:
-> >   percpu_up_write+0x33/0x40
-> >   try_remove_memory+0x66/0x120
-> >   ? _cond_resched+0x19/0x30
-> >   remove_memory+0x2b/0x40
-> >   dev_dax_kmem_remove+0x36/0x72 [kmem]
-> >   device_release_driver_internal+0xf0/0x1c0
-> >   device_release_driver+0x12/0x20
-> >   bus_remove_device+0xe1/0x150
-> >   device_del+0x17b/0x3e0
-> >   unregister_dev_dax+0x29/0x60
-> >   devm_action_release+0x15/0x20
-> >   release_nodes+0x19a/0x1e0
-> >   devres_release_all+0x3f/0x50
-> >   device_release_driver_internal+0x100/0x1c0
-> >   driver_detach+0x4c/0x8f
-> >   bus_remove_driver+0x5c/0xd0
-> >   driver_unregister+0x31/0x50
-> >   dax_pmem_exit+0x10/0xfe0 [dax_pmem]
-> >
-> > This fixes it by moving mem_hotplug_done ahead of "done"
-> >
-> > Signed-off-by: Jia He <justin.he@arm.com>
-> > ---
-> >  mm/memory_hotplug.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index e1e290577b45..86b36714342b 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -1769,8 +1769,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
-> >
-> >       try_offline_node(nid);
-> >
-> > -done:
-> >       mem_hotplug_done();
-> > +done:
-> >       return rc;
-> >  }
-> >
-> >
->
-> Just drop the "done" label, use "return rc;" directly instead of the
-> goto, and "return 0;" at the end.
->
-> Also, please add
->
-> Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
->
-> and
->
-> Cc: stable@vger.kernel.org # v5.6+
->
-> Thanks!
-
-Yes, thanks, you can also add:
-
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+On Mon, Jul 06, 2020 at 08:46:00PM -0700, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
+> 
+> * Adds the zstd cmd to scripts/Makefile.lib
+> * Adds the HAVE_KERNEL_ZSTD and KERNEL_ZSTD options
+> 
+> Architecture specific support is still needed for decompression.
+> 
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 916b2f7f7098..d960f8815f87 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -413,6 +413,21 @@ quiet_cmd_xzkern = XZKERN  $@
+>  quiet_cmd_xzmisc = XZMISC  $@
+>        cmd_xzmisc = cat $(real-prereqs) | $(XZ) --check=crc32 --lzma2=dict=1MiB > $@
+>  
+> +# ZSTD
+> +# ---------------------------------------------------------------------------
+> +# Appends the uncompressed size of the data using size_append. The .zst
+> +# format has the size information available at the beginning of the file too,
+> +# but it's in a more complex format and it's good to avoid changing the part
+> +# of the boot code that reads the uncompressed size.
+> +# Note that the bytes added by size_append will make the zstd tool think that
+> +# the file is corrupt. This is expected.
+> +
+> +quiet_cmd_zstd = ZSTD    $@
+> +cmd_zstd = (cat $(filter-out FORCE,$^) | \
+		   ^^ should just be $(real-prereqs)
+> +	zstd -19 && \
+> +        $(call size_append, $(filter-out FORCE,$^))) > $@ || \
+	   ^^ size_append does not take arguments. It's used as just
+	   $(size_append) and will always output shell code to print the
+	   total size of $(real-prereqs) -- see other compressor command
+	   definitions.
+> +	(rm -f $@ ; false)
+> +
+>  # ASM offsets
+>  # ---------------------------------------------------------------------------
+>  
+> -- 
+> 2.27.0
+> 
