@@ -2,123 +2,134 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D915CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A91204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFFE204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135828;
+	bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0FkzBPdjiU/3T3hw2TR9WjCQYW5q+uJBYL4vyx3U8LqhCOH8dLjkWdPbFIJ1InWXg
+	 W6LcXqbMLT9QesJacudLtbg8IGkeynwV+zrJQiFUhqIiWszkt1V4sPllwSr65eaKOT
+	 Dq5VlRTgY9qtQLHwLiiiCIPfH8o1u2STFe8KJbqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgGGPaY (ORCPT
+        id S1730055AbgGGPYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:30:24 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:34031 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgGGPaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:30:15 -0400
-Received: by mail-il1-f197.google.com with SMTP id y3so18723185ily.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:30:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=l5UfEPh6FpvcqMK9z9YCj6DGXnLOftd9sD9CfnuWGio=;
-        b=ZjFvhjITieldz3Eyu5+AmYELpEfSDulUbg06yvsCyppgg95vBuFBvYQeYXjXe8r4bL
-         8qnf+6i3bLnZdT5ndseMAR5m6s1aoJ9kT6pKNbQlmXHhqyJ0/Gjuv8EHm33TS1zO9Fll
-         26SawQcB+6znWEJfcyxEQ7cLsUtl8qz/hEJgsdP+wwRnoVDCQrgs0aLvO7Usd1mIcAUS
-         Qyl7tynJ1gEjxxqev5vKoIU9jRdspM+4TGS/5DHtmewlem3BrQzd9lXb/+uzkYMKa4Lz
-         OJOWnIjBKc0pokcaBK/xsdzZ5jBd6JZJQFpXSzNCVXqj8fn6DSJgJSRdkf1PLOKZwMET
-         D77w==
-X-Gm-Message-State: AOAM531iWd/UnvFcXcH52F1tbQnme2bvLOpw+PfeN64TUaY2ihQComAr
-        RZr3BP5ohPAwZVCZ0j/dEuccbeUM0kZ1+IWrDZgs13eDs0Zu
-X-Google-Smtp-Source: ABdhPJz38T51Ko5sHjG40+v5KRv3EC++gkZunO00fGv8OmSqfw3SsUSP6S8MGjq1G+jBQ8orWn+UoH3rpNWToypbts+u/bx/KU74
+        Tue, 7 Jul 2020 11:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730024AbgGGPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A331E207CD;
+        Tue,  7 Jul 2020 15:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594135445;
+        bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sa4NlwW5JDa2CtXfGPRu5l9xl2cT8Lbq3g7AipLpJ7k0srXjgo0/HUg02CGoe6EbC
+         rk+ZUceUbHpkH0sGsz5P/EVC0oZtoiwo9g5kCLrnwz1mDwrTvjwEHJjWSrb79z+CPk
+         Bn4xay0yWlTfIDVpiWpjcfTDDO2Kq33TreZcgFRc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Alex Guzman <alex@guzman.io>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.7 043/112] tpm: Fix TIS locality timeout problems
+Date:   Tue,  7 Jul 2020 17:16:48 +0200
+Message-Id: <20200707145803.049491500@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
+References: <20200707145800.925304888@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2c8b:: with SMTP id i11mr31473413iow.139.1594135814367;
- Tue, 07 Jul 2020 08:30:14 -0700 (PDT)
-Date:   Tue, 07 Jul 2020 08:30:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f06edf05a9dbaa44@google.com>
-Subject: general protection fault in batadv_iv_ogm_schedule_buff (2)
-From:   syzbot <syzbot+2eeeb5ad0766b57394d8@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-syzbot found the following crash on:
+commit 7862840219058436b80029a0263fd1ef065fb1b3 upstream.
 
-HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=130b828f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=2eeeb5ad0766b57394d8
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+It has been reported that some TIS based TPMs are giving unexpected
+errors when using the O_NONBLOCK path of the TPM device. The problem
+is that some TPMs don't like it when you get and then relinquish a
+locality (as the tpm_try_get_ops()/tpm_put_ops() pair does) without
+sending a command.  This currently happens all the time in the
+O_NONBLOCK write path. Fix this by moving the tpm_try_get_ops()
+further down the code to after the O_NONBLOCK determination is made.
+This is safe because the priv->buffer_mutex still protects the priv
+state being modified.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2eeeb5ad0766b57394d8@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
-CPU: 1 PID: 9126 Comm: kworker/u4:9 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-RIP: 0010:batadv_iv_ogm_schedule_buff+0xd1e/0x1410 net/batman-adv/bat_iv_ogm.c:843
-Code: 80 3c 28 00 0f 85 ee 05 00 00 4d 8b 3f 49 81 ff e0 e9 4e 8d 0f 84 dd 02 00 00 e8 bd 80 ae f9 49 8d 7f 70 48 89 f8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 af 06 00 00 48 8b 44 24 08 49 8b 6f 70 80 38
-RSP: 0018:ffffc90004e97b98 EFLAGS: 00010202
-RAX: 000000000000000e RBX: ffff8880a7471800 RCX: ffffffff87c5394d
-RDX: ffff88804cf02380 RSI: ffffffff87c536a3 RDI: 0000000000000070
-RBP: 0000000000077000 R08: 0000000000000001 R09: ffff8880a875a02b
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000007
-R13: dffffc0000000000 R14: ffff888051ad4c40 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000400200 CR3: 0000000061cac000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- batadv_iv_ogm_schedule net/batman-adv/bat_iv_ogm.c:869 [inline]
- batadv_iv_ogm_schedule net/batman-adv/bat_iv_ogm.c:862 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x5c8/0x800 net/batman-adv/bat_iv_ogm.c:1722
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Modules linked in:
----[ end trace f5c5eda032070cd1 ]---
-RIP: 0010:batadv_iv_ogm_schedule_buff+0xd1e/0x1410 net/batman-adv/bat_iv_ogm.c:843
-Code: 80 3c 28 00 0f 85 ee 05 00 00 4d 8b 3f 49 81 ff e0 e9 4e 8d 0f 84 dd 02 00 00 e8 bd 80 ae f9 49 8d 7f 70 48 89 f8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 af 06 00 00 48 8b 44 24 08 49 8b 6f 70 80 38
-RSP: 0018:ffffc90004e97b98 EFLAGS: 00010202
-RAX: 000000000000000e RBX: ffff8880a7471800 RCX: ffffffff87c5394d
-RDX: ffff88804cf02380 RSI: ffffffff87c536a3 RDI: 0000000000000070
-RBP: 0000000000077000 R08: 0000000000000001 R09: ffff8880a875a02b
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000007
-R13: dffffc0000000000 R14: ffff888051ad4c40 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000400200 CR3: 000000009480d000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206275
+Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
+Reported-by: Mario Limonciello <Mario.Limonciello@dell.com>
+Tested-by: Alex Guzman <alex@guzman.io>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/char/tpm/tpm-dev-common.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -189,15 +189,6 @@ ssize_t tpm_common_write(struct file *fi
+ 		goto out;
+ 	}
+ 
+-	/* atomic tpm command send and result receive. We only hold the ops
+-	 * lock during this period so that the tpm can be unregistered even if
+-	 * the char dev is held open.
+-	 */
+-	if (tpm_try_get_ops(priv->chip)) {
+-		ret = -EPIPE;
+-		goto out;
+-	}
+-
+ 	priv->response_length = 0;
+ 	priv->response_read = false;
+ 	*off = 0;
+@@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *fi
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
+-		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
+ 
++	/* atomic tpm command send and result receive. We only hold the ops
++	 * lock during this period so that the tpm can be unregistered even if
++	 * the char dev is held open.
++	 */
++	if (tpm_try_get_ops(priv->chip)) {
++		ret = -EPIPE;
++		goto out;
++	}
++
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
+
+
