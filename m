@@ -2,173 +2,260 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84286C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D36B204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE4B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G+VWkqkq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TxDsbyOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgGGPbe (ORCPT
+        id S1730297AbgGGPbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730246AbgGGPba (ORCPT
+        Tue, 7 Jul 2020 11:31:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41288 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728661AbgGGPba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:31:30 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B41C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:31:30 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id v26so6506230vkn.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k9pD5UhiE599Tk9wmQP354KMod/Tb87VcByMMuwvg3k=;
-        b=G+VWkqkqtjaLmPcbE4Vr+ciMMRNHr+VCxIoF6KeYJNsyLUH8ifsFw42bsVUuCQcL2v
-         4h8B6RVOb0A7JHYxkMMPFot6aNEHIX4sO1KFmTN9HVLhhirhuN/5M7I9phPJxLAU7aez
-         9P7ONjtIUTLRxZSOQviFEN8aNFPBqxVoZEhGU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k9pD5UhiE599Tk9wmQP354KMod/Tb87VcByMMuwvg3k=;
-        b=bZxu1szZQ+TIlXC+WHm8MnZsUdpuMxUlfVHgwuJcHUZAIh19fgHlgbr9dwsMxkO9om
-         bxjcmVz6FLlQAykQQLyfWdtigFte99vRtp09gk2b8pnMy4tkmlNuwAQqEDhoa+Nj6WZH
-         4LT4+UQypAIqckJfFdwf49mq1qTJBagZEhMs++LzlKm7T2zNnGw7VPZ8Ntd2FfsbZqxy
-         dLoaR+JJCeQT0DoF4t1/mcBtBx/w7rgORIAEvHI2QJDWgAkfJ88JxrzejPiOE+4ibK5O
-         VRD8ZCumLoCB21tyVoR1VNkSpFvVGyKrMYvBuhi+U84S/TXgTVM/ZjL/0LJ1rP9T7FjD
-         zelg==
-X-Gm-Message-State: AOAM530WnI0ggKoeYhlJ/16vJv+FalySpyxXpdjkicHixz0J+MeBPvBQ
-        izzK0LCYI37BKj0xNaQreqMuwT22xzc2cM53XAzLmA==
-X-Google-Smtp-Source: ABdhPJzywIHzvHEbshbYh1BPf/R2VSON3B3el7elCV5+s8tTIaZ0pNfM6hRiiIO9NHAG6kQxEZ1i9zEbDrKxhAAT9zg=
-X-Received: by 2002:a1f:418f:: with SMTP id o137mr37478018vka.25.1594135888939;
- Tue, 07 Jul 2020 08:31:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200706210717.1210639-1-abhishekpandit@chromium.org>
- <20200706140715.v2.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <20200707142859.GB55434@kroah.com>
-In-Reply-To: <20200707142859.GB55434@kroah.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 7 Jul 2020 08:31:18 -0700
-Message-ID: <CANFp7mUgJScOn1xJFqqK82UkRsQ7GpsEJ7Ai9gptZjCRtf+JJw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594135888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ExoCZcB4XU21NzG3UvP3BsHdDl/GnhUWGWYlr6OgbLw=;
+        b=TxDsbyORUC4hSRmpeIvLzM7ta1nu1SioeksLKrtx4mDSt2wf6gIbtzouMFLtkfpSb+Zxy8
+        imnL0lYyhmgyLr+BvJ7D5rI6vOhEp5c2QzpvKNy+GDyKUDH5nWZ+gKqlbve5K9XEDXqrHx
+        r8ZvtebnAyPiWpunmmS9m7PtmaAcrms=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-79boJhDXNsuYmslmiVbF6Q-1; Tue, 07 Jul 2020 11:31:24 -0400
+X-MC-Unique: 79boJhDXNsuYmslmiVbF6Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D9A1EC1A4;
+        Tue,  7 Jul 2020 15:31:23 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-114-172.phx2.redhat.com [10.3.114.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39EF65C1B2;
+        Tue,  7 Jul 2020 15:31:23 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 36E1A1202DC; Tue,  7 Jul 2020 11:31:22 -0400 (EDT)
+Date:   Tue, 7 Jul 2020 11:31:22 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        rafael.j.wysocki@intel.com, Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 35/65] nfsd: clients dont need to break their own
+ delegations
+Message-ID: <20200707153122.GA171624@pick.fieldses.org>
+References: <20200707145752.417212219@linuxfoundation.org>
+ <20200707145754.171869800@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707145754.171869800@linuxfoundation.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+NACK.
 
+(How did this one even end up headed for stable?  It wasn't cc'd to
+stable, it's not a bugfix, and it's not a small patch.)
 
-On Tue, Jul 7, 2020 at 7:29 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jul 06, 2020 at 02:07:17PM -0700, Abhishek Pandit-Subedi wrote:
-> > Udev rules that depend on the power/wakeup attribute don't get triggered
-> > correctly if device_set_wakeup_capable is called after the device is
-> > created. This can happen for several reasons (driver sets wakeup after
-> > device is created, wakeup is changed on parent device, etc) and it seems
-> > reasonable to emit a changed event when adding or removing attributes on
-> > the device.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Add newline at end of bt_dev_err
-> >
-> >  drivers/base/power/sysfs.c | 21 ++++++++++++++++++++-
-> >  1 file changed, 20 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index 24d25cf8ab1487..d57e8e7f175ebf 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* sysfs entries for device PM */
-> >  #include <linux/device.h>
-> > +#include <linux/kobject.h>
-> >  #include <linux/string.h>
-> >  #include <linux/export.h>
-> >  #include <linux/pm_qos.h>
-> > @@ -739,12 +740,30 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> >
-> >  int wakeup_sysfs_add(struct device *dev)
-> >  {
-> > -     return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +     int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +
-> > +     if (!ret) {
-> > +             int tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> > +
-> > +             if (tmp)
-> > +                     dev_err(dev,
-> > +                             "Error in uevent for wakeup_sysfs_add: %d\n",
-> > +                             tmp);
-> > +     }
-> > +
-> > +     return ret;
-> >  }
->
-> Shouldn't the above function look like this instead to be simpler:
->
-> int wakeup_sysfs_add(struct device *dev)
-> {
->         int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
->
->         if (ret)
->                 return ret;
->
->         return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> }
->
->
-> >
-> >  void wakeup_sysfs_remove(struct device *dev)
-> >  {
-> > +     int tmp;
->
-> Use 'ret' like the above function had, to be consistent.
->
-> > +
-> >       sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +
-> > +     tmp = kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> > +     if (tmp)
-> > +             dev_err(dev, "Error in uevent for wakeup_sysfs_remove: %d\n",
->
-> nit, use __func__ to describe a function name, if you really want it.
-> Why do you need to send a message for this error, will that really ever
-> happen?
->
+--b.
 
-Looking through kobject_uevent, it does look like the errors are
-unlikely to be seen (-ENOMEM, -ENOENT) and probably don't need to be
-logged.
-Will apply the suggestions above and send a v3.
+On Tue, Jul 07, 2020 at 05:17:14PM +0200, Greg Kroah-Hartman wrote:
+> From: J. Bruce Fields <bfields@redhat.com>
+> 
+> [ Upstream commit 28df3d1539de5090f7916f6fff03891b67f366f4 ]
+> 
+> We currently revoke read delegations on any write open or any operation
+> that modifies file data or metadata (including rename, link, and
+> unlink).  But if the delegation in question is the only read delegation
+> and is held by the client performing the operation, that's not really
+> necessary.
+> 
+> It's not always possible to prevent this in the NFSv4.0 case, because
+> there's not always a way to determine which client an NFSv4.0 delegation
+> came from.  (In theory we could try to guess this from the transport
+> layer, e.g., by assuming all traffic on a given TCP connection comes
+> from the same client.  But that's not really correct.)
+> 
+> In the NFSv4.1 case the session layer always tells us the client.
+> 
+> This patch should remove such self-conflicts in all cases where we can
+> reliably determine the client from the compound.
+> 
+> To do that we need to track "who" is performing a given (possibly
+> lease-breaking) file operation.  We're doing that by storing the
+> information in the svc_rqst and using kthread_data() to map the current
+> task back to a svc_rqst.
+> 
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  Documentation/filesystems/locking.rst |  2 ++
+>  fs/locks.c                            |  3 +++
+>  fs/nfsd/nfs4proc.c                    |  2 ++
+>  fs/nfsd/nfs4state.c                   | 14 ++++++++++++++
+>  fs/nfsd/nfsd.h                        |  2 ++
+>  fs/nfsd/nfssvc.c                      |  6 ++++++
+>  include/linux/fs.h                    |  1 +
+>  include/linux/sunrpc/svc.h            |  1 +
+>  8 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+> index fc3a0704553cf..b5f8d15a30fb7 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -425,6 +425,7 @@ prototypes::
+>  	int (*lm_grant)(struct file_lock *, struct file_lock *, int);
+>  	void (*lm_break)(struct file_lock *); /* break_lease callback */
+>  	int (*lm_change)(struct file_lock **, int);
+> +	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>  
+>  locking rules:
+>  
+> @@ -435,6 +436,7 @@ lm_notify:		yes		yes			no
+>  lm_grant:		no		no			no
+>  lm_break:		yes		no			no
+>  lm_change		yes		no			no
+> +lm_breaker_owns_lease:	no		no			no
+>  ==========		=============	=================	=========
+>  
+>  buffer_head
+> diff --git a/fs/locks.c b/fs/locks.c
+> index b8a31c1c4fff3..a3f186846e93e 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -1557,6 +1557,9 @@ static bool leases_conflict(struct file_lock *lease, struct file_lock *breaker)
+>  {
+>  	bool rc;
+>  
+> +	if (lease->fl_lmops->lm_breaker_owns_lease
+> +			&& lease->fl_lmops->lm_breaker_owns_lease(lease))
+> +		return false;
+>  	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT)) {
+>  		rc = false;
+>  		goto trace;
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 4798667af647c..96fa2837d3cfb 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1961,6 +1961,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  		goto encode_op;
+>  	}
+>  
+> +	rqstp->rq_lease_breaker = (void **)&cstate->clp;
+> +
+>  	trace_nfsd_compound(rqstp, args->opcnt);
+>  	while (!status && resp->opcnt < args->opcnt) {
+>  		op = &args->ops[resp->opcnt++];
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 8650a97e2ba96..1e8f5e281bb53 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4464,6 +4464,19 @@ nfsd_break_deleg_cb(struct file_lock *fl)
+>  	return ret;
+>  }
+>  
+> +static bool nfsd_breaker_owns_lease(struct file_lock *fl)
+> +{
+> +	struct nfs4_delegation *dl = fl->fl_owner;
+> +	struct svc_rqst *rqst;
+> +	struct nfs4_client *clp;
+> +
+> +	if (!i_am_nfsd())
+> +		return NULL;
+> +	rqst = kthread_data(current);
+> +	clp = *(rqst->rq_lease_breaker);
+> +	return dl->dl_stid.sc_client == clp;
+> +}
+> +
+>  static int
+>  nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
+>  		     struct list_head *dispose)
+> @@ -4475,6 +4488,7 @@ nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
+>  }
+>  
+>  static const struct lock_manager_operations nfsd_lease_mng_ops = {
+> +	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
+>  	.lm_break = nfsd_break_deleg_cb,
+>  	.lm_change = nfsd_change_deleg_cb,
+>  };
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index af2947551e9ce..7a835fb7d79f7 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -87,6 +87,8 @@ int		nfsd_pool_stats_release(struct inode *, struct file *);
+>  
+>  void		nfsd_destroy(struct net *net);
+>  
+> +bool		i_am_nfsd(void);
+> +
+>  struct nfsdfs_client {
+>  	struct kref cl_ref;
+>  	void (*cl_release)(struct kref *kref);
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index e8bee8ff30c59..cb7f0aa9a3b05 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -590,6 +590,11 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
+>  	.svo_module		= THIS_MODULE,
+>  };
+>  
+> +bool i_am_nfsd()
+> +{
+> +	return kthread_func(current) == nfsd;
+> +}
+> +
+>  int nfsd_create_serv(struct net *net)
+>  {
+>  	int error;
+> @@ -997,6 +1002,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+>  		*statp = rpc_garbage_args;
+>  		return 1;
+>  	}
+> +	rqstp->rq_lease_breaker = NULL;
+>  	/*
+>  	 * Give the xdr decoder a chance to change this if it wants
+>  	 * (necessary in the NFSv4.0 compound case)
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 5bd384dbdca58..4b5b7667405d8 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1040,6 +1040,7 @@ struct lock_manager_operations {
+>  	bool (*lm_break)(struct file_lock *);
+>  	int (*lm_change)(struct file_lock *, int, struct list_head *);
+>  	void (*lm_setup)(struct file_lock *, void **);
+> +	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>  };
+>  
+>  struct lock_manager {
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 1afe38eb33f7e..ab6e12d9fcf61 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -299,6 +299,7 @@ struct svc_rqst {
+>  	struct net		*rq_bc_net;	/* pointer to backchannel's
+>  						 * net namespace
+>  						 */
+> +	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+>  };
+>  
+>  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+> -- 
+> 2.25.1
+> 
+> 
+> 
 
-Thanks,
-Abhishek
-
-> thanks,
->
-> greg k-h
