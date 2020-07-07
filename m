@@ -2,51 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4987C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D28120674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7F320771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134671;
-	bh=n127BPCtiOaOfhz1B+C8A0K3XN6rvgW2LwxHMqSCFbk=;
+	s=default; t=1594134676;
+	bh=NDSl2fJtyWjMwyx1tgk5KUtqdBTmmhz/9Mb98EPWzeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QfG/iqzRwGMBaURNMJLnKnomI7CLg1tkN3w79SM1mCyudjeD8FixFrVJEIUvo9h4k
-	 ss4P+cPjdRbZs1LyeexVbMPSlCpI/zw1xNxUMpUo48X32Gp/oKNuatgFiOjQ477DWE
-	 hciCCuVDeMo9SdOS+l//P6iUbBauivr6mT96jcQg=
+	b=Vcz1afoGKq8UG4c8JbvjJA4XK49kS51b+nbh7ApXGzPvPZvUoW+T0PBZWeYQy/OHQ
+	 pXAmdbqnIOzGmgCdSjqs4ikUPmlCnTpu6vaYHsEkuGMLPZ+Rv0DWyhTpCjJPdN/gFs
+	 rxVd7t1hhQBIGq9EQpEdIPBIBU1kQQIUm5Lg3uT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgGGPLK (ORCPT
+        id S1728225AbgGGPLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgGGPLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:11:01 -0400
+        id S1728626AbgGGPLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:11:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12EEF20663;
-        Tue,  7 Jul 2020 15:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E427A2065D;
+        Tue,  7 Jul 2020 15:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134660;
-        bh=n127BPCtiOaOfhz1B+C8A0K3XN6rvgW2LwxHMqSCFbk=;
+        s=default; t=1594134671;
+        bh=NDSl2fJtyWjMwyx1tgk5KUtqdBTmmhz/9Mb98EPWzeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0MPuBOo3xk4kHHvqP3OzhP2FBYbojfLVUWJ7XB9tM9gqrwTKQtC4VQMNzgiiQjid
-         zSMaja0TCmUjkFl/5CI5NQjESVJOpbk2WSPvKno2Xs1/ZGRlCLnjrVOLdvdbcddpSa
-         MTfYncwc8+nIWZPpZMvmTGOnAb/v6FV+sGbOtfaM=
+        b=0t0Wq7RvT9Mj4cBaVnHNBqS4PdpvvEKbPGemmmsaeW09O03Ct325RGe+qrAP1EN+2
+         /FEUB0gydWNcjA8CujiNyPoIwxErJJghat31ZRqZs17i+6fZuQxLEtQzesD26kHF8P
+         7QHVkWBT4BackZHgk5hNDVba4exE8eCO8a8LwAdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Andersson <pipatron@gmail.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 04/19] EDAC/amd64: Read back the scrub rate PCI register on F15h
-Date:   Tue,  7 Jul 2020 17:10:07 +0200
-Message-Id: <20200707145747.717554833@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Moyles <bmoyles@netflix.com>,
+        Mauricio Faria de Oliveira <mfo@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 08/19] crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+Date:   Tue,  7 Jul 2020 17:10:11 +0200
+Message-Id: <20200707145747.922400264@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
 References: <20200707145747.493710555@linuxfoundation.org>
@@ -59,47 +60,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 ]
+commit 34c86f4c4a7be3b3e35aa48bd18299d4c756064d upstream.
 
-Commit:
+The locking in af_alg_release_parent is broken as the BH socket
+lock can only be taken if there is a code-path to handle the case
+where the lock is owned by process-context.  Instead of adding
+such handling, we can fix this by changing the ref counts to
+atomic_t.
 
-  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
+This patch also modifies the main refcnt to include both normal
+and nokey sockets.  This way we don't have to fudge the nokey
+ref count when a socket changes from nokey to normal.
 
-added support for F15h, model 0x60 CPUs but in doing so, missed to read
-back SCRCTRL PCI config register on F15h CPUs which are *not* model
-0x60. Add that read so that doing
+Credits go to Mauricio Faria de Oliveira who diagnosed this bug
+and sent a patch for it:
 
-  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
+https://lore.kernel.org/linux-crypto/20200605161657.535043-1-mfo@canonical.com/
 
-can show the previously set DRAM scrub rate.
+Reported-by: Brian Moyles <bmoyles@netflix.com>
+Reported-by: Mauricio Faria de Oliveira <mfo@canonical.com>
+Fixes: 37f96694cf73 ("crypto: af_alg - Use bh_lock_sock in...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-Reported-by: Anders Andersson <pipatron@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> #v4.4..
-Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ crypto/af_alg.c         |   26 +++++++++++---------------
+ crypto/algif_aead.c     |    9 +++------
+ crypto/algif_hash.c     |    9 +++------
+ crypto/algif_skcipher.c |    9 +++------
+ include/crypto/if_alg.h |    4 ++--
+ 5 files changed, 22 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 932ba76761835..5f86075e34da9 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -248,6 +248,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -130,21 +130,15 @@ EXPORT_SYMBOL_GPL(af_alg_release);
+ void af_alg_release_parent(struct sock *sk)
+ {
+ 	struct alg_sock *ask = alg_sk(sk);
+-	unsigned int nokey = ask->nokey_refcnt;
+-	bool last = nokey && !ask->refcnt;
++	unsigned int nokey = atomic_read(&ask->nokey_refcnt);
  
- 		if (pvt->model == 0x60)
- 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
-+		else
-+			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
- 	} else
- 		amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
+ 	sk = ask->parent;
+ 	ask = alg_sk(sk);
  
--- 
-2.25.1
-
+-	local_bh_disable();
+-	bh_lock_sock(sk);
+-	ask->nokey_refcnt -= nokey;
+-	if (!last)
+-		last = !--ask->refcnt;
+-	bh_unlock_sock(sk);
+-	local_bh_enable();
++	if (nokey)
++		atomic_dec(&ask->nokey_refcnt);
+ 
+-	if (last)
++	if (atomic_dec_and_test(&ask->refcnt))
+ 		sock_put(sk);
+ }
+ EXPORT_SYMBOL_GPL(af_alg_release_parent);
+@@ -189,7 +183,7 @@ static int alg_bind(struct socket *sock,
+ 
+ 	err = -EBUSY;
+ 	lock_sock(sk);
+-	if (ask->refcnt | ask->nokey_refcnt)
++	if (atomic_read(&ask->refcnt))
+ 		goto unlock;
+ 
+ 	swap(ask->type, type);
+@@ -238,7 +232,7 @@ static int alg_setsockopt(struct socket
+ 	int err = -EBUSY;
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (atomic_read(&ask->refcnt) != atomic_read(&ask->nokey_refcnt))
+ 		goto unlock;
+ 
+ 	type = ask->type;
+@@ -305,12 +299,14 @@ int af_alg_accept(struct sock *sk, struc
+ 
+ 	sk2->sk_family = PF_ALG;
+ 
+-	if (nokey || !ask->refcnt++)
++	if (atomic_inc_return_relaxed(&ask->refcnt) == 1)
+ 		sock_hold(sk);
+-	ask->nokey_refcnt += nokey;
++	if (nokey) {
++		atomic_inc(&ask->nokey_refcnt);
++		atomic_set(&alg_sk(sk2)->nokey_refcnt, 1);
++	}
+ 	alg_sk(sk2)->parent = sk;
+ 	alg_sk(sk2)->type = type;
+-	alg_sk(sk2)->nokey_refcnt = nokey;
+ 
+ 	newsock->ops = type->ops;
+ 	newsock->state = SS_CONNECTED;
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -528,7 +528,7 @@ static int aead_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -540,11 +540,8 @@ static int aead_check_key(struct socket
+ 	if (!tfm->has_key)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -252,7 +252,7 @@ static int hash_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -264,11 +264,8 @@ static int hash_check_key(struct socket
+ 	if (!tfm->has_key)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -774,7 +774,7 @@ static int skcipher_check_key(struct soc
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -786,11 +786,8 @@ static int skcipher_check_key(struct soc
+ 	if (!tfm->has_key)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/include/crypto/if_alg.h
++++ b/include/crypto/if_alg.h
+@@ -30,8 +30,8 @@ struct alg_sock {
+ 
+ 	struct sock *parent;
+ 
+-	unsigned int refcnt;
+-	unsigned int nokey_refcnt;
++	atomic_t refcnt;
++	atomic_t nokey_refcnt;
+ 
+ 	const struct af_alg_type *type;
+ 	void *private;
 
 
