@@ -2,157 +2,67 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B88FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C860CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3877C20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="k5O7SoEu"
+	by mail.kernel.org (Postfix) with ESMTP id 9B82420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgGGWiB (ORCPT
+        id S1728763AbgGGWjG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
+        Tue, 7 Jul 2020 18:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbgGGWiA (ORCPT
+        with ESMTP id S1726951AbgGGWjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:38:00 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88F7C08C5E2
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:37:59 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f2so17328145plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ujEygxc3d5j3mD7Fz8DXKzp+VHqFRmCSAyV6TACKRqY=;
-        b=k5O7SoEuB4v6eAKTQCGR+WdOKA3x9uxJYb+gAPfh3XvulB0NUO8KAQitfuJa9ojiSH
-         hxKVrpKXGznJXSNUg9l/jd5QyFaTM+4Eb3lSE69M4/KL2f9OFW1/Ms8Fw7c5Z7VudOMo
-         tCLp+SrSLpUSbbAMy+WG/OHB+odh5rndXsxAiBUnwSaS34Ahhg0rVR+db6V3tTCIu1NN
-         eDfPa05dmlFdw9/Mb/JNujhTLFEzBBdOagseogP3GiACZ4+xPX0M877Cm544V+awZNDO
-         BpbhGyU+kbXhZowakppxW8sAXBwZssx2nSOq1RHiXZjqDiktcfi8tcZpEBVn+DPU4bVv
-         mENw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ujEygxc3d5j3mD7Fz8DXKzp+VHqFRmCSAyV6TACKRqY=;
-        b=UK2F+WJpPyGVElqdJPOxPMdcBwgmH6B82vxSa/kEdOTWPga5frkwujiNX7HT5cuhLk
-         DyPqLVvhhI95A/YecV5RAGgh9EKf950itsHFeLzNNm7VGcnSmjW12FCyPZ0KmDLMpvzQ
-         tbf6508X+B2oV/5SJy2/BQVLF2KJPRLNdHm3wmY8f63VOB0cP46C7HRKr7d+Sdn6ANsZ
-         WqKFAtUO0sgkPFHJKFKrvuEHlG06HH3b6v2+dg11zbQ4DiWhMECH6UWQ7pqeiLhd0NnB
-         sP/3ZpHmjDTuO14Ug3PQ4qRpUdhrgfUm/70BGo+aVxUxe+8hk13T5cPms92N8o/1hx9y
-         oPaw==
-X-Gm-Message-State: AOAM533CPPsx/FvjaF4rBmZU1rTLwHUPDzaw12gY+gvA+zGz50OR4VVv
-        49Yy7ITH16DbNNZbIKCf3sUy4Q==
-X-Google-Smtp-Source: ABdhPJynwm1vS5HIwknN1B1A+r1QOKKGTnZqhLY/x2Zvdjf5NrFMJCsGKME8x1h9+LkeExWE4OO7ig==
-X-Received: by 2002:a17:90a:9f4a:: with SMTP id q10mr6612744pjv.139.1594161479264;
-        Tue, 07 Jul 2020 15:37:59 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id e6sm15496691pfh.176.2020.07.07.15.37.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 15:37:58 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
- <20200706141002.GZ25523@casper.infradead.org>
- <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
- <20200706143208.GA25523@casper.infradead.org>
- <20200707151105.GA23395@test-zns>
- <20200707155237.GM25523@casper.infradead.org>
- <20200707202342.GA28364@test-zns>
- <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
- <20200707221812.GN25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
-Date:   Tue, 7 Jul 2020 16:37:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200707221812.GN25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jul 2020 18:39:06 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DA4C061755;
+        Tue,  7 Jul 2020 15:39:05 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3BD85120ED48D;
+        Tue,  7 Jul 2020 15:39:05 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 15:39:04 -0700 (PDT)
+Message-Id: <20200707.153904.491848475455000428.davem@davemloft.net>
+To:     linus.luessing@c0d3.blue
+Cc:     netdev@vger.kernel.org, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, martin@linuxlounge.net,
+        bridge@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] bridge: mcast: Fix MLD2 Report IPv6 payload
+ length check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200705191017.10546-1-linus.luessing@c0d3.blue>
+References: <20200705191017.10546-1-linus.luessing@c0d3.blue>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 15:39:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 4:18 PM, Matthew Wilcox wrote:
-> On Tue, Jul 07, 2020 at 02:40:06PM -0600, Jens Axboe wrote:
->>>> so we have another 24 bytes before io_kiocb takes up another cacheline.
->>>> If that's a serious problem, I have an idea about how to shrink struct
->>>> kiocb by 8 bytes so struct io_rw would have space to store another
->>>> pointer.
->>> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
->>> it must be placed within io_rw - I'll come to know once I get to
->>> implement this. Please share the idea you have, it can come handy.
->>
->> Except it doesn't, I'm not interested in adding per-request type fields
->> to the generic part of it. Before we know it, we'll blow past the next
->> cacheline.
->>
->> If we can find space in the kiocb, that'd be much better. Note that once
->> the async buffered bits go in for 5.9, then there's no longer a 4-byte
->> hole in struct kiocb.
-> 
-> Well, poot, I was planning on using that.  OK, how about this:
+From: Linus Lüssing <linus.luessing@c0d3.blue>
+Date: Sun,  5 Jul 2020 21:10:17 +0200
 
-Figured you might have had your sights set on that one, which is why I
-wanted to bring it up upfront :-)
-
-> +#define IOCB_NO_CMPL		(15 << 28)
+> Commit e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in
+> igmp3/mld2 report handling") introduced a bug in the IPv6 header payload
+> length check which would potentially lead to rejecting a valid MLD2 Report:
 > 
->  struct kiocb {
-> [...]
-> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
-> +	loff_t __user *ki_uposp;
-> -	int			ki_flags;
-> +	unsigned int		ki_flags;
+> The check needs to take into account the 2 bytes for the "Number of
+> Sources" field in the "Multicast Address Record" before reading it.
+> And not the size of a pointer to this field.
 > 
-> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
-> +static ki_cmpl * const ki_cmpls[15];
-> 
-> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
-> +{
-> +	unsigned int id = iocb->ki_flags >> 28;
-> +
-> +	if (id < 15)
-> +		ki_cmpls[id](iocb, ret, ret2);
-> +}
-> 
-> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
-> +{
-> +	for (i = 0; i < 15; i++) {
-> +		if (ki_cmpls[id])
-> +			continue;
-> +		ki_cmpls[id] = cb;
-> +		return id;
-> +	}
-> +	WARN();
-> +	return -1;
-> +}
+> Fixes: e57f61858b7c ("net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling")
+> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
 
-That could work, we don't really have a lot of different completion
-types in the kernel.
-
--- 
-Jens Axboe
-
+Applied and queued up for -stable, thank you.
