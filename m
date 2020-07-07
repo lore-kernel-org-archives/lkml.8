@@ -6,65 +6,73 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F37FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86722067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF672067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgGGTzi convert rfc822-to-8bit (ORCPT
+        id S1728735AbgGGT41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:55:38 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:39930 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgGGTzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:55:37 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jstgh-0003Qy-8z; Tue, 07 Jul 2020 19:55:31 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jstgh-00047U-6A; Tue, 07 Jul 2020 21:55:31 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Carlos O'Donell <carlos@redhat.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>
-Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
-        <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
-        <87fta3zstr.fsf@mid.deneb.enyo.de>
-        <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
-        <874kqjzhkb.fsf@mid.deneb.enyo.de>
-        <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
-        <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
-Date:   Tue, 07 Jul 2020 21:55:31 +0200
-In-Reply-To: <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com> (Carlos
-        O'Donell's message of "Tue, 7 Jul 2020 14:53:41 -0400")
-Message-ID: <87zh8bw158.fsf@mid.deneb.enyo.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Jul 2020 15:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727908AbgGGT40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:56:26 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CC2C061755;
+        Tue,  7 Jul 2020 12:56:26 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AEC30120F93E0;
+        Tue,  7 Jul 2020 12:56:25 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 12:56:24 -0700 (PDT)
+Message-Id: <20200707.125624.2030141794702878802.davem@davemloft.net>
+To:     alobakin@marvell.com
+Cc:     kai.heng.feng@canonical.com, anthony.wong@canonical.com,
+        irusskikh@marvell.com, kuba@kernel.org, ndanilov@marvell.com,
+        mstarovoitov@marvell.com, dmitry.bezrukov@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: atlantic: Add support for firmware v4
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200707084657.205-1-alobakin@marvell.com>
+References: <20200707063830.15645-1-kai.heng.feng@canonical.com>
+        <20200707084657.205-1-alobakin@marvell.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 12:56:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Carlos O'Donell:
+From: Alexander Lobakin <alobakin@marvell.com>
+Date: Tue, 7 Jul 2020 11:46:57 +0300
 
-> It's not a great fit IMO. Just let the kernel version be the arbiter of
-> correctness.
+> From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Date:   Tue,  7 Jul 2020 14:38:28 +0800
+> 
+>> We have a new ethernet card that is supported by the atlantic driver:
+>> 01:00.0 Ethernet controller [0200]: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] [1d6a:07b1] (rev 02)
+>> 
+>> But the driver failed to probe the device:
+>> kernel: atlantic: Bad FW version detected: 400001e
+>> kernel: atlantic: probe of 0000:01:00.0 failed with error -95
+>> 
+>> As a pure guesswork, simply adding the firmware version to the driver
+> 
+> Please don't send "pure guessworks" to net-fixes tree. You should have
+> reported this as a bug to LKML and/or atlantic team, so we could issue
+> it.
 
-For manual review, sure.  But checking it programmatically does not
-yield good results due to backports.  Even those who use the stable
-kernel series sometimes pick up critical fixes beforehand, so it's not
-reliable possible for a program to say, “I do not want to run on this
-kernel because it has a bad version”.  We had a recent episode of this
-with the Go runtime, which tried to do exactly this.
+Production hardware is shipping to customers and the driver
+maintainers didn't add support for this ID yet?  What is that
+"atlantic team" waiting for?
+
+Honestly I don't blame someone for posting a patch like this to get it
+to work.
