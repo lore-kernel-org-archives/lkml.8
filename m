@@ -2,80 +2,253 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B68C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A59BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0E9206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4830206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qivHjV75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGGI6t (ORCPT
+        id S1726911AbgGGJBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:58:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50484 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgGGI6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:58:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A5D0E2008CD;
-        Tue,  7 Jul 2020 10:58:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E35E2015DF;
-        Tue,  7 Jul 2020 10:58:41 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BC92C402F0;
-        Tue,  7 Jul 2020 16:58:35 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ASoC: fsl_spdif: Clear the validity bit for TX
-Date:   Tue,  7 Jul 2020 16:54:25 +0800
-Message-Id: <1594112066-31297-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594112066-31297-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1594112066-31297-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 7 Jul 2020 05:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGJBi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:01:38 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22F9C061755;
+        Tue,  7 Jul 2020 02:01:37 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id x9so35372126ila.3;
+        Tue, 07 Jul 2020 02:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=5sZ6sctOprW48prqnqqAPPY0rYJt8Ppe0eVRvN2BoLs=;
+        b=qivHjV75dl8H9nMeZYxcx5YUT1upU7x/F8ZIc3oXMco0H+h3g+A/tVTfpzuGnxSPpd
+         sV/sd+gEoMZPgwx7k7RodpykLiYmoZHRCaTjDdbNTXmg3GF+gR0QfLpXvr+h8p8fVDsk
+         Eny6k4adb/Hbo1zKvQTA9jZkCI5+so7UZcaIWsMH+p7M9ORQZ36m6ZWi/duul9NaNFmD
+         zLxEu5MJlueBB70cWnyPLHNMrOfVr4myhkKnzwk9TaktYxcr3A5FzgybCexhg/RIPxP3
+         Di2erilMSe3kvzKMDmRQl4OVJ3NY4YbAcSaJwxXmcVwN1xVuiAFu8q8n5nUBf8FSu5qs
+         OAYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=5sZ6sctOprW48prqnqqAPPY0rYJt8Ppe0eVRvN2BoLs=;
+        b=nnPON1Yim/YHdH8ytJ+ZKsCr1X4eqfuDIO+aYcMkteBdfl3binWq74qq+3qAEA3vQ+
+         are51kus3yCmFVnzEPzQlvdUBN3cpFu/2ssEO4+2+zvSfs8GRQjhINNp3l88HPyFdtK7
+         E/YFsbwGPmqNcrv3KgoImz45L/0Ad/2Ej8oWzA/IV9etCC1UB1WdCW825OJ6dqd8QRwG
+         Ln5A7c9Ln7hNUXABNaG8Z2iU/LOU8zfbFu7mbesv6s9kJz8cr0S02r5Gc051ooa+5/Wy
+         YRR4fLEori3vVdF5ZP1pfN92G30GkIC2sK1tKcYfGolxEqXRfDp/jk54Ty9eNibPYSse
+         9mHA==
+X-Gm-Message-State: AOAM530uNPqDTQcYSj0zTcRByHljqbEGBl/JDI1ReMPaJJyZvf2cRea8
+        4B3Gq8eMPxgspCHNv5fNM+fLUgbb4l+UMFnLDN7+linl7PE=
+X-Google-Smtp-Source: ABdhPJzk/JpcsfV1CIcgIrRuhmCoe1B8NPGz8WVZ/NWh0zHznhv28N2lorRQovW5ZosBXh1XS6mqNulyUDR7OC55uHc=
+X-Received: by 2002:a92:dc09:: with SMTP id t9mr35441821iln.226.1594112496813;
+ Tue, 07 Jul 2020 02:01:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200707034604.1539157-1-nickrterrell@gmail.com> <CA+icZUXvHWj7rDXNXpGL+kTRqC9UMkeUKuCCGiHJnhG6vP4VRQ@mail.gmail.com>
+In-Reply-To: <CA+icZUXvHWj7rDXNXpGL+kTRqC9UMkeUKuCCGiHJnhG6vP4VRQ@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 7 Jul 2020 11:01:25 +0200
+Message-ID: <CA+icZUUXHXXC9C47mZd1JamVnvZhpru-GWmgHQMERF7Y3AQKgw@mail.gmail.com>
+Subject: Re: [GIT PULL][PATCH v6 0/8] Add support for ZSTD-compressed kernel
+ and initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In IEC958 spec, "The validity bit is logical "0" if the
-information in the main data field is reliable, and it
-is logical "1" if it is not".
+On Tue, Jul 7, 2020 at 6:03 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Tue, Jul 7, 2020 at 5:50 AM Nick Terrell <nickrterrell@gmail.com> wrote:
+> >
+> > From: Nick Terrell <terrelln@fb.com>
+> >
+> > Please pull from
+> >
+> >   git@github.com:terrelln/linux.git tags/v6-zstd
+> >
+> > to get these changes. Alternatively the patchset is included.
+> >
+>
+> Hi Nick,
+>
+> cool, I just pulled from their.
+> Yesterday, I switched over from Linux v5.7.y to v5.8-rc4.
+> What a good timing :-).
+>
+> I will report later.
+>
 
-The default value of "ValCtrl" is zero, which means
-"Outgoing Validity always set", then all the data is not
-reliable, then some spdif sink device will drop the data.
+Looks good.
 
-So set "ValCtrl" to 1, that is to clear "Outgoing Validity"
-in default.
+$ scripts/diffconfig /boot/config-5.8.0-rc4-3-amd64-llvm11-ias
+/boot/config-5.8.0-rc4-4-amd64-llvm11-ias
+ BUILD_SALT "5.8.0-rc4-3-amd64-llvm11-ias" -> "5.8.0-rc4-4-amd64-llvm11-ias"
+ KERNEL_XZ y -> n
++DECOMPRESS_ZSTD y
++HAVE_KERNEL_ZSTD y
++KERNEL_ZSTD y
++RD_ZSTD y
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_spdif.c | 4 ++++
- 1 file changed, 4 insertions(+)
+# du -s -k initrd.img-5.8.0-rc4-3-amd64-llvm11-ias
+initrd.img-5.8.0-rc4-4-amd64-llvm11-ias
+31208   initrd.img-5.8.0-rc4-3-amd64-llvm11-ias <--- GZIP
+24768   initrd.img-5.8.0-rc4-4-amd64-llvm11-ias <--- ZSTD
 
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 9fb95c6ee7ba..576370dc6e70 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -985,6 +985,10 @@ static int fsl_spdif_dai_probe(struct snd_soc_dai *dai)
- 
- 	snd_soc_add_dai_controls(dai, fsl_spdif_ctrls, ARRAY_SIZE(fsl_spdif_ctrls));
- 
-+	/*Clear the val bit for Tx*/
-+	regmap_update_bits(spdif_private->regmap, REG_SPDIF_SCR,
-+			   SCR_VAL_MASK, SCR_VAL_CLEAR);
-+
- 	return 0;
- }
- 
--- 
-2.21.0
+- Sedat -
 
+> Regards,
+> - Sedat -
+>
+> > Hi all,
+> >
+> > This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> > initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> > are supported on all architectures. The ZSTD-compressed kernel is only
+> > hooked up to x86 in this patch set.
+> >
+> > Zstandard requires slightly more memory during the kernel decompression
+> > on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> > window size.
+> >
+> > Zstandard requires memory proprortional to the window size used during
+> > compression for decompressing the ramdisk image, since streaming mode is
+> > used. Newer versions of zstd (1.3.2+) list the window size of a file
+> > with `zstd -lv <file>'. The absolute maximum amount of memory required
+> > is just over 8 MB, but it can be controlled at compression time.
+> >
+> > This patch set has been boot tested with buildroot and QEMU based off
+> > of linux-5.8-rc4.
+> >
+> > On i386 and x86_64 I have tested the following configurations:
+> > * zstd compressed kernel and a separate zstd compressed initramfs
+> > * zstd compressed kernel and a built-in zstd compressed initramfs
+> > * gzip compressed kernel and a separate gzip compressed initramfs
+> > * gzip compressed kernel and a built-in gzip compressed initramfs
+> >
+> > On arm and aarch64 I tested the same configurations, except that the kernel is
+> > always gzip compressed.
+> >
+> > Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> > months. When we switched from a xz compressed initramfs to a zstd compressed
+> > initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> > switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> > seconds of boot time.
+> >
+> > Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> > When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> > decompression time shrunk from 27 seconds to 8 seconds.
+> >
+> > The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> > than the xz or lzma compressed kernels, and it decompresses faster than
+> > everything except lz4. See the table below for the measurement of an x86_64
+> > kernel ordered by compressed size:
+> >
+> > algo    size
+> > xz       6,509,792
+> > lzma     6,856,576
+> > zstd     7,399,157
+> > gzip     8,522,527
+> > bzip     8,629,603
+> > lzo      9,808,035
+> > lz4     10,705,570
+> > none    32,565,672
+> >
+> > Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+> >
+> > v1 -> v2:
+> > - Rebase
+> >   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> > - No functional changes except to rebase
+> > - Split the patches up into smaller chunks
+> >
+> > v2 -> v3:
+> > - Add *.zst to the .gitignore in patch 8
+> > - Style nits in patch 3
+> > - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+> >   1 through 3
+> >
+> > v3 -> v4:
+> > - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+> >   With this change I switch from malloc() to large_malloc() for the
+> >   buffers.
+> > - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+> >   the max that zstd in the kernel supports.
+> >
+> > v4 -> v5:
+> > - Update commit message for patch 6 in response to comments
+> > - Rebase onto next-20200408
+> >
+> > v5 -> v6:
+> > - Rebase onto v5.8-rc4
+> >
+> > Best,
+> > Nick Terrell
+> >
+> > Adam Borowski (1):
+> >   .gitignore: add ZSTD-compressed files
+> >
+> > Nick Terrell (7):
+> >   lib: prepare zstd for preboot environment
+> >   lib: prepare xxhash for preboot environment
+> >   lib: add zstd support to decompress
+> >   init: add support for zstd compressed kernel
+> >   usr: add support for zstd compressed initramfs
+> >   x86: bump ZO_z_extra_bytes margin for zstd
+> >   x86: Add support for ZSTD compressed kernel
+> >
+> >  .gitignore                        |   1 +
+> >  Documentation/x86/boot.rst        |   6 +-
+> >  arch/x86/Kconfig                  |   1 +
+> >  arch/x86/boot/compressed/Makefile |   5 +-
+> >  arch/x86/boot/compressed/misc.c   |   4 +
+> >  arch/x86/boot/header.S            |   8 +-
+> >  arch/x86/include/asm/boot.h       |   6 +-
+> >  include/linux/decompress/unzstd.h |  11 +
+> >  init/Kconfig                      |  15 +-
+> >  lib/Kconfig                       |   4 +
+> >  lib/Makefile                      |   1 +
+> >  lib/decompress.c                  |   5 +
+> >  lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
+> >  lib/xxhash.c                      |  21 +-
+> >  lib/zstd/decompress.c             |   2 +
+> >  lib/zstd/fse_decompress.c         |   9 +-
+> >  lib/zstd/zstd_internal.h          |  14 +-
+> >  scripts/Makefile.lib              |  15 ++
+> >  usr/Kconfig                       |  20 ++
+> >  usr/Makefile                      |   1 +
+> >  20 files changed, 464 insertions(+), 27 deletions(-)
+> >  create mode 100644 include/linux/decompress/unzstd.h
+> >  create mode 100644 lib/decompress_unzstd.c
+> >
+> > --
+> > 2.27.0
+> >
