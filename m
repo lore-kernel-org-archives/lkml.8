@@ -2,45 +2,45 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8516206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47671206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgGGLzH (ORCPT
+        id S1727079AbgGGL5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:55:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59996 "EHLO huawei.com"
+        Tue, 7 Jul 2020 07:57:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7819 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725944AbgGGLzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:55:07 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2DBA98E528D7DC0EAFEE;
-        Tue,  7 Jul 2020 19:55:05 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.214) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 7 Jul 2020
- 19:54:57 +0800
-Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
- tmpfile
+        id S1726745AbgGGL53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:57:29 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D659616BD5B4F6A04B78;
+        Tue,  7 Jul 2020 19:57:27 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.214) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 7 Jul 2020
+ 19:57:21 +0800
+Subject: Re: [PATCH] ubifs: Fix wrong orphan node deletion in
+ ubifs_jnl_update()
 To:     Richard Weinberger <richard.weinberger@gmail.com>
 CC:     <linux-mtd@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Richard Weinberger <richard@nod.at>,
         "zhangyi (F)" <yi.zhang@huawei.com>
-References: <20200701112643.726986-1-chengzhihao1@huawei.com>
- <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
+References: <20200702152048.1819867-1-chengzhihao1@huawei.com>
+ <CAFLxGvybobVbhS4zQSxSmq3xR40QP=pkyDG8j7jA8a6eOOKfHg@mail.gmail.com>
 From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
-Date:   Tue, 7 Jul 2020 19:54:57 +0800
+Message-ID: <37d3628a-1904-bb94-e225-348dfeafe6b1@huawei.com>
+Date:   Tue, 7 Jul 2020 19:57:21 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
+In-Reply-To: <CAFLxGvybobVbhS4zQSxSmq3xR40QP=pkyDG8j7jA8a6eOOKfHg@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.179.214]
@@ -50,44 +50,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/7/7 19:26, Richard Weinberger 写道:
-> On Wed, Jul 1, 2020 at 1:28 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->> There is a potential space leak problem while linking tmpfile, in which
->> case, inode node (with nlink=0) is valid in tnc (on flash), which leads
->> to space leak. Meanwhile, the corresponding data nodes won't be released
->> from tnc. For example, (A reproducer can be found in Link):
+在 2020/7/7 19:52, Richard Weinberger 写道:
+> On Thu, Jul 2, 2020 at 5:21 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>> There a wrong orphan node deleting in error handling path in
+>> ubifs_jnl_update(), which may cause following error msg:
 >>
->> $ mount UBIFS
->>    [process A]            [process B]         [TNC]         [orphan area]
+>>    UBIFS error (ubi0:0 pid 1522): ubifs_delete_orphan [ubifs]:
+>>    missing orphan ino 65
 >>
->>   ubifs_tmpfile                          inode_A (nlink=0)     inode_A
->>                            do_commit     inode_A (nlink=0)     inode_A
->>                                 ↑
->>        (comment: It makes sure not replay inode_A in next mount)
->>   ubifs_link                             inode_A (nlink=0)     inode_A
->>     ubifs_delete_orphan                  inode_A (nlink=0)
->>                            do_commit     inode_A (nlink=0)
->>                             ---> POWERCUT <---
->>     (ubifs_jnl_update)
+>> Fix this by checking whether the node has been operated for
+>> adding to orphan list before being deleted,
 >>
->> $ mount UBIFS
->>    inode_A will neither be replayed in ubifs_replay_journal() nor
->>    ubifs_mount_orphans(). inode_A (nlink=0) with its data nodes will
->>    always on tnc, it occupy space but is non-visable for users.
+>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+>> ---
+>>   fs/ubifs/journal.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
 >>
->> Commit ee1438ce5dc4d ("ubifs: Check link count of inodes when killing
->> orphans.") handles problem in mistakenly deleting relinked tmpfile
->> while replaying orphan area. Since that, tmpfile inode should always
->> live in orphan area even it is linked. Fix it by reverting commit
->> 32fe905c17f001 ("ubifs: Fix O_TMPFILE corner case in ubifs_link()").
-> Well, by reverting this commit you re-introduce the issue it fixes. ;-\
->
-Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix 
-O_TMPFILE corner case in ubifs_link()") wanted to fix.
-I think orphan area is used to remind filesystem don't forget to delete 
-inodes (whose nlink is 0) in next unclean rebooting. Generally, the file 
-system is not corrupted caused by replaying orphan nodes.
-Ralph reported a filesystem corruption in combination with overlayfs. 
-Can you tell me the details about that problem? Thanks.
-
+>> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+>> index e5ec1afe1c66..db0a80dd9d52 100644
+>> --- a/fs/ubifs/journal.c
+>> +++ b/fs/ubifs/journal.c
+>> @@ -539,7 +539,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+>>                       const struct fscrypt_name *nm, const struct inode *inode,
+>>                       int deletion, int xent)
+>>   {
+>> -       int err, dlen, ilen, len, lnum, ino_offs, dent_offs;
+>> +       int err, dlen, ilen, len, lnum, ino_offs, dent_offs, orphan_added = 0;
+>>          int aligned_dlen, aligned_ilen, sync = IS_DIRSYNC(dir);
+>>          int last_reference = !!(deletion && inode->i_nlink == 0);
+>>          struct ubifs_inode *ui = ubifs_inode(inode);
+>> @@ -630,6 +630,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+>>                          goto out_finish;
+>>                  }
+>>                  ui->del_cmtno = c->cmt_no;
+>> +               orphan_added = 1;
+>>          }
+>>
+>>          err = write_head(c, BASEHD, dent, len, &lnum, &dent_offs, sync);
+>> @@ -702,7 +703,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+>>          kfree(dent);
+>>   out_ro:
+>>          ubifs_ro_mode(c, err);
+>> -       if (last_reference)
+>> +       if (last_reference && orphan_added)
+> I think you can just check for orphan_added here.
+> Looks good otherwise, thanks for fixing! :-)
+Sounds reasonable. I will send v2.
 
