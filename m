@@ -2,107 +2,93 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5478C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5F3206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B03206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O3TpP6f7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgGGCif (ORCPT
+        id S1727791AbgGGCof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:38:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33432 "EHLO mga11.intel.com"
+        Mon, 6 Jul 2020 22:44:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:56395 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbgGGCif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:38:35 -0400
-IronPort-SDR: LERVPcaK2soudAsveVRK6jvRU8TJQou0PTlZgPapWBxOiyLeLGLasNpHQqIYkTM66/pdzojAyG
- 6IddldTcvYmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145630076"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="145630076"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:38:34 -0700
-IronPort-SDR: 6qaw/Hnypxc/zSmBohiorkumC/YHiBQk2uyQGEdIfPxIC07OtwwSgEOdFBp03aWqds7HTPISdY
- 6caG3+NPKXrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="482899731"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Jul 2020 19:38:30 -0700
-Date:   Tue, 7 Jul 2020 10:38:29 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andi Kleen <andi.kleen@intel.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, ying.huang@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Message-ID: <20200707023829.GA85993@shbuild999.sh.intel.com>
-References: <20200705044454.GA90533@shbuild999.sh.intel.com>
- <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
- <20200705125854.GA66252@shbuild999.sh.intel.com>
- <20200705155232.GA608@lca.pw>
- <20200706014313.GB66252@shbuild999.sh.intel.com>
- <20200706023614.GA1231@lca.pw>
- <20200706132443.GA34488@shbuild999.sh.intel.com>
- <20200706133434.GA3483883@tassilo.jf.intel.com>
+        id S1726434AbgGGCof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:44:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B16GS4VjSz9sRR;
+        Tue,  7 Jul 2020 12:44:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594089872;
+        bh=HP+pO41oFoQSlyD8UWUtPdpmn6fAVCYBd6fmrUXd82w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=O3TpP6f74YD9R7g4wzVkCIS8RlyRL9sIyduZ0yGmckRI0YatglZCuXuT9PDpUBE/X
+         p75HQ03zlwBAMlDrclX9gDEg4SV4/Z8IMx4wAiOG3Nalbw0ASyj4gDFpYtf6dbSj7D
+         NtZi86nOUmzw0S4fKi3/D3XqT65hQekPO9DpUKz7A1CyDNN44vZhm9Rr7fjaCUZ8Ao
+         RULer9aFav8cCgbvJETlwyivea+bEwKwSUkW2w3CcTWW0FE/qb8HzItaBP8A9Rgbd4
+         804QpSPZ3uT02+A8InbAr360fMOEkErFMCkdocfNeE4t4x+3akWDVSkvubehZworsL
+         eHUcXXU1Se3JQ==
+Date:   Tue, 7 Jul 2020 12:44:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the mfd tree
+Message-ID: <20200707124431.450bb0da@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706133434.GA3483883@tassilo.jf.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/TvkVtWjdCBZFDArLLAFpwQZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 06:34:34AM -0700, Andi Kleen wrote:
-> >  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-> > -	if (ret == 0 && write)
-> > +	if (ret == 0 && write) {
-> > +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> > +			schedule_on_each_cpu(sync_overcommit_as);
-> 
-> The schedule_on_each_cpu is not atomic, so the problem could still happen
-> in that window.
-> 
-> I think it may be ok if it eventually resolves, but certainly needs
-> a comment explaining it. Can you do some stress testing toggling the
-> policy all the time on different CPUs and running the test on
-> other CPUs and see if the test fails?
+--Sig_/TvkVtWjdCBZFDArLLAFpwQZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For the raw test case reported by 0day, this patch passed in 200 times
-run. And I will read the ltp code and try stress testing it as you
-suggested.
+Hi all,
 
+After merging the mfd tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-> The other alternative would be to define some intermediate state
-> for the sysctl variable and only switch to never once the schedule_on_each_cpu
-> returned. But that's more complexity.
+drivers/mfd/axp20x-i2c.c:82:5: warning: "CONFIG_ACPI" is not defined, evalu=
+ates to 0 [-Wundef]
+   82 | #if CONFIG_ACPI
+      |     ^~~~~~~~~~~
 
-One thought I had is to put this schedule_on_each_cpu() before
-the proc_dointvec_minmax() to do the sync before sysctl_overcommit_memory
-is really changed. But the window still exists, as the batch is
-still the larger one. 
+Introduced by commit
 
-Thanks,
-Feng
+  20f359cb236b ("mfd: axp20x-i2c: Do not define 'struct acpi_device_id' whe=
+n !CONFIG_ACPI")
 
-> 
-> 
-> -Andi
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TvkVtWjdCBZFDArLLAFpwQZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8D4Y8ACgkQAVBC80lX
+0GyvrQf+K+Qjf4neIlMo2JtfdDGyKKNJR6RpAcC/JWhC4IF3BrotP2cSbpZHkE2B
+yLXyrnsIM5O/DLXUTfJFUPQxC4laW2k0hszr36hTxBAiZipMOCqeBmwN+atJkZ5D
+UoYc0SzWQ6zZ/X/BT4ydLJ2g6uJyhnePn4tUlSwJUfd06oOCO2nGTCnH7YtKiAbJ
+Eu/t4VDZcmYyPzpsY3FUavJSfWVBYsoJUf1hPWLogeh7DP0wjHJ775+nVR3mEj6Y
+yIafruTIJzILqaUXMwdaVo4vqSOn/MPqqgvz5vLdTqrVd9RwTKKEISKZ0h6p2oAf
+3A7Q3FrZoeed477buZSeIPVZql7YiA==
+=/lgx
+-----END PGP SIGNATURE-----
+
+--Sig_/TvkVtWjdCBZFDArLLAFpwQZ--
