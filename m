@@ -2,132 +2,149 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E68420702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3423B20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzqoVfv5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iodVE/88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGGLbE (ORCPT
+        id S1728036AbgGGLbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgGGLbD (ORCPT
+        Tue, 7 Jul 2020 07:31:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43261 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726540AbgGGLbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:31:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33DDC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:31:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 9so49426372ljv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oU+zHS1dWLePXpv1roLop07qC5/+PHNWookUwJLe/zU=;
-        b=HzqoVfv5RmJSiJec48Z3gyXEpw3X1xzcpa7yGskC4YP4FKDLYWnNwGMKx7bPp5Di7M
-         tAPv4yoi7/blcmwpByoACwe0S74SDsfhbuSrSJbAMsKtYruaS6ia/LBd+13co+pkezkk
-         7ED8pj13E7YmJr85IrN0MVKjFyHLI0G0TJ73UB9v7WnD2zN0X7ICOOtfjGUQ0J71cnjP
-         iYWwsuoH7p9DXqBStWZvc8pwrz62bilvgWSXrlKpRzl7c1aLuLFkvFYxt82/FhaGmybv
-         fSUho90IdiLmF9K8hKcl976CmHjAZzritDhMnDBdK/WDiwPviUgXcEseAddmE8iDGBHE
-         TFJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oU+zHS1dWLePXpv1roLop07qC5/+PHNWookUwJLe/zU=;
-        b=QEJ4oEPPGTr2YGGWn2rpBYiowNupwJZGZA/4Rzc/9GVsWNsHC24McZLa+FZ/8lA25I
-         vnqjsdNE+YdyitT2k7aafiuJturXKGhi0bhuBpPrTxwR0JjtEBrHoo12pyBQoKSLYVah
-         jYNQTm03MIxscE4P+0TUswrO/7W/1k0SXEHs8uROYcgKNCaTr9BhbFbr0Uz0fR6+Wv4b
-         4QkTvcBAJ0RuIL8xJeDk9IgvRH4hd4OjJ3dY739uYWPvPyIAkCRkCvlSRJUqlIVSJOHa
-         RnvAh+xC9iuuCI8+cNeITD+279m2QR4B9y5V/QTzoXXG4q9g0vhGrLyQk5QHX9gXmCyu
-         ClOg==
-X-Gm-Message-State: AOAM5332O8CuGJewXZXuaFNPdAqaoozSATc0PBILVoOoBNSgN57ZGNUt
-        HaCO0e9iwrrTkXWTI0FZZB88qph0+MXBXD9sl2g=
-X-Google-Smtp-Source: ABdhPJwnwnMnJ0iADB+yNPtPOSoRhfTA8saUU2vq4vN7LszeEgrx/ZXEdYoZDO9/LdNXumlwQmvPr/VyPXzdTGQtYqA=
-X-Received: by 2002:a2e:5d8:: with SMTP id 207mr28871025ljf.257.1594121461257;
- Tue, 07 Jul 2020 04:31:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
- <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com> <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
-In-Reply-To: <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 7 Jul 2020 17:00:49 +0530
-Message-ID: <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
+        Tue, 7 Jul 2020 07:31:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594121469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W4e4p5dLUhje1SEFTTrCpD000/W8kMbUlw2wtOztRIY=;
+        b=iodVE/88rjY9SeVC58U+0/K3DySkSGKCeiOTAhJYc/CkUdKyWS0ayd7SIP6lQ1esiIjOKk
+        +54qMsKyfILZgwuWbEfjnKJQIXL+nMe273E0pR5F+1teZJ0skI16jBRfepcGXA+XSdRXVp
+        x8XVFVM09/LuQOsvAX4ojEKd9j1qij8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-Pk7q_zGqMpqTU48Rs7fcuA-1; Tue, 07 Jul 2020 07:31:07 -0400
+X-MC-Unique: Pk7q_zGqMpqTU48Rs7fcuA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F3E1A0BD7;
+        Tue,  7 Jul 2020 11:31:05 +0000 (UTC)
+Received: from starship (unknown [10.35.206.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7021579CE2;
+        Tue,  7 Jul 2020 11:30:58 +0000 (UTC)
+Message-ID: <a0ab28aa726df404962dbc1c6d1f833947cc149b.camel@redhat.com>
+Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Date:   Tue, 07 Jul 2020 14:30:57 +0300
+In-Reply-To: <20200707061105.GH5208@linux.intel.com>
+References: <20200702174455.282252-1-mlevitsk@redhat.com>
+         <20200702181606.GF3575@linux.intel.com>
+         <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
+         <20200707061105.GH5208@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 3:08 PM J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrot=
-e:
->
-> On 06.07.20 20:16, Souptick Joarder wrote:
-> > pages need to be marked as dirty before unpinned it in
-> > unlock_pages() which was oversight. This is fixed now.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > Suggested-by: John Hubbard <jhubbard@nvidia.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: Paul Durrant <xadimgnik@gmail.com>
-> > ---
-> >   drivers/xen/privcmd.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> > index 33677ea..f6c1543 100644
-> > --- a/drivers/xen/privcmd.c
-> > +++ b/drivers/xen/privcmd.c
-> > @@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], uns=
-igned int nr_pages)
-> >   {
-> >       unsigned int i;
-> >
-> > -     for (i =3D 0; i < nr_pages; i++)
-> > +     for (i =3D 0; i < nr_pages; i++) {
-> > +             if (!PageDirty(pages[i]))
-> > +                     set_page_dirty_lock(pages[i]);
->
-> With put_page() directly following I think you should be able to use
-> set_page_dirty() instead, as there is obviously a reference to the page
-> existing.
+On Mon, 2020-07-06 at 23:11 -0700, Sean Christopherson wrote:
+> On Sun, Jul 05, 2020 at 12:40:25PM +0300, Maxim Levitsky wrote:
+> > > Rather than compute the mask every time, it can be computed once on module
+> > > load and stashed in a global.  Note, there's a RFC series[*] to support
+> > > reprobing bugs at runtime, but that has bigger issues with existing KVM
+> > > functionality to be addressed, i.e. it's not our problem, yet :-).
+> > > 
+> > > [*] https://lkml.kernel.org/r/1593703107-8852-1-git-send-email-mihai.carabas@oracle.com
+> > 
+> > Thanks for the pointer!
+> >  
+> > Note though that the above code only runs once, since after a single
+> > successful (non #GP) set of it to non-zero value, it is cleared in MSR bitmap
+> > for both reads and writes on both VMX and SVM.
+> 
+> For me the performance is secondary to documenting the fact that the host
+> valid bits are fixed for a given instance of the kernel.  There's enough
+> going on in kvm_spec_ctrl_valid_bits_host() that's it's not super easy to
+> see that it's a "constant" value.
+> 
+> > This is done because of performance reasons which in this case are more
+> > important than absolute correctness.  Thus to some extent the guest checks in
+> > the above are pointless.
+> >  
+> > If you ask me, I would just remove the kvm_spec_ctrl_valid_bits, and pass
+> > this msr to guest right away and not on first access.
+> 
+> That would unnecessarily penalize guests that don't utilize the MSR as KVM
+> would need to do a RDMSR on every VM-Exit to grab the guest's value.
+I haven't thought about this, this makes sense.
 
-Patch [3/3] will convert above codes to use unpin_user_pages_dirty_lock()
-which internally do the same check. So I thought to keep linux-stable and
-linux-next code in sync. John had a similar concern [1] and later agreed to=
- keep
-this check.
+> 
+> One oddity with this whole thing is that by passing through the MSR, KVM is
+> allowing the guest to write bits it doesn't know about, which is definitely
+> not normal.  It also means the guest could write bits that the host VMM
+> can't.
+> 
+> Somehwat crazy idea inbound... rather than calculating the valid bits in
+> software, what if we throw the value at the CPU and see if it fails?  At
+> least that way the host and guest are subject to the same rules.  E.g.
+> 
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2062,11 +2062,19 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>                     !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>                         return 1;
+> 
+> -               if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+> -                       return 1;
+> -
+> +               ret = 0;
+>                 vmx->spec_ctrl = data;
+> -               if (!data)
+> +
+> +               local_irq_disable();
+> +               if (rdmsrl_safe(MSR_IA32_SPEC_CTRL, &data))
+> +                       ret = 1;
+> +               else if (wrmsrl_safe(MSR_IA32_SPEC_CTRL, vmx->spec_ctrl))
+> +                       ret = 1;
+> +               else
+> +                       wrmsrl(MSR_IA32_SPEC_CTRL, data))
+> +               local_irq_enable();
+> +
+> +               if (ret || !vmx->spec_ctrl)
+>                         break;
+> 
+>                 /*
+> 
+I don't mind this as well, knowing that this is done only one per VM run anyway.
 
-Shall I keep this check ?  No ?
+Best regards,
+	Maxim Levitsky
 
-[1] https://lore.kernel.org/xen-devel/a750e5e5-fd5d-663b-c5fd-261d7c939ba7@=
-nvidia.com/
 
->
-> >               put_page(pages[i]);
-> > +     }
-> >   }
-> >
-> >   static long privcmd_ioctl_dm_op(struct file *file, void __user *udata=
-)
-> >
->
-> Juergen
