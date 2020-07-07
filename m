@@ -2,115 +2,99 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C48C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3458AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C00F206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A68B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fEqHjWMc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SDfdxurn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgGGKRZ (ORCPT
+        id S1728298AbgGGKR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728184AbgGGKRM (ORCPT
+        Tue, 7 Jul 2020 06:17:29 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:62255 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726946AbgGGKRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 06:17:12 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5E2C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so1411762wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
-        b=fEqHjWMcV3QH7QNn2Owlf7RTYFuOqYPb28IOEN+o8frgMg6wAk8EIXNIqfXOBqZq/J
-         eeNF4yNNT3ZzEc5lsIJ/W04R1U22wzOJwlIgEaSxbcmxd8TAEG0DB9MI6zZ2RgNDZckd
-         17shoR7zE9yCtAQjpGYYM0SiDGaB5u/gxtfv3XELzdDRrwTwbclyndNJxB4BZeFnqY1I
-         OyjOspkNXEZtkGE0QSucKXF5JuLvxRciMy6CiAGnjOdgV9USRqYyNr2lNLA3NgF7RVh1
-         6vqRw2pZ7C5/IkR610hR7hIDqT6R4cHYaecuXnKDtPOQ+LZUCIFg/+NHbIdNw+HgVsiF
-         BGsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
-        b=O40fbDepR8MXIfEFHEfl3NolDBeDmlb9DbQ1ym7AWiL1IyOkDm+x5IkW3Z/4r9/qsu
-         aZSszszRPQ/KVvFu03eeDzixt+JxYzlpC5Vk1cidQbRo/aeWDLpy1lFrNMrUD38Xh2D4
-         cimjbk46R/4k7ay9P8TB2d0+SOKFM48k1LaI/lYc2cEiE6m8Zg9Pl8nlIzzy1NpbECgh
-         diGWZv7oWioh7zciZiv3pzYBcmfrra2dzJUvZgUuwpfM23dB5pMSCO3054+1LcOTPzUw
-         /fKDi3hlQ8OHTEg4TyF78XHaIGf/IfGDxNYbdG84k7BkrIXWyCDjyJORR5gUbrVJo4lQ
-         Jx4g==
-X-Gm-Message-State: AOAM533PNe2VuCChPVNUrEnxnBYz4kEew+i+D5ODe9IjYU0fyLorUg+1
-        p8txgTMte69EDuTRwp4Pp3Kx/w==
-X-Google-Smtp-Source: ABdhPJxvtg3nk0eX5HE4sSuL+1NhcMKYEL2lfzfo5OK/+r0EuBSISL2ieYbjgHLSGSKA8gV8c787RA==
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr3231907wmh.166.1594117030396;
-        Tue, 07 Jul 2020 03:17:10 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:17:09 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andrea Venturi <be17068@iperbole.bo.it>,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: [PATCH 18/28] ASoC: sunxi: sun4i-spdif: Fix misspelling of 'reg_dac_txdata'
-Date:   Tue,  7 Jul 2020 11:16:32 +0100
-Message-Id: <20200707101642.1747944-19-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
-References: <20200707101642.1747944-1-lee.jones@linaro.org>
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594117031; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=BXI021rh3NXH5BcDC2Muu+0d+4q5W0LWbpYi2AY+2A4=; b=SDfdxurnYwJm8mP9s52bhnsKVxz9zZVXYnADFasVHWRiQtZIfjQsfrLjT1c35c6HeXV9oQom
+ wqS4C9ITvrVTccAbMBFazAejDWeTB9lDkrczE4wCaRxppsIX74A/54vOVtv3tNzEFZu6/7mJ
+ Rv0N3AUyUAp3IfamK7q+BqItxNE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5f044b93d8ca07a573e8c852 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 10:16:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 70EB7C433CA; Tue,  7 Jul 2020 10:16:51 +0000 (UTC)
+Received: from [192.168.0.15] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACB36C433C6;
+        Tue,  7 Jul 2020 10:16:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACB36C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH 1/3] spi: spi-geni-qcom: Avoid clock setting if not needed
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        swboyd@chromium.org, georgi.djakov@linaro.org,
+        ctheegal@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200702004509.2333554-1-dianders@chromium.org>
+ <20200701174506.1.Icfdcee14649fc0a6c38e87477b28523d4e60bab3@changeid>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <1b9f0313-0e8f-0a75-b0a5-b6a768af0a7a@codeaurora.org>
+Date:   Tue, 7 Jul 2020 15:46:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701174506.1.Icfdcee14649fc0a6c38e87477b28523d4e60bab3@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Property name descriptions need to match exactly.
 
-Fixes the following W=1 kernel build warning(s):
+On 7/2/2020 6:15 AM, Douglas Anderson wrote:
+> Every SPI transfer could have a different clock rate.  The
+> spi-geni-qcom controller code to deal with this was never very well
+> optimized and has always had a lot of code plus some calls into the
+> clk framework which, at the very least, would grab a mutex.  However,
+> until recently, the overhead wasn't _too_ much.  That changed with
+> commit 0e3b8a81f5df ("spi: spi-geni-qcom: Add interconnect support")
+> we're now calling geni_icc_set_bw(), which leads to a bunch of math
+> plus:
+>    geni_icc_set_bw()
+>      icc_set_bw()
+>        apply_constraints()
+>          qcom_icc_set()
+>            qcom_icc_bcm_voter_commit()
+>              rpmh_invalidate()
+>              rpmh_write_batch()
+> ...and those rpmh commands can be a bit beefy if you call them too
+> often.
 
- sound/soc/sunxi/sun4i-spdif.c:178: warning: Function parameter or member 'reg_dac_txdata' not described in 'sun4i_spdif_quirks'
+Reviewed-by: Akash Asthana<akashast@codeaurora.org>
 
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andrea Venturi <be17068@iperbole.bo.it>
-Cc: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- sound/soc/sunxi/sun4i-spdif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
-index 86779a99df751..326dd45e39dab 100644
---- a/sound/soc/sunxi/sun4i-spdif.c
-+++ b/sound/soc/sunxi/sun4i-spdif.c
-@@ -167,7 +167,7 @@
- /**
-  * struct sun4i_spdif_quirks - Differences between SoC variants.
-  *
-- * @reg_dac_tx_data: TX FIFO offset for DMA config.
-+ * @reg_dac_txdata: TX FIFO offset for DMA config.
-  * @has_reset: SoC needs reset deasserted.
-  * @val_fctl_ftx: TX FIFO flush bitmask.
-  */
 -- 
-2.25.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
