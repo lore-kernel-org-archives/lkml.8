@@ -2,91 +2,149 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F714C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC02C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416E0206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BF7206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bgh1b8ln"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gez1hgpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgGGMDH (ORCPT
+        id S1727097AbgGGMGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGGMDG (ORCPT
+        Tue, 7 Jul 2020 08:06:23 -0400
+Received: from mail.efficios.com ([167.114.26.124]:42400 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGMGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:03:06 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3569DC08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:03:06 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so24676668ljn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YH/VxHJ3AGs6CZr/wDufvaXGnXEL37As4napaZvmJwI=;
-        b=Bgh1b8lny6xvbW6+ct6t0vaU1Jiuk1+UbOS0d8piluPPBGIXBoT6fW7BVBSL7RHC63
-         fEwHuYtJRRgTOHhbS2rN6Tjv4NtcokJr8Fuoa7BvDxlhthTf17pY3yOCrhuNLV3gkrYG
-         Q4R3d+gPzj9akoo0jD0im55k7lI7uXK4QpdEzdJsmEJxDe4Nb2ojQJhKD+UQ+YtvdV8H
-         ZTjUu6RzuTMzq6LAahoT55UVyxUCAbEEUhKJ/VvC7TrN4hv/IrpXz4dTMVhhSmFMYZNM
-         xcw1PbLOYtWC79erbC2q965s5SZDvI1mznoOTC7Wo6tcIWKecnXnph1xJwDHHTVaozHM
-         aPBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YH/VxHJ3AGs6CZr/wDufvaXGnXEL37As4napaZvmJwI=;
-        b=HVavFB75SeoDkB9yFQmJ+if6A6b+JYVN3yMf6CMR0PyeZGVCMrHoyicjSLA3B4qnGC
-         tSzHuOKwlRc/31ozhRwo+dz4GZ7eBYATWmFfq0JmYC+5IdvF1KslFGYqQnVwbGGQ/x0Z
-         9+T/3EkLWWOjEObgfQj4m9Nr3EweEhvq6e8U5JPXdL+h0APaHY4xZTCovPE8WElgFu4T
-         uEVfcP9ecPlOutBd+BK5jWfJfXqVZifCiy/S3COF6iIUtAWK9i7CyrJFRHALwipan+Aq
-         VK3ya3cushC/w1klOjCA3zw+yiD9GXIED4LCqksxrrdKmBv1GUsUcSCc5TaLOVWCUEoi
-         PAag==
-X-Gm-Message-State: AOAM530i6hSu+trNnA52nSxALnkNlBZqAIu7kQYgg9uFO9EwxZPLShZS
-        k3Zl8W+6000PXeGv1hIah8acxn/pI5wBHes1jIenOA==
-X-Google-Smtp-Source: ABdhPJyR5v0EwI80g1kmy1SXVGsVqQpkid61MlRrKwlnDjYgLnU+qYwazQ3V+EyiCn9ABxFKleq7Kr5Bjuu2lykaDYY=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr14035216lji.338.1594123384691;
- Tue, 07 Jul 2020 05:03:04 -0700 (PDT)
+        Tue, 7 Jul 2020 08:06:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 6C6C12EED;
+        Tue,  7 Jul 2020 08:06:21 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XVIT9bVn-vr1; Tue,  7 Jul 2020 08:06:21 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id ECE0D2DDE;
+        Tue,  7 Jul 2020 08:06:20 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com ECE0D2DDE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594123581;
+        bh=R1Sxn+P3gozzJcMY/YSkvRzlXSDvvg/0BB8OWSVSc5I=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=gez1hgpyjo1rJm+SO3IxLu5rWLfJpoVNYVTJswwo6gyFlfFG1jbNX0QlCivSi+ghR
+         Dq0LA8i7OSpJyq85GReTZJzyPGng0AI6Ung9+7we8SxowX6BqSdMwK+kj+uKUFjv/F
+         ZioUEc6yXge4eJ4+mcT9ZxxMGUzn/ueN2JNyQsqs3f8wgEMOPNjT5LF1HbsfxOwSFB
+         6FkULQpeBcTllWn3F3hw7Lhime3nPfJRSdBNbRcQa//is72u5CuvlS81IXWoa5rpyf
+         YByaLEQvtDHrBoRwoRpulvDACqTJr3kowRGafv5l3YtUnxhtMwmw/f/Rc7MixCw1GK
+         Pu5MYCtMbsFQg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id NAQ7EFEsqPUS; Tue,  7 Jul 2020 08:06:20 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id D9E282DDB;
+        Tue,  7 Jul 2020 08:06:20 -0400 (EDT)
+Date:   Tue, 7 Jul 2020 08:06:20 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Message-ID: <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
+In-Reply-To: <874kqjzhkb.fsf@mid.deneb.enyo.de>
+References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com> <20200706204913.20347-4-mathieu.desnoyers@efficios.com> <87fta3zstr.fsf@mid.deneb.enyo.de> <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com> <874kqjzhkb.fsf@mid.deneb.enyo.de>
+Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce
+ RSEQ_FLAG_RELIABLE_CPU_ID
 MIME-Version: 1.0
-References: <20200622192558.152828-1-konradybcio@gmail.com> <20200622192558.152828-3-konradybcio@gmail.com>
-In-Reply-To: <20200622192558.152828-3-konradybcio@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:02:54 +0200
-Message-ID: <CACRpkda7b5a95ZpLmZ07awzSHenfxyzxFR46s0cUa_5JzYQ3tw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] Documentation: Document pm660(l) SPMI GPIOs compatible
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
+Thread-Index: necjClEjKCrHFicK9OlbqryGqXBZRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 9:26 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
+----- On Jul 7, 2020, at 7:32 AM, Florian Weimer fw@deneb.enyo.de wrote:
 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> * Mathieu Desnoyers:
+> 
+>> Those are very good points. One possibility we have would be to let
+>> glibc do the rseq registration without the RSEQ_FLAG_RELIABLE_CPU_ID
+>> flag. On kernels with the bug present, the cpu_id field is still good
+>> enough for typical uses of sched_getcpu() which does not appear to
+>> have a very strict correctness requirement on returning the right
+>> cpu number.
+>>
+>> Then libraries and applications which require a reliable cpu_id
+>> field could check this on their own by calling rseq with the
+>> RSEQ_FLAG_RELIABLE_CPU_ID flag. This would not make the state more
+>> complex in __rseq_abi, and let each rseq user decide about its own
+>> fate: whether it uses rseq or keeps using an rseq-free fallback.
+>>
+>> I am still tempted to allow combining RSEQ_FLAG_REGISTER |
+>> RSEQ_FLAG_RELIABLE_CPU_ID for applications which would not be using
+>> glibc, and want to check this flag on thread registration.
+> 
+> Well, you could add a bug fix level field to the __rseq_abi variable.
 
-Patch applied.
+Even though I initially planned to make the struct rseq_abi extensible,
+the __rseq_abi variable ends up being fix-sized, so we need to be very
+careful in choosing what we place in the remaining 12 bytes of padding.
+I suspect we'd want to keep 8 bytes to express a pointer to an
+"extended" structure.
 
-Yours,
-Linus Walleij
+I wonder if a bug fix level "version" is the right approach. We could
+instead have a bitmask of fixes, which the application could independently
+check. For instance, some applications may care about cpu_id field
+reliability, and others not.
+
+> Then applications could check if the kernel has the appropriate level
+> of non-buggyness.  But the same thing could be useful for many other
+> kernel interfaces, and I haven't seen such a fix level value for them.
+> What makes rseq so special?
+
+I guess my only answer is because I care as a user of the system call, and
+what is a system call without users ? I have real applications which work
+today with end users deploying them on various kernels, old and new, and I
+want to take advantage of this system call to speed them up. However, if I
+have to choose between speed and correctness (in other words, not crashing
+a critical application), I will choose correctness. So if I cannot detect
+that I can safely use the system call, it becomes pretty much useless even
+for my own use-cases.
+
+> It won't help with the present bug, but maybe we should add an rseq
+> API sub-call that blocks future rseq registration for the thread.
+> Then we can add a glibc tunable that flips off rseq reliably if people
+> do not want to use it for some reason (and switch to the non-rseq
+> fallback code instead).  But that's going to help with future bugs
+> only.
+
+I don't think it's needed. All I really need is to have _some_ way to
+let lttng-ust or liburcu query whether the cpu_id field is reliable. This
+state does not have to be made quickly accessible to other libraries,
+nor does it have to be shared between libraries. It would allow each
+user library or application to make its own mind on whether it can use
+rseq or not.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
