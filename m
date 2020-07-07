@@ -2,58 +2,58 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA183C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D079B2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BEA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGGIpA (ORCPT
+        id S1727962AbgGGIpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:45:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36976 "EHLO
+        Tue, 7 Jul 2020 04:45:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64132 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726467AbgGGIo7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726467AbgGGIpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:44:59 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0678YD1h105513;
-        Tue, 7 Jul 2020 04:44:54 -0400
+        Tue, 7 Jul 2020 04:45:05 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0678Ve6c104150;
+        Tue, 7 Jul 2020 04:45:00 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32482kn0pn-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx67-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 04:44:54 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0678YMRP106482;
-        Tue, 7 Jul 2020 04:44:51 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32482kn0k9-1
+        Tue, 07 Jul 2020 04:44:57 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0678XoAT110196;
+        Tue, 7 Jul 2020 04:44:50 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx25-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 04:44:50 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0678eADI020543;
-        Tue, 7 Jul 2020 08:44:44 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 322hd7u6xj-1
+        Tue, 07 Jul 2020 04:44:49 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0678iVx4002463;
+        Tue, 7 Jul 2020 08:44:42 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 322hd81mdk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 08:44:44 +0000
+        Tue, 07 Jul 2020 08:44:42 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0678ifnv56033414
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0678idwq49741930
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 08:44:41 GMT
+        Tue, 7 Jul 2020 08:44:39 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D84CA4055;
-        Tue,  7 Jul 2020 08:44:41 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6511BA404D;
+        Tue,  7 Jul 2020 08:44:39 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E693A4040;
-        Tue,  7 Jul 2020 08:44:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 87860A4057;
+        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
 Received: from oc3016276355.ibm.com (unknown [9.145.29.12])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 08:44:40 +0000 (GMT)
+        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
 From:   Pierre Morel <pmorel@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
@@ -62,74 +62,101 @@ Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
         virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
         david@gibson.dropbear.id.au, linuxram@us.ibm.com,
         heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v4 2/2] s390: virtio: PV needs VIRTIO I/O device protection
-Date:   Tue,  7 Jul 2020 10:44:37 +0200
-Message-Id: <1594111477-15401-3-git-send-email-pmorel@linux.ibm.com>
+Subject: [PATCH v4 0/2] s390: virtio: let arch validate VIRTIO features
+Date:   Tue,  7 Jul 2020 10:44:35 +0200
+Message-Id: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
-References: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-07_05:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 phishscore=0 suspectscore=1 cotscore=-2147483648
- mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007070066
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ suspectscore=1 bulkscore=0 clxscore=1015 cotscore=-2147483648 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007070062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-S390, protecting the guest memory against unauthorized host access
-needs to enforce VIRTIO I/O device protection through the use of
-VIRTIO_F_VERSION_1 and VIRTIO_F_IOMMU_PLATFORM.
+Hi all,
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- arch/s390/kernel/uv.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+I changed the patch subject to reflect the content, becoming more
+general.
 
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index c296e5c8dbf9..106330f6eda1 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -14,6 +14,7 @@
- #include <linux/memblock.h>
- #include <linux/pagemap.h>
- #include <linux/swap.h>
-+#include <linux/virtio_config.h>
- #include <asm/facility.h>
- #include <asm/sections.h>
- #include <asm/uv.h>
-@@ -413,3 +414,27 @@ static int __init uv_info_init(void)
- }
- device_initcall(uv_info_init);
- #endif
-+
-+/*
-+ * arch_validate_virtio_iommu_platform
-+ * @dev: the VIRTIO device being added
-+ *
-+ * Return value: returns -ENODEV if any features of the
-+ *               device breaks the protected virtualization
-+ *               0 otherwise.
-+ */
-+int arch_validate_virtio_features(struct virtio_device *dev)
-+{
-+	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-+		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
-+		return is_prot_virt_guest() ? -ENODEV : 0;
-+	}
-+
-+	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-+		dev_warn(&dev->dev,
-+			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-+		return is_prot_virt_guest() ? -ENODEV : 0;
-+	}
-+
-+	return 0;
-+}
+1) I removed the ack from Christian and Jason even far as
+   I understand they gave it for the functionality more than for the
+   implementation.
+   @Jason, @Christian, please can I get back your acked-by with these changes?
+
+2) previous patch had another name:
+   [PATCH v3 0/1] s390: virtio: let arch choose to accept devices without IOMMU feature
+   id: Message-Id: <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+
+3) The new version generalize the validation of the features by the
+   architecture, making it not IOMMU_PLATFORM specific anymore inside
+   virtio.c
+
+   The architecture specific code for s390 is now testing the virtio
+   features.
+
+4) Since I reworked the patch I also moved the arch specific code
+   from arch/s390/mm/init.c to arch/s390/kernel/to uv.c
+
+5) Finaly, I splitted the patch into generic virtio and arch
+   specific code.
+
+Regards,
+Pierre
+
+Pierre Morel (2):
+  virtio: let arch validate VIRTIO features
+  s390: virtio: PV needs VIRTIO I/O device protection
+
+ arch/s390/kernel/uv.c         | 25 +++++++++++++++++++++++++
+ drivers/virtio/virtio.c       | 19 +++++++++++++++++++
+ include/linux/virtio_config.h |  1 +
+ 3 files changed, 45 insertions(+)
+
 -- 
 2.25.1
+
+Changelog
+
+to v4:
+
+- separate virtio and arch code
+  (Pierre)
+
+- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
+  (Heiko)
+
+- moved validation inside the arch code
+  (Connie)
+
+- moved the call to arch validation before VIRTIO_F_1 test
+  (Michael)
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
 
