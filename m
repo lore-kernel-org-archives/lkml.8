@@ -2,187 +2,188 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF09C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C59C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0ED2080D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C9B2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135463;
+	bh=r04Y4mUiDsaVVGGSKtOVGu/kIzxHagWSP2D/OpDco4w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DDDm5ZI5oc60APk1WC/oeUL2gQni9VStHf1yEjl5BgF7rBpXVIlx5jyvnulG9dp1N
+	 i1294sKp0h07Fe+J0t0aOz6e2hC4r6iC4HLDmdgLUcL8ob0Vr51VgqYfngXZvgbAD9
+	 OdTIrXTc/9y58cAWbL9ncLpFiGRtE2e/CRhxy8ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgGGPYS (ORCPT
+        id S1730086AbgGGPYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37374 "EHLO mx2.suse.de"
+        Tue, 7 Jul 2020 11:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbgGGPYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 245C3AC24;
-        Tue,  7 Jul 2020 15:24:12 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 730F01E12BC; Tue,  7 Jul 2020 17:24:11 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 17:24:11 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>
-Cc:     amir73il@gmail.com, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: memory leak in inotify_update_watch
-Message-ID: <20200707152411.GD25069@quack2.suse.cz>
-References: <000000000000a47ace05a9c7b825@google.com>
+        id S1730074AbgGGPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C969E207D0;
+        Tue,  7 Jul 2020 15:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594135457;
+        bh=r04Y4mUiDsaVVGGSKtOVGu/kIzxHagWSP2D/OpDco4w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x1PutwLocey9VBF7Cs+nj2tAUIQfVrA0aOeD8VszGFtXHEqlV6ZC6I7tSsOz48Mzl
+         w/StyYMQlusUPYSefW5hPWzQpfKC97HLAHrzATsVT0B+qzWuSXak5qYVGkbRPs2bsi
+         oqF6Tmj2a1MqglqVhAJJvSJS420nSyCgt/Ajat/8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 048/112] btrfs: fix RWF_NOWAIT writes blocking on extent locks and waiting for IO
+Date:   Tue,  7 Jul 2020 17:16:53 +0200
+Message-Id: <20200707145803.290182070@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
+References: <20200707145800.925304888@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000a47ace05a9c7b825@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Filipe Manana <fdmanana@suse.com>
 
-On Mon 06-07-20 08:42:24, syzbot wrote:
-> syzbot found the following crash on:
-> 
-> HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17644c05100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=dec34b033b3479b9ef13
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1478a67b100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888115db8480 (size 576):
->   comm "systemd-udevd", pid 11037, jiffies 4295104591 (age 56.960s)
->   hex dump (first 32 bytes):
->     00 04 00 00 00 00 00 00 80 fd e8 15 81 88 ff ff  ................
->     a0 02 dd 20 81 88 ff ff b0 81 d0 09 81 88 ff ff  ... ............
->   backtrace:
->     [<00000000288c0066>] radix_tree_node_alloc.constprop.0+0xc1/0x140 lib/radix-tree.c:252
->     [<00000000f80ba6a7>] idr_get_free+0x231/0x3b0 lib/radix-tree.c:1505
->     [<00000000ec9ab938>] idr_alloc_u32+0x91/0x120 lib/idr.c:46
->     [<00000000aea98d29>] idr_alloc_cyclic+0x84/0x110 lib/idr.c:125
->     [<00000000dbad44a4>] inotify_add_to_idr fs/notify/inotify/inotify_user.c:365 [inline]
->     [<00000000dbad44a4>] inotify_new_watch fs/notify/inotify/inotify_user.c:578 [inline]
->     [<00000000dbad44a4>] inotify_update_watch+0x1af/0x2d0 fs/notify/inotify/inotify_user.c:617
->     [<00000000e141890d>] __do_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:755 [inline]
->     [<00000000e141890d>] __se_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:698 [inline]
->     [<00000000e141890d>] __x64_sys_inotify_add_watch+0x12f/0x180 fs/notify/inotify/inotify_user.c:698
->     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
->     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ Upstream commit 5dbb75ed6900048e146247b6325742d92c892548 ]
 
-I've been looking into this for a while and I don't think this is related
-to inotify at all. Firstly the reproducer looks totally benign:
+A RWF_NOWAIT write is not supposed to wait on filesystem locks that can be
+held for a long time or for ongoing IO to complete.
 
-prlimit64(0x0, 0xe, &(0x7f0000000280)={0x9, 0x8d}, 0x0)
-sched_setattr(0x0, &(0x7f00000000c0)={0x38, 0x2, 0x0, 0x0, 0x9}, 0x0)
-vmsplice(0xffffffffffffffff, 0x0, 0x0, 0x0)
-perf_event_open(0x0, 0x0, 0xffffffffffffffff, 0xffffffffffffffff, 0x0)
-clone(0x20000103, 0x0, 0xfffffffffffffffe, 0x0, 0xffffffffffffffff)
-syz_mount_image$vfat(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+However when calling check_can_nocow(), if the inode has prealloc extents
+or has the NOCOW flag set, we can block on extent (file range) locks
+through the call to btrfs_lock_and_flush_ordered_range(). Such lock can
+take a significant amount of time to be available. For example, a fiemap
+task may be running, and iterating through the entire file range checking
+all extents and doing backref walking to determine if they are shared,
+or a readpage operation may be in progress.
 
-So we seem to set SCHED_RR class and prio 9 to itself, the rest of syscalls
-seem to be invalid and should fail. Secondly, the kernel log shows that we
-hit OOM killer frequently and after one of these kills, many leaked objects
-(among them this radix tree node from inotify idr) are reported. I'm not
-sure if it could be the leak detector getting confused (e.g. because it got
-ENOMEM at some point) or something else... Catalin, any idea?
+Also at btrfs_lock_and_flush_ordered_range(), called by check_can_nocow(),
+after locking the file range we wait for any existing ordered extent that
+is in progress to complete. Another operation that can take a significant
+amount of time and defeat the purpose of RWF_NOWAIT.
 
-								Honza
+So fix this by trying to lock the file range and if it's currently locked
+return -EAGAIN to user space. If we are able to lock the file range without
+waiting and there is an ordered extent in the range, return -EAGAIN as
+well, instead of waiting for it to complete. Finally, don't bother trying
+to lock the snapshot lock of the root when attempting a RWF_NOWAIT write,
+as that is only important for buffered writes.
 
-> BUG: memory leak
-> unreferenced object 0xffff88811fb8c180 (size 192):
->   comm "systemd-udevd", pid 11486, jiffies 4295108810 (age 14.770s)
->   hex dump (first 32 bytes):
->     08 80 00 00 06 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 89 13 1a 81 88 ff ff  ................
->   backtrace:
->     [<000000009fe0803b>] __d_alloc+0x2a/0x260 fs/dcache.c:1709
->     [<000000005a828803>] d_alloc+0x21/0xb0 fs/dcache.c:1788
->     [<00000000e0349988>] __lookup_hash+0x67/0xc0 fs/namei.c:1441
->     [<00000000907d6c36>] filename_create+0xa5/0x1c0 fs/namei.c:3459
->     [<0000000025ebf47f>] user_path_create fs/namei.c:3516 [inline]
->     [<0000000025ebf47f>] do_symlinkat+0x70/0x180 fs/namei.c:3973
->     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
->     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888107962b00 (size 704):
->   comm "systemd-udevd", pid 11486, jiffies 4295108810 (age 14.770s)
->   hex dump (first 32 bytes):
->     00 00 00 00 01 00 00 00 00 00 20 00 00 00 00 00  .......... .....
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<000000001bbffdf0>] shmem_alloc_inode+0x18/0x40 mm/shmem.c:3701
->     [<000000008bdb5db7>] alloc_inode+0x27/0xf0 fs/inode.c:232
->     [<00000000b322bd08>] new_inode_pseudo fs/inode.c:928 [inline]
->     [<00000000b322bd08>] new_inode+0x21/0xf0 fs/inode.c:957
->     [<0000000090aa6bc7>] shmem_get_inode+0x47/0x2b0 mm/shmem.c:2229
->     [<00000000d46b8299>] shmem_symlink+0x6b/0x290 mm/shmem.c:3080
->     [<00000000edfa50df>] vfs_symlink fs/namei.c:3953 [inline]
->     [<00000000edfa50df>] vfs_symlink+0x15a/0x230 fs/namei.c:3939
->     [<00000000a8f2bfa3>] do_symlinkat+0x14f/0x180 fs/namei.c:3980
->     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
->     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff88811952fa80 (size 56):
->   comm "systemd-udevd", pid 11486, jiffies 4295108810 (age 14.770s)
->   hex dump (first 32 bytes):
->     a8 2c 96 07 81 88 ff ff e0 18 b9 81 ff ff ff ff  .,..............
->     70 2b 96 07 81 88 ff ff 98 fa 52 19 81 88 ff ff  p+........R.....
->   backtrace:
->     [<00000000369fbe38>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
->     [<00000000369fbe38>] lsm_inode_alloc security/security.c:588 [inline]
->     [<00000000369fbe38>] security_inode_alloc+0x2e/0xb0 security/security.c:971
->     [<000000005b4a8c5f>] inode_init_always+0x10c/0x200 fs/inode.c:171
->     [<0000000022ebc8f1>] alloc_inode+0x44/0xf0 fs/inode.c:239
->     [<00000000b322bd08>] new_inode_pseudo fs/inode.c:928 [inline]
->     [<00000000b322bd08>] new_inode+0x21/0xf0 fs/inode.c:957
->     [<0000000090aa6bc7>] shmem_get_inode+0x47/0x2b0 mm/shmem.c:2229
->     [<00000000d46b8299>] shmem_symlink+0x6b/0x290 mm/shmem.c:3080
->     [<00000000edfa50df>] vfs_symlink fs/namei.c:3953 [inline]
->     [<00000000edfa50df>] vfs_symlink+0x15a/0x230 fs/namei.c:3939
->     [<00000000a8f2bfa3>] do_symlinkat+0x14f/0x180 fs/namei.c:3980
->     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
->     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff88811f95dcc0 (size 192):
->   comm "systemd-udevd", pid 11488, jiffies 4295108822 (age 14.650s)
->   hex dump (first 32 bytes):
->     08 80 00 00 06 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 89 13 1a 81 88 ff ff  ................
->   backtrace:
->     [<000000009fe0803b>] __d_alloc+0x2a/0x260 fs/dcache.c:1709
->     [<000000005a828803>] d_alloc+0x21/0xb0 fs/dcache.c:1788
->     [<00000000e0349988>] __lookup_hash+0x67/0xc0 fs/namei.c:1441
->     [<00000000907d6c36>] filename_create+0xa5/0x1c0 fs/namei.c:3459
->     [<0000000025ebf47f>] user_path_create fs/namei.c:3516 [inline]
->     [<0000000025ebf47f>] do_symlinkat+0x70/0x180 fs/namei.c:3973
->     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
->     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/file.c | 37 ++++++++++++++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 11 deletions(-)
+
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 52d565ff66e2d..93244934d4f92 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1541,7 +1541,7 @@ lock_and_cleanup_extent_if_need(struct btrfs_inode *inode, struct page **pages,
+ }
+ 
+ static noinline int check_can_nocow(struct btrfs_inode *inode, loff_t pos,
+-				    size_t *write_bytes)
++				    size_t *write_bytes, bool nowait)
+ {
+ 	struct btrfs_fs_info *fs_info = inode->root->fs_info;
+ 	struct btrfs_root *root = inode->root;
+@@ -1549,27 +1549,43 @@ static noinline int check_can_nocow(struct btrfs_inode *inode, loff_t pos,
+ 	u64 num_bytes;
+ 	int ret;
+ 
+-	if (!btrfs_drew_try_write_lock(&root->snapshot_lock))
++	if (!nowait && !btrfs_drew_try_write_lock(&root->snapshot_lock))
+ 		return -EAGAIN;
+ 
+ 	lockstart = round_down(pos, fs_info->sectorsize);
+ 	lockend = round_up(pos + *write_bytes,
+ 			   fs_info->sectorsize) - 1;
++	num_bytes = lockend - lockstart + 1;
+ 
+-	btrfs_lock_and_flush_ordered_range(inode, lockstart,
+-					   lockend, NULL);
++	if (nowait) {
++		struct btrfs_ordered_extent *ordered;
++
++		if (!try_lock_extent(&inode->io_tree, lockstart, lockend))
++			return -EAGAIN;
++
++		ordered = btrfs_lookup_ordered_range(inode, lockstart,
++						     num_bytes);
++		if (ordered) {
++			btrfs_put_ordered_extent(ordered);
++			ret = -EAGAIN;
++			goto out_unlock;
++		}
++	} else {
++		btrfs_lock_and_flush_ordered_range(inode, lockstart,
++						   lockend, NULL);
++	}
+ 
+-	num_bytes = lockend - lockstart + 1;
+ 	ret = can_nocow_extent(&inode->vfs_inode, lockstart, &num_bytes,
+ 			NULL, NULL, NULL);
+ 	if (ret <= 0) {
+ 		ret = 0;
+-		btrfs_drew_write_unlock(&root->snapshot_lock);
++		if (!nowait)
++			btrfs_drew_write_unlock(&root->snapshot_lock);
+ 	} else {
+ 		*write_bytes = min_t(size_t, *write_bytes ,
+ 				     num_bytes - pos + lockstart);
+ 	}
+-
++out_unlock:
+ 	unlock_extent(&inode->io_tree, lockstart, lockend);
+ 
+ 	return ret;
+@@ -1641,7 +1657,7 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
+ 			if ((BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
+ 						      BTRFS_INODE_PREALLOC)) &&
+ 			    check_can_nocow(BTRFS_I(inode), pos,
+-					&write_bytes) > 0) {
++					    &write_bytes, false) > 0) {
+ 				/*
+ 				 * For nodata cow case, no need to reserve
+ 				 * data space.
+@@ -1920,12 +1936,11 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
+ 		 */
+ 		if (!(BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
+ 					      BTRFS_INODE_PREALLOC)) ||
+-		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes) <= 0) {
++		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes,
++				    true) <= 0) {
+ 			inode_unlock(inode);
+ 			return -EAGAIN;
+ 		}
+-		/* check_can_nocow() locks the snapshot lock on success */
+-		btrfs_drew_write_unlock(&root->snapshot_lock);
+ 		/*
+ 		 * There are holes in the range or parts of the range that must
+ 		 * be COWed (shared extents, RO block groups, etc), so just bail
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
+
+
