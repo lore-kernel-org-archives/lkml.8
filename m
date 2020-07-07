@@ -2,72 +2,72 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90EB420720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C3920720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nshsoOrg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOA54ZJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgGGWMh (ORCPT
+        id S1729274AbgGGWNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
+        Tue, 7 Jul 2020 18:13:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbgGGWMg (ORCPT
+        with ESMTP id S1727945AbgGGWNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:12:36 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5E4C061755;
-        Tue,  7 Jul 2020 15:12:36 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k23so44830086iom.10;
-        Tue, 07 Jul 2020 15:12:36 -0700 (PDT)
+        Tue, 7 Jul 2020 18:13:33 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEDCC061755;
+        Tue,  7 Jul 2020 15:13:32 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q3so26698202ilt.8;
+        Tue, 07 Jul 2020 15:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=U4CnpBDELPfqZ1fbnb3srfTvu3fBxT8MeUyNFAnMTQQ=;
-        b=nshsoOrgwi7Nfp1mYN1cvUbjPvB6hNNg4IfFIdAhm0SbH+9kP46hKneJOxm4qXEPk7
-         CIqy+u4vEmAEod2DP9mEqisAxrhXJOwB4/3PZ2JnSA7Xq0nC2z01CA+eyLNOmUOHYJJ5
-         WEnDJZMeN7NFoiwPflSN2yGrpb3oiJNxxgOmDUiMgTQyW0k57ij6y2k3DHie2DKQT5nO
-         wNwkU3tVUI8dnLQzjyL6tvKdysd9pWwh6yA1BxjN4PYB0139zjp6zX42ENzFWn0lI9bV
-         OXwE4rOpHg+7h8f8qGk3stQXQfhR95AG5ghtmwBqnyzBpHN/w60XbZVVLj5Fgg29q3Wf
-         oaHA==
+        bh=ebHoea24iBgPzS9O9JOWhIPUCQLUd/MkaP3rwV0k9ns=;
+        b=uOA54ZJ49ZliLtaMBtzWa5R5sdXU4fhkaJKt2aCHbDZsQBe1W0jp5Qq3LXByql3TxN
+         4XUc3A9Iu76iEPLukx5bh41xAcUIodCr3M4Oo1Rsau2XU0ZvPy0eixQqD4w4Gyg0gaEH
+         865ii0tPiRcqpMFW0mMsUGRWqkoDflk/7SuawIqWZ5QEqLo7zXAa7dYXFZ6EcrKGiSa9
+         Gg0k7M/L9Q5vwFCV4n5OiFaz5uej/I20sdyNh4B3C4DRMiFpJYxJUueMdhbOc4LQosNl
+         Oq//UHgVN88QzCLO+dIst+Ggl+TQP/0yNXry8JVXytjamagrRFgEZDX/0S1zdIKV/C+1
+         brTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U4CnpBDELPfqZ1fbnb3srfTvu3fBxT8MeUyNFAnMTQQ=;
-        b=N/ft5GkVUNAG5FGmUJPtGk3Mqs+7xZXYoQ8mQBHBXziKpdQSyX9SRAM64aDj0vsj0U
-         BR+nfNV8iflWznqXRvXpRyoH4RsD/CS+sdxI4k2//yKnYMFq0DlhhE73D6RBHUm6Bf4V
-         0mKDAOEotmICW9Vm/n/zyn9PBhUl0PCzjdDXSrdERRm4biSnESF8Khg54O7zYWzmRXr7
-         9kC4t996hQG4UbRB4Tx10DxfO2I1SAUxGscxk+V4UHG7F8mjrvY3HmzdoWncfMq0Oe5n
-         ubvIxrs+AeF77Ze5e8vjlirBG5E3+Lu6LKBlQnbhmYxTX2CWUmZz6O02rM2LmRy9eVN9
-         Gt4w==
-X-Gm-Message-State: AOAM532mP6EcKtKC7rIoumKyQwuVAyNcWtoOY5npXeRhS8WPxb//V5VR
-        QccHmxOkIuchetYKNgajhoFpbLlja0kLhYRXc2k=
-X-Google-Smtp-Source: ABdhPJwYWDqXpQ3fjMT49ImNn7ATEM0gyBe4WlkeyxbhzDewpc5BWoAHkb/Wq0RHXXSGSy7q/2Qq0UXrlSfF4P/7FGk=
-X-Received: by 2002:a6b:b2d1:: with SMTP id b200mr32012038iof.137.1594159955956;
- Tue, 07 Jul 2020 15:12:35 -0700 (PDT)
+        bh=ebHoea24iBgPzS9O9JOWhIPUCQLUd/MkaP3rwV0k9ns=;
+        b=Y3xi1jQYlWo1bsSOoz7zAenC7GvUotCh95q9TiWUq6RLNv2siwo0Djq/IrfF62pi4Z
+         ASmeQvdIfw5iiwNvpw5CAbT67Uq7xloY86X23bDCLGV2EPrVAnLvPSmqgtENpqNEBfNs
+         XpI/YLaH8CJxMx0+BdyaQSDhR+cHREt2zj5FTu9xNg2Cydob/5MBEwl59h1YhM12q3O/
+         y3I+91okEbYkE3vwREcF7qOYT59IVdvfQW0DsskhHXE44e90a/kEL+dybbqVMDsIY70C
+         vTNwJ8cHIWGJn5l0oaxAN4GaoEd2ZWBqCeNKrr5L4D6EwMMV//2MY4Ew3EO98FVPWAL9
+         rHyw==
+X-Gm-Message-State: AOAM533yXtNk08IJ/cM7XWRDquZ5HBYLL5VfKoBAU7vvZT6bhafCHP9N
+        TmPKGuekaBPZIxNthMm2tPViFDnWlk8VTBxwgNc=
+X-Google-Smtp-Source: ABdhPJxqwaGXwz83DTFQOUjRKXL59dDxJXKiaYLJtLhFWxFQTpza0ByW2F7SfF9q63gthTZDzoQzQ4Hv3IBDoSHXfj0=
+X-Received: by 2002:a92:5b4b:: with SMTP id p72mr7632967ilb.285.1594160012404;
+ Tue, 07 Jul 2020 15:13:32 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAFXsbZrVZjiyO_G6z6T82t0xT36Zi2gGo0kPnt6n58R-rO3TVg@mail.gmail.com>
- <7f627cb8-2eae-cdc9-09fc-e3e612b5632a@gmail.com>
-In-Reply-To: <7f627cb8-2eae-cdc9-09fc-e3e612b5632a@gmail.com>
+ <CAOMZO5DctkSWri+6Zh1HfSWFJcz=nb8eUHZsvwFwRZ_B9ZCSTg@mail.gmail.com>
+In-Reply-To: <CAOMZO5DctkSWri+6Zh1HfSWFJcz=nb8eUHZsvwFwRZ_B9ZCSTg@mail.gmail.com>
 From:   Chris Healy <cphealy@gmail.com>
-Date:   Tue, 7 Jul 2020 15:12:25 -0700
-Message-ID: <CAFXsbZpq9iY4E+TfMduipfeUr8cUZd4-EVO=+7b3WuOS5fF3cQ@mail.gmail.com>
+Date:   Tue, 7 Jul 2020 15:13:21 -0700
+Message-ID: <CAFXsbZrVxE4fGhwfax7C5tJCLnbihxB6=Q4VxUisXd2OE_ut4Q@mail.gmail.com>
 Subject: Re: [PATCH] ARM64: dts: update MDIO speed and preamble for zii-ultra device
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -76,35 +76,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 2:59 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Tue, Jul 7, 2020 at 2:54 PM Fabio Estevam <festevam@gmail.com> wrote:
 >
 > Hi Chris,
 >
-> On 7/4/2020 6:26 PM, Chris Healy wrote:
+> The subject pattern used for ARM64 i.MX patches is like:
+>
+> arm64: dts: zii-ultra: update MDIO speed and preamble
+
+Thanks for pointing this out.  I have to make a change to this patch
+anyway so I will resubmit with the correct subject pattern.
+
+>
+> On Sat, Jul 4, 2020 at 10:26 PM Chris Healy <cphealy@gmail.com> wrote:
+> >
 > > Update MDIO configuration with zii-ultra device to fully utilize
 > > MDIO endpoint capabilities.  Device supports 12.5MHz clock and
 > > doesn't require MDIO preamble.
 > >
 > > Signed-off-by: Chris Healy <cphealy@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > index 6a55165bd76a..98aa67a4c040 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > @@ -132,6 +132,8 @@
-> >          #address-cells = <1>;
-> >          #size-cells = <0>;
-> >          status = "okay";
-> > +        suppress-preamble = <1>;
 >
-> suppress-preamble is defined as a boolean, so you can remove the "= <1>"
-> part entirely.
-
-Good point, I'll make the necessary change.
-
-> --
-> Florian
+> Other than that:
+>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
