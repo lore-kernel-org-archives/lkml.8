@@ -2,148 +2,77 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6074AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5584DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4008B20702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B44820702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGGLMV (ORCPT
+        id S1728246AbgGGLMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:12:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46348 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727962AbgGGLMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:12:07 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067B1aN6159350;
-        Tue, 7 Jul 2020 07:12:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffdweur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:12:02 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067B1iFC160156;
-        Tue, 7 Jul 2020 07:12:01 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffdweuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:12:01 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067B0HGh032108;
-        Tue, 7 Jul 2020 11:12:00 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 324qfur48q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 11:12:00 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067BC0Jv50659838
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 11:12:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BAF0B2065;
-        Tue,  7 Jul 2020 11:12:00 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D007EB205F;
-        Tue,  7 Jul 2020 11:11:59 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.70.202])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 11:11:59 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 509982E48B9; Tue,  7 Jul 2020 16:41:54 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH 1/5] cpuidle-pseries: Set the latency-hint before entering CEDE
-Date:   Tue,  7 Jul 2020 16:41:35 +0530
-Message-Id: <1594120299-31389-2-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_06:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- impostorscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0
- adultscore=0 mlxlogscore=776 spamscore=0 priorityscore=1501 bulkscore=0
- phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007070081
+        Tue, 7 Jul 2020 07:12:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7263 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727827AbgGGLMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:12:52 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E970C29AF5D6A67F67A2;
+        Tue,  7 Jul 2020 19:12:50 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Jul 2020 19:12:43 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Michel Lespinasse <walken@google.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Yan <yanaijie@huawei.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] lib/test_lockup.c: make symbol 'test_works' static
+Date:   Tue, 7 Jul 2020 19:22:52 +0800
+Message-ID: <20200707112252.9047-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Fix sparse build warning:
 
-As per the PAPR, each H_CEDE call is associated with a latency-hint to
-be passed in the VPA field "cede_latency_hint". The CEDE states that
-we were implicitly entering so far is CEDE with latency-hint = 0.
+lib/test_lockup.c:403:1: warning:
+ symbol '__pcpu_scope_test_works' was not declared. Should it be static?
 
-This patch explicitly sets the latency hint corresponding to the CEDE
-state that we are currently entering. While at it, we save the
-previous hint, to be restored once we wakeup from CEDE. This will be
-required in the future when we expose extended-cede states through the
-cpuidle framework, where each of them will have a different
-cede-latency hint.
-
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- drivers/cpuidle/cpuidle-pseries.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ lib/test_lockup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-index 4a37252..39d4bb6 100644
---- a/drivers/cpuidle/cpuidle-pseries.c
-+++ b/drivers/cpuidle/cpuidle-pseries.c
-@@ -105,19 +105,27 @@ static void check_and_cede_processor(void)
- 	}
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index ff26f36d729f..0f81252837b9 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -400,7 +400,7 @@ static void test_lockup(bool master)
+ 	test_unlock(master, true);
  }
  
-+#define NR_CEDE_STATES		1  /* CEDE with latency-hint 0 */
-+#define NR_DEDICATED_STATES	(NR_CEDE_STATES + 1) /* Includes snooze */
-+
-+u8 cede_latency_hint[NR_DEDICATED_STATES];
- static int dedicated_cede_loop(struct cpuidle_device *dev,
- 				struct cpuidle_driver *drv,
- 				int index)
+-DEFINE_PER_CPU(struct work_struct, test_works);
++static DEFINE_PER_CPU(struct work_struct, test_works);
+ 
+ static void test_work_fn(struct work_struct *work)
  {
-+	u8 old_latency_hint;
- 
- 	pseries_idle_prolog();
- 	get_lppaca()->donate_dedicated_cpu = 1;
-+	old_latency_hint = get_lppaca()->cede_latency_hint;
-+	get_lppaca()->cede_latency_hint = cede_latency_hint[index];
- 
- 	HMT_medium();
- 	check_and_cede_processor();
- 
- 	local_irq_disable();
- 	get_lppaca()->donate_dedicated_cpu = 0;
-+	get_lppaca()->cede_latency_hint = old_latency_hint;
- 
- 	pseries_idle_epilog();
- 
-@@ -149,7 +157,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
- /*
-  * States for dedicated partition case.
-  */
--static struct cpuidle_state dedicated_states[] = {
-+static struct cpuidle_state dedicated_states[NR_DEDICATED_STATES] = {
- 	{ /* Snooze */
- 		.name = "snooze",
- 		.desc = "snooze",
--- 
-1.9.4
 
