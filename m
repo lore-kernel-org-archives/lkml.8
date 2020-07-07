@@ -2,189 +2,143 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D56C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17117C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F20F2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2F320708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gOtPpM9j"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1fG0G8ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgGGKcu (ORCPT
+        id S1728250AbgGGKcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:32:50 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3517 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgGGKcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:32:50 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f044ee70000>; Tue, 07 Jul 2020 03:31:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 03:32:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Jul 2020 03:32:49 -0700
-Received: from [10.2.173.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
- 2020 10:32:48 +0000
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
- <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
- <6e09f5d3-85ca-5bf9-8617-b9c8bec36615@nvidia.com>
- <64622861-c9e7-c158-a2c3-0db8c65fd29f@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b0381437-31ea-a2f0-1105-842a357b9b23@nvidia.com>
-Date:   Tue, 7 Jul 2020 03:32:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 06:32:54 -0400
+Received: from mail-bn8nam11on2042.outbound.protection.outlook.com ([40.107.236.42]:11264
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726745AbgGGKcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:32:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l54omh208ayP/id6Q0YVvq8fsQcCQ1c94XaGxm+v4n+mhOSzV6W209bL+dpw6CUVzUJpYKc7HsAGpqoUjV6S4G5co50/dOfYFG9N76Z0yz5u9cTlo6THn1mfHxvTSLFuLbjaBNFTzT3Kua+k+0bJmfdMrpcRxzQR/0X8W0pONBgHmih5fhgnNMbY3ot1duKOZ29/pwSwLUG6ZatPJZ645QDMFdYUE76FkOVY6u+r0lOQmiWtCEGEIxc0OZQyaJM6Zwsvji0mnbGE/oMvJLIRIvhvgGCuJ/fAJ0gB/I1ZBPhvaHdio3s443WZYDyCXjBwqwTWYilU8pxrx8a6TU7qKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Uo0jBFwdYzI2HgdAr+Ljv02NvSGjdaRxTWqn/fpRYLc=;
+ b=e8RgiFfYP2CRC7N0knr1TkeDL3AycGSIW0991HV5sAUJ6FMVk6u6DLhka04+2yFMZqbs5wd1pLblshPHsNGCOaQICdtST+Pzj5gzbBODbClie20o2XqygyV5YYxrpb24rA+vaM9kyCFbvunjjjhcHjy/AUBarfzVIknss032H6JhgGlqPK6S++gULfL9cCchGibx4B3tpYSF81qG1zzYc9dhBWxif6wfUptC1odNqtfykQoCvFyyWGsoun2BleUxo3wYFsWrw6ufsgW+tmJ/d7qqT7QmLGn6pAb2eRPXaBPpFQ0haZPocGaOw6w6s73sxVWe/kNQCJ2glB4RWGd/Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alsa-project.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Uo0jBFwdYzI2HgdAr+Ljv02NvSGjdaRxTWqn/fpRYLc=;
+ b=1fG0G8sskQ6PoNyV8Ee1lFIoJ4ouXliu9b/+emAwgLTjjfDhjy1IS3Dsa0dHRBUk+VXqwlGcWtSFnUssMhrIRUXkJMvIBOcireEXxmdrpqGfoq6WHDcV8C/wVBfdzzBoaRdp8NNWns3U19oO54Kxo7q4M1ob/3L6HsRMC3RZLik=
+Received: from MW2PR16CA0061.namprd16.prod.outlook.com (2603:10b6:907:1::38)
+ by BN6PR12MB1297.namprd12.prod.outlook.com (2603:10b6:404:14::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 7 Jul
+ 2020 10:32:49 +0000
+Received: from CO1NAM11FT008.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:907:1:cafe::a8) by MW2PR16CA0061.outlook.office365.com
+ (2603:10b6:907:1::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend
+ Transport; Tue, 7 Jul 2020 10:32:49 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; alsa-project.org; dkim=none (message not signed)
+ header.d=none;alsa-project.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ CO1NAM11FT008.mail.protection.outlook.com (10.13.175.191) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3153.24 via Frontend Transport; Tue, 7 Jul 2020 10:32:49 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 7 Jul 2020
+ 05:32:47 -0500
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 7 Jul 2020
+ 05:32:47 -0500
+Received: from LinuxHost.amd.com (10.180.168.240) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 7 Jul 2020 05:32:44 -0500
+From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To:     <alsa-devel@alsa-project.org>
+CC:     <perex@perex.cz>, <hui.wang@canonical.com>,
+        <Alexander.Deucher@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ASoC: amd: add ACPI dependency check
+Date:   Tue, 7 Jul 2020 16:16:41 +0530
+Message-ID: <1594118813-18689-1-git-send-email-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <64622861-c9e7-c158-a2c3-0db8c65fd29f@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594117863; bh=+ioWmMRpimhJ+Fm0plospxLg6LY05b/0pMyg8tUo5X0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=gOtPpM9jrAjr9lCdRxUNFSgKN6x2xM7ZmSMKpnOPPVmMy+l3SdJIVARqZ2Xay+m9h
-         +rmWof/ddSUvAuBmX4Cq6JElVzNp9MGA/o65v0Yq3LdJSPDx4CIWatwkfOra+teaFG
-         iH2zA6IEPwvmQtwEmJhVxpOSrEsJrl6pXImscOsvr8cnarFxguwEVRvHrSCyC5stO3
-         8NfGAnwqmEEOetcL3Ui8kqDfPZhWMfGdsX0QU41aPAD7BrImVjdjYJIpYnSMuNnelt
-         8CuihppzF3BoVB2hDS+1QA5ZAsuqWgra4sR4hX8KONgkSDLvMvZnhiFQXGXefwLhNV
-         4MPDMW4/O2yIQ==
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(136003)(376002)(46966005)(478600001)(26005)(70586007)(82310400002)(6666004)(70206006)(4326008)(186003)(47076004)(83380400001)(336012)(2906002)(54906003)(316002)(36756003)(2616005)(4744005)(356005)(86362001)(426003)(5660300002)(8936002)(81166007)(8676002)(82740400003)(6916009)(7696005);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 50d3ebdd-6a28-4b20-129b-08d82261189f
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1297:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB129793D50BB5D4A6F6260B6697660@BN6PR12MB1297.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NlR5EPCd6bFcOWMQCeve1pztoeCubiE/8MDO2yd+IbIbImslI5EhYJqBAOzYDjgdHq7oBfrgbggBtlVOOaeG/2aCBg6f1I5xyqyuY3YijSXjRG2u2O+Pv+SSp/S5arKZfH+AqJ+PimCfPRb2q5NoGzRp9mISFtYvG4MfElw+Vv6EhqoVqbIOAYf9yn7M5w+8H3/GKJ9w57jW8NKmj2O5VoapcZcW2F0LUcvjkEIddwzCDloHphHHxHH5g5sSSfnH/NlsCoBVIBlJ8m+yTulFxcvOY1d+00TgVsEGl0zoJIB13ax9ZxbktlcPXgRRzl7PmLo2UXAM1FW594q40MZSOTFadtrg4UiQtHjUsqKxDvA+fY6vGxrPZqrodF2T+IUQCYzWw4hJrFG1pIVnY7z4mw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2020 10:32:49.1556
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50d3ebdd-6a28-4b20-129b-08d82261189f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1297
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add ACPI dependency for evaluating DMIC hardware
+runtime.
 
-On 7/7/20 2:51 AM, Hans Verkuil wrote:
-> On 07/07/2020 11:40, Sowjanya Komatineni wrote:
->> On 7/6/20 2:10 AM, Hans Verkuil wrote:
->>>> +static int tegra_vi_graph_notify_complete(struct v4l2_async_notifier *notifier)
->>>> +{
->>>> +	struct tegra_vi_graph_entity *entity;
->>>> +	struct v4l2_async_subdev *asd;
->>>> +	struct v4l2_subdev *subdev;
->>>> +	struct tegra_vi_channel *chan;
->>>> +	struct tegra_vi *vi;
->>>> +	int ret;
->>>> +
->>>> +	chan = container_of(notifier, struct tegra_vi_channel, notifier);
->>>> +	vi = chan->vi;
->>>> +
->>>> +	dev_dbg(vi->dev, "notify complete, all subdevs registered\n");
->>>> +
->>>> +	ret = video_register_device(&chan->video, VFL_TYPE_VIDEO, -1);
->>> This should be done last after the tegra_vi_graph_build and tegra_channel_setup_ctrl_handler
->>> calls. The video device is immediately accessible after this call, so don't
->>> call it until everything is setup (i.e. until just before the 'return 0;' below).
->>>
->>>> +	if (ret < 0) {
->>>> +		dev_err(vi->dev,
->>>> +			"failed to register video device: %d\n", ret);
->>>> +		goto unregister_video;
->>>> +	}
->>>> +
->>>> +	/* create links between the entities */
->>>> +	list_for_each_entry(asd, &chan->notifier.asd_list, asd_list) {
->>>> +		entity = to_tegra_vi_graph_entity(asd);
->>>> +		ret = tegra_vi_graph_build(chan, entity);
->>>> +		if (ret < 0)
->>>> +			goto unregister_video;
->>>> +	}
->>>> +
->> Hi Hans,
->>
->> Currently Tegra video driver sets v4l2_dev->mdev prior to graph parse and building links to let media_device_register_entity() to happen
->> during video_register_device() -> video_register_media_controller() and media_device_unregister_entity() to happen during v4l2_device_release()
->>
->> TPG also does the same of letting media entity register/unregister to happen during video device register and release callback.
->>
->> So, registering video device prior to media links creation as media_device_register_entity() will happen during video_register_device()
->>
->> To register video device after creating media links, it need to change for both TPG and Non-TPG to not set v4l2_dev->mdev and Tegra video
->> driver should explicitly take care of media_device_register_entity() and media_device_unregister_entity().
->>
->> Prior to making this change to both TPG and Non-TPG, would like to understand on possibility of using video device node prior to finishing
->> complete driver probe()
->>
->> As video device register happens during async notifier complete callback, and all the device graph build happens during video driver probe()
->> what exactly will be the issue of having video device node prior to creating media links?
-> It's not the 'create links between the entities' bit that's the problem, it is what follows:
->
-> +	ret = tegra_channel_setup_ctrl_handler(chan);
-> +	if (ret < 0) {
-> +		dev_err(vi->dev,
-> +			"failed to setup channel controls: %d\n", ret);
-> +		goto unregister_video;
-> +	}
-> +
-> +	vi_fmts_bitmap_init(chan);
-> +	subdev = tegra_channel_get_remote_subdev(chan, false);
-> +	v4l2_set_subdev_hostdata(subdev, chan);
->
-> That should be done before the video_register_device call.
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+ sound/soc/amd/renoir/rn-pci-acp3x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v4l2_subdev is retrieved in tegra_channel_get_remote_subdev() through 
-media pad entity links which are setup only during media_create_pad_link()
+diff --git a/sound/soc/amd/renoir/rn-pci-acp3x.c b/sound/soc/amd/renoir/rn-pci-acp3x.c
+index d1faea5..165c93f 100644
+--- a/sound/soc/amd/renoir/rn-pci-acp3x.c
++++ b/sound/soc/amd/renoir/rn-pci-acp3x.c
+@@ -218,6 +218,7 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
+ 		ret = -ENODEV;
+ 		goto de_init;
+ 	} else if (dmic_acpi_check == ACP_DMIC_AUTO) {
++#if defined(CONFIG_ACPI)
+ 		handle = ACPI_HANDLE(&pci->dev);
+ 		ret = acpi_evaluate_integer(handle, "_WOV", NULL, &dmic_status);
+ 		if (ACPI_FAILURE(ret)) {
+@@ -228,6 +229,7 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
+ 			ret = -ENODEV;
+ 			goto de_init;
+ 		}
++#endif
+ 	}
+ 
+ 	adata->res = devm_kzalloc(&pci->dev,
+-- 
+2.7.4
 
-Currently as driver lets media_device_register_entity() to happen during 
-video_device_register(), media_create_pad_link() is done after 
-video_register_device.
-
-media_create_pad_link() need to happen prior to using 
-tegra_channel_get_remote_subdev() with current implementation.
-
-
-Probably I can move tegra_channel_setup_ctrl_handler() and 
-vi_fmts_bitmap_init() into subdev bound notifier callback to invoke them 
-for subdev entity not MEDIA_ENT_F_VID_IF_BRIDGE.
-
-With this by the time video_register_device happens during complete 
-callback, ctrl handler and bitmaps both will be setup/initialized.
-
->
-> Because otherwise the /dev/videoX doesn't have the full set of controls, and
-> I am also not certain which ioctls might use the subdev hostdata.
-
-csi driver gets hostdata as it needs channel pg_mode selection value and 
-this is used only during streaming.
-
-
-> The core problem is really that video_register_device should have been split
-> into an init function and a register function, so it is possible to set
-> everything up before registering the video device. Oh well...
->
-> Regards,
->
-> 	Hans
->
->> I see some other drivers also doing the same order of registering video device prior to creating media links and also we are doing the same
->> in L4T driver as well.
->>
->> Thanks
->>
->> Sowjanya
->>
->>
