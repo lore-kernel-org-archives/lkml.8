@@ -6,50 +6,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF15C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B94206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1C7206E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgGGTQl (ORCPT
+        id S1728722AbgGGTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:16:41 -0400
+        Tue, 7 Jul 2020 15:16:43 -0400
 Received: from mga01.intel.com ([192.55.52.88]:5637 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728663AbgGGTQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:16:39 -0400
-IronPort-SDR: zD2Y3l9N0TdbLfbm6eQVFxVYIkVHy6IsP1OfNksdqhY9LDIHHyCwZrOh1MbXhZT8oIK23jJ+kw
- B7qC2TdbGmZA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165752998"
+        id S1728692AbgGGTQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:16:40 -0400
+IronPort-SDR: Y/n4nTHtD08uP2USfbUkgTjL7Oxsg2cPyg47YkvB1UF/3k4oz+D4g5BjHYUMbOjsjLZGkGI+XP
+ 5uSWFaSAAzNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165753003"
 X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="165752998"
+   d="scan'208";a="165753003"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:38 -0700
-IronPort-SDR: 2A4qNl2xB4s5LGy7ZTxWCqUDjEifAnZDy5qv1Kka0MGuyK5zhvYydOzQUvSwESWI6qdURYBXpM
- 7ZzuivkUJ2kg==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:40 -0700
+IronPort-SDR: /suSIlxaokPqR671iiUxFN6GYWeFBnGgoSr6SrYAdcFMWA592cksoAJz+aA+siuLWXuDPD6XE0
+ pqmOvKGkbfZg==
 X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="388601636"
+   d="scan'208";a="388601639"
 Received: from mrtorger-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.77.62])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:37 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:16:39 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Ola Lilja <ola.o.lilja@stericsson.com>,
-        Roger Nilsson <roger.xr.nilsson@stericsson.com>,
-        Sandeep Kaushik <sandeep.kaushik@st.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 05/10] ASoC: ux500: ux500_msp_i2s: Remove unused variables 'reg_val_DR' and 'reg_val_TSTDR'
-Date:   Tue,  7 Jul 2020 14:16:10 -0500
-Message-Id: <20200707191615.98296-6-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 06/10] ASoC: sti: uniperif: fix 'defined by not used' warning
+Date:   Tue,  7 Jul 2020 14:16:11 -0500
+Message-Id: <20200707191615.98296-7-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707191615.98296-1-pierre-louis.bossart@linux.intel.com>
 References: <20200707191615.98296-1-pierre-louis.bossart@linux.intel.com>
@@ -61,67 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+Fix W=1 warning. The table uni_tdm_hw is declared in a header included
+by multiple C file. This isn't really a good practice but for now
+using __maybe_unused makes the following warning go away.
 
-Looks like these have been unchecked since the driver's inception in 2012.
+sound/soc/sti/sti_uniperif.c:12:
+sound/soc/sti/uniperif.h:1351:38: warning: ‘uni_tdm_hw’ defined but
+not used [-Wunused-const-variable=]
+ 1351 | static const struct snd_pcm_hardware uni_tdm_hw = {
+      |                                      ^~~~~~~~~~
 
-Fixes the following W=1 kernel build warning(s):
-
- sound/soc/ux500/ux500_msp_i2s.c: In function ‘flush_fifo_rx’:
- sound/soc/ux500/ux500_msp_i2s.c:398:6: warning: variable ‘reg_val_DR’ set but not used [-Wunused-but-set-variable]
- sound/soc/ux500/ux500_msp_i2s.c: In function ‘flush_fifo_tx’:
- sound/soc/ux500/ux500_msp_i2s.c:415:6: warning: variable ‘reg_val_TSTDR’ set but not used [-Wunused-but-set-variable]
-
-Cc: zhong jiang <zhongjiang@huawei.com>
-Cc: Ola Lilja <ola.o.lilja@stericsson.com>
-Cc: Roger Nilsson <roger.xr.nilsson@stericsson.com>
-Cc: Sandeep Kaushik <sandeep.kaushik@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/ux500/ux500_msp_i2s.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/sti/uniperif.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ux500/ux500_msp_i2s.c b/sound/soc/ux500/ux500_msp_i2s.c
-index 394d8b2a4a16..fd0b88bb7921 100644
---- a/sound/soc/ux500/ux500_msp_i2s.c
-+++ b/sound/soc/ux500/ux500_msp_i2s.c
-@@ -395,7 +395,7 @@ static int enable_msp(struct ux500_msp *msp, struct ux500_msp_config *config)
+diff --git a/sound/soc/sti/uniperif.h b/sound/soc/sti/uniperif.h
+index 2dc2da5d458b..a16adeb7c1e9 100644
+--- a/sound/soc/sti/uniperif.h
++++ b/sound/soc/sti/uniperif.h
+@@ -1348,7 +1348,7 @@ struct sti_uniperiph_data {
+ 	struct sti_uniperiph_dai dai_data;
+ };
  
- static void flush_fifo_rx(struct ux500_msp *msp)
- {
--	u32 reg_val_DR, reg_val_GCR, reg_val_FLR;
-+	u32 reg_val_GCR, reg_val_FLR;
- 	u32 limit = 32;
- 
- 	reg_val_GCR = readl(msp->registers + MSP_GCR);
-@@ -403,7 +403,7 @@ static void flush_fifo_rx(struct ux500_msp *msp)
- 
- 	reg_val_FLR = readl(msp->registers + MSP_FLR);
- 	while (!(reg_val_FLR & RX_FIFO_EMPTY) && limit--) {
--		reg_val_DR = readl(msp->registers + MSP_DR);
-+		readl(msp->registers + MSP_DR);
- 		reg_val_FLR = readl(msp->registers + MSP_FLR);
- 	}
- 
-@@ -412,7 +412,7 @@ static void flush_fifo_rx(struct ux500_msp *msp)
- 
- static void flush_fifo_tx(struct ux500_msp *msp)
- {
--	u32 reg_val_TSTDR, reg_val_GCR, reg_val_FLR;
-+	u32 reg_val_GCR, reg_val_FLR;
- 	u32 limit = 32;
- 
- 	reg_val_GCR = readl(msp->registers + MSP_GCR);
-@@ -421,7 +421,7 @@ static void flush_fifo_tx(struct ux500_msp *msp)
- 
- 	reg_val_FLR = readl(msp->registers + MSP_FLR);
- 	while (!(reg_val_FLR & TX_FIFO_EMPTY) && limit--) {
--		reg_val_TSTDR = readl(msp->registers + MSP_TSTDR);
-+		readl(msp->registers + MSP_TSTDR);
- 		reg_val_FLR = readl(msp->registers + MSP_FLR);
- 	}
- 	writel(0x0, msp->registers + MSP_ITCR);
+-static const struct snd_pcm_hardware uni_tdm_hw = {
++static __maybe_unused const struct snd_pcm_hardware uni_tdm_hw = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_MMAP |
+ 		SNDRV_PCM_INFO_MMAP_VALID,
 -- 
 2.25.1
 
