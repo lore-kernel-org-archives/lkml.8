@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42822C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A1E2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1E82065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135050;
-	bh=/2HtsTSjJmXvMsJ91Q9Z7SL8AT2KMpSO5NaRPPKn97g=;
+	s=default; t=1594135052;
+	bh=mZ+94ue3jrh62rM9/yhydqQai/V6Wz+Chq6dMesfcOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M47mVHA78NLMtedKVJ1wu7yWnlBQ8gzPiD2JBXGQoku9/qaMF3IMtuTmadZLg646W
-	 tb+uGy/wCCQ3lDYp9GrFYsc4dpLaplg3je9jomvC6fL+syZWQ9SdJnZuwPYtwQty8L
-	 RSGlUVwX8a+SvNPS2MNOp5ZiClEcDrkBPSjZvQws=
+	b=a4Dk5pzD1gXzVPV/C/A64PaDh5Fx34s5D1hjm2QuW6rjylxlxKmDNFKT1kevZf8BX
+	 R4MkpTfgVOclfvGozbRj8tos6Bj1c2ZlVSohxtwMo1ic4JPZNnEIyTQb3Ny1jBKOiv
+	 pqrMFUE3LI/IN+yAyIktLLZNaiS/oLmi6e8bS8sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgGGPR1 (ORCPT
+        id S1729120AbgGGPQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgGGPQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:55 -0400
+        id S1729083AbgGGPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C7320773;
-        Tue,  7 Jul 2020 15:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 399C620663;
+        Tue,  7 Jul 2020 15:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135014;
-        bh=/2HtsTSjJmXvMsJ91Q9Z7SL8AT2KMpSO5NaRPPKn97g=;
+        s=default; t=1594135009;
+        bh=mZ+94ue3jrh62rM9/yhydqQai/V6Wz+Chq6dMesfcOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcbswT/kQ0D7kMbgT/QciVMI26DNhu7e1z10D9c7tWGpMvGrVPvye6srGWH+JWZO7
-         ouM23QXxLxzgNlxz0O/e9IPlpPFOAsUqnnKgCzQ/hNukxSESrPuJZmBpwm1FUxUVvt
-         mHL8SSxPwyP6S6/ndBUiGFNbe1yLTp+shRKUflMo=
+        b=e75w6Hl2tX4ZPpslrT6QnK9/SXmYoCqg6fBL7uVA1tMe/Zy8br0nchVFW+aEU+YNl
+         tV+PALhnd2bUb4Oq+cFuq5O58Irrh5jtgYjOAonjhllH7UZXSOC2JqCO7SBFj9V9Ji
+         aB6C1lhLKQeftAuAHyy4qDOVTkeJCk1ACQYkC01U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 4.14 21/27] SMB3: Honor seal flag for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:15:48 +0200
-Message-Id: <20200707145749.962041387@linuxfoundation.org>
+        stable@vger.kernel.org, Elliott Mitchell <ehem+debian@m5p.com>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 19/27] nfsd: apply umask on fs without ACL support
+Date:   Tue,  7 Jul 2020 17:15:46 +0200
+Message-Id: <20200707145749.870230772@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -60,35 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit cc15461c73d7d044d56c47e869a215e49bd429c8 upstream.
+commit 22cf8419f1319ff87ec759d0ebdff4cbafaee832 upstream.
 
-Ensure multiuser SMB3 mounts use encryption for all users' tcons if the
-mount options are configured to require encryption. Without this, only
-the primary tcon and IPC tcons are guaranteed to be encrypted. Per-user
-tcons would only be encrypted if the server was configured to require
-encryption.
+The server is failing to apply the umask when creating new objects on
+filesystems without ACL support.
 
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+To reproduce this, you need to use NFSv4.2 and a client and server
+recent enough to support umask, and you need to export a filesystem that
+lacks ACL support (for example, ext4 with the "noacl" mount option).
+
+Filesystems with ACL support are expected to take care of the umask
+themselves (usually by calling posix_acl_create).
+
+For filesystems without ACL support, this is up to the caller of
+vfs_create(), vfs_mknod(), or vfs_mkdir().
+
+Reported-by: Elliott Mitchell <ehem+debian@m5p.com>
+Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+Fixes: 47057abde515 ("nfsd: add support for the umask attribute")
+Cc: stable@vger.kernel.org
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfsd/vfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4327,6 +4327,7 @@ cifs_construct_tcon(struct cifs_sb_info
- 	vol_info->no_linux_ext = !master_tcon->unix_ext;
- 	vol_info->sectype = master_tcon->ses->sectype;
- 	vol_info->sign = master_tcon->ses->sign;
-+	vol_info->seal = master_tcon->seal;
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1202,6 +1202,9 @@ nfsd_create_locked(struct svc_rqst *rqst
+ 		iap->ia_mode = 0;
+ 	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
  
- 	rc = cifs_set_vol_auth(vol_info, master_tcon->ses);
- 	if (rc) {
++	if (!IS_POSIXACL(dirp))
++		iap->ia_mode &= ~current_umask();
++
+ 	err = 0;
+ 	host_err = 0;
+ 	switch (type) {
+@@ -1413,6 +1416,9 @@ do_nfsd_create(struct svc_rqst *rqstp, s
+ 		goto out;
+ 	}
+ 
++	if (!IS_POSIXACL(dirp))
++		iap->ia_mode &= ~current_umask();
++
+ 	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
+ 	if (host_err < 0) {
+ 		fh_drop_write(fhp);
 
 
