@@ -2,53 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79166C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1A120738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5816720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135010;
-	bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
+	s=default; t=1594135016;
+	bh=msfuEiO+x7aXjVRFosgMz+O+NJtzAGraiNCQX6X1ZSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXHrrh1OzdpK9fr1gFQ7Rl8W6utO2s75ZL/z9EbvhpUFlB6Iyt9MmTKAHntfV7SES
-	 caQFIAf3bc1mLZ0/Yv6isKuGR0pIUoanwUqoBgQCzdanmbXObfPfJTUzRnJlrMl23D
-	 ztT7Ie333Fc7vXvu7bjIbTOgLwErVuaFc+GWiynY=
+	b=lqh3uenyXC6rP6vPYOfAi5D9KsrZllFQACi3yrEVMHvtUIKaxxWuaVHc9ZTP6ZPuF
+	 AawWjTJ0UAOuOiupl20D9pO8jW4mj2ryQ6nHHadNqigHMgpzei2kNJRi8DFZSErTbK
+	 qWx16Fkq0cC09vFZZwC7Je2yACOnpmcbP3MCS3ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgGGPQt (ORCPT
+        id S1729131AbgGGPQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgGGPQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:45 -0400
+        id S1729081AbgGGPQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3415620663;
-        Tue,  7 Jul 2020 15:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0AF120674;
+        Tue,  7 Jul 2020 15:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135004;
-        bh=idTxtCNKIbSRyntYocSBfWdeqKocdgP1o74vUnpWvY0=;
+        s=default; t=1594135007;
+        bh=msfuEiO+x7aXjVRFosgMz+O+NJtzAGraiNCQX6X1ZSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7NdC5nL1tVjxCtHwC2tytJA3nGIFRWgYjq1T+wriVpsiRflI7vNxIuxMi9YdR31F
-         a7LlzREOiAUvOz+tJir+NvxsY3dWXOonLSQf0wxXt/C6iGeLS0n9DB3t+qxpe6CSfj
-         GhN1P7QMje8uVztzviKPVrEosjCL9Gu5aJiuLaHo=
+        b=mO7zS46FCur4h7cm+zoIVE1y/QDadI2ye6VlXGNqiQAtIiMsTmuznKGGDRYpLlY4l
+         lSG31KwY1jIetIzVEGSGy+V/Sf31GW4CuFDEsnlvWSthu6HswpimDcy4DZWBxy3CBt
+         piBiX+Mg81Al5Nejs/bAm0ZJvewKVhLiFJnNKyFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/27] i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-Date:   Tue,  7 Jul 2020 17:15:45 +0200
-Message-Id: <20200707145749.827942938@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 4.14 27/27] efi: Make it possible to disable efivar_ssdt entirely
+Date:   Tue,  7 Jul 2020 17:15:54 +0200
+Message-Id: <20200707145750.239540292@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -61,43 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Peter Jones <pjones@redhat.com>
 
-[ Upstream commit cd217f2300793a106b49c7dfcbfb26e348bc7593 ]
+commit 435d1a471598752446a72ad1201b3c980526d869 upstream.
 
-The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
-low, this differs to the PCA9564 which uses 90h for this indication.
-Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
+In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
+CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
+are tied to specific Kconfig options.  Currently this is not the case
+for modifying the ACPI SSDT via the efivar_ssdt kernel command line
+option and associated EFI variable.
 
-Based on looking through the PCA9564 and PCA9665 datasheets this should
-be safe for both chips. The PCA9564 should not return 0x78 for any valid
-state and the PCA9665 should not return 0x90.
+This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
+disabled, in order to allow enabling or disabling that feature during
+the build.
 
-Fixes: eff9ec95efaa ("i2c-algo-pca: Add PCA9665 support")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Link: https://lore.kernel.org/r/20200615202408.2242614-1-pjones@redhat.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/Kconfig |   11 +++++++++++
+ drivers/firmware/efi/efi.c   |    2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
-index e370804ec8bc6..3a9db4626cb60 100644
---- a/drivers/i2c/algos/i2c-algo-pca.c
-+++ b/drivers/i2c/algos/i2c-algo-pca.c
-@@ -326,7 +326,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
- 			DEB2("BUS ERROR - SDA Stuck low\n");
- 			pca_reset(adap);
- 			goto out;
--		case 0x90: /* Bus error - SCL stuck low */
-+		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
-+		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
- 			DEB2("BUS ERROR - SCL Stuck low\n");
- 			pca_reset(adap);
- 			goto out;
--- 
-2.25.1
-
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -164,6 +164,17 @@ config RESET_ATTACK_MITIGATION
+ 	  have been evicted, since otherwise it will trigger even on clean
+ 	  reboots.
+ 
++config EFI_CUSTOM_SSDT_OVERLAYS
++	bool "Load custom ACPI SSDT overlay from an EFI variable"
++	depends on EFI_VARS && ACPI
++	default ACPI_TABLE_UPGRADE
++	help
++	  Allow loading of an ACPI SSDT overlay from an EFI variable specified
++	  by a kernel command line option.
++
++	  See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
++	  information.endmenu
++
+ endmenu
+ 
+ config UEFI_CPER
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -221,7 +221,7 @@ static void generic_ops_unregister(void)
+ 	efivars_unregister(&generic_efivars);
+ }
+ 
+-#if IS_ENABLED(CONFIG_ACPI)
++#ifdef CONFIG_EFI_CUSTOM_SSDT_OVERLAYS
+ #define EFIVAR_SSDT_NAME_MAX	16
+ static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
+ static int __init efivar_ssdt_setup(char *str)
 
 
