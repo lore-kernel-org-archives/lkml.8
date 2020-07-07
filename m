@@ -2,137 +2,92 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E37BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7890520674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u3N/FiQE"
+	by mail.kernel.org (Postfix) with ESMTP id 448EA20702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgGGGzZ (ORCPT
+        id S1728127AbgGGGzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgGGGzY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:55:24 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613EFC061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:55:24 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id o15so21922279vsp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 23:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R5BjuHDM7SvbwjX2Wy0yK9rZ3kvZqwci6rTlVHchQms=;
-        b=u3N/FiQEU/C/kO2T73BlHN0SZ7p0aso1DFhdA3lZ7DW8LAGykkaHH2i+XXtXsWEqhx
-         2oZftQS3TbmOAeem+c/Ykimd/yZVKGFScenD6Ql31xaBx1OMGL73tvizuPBaGVuHZPKV
-         dWQa+7nduTPNA193emz8Qjc5qY8xal2QyyewGgr5G6NWqWMeHmOBvdRoYGZs5yZrN31H
-         4hojVcG6VhV2rQwnVFCA1g2Ed4lR2lvb0Z2vBIJVB6pup/VMvTvlJJ/cBbLhHEezzS9j
-         4SMFXHh2OqjD4C4n2P9JfpvUH7OCFS5Dcso8LaoYIIfNhxbHR52barpQSRtgrBJCMAOR
-         X81A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R5BjuHDM7SvbwjX2Wy0yK9rZ3kvZqwci6rTlVHchQms=;
-        b=rmEPF1UAC4FiLicQ4fpBmxUYWX7W1M687U/csUPiL/FhTPnxIfVCaplTGiZvtEqBp/
-         7lU/5fU2PZ2kHxlRu9tFJVm4JvBuM2OB/QG1/lQP2GemaiY6ThX9Q5MlGVynvA3oOIJg
-         lHZ9/dHYqRLEzedNHqfD5yz1fYDFC6h/XR9c4ZAKy4yOi/0LbaGs0Ubgn2ac1AC9RnBz
-         Xd5a7NCMl4Kw4h3sWTdeeb5X2wF/t3l5D01hMOTHRlnWh2jwJrw8O45rHRB1o743wnYe
-         Q+5ZfnVIhagOh4o/gD8YgsY0Zmnt7y8RdE9SqnCjfQAiG+pyFyogxIaFcuBLdIDy4Z8K
-         GaIg==
-X-Gm-Message-State: AOAM5332gurGMuS6r26GwWyqSJpbB3AFnEiRskH3oX6mifixqQ17N+eD
-        ZHXv3iHfsGh4WZkGiYVPYuTCNTL8HR8TcRfmVmRIKA==
-X-Google-Smtp-Source: ABdhPJxBYFpArr21ZuEa8iqd08YvBimLIpo2Sv9wNImWbaG78jmphcf8G/Cb+SRyEWPEqwFoz62WDpVw5zzTvOldd3w=
-X-Received: by 2002:a67:ca03:: with SMTP id z3mr31570079vsk.34.1594104923449;
- Mon, 06 Jul 2020 23:55:23 -0700 (PDT)
+        Tue, 7 Jul 2020 02:55:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:57417 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbgGGGzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:55:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 21E0268BEB; Tue,  7 Jul 2020 08:55:50 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 08:55:49 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     David Rientjes <rientjes@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, linux-mm@kvack.org,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [BUG] XHCI getting ZONE_DMA32 memory > than its bus_dma_limit
+Message-ID: <20200707065549.GA23760@lst.de>
+References: <34619bdf-6527-ae82-7e4d-e2ea7c67ed56@arm.com> <a9058fd2c54bbea69fdf97e30277338a61b5c0b4.camel@suse.de> <cc17fe85-99a3-ec8c-985a-2a21cf09bf49@arm.com> <alpine.DEB.2.23.453.2007051635250.3687564@chino.kir.corp.google.com> <32ee3bf222b1966caa98b67a9cec8712817a4b52.camel@suse.de>
 MIME-Version: 1.0
-References: <20200701102317.235032-1-lee.jones@linaro.org>
-In-Reply-To: <20200701102317.235032-1-lee.jones@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 7 Jul 2020 08:54:47 +0200
-Message-ID: <CAPDyKFonM1AJro7UEY0V=OmGEhMEQHpx5zQM6aMvJidEXFiWpA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] arch: arm: mach-omap2: mmc: Move omap_mmc_notify_cover_event()
- prototype
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32ee3bf222b1966caa98b67a9cec8712817a4b52.camel@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 12:23, Lee Jones <lee.jones@linaro.org> wrote:
->
-> When building the kernel with W=3D1 the build system complains of:
->
->  drivers/mmc/host/omap.c:854:6: warning: no previous prototype for =E2=80=
-=98omap_mmc_notify_cover_event=E2=80=99 [-Wmissing-prototypes]
->  854 | void omap_mmc_notify_cover_event(struct device *dev, int num, int =
-is_closed)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> If we move the prototype into a shared headerfile the build system
-> will be satisfied.  Rather than create a whole new headerfile just
-> for this purpose, it makes sense to use the already existing
-> mmc-omap.h.
->
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: linux-omap@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Mon, Jul 06, 2020 at 04:09:36PM +0200, Nicolas Saenz Julienne wrote:
+> On Sun, 2020-07-05 at 16:41 -0700, David Rientjes wrote:
+> > On Fri, 3 Jul 2020, Robin Murphy wrote:
+> > > Or perhaps just get rid of atomic_pool_dma32 (and allocate atomic_pool_dma
+> > > from ZONE_DMA32 if !ZONE_DMA). That should make it fall pretty much back in
+> > > line while still preserving the potential benefit of the kernel pool for
+> > > non-address-constrained devices.
+> > > 
+> > 
+> > I assume it depends on how often we have devices where 
+> > __dma_direct_alloc_pages() behavior is required, i.e. what requires the 
+> > dma_coherent_ok() checks and altering of the gfp flags to get memory that 
+> > works.
+> > 
+> > Is the idea that getting rid of atomic_pool_dma32 would use GFP_KERNEL 
+> > (and atomic_pool_kernel) as the default policy here?  That doesn't do any 
+> > dma_coherent_ok() checks so dma_direct_alloc_pages would return from 
+> > ZONE_NORMAL without a < 3G check?
+> 
+> IIUC this is not what Robin proposes.
+> 
+> The idea is to only have one DMA pool, located in ZONE_DMA, if enabled, and
+> ZONE_DMA32 otherwise. This way you're always sure the memory is going to be
+> good enough for any device while maintaining the benefits of
+> atomic_pool_kernel.
 
-Applied for next, thanks!
+That is how I understood the proposal from Robin and I think it is
+the right thing to do.
 
-Kind regards
-Uffe
+> > It *seems* like we want to check if dma_coherent_ok() succeeds for ret in 
+> > dma_direct_alloc_pages() when allocating from the atomic pool and, based 
+> > on criteria that allows fallback, just fall into 
+> > __dma_direct_alloc_pages()?
+> 
+> I suspect I don't have enough perspective here but, isn't that breaking the
+> point of having an atomic pool? Wouldn't that generate big latency spikes? I
+> can see how audio transfers over USB could be affected by this specifically,
+> IIRC those are allocated atomically and have timing constraints.
+> 
+> That said, if Robin solution works for you, I don't mind having a go at it.
 
-
-> ---
->  arch/arm/mach-omap2/mmc.h              | 4 ----
->  include/linux/platform_data/mmc-omap.h | 3 +++
->  2 files changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/mach-omap2/mmc.h b/arch/arm/mach-omap2/mmc.h
-> index 7f4e053c34344..b5533e93cb632 100644
-> --- a/arch/arm/mach-omap2/mmc.h
-> +++ b/arch/arm/mach-omap2/mmc.h
-> @@ -16,7 +16,3 @@ static inline int omap_msdi_reset(struct omap_hwmod *oh=
-)
->         return 0;
->  }
->  #endif
-> -
-> -/* called from board-specific card detection service routine */
-> -extern void omap_mmc_notify_cover_event(struct device *dev, int slot,
-> -                                       int is_closed);
-> diff --git a/include/linux/platform_data/mmc-omap.h b/include/linux/platf=
-orm_data/mmc-omap.h
-> index 9acf0e87aa9be..f0b8947e6b07d 100644
-> --- a/include/linux/platform_data/mmc-omap.h
-> +++ b/include/linux/platform_data/mmc-omap.h
-> @@ -116,3 +116,6 @@ struct omap_mmc_platform_data {
->
->         } slots[OMAP_MMC_MAX_SLOTS];
->  };
-> +
-> +extern void omap_mmc_notify_cover_event(struct device *dev, int slot,
-> +                                       int is_closed);
-> --
-> 2.25.1
->
+We can't just fall back to __dma_direct_alloc_pages when allocation
+from the atomic pool fails, as the atomic pool exists for provide
+allocations that require sleeping actions for callers that can't
+sleep.
