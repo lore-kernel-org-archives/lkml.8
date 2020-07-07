@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE362065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA782088E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135550;
-	bh=u5hZZbFiRo5yvKUXbV5TVcAyrT/PdqV0ctTx9a77ELA=;
+	s=default; t=1594135553;
+	bh=0FKU8CzWdHgKgcmcyG4su7ho8QOKuw0YpyhgYdqI3TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kggrJ1jFxxxMbqY21FLty+8ngl8sZNFOnnJ1vxwC3G/RW5YAxEWx8F9bN1Vx/5fqn
-	 36ZeBm903Wbys4E8nA4vlUZlF1sOYJttyLQ1ZN56OM4r24KdWK0L9/uV9IAExkeMfb
-	 ACxtJH9HPK1EpjTxPWZZik7pS6aVgM1N0q04xB5U=
+	b=cgFMfRKBgcvYamYH1QWdZ4qVNw32NMdi9268ilSidN7P72l6ID8XM7XMv+frtA4cq
+	 +KWm4BfnPGU9ePss2AE83618LzY/mxrwoknpijx1rp3Ri5dU7J7BD/fyYUvXke8srs
+	 8oi9tOeIqnuUCR8ghDMdM/Ul8dGEWKmEdxYLAd+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgGGPZt (ORCPT
+        id S1730254AbgGGPZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgGGPZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:42 -0400
+        id S1729881AbgGGPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C462088E;
-        Tue,  7 Jul 2020 15:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3BE92065D;
+        Tue,  7 Jul 2020 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135542;
-        bh=u5hZZbFiRo5yvKUXbV5TVcAyrT/PdqV0ctTx9a77ELA=;
+        s=default; t=1594135547;
+        bh=0FKU8CzWdHgKgcmcyG4su7ho8QOKuw0YpyhgYdqI3TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BO3JBi2A2KnkJ0xUlg13Z+2aZXhOAiJKPOlWVrscxyK8eZPdZjsW39owCpklYp4V+
-         dN4EDX4gag446GBOkf3SOyq/ME0tCaIHd3AsjQ4iONYz4+vUNVZIsXEeSuVzGHY+Jt
-         CGO8Zhb6VJmEefbEKV0TYQtck+hMWVdW1xow0Umc=
+        b=wmXodH2BvQnicCDshTOZN/fhFwHOTQ+Xu4CG+/6AxfrCMa213pCkLjZxzzLiPTuUa
+         207DCxl+kEYJcPe5icfdUz7fcVK53MVtqW779pBHu4iXcPMQ/va21ZJWRHLj6HXTTr
+         ZaJFq0YEYyFSd09CnxBGijcZsm7963UIvMuD3F8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ricardo Ribalda <ribalda@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 082/112] i2c: designware: platdrv: Set class based on DMI
-Date:   Tue,  7 Jul 2020 17:17:27 +0200
-Message-Id: <20200707145804.885886148@linuxfoundation.org>
+        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 084/112] io_uring: fix regression with always ignoring signals in io_cqring_wait()
+Date:   Tue,  7 Jul 2020 17:17:29 +0200
+Message-Id: <20200707145804.978657030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,63 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda <ribalda@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit db2a8b6f1df93d5311970cca03052c01178de674 ]
+[ Upstream commit b7db41c9e03b5189bc94993bd50e4506ac9e34c1 ]
 
-Current AMD's zen-based APUs use this core for some of its i2c-buses.
+When switching to TWA_SIGNAL for task_work notifications, we also made
+any signal based condition in io_cqring_wait() return -ERESTARTSYS.
+This breaks applications that rely on using signals to abort someone
+waiting for events.
 
-With this patch we re-enable autodetection of hwmon-alike devices, so
-lm-sensors will be able to work automatically.
+Check if we have a signal pending because of queued task_work, and
+repeat the signal check once we've run the task_work. This provides a
+reliable way of telling the two apart.
 
-It does not affect the boot-time of embedded devices, as the class is
-set based on the DMI information.
+Additionally, only use TWA_SIGNAL if we are using an eventfd. If not,
+we don't have the dependency situation described in the original commit,
+and we can get by with just using TWA_RESUME like we previously did.
 
-DMI is probed only on Qtechnology QT5222 Industrial Camera Platform.
-
-DocLink: https://qtec.com/camera-technology-camera-platforms/
-Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
-Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: ce593a6c480a ("io_uring: use signal based task_work running")
+Cc: stable@vger.kernel.org # v5.7
+Reported-by: Andres Freund <andres@anarazel.de>
+Tested-by: Andres Freund <andres@anarazel.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-designware-platdrv.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 5536673060cc6..3a9c2cfbef974 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -234,6 +234,17 @@ static const u32 supported_speeds[] = {
- 	I2C_MAX_STANDARD_MODE_FREQ,
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 51362a619fd50..2be6ea0103405 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4136,14 +4136,22 @@ struct io_poll_table {
+ 	int error;
  };
  
-+static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
-+	{
-+		.ident = "Qtechnology QT5222",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
-+		},
-+	},
-+	{ } /* terminate list */
-+};
-+
- static int dw_i2c_plat_probe(struct platform_device *pdev)
+-static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb,
+-				int notify)
++static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb)
  {
- 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-@@ -349,7 +360,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	struct task_struct *tsk = req->task;
+-	int ret;
++	struct io_ring_ctx *ctx = req->ctx;
++	int ret, notify = TWA_RESUME;
  
- 	adap = &dev->adapter;
- 	adap->owner = THIS_MODULE;
--	adap->class = I2C_CLASS_DEPRECATED;
-+	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
-+					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
- 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->nr = -1;
+-	if (req->ctx->flags & IORING_SETUP_SQPOLL)
++	/*
++	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
++	 * If we're not using an eventfd, then TWA_RESUME is always fine,
++	 * as we won't have dependencies between request completions for
++	 * other kernel wait conditions.
++	 */
++	if (ctx->flags & IORING_SETUP_SQPOLL)
+ 		notify = 0;
++	else if (ctx->cq_ev_fd)
++		notify = TWA_SIGNAL;
+ 
+ 	ret = task_work_add(tsk, cb, notify);
+ 	if (!ret)
+@@ -4174,7 +4182,7 @@ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
+ 	 * of executing it. We can't safely execute it anyway, as we may not
+ 	 * have the needed state needed for it anyway.
+ 	 */
+-	ret = io_req_task_work_add(req, &req->task_work, TWA_SIGNAL);
++	ret = io_req_task_work_add(req, &req->task_work);
+ 	if (unlikely(ret)) {
+ 		WRITE_ONCE(poll->canceled, true);
+ 		tsk = io_wq_get_task(req->ctx->io_wq);
+@@ -6279,7 +6287,14 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 		if (current->task_works)
+ 			task_work_run();
+ 		if (signal_pending(current)) {
+-			ret = -ERESTARTSYS;
++			if (current->jobctl & JOBCTL_TASK_WORK) {
++				spin_lock_irq(&current->sighand->siglock);
++				current->jobctl &= ~JOBCTL_TASK_WORK;
++				recalc_sigpending();
++				spin_unlock_irq(&current->sighand->siglock);
++				continue;
++			}
++			ret = -EINTR;
+ 			break;
+ 		}
+ 		if (io_should_wake(&iowq, false))
+@@ -6288,7 +6303,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	} while (1);
+ 	finish_wait(&ctx->wait, &iowq.wq);
+ 
+-	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
++	restore_saved_sigmask_unless(ret == -EINTR);
+ 
+ 	return READ_ONCE(rings->cq.head) == READ_ONCE(rings->cq.tail) ? ret : 0;
+ }
 -- 
 2.25.1
 
