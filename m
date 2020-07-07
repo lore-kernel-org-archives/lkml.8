@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7742D20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93705206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136035;
-	bh=Brifg5H2GM2UzNR684NMp71BfyWKASxXhfyy9IO3azY=;
+	s=default; t=1594136041;
+	bh=bvPcKlwlDuQ39NgeyRvOJPem66G0vhDdmIycbdbyolo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z5DMOXF8g7azDPyoVQNstWgDVBnnx7U1gOq6ux9s0XYSoMdZEDIdKtG14WOvIqNoQ
-	 cs2grQz9hYapbXI/CVZErJCYyuXQLbt2tRsImFRQM1VPzNdTomF70Lu9MmtvZK98Kj
-	 yfQgtsIcIE6mJV+JjLSYdhujG+CmzYKosap5ZdSE=
+	b=UsiFN9WXa+1DZOcRvFw1l2VGsCdJYFjyAbgjcPKFAsIcyqgUZYqETdrZGJAgid4XK
+	 OP+hd09kNEvmDXjK2Oe1TtG7g4Hmux1FnDY/KZF0ThLFhZ+xrS3AbtxVzidu/lZSIi
+	 Ryew1x+PKT6df8h59bssaHTz+RlH/7xlsp9GGHuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgGGPdx (ORCPT
+        id S1729993AbgGGPeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgGGPUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:08 -0400
+        id S1728620AbgGGPTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFBB207F9;
-        Tue,  7 Jul 2020 15:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1388920663;
+        Tue,  7 Jul 2020 15:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135207;
-        bh=Brifg5H2GM2UzNR684NMp71BfyWKASxXhfyy9IO3azY=;
+        s=default; t=1594135186;
+        bh=bvPcKlwlDuQ39NgeyRvOJPem66G0vhDdmIycbdbyolo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bA3ZmQLZ93/ZTVSaInOy4+VJsVZ20kosYV024Clro00X6TprPNf6itZXP0VahGQbQ
-         XNkXGtw31lam5uYL2c5FEEONqMFN7zGgMSfhzK9YSU7zg6QSjEiHlfWphVqrXYtj2P
-         KuLxLzBUCuik1C1/KXxUox7d0qxsl0r8ID0Gq1K4=
+        b=hTV6uEiwaeAYLJiBn4Xtl33KdeVpUMBSvx73GmWTcuep5Kt2aIS+C86KREFBCqY0t
+         bIUVfu1kB3GfOpwZOvP3g8hVCId47AwfkEZVX9aPO3gzX/GgoC23tVA3yaz4YxXG30
+         smz1HeFlsjdPILpamkhpDEzpSCZn3BFqMiUMRnIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 16/65] nvme-multipath: fix deadlock due to head->lock
-Date:   Tue,  7 Jul 2020 17:16:55 +0200
-Message-Id: <20200707145753.240242645@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Steve French <stfrench@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/36] SMB3: Honor posix flag for multiuser mounts
+Date:   Tue,  7 Jul 2020 17:17:15 +0200
+Message-Id: <20200707145750.232853396@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-References: <20200707145752.417212219@linuxfoundation.org>
+In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
+References: <20200707145749.130272978@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,122 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Paul Aurich <paul@darkrain42.org>
 
-[ Upstream commit d8a22f85609fadb46ba699e0136cc3ebdeebff79 ]
+[ Upstream commit 5391b8e1b7b7e5cfa2dd4ffdc4b8c6b64dfd1866 ]
 
-In the following scenario scan_work and ana_work will deadlock:
+The flag from the primary tcon needs to be copied into the volume info
+so that cifs_get_tcon will try to enable extensions on the per-user
+tcon. At that point, since posix extensions must have already been
+enabled on the superblock, don't try to needlessly adjust the mount
+flags.
 
-When scan_work calls nvme_mpath_add_disk() this holds ana_lock
-and invokes nvme_parse_ana_log(), which may issue IO
-in device_add_disk() and hang waiting for an accessible path.
-
-While nvme_mpath_set_live() only called when nvme_state_is_live(),
-a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
-
-Since nvme_mpath_set_live() holds ns->head->lock, an ana_work on
-ANY ctrl will not be able to complete nvme_mpath_set_live()
-on the same ns->head, which is required in order to update
-the new accessible path and remove NVME_NS_ANA_PENDING..
-Therefore IO never completes: deadlock [1].
-
-Fix:
-Move device_add_disk out of the head->lock and protect it with an
-atomic test_and_set for a new NVME_NS_HEAD_HAS_DISK bit.
-
-[1]:
-kernel: INFO: task kworker/u8:2:160 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:2    D    0   160      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  nvme_update_ns_ana_state+0x22/0x60 [nvme_core]
-kernel:  nvme_update_ana_state+0xca/0xe0 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  nvme_read_ana_log+0x76/0x100 [nvme_core]
-kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-kernel: INFO: task kworker/u8:4:439 blocked for more than 120 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u8:4    D    0   439      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  efi_partition+0x1e6/0x708
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_mpath_add_disk+0xbe/0x100 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  nvme_scan_work+0x256/0x390 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ret_from_fork+0x35/0x40
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: ce558b0e17f8 ("smb3: Add posix create context for smb3.11 posix mounts")
+Fixes: b326614ea215 ("smb3: allow "posix" mount option to enable new SMB311 protocol extensions")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 4 ++--
- drivers/nvme/host/nvme.h      | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ fs/cifs/connect.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 18f0a05c74b56..574b52e911f08 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -417,11 +417,11 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 	if (!head->disk)
- 		return;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 9e569d60c636b..136de62f351a7 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4602,6 +4602,7 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
+ 	vol_info->nohandlecache = master_tcon->nohandlecache;
+ 	vol_info->local_lease = master_tcon->local_lease;
+ 	vol_info->no_linux_ext = !master_tcon->unix_ext;
++	vol_info->linux_ext = master_tcon->posix_extensions;
+ 	vol_info->sectype = master_tcon->ses->sectype;
+ 	vol_info->sign = master_tcon->ses->sign;
  
--	mutex_lock(&head->lock);
--	if (!(head->disk->flags & GENHD_FL_UP))
-+	if (!test_and_set_bit(NVME_NSHEAD_DISK_LIVE, &head->flags))
- 		device_add_disk(&head->subsys->dev, head->disk,
- 				nvme_ns_id_attr_groups);
+@@ -4629,10 +4630,6 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
+ 		goto out;
+ 	}
  
-+	mutex_lock(&head->lock);
- 	if (nvme_path_is_optimized(ns)) {
- 		int node, srcu_idx;
+-	/* if new SMB3.11 POSIX extensions are supported do not remap / and \ */
+-	if (tcon->posix_extensions)
+-		cifs_sb->mnt_cifs_flags |= CIFS_MOUNT_POSIX_PATHS;
+-
+ 	if (cap_unix(ses))
+ 		reset_cifs_unix_caps(0, tcon, NULL, vol_info);
  
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 22e8401352c22..ed02260862cb5 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -345,6 +345,8 @@ struct nvme_ns_head {
- 	spinlock_t		requeue_lock;
- 	struct work_struct	requeue_work;
- 	struct mutex		lock;
-+	unsigned long		flags;
-+#define NVME_NSHEAD_DISK_LIVE	0
- 	struct nvme_ns __rcu	*current_path[];
- #endif
- };
 -- 
 2.25.1
 
