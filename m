@@ -2,96 +2,111 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B815FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA5B20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961D620702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LywVwyGX"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JjYvUZBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgGGFoS (ORCPT
+        id S1728020AbgGGFuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+        Tue, 7 Jul 2020 01:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgGGFoS (ORCPT
+        with ESMTP id S1727789AbgGGFuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:44:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0CAC061755;
-        Mon,  6 Jul 2020 22:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=VZkOok0klgYFwIIGzlVgtaFmTD1Z+sQAb+yB5lFvhOw=; b=LywVwyGX/TJ2DZv2pe2/K08L5r
-        MJDRPMQ6dPYqEoL75gE7NLMEC2Gk+iIYvxkj5BYB9ir7uaGoEI3KTdZTpUy2dK34VvxQ5IFnAkwfj
-        Z53fC+wV1m6YnNgod2y063+J0kDfkvSfL/JwxNnlgomj7ITPpGPt+ZMG2WaX8F9AreLeNJrdSXecK
-        C33ZP48O7t5qd6WBZhZZe6Ns+2Q9Rie0b8hfMh7t/uoX8Nx7NBckcI4Euv6qnOwbdA3LL2fhNu/Dg
-        In2bIpTuJuOw3SGWeK3oz3vCTfaZLo+AtgrZSyUq4n4nu7vRqZyNWxQyd5eeNefJn6MixQuYJg1XN
-        ttz4h/7A==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsgOj-00019U-FU; Tue, 07 Jul 2020 05:44:06 +0000
-Subject: Re: mmotm 2020-07-06-18-53 uploaded
- (sound/soc/amd/renoir/rn-pci-acp3x.c:)
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        sfr@canb.auug.org.au, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-References: <20200707015344.U9ep-OO5Z%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b54188c7-47b4-b7e4-2f74-6394320df5df@infradead.org>
-Date:   Mon, 6 Jul 2020 22:44:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 01:50:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E448C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 22:50:17 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so32498781wrl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 22:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tWwPNUXAhZkGALSmCM6I62dir2ac7KtA6PfPQYUz4tM=;
+        b=JjYvUZBaLJxTV/BcuvHN0yhsBodhFnLNMtn6S42f4eG11n/5e/oCblJoIIBUpfysyf
+         Vgw3xlD1GHvhj9g1ql1pmPUfwN4tqKoAj4Pvpq1pZ2urqQ5fkXpiqvs54MSWagyQKwiA
+         n6No1KSVjXYrja6mPtGqEkYkUS2sD4sKfSn3E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=tWwPNUXAhZkGALSmCM6I62dir2ac7KtA6PfPQYUz4tM=;
+        b=rtYoeuy1sdFjYNMeVqv0ufJOsGhDkjKKx20ouvgqgAicSivh5kDHhLHk/SPhjsGjqa
+         iY6IEyCKLHbV8Rkhfnjaq6RscJTmCkVu6EHjPgmoSARyAHXuLcEBBECCc3mlTjysUL9E
+         +YTq23J3Vze9iGR73tfrFhlJR9aHRJpJ/6hDbixT6XeWeH0rP398ZjE2rIe0kI4Flk7y
+         /Q7x5lHaLVaGrR7irOvQZt6NbU9N7QeKYJA6yaN7HpBNQ4xqmi6Og3x4FqwGTEbfn7yJ
+         xDiGS7kvd2CaFX877j/8hzwxRSzjjl37TozYQtfutpWju+qXNP1oJuckqwXCPWyRnJ+j
+         03wA==
+X-Gm-Message-State: AOAM530LuOuKcCHzOXjnvR6oPLcPHZQS4R3S67YWDzLoUsBSsXoEHWS5
+        L4NJHQTYx9ZNNvB3TdaXhO0New==
+X-Google-Smtp-Source: ABdhPJxzb1aGKqJ4jxtL9PIFyXbRUO2dBkb0GWe1iZ9+xLYdWRBle+zVIIjxFlCnANQHnCq+1iMaNw==
+X-Received: by 2002:a5d:40cf:: with SMTP id b15mr51255032wrq.319.1594101016305;
+        Mon, 06 Jul 2020 22:50:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id k185sm1883352wmk.47.2020.07.06.22.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 22:50:15 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 07:50:13 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Suraj Upadhyay <usuraj35@gmail.com>
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [Proposal] drm: amd: Convert logging to drm_* functions with
+ drm_device parameter
+Message-ID: <20200707055013.GG3278063@phenom.ffwll.local>
+Mail-Followup-To: Suraj Upadhyay <usuraj35@gmail.com>,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+References: <20200706105138.GA10722@blackclown>
 MIME-Version: 1.0
-In-Reply-To: <20200707015344.U9ep-OO5Z%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706105138.GA10722@blackclown>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 6:53 PM, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2020-07-06-18-53 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
-> 
+On Mon, Jul 06, 2020 at 04:21:38PM +0530, Suraj Upadhyay wrote:
+> Hii Maintainers,
+> 	I recently came across this list of janatorial tasks
+> for starters on DRM subsystem [1]. One of the tasks is replacing
+> conventional dmesg macros (like dev_info(), dev_warn() and dev_err())
+> with DRM dmesg macros [2]. And I need your input whether the
+> conversions to DRM dmesg macros are worth it or not.
+> I would like to start working on this task if this needs the change.
 
-on i386:
+For any core code I'm happy to merge such patches. If you're changing a
+specific driver (all the subdirectories under drivers/gpu/drm/*) then
+please ping the specific driver maintainer first. They should be all
+listed in the MAINTAINERS file.
 
-when CONFIG_ACPI is not set/enabled:
+Cheers, Daniel
 
-../sound/soc/amd/renoir/rn-pci-acp3x.c: In function ‘snd_rn_acp_probe’:
-../sound/soc/amd/renoir/rn-pci-acp3x.c:222:9: error: implicit declaration of function ‘acpi_evaluate_integer’; did you mean ‘acpi_evaluate_object’? [-Werror=implicit-function-declaration]
-   ret = acpi_evaluate_integer(handle, "_WOV", NULL, &dmic_status);
-         ^~~~~~~~~~~~~~~~~~~~~
-         acpi_evaluate_object
+> 
+> Thank you,
+> Suraj Upadhyay.
+> 
+> [1] https://dri.freedesktop.org/docs/drm/gpu/todo.html.
+> [2] https://dri.freedesktop.org/docs/drm/gpu/todo.html#convert-logging-to-drm-functions-with-drm-device-paramater
+> 
 
 
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
