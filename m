@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEABC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FD8206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0D420663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135977;
-	bh=n+h6vftLiWs+H1so8k71lTA8lNPvDrLu2/50n68P8ks=;
+	s=default; t=1594135981;
+	bh=xNgxuafim4tGyZpEE1Liq7qCviauMv+IL2AhbUrrGCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yvmo3NnIfOtfZwUuSDUZY1Qd9f4sI8UxvAJtiAXAq0w7gkKb+rUCA+RryGomAI8jX
-	 2RYneffZ+rw7pDnsAsXyPTX5CADS4g15GYHGc/l9ErPtZxAYCkv4O4YW2vkIQNCP2W
-	 cfTuPRKhGywPdoVvg3VxO+6EiLPo3AOP0lzYV8g4=
+	b=zGGPebMbAKLlYQ9PCOITIOpIn+vzXw1VCiAjcgZhti3KeaudPWRh/NAM4T8du3SEx
+	 RjQnL6U/veENkVCXEKKYpBUhX2H28I2pWiIrOwzgHQ+DcLAV6d+TW+n4LSnAiQIq71
+	 YZBRVRu88hE8B8Pu/cTkz8feuVHP9+scVT2ItD78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgGGPc4 (ORCPT
+        id S1729678AbgGGPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:32:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33478 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbgGGPVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:18 -0400
+        id S1729673AbgGGPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF8C20771;
-        Tue,  7 Jul 2020 15:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A14206F6;
+        Tue,  7 Jul 2020 15:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135277;
-        bh=n+h6vftLiWs+H1so8k71lTA8lNPvDrLu2/50n68P8ks=;
+        s=default; t=1594135272;
+        bh=xNgxuafim4tGyZpEE1Liq7qCviauMv+IL2AhbUrrGCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sb/G8/g2KBU0QAPsd0HtV9dQVGIgg2Jp037DBOZPZMCrTQ9GlpidQQHF7FWu4t2KS
-         wKjN1STgiFvxPbDx5ByC2OjFy2yqCOgvaU2huChzVeBw+H61GyfSsrGNr/oFcMKU3f
-         B7vDdJdSg86S2TI0ruJqDBhkKW42BYVwhxQMXl3s=
+        b=BCJdsPn/WbO45Ku5sY/cAbvdIozSNhC/EDb4BGb4Mw4RQNdu4nfAC5/hawoh3QAyg
+         hx+YBstzm+0y8t9D/4e95YPNSBX2nTjnF2YIH2wrzq5aXq3/t23pp1/47mufVIJgS2
+         LGAW/omsEgmGE82QYycbIwv+1qcWXEDRFhIZkzwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 44/65] i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-Date:   Tue,  7 Jul 2020 17:17:23 +0200
-Message-Id: <20200707145754.594554577@linuxfoundation.org>
+        stable@vger.kernel.org, Avinash M N <Avinash.M.N@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 42/65] nvme: fix a crash in nvme_mpath_add_disk
+Date:   Tue,  7 Jul 2020 17:17:21 +0200
+Message-Id: <20200707145754.492490789@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,41 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit cd217f2300793a106b49c7dfcbfb26e348bc7593 ]
+[ Upstream commit 72d447113bb751ded97b2e2c38f886e4a4139082 ]
 
-The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
-low, this differs to the PCA9564 which uses 90h for this indication.
-Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
+For private namespaces ns->head_disk is NULL, so add a NULL check
+before updating the BDI capabilities.
 
-Based on looking through the PCA9564 and PCA9665 datasheets this should
-be safe for both chips. The PCA9564 should not return 0x78 for any valid
-state and the PCA9665 should not return 0x90.
-
-Fixes: eff9ec95efaa ("i2c-algo-pca: Add PCA9665 support")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: b2ce4d90690b ("nvme-multipath: set bdi capabilities once")
+Reported-by: Avinash M N <Avinash.M.N@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
-index 5ac93f41bfecf..8ea850eed18f7 100644
---- a/drivers/i2c/algos/i2c-algo-pca.c
-+++ b/drivers/i2c/algos/i2c-algo-pca.c
-@@ -314,7 +314,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
- 			DEB2("BUS ERROR - SDA Stuck low\n");
- 			pca_reset(adap);
- 			goto out;
--		case 0x90: /* Bus error - SCL stuck low */
-+		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
-+		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
- 			DEB2("BUS ERROR - SCL Stuck low\n");
- 			pca_reset(adap);
- 			goto out;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index e1eeed5856570..5433aa2f76017 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -673,10 +673,11 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ 	}
+ 
+ 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
+-		struct backing_dev_info *info =
+-					ns->head->disk->queue->backing_dev_info;
++		struct gendisk *disk = ns->head->disk;
+ 
+-		info->capabilities |= BDI_CAP_STABLE_WRITES;
++		if (disk)
++			disk->queue->backing_dev_info->capabilities |=
++					BDI_CAP_STABLE_WRITES;
+ 	}
+ }
+ 
 -- 
 2.25.1
 
