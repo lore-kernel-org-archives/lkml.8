@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D463C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2FC2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B84920663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135561;
-	bh=3NwqFezCmPe9nPgiAGgAMOp5zWQ+zCs/N3fpTYnnuxA=;
+	s=default; t=1594135565;
+	bh=eJ6URdP5x8PemYoHcolXfF7Vl/a/bH8husjspmEuO9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m8PxWPRfMcVrtZ8V2AgFB76kEaAtJmK/KcjbPI61d9S0CdURrbI2ySo7DXT5M0acm
-	 scuGi9ueSlpt02zYWThJ1k2BFwHEq3WjQkkfwY64rMdzImoU93/FHAy8IHM2rOG/44
-	 S+ENdXa5I8Qr7xKsL5mLAvnF+g03nA6lwuZ8Ocm8=
+	b=Qsovjrx5/CE2b4mpfxaqM9GTehJBresQJ0VGEKdDpFVs742lyP45bn0p1bX/gSsy4
+	 7WLyGfU4xqgmuxd5vOftCTJNe8cTie4WiCaG/y+O/LF5GZXn/tca9967fhYjnmoxBJ
+	 McIBpRubb9QkTU5nc7JeksTAK9gGxff+MudGY/Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgGGPZ7 (ORCPT
+        id S1730263AbgGGP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40062 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730253AbgGGPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:53 -0400
+        id S1730255AbgGGPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6712065D;
-        Tue,  7 Jul 2020 15:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AD192065D;
+        Tue,  7 Jul 2020 15:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135552;
-        bh=3NwqFezCmPe9nPgiAGgAMOp5zWQ+zCs/N3fpTYnnuxA=;
+        s=default; t=1594135557;
+        bh=eJ6URdP5x8PemYoHcolXfF7Vl/a/bH8husjspmEuO9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtI8umdkxx5xLjIIwG8nJEN32QBfcCUm/Z4d1OgZIkxk5f8v1C6/Hi1in3xm0rz5E
-         8W+KH7YugdLswg0kwgS93s700d1jp6BZe2qyjVAlTc9oPa2qXRymCfekLX6ylKZqAn
-         a9NQDxlcj8o+bt/4U08dfWoHw5l867Qt40nl/aLU=
+        b=w24pbPa2+1aeyDP8RLu3dezzmpp0XIHY193zF2WMxf1CeSVIFoFUiOrUxBlaEsrSF
+         VNd9OW4T7oSlSsvhfk8Ya1jNocYQWmKdOHBSGDKlyLqi2R26vD/d5myXGpTYmvwfms
+         G8+KFOfjdx4qTYV//ljCdD7HR08xKDjJUKqbf48w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.7 085/112] spi: spi-fsl-dspi: Fix external abort on interrupt in resume or exit paths
-Date:   Tue,  7 Jul 2020 17:17:30 +0200
-Message-Id: <20200707145805.025735817@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Tsoy <alexander@tsoy.me>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        Hans de Goede <jwrdegoede@fedoraproject.org>
+Subject: [PATCH 5.7 087/112] Revert "ALSA: usb-audio: Improve frames size computation"
+Date:   Tue,  7 Jul 2020 17:17:32 +0200
+Message-Id: <20200707145805.120321836@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,122 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 3d87b613d6a3c6f0980e877ab0895785a2dde581 upstream.
+This reverts commit d288dc74f8cf95cb7ae0aaf245b7128627a49bf3 which is
+commit f0bd62b64016508938df9babe47f65c2c727d25c upstream.
 
-If shared interrupt comes late, during probe error path or device remove
-(could be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
-dspi_interrupt() will access registers with the clock being disabled.
-This leads to external abort on non-linefetch on Toradex Colibri VF50
-module (with Vybrid VF5xx):
+It causes a number of reported issues and a fix for it has not hit
+Linus's tree yet.  Revert this to resolve those problems.
 
-    $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
-
-    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
-    Internal error: : 1008 [#1] ARM
-    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-    Backtrace:
-      (regmap_mmio_read32le)
-      (regmap_mmio_read)
-      (_regmap_bus_reg_read)
-      (_regmap_read)
-      (regmap_read)
-      (dspi_interrupt)
-      (free_irq)
-      (devm_irq_release)
-      (release_nodes)
-      (devres_release_all)
-      (device_release_driver_internal)
-
-The resource-managed framework should not be used for shared interrupt
-handling, because the interrupt handler might be called after releasing
-other resources and disabling clocks.
-
-Similar bug could happen during suspend - the shared interrupt handler
-could be invoked after suspending the device.  Each device sharing this
-interrupt line should disable the IRQ during suspend so handler will be
-invoked only in following cases:
-1. None suspended,
-2. All devices resumed.
-
-Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622110543.5035-3-krzk@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Alexander Tsoy <alexander@tsoy.me>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Hans de Goede <jwrdegoede@fedoraproject.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/spi/spi-fsl-dspi.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ sound/usb/card.h     |    4 ----
+ sound/usb/endpoint.c |   43 +++++--------------------------------------
+ sound/usb/endpoint.h |    1 -
+ sound/usb/pcm.c      |    2 --
+ 4 files changed, 5 insertions(+), 45 deletions(-)
 
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1105,6 +1105,8 @@ static int dspi_suspend(struct device *d
- 	struct spi_controller *ctlr = dev_get_drvdata(dev);
- 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -84,10 +84,6 @@ struct snd_usb_endpoint {
+ 	dma_addr_t sync_dma;		/* DMA address of syncbuf */
  
-+	if (dspi->irq)
-+		disable_irq(dspi->irq);
- 	spi_controller_suspend(ctlr);
- 	clk_disable_unprepare(dspi->clk);
+ 	unsigned int pipe;		/* the data i/o pipe */
+-	unsigned int framesize[2];	/* small/large frame sizes in samples */
+-	unsigned int sample_rem;	/* remainder from division fs/fps */
+-	unsigned int sample_accum;	/* sample accumulator */
+-	unsigned int fps;		/* frames per second */
+ 	unsigned int freqn;		/* nominal sampling rate in fs/fps in Q16.16 format */
+ 	unsigned int freqm;		/* momentary sampling rate in fs/fps in Q16.16 format */
+ 	int	   freqshift;		/* how much to shift the feedback value to get Q16.16 */
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -124,12 +124,12 @@ int snd_usb_endpoint_implicit_feedback_s
  
-@@ -1125,6 +1127,8 @@ static int dspi_resume(struct device *de
- 	if (ret)
- 		return ret;
- 	spi_controller_resume(ctlr);
-+	if (dspi->irq)
-+		enable_irq(dspi->irq);
- 
- 	return 0;
- }
-@@ -1381,8 +1385,8 @@ static int dspi_probe(struct platform_de
- 		goto poll_mode;
- 	}
- 
--	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
--			       IRQF_SHARED, pdev->name, dspi);
-+	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
-+				   IRQF_SHARED, pdev->name, dspi);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
- 		goto out_clk_put;
-@@ -1396,7 +1400,7 @@ poll_mode:
- 		ret = dspi_request_dma(dspi, res->start);
- 		if (ret < 0) {
- 			dev_err(&pdev->dev, "can't get dma channels\n");
--			goto out_clk_put;
-+			goto out_free_irq;
- 		}
- 	}
- 
-@@ -1411,11 +1415,14 @@ poll_mode:
- 	ret = spi_register_controller(ctlr);
- 	if (ret != 0) {
- 		dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
--		goto out_clk_put;
-+		goto out_free_irq;
- 	}
- 
+ /*
+  * For streaming based on information derived from sync endpoints,
+- * prepare_outbound_urb_sizes() will call slave_next_packet_size() to
++ * prepare_outbound_urb_sizes() will call next_packet_size() to
+  * determine the number of samples to be sent in the next packet.
+  *
+- * For implicit feedback, slave_next_packet_size() is unused.
++ * For implicit feedback, next_packet_size() is unused.
+  */
+-int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep)
++int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+ {
+ 	unsigned long flags;
+ 	int ret;
+@@ -146,29 +146,6 @@ int snd_usb_endpoint_slave_next_packet_s
  	return ret;
+ }
  
-+out_free_irq:
-+	if (dspi->irq)
-+		free_irq(dspi->irq, dspi);
- out_clk_put:
- 	clk_disable_unprepare(dspi->clk);
- out_ctlr_put:
-@@ -1431,6 +1438,8 @@ static int dspi_remove(struct platform_d
+-/*
+- * For adaptive and synchronous endpoints, prepare_outbound_urb_sizes()
+- * will call next_packet_size() to determine the number of samples to be
+- * sent in the next packet.
+- */
+-int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+-{
+-	int ret;
+-
+-	if (ep->fill_max)
+-		return ep->maxframesize;
+-
+-	ep->sample_accum += ep->sample_rem;
+-	if (ep->sample_accum >= ep->fps) {
+-		ep->sample_accum -= ep->fps;
+-		ret = ep->framesize[1];
+-	} else {
+-		ret = ep->framesize[0];
+-	}
+-
+-	return ret;
+-}
+-
+ static void retire_outbound_urb(struct snd_usb_endpoint *ep,
+ 				struct snd_urb_ctx *urb_ctx)
+ {
+@@ -213,8 +190,6 @@ static void prepare_silent_urb(struct sn
  
- 	/* Disconnect from the SPI framework */
- 	dspi_release_dma(dspi);
-+	if (dspi->irq)
-+		free_irq(dspi->irq, dspi);
- 	clk_disable_unprepare(dspi->clk);
- 	spi_unregister_controller(dspi->ctlr);
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
+-		else if (ep->sync_master)
+-			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
+@@ -1086,17 +1061,10 @@ int snd_usb_endpoint_set_params(struct s
+ 	ep->maxpacksize = fmt->maxpacksize;
+ 	ep->fill_max = !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX);
+ 
+-	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL) {
++	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL)
+ 		ep->freqn = get_usb_full_speed_rate(rate);
+-		ep->fps = 1000;
+-	} else {
++	else
+ 		ep->freqn = get_usb_high_speed_rate(rate);
+-		ep->fps = 8000;
+-	}
+-
+-	ep->sample_rem = rate % ep->fps;
+-	ep->framesize[0] = rate / ep->fps;
+-	ep->framesize[1] = (rate + (ep->fps - 1)) / ep->fps;
+ 
+ 	/* calculate the frequency in 16.16 format */
+ 	ep->freqm = ep->freqn;
+@@ -1155,7 +1123,6 @@ int snd_usb_endpoint_start(struct snd_us
+ 	ep->active_mask = 0;
+ 	ep->unlink_mask = 0;
+ 	ep->phase = 0;
+-	ep->sample_accum = 0;
+ 
+ 	snd_usb_endpoint_start_quirk(ep);
+ 
+--- a/sound/usb/endpoint.h
++++ b/sound/usb/endpoint.h
+@@ -28,7 +28,6 @@ void snd_usb_endpoint_release(struct snd
+ void snd_usb_endpoint_free(struct snd_usb_endpoint *ep);
+ 
+ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
+-int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep);
+ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep);
+ 
+ void snd_usb_handle_sync_urb(struct snd_usb_endpoint *ep,
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1585,8 +1585,6 @@ static void prepare_playback_urb(struct
+ 	for (i = 0; i < ctx->packets; i++) {
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
+-		else if (ep->sync_master)
+-			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
  
 
 
