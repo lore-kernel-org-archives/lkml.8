@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A066C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FC9C433DF
 	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD3920672
+	by mail.kernel.org (Postfix) with ESMTP id 84045206E2
 	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgGGXhQ (ORCPT
+        id S1729255AbgGGXhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:37:16 -0400
+        Tue, 7 Jul 2020 19:37:17 -0400
 Received: from mga07.intel.com ([134.134.136.100]:29601 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgGGXhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 19:37:14 -0400
-IronPort-SDR: FybVHcydTF43cHP0xdezijPdb4o6PseCLtzEGTmmnscuwasta/8luY5PytBo4Ief2CEDi/JFeW
- AQwk1YI8bkBw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212655407"
+        id S1729170AbgGGXhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 19:37:15 -0400
+IronPort-SDR: IMpPoQzNWkl55BtjCXC7h5ecpw7D1b/A0vAje9m/OKFd3v1DtO3AHqYTpVf1yt/Beq4BEcyosH
+ 1PDL4JGznaKQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212655413"
 X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="212655407"
+   d="scan'208";a="212655413"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 16:37:13 -0700
-IronPort-SDR: czNIvxNJw3KvtuLtENzXTpZoKLblgthpivaGS18iIqP4x8CSXz2sD8/l5PqOzodf1XrDM/HIwX
- qyKv52DrqqJA==
+IronPort-SDR: saGIe4FkPyjzymdlPV6AkjjXBgV8h0A2+xaUpttwEPdeQsjfLHIhHhAWnWfnofOI1SGTJbh1WB
+ BiAelycxdyGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="323693913"
+   d="scan'208";a="323693922"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga007.jf.intel.com with ESMTP; 07 Jul 2020 16:37:12 -0700
+  by orsmga007.jf.intel.com with ESMTP; 07 Jul 2020 16:37:13 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 2/5] iommu/uapi: Add argsz for user filled data
-Date:   Tue,  7 Jul 2020 16:43:46 -0700
-Message-Id: <1594165429-20075-3-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 5/5] iommu/vt-d: Remove UAPI version check
+Date:   Tue,  7 Jul 2020 16:43:49 -0700
+Message-Id: <1594165429-20075-6-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594165429-20075-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1594165429-20075-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -61,72 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As IOMMU UAPI gets extended, user data size may increase. To support
-backward compatibiliy, this patch introduces a size field to each UAPI
-data structures. It is *always* the responsibility for the user to fill in
-the correct size.
+IOMMU generic layer already does sanity checks on UAPI data which
+include version check. Remove the version check from vendor driver.
 
-Specific scenarios for user data handling are documented in:
-Documentation/userspace-api/iommu.rst
-
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- include/uapi/linux/iommu.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/iommu/intel/iommu.c | 3 +--
+ drivers/iommu/intel/svm.c   | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index e907b7091a46..303f148a5cd7 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -135,6 +135,7 @@ enum iommu_page_response_code {
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index abd70b618a3f..63fcca4645c9 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -5383,8 +5383,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+ 	int ret = 0;
+ 	u64 size = 0;
  
- /**
-  * struct iommu_page_response - Generic page response information
-+ * @argsz: User filled size of this data
-  * @version: API version of this structure
-  * @flags: encodes whether the corresponding fields are valid
-  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
-@@ -143,6 +144,7 @@ enum iommu_page_response_code {
-  * @code: response code from &enum iommu_page_response_code
-  */
- struct iommu_page_response {
-+	__u32	argsz;
- #define IOMMU_PAGE_RESP_VERSION_1	1
- 	__u32	version;
- #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-@@ -218,6 +220,7 @@ struct iommu_inv_pasid_info {
- /**
-  * struct iommu_cache_invalidate_info - First level/stage invalidation
-  *     information
-+ * @argsz: User filled size of this data
-  * @version: API version of this structure
-  * @cache: bitfield that allows to select which caches to invalidate
-  * @granularity: defines the lowest granularity used for the invalidation:
-@@ -246,6 +249,7 @@ struct iommu_inv_pasid_info {
-  * must support the used granularity.
-  */
- struct iommu_cache_invalidate_info {
-+	__u32	argsz;
- #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
- 	__u32	version;
- /* IOMMU paging structure cache */
-@@ -292,6 +296,7 @@ struct iommu_gpasid_bind_data_vtd {
+-	if (!inv_info || !dmar_domain ||
+-	    inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
++	if (!inv_info || !dmar_domain)
+ 		return -EINVAL;
  
- /**
-  * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
-+ * @argsz:	User filled size of this data
-  * @version:	Version of this data structure
-  * @format:	PASID table entry format
-  * @flags:	Additional information on guest bind request
-@@ -309,6 +314,7 @@ struct iommu_gpasid_bind_data_vtd {
-  * PASID to host PASID based on this bind data.
-  */
- struct iommu_gpasid_bind_data {
-+	__u32 argsz;
- #define IOMMU_GPASID_BIND_VERSION_1	1
- 	__u32 version;
- #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+ 	if (!dev || !dev_is_pci(dev))
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 713b3a218483..15b36fa0147a 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -240,8 +240,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 	if (WARN_ON(!iommu) || !data)
+ 		return -EINVAL;
+ 
+-	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+-	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
++	if (data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+ 		return -EINVAL;
+ 
+ 	if (!dev_is_pci(dev))
 -- 
 2.7.4
 
