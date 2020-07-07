@@ -2,168 +2,113 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70320C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE00C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 491B520708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DE920738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="El0vxZtq"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="zVxRNPDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgGGQsG (ORCPT
+        id S1728272AbgGGQs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45828 "EHLO
+        Tue, 7 Jul 2020 12:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgGGQsE (ORCPT
+        with ESMTP id S1726911AbgGGQs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:48:04 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F63C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:48:04 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id a17so11996298vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:48:04 -0700 (PDT)
+        Tue, 7 Jul 2020 12:48:58 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D0CC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:48:57 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y10so47267548eje.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1eWoCnOASAKMtuQZyGLOuX3o7NTlzqUAEG+oBEPWKJ8=;
-        b=El0vxZtqg6JPxeKZyM66PqiJ4jyD0i9lHL6yotyIIDUC+AViY0YG4D/79jNwjMUabw
-         9Pr+v/FoxAAvwkEMHuljUs0iNcnGbyDN1kDvHa6dchgrr3JbLcEOq/qc5RS43jbf9URR
-         JVyJb24B6MSCghW0Q5LihVIf3+BHxKMaYaFA8=
+        bh=zgVTJRvD9bwxe5h5OvimEh3WdUQa6jrydlK+z8ViyTs=;
+        b=zVxRNPDq7ABzlflkDXevx/FhRX3DMHNv1OPOprmzo5mnbqWnTdiXr3GZ9aWg1o3S99
+         kfIbw7eX93DpOe60uBJ1MCq69J4i2kwjsfBHFiQSBpFsRGqoP+Xw8vUEiubYxSvh9eKd
+         rEEvMukKP+CiCbPiwrg0eVAIXy72RK2BZF7IzlOHb6akoBOrVrqBd5R97Iyn4yOI1Jzm
+         qtGuOV8VdVYNsp3CYFNGqby+BbC4t7/DVn4OiKv3nXhRZBqmDU0D/c8gD/aWojzgoKMy
+         Cp99EZZjV60Ui9aeL7L8GegBgX5P36pggwvzayFn3QiBf8do4mMHVD29Sxm2ZcwkmTI5
+         GJ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1eWoCnOASAKMtuQZyGLOuX3o7NTlzqUAEG+oBEPWKJ8=;
-        b=dqi0ZMyInhgB+E5YOIb/y+eM8hJSJ1O/NxSOBo8OK6cluwZ6zdhvPwlhSY2Pm2WIcf
-         EEQpLHjaSqsmiQ144cXYpIvPzfxwib2pIVTCaUNxis8TNchtSOLQeVVrHFOzyCVxakAl
-         M3Na2xpfu5n8/TPHRwasy+hSk6dKo+xAEm/q7XJaFl8jhLbZwERDdB16HdO0vTeaBf4R
-         kYSnE6kCNIIi6WGcptBqe8LKQ8vkwhTEPh7hBtnXkhTZsZpBi32bEnTN6Udq56PIAezp
-         miN0jbK7bIF6YbRAMeJcCL6xrCDDcwJN1IAbxwi/vVfys/nyIrZWd74oDfBIewVushTL
-         5EUQ==
-X-Gm-Message-State: AOAM533M7W2CpW1Ts+IHC/xLBjbwaaVr70XB8WyOts3BMnP+Lj6HKXul
-        UA/mBl+Fm/5eBBUYXh/q6mjSTY17zVL6h5Rb8F3pkA==
-X-Google-Smtp-Source: ABdhPJysq8+6FxhpZrg1dgwHaUrHRyK3KI93qSdqzWL6HNijbQcEkUjFbxYm09sE8WLnXhQ1UoylWLanSIj9IJCT5bo=
-X-Received: by 2002:a67:c90c:: with SMTP id w12mr30280616vsk.86.1594140483655;
- Tue, 07 Jul 2020 09:48:03 -0700 (PDT)
+        bh=zgVTJRvD9bwxe5h5OvimEh3WdUQa6jrydlK+z8ViyTs=;
+        b=G3u4Gl6iYGKZJsznRZy5G+UJ18oQ2lAfJVqq5Bh7pQhm32fa48S6eMkDu5rsIsPFkS
+         StfO/ULzlJbCyBLK94eGqcxVEjC+grN6TibxjiXrvy7pveMtGcndEcCdvFjHH54rFrHv
+         KgVooZqWAkdgkJsH029YCXTs1O2kCEuvRU9peS8BGOI8/l8Cya5iw9OhNH/iApBGhgV0
+         csPACOWXFE//HAqTw86ySsDUpYjrN0nd0z0yQj7CB8JLi/XiwhwWmvThwgR4kUdTcMZK
+         e8OgIcH59h4ru3yjBuIurhvZsayqGAq5l8LT6spulEm9xRnSzGsIDwMKRnPAMdGoNnNJ
+         /STQ==
+X-Gm-Message-State: AOAM531OQN5osMHj1WFZTEM5vagRiAPnTD7ZzPB8VYDrh2Q74Ne823GG
+        EBbDPp72mADtBXIfJTpcPqC+PZIE/Q1A9/EIo71XiQ==
+X-Google-Smtp-Source: ABdhPJwN4AiRPoJPptQHSEO5cXd/B0knty7XexXAcHi41D+rEc2uWRwzjRdqzHuHAga/dgYkl+FQ3tSx4nDRlmqpLQA=
+X-Received: by 2002:a17:906:1986:: with SMTP id g6mr37299161ejd.404.1594140536621;
+ Tue, 07 Jul 2020 09:48:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707162417.3514284-1-abhishekpandit@chromium.org>
- <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 7 Jul 2020 09:47:52 -0700
-Message-ID: <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+References: <20200707101912.571531-1-maxime@cerno.tech>
+In-Reply-To: <20200707101912.571531-1-maxime@cerno.tech>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Tue, 7 Jul 2020 09:48:45 -0700
+Message-ID: <CADaigPVu1PEANANuS03fO=kSxFuhmqsz=Y5WmwiAeXmMOotrHA@mail.gmail.com>
+Subject: Re: [PATCH] drm/vc4: dsi: Only register our component once a DSI
+ device is attached
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-
-(resent in plain text)
-
-On Tue, Jul 7, 2020 at 9:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Tue, Jul 7, 2020 at 3:26 AM Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
-> <abhishekpandit@chromium.org> wrote:
-> >
-> > Udev rules that depend on the power/wakeup attribute don't get triggered
-> > correctly if device_set_wakeup_capable is called after the device is
-> > created. This can happen for several reasons (driver sets wakeup after
-> > device is created, wakeup is changed on parent device, etc) and it seems
-> > reasonable to emit a changed event when adding or removing attributes on
-> > the device.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - Fix warning where returning from void and tested on device
-> >
-> > Changes in v3:
-> > - Simplified error handling
-> >
-> > Changes in v2:
-> > - Add newline at end of bt_dev_err
-> >
-> >  drivers/base/power/sysfs.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index 24d25cf8ab1487..aeb58d40aac8de 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* sysfs entries for device PM */
-> >  #include <linux/device.h>
-> > +#include <linux/kobject.h>
-> >  #include <linux/string.h>
-> >  #include <linux/export.h>
-> >  #include <linux/pm_qos.h>
-> > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> >
-> >  int wakeup_sysfs_add(struct device *dev)
-> >  {
-> > -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> If the DSI driver is the last to probe, component_add will try to run all
+> the bind callbacks straight away and return the error code.
 >
-> So let me repeat the previous comment:
+> However, since we depend on a power domain, we're pretty much guaranteed to
+> be in that case on the BCM2711, and are just lucky on the previous SoCs
+> since the v3d also depends on that power domain and is further in the probe
+> order.
 >
-> If you return an error here, it may confuse the caller to think that
-> the operation has failed completely, whereas the merging of the
-> attribute group has been successful already.
+> In that case, the DSI host will not stick around in the system: the DSI
+> bind callback will be executed, will not find any DSI device attached and
+> will return EPROBE_DEFER, and we will then remove the DSI host and ask to
+> be probed later on.
 >
-> I don't think that an error can be returned at this point.
+> But since that host doesn't stick around, DSI devices like the RaspberryPi
+> touchscreen whose probe is not linked to the DSI host (unlike the usual DSI
+> devices that will be probed through the call to mipi_dsi_host_register)
+> cannot attach to the DSI host, and we thus end up in a situation where the
+> DSI host cannot probe because the panel hasn't probed yet, and the panel
+> cannot probe because the DSI host hasn't yet.
 >
+> In order to break this cycle, let's wait until there's a DSI device that
+> attaches to the DSI host to register the component and allow to progress
+> further.
+>
+> Suggested-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-The caller looks at the return code and just logs that an error
-occurred (no other action). It's also unlikely for kobject_uevent to
-fail (I saw mostly -ENOMEM and an -ENOENT when the kobj wasn't in the
-correct set).
-
-Call site:
-    int ret = wakeup_sysfs_add(dev);
-
-    if (ret)
-        dev_info(dev, "Wakeup sysfs attributes not added\n");
-
-So I'm ok with either keeping this as-is (caller isn't getting
-confused, just logging) or swallowing the return of kobject_uevent.
-
-> >  }
-> >
-> >  void wakeup_sysfs_remove(struct device *dev)
-> >  {
-> >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> >  }
-> >
-> >  int pm_qos_sysfs_add_resume_latency(struct device *dev)
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
+I feel like I've written this patch before, but I've thankfully
+forgotten most of my battle with DSI probing.  As long as this still
+lets vc4 probe in the absence of a DSI panel in the DT as well, then
+this is enthusiastically acked.
