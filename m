@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC33AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA3E42083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214E9206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135510;
-	bh=CRsp8Ec+JpsS3ZUjCJ42n8X82VJfnOI53L8lqcpxqto=;
+	s=default; t=1594135516;
+	bh=YYRylRk8DAxmT92r0BtuXDiEuWx7sVndlISItVJ9yP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUmznNfWXGF/zGpN/LCY2NJkcHBecWr2VP4B/QoSCe46HMnpeluTMH5u8ZSG3u21L
-	 973JSuIZ89LccItWn/LA6LAFZ3X8HmlKqpFg1Y04PGqoHfxeaMQFE7vU1VTyQ5nExK
-	 SxKyB+pi+Evi2yFLd+k8jCD42OBBF1eitkgGzLec=
+	b=NB7rZDU3gWhNuEhNUXZqxelWVvbtwyBBH5v11PrgdBAvYKIN9KL5o8Y0nrUPC5ooT
+	 8WewLcvci4gOSiebzoZQzhLz1/2QeNlUiMIJekYTDvKaPJUWEaUoPzv2PwIbp6/vmb
+	 0CkMmOYqynmzi1Xbw4Guh6t8pIJi5k0gO0B3p8iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbgGGPZJ (ORCPT
+        id S1730184AbgGGPZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgGGPZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:05 -0400
+        id S1730172AbgGGPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 707DA20663;
-        Tue,  7 Jul 2020 15:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED3A2084C;
+        Tue,  7 Jul 2020 15:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135505;
-        bh=CRsp8Ec+JpsS3ZUjCJ42n8X82VJfnOI53L8lqcpxqto=;
+        s=default; t=1594135509;
+        bh=YYRylRk8DAxmT92r0BtuXDiEuWx7sVndlISItVJ9yP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N/V4TTyT8GdBAsl5fIxFLqu0GddUHQ50/P1N3m+HkndMGsyK2FDjOAosdN+aWe25t
-         a+dJGIH1FI5z+u0NOw0AibQV8fX3TUCYYah28JAsL7TY3cFmMQrLDjfJ/uFRw6Gvk+
-         2gLCjKlUgu4fSvtnAtgs07Ccx9Y2S+hg/64K78Ok=
+        b=KahzlbVyNTAZmUGRINZl9hVGOJKCMP6ClrAKWgfBYjdB3N/YFyZo0FALRJ0qNArGc
+         NdWcBloS66PejOZ8QuCmj2CRjyfzXdqla5iiNn5fz/lodE4Y5eM4uCSelR1Iqx1BXt
+         P52HQWB9ZgMW0mbrg1bMAUA4gHxsdfeuSBJHBx9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 068/112] thermal/drivers/sprd: Fix return value of sprd_thm_probe()
-Date:   Tue,  7 Jul 2020 17:17:13 +0200
-Message-Id: <20200707145804.233688901@linuxfoundation.org>
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 5.7 070/112] kthread: save thread function
+Date:   Tue,  7 Jul 2020 17:17:15 +0200
+Message-Id: <20200707145804.332402326@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,38 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit b4147917ad4ff2c755e01a7ca296b14030d2d507 ]
+[ Upstream commit 52782c92ac85c4e393eb4a903a62e6c24afa633f ]
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+It's handy to keep the kthread_fn just as a unique cookie to identify
+classes of kthreads.  E.g. if you can verify that a given task is
+running your thread_fn, then you may know what sort of type kthread_data
+points to.
 
-Fixes: 554fdbaf19b1 ("thermal: sprd: Add Spreadtrum thermal driver support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1590371941-25430-1-git-send-email-yangtiezhu@loongson.cn
+We'll use this in nfsd to pass some information into the vfs.  Note it
+will need kthread_data() exported too.
+
+Original-patch-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/sprd_thermal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/kthread.h |  1 +
+ kernel/kthread.c        | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/drivers/thermal/sprd_thermal.c b/drivers/thermal/sprd_thermal.c
-index a340374e8c51a..4cde70dcf6556 100644
---- a/drivers/thermal/sprd_thermal.c
-+++ b/drivers/thermal/sprd_thermal.c
-@@ -348,8 +348,8 @@ static int sprd_thm_probe(struct platform_device *pdev)
+diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+index 8bbcaad7ef0f4..c2a274b79c429 100644
+--- a/include/linux/kthread.h
++++ b/include/linux/kthread.h
+@@ -57,6 +57,7 @@ bool kthread_should_stop(void);
+ bool kthread_should_park(void);
+ bool __kthread_should_park(struct task_struct *k);
+ bool kthread_freezable_should_stop(bool *was_frozen);
++void *kthread_func(struct task_struct *k);
+ void *kthread_data(struct task_struct *k);
+ void *kthread_probe_data(struct task_struct *k);
+ int kthread_park(struct task_struct *k);
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a5..b84fc7eec0358 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -46,6 +46,7 @@ struct kthread_create_info
+ struct kthread {
+ 	unsigned long flags;
+ 	unsigned int cpu;
++	int (*threadfn)(void *);
+ 	void *data;
+ 	struct completion parked;
+ 	struct completion exited;
+@@ -152,6 +153,20 @@ bool kthread_freezable_should_stop(bool *was_frozen)
+ }
+ EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
  
- 	thm->var_data = pdata;
- 	thm->base = devm_platform_ioremap_resource(pdev, 0);
--	if (!thm->base)
--		return -ENOMEM;
-+	if (IS_ERR(thm->base))
-+		return PTR_ERR(thm->base);
++/**
++ * kthread_func - return the function specified on kthread creation
++ * @task: kthread task in question
++ *
++ * Returns NULL if the task is not a kthread.
++ */
++void *kthread_func(struct task_struct *task)
++{
++	if (task->flags & PF_KTHREAD)
++		return to_kthread(task)->threadfn;
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(kthread_func);
++
+ /**
+  * kthread_data - return data value specified on kthread creation
+  * @task: kthread task in question
+@@ -164,6 +179,7 @@ void *kthread_data(struct task_struct *task)
+ {
+ 	return to_kthread(task)->data;
+ }
++EXPORT_SYMBOL_GPL(kthread_data);
  
- 	thm->nr_sensors = of_get_child_count(np);
- 	if (thm->nr_sensors == 0 || thm->nr_sensors > SPRD_THM_MAX_SENSOR) {
+ /**
+  * kthread_probe_data - speculative version of kthread_data()
+@@ -244,6 +260,7 @@ static int kthread(void *_create)
+ 		do_exit(-ENOMEM);
+ 	}
+ 
++	self->threadfn = threadfn;
+ 	self->data = data;
+ 	init_completion(&self->exited);
+ 	init_completion(&self->parked);
 -- 
 2.25.1
 
