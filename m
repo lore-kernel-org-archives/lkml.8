@@ -6,99 +6,68 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6258EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73655C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4136C206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF3520720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594148419;
-	bh=FUUkWJxhlhnlJ6qB2OGmjYydtxVJgtloTkFf5fHMkx0=;
+	s=default; t=1594148488;
+	bh=yTAxqihv430USW9Qh1Hfg9Wp4VIfe9iWsjLd10DcD4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qeZwcJAcQ1QYRqdxjGqt+mBG/2BpZoKUWSEkonFachnxcwfwb7eyENW2zCC1RXfir
-	 BXBE1OKBqyqmhESpRNxtAOYFtRSIq06z+2tJP4QuYm3RP8yYDlbR2R8sJWwaamuCFE
-	 gd0L1G9Uof8iwPYP7/T7oiWnXWPFgzq9t389X0Sc=
+	b=lZbzlKrtGeeAtTDwxsK5tHWWZy0UjxEZmOxtbxUYBQxS927E6EO6D6aEHe25xjmem
+	 G3+diBlbPqVT7Wz3oYy5jqAqBzj8fhmn/dO1ph+g879LjsPj2SnStJ5qc7ceRgcvRO
+	 7CWa7S6CQEvzRRCh+YgE2LTPg45E0YoPxHl3Athk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgGGTAS (ORCPT
+        id S1728840AbgGGTB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:00:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35023 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbgGGTAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:00:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z2so24101873wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:00:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VoyDJTI1cJ/dJyHAL3PoVYED5J0Stt74X8oxEEic8ao=;
-        b=X4fcnEahO6fiCMhc145CKw1SH4xcDyoAajz1XNtBubdJfqXXRHU/zs6B6siuoIBBWH
-         1fCKpnGCob2rbukjccC7gzYn/1Dwbb4OjJRJBmd5BFljlt+vhWrhVQf4cQ5739EsMFyw
-         WlEVVCpG0o9zsBHeL6lBAo5CZ0h6+0N9lZLYIFAqmwMzv+K8fdcE10iJBDuBx3imWQIu
-         nb8Nf7yJBnHUIQZZPnsFViuj+HRJCyg5+HbSWqS3Q/DsnpRcNUqYjKYbEofHxsbq/oUK
-         wadyc2zlBV0bV6f7jVArusHemkhu9zTdvL2Gy6NFxTS3+nfRCZYjcisA2HW9l8c1Gj+i
-         5txg==
-X-Gm-Message-State: AOAM533Px9WgYLDrB7yrfMw/kEoDBzkXPRmujsDRJQO9SgJ1iUpM2T/z
-        bfQPxOJVZFk7yEUjWie47m8=
-X-Google-Smtp-Source: ABdhPJyj3S6v1FPmg4uWREMeTffGzWqJbvJBFUP3wNgeFQT8ldjLochB7WGbW9hEpKcA9NtBo+LvEw==
-X-Received: by 2002:a5d:5441:: with SMTP id w1mr52781033wrv.381.1594148415773;
-        Tue, 07 Jul 2020 12:00:15 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id h84sm2540887wme.22.2020.07.07.12.00.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 12:00:14 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 21:00:13 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 06/11] mm/migrate: make a standard migration target
- allocation function
-Message-ID: <20200707190013.GZ5913@dhcp22.suse.cz>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-7-git-send-email-iamjoonsoo.kim@lge.com>
- <409b6e24-d143-a61c-95a3-1a55e1a6008e@suse.cz>
+        Tue, 7 Jul 2020 15:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728831AbgGGTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:01:26 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D677206CD;
+        Tue,  7 Jul 2020 19:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594148485;
+        bh=yTAxqihv430USW9Qh1Hfg9Wp4VIfe9iWsjLd10DcD4Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cx0gQyHstH9QznqMz6bmbgO+S4FeDt1zsNIW/PBoaBvg4/EfZmfApfEHxNPOj4r8u
+         heL7RXkJMZXbxqNcDH55IQUMgGuFkgak+A5qVJWtsc7LaG3nYz8n7IE+5IyfI4yUHs
+         KnuLhYV4Lg1mZ7wt0k4uoLJFgahZVwDzjMVagdm8=
+Date:   Tue, 7 Jul 2020 12:01:23 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me, baolin.wang7@gmail.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] nvme-pci: Use standard block status macro
+Message-ID: <20200707190123.GB1997220@dhcp-10-100-145-180.wdl.wdc.com>
+References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
+ <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <409b6e24-d143-a61c-95a3-1a55e1a6008e@suse.cz>
+In-Reply-To: <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-07-20 16:49:51, Vlastimil Babka wrote:
-> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > 
-> > There are some similar functions for migration target allocation.  Since
-> > there is no fundamental difference, it's better to keep just one rather
-> > than keeping all variants.  This patch implements base migration target
-> > allocation function.  In the following patches, variants will be converted
-> > to use this function.
-> > 
-> > Changes should be mechanical but there are some differences. First, Some
-> > callers' nodemask is assgined to NULL since NULL nodemask will be
-> > considered as all available nodes, that is, &node_states[N_MEMORY].
-> > Second, for hugetlb page allocation, gfp_mask is ORed since a user could
-> > provide a gfp_mask from now on.
-> 
-> I think that's wrong. See how htlb_alloc_mask() determines between
-> GFP_HIGHUSER_MOVABLE and GFP_HIGHUSER, but then you OR it with __GFP_MOVABLE so
-> it's always GFP_HIGHUSER_MOVABLE.
+On Fri, Jul 03, 2020 at 10:49:24AM +0800, Baolin Wang wrote:
+>  static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+> @@ -844,7 +844,7 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
+>  	if (dma_mapping_error(dev->dev, iod->meta_dma))
+>  		return BLK_STS_IOERR;
+>  	cmnd->rw.metadata = cpu_to_le64(iod->meta_dma);
+> -	return 0;
+> +	return BLK_STS_OK;
+>  }
 
-Right you are! Not that it would make any real difference because only
-migrateable hugetlb pages will get __GFP_MOVABLE and so we shouldn't
-really end up here for !movable pages in the first place (not sure about
-soft offlining at this moment). But yeah it would be simply better to
-override gfp mask for hugetlb which we have been doing anyway.
--- 
-Michal Hocko
-SUSE Labs
+This is fine, though it takes knowing that this value is 0 for the
+subsequent 'if (!ret)' check to make sense. Maybe those should change to
+'if (ret != BLK_STS_OK)' so the check uses the same symbol as the
+return, and will always work in the unlikely event that the defines
+are reordered.
