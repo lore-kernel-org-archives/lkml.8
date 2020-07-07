@@ -2,94 +2,146 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9783C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8602F2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6F320708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDkM67lx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f3wQLBn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgGGRwx (ORCPT
+        id S1728591AbgGGRxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:52:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
+        Tue, 7 Jul 2020 13:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgGGRwt (ORCPT
+        with ESMTP id S1728265AbgGGRxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:52:49 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39B1C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:52:48 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h19so51007412ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V/nLHP/a64QASjJIAOtt8ipI7UU8QCW6oWvo4l1cggo=;
-        b=ZDkM67lxowhQftwo2fr4VRbpqt97Y6UFmgbkf27HOImXfi3YyD+s8bPZPt/EjIpGkB
-         nmTNdVHBFvy41HqE03tLmcuzBxc8cEQWKWp980b0XL2mrguXcBWOK5lox+lCWNREQ/A3
-         wx1MHW9Fs4svwt8ZepMQN5MoFPygNHBgUYIwJIJD5lcpoLrn3VfNRYqwmNYEnIXcT2v9
-         WNOG37rCksUqsBLha5kNlLfn+ki5TNHXd07cF49OGt6BF6N5Afzv2z5rKd4bSj2Dsmih
-         Z452EAh2SkwTASgBtKyahaXJy51MgohKtYwC+rLpKzH9LQC2zAjWGA3xMtK4AjYeaJ80
-         xrLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V/nLHP/a64QASjJIAOtt8ipI7UU8QCW6oWvo4l1cggo=;
-        b=Ml2Q4zbLyuFz7wycShASpv6e+npobGfhAmhD2gFK32/Fybfl+bBVnzMCct59xpjr1D
-         EKDEtKKswD6Fu4GRAymR6pZfQfLy6XdWz1y+OCPU0robvHUulwxVswsCNMXCBM9Uljb+
-         rDmJljVOm/J+xd6999jbwuZM6xPxF5KYpKjB6TlHcJCBOYfmjsyzGYz14w3JIKQ0xWrI
-         sqFbLqH6v1DqFw0bwPox077Ib/v8ZQv8zJFRXIiA0w3lxP2Y5lKNS8g7WiKMTFdxdg/t
-         1rkPi4qXDOkD3/q8uOigdkMydZcP2GT+qGHt8wuntBNIjVi93FEDROL3ltkMvYtucNWd
-         9ang==
-X-Gm-Message-State: AOAM532fdAcWycyKqiZgIZwy53WAjWcc2pVu8y8l2NvoQ1d6D2nPFuf/
-        R15w2jGJmz9dLTAf5V8AARUqUxi3WLtgMG/VMoOh3Q==
-X-Google-Smtp-Source: ABdhPJxmEviU4ufhbV7r3K3OAkUAqQc0pZDEiuTDPx1mQ5sjBFGPtYcHmchmvbDtsXiaWKN0VPnhHGNbl0jM+9b7egs=
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr19271931lji.270.1594144367221;
- Tue, 07 Jul 2020 10:52:47 -0700 (PDT)
+        Tue, 7 Jul 2020 13:53:04 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E2DC061755;
+        Tue,  7 Jul 2020 10:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ikLDu9Sqnofb7uotDosNOhH64p/v3I5ZekNTOjjncWE=; b=f3wQLBn5jEdVdwA61niHFtDcYq
+        HurwCJPCNykfmI4pqa6SJPG4Y4l9kfx3UO1Qq3gGPsYxFiGZp+RrLUkJt+jr4f2cSiAIhlmneDKHu
+        JVvWx+XVrdW1hg+FqBX4Ak1SbFyq6EtYIfbMUaoI5z3K+0Ys0aqt3YwXcyMVdlimSAvUVCZS3mbKh
+        G6mVv5H1r+aCwp31mA3uf1VrvNE9UucIZBQIF+a7wkof/Fd2NhJQGCEDe9bXgygNz5wVBp+6XwgSP
+        myrSeWKwwtNAe9RazV3T34Lv2GgED2tQnBY+3efFSpAi08gdmS1bU0UbFCJfJtKN2oDBJubIWePzZ
+        +2l+3h/A==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsrm5-0003kX-Pj; Tue, 07 Jul 2020 17:52:58 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 21/23] fs: don't allow kernel reads and writes without iter ops
+Date:   Tue,  7 Jul 2020 19:47:59 +0200
+Message-Id: <20200707174801.4162712-22-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200707174801.4162712-1-hch@lst.de>
+References: <20200707174801.4162712-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200707173612.124425-1-guro@fb.com> <20200707173612.124425-3-guro@fb.com>
-In-Reply-To: <20200707173612.124425-3-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 7 Jul 2020 10:52:36 -0700
-Message-ID: <CALvZod5Hka4VBgmoQNJXLwiohFAt8tR3FwNzd=9pnuhO7NaxJQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] mm: kmem: switch to static_branch_likely() in memcg_kmem_enabled()
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 10:36 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Currently memcg_kmem_enabled() is optimized for the kernel memory
-> accounting being off. It was so for a long time, and arguably the
-> reason behind was that the kernel memory accounting was initially an
-> opt-in feature. However, now it's on by default on both cgroup v1
-> and cgroup v2, and it's on for all cgroups. So let's switch over
-> to static_branch_likely() to reflect this fact.
->
-> Unlikely there is a significant performance difference, as the cost
-> of a memory allocation and its accounting significantly exceeds the
-> cost of a jump. However, the conversion makes the code look more
-> logically.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+Don't allow calling ->read or ->write with set_fs as a preparation for
+killing off set_fs.  While I've not triggered any of these cases in my
+setups as all the usual suspect (file systems, pipes, sockets, block
+devices, system character devices) use the iter ops this is almost
+going to be guaranteed to eventuall break something, so print a detailed
+error message helping to debug such cases.  The fix will be to switch the
+affected driver to use the iter ops.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/read_write.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 8bec4418543994..11c55547cfc9d6 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -419,6 +419,13 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
+ 	return ret;
+ }
+ 
++static void warn_unsupported(struct file *file, const char *op)
++{
++	pr_warn_ratelimited(
++		"kernel %s not supported for file %pD4 (pid: %d comm: %.20s)\n",
++		op, file, current->pid, current->comm);
++}
++
+ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+ {
+ 	ssize_t ret;
+@@ -430,13 +437,7 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+ 
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+-	if (file->f_op->read) {
+-		mm_segment_t old_fs = get_fs();
+-
+-		set_fs(KERNEL_DS);
+-		ret = file->f_op->read(file, (void __user *)buf, count, pos);
+-		set_fs(old_fs);
+-	} else if (file->f_op->read_iter) {
++	if (file->f_op->read_iter) {
+ 		struct kvec iov = { .iov_base = buf, .iov_len = count };
+ 		struct kiocb kiocb;
+ 		struct iov_iter iter;
+@@ -447,6 +448,8 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+ 		ret = file->f_op->read_iter(&kiocb, &iter);
+ 		*pos = kiocb.ki_pos;
+ 	} else {
++		if (file->f_op->read)
++			warn_unsupported(file, "read");
+ 		ret = -EINVAL;
+ 	}
+ 	if (ret > 0) {
+@@ -530,14 +533,7 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
+ 
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+-	if (file->f_op->write) {
+-		mm_segment_t old_fs = get_fs();
+-
+-		set_fs(KERNEL_DS);
+-		ret = file->f_op->write(file, (__force const char __user *)buf,
+-				count, pos);
+-		set_fs(old_fs);
+-	} else if (file->f_op->write_iter) {
++	if (file->f_op->write_iter) {
+ 		struct kvec iov = { .iov_base = (void *)buf, .iov_len = count };
+ 		struct kiocb kiocb;
+ 		struct iov_iter iter;
+@@ -549,6 +545,8 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
+ 		if (ret > 0)
+ 			*pos = kiocb.ki_pos;
+ 	} else {
++		if (file->f_op->write)
++			warn_unsupported(file, "write");
+ 		ret = -EINVAL;
+ 	}
+ 	if (ret > 0) {
+-- 
+2.26.2
+
