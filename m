@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A47C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A579F206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AA4206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135762;
-	bh=SYFssJ2fYNETHUelv4SR9+zQb3uOZ92wRAwxCOFXqBE=;
+	s=default; t=1594135766;
+	bh=/xjjT+s96wlfNil8hnKvalJ9n/2rmxOGa+riN1pjP/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5Ma7oSV4wEt1F8KpG5U/F8c9uJ8rbGpEmDtHNpIgXfB7F93YUnTcxPeX8Ti4Shkh
-	 RRmzwRNW7A+GwfH4Zsm88uCsJvG+BWFdIkaUL5nw1OfgP8m9mpe3tVrlPkZ29HUSLB
-	 u5GCgKGIJCGZkr2o7dP28Qng0Y9nDAfXhlIC/yeE=
+	b=gjbdcHnPoPp8e1paSD7JsfJZtsBmJuRXwbLk86zFoPa6ysco1jHQJf9OpkA1aDpc2
+	 xzRk0BrZt46cvXVOMvIzNj4pzLd1BStvjmZQSKV1y8yywhdYhHnSYMkb7k3JzBVuRU
+	 ZJE3NZO3uLn3LbBBNOs/4woPkxpQDx7IrjDRV0RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgGGP3V (ORCPT
+        id S1730280AbgGGP3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38942 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbgGGPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:08 -0400
+        id S1728266AbgGGPY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D783F2083B;
-        Tue,  7 Jul 2020 15:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7EE2082E;
+        Tue,  7 Jul 2020 15:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135507;
-        bh=SYFssJ2fYNETHUelv4SR9+zQb3uOZ92wRAwxCOFXqBE=;
+        s=default; t=1594135497;
+        bh=/xjjT+s96wlfNil8hnKvalJ9n/2rmxOGa+riN1pjP/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CYgbedhahGM8m+qtSoqoky909T67A4l+lMiRJm4a+P5Y4HjoRB+ngINX410VengL2
-         XRBgaPntd0Mjnzd/CbhWyOCGusiBfYvKcv1Uy3Nd4hR8rf3qIlQ9y1QPuuyfrhqJWx
-         TVNITh+iSVHYIdGj5DkWwsFwkwVB5LUzqpA1ZNXc=
+        b=fL4ysjwzbDFw7/53G1qh7G7QJk79K2gYUN9HwUd9RUGx1z3ip/QHQpnL/GpqhYBku
+         dkgnAD4WeJ0xiGgV2Tt9Rp8FqoBaSZQTUtPeducKXdpUJhDGvVHbKJUcCpO4r4HVnH
+         iLS4VzXmDOUcAKuAKE2NmC6TMm/ioOF94ChBHls0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Van Do <van.do.xw@renesas.com>,
-        Dien Pham <dien.pham.ry@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org,
+        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/112] thermal/drivers/rcar_gen3: Fix undefined temperature if negative
-Date:   Tue,  7 Jul 2020 17:17:14 +0200
-Message-Id: <20200707145804.284375172@linuxfoundation.org>
+Subject: [PATCH 5.7 065/112] hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
+Date:   Tue,  7 Jul 2020 17:17:10 +0200
+Message-Id: <20200707145804.091912038@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -64,53 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dien Pham <dien.pham.ry@renesas.com>
+From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 
-[ Upstream commit 5f8f06425a0dcdad7bedbb77e67f5c65ab4dacfc ]
+[ Upstream commit 8b97f9922211c44a739c5cbd9502ecbb9f17f6d1 ]
 
-As description for DIV_ROUND_CLOSEST in file include/linux/kernel.h.
-  "Result is undefined for negative divisors if the dividend variable
-   type is unsigned and for negative dividends if the divisor variable
-   type is unsigned."
+Although it rarely happens, we should call free_capabilities()
+if error happens after read_capabilities() to free allocated strings.
 
-In current code, the FIXPT_DIV uses DIV_ROUND_CLOSEST but has not
-checked sign of divisor before using. It makes undefined temperature
-value in case the value is negative.
-
-This patch fixes to satisfy DIV_ROUND_CLOSEST description
-and fix bug too. Note that the variable name "reg" is not good
-because it should be the same type as rcar_gen3_thermal_read().
-However, it's better to rename the "reg" in a further patch as
-cleanup.
-
-Signed-off-by: Van Do <van.do.xw@renesas.com>
-Signed-off-by: Dien Pham <dien.pham.ry@renesas.com>
-[shimoda: minor fixes, add Fixes tag]
-Fixes: 564e73d283af ("thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Niklas Soderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1593085099-2057-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Fixes: de584afa5e188 ("hwmon driver for ACPI 4.0 power meters")
+Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+Link: https://lore.kernel.org/r/20200625043242.31175-1-misono.tomohiro@jp.fujitsu.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/rcar_gen3_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/acpi_power_meter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-index 58fe7c1ef00b1..c48c5e9b8f203 100644
---- a/drivers/thermal/rcar_gen3_thermal.c
-+++ b/drivers/thermal/rcar_gen3_thermal.c
-@@ -167,7 +167,7 @@ static int rcar_gen3_thermal_get_temp(void *devdata, int *temp)
- {
- 	struct rcar_gen3_thermal_tsc *tsc = devdata;
- 	int mcelsius, val;
--	u32 reg;
-+	int reg;
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 0db8ef4fd6e18..a270b975e90bb 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -883,7 +883,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
  
- 	/* Read register and convert to mili Celsius */
- 	reg = rcar_gen3_thermal_read(tsc, REG_GEN3_TEMP) & CTEMP_MASK;
+ 	res = setup_attrs(resource);
+ 	if (res)
+-		goto exit_free;
++		goto exit_free_capability;
+ 
+ 	resource->hwmon_dev = hwmon_device_register(&device->dev);
+ 	if (IS_ERR(resource->hwmon_dev)) {
+@@ -896,6 +896,8 @@ static int acpi_power_meter_add(struct acpi_device *device)
+ 
+ exit_remove:
+ 	remove_attrs(resource);
++exit_free_capability:
++	free_capabilities(resource);
+ exit_free:
+ 	kfree(resource);
+ exit:
 -- 
 2.25.1
 
