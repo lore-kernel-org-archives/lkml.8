@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF356C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA782088E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5202082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135553;
-	bh=0FKU8CzWdHgKgcmcyG4su7ho8QOKuw0YpyhgYdqI3TM=;
+	s=default; t=1594135558;
+	bh=yarrN/SMtJ/H7bc1F42VTZOXDsUTCBQx14FHEqb7RuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cgFMfRKBgcvYamYH1QWdZ4qVNw32NMdi9268ilSidN7P72l6ID8XM7XMv+frtA4cq
-	 +KWm4BfnPGU9ePss2AE83618LzY/mxrwoknpijx1rp3Ri5dU7J7BD/fyYUvXke8srs
-	 8oi9tOeIqnuUCR8ghDMdM/Ul8dGEWKmEdxYLAd+I=
+	b=PZWBwpptz+Qxo5TXZ2Mvnsz5qXupYefa2BvvCeXP6bRb8BS2Wklp3FfnZzq/WMig5
+	 51MFzF6Tu9U6d19Z4eHm8x3jkkRA/K8lX4OSlACPmLxDB2S5AtjxM3g1HoMF2heETT
+	 51imAJBZIEi+iGI4cGNpP1RVku0Hu6y9MZRG9zE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgGGPZw (ORCPT
+        id S1730256AbgGGPZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729881AbgGGPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:48 -0400
+        id S1728903AbgGGPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3BE92065D;
-        Tue,  7 Jul 2020 15:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F752082E;
+        Tue,  7 Jul 2020 15:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135547;
-        bh=0FKU8CzWdHgKgcmcyG4su7ho8QOKuw0YpyhgYdqI3TM=;
+        s=default; t=1594135549;
+        bh=yarrN/SMtJ/H7bc1F42VTZOXDsUTCBQx14FHEqb7RuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmXodH2BvQnicCDshTOZN/fhFwHOTQ+Xu4CG+/6AxfrCMa213pCkLjZxzzLiPTuUa
-         207DCxl+kEYJcPe5icfdUz7fcVK53MVtqW779pBHu4iXcPMQ/va21ZJWRHLj6HXTTr
-         ZaJFq0YEYyFSd09CnxBGijcZsm7963UIvMuD3F8U=
+        b=jpzd38OmCDYL2qwoIGEP6AzcltkZuDyuOG9VY4DkgAmv4YHomvjs7GjbZDaRhboWS
+         U+1/6+Ytns6r1cspxSCZN+gbgQp4Ri/ce1Itcc4ynJ7I5gOVereq2ZAVY9/vCv9Jcd
+         hlhI6WqzDc0YsH+du2gpg4jal80iFxcU1bTEVA4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 084/112] io_uring: fix regression with always ignoring signals in io_cqring_wait()
-Date:   Tue,  7 Jul 2020 17:17:29 +0200
-Message-Id: <20200707145804.978657030@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 058/112] cxgb4: use unaligned conversion for fetching timestamp
+Date:   Tue,  7 Jul 2020 17:17:03 +0200
+Message-Id: <20200707145803.761321697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -59,97 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit b7db41c9e03b5189bc94993bd50e4506ac9e34c1 ]
+[ Upstream commit 589b1c9c166dce120e27b32a83a78f55464a7ef9 ]
 
-When switching to TWA_SIGNAL for task_work notifications, we also made
-any signal based condition in io_cqring_wait() return -ERESTARTSYS.
-This breaks applications that rely on using signals to abort someone
-waiting for events.
+Use get_unaligned_be64() to fetch the timestamp needed for ns_to_ktime()
+conversion.
 
-Check if we have a signal pending because of queued task_work, and
-repeat the signal check once we've run the task_work. This provides a
-reliable way of telling the two apart.
+Fixes following sparse warning:
+sge.c:3282:43: warning: cast to restricted __be64
 
-Additionally, only use TWA_SIGNAL if we are using an eventfd. If not,
-we don't have the dependency situation described in the original commit,
-and we can get by with just using TWA_RESUME like we previously did.
-
-Fixes: ce593a6c480a ("io_uring: use signal based task_work running")
-Cc: stable@vger.kernel.org # v5.7
-Reported-by: Andres Freund <andres@anarazel.de>
-Tested-by: Andres Freund <andres@anarazel.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 51362a619fd50..2be6ea0103405 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4136,14 +4136,22 @@ struct io_poll_table {
- 	int error;
- };
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index db8106d9d6edf..28ce9856a0784 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -3300,7 +3300,7 @@ static noinline int t4_systim_to_hwstamp(struct adapter *adapter,
  
--static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb,
--				int notify)
-+static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb)
- {
- 	struct task_struct *tsk = req->task;
--	int ret;
-+	struct io_ring_ctx *ctx = req->ctx;
-+	int ret, notify = TWA_RESUME;
+ 	hwtstamps = skb_hwtstamps(skb);
+ 	memset(hwtstamps, 0, sizeof(*hwtstamps));
+-	hwtstamps->hwtstamp = ns_to_ktime(be64_to_cpu(*((u64 *)data)));
++	hwtstamps->hwtstamp = ns_to_ktime(get_unaligned_be64(data));
  
--	if (req->ctx->flags & IORING_SETUP_SQPOLL)
-+	/*
-+	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
-+	 * If we're not using an eventfd, then TWA_RESUME is always fine,
-+	 * as we won't have dependencies between request completions for
-+	 * other kernel wait conditions.
-+	 */
-+	if (ctx->flags & IORING_SETUP_SQPOLL)
- 		notify = 0;
-+	else if (ctx->cq_ev_fd)
-+		notify = TWA_SIGNAL;
- 
- 	ret = task_work_add(tsk, cb, notify);
- 	if (!ret)
-@@ -4174,7 +4182,7 @@ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
- 	 * of executing it. We can't safely execute it anyway, as we may not
- 	 * have the needed state needed for it anyway.
- 	 */
--	ret = io_req_task_work_add(req, &req->task_work, TWA_SIGNAL);
-+	ret = io_req_task_work_add(req, &req->task_work);
- 	if (unlikely(ret)) {
- 		WRITE_ONCE(poll->canceled, true);
- 		tsk = io_wq_get_task(req->ctx->io_wq);
-@@ -6279,7 +6287,14 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 		if (current->task_works)
- 			task_work_run();
- 		if (signal_pending(current)) {
--			ret = -ERESTARTSYS;
-+			if (current->jobctl & JOBCTL_TASK_WORK) {
-+				spin_lock_irq(&current->sighand->siglock);
-+				current->jobctl &= ~JOBCTL_TASK_WORK;
-+				recalc_sigpending();
-+				spin_unlock_irq(&current->sighand->siglock);
-+				continue;
-+			}
-+			ret = -EINTR;
- 			break;
- 		}
- 		if (io_should_wake(&iowq, false))
-@@ -6288,7 +6303,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 	} while (1);
- 	finish_wait(&ctx->wait, &iowq.wq);
- 
--	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
-+	restore_saved_sigmask_unless(ret == -EINTR);
- 
- 	return READ_ONCE(rings->cq.head) == READ_ONCE(rings->cq.tail) ? ret : 0;
+ 	return RX_PTP_PKT_SUC;
  }
 -- 
 2.25.1
