@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40468C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 161702078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2D4207BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135160;
-	bh=FKfxQsRyT7kjS0tQFt9nWm9CYWhxBmsTbmgijqJj0yg=;
+	s=default; t=1594135163;
+	bh=jg37BOgnRVux8mq45Jft7hfVe7BKUumcFyBY9H09wFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RvDFaTlG7u9HE6FBnjg1mo4bvxkuUUoFEhyq3Fxc2AE2EFh+bCcrswrS7VfopwPO8
-	 rraiRtLmfjhphr6hRSiBjrf1Xk3dwb4/QggtNobJmGTf2dEABmJ50o39cStTZYJPGy
-	 orSDcwFqNf+P2ZG8oQhNjZuXc0ZwDYL6rEhMbNnw=
+	b=jFQ6B1oKhJ6pJi+A/s04zpAEWusfMVXFU1ilQSDAemKT2YU/4UpaWC0/7jQVZD/u0
+	 uCMo8a+hoZyqlFbf63W++KEmAEn4ch/nVsz9OjMg82mKdQ82HGMgKpcy/FJH+w+eUu
+	 rJuDBflpXVTA+V1i4rPkvLfMIjzANoUa64Oi7bbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgGGPTS (ORCPT
+        id S1729321AbgGGPTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58918 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbgGGPTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:16 -0400
+        id S1728249AbgGGPTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB45B20771;
-        Tue,  7 Jul 2020 15:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE692065D;
+        Tue,  7 Jul 2020 15:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135155;
-        bh=FKfxQsRyT7kjS0tQFt9nWm9CYWhxBmsTbmgijqJj0yg=;
+        s=default; t=1594135158;
+        bh=jg37BOgnRVux8mq45Jft7hfVe7BKUumcFyBY9H09wFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1UfDzO+PuGxdNosiujkEoE0gXA/hQJz4J3qW8zFE2M2yf7X2Lssg2U5sRUXqUzax
-         eFxqEjtgA8amj0X2h8oXJZWbCwuVBltvn0IVkZ8kQhF2xwhCrivj+3SjQNPKVALT8/
-         iSVNy87pbyj2K3/HeseRCzxvYBYU3NRmcGZmJcnE=
+        b=QmqTIiSeDPcymmUExL8zOrGZ7uVEJPT2fzJITmcE/WmBraBT/wY8fWcZFYs5Yq/zD
+         6qboaInaKeiO4YFk2326tlFIT5dCFKG7/zX7D2U15u2osNyc8u7Ag06Ma/8vwQ1Ldo
+         tLJsqRHAY236wOJN6fUoUY5A8TM43tuAG/Wh95LI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 4.19 33/36] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
-Date:   Tue,  7 Jul 2020 17:17:25 +0200
-Message-Id: <20200707145750.738867355@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 34/36] irqchip/gic: Atomically update affinity
+Date:   Tue,  7 Jul 2020 17:17:26 +0200
+Message-Id: <20200707145750.785360792@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -59,68 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Marc Zyngier <maz@kernel.org>
 
-commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
+commit 005c34ae4b44f085120d7f371121ec7ded677761 upstream.
 
-This resolves the hazard between the mtc0 in the change_c0_status() and
-the mfc0 in configure_exception_vector(). Without resolving this hazard
-configure_exception_vector() could read an old value and would restore
-this old value again. This would revert the changes change_c0_status()
-did. I checked this by printing out the read_c0_status() at the end of
-per_cpu_trap_init() and the ST0_MX is not set without this patch.
+The GIC driver uses a RMW sequence to update the affinity, and
+relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
+to update it atomically.
 
-The hazard is documented in the MIPS Architecture Reference Manual Vol.
-III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
-6.03 table 8.1 which includes:
+But these sequences only expand into anything meaningful if
+the BL_SWITCHER option is selected, which almost never happens.
 
-   Producer | Consumer | Hazard
-  ----------|----------|----------------------------
-   mtc0     | mfc0     | any coprocessor 0 register
+It also turns out that using a RMW and locks is just as silly,
+as the GIC distributor supports byte accesses for the GICD_TARGETRn
+registers, which when used make the update atomic by definition.
 
-I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
-There the change_c0_status() function would activate the DSPen by
-setting ST0_MX in the c0_status register. This was reverted and then the
-system got a DSP exception when the DSP registers were saved in
-save_dsp() in the first process switch. The crash looks like this:
+Drop the terminally broken code and replace it by a byte write.
 
-[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
-[    0.113470] Rebooting in 1 seconds..
-
-We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
-not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
-kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
-did not happen.
-
-In the kernel I bisected this problem to commit 9012d011660e ("compiler:
-allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
-reverted it also happened after commit 172dcd935c34b ("MIPS: Always
-allocate exception vector for MIPSr2+").
-
-Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
-does similar changes to a different file. I am not sure if there are
-more places affected by this problem.
-
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/traps.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-gic.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -2096,6 +2096,7 @@ static void configure_status(void)
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -324,10 +324,8 @@ static int gic_irq_set_vcpu_affinity(str
+ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
+-	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
+-	u32 val, mask, bit;
+-	unsigned long flags;
++	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
++	unsigned int cpu;
  
- 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
- 			 status_set);
-+	back_to_back_c0_hazard();
- }
+ 	if (!force)
+ 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+@@ -337,13 +335,7 @@ static int gic_set_affinity(struct irq_d
+ 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
  
- unsigned int hwrena;
+-	gic_lock_irqsave(flags);
+-	mask = 0xff << shift;
+-	bit = gic_cpu_map[cpu] << shift;
+-	val = readl_relaxed(reg) & ~mask;
+-	writel_relaxed(val | bit, reg);
+-	gic_unlock_irqrestore(flags);
+-
++	writeb_relaxed(gic_cpu_map[cpu], reg);
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
 
 
