@@ -2,161 +2,70 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E283207BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="POB0tDdC"
+	by mail.kernel.org (Postfix) with ESMTP id 95F8F206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgGGT6O (ORCPT
+        id S1728849AbgGGT6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        Tue, 7 Jul 2020 15:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbgGGT6N (ORCPT
+        with ESMTP id S1727003AbgGGT6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:58:13 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37102C08C5EF
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 12:58:13 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md7so138613pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VzRu+6RTYvmFttwhsiQLXCF6YnU1lg38nqV7v8N7whw=;
-        b=POB0tDdCbNVqmVQZ6yua+ndmhJsgXFLarIJRrzZHpuDGP0B1FODyoxi9lUTM/pG0IL
-         mE1dMIr/gsK64CjizChpcXywJYXY4Vfi25COfLptk3V+mFNHqoasjVtfubvV2ebCtl7a
-         czRuA5AP473VLGgnEz34EgdAlV0QOt3H67RniAnOVC2+In0mdoC9rSRvmlMzUXfZVzt4
-         xGEFUHBxADeMLVRzRAoW7/H0iSwTAcsqnlAtpK24wb/U0fEHrp7KMPF2hLocEXQ4+asp
-         047TKx7zculMEGUVbpwgiExvH3ficDy6d/Wj01wsX8chenP63N6BpBBILOJ6KcW2NDnx
-         OPSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VzRu+6RTYvmFttwhsiQLXCF6YnU1lg38nqV7v8N7whw=;
-        b=hO9BXlettY8suZsWeRP5RpMGgd5xvuSodPCgr9vedRK0h0/wIUqQEsXjzeKIi2tHVG
-         h6qX6ZGVQ5fLP7gV72r/j6zoMiBdCfTx5jEFs/feCkZKhIV9dElQHQO53IJ6I4YyEjNF
-         lY2DoZm7s7+KmNE+92K7nidYQ85MLlUu4IAyuTk2iKzTvu4B+OHE6WOl5IFlICxIH8eY
-         0ARsoBj+4pXDpSOXw8m4PKHiy9McLAZbdtqX08R4lBjG7vyx+9UnWK51r3V7d7byn1AN
-         Ufmqa7KfV/ZdadwoganWZB+D9CkSBGNPKKVJ50C9ifsgcckKGIKtIImH5gX8rfdcM4zQ
-         sdKw==
-X-Gm-Message-State: AOAM531TpXEiAZ5FhIpUTpLtjMWvrAKHK+Dy6bVMF0YeOBIUjjHdDTL8
-        mP81WQhJr8GH0fvLr4rG5kYTRfYoATwjWuFBthEciA==
-X-Google-Smtp-Source: ABdhPJwAgKOW6WJkomMyOukfnt4wP2/V35sf6mYJAhQLNyaosM4LY2uIUq7rKvvPZg70NVApdINfIkTmb6+bTRJLXD0=
-X-Received: by 2002:a17:90b:1296:: with SMTP id fw22mr6086502pjb.20.1594151892296;
- Tue, 07 Jul 2020 12:58:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707092117.963394-1-masahiroy@kernel.org>
-In-Reply-To: <20200707092117.963394-1-masahiroy@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 7 Jul 2020 12:58:01 -0700
-Message-ID: <CAFd5g46eCjZA-e4akYc1K8u29tp94gpmrAOxZ_joZ=9kJtZeuA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: introduce ccflags-remove-y and asflags-remove-y
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Haren Myneni <haren@us.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Paul Mackerras <paulus@samba.org>,
-        Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-crypto@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-sh@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jul 2020 15:58:40 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CD6C061755;
+        Tue,  7 Jul 2020 12:58:40 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7FE3B120F93E0;
+        Tue,  7 Jul 2020 12:58:39 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 12:58:38 -0700 (PDT)
+Message-Id: <20200707.125838.250656053300553400.davem@davemloft.net>
+To:     acelan.kao@canonical.com
+Cc:     bjorn@mork.no, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: add support for Quectel EG95 LTE
+ modem
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200707081445.1064346-1-acelan.kao@canonical.com>
+References: <20200707081445.1064346-1-acelan.kao@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 12:58:40 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 2:22 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> CFLAGS_REMOVE_<file>.o filters out flags when compiling a particular
-> object, but there is no convenient way to do that for every object in
-> a directory.
->
-> Add ccflags-remove-y and asflags-remove-y to make it easily.
->
-> Use ccflags-remove-y to clean up some Makefiles.
->
-> The add/remove order works as follows:
->
->  [1] KBUILD_CFLAGS specifies compiler flags used globally
->
->  [2] ccflags-y adds compiler flags for all objects in the
->      current Makefile
->
->  [3] ccflags-remove-y removes compiler flags for all objects in the
->      current Makefile (New feature)
->
->  [4] CFLAGS_<file> adds compiler flags per file.
->
->  [5] CFLAGS_REMOVE_<file> removes compiler flags per file.
->
-> Having [3] before [4] allows us to remove flags from most (but not all)
-> objects in the current Makefile.
->
-> For example, kernel/trace/Makefile removes $(CC_FLAGS_FTRACE)
-> from all objects in the directory, then adds it back to
-> trace_selftest_dynamic.o and CFLAGS_trace_kprobe_selftest.o
->
-> Please note ccflags-remove-y has no effect to the sub-directories.
-> In contrast, the previous notation got rid of compiler flags also from
-> all the sub-directories.
->
->   arch/arm/boot/compressed/
->   arch/powerpc/xmon/
->   arch/sh/
->   kernel/trace/
->
-> ... have no sub-directories.
->
->   lib/
->
-> ... has several sub-directories.
->
-> To keep the behavior, I added ccflags-remove-y to all Makefiles
-> in subdirectories of lib/, except:
->
->   lib/vdso/Makefile        - Kbuild does not descend into this Makefile
->   lib/raid/test/Makefile   - This is not used for the kernel build
->
-> I think commit 2464a609ded0 ("ftrace: do not trace library functions")
-> excluded too much. In later commit, I will try to remove ccflags-remove-y
-> from sub-directory Makefiles.
->
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+From: AceLan Kao <acelan.kao@canonical.com>
+Date: Tue,  7 Jul 2020 16:14:45 +0800
 
-Acked-by: Brendan Higgins <brendanhiggins@google.com> (KUnit)
+> Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+> 
+> T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
+> D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
+> P:  Vendor=2c7c ProdID=0195 Rev=03.18
+> S:  Manufacturer=Android
+> S:  Product=Android
+> C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+> I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+> I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+> I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+> I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+> I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+> 
+> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+
+Applied, thank you.
