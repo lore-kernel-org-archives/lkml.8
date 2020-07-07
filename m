@@ -2,124 +2,207 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF4CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26E620720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C468B20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OspgZzSh"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IQ2Ri285"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgGGUia (ORCPT
+        id S1728880AbgGGUkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:38:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57726 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728347AbgGGUi3 (ORCPT
+        Tue, 7 Jul 2020 16:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgGGUkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:38:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594154308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aMjCiC4fXOOzIsPO0KvxcCfMxXjgG381WcddzPegvjk=;
-        b=OspgZzSh+09WrDVaoEsrCrk+bOWWGA0jCh1lJVYVVLfN1bfgjW5ypvcHE7otgMp8axLEMT
-        O8Rl0TeicwjK+4LbH6MyplExsI8i3tZ0i9yawT+PN/8ZBWMM9TXSU1OpSZR91XjGDF3i8t
-        XJUUF4q2lkcY5ddn+ifYQRODA957XWc=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-X5COuLccNxujqkvCuZsU6A-1; Tue, 07 Jul 2020 16:38:26 -0400
-X-MC-Unique: X5COuLccNxujqkvCuZsU6A-1
-Received: by mail-qt1-f199.google.com with SMTP id s25so168838qth.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:38:26 -0700 (PDT)
+        Tue, 7 Jul 2020 16:40:10 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5007C08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 13:40:09 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id e64so39736055iof.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6BcRRLzOR9a+EmqTy6ErKRyeDhziM18eSEgk9TnV5Yg=;
+        b=IQ2Ri285jvhwaFWJllN7Q9RHvfmiak2Yupr2qv/DT/f+pxd3w1HVP5xWzsWCSPuFda
+         VF5MBmEQHhhRva0nUZay4UpGEXn8CWI5lmUIndEXJaz6DbqnfRJwb1xLlHyxdRr52PST
+         lWdHUF9tLXdy55y6toJX8gYZck7SuqMGVMOBTL3QCSKRdQp6CrhEZPu9ZRpLPUHeIYZ9
+         AETpjxE475grhRKQ9wYVbKrSYCXCgo8L4fgLpm0c4JuZlO6Abi3lPQ/+AoABCPetJTGp
+         66spIEzwQWKJc2mPi8baE227fPgWFD+yhmTASzJxKHt6oxQglMxuyJq246/2+vM/lk7a
+         3Zhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aMjCiC4fXOOzIsPO0KvxcCfMxXjgG381WcddzPegvjk=;
-        b=DFHhFt9taO+fJViugvjqfQSU4s7WDZx1/ItF8uv15bD9tLzD+GPw1S/bGLpJ6uuX+8
-         5rciHZHdWVhOOASI0VM7jOacBvO11tMv0bxO51jTeiB7QY1DSCpXncMXczPbjc42r8CS
-         AMsW0HCWXnmvtdz3JGt9jVx5c64z/qWu9EhDo/hWmT4YBlk7g980p7eI2qzfNTlpp0NN
-         WkWsVcQNI4ByFlHQOf/J1MmSfSbS3bZ0jdnsW5UV0HNEj7xc03SSQG28m92bmKIpyEO8
-         lT0Y43RskEVef+1Y+hBwB18CPyjoYfhWCZThz/ePfmPLaQpDgnBNrPQBoCe8jDgGxnvE
-         EIOA==
-X-Gm-Message-State: AOAM532rcGngHie4IYJ/1WAP03jZ6CQiG3Uw2yyyFCywau2xAy1VdySb
-        ZNrr0mWPHH8iNoXaGwVopN3KQ6M561zvXdtYrKr4vhNRbJjJPgkhS9msBkHska91N2lu61XijWd
-        i1yVjzpLlOi/awvoxS5oTPiCQ
-X-Received: by 2002:a0c:a8e6:: with SMTP id h38mr48101763qvc.15.1594154306096;
-        Tue, 07 Jul 2020 13:38:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzleWjN2olOhhrG5haHwdKHsD0Dqr3AfHJ7k/D2DRg2L3jSRHghjGvq6xqW45fgCMAxgq8VpQ==
-X-Received: by 2002:a0c:a8e6:: with SMTP id h38mr48101747qvc.15.1594154305869;
-        Tue, 07 Jul 2020 13:38:25 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id n143sm23806440qkn.94.2020.07.07.13.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 13:38:25 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 16:38:23 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200707203823.GI88106@xz-x1>
-References: <20200601115957.1581250-1-peterx@redhat.com>
- <20200601115957.1581250-3-peterx@redhat.com>
- <20200702230849.GL3575@linux.intel.com>
- <20200703184122.GF6677@xz-x1>
- <20200707061732.GI5208@linux.intel.com>
- <20200707195009.GE88106@xz-x1>
- <20200707195658.GK20096@linux.intel.com>
- <20200707201508.GH88106@xz-x1>
- <20200707202623.GM20096@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6BcRRLzOR9a+EmqTy6ErKRyeDhziM18eSEgk9TnV5Yg=;
+        b=mQ9VuWykIkWlZ+z5hJ2KbOrEgyPMsO1PpbUBMtExDazifl2HKZrHpWvB8NeXIEjuNg
+         yTIDVFIOXifs2rMHP63VE4GPnYPm/YzrfvYvIBIzfmFyUrHZ5JR/Kxjroq63H61OQiBM
+         lq+YcF73gWi6vPArlsEYsTRjvvqOvHfcIFkYASAxDE52Upq/tpZi/TFV5IGvnYWxJMIO
+         AxoWeRtJ3GUqweuIAZYrqL2wNudnSUGjKVkJEbt+ANLP8cx3nlxDDPGOGCPPpLIDfRdT
+         jN1wCega3DTSKPguqhXbGwkTS0k3SAh7BktSjNP3p/I/OaqJehfVBxQMv+m1VGFd7RIN
+         A0Mw==
+X-Gm-Message-State: AOAM531wezTsTkrT7KR040tWZklPQKcOeKH3bKoHzXA2CC21cW7RctXv
+        TNF0My9HJ+fU/PBaIaEUyGwmJQ==
+X-Google-Smtp-Source: ABdhPJxebRGc83pzGSG/E6dbpIhDmfmgCpDogiz6BeHTBx5v4jcdBAvuJq2/4tx4nD3aGNga5j5iWw==
+X-Received: by 2002:a5e:c311:: with SMTP id a17mr3667434iok.12.1594154408972;
+        Tue, 07 Jul 2020 13:40:08 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v4sm13400907ilo.44.2020.07.07.13.40.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 13:40:08 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Kanchan Joshi <joshi.k@samsung.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
+        Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200705210947.GW25523@casper.infradead.org>
+ <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
+ <20200706141002.GZ25523@casper.infradead.org>
+ <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
+ <20200706143208.GA25523@casper.infradead.org>
+ <20200707151105.GA23395@test-zns>
+ <20200707155237.GM25523@casper.infradead.org>
+ <20200707202342.GA28364@test-zns>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
+Date:   Tue, 7 Jul 2020 14:40:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200707202342.GA28364@test-zns>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200707202623.GM20096@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:26:23PM -0700, Sean Christopherson wrote:
-> On Tue, Jul 07, 2020 at 04:15:08PM -0400, Peter Xu wrote:
-> > On Tue, Jul 07, 2020 at 12:56:58PM -0700, Sean Christopherson wrote:
-> > > > > It's a single line of code, and there's more than one
-> > > > > "shouldn't" in the above.
-> > > > 
-> > > > If you want, I can both set it and add the comment.  Thanks,
-> > > 
-> > > Why bother with the comment?  It'd be wrong in the sense that the as_id is
-> > > always valid/accurate, even if npages == 0.
-> > 
-> > Sorry I'm confused.. when npages==0, why as_id field is meaningful?  Even if
-> > the id field is meaningless after the slot is successfully removed, or am I
-> > wrong?
-> > 
-> > My understanding is that after your dynamic slot work, we'll only have at most
-> > one extra memslot that was just removed, and that slot should be meaningless as
-> > a whole.  Feel free to correct me.
-> 
-> Your understanding is correct.  What I'm saying is that if something goes
-> awry and the memslots need to be debugged, having accurate info for that one
-> defunct memslot could be helpful, if only to not confuse a future debugger
-> that doesn't fully understand memslots or address spaces.  Sure, it could be
-> manually added back in for debug, but it's literally a single line of code
-> to carry and it avoids the need for a special comment.
+On 7/7/20 2:23 PM, Kanchan Joshi wrote:
+> On Tue, Jul 07, 2020 at 04:52:37PM +0100, Matthew Wilcox wrote:
+>> On Tue, Jul 07, 2020 at 08:41:05PM +0530, Kanchan Joshi wrote:
+>>> On Mon, Jul 06, 2020 at 03:32:08PM +0100, Matthew Wilcox wrote:
+>>>> On Mon, Jul 06, 2020 at 08:27:17AM -0600, Jens Axboe wrote:
+>>>>> On 7/6/20 8:10 AM, Matthew Wilcox wrote:
+>>>>>> On Sun, Jul 05, 2020 at 03:12:50PM -0600, Jens Axboe wrote:
+>>>>>>> On 7/5/20 3:09 PM, Matthew Wilcox wrote:
+>>>>>>>> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+>>>>>>>>> On 7/5/20 12:47 PM, Kanchan Joshi wrote:
+>>>>>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>>>>>>>
+>>>>>>>>>> For zone-append, block-layer will return zone-relative offset via ret2
+>>>>>>>>>> of ki_complete interface. Make changes to collect it, and send to
+>>>>>>>>>> user-space using cqe->flags.
+>>>>>>
+>>>>>>>> I'm surprised you aren't more upset by the abuse of cqe->flags for the
+>>>>>>>> address.
+>>>
+>>> Documentation (https://protect2.fireeye.com/url?k=297dbcbf-74aee030-297c37f0-0cc47a31ce52-632d3561909b91fc&q=1&u=https%3A%2F%2Fkernel.dk%2Fio_uring.pdf) mentioned cqe->flags can carry
+>>> the metadata for the operation. I wonder if this should be called abuse.
+>>>
+>>>>>>> Yeah, it's not great either, but we have less leeway there in terms of
+>>>>>>> how much space is available to pass back extra data.
+>>>>>>>
+>>>>>>>> What do you think to my idea of interpreting the user_data as being a
+>>>>>>>> pointer to somewhere to store the address?  Obviously other things
+>>>>>>>> can be stored after the address in the user_data.
+>>>>>>>
+>>>>>>> I don't like that at all, as all other commands just pass user_data
+>>>>>>> through. This means the application would have to treat this very
+>>>>>>> differently, and potentially not have a way to store any data for
+>>>>>>> locating the original command on the user side.
+>>>>>>
+>>>>>> I think you misunderstood me.  You seem to have thought I meant
+>>>>>> "use the user_data field to return the address" when I actually meant
+>>>>>> "interpret the user_data field as a pointer to where userspace
+>>>>>> wants the address stored".
+>>>>>
+>>>>> It's still somewhat weird to have user_data have special meaning, you're
+>>>>> now having the kernel interpret it while every other command it's just
+>>>>> an opaque that is passed through.
+>>>>>
+>>>>> But it could of course work, and the app could embed the necessary
+>>>>> u32/u64 in some other structure that's persistent across IO. If it
+>>>>> doesn't have that, then it'd need to now have one allocated and freed
+>>>>> across the lifetime of the IO.
+>>>>>
+>>>>> If we're going that route, it'd be better to define the write such that
+>>>>> you're passing in the necessary information upfront. In syscall terms,
+>>>>> then that'd be something ala:
+>>>>>
+>>>>> ssize_t my_append_write(int fd, const struct iovec *iov, int iovcnt,
+>>>>> 			off_t *offset, int flags);
+>>>>>
+>>>>> where *offset is copied out when the write completes. That removes the
+>>>>> need to abuse user_data, with just providing the storage pointer for the
+>>>>> offset upfront.
+>>>>
+>>>> That works for me!  In io_uring terms, would you like to see that done
+>>>> as adding:
+>>>>
+>>>>        union {
+>>>>                __u64   off;    /* offset into file */
+>>>> +		__u64   *offp;	/* appending writes */
+>>>>                __u64   addr2;
+>>>>        };
+>>> But there are peformance implications of this approach?
+>>> If I got it right, the workflow is: - Application allocates 64bit of space,
+>>> writes "off" into it and pass it
+>>>  in the sqe->addr2
+>>> - Kernel first reads sqe->addr2, reads the value to know the intended
+>>>  write-location, and stores the address somewhere (?) to be used during
+>>>  completion. Storing this address seems tricky as this may add one more
+>>>  cacheline (in io_kiocb->rw)?
+>>
+>> io_kiocb is:
+>>        /* size: 232, cachelines: 4, members: 19 */
+>>        /* forced alignments: 1 */
+>>        /* last cacheline: 40 bytes */
+>> so we have another 24 bytes before io_kiocb takes up another cacheline.
+>> If that's a serious problem, I have an idea about how to shrink struct
+>> kiocb by 8 bytes so struct io_rw would have space to store another
+>> pointer.
+> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
+> it must be placed within io_rw - I'll come to know once I get to
+> implement this. Please share the idea you have, it can come handy.
 
-Sure, will do.  But again, I hope you allow me to add at least some comment.
-To me, it's still weird to set these in a destroying memslot...
+Except it doesn't, I'm not interested in adding per-request type fields
+to the generic part of it. Before we know it, we'll blow past the next
+cacheline.
+
+If we can find space in the kiocb, that'd be much better. Note that once
+the async buffered bits go in for 5.9, then there's no longer a 4-byte
+hole in struct kiocb.
+
+>> ... we've just done an I/O.  Concern about an extra pointer access
+>> seems misplaced?
+> 
+> I was thinking about both read-from (submission) and write-to
+> (completion) from user-space pointer, and all those checks APIs
+> (get_user, copy_from_user) perform.....but when seen against I/O (that
+> too direct), it does look small. Down the line it may matter for cached-IO
+> but I get your point. 
+
+Really don't think that matters at all.
 
 -- 
-Peter Xu
+Jens Axboe
 
