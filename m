@@ -2,129 +2,135 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60830C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F4320684
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4816220684
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fbbH+nMU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="osXjIQWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgGGEGT (ORCPT
+        id S1727008AbgGGEIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgGGEGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:06:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06812C061755;
-        Mon,  6 Jul 2020 21:06:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zVZLs0N75aZV67cHh+dPIHohMDTzmdFMj5VSVF1NIIE=; b=fbbH+nMUdsi61xBpyAWZ3pwwVH
-        RcP5goKiCyW+CRG6U9h5HWCFdyU+6CeAngxeyk4mKEo0Ikxe738kaJPNlAkgu/yVDbVTUH6kaba8A
-        TcL7cBxYSgt/4V2PoGfEyJQUelVVAa4Qhzay8lmHjYTMnSCXfvWvweIr8+5z8KFrfNSeo9Q31MyGf
-        5rih/kL54q1ouZUoKRNi8rvVcyH6J0Cai5xSPnjIejds8/Ba3fL6/sMEB8gd9Xy3AhLMYBToZShyw
-        QXQJjyu/jDt0iWZ2nlS95xsjZM0cAcdP+feB3S+6B3vn+ILQUpIfyYMLv8S1hssK/1oLPZ5zvqBon
-        o+Sunugg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jses2-0005Cw-0f; Tue, 07 Jul 2020 04:06:14 +0000
-Date:   Tue, 7 Jul 2020 05:06:13 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v35 23/24] docs: x86/sgx: Document SGX micro architecture
- and kernel internals
-Message-ID: <20200707040613.GH25523@casper.infradead.org>
-References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
- <20200707033747.142828-24-jarkko.sakkinen@linux.intel.com>
+        Tue, 7 Jul 2020 00:08:12 -0400
+Received: from mail-eopbgr20083.outbound.protection.outlook.com ([40.107.2.83]:37228
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725766AbgGGEIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:08:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4WMvymFy1x/YtugGfxm/kCCThTi4+W1qa2+zr45H6Y5SAYFsMV1vte52YerKFHtFhVyGcw7MZ9yeZzgF1GXLGTEMgU+2tC3d9xPjO0VN5Kj1wr+6OBN8PqxEedXc5e717m6JZQnaxV3YX4FEYGMGP3rdmKy7bWxKnYtKP9SyG818zGaMBo69HVw3VSAGrOs1s+94bva/Y4XivIyvDFuj4u5qG0jFiVfis23MvFOlC36ZCRDMPnUSTU3k8DH6DQXgx5KwtV3oJgiAoQ7IRDbKCXVCQ3KEk/xOnhuMQLmLO9cQ3K7923CjSlHUgCMLT/uqGFJMM9rUK5Bln5pf71CgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jmgcqBcBb6P2UhW8aGxHkTyTiQqbplue+L7CVRAi1io=;
+ b=bRlKagOmczw5os1S5I7ilsKvQGwuU9jzHO8lHq2UUJc7s5alqEmegvhavyEZti3gcQNW2jA8882bosG+3blbjB+i863UtUUnH7/OUUyAl/9CvA5ZxGkzizrv9+a+K1no4KPY6wIwa4k3Sn48JW8HoXaW9Pc2YeKjjC+wPati26OKycsbGrpnz0uhZ1LtJ6L996A+ykBCOosA1YK4mHm0AQvQM3CswqTPubh5Ru/7R+oOfUSOFAaSPsZEmReFSqChJJUPLdMrqIKrgc5q3op0Cn7oF9vQhFCFAd+Y8kYo1GSqKlYlLLBsfmNZROGmmTLWl2R96GK7OWvOc+cS2spQUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jmgcqBcBb6P2UhW8aGxHkTyTiQqbplue+L7CVRAi1io=;
+ b=osXjIQWx2bGaJxGDfdR6skg+RChtRz7Y8/ljTa245l4omVXadyzILML3+TgxrkD+TuODgsSci77bIrFfv5vtq7PFR7H7nuc1FWCaGFDg73it+VTGXfXnSgYE8AgSQCKznGkE00R4qDjDnwB+ByJ69vlinGulvHVPdMyt47lOhBU=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM7PR04MB6902.eurprd04.prod.outlook.com
+ (2603:10a6:20b:107::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Tue, 7 Jul
+ 2020 04:08:09 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 04:08:09 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Sergey Organov <sorganov@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: RE: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
+ fec_ptp_set()
+Thread-Topic: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
+ fec_ptp_set()
+Thread-Index: AQHWU6F5IyIEbIdp8UqiTSGJIl4IMaj7gQmw
+Date:   Tue, 7 Jul 2020 04:08:08 +0000
+Message-ID: <AM6PR0402MB3607DE03C3333B9E4C8D3309FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-5-sorganov@gmail.com>
+In-Reply-To: <20200706142616.25192-5-sorganov@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d624a583-d2fd-447a-d4d3-08d8222b5bb0
+x-ms-traffictypediagnostic: AM7PR04MB6902:
+x-microsoft-antispam-prvs: <AM7PR04MB690287CFF25C2A1C1DE2FFCEFF660@AM7PR04MB6902.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:147;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c/rGk4sWuxExwRHyxgx3tV8TQKxfw5Hoa120PTKF0GUDAhB02eqYWlbIbWLBRt9aGNZwY/fhHzZntwbpKSKmxpQ5b404x7MKFb9r/YiwglIi8Up9DzWzRmDg1dDcYv/WoruwOdVFfiShi/2Qf/C7bI9/DEHHkonQOg4qy2oRFkY1leoPfvR6cWl7Yfv1YpuZM/2VWSA8ar2RhEjoKJ8NzhfLWbW3ALaOIMXnpAfw83U0cGqmfMNlw5J243SIzTmZLtEzcrpXan+rX4Hpeg8a6nr2QonqpXPeFlVkX3Ky+NAD3s5Nt8yxGzDUMmC2V/5zqpSJnn032y0EYNOFZ1uom6mu5QEnHfAkmoIfC1R7h17goN78yLOQ8qZbH22FIZ1H
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(316002)(26005)(186003)(6506007)(110136005)(71200400001)(54906003)(7696005)(478600001)(8936002)(8676002)(4744005)(4326008)(33656002)(55016002)(2906002)(9686003)(76116006)(83380400001)(52536014)(86362001)(5660300002)(66446008)(64756008)(66556008)(66476007)(66946007)(26583001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: G/flYSsH5//FdjZQs9ngz7EJbpmnpcUgNmTF+2nHSYwOzsdnOSmROMPvDXassijYpJsBwkOqUAJQr6jEDEu1ZXbqGfG3ugeCGBAqVgDRFvg3Chw8WBsX3e+nLRNbL4bSdCK0zpjdD7ub2JqMoc+f/VS4S7fb508xZTieFFHgZQ4X5LfDCRxBIYUBpkXINGA4lWCIrBVDpxP5wTET4JQ3TfRcarS3O4PQ6h1Vf0U4NDCyxpNR0FqjE+HQOtiJqN7J3qcPMP/wHzqmXquGE/CRL5Bx3QAkg3MirS6en1ckMa1vmxSngLNMmZYOgkNOkN74QU2rjPy8yge4eWLPxuq32iypxZE1eNJHlMSwoPNiUYDN+oIpWKCkyzLBGiNOg6Wwrfvy/ghfwN1xiDzD0T29qP0cJq/Jn/E8O3LrHmnEzAEDmY2aa0F+PHeG2HnFUSJHEeog1r5Da0pQXQSuru+eXogAvW9X3+dMNve/SV00TsVBfmlYKTdEBrK//51vqeSN
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707033747.142828-24-jarkko.sakkinen@linux.intel.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d624a583-d2fd-447a-d4d3-08d8222b5bb0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 04:08:08.9868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LnVSWBwdMHmWUjgZ9C8cpe3cXhq769zrOPF/ZEYH0asNvG88mbMRdJszSGFaako9nwx3lri8JHdH09A29vxriw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6902
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 06:37:46AM +0300, Jarkko Sakkinen wrote:
-> +*Software Guard eXtensions (SGX)* is a set of instructions that enable ring-3
+From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020 10:26 =
+PM
+> Code of the form "if(x) x =3D 0" replaced with "x =3D 0".
+>=20
+> Code of the form "if(x =3D=3D a) x =3D a" removed.
+>=20
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_ptp.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
+> b/drivers/net/ethernet/freescale/fec_ptp.c
+> index e455343..4152cae 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -485,9 +485,7 @@ int fec_ptp_set(struct net_device *ndev, struct ifreq
+> *ifr)
+>=20
+>         switch (config.rx_filter) {
+>         case HWTSTAMP_FILTER_NONE:
+> -               if (fep->hwts_rx_en)
+> -                       fep->hwts_rx_en =3D 0;
+> -               config.rx_filter =3D HWTSTAMP_FILTER_NONE;
+The line should keep according your commit log.
 
-I can never remember which way up intel numbers their rings.
-Is that user mode or kernel mode?
-
-> +applications to set aside private regions of code and data. These regions are
-> +called enclaves. An enclave can be entered to a fixed set of entry points. Only
-
-entered through?
-
-> +a CPU running inside the enclave can access its code and data.
-> +
-> +The support can be determined by
-> +
-> +	``grep sgx /proc/cpuinfo``
-> +
-> +Enclave Page Cache
-> +==================
-> +
-> +SGX utilizes an *Enclave Page Cache (EPC)* to store pages that are associated
-> +with an enclave. It is contained in a BIOS reserved region of physical memory.
-> +Unlike pages used for regular memory, pages can only be accessed outside the
-> +enclave for different purposes with the instructions **ENCLS**, **ENCLV** and
-> +**ENCLU**.
-> +
-> +Direct memory accesses to an enclave can be only done by a CPU executing inside
-> +the enclave. An enclave can be entered with **ENCLU[EENTER]** to a fixed set of
-> +entry points. However, a CPU executing inside the enclave can do outside memory
-> +accesses.
-
-This is rather tortured.  I think what you're trying to say here is:
-
-Only a CPU executing inside an enclave can access memory belonging to the
-enclave.  The CPU may access memory outside the enclave as long as it does
-not attempt to access memory which is inside a different enclave.
-
-> +Enclave Page Cache Map
-> +----------------------
-> +
-> +The processor tracks EPC pages via the *Enclave Page Cache Map (EPCM)*.  EPCM
-> +contains an entry for each EPC page, which describes the owning enclave, access
-> +rights and page type among the other things.
-> +
-> +The permissions from EPCM is consulted if and only if walking the kernel page
-> +tables succeeds. The total permissions are thus a conjunction between page table
-> +and EPCM permissions.
-> +
-> +For all intents and purposes the SGX architecture allows the processor to
-> +invalidate all EPCM entries at will, i.e. requires that software be prepared to
-> +handle an EPCM fault at any time. The contents of EPC are encrypted with an
-> +ephemeral key, which is lost on power transitions.
-
-The SGX architecture allows the processor to invalidate any EPCM entry
-at any time.  Sotware must be prepared to handle the resulting EPCM fault.
-The contents of EPC are encrypted with an ephemeral key, which is lost on
-power transitions.
-
-(can you be a bit more specific about power transitions?  do you mean
-suspend/resume?  hibernate/wake?  poweroff/poweron?  what about reset?
-surely you don't mean S1?  or do you?)
+> +               fep->hwts_rx_en =3D 0;
+>                 break;
+>=20
+>         default:
+> --
+> 2.10.0.1.g57b01a3
 
