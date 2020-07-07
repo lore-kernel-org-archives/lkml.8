@@ -2,332 +2,178 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16613C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D10A206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83ED20739
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXAMCwQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgGGLlr (ORCPT
+        id S1727793AbgGGLnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:41:47 -0400
-Received: from mailomta32-re.btinternet.com ([213.120.69.125]:22355 "EHLO
-        re-prd-fep-046.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726805AbgGGLlq (ORCPT
+        Tue, 7 Jul 2020 07:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGLnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:41:46 -0400
-Received: from re-prd-rgout-002.btmx-prd.synchronoss.net ([10.2.54.5])
-          by re-prd-fep-046.btinternet.com with ESMTP
-          id <20200707114143.YIZZ4657.re-prd-fep-046.btinternet.com@re-prd-rgout-002.btmx-prd.synchronoss.net>;
-          Tue, 7 Jul 2020 12:41:43 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.71.41]
-X-OWM-Source-IP: 31.53.71.41 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgdefjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedtudenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecuggftrfgrthhtvghrnhepgeeftdfhfeeuiefhgfekfeethedutddtfeduteevleevfedvfefhjeeijefhgffgnecukfhppeefuddrheefrdejuddrgedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohephhgvnhhrhidrhhhomhgvpdhinhgvthepfedurdehfedrjedurdeguddpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeovghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.53.71.41) by re-prd-rgout-002.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5ED9C0CC05A79E9B; Tue, 7 Jul 2020 12:41:42 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     gregkh@linuxfoundation.org
-Cc:     evel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] staging: rtl8723bs: Using comparison to true is error prone
-Date:   Tue,  7 Jul 2020 12:41:28 +0100
-Message-Id: <20200707114128.30312-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jul 2020 07:43:15 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099F3C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:43:15 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k5so8849043pjg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ohadtc0L1YoGCqvh2RHLLL9N195SXhq2FPyHHtyTf6I=;
+        b=MXAMCwQC8IL27+0vSF5sDoTYe9kbihNM+TeZqy0WH9RI3hH+SYQ9jVN0g6OCodM1sw
+         5r20dsooDL0hkjMZe2WtW5bpA4xoShUQPLoTZU+tSHKHwa/1fTkLYm7vWA+lmd7OL+3d
+         oFhJHDS3pUCuV07P3UmfJDcaq6ZZlh2rXJfsF1bFXfH4e1lpGbKFtadcaFa532quvoLj
+         McwFQeBEfJ3Iugph62liszwuWDG9lDg6vIDqn0d035p5EoijBbKHkEeUlBqAe0IIy5HM
+         2KOR34BeAXfhVOrcydaGIWDMNNu5Rck5SBvqcytLvw70T/Mn2PAVh9o56amAGiX4f5IV
+         gofg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ohadtc0L1YoGCqvh2RHLLL9N195SXhq2FPyHHtyTf6I=;
+        b=hQHZogxYCiGsSDFv+2SuyJ2KDQSvydfHIbKenqkaV9eACDCuifZKhWuMCccvUXxrkG
+         PaAdAcXnekXeRVgPVtTrf0xlTVibjKRqV8eH3LkPa4wlsUC2vhrVf222PBhXsb+sJQ/Z
+         9qouabU0SzaqRVQl8CpCO+TRnBrb+sVULB9zA4JytQ9NdnbhGXjMc5fMGiY5BUfkYxJO
+         rFlAMbf130fqW1P6ug3t4IVfIVNIMq90rEODTcYyW7khZ3I03KoKRLRUwg3pKeZkzll5
+         tVtThEEcTU64u3luxNwGPnu36QX/GirpqQBr3UBXUxNnBdUCzzcmfKW8XN8EgAiqEMGd
+         Lrbg==
+X-Gm-Message-State: AOAM5315MYBzuvFRW0Z3j5m5eamau3pBAjWs4o3QeEU9zSihoPjPPNGa
+        I1YF8OR16JnKGDi+aarrrC4=
+X-Google-Smtp-Source: ABdhPJyuDHicYHOOouJdoIfw6ImZfpUPNRi11nfS3g9x/1Aq5MFh5yUCacafbwTrf61t0Skjc1cAxQ==
+X-Received: by 2002:a17:902:40a:: with SMTP id 10mr23417001ple.260.1594122194607;
+        Tue, 07 Jul 2020 04:43:14 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o2sm57891pfh.160.2020.07.07.04.43.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 04:43:13 -0700 (PDT)
+Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to
+ Linux error codes
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+References: <20200704142607.171400-1-linux@roeck-us.net>
+ <7fd5528a-017e-d706-8092-8e1d6b187243@collabora.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <8f9314a2-bd40-4ce0-ca9d-25722c642107@roeck-us.net>
+Date:   Tue, 7 Jul 2020 04:43:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <7fd5528a-017e-d706-8092-8e1d6b187243@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clear below issues reported by checkpatch.pl:
+On 7/7/20 3:10 AM, Enric Balletbo i Serra wrote:
+> Hi Prashant and Guenter,
+> 
+> Thank you to spend your time on look at this.
+> 
+> On 4/7/20 16:26, Guenter Roeck wrote:
+>> The EC reports a variety of error codes. Most of those, with the exception
+>> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+>> error code gets lost. Convert all EC errors to Linux error codes to report
+>> a more meaningful error to the caller to aid debugging.
+>>
+>> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+>> Cc: Prashant Malani <pmalani@chromium.org>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+> 
+> For me the patch looks good as is. Said that, I'd like to discuss a bit more
+> (but not too much) about it :-). My "concerns" are:
+> 
+> - It is not clear to me if some EC errors match directly to a linux kernel error
+> codes, the importance of them, and which action should be taken in that case or
+> if just reporting is enough.
+> 
+> - The EC result can be obtained, either, enabling more debug traces or using the
+> linux kernel tracing tools. So, IMO mapping _all_ the errors has very little value.
+> 
+> Right now, the policy I followed is return -EPROTO for all EC errors and
+> introduce/match a new error when someone (another kernel driver or userspace
+> needs to know about it, i.e [1], where some EC drivers do different actions if
+> -ENOTSUPP is returned). We introduced that error because we had a use case for it.
+> 
+> The future, I'd like to maintain this policy if it makes sense to you. And
+> introduce a new error when we have a use case for it. I.e if at some point a
+> kernel driver needs to know when the EC is busy (-EBUSY) because the driver
+> waits and retries again, I'll be fine to introduce this new error/match code.
+> Otherwise, I feel that has no really value.
+> 
+> Said that, if you still feel, that this will help you for debugging purposes, I
+> am completely fine to pick the patch.
+> 
+> Thoughts?
+> 
 
-CHECK: Using comparison to false is error prone
-CHECK: Using comparison to true is error pron
+Yes, I did feel it was useful, error codes are never perfect, it is rarely
+possible to enable tracing in situations in which the error that was observed,
+and I think it would have been and would be useful (having it would have saved
+hours of analysis and debugging time), but not for the cost of spending hours
+of argument about it. Please drop.
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
- drivers/staging/rtl8723bs/os_dep/os_intfs.c | 70 ++++++++++-----------
- 1 file changed, 32 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-index 50a3c2c3a8d2..27f990a01a23 100644
---- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-+++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-@@ -313,7 +313,7 @@ static int rtw_net_set_mac_address(struct net_device *pnetdev, void *p)
- 	struct adapter *padapter = (struct adapter *)rtw_netdev_priv(pnetdev);
- 	struct sockaddr *addr = p;
-
--	if (padapter->bup == false) {
-+	if (!padapter->bup) {
- 		/* DBG_871X("r8711_net_set_mac_address(), MAC =%x:%x:%x:%x:%x:%x\n", addr->sa_data[0], addr->sa_data[1], addr->sa_data[2], addr->sa_data[3], */
- 		/* addr->sa_data[4], addr->sa_data[5]); */
- 		memcpy(padapter->eeprompriv.mac_addr, addr->sa_data, ETH_ALEN);
-@@ -897,12 +897,12 @@ int _netdev_open(struct net_device *pnetdev)
-
- 	padapter->netif_up = true;
-
--	if (pwrctrlpriv->ps_flag == true) {
-+	if (pwrctrlpriv->ps_flag) {
- 		padapter->net_closed = false;
- 		goto netdev_open_normal_process;
- 	}
-
--	if (padapter->bup == false) {
-+	if (!padapter->bup) {
- 		padapter->bDriverStopped = false;
- 		padapter->bSurpriseRemoved = false;
- 		padapter->bCardDisableWOHSM = false;
-@@ -964,7 +964,7 @@ int netdev_open(struct net_device *pnetdev)
- 	struct adapter *padapter = (struct adapter *)rtw_netdev_priv(pnetdev);
- 	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(padapter);
-
--	if (pwrctrlpriv->bInSuspend == true) {
-+	if (pwrctrlpriv->bInSuspend) {
- 		DBG_871X("+871x_drv - drv_open, bInSuspend =%d\n", pwrctrlpriv->bInSuspend);
- 		return 0;
- 	}
-@@ -1041,7 +1041,7 @@ void rtw_ips_dev_unload(struct adapter *padapter)
- 	DBG_871X("====> %s...\n", __func__);
-
-
--	if (padapter->bSurpriseRemoved == false)
-+	if (!padapter->bSurpriseRemoved)
- 		rtw_hal_deinit(padapter);
- }
-
-@@ -1052,7 +1052,7 @@ static int pm_netdev_open(struct net_device *pnetdev, u8 bnormal)
-
- 	struct adapter *padapter = (struct adapter *)rtw_netdev_priv(pnetdev);
-
--	if (true == bnormal) {
-+	if (bnormal) {
- 		if (mutex_lock_interruptible(&(adapter_to_dvobj(padapter)->hw_init_mutex)) == 0) {
- 			status = _netdev_open(pnetdev);
- 			mutex_unlock(&(adapter_to_dvobj(padapter)->hw_init_mutex));
-@@ -1071,7 +1071,7 @@ static int netdev_close(struct net_device *pnetdev)
-
- 	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+871x_drv - drv_close\n"));
-
--	if (pwrctl->bInternalAutoSuspend == true) {
-+	if (pwrctl->bInternalAutoSuspend) {
- 		/* rtw_pwr_wakeup(padapter); */
- 		if (pwrctl->rf_pwrstate == rf_off)
- 			pwrctl->ps_flag = true;
-@@ -1134,7 +1134,7 @@ void rtw_dev_unload(struct adapter *padapter)
-
- 	RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("+%s\n", __func__));
-
--	if (padapter->bup == true) {
-+	if (padapter->bup) {
- 		DBG_871X("===> %s\n", __func__);
-
- 		padapter->bDriverStopped = true;
-@@ -1149,7 +1149,7 @@ void rtw_dev_unload(struct adapter *padapter)
- 		if (!pwrctl->bInternalAutoSuspend)
- 			rtw_stop_drv_threads(padapter);
-
--		while (atomic_read(&(pcmdpriv->cmdthd_running)) == true) {
-+		while (atomic_read(&pcmdpriv->cmdthd_running)) {
- 			if (cnt > 5) {
- 				DBG_871X("stop cmdthd timeout\n");
- 				break;
-@@ -1163,7 +1163,8 @@ void rtw_dev_unload(struct adapter *padapter)
- 		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("@ %s: stop thread complete!\n", __func__));
-
- 		/* check the status of IPS */
--		if (rtw_hal_check_ips_status(padapter) == true || pwrctl->rf_pwrstate == rf_off) { /* check HW status and SW state */
-+		if (rtw_hal_check_ips_status(padapter) || pwrctl->rf_pwrstate == rf_off) {
-+			/* check HW status and SW state */
- 			DBG_871X_LEVEL(_drv_always_, "%s: driver in IPS-FWLPS\n", __func__);
- 			pdbgpriv->dbg_dev_unload_inIPS_cnt++;
- 			LeaveAllPowerSaveMode(padapter);
-@@ -1171,11 +1172,10 @@ void rtw_dev_unload(struct adapter *padapter)
- 			DBG_871X_LEVEL(_drv_always_, "%s: driver not in IPS\n", __func__);
- 		}
-
--		if (padapter->bSurpriseRemoved == false) {
-+		if (!padapter->bSurpriseRemoved) {
- 			hal_btcoex_IpsNotify(padapter, pwrctl->ips_mode_req);
- #ifdef CONFIG_WOWLAN
--			if (pwrctl->bSupportRemoteWakeup == true &&
--				pwrctl->wowlan_mode == true) {
-+			if (pwrctl->bSupportRemoteWakeup && pwrctl->wowlan_mode) {
- 				DBG_871X_LEVEL(_drv_always_, "%s bSupportRemoteWakeup ==true  do not run rtw_hal_deinit()\n", __func__);
- 			}
- 			else
-@@ -1235,7 +1235,7 @@ static int rtw_suspend_free_assoc_resource(struct adapter *padapter)
- 	if (check_fwstate(pmlmepriv, _FW_UNDER_SURVEY))
- 		rtw_indicate_scan_done(padapter, 1);
-
--	if (check_fwstate(pmlmepriv, _FW_UNDER_LINKING) == true) {
-+	if (check_fwstate(pmlmepriv, _FW_UNDER_LINKING)) {
- 		DBG_871X_LEVEL(_drv_always_, "%s: fw_under_linking\n", __func__);
- 		rtw_indicate_disconnect(padapter);
- 	}
-@@ -1259,7 +1259,7 @@ void rtw_suspend_wow(struct adapter *padapter)
- 	DBG_871X("wowlan_mode: %d\n", pwrpriv->wowlan_mode);
- 	DBG_871X("wowlan_pno_enable: %d\n", pwrpriv->wowlan_pno_enable);
-
--	if (pwrpriv->wowlan_mode == true) {
-+	if (pwrpriv->wowlan_mode) {
- 		if (pnetdev)
- 			rtw_netif_stop_queue(pnetdev);
- 		/*  1. stop thread */
-@@ -1283,8 +1283,7 @@ void rtw_suspend_wow(struct adapter *padapter)
- 		poidparam.subcode = WOWLAN_ENABLE;
- 		padapter->HalFunc.SetHwRegHandler(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
- 		if (rtw_chk_roam_flags(padapter, RTW_ROAM_ON_RESUME)) {
--			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)
--				&& check_fwstate(pmlmepriv, _FW_LINKED)) {
-+			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) && check_fwstate(pmlmepriv, _FW_LINKED)) {
- 				DBG_871X("%s %s(" MAC_FMT "), length:%d assoc_ssid.length:%d\n", __func__,
- 						pmlmepriv->cur_network.network.Ssid.Ssid,
- 						MAC_ARG(pmlmepriv->cur_network.network.MacAddress),
-@@ -1297,7 +1296,7 @@ void rtw_suspend_wow(struct adapter *padapter)
-
- 		DBG_871X_LEVEL(_drv_always_, "%s: wowmode suspending\n", __func__);
-
--		if (check_fwstate(pmlmepriv, _FW_UNDER_SURVEY) == true) {
-+		if (check_fwstate(pmlmepriv, _FW_UNDER_SURVEY)) {
- 			DBG_871X_LEVEL(_drv_always_, "%s: fw_under_survey\n", __func__);
- 			rtw_indicate_scan_done(padapter, 1);
- 			clr_fwstate(pmlmepriv, _FW_UNDER_SURVEY);
-@@ -1313,8 +1312,7 @@ void rtw_suspend_wow(struct adapter *padapter)
- 			DBG_871X_LEVEL(_drv_always_, "%s: pno: %d\n", __func__, pwrpriv->wowlan_pno_enable);
- 		else
- 			rtw_set_ps_mode(padapter, PS_MODE_DTIM, 0, 0, "WOWLAN");
--	}
--	else {
-+	} else {
- 		DBG_871X_LEVEL(_drv_always_, "%s: ### ERROR ### wowlan_mode =%d\n", __func__, pwrpriv->wowlan_mode);
- 	}
- 	DBG_871X("<== " FUNC_ADPT_FMT " exit....\n", FUNC_ADPT_ARG(padapter));
-@@ -1385,10 +1383,8 @@ static void rtw_suspend_normal(struct adapter *padapter)
-
- 	rtw_suspend_free_assoc_resource(padapter);
-
--	if ((rtw_hal_check_ips_status(padapter) == true)
--		|| (adapter_to_pwrctl(padapter)->rf_pwrstate == rf_off)) {
-+	if ((rtw_hal_check_ips_status(padapter)) || (adapter_to_pwrctl(padapter)->rf_pwrstate == rf_off))
- 		DBG_871X_LEVEL(_drv_always_, "%s: ### ERROR #### driver in IPS ####ERROR###!!!\n", __func__);
--	}
-
- 	rtw_dev_unload(padapter);
-
-@@ -1415,7 +1411,7 @@ int rtw_suspend_common(struct adapter *padapter)
-
- 	pwrpriv->bInSuspend = true;
-
--	while (pwrpriv->bips_processing == true)
-+	while (pwrpriv->bips_processing)
- 		msleep(1);
-
- 	if ((!padapter->bup) || (padapter->bDriverStopped) || (padapter->bSurpriseRemoved)) {
-@@ -1433,24 +1429,24 @@ int rtw_suspend_common(struct adapter *padapter)
- 	rtw_stop_cmd_thread(padapter);
-
- 	/*  wait for the latest FW to remove this condition. */
--	if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true) {
-+	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 		hal_btcoex_SuspendNotify(padapter, 0);
- 		DBG_871X("WIFI_AP_STATE\n");
--	} else if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == true) {
-+	} else if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
- 		hal_btcoex_SuspendNotify(padapter, 1);
- 		DBG_871X("STATION\n");
- 	}
-
- 	rtw_ps_deny_cancel(padapter, PS_DENY_SUSPEND);
-
--	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == true) {
-+	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
- 	#ifdef CONFIG_WOWLAN
- 		if (check_fwstate(pmlmepriv, _FW_LINKED))
- 			pwrpriv->wowlan_mode = true;
--		else if (pwrpriv->wowlan_pno_enable == true)
-+		else if (pwrpriv->wowlan_pno_enable)
- 			pwrpriv->wowlan_mode |= pwrpriv->wowlan_pno_enable;
-
--		if (pwrpriv->wowlan_mode == true)
-+		if (pwrpriv->wowlan_mode)
- 			rtw_suspend_wow(padapter);
- 		else
- 			rtw_suspend_normal(padapter);
-@@ -1458,7 +1454,7 @@ int rtw_suspend_common(struct adapter *padapter)
- 	#else /* CONFIG_WOWLAN */
- 		rtw_suspend_normal(padapter);
- 	#endif /* CONFIG_WOWLAN */
--	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true) {
-+	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 	#ifdef CONFIG_AP_WOWLAN
- 		rtw_suspend_ap_wow(padapter);
- 	#else
-@@ -1513,7 +1509,7 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 	pwrpriv->pno_in_resume = true;
- #endif
-
--	if (pwrpriv->wowlan_mode == true) {
-+	if (pwrpriv->wowlan_mode) {
- 		rtw_set_ps_mode(padapter, PS_MODE_ACTIVE, 0, 0, "WOWLAN");
-
- 		pwrpriv->bFwCurrentInPSMode = false;
-@@ -1553,8 +1549,7 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 			else
- 				rtw_netif_wake_queue(pnetdev);
- 		}
--	}
--	else {
-+	} else {
- 		DBG_871X_LEVEL(_drv_always_, "%s: ### ERROR ### wowlan_mode =%d\n", __func__, pwrpriv->wowlan_mode);
- 	}
-
-@@ -1584,7 +1579,7 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 		}
- 	}
-
--	if (pwrpriv->wowlan_mode == true) {
-+	if (pwrpriv->wowlan_mode) {
- 		pwrpriv->bips_processing = false;
- 		_set_timer(&padapter->mlmepriv.dynamic_chk_timer, 2000);
- 	} else {
-@@ -1730,7 +1725,6 @@ static int rtw_resume_process_normal(struct adapter *padapter)
- 		rtw_signal_process(padapter->pid[1], SIGUSR2);
- 	}
-
--
- 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
- 		DBG_871X(FUNC_ADPT_FMT " fwstate:0x%08x - WIFI_STATION_STATE\n", FUNC_ADPT_ARG(padapter), get_fwstate(pmlmepriv));
-
-@@ -1762,9 +1756,9 @@ int rtw_resume_common(struct adapter *padapter)
- 	DBG_871X_LEVEL(_drv_always_, "resume start\n");
- 	DBG_871X("==> %s (%s:%d)\n", __func__, current->comm, current->pid);
-
--	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == true) {
-+	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE)) {
- 	#ifdef CONFIG_WOWLAN
--		if (pwrpriv->wowlan_mode == true)
-+		if (pwrpriv->wowlan_mode)
- 			rtw_resume_process_wow(padapter);
- 		else
- 			rtw_resume_process_normal(padapter);
-@@ -1772,7 +1766,7 @@ int rtw_resume_common(struct adapter *padapter)
- 		rtw_resume_process_normal(padapter);
- 	#endif
-
--	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true) {
-+	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 	#ifdef CONFIG_AP_WOWLAN
- 		rtw_resume_process_ap_wow(padapter);
- 	#else
---
-2.17.1
-
+Guenter
