@@ -2,240 +2,168 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17858C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70320C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28D520708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491B520708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQycTV/T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="El0vxZtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGGQng (ORCPT
+        id S1728208AbgGGQsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        Tue, 7 Jul 2020 12:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgGGQne (ORCPT
+        with ESMTP id S1726911AbgGGQsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:43:34 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA04DC061755;
-        Tue,  7 Jul 2020 09:43:33 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id lx13so28618628ejb.4;
-        Tue, 07 Jul 2020 09:43:33 -0700 (PDT)
+        Tue, 7 Jul 2020 12:48:04 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F63C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:48:04 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id a17so11996298vsq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xI3EFOdDK97fBdcB1+8EI7de19472Lb47rxMR6f0Teg=;
-        b=OQycTV/Tzy5T0/XoAHPBRkBiIhwm/frE69h6Kt9xFNu0JHGwHuTguJ7FYCcx0yD8A/
-         0SQQSCw16BqEE6JrgjQiBDRKBVMNK/VEEM03qbebq53LXhj/2RmImYfZYGN3DvOgJvLQ
-         ++Y0m08Fs/aODMqbtdyqLFAF9aTh/sKKf/VnQBtBVfsVsJ507Qv+mXYwTAJLWlRxtDHB
-         UZ4ORsw6rgE8I75dOxbTmjycH+Xx2dCKXCLKY5cwpbT5pmecTAD3wObT0y8Zz3zBIbi6
-         s/a1k/2dkPNuIOSmUv/wHCJzIW897Te9laZtNKdgLek9QkDDAvNCQjrcZylZa14TymhS
-         xp3A==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1eWoCnOASAKMtuQZyGLOuX3o7NTlzqUAEG+oBEPWKJ8=;
+        b=El0vxZtqg6JPxeKZyM66PqiJ4jyD0i9lHL6yotyIIDUC+AViY0YG4D/79jNwjMUabw
+         9Pr+v/FoxAAvwkEMHuljUs0iNcnGbyDN1kDvHa6dchgrr3JbLcEOq/qc5RS43jbf9URR
+         JVyJb24B6MSCghW0Q5LihVIf3+BHxKMaYaFA8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xI3EFOdDK97fBdcB1+8EI7de19472Lb47rxMR6f0Teg=;
-        b=RLBwReX0FIbIxiamP5aBLkP3XJJlGKLtWZkHhIQKyhs10OgC6Jivk3joLEZvrN/lgF
-         bESzMxQo/s5FspAxgtBxeN+JptoyvrSo7tqM15iHH2jLxu6Rl5qpWOlikpI11i6oCJ7P
-         nfbzhV4WaLbas0RQUevVst5YI5ijh8w2fc580KyCMO6H/6hh5//QYwvbTOf9LbByVP+r
-         fLuJzcwKE0hkl93667Lpu71iLUkK7CE+CGamiomB5bY9Ziv1tHrs2XveP1eIPk1Fifil
-         a9WvGRMIqwVb9EXKVdlfo/eGlqNi7ADNCg8X8i/xSP3IOP1H8syWb9MDticpwbmkRFMh
-         tuUw==
-X-Gm-Message-State: AOAM532zhuKEmjjNnkW7yqnhVZVDhBQ9jrB98JxY8flc1acK1s2AupL4
-        4Tnrkf2sPZvbuLz4NGr13Y0=
-X-Google-Smtp-Source: ABdhPJwct8KkIgjJ38GUaqLHn3ulTKB5Tst62f63wHwRtQxaBu8Nc//f90clH0KPQU2H7l55roI5tA==
-X-Received: by 2002:a17:906:fa9a:: with SMTP id lt26mr38577976ejb.502.1594140212329;
-        Tue, 07 Jul 2020 09:43:32 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id x10sm594738ejc.46.2020.07.07.09.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 09:43:31 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 19:43:29 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200707164329.pm4p73nzbsda3sfv@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
- <874kqksdrb.fsf@osv.gnss.ru>
- <20200707063651.zpt6bblizo5r3kir@skbuf>
- <87sge371hv.fsf@osv.gnss.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1eWoCnOASAKMtuQZyGLOuX3o7NTlzqUAEG+oBEPWKJ8=;
+        b=dqi0ZMyInhgB+E5YOIb/y+eM8hJSJ1O/NxSOBo8OK6cluwZ6zdhvPwlhSY2Pm2WIcf
+         EEQpLHjaSqsmiQ144cXYpIvPzfxwib2pIVTCaUNxis8TNchtSOLQeVVrHFOzyCVxakAl
+         M3Na2xpfu5n8/TPHRwasy+hSk6dKo+xAEm/q7XJaFl8jhLbZwERDdB16HdO0vTeaBf4R
+         kYSnE6kCNIIi6WGcptBqe8LKQ8vkwhTEPh7hBtnXkhTZsZpBi32bEnTN6Udq56PIAezp
+         miN0jbK7bIF6YbRAMeJcCL6xrCDDcwJN1IAbxwi/vVfys/nyIrZWd74oDfBIewVushTL
+         5EUQ==
+X-Gm-Message-State: AOAM533M7W2CpW1Ts+IHC/xLBjbwaaVr70XB8WyOts3BMnP+Lj6HKXul
+        UA/mBl+Fm/5eBBUYXh/q6mjSTY17zVL6h5Rb8F3pkA==
+X-Google-Smtp-Source: ABdhPJysq8+6FxhpZrg1dgwHaUrHRyK3KI93qSdqzWL6HNijbQcEkUjFbxYm09sE8WLnXhQ1UoylWLanSIj9IJCT5bo=
+X-Received: by 2002:a67:c90c:: with SMTP id w12mr30280616vsk.86.1594140483655;
+ Tue, 07 Jul 2020 09:48:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sge371hv.fsf@osv.gnss.ru>
+References: <20200707162417.3514284-1-abhishekpandit@chromium.org>
+ <20200707092406.v4.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iyvge_Hqgm46_vfjh45YFdnsJ7ksvY7DqD6gx+f+1dvg@mail.gmail.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 7 Jul 2020 09:47:52 -0700
+Message-ID: <CANFp7mUas8Qnzqeivri25S7SWbKe6T+6riN419dR6xZXXOcaKA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:07:08PM +0300, Sergey Organov wrote:
-> Vladimir Oltean <olteanv@gmail.com> writes:
-> >
-> > What do you mean 'no ticking', and what do you mean by 'non-initialized
-> > clock' exactly? I don't know if the fec driver is special in any way, do
-> > you mean that multiple runs of $(phc_ctl /dev/ptp0 get) from user space
-> > all return 0? That is not at all what is to be expected, I think. The
-> > PHC is always ticking. Its time is increasing.
-> 
-> That's how it is right now. My point is that it likely shouldn't. Why is
-> it ticking when nobody needs it? Does it draw more power due to that?
-> 
-> > What would be that initialization procedure that makes it tick, and
-> > who is doing it (and when)?
-> 
-> The user space code that cares, obviously. Most probably some PTP stack
-> daemon. I'd say that any set clock time ioctl() should start the clock,
-> or yet another ioctl() that enables/disables the clock, whatever.
-> 
+Hi Rafael,
 
-That ioctl doesn't exist, at least not in PTP land. This also addresses
-your previous point.
+(resent in plain text)
 
+On Tue, Jul 7, 2020 at 9:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Jul 7, 2020 at 6:24 PM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
 > >
-> >> > Whatever the default value of the clock may be, it's bound to be
-> >> > confusing for some reason, _if_ the reason why you're investigating it
-> >> > in the first place is a driver bug. Also, I don't really see how your
-> >> > change to use Jan 1st 1970 makes it any less confusing.
-> >> 
-> >> When I print the clocks in application, I see seconds and milliseconds
-> >> part since epoch. With this patch seconds count from 0, that simply
-> >> match uptime. Easy to tell from any other (malfunctioning) clock.
-> >> 
+> > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > correctly if device_set_wakeup_capable is called after the device is
+> > created. This can happen for several reasons (driver sets wakeup after
+> > device is created, wakeup is changed on parent device, etc) and it seems
+> > reasonable to emit a changed event when adding or removing attributes on
+> > the device.
 > >
-> > It doesn't really match uptime (CLOCK_MONOTONIC). Instead, it is just
-> > initialized with zero. If you have fec built as module and you insmod it
-> > after a few days of uptime, it will not track CLOCK_MONOTONIC at all.
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
 > >
-> > Not to say that there's anything wrong with initializing it with 0. It's
-> > just that I don't see why it would be objectively better.
-> 
-> Well, it would have been better for me in my particular quest to find
-> the problem, so it rather needs to be shown where initializing with
-> kernel time is objectively better.
-> 
-> Moreover, everything else being equal, 0 is always better, just because
-> of simplicity.
-> 
+> > Changes in v4:
+> > - Fix warning where returning from void and tested on device
 > >
-> >> Here is the description of confusion and improvement. I spent half a day
-> >> not realizing that I sometimes get timestamps from the wrong PTP clock.
+> > Changes in v3:
+> > - Simplified error handling
 > >
-> > There is a suite of tests in tools/testing/selftests/ptp/ which is
-> > useful in debugging problems like this.
+> > Changes in v2:
+> > - Add newline at end of bt_dev_err
 > >
-> > Alternatively, you can write to each individual clock using $(phc_ctl
-> > /dev/ptpN set 0) and check your timestamps again. If the timestamps
-> > don't nudge, it's clear that the timestamps you're getting are not from
-> > the PHC you've written to. Much simpler.
-> 
-> Maybe. Once you do figure there is another clock in the system and/or
-> that that clock is offending. In my case /that/ was the hard part, not
-> changing that offending clock, once found, to whatever.
-> 
+> >  drivers/base/power/sysfs.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > index 24d25cf8ab1487..aeb58d40aac8de 100644
+> > --- a/drivers/base/power/sysfs.c
+> > +++ b/drivers/base/power/sysfs.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /* sysfs entries for device PM */
+> >  #include <linux/device.h>
+> > +#include <linux/kobject.h>
+> >  #include <linux/string.h>
+> >  #include <linux/export.h>
+> >  #include <linux/pm_qos.h>
+> > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> >
+> >  int wakeup_sysfs_add(struct device *dev)
+> >  {
+> > -       return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +       int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+>
+> So let me repeat the previous comment:
+>
+> If you return an error here, it may confuse the caller to think that
+> the operation has failed completely, whereas the merging of the
+> attribute group has been successful already.
+>
+> I don't think that an error can be returned at this point.
+>
 
-And my point was that you could have been in a different situation, when
-all of your clocks could have been ticking in 1970, so this wouldn't
-have been a distiguishing point. So this argument is poor. Using
-phc_ctl, or scripts around that, is much more dynamic.
+The caller looks at the return code and just logs that an error
+occurred (no other action). It's also unlikely for kobject_uevent to
+fail (I saw mostly -ENOMEM and an -ENOENT when the kobj wasn't in the
+correct set).
 
-> >
-> >> Part of the problem is that kernel time at startup, when it is used for
-> >> initialization of the PTP clock, is in fact somewhat random, and it
-> >> could be off by a few seconds.
-> >
-> > Yes, the kernel time at startup is exactly random (not traceable to any
-> > clock reference). And so is the PHC.
-> >
-> >> Now, when in application I get time stamp
-> >> that is almost right, and then another one that is, say, 9 seconds off,
-> >> what should I think? Right, that I drive PTP clock wrongly.
-> >> 
-> >> Now, when one of those timestamps is almost 0, I see immediately I got
-> >> time from wrong PTP clock, rather than wrong time from correct PTP
-> >> clock.
-> >> 
-> >
-> > There are 2 points to be made here:
-> >
-> > 1. There are simpler ways to debug your issue than to leave a patch in
-> >    the kernel, like the "phc_ctl set 0" I mentioned above. This can be
-> >    considered a debugging patch which is also going to have consequences
-> >    for the other users of the driver, if applied. We need to consider
-> >    whether the change in behavior is useful in general.
-> 
-> This does not apply to my particular case as I explained above, and then
-> ease with debug is just a nice side-effect of code simplification.
-> 
-> >
-> > 2. There are boards out there which don't have any battery-backed RTC,
-> >    so CLOCK_REALTIME could be ticking in Jan 1970 already, and therefore
-> >    the PHC would be initialized with a time in 1970. Or your GM might be
-> >    configured to be ticking in Jan 1970 (there are some applications
-> >    that only require the network to be synchronized, but not for the
-> >    time to be traceable to TAI). How does your change make a difference
-> >    to eliminate confusion there, when all of your clocks are going to be
-> >    in 1970? It doesn't make a net difference. Bottom line, a clock
-> >    initialized with 0 doesn't mean it's special in any way. You _could_
-> >    make that change in your debugging environment, and it _could_ be
-> >    useful to your debugging, but if it's not universally useful, I
-> >    wouldn't try to patch the kernel with this change.
-> 
-> If there is nothing special about any value, 0 is the value to choose,
-> because of simplicity. Once again, I only explained debugging advantages
-> because you've asked about it. It's just a nice side-effect, as it
-> often happens to be when one keeps things as simple as possible.
-> 
-> > Please note that, although my comments appear to be in disagreement with
-> > your idea, they are in fact not at all. It's just that, if there's a a
-> > particular answer to "what time to initialize a PHC with" that is more
-> > favourable than the rest (even though the question itself is a bit
-> > irrelevant overall), then that answer ought to be enforced kernel-wide,
-> > I think.
-> 
-> As everybody, I believe in a set of generic programming principles that
-> are not to be violated lightly. KISS is one of the principles I believe,
-> and trying to be clever with no apparent reason is one way of violating
-> it.
-> 
-> Overall, here is my argument: 0 is simpler than kernel time, so how is
-> it useful to initialize PTP with kernel time that is as wrong as a value
-> for PTP time as 0?
-> 
+Call site:
+    int ret = wakeup_sysfs_add(dev);
 
-And overall, my argument is: you are making a user-visible change, for
-basically no strong reason, other than the fact that you like zero
-better. You're trying to reduce confusion, not increase it, right?
+    if (ret)
+        dev_info(dev, "Wakeup sysfs attributes not added\n");
 
-I agree with the basic fact that zero is a simpler and more consistent
-value to initialize a PHC with, than the system time. As I've already
-shown to you, I even attempted to make a similar change to the ptp_qoriq
-driver which was rejected. So I hoped that you could bring some better
-arguments than "I believe 0 is simpler". Since no value is right, no
-value is wrong either, so why make a change in the first place? The only
-value in _changing_ to zero would be if all drivers were changed to use
-it consistently, IMO.
+So I'm ok with either keeping this as-is (caller isn't getting
+confused, just logging) or swallowing the return of kobject_uevent.
 
-But I will stop here and let the PTP maintainer make a choice. I only
-intervened because I knew what the default answer was going to be.
-
-> Thanks,
-> -- Sergey.
-
-Thanks,
--Vladimir
+> >  }
+> >
+> >  void wakeup_sysfs_remove(struct device *dev)
+> >  {
+> >         sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> > +       kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+> >  }
+> >
+> >  int pm_qos_sysfs_add_resume_latency(struct device *dev)
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
