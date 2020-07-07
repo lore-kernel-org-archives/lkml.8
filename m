@@ -5,63 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F60C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB2C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E454820738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9D220758
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j74iLk6i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xre+DO5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgGGEya (ORCPT
+        id S1728127AbgGGEyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
+        Tue, 7 Jul 2020 00:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgGGEy2 (ORCPT
+        with ESMTP id S1728088AbgGGEya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:54:28 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113D7C061794
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:54:28 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id p8so31511953pgj.14
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:54:28 -0700 (PDT)
+        Tue, 7 Jul 2020 00:54:30 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5ADC061794
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:54:30 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id q6so19212507qke.21
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=97u8CGQi5ZioYr1yjrYRCu5eLh5aS+BU1QeP4Xn39iE=;
-        b=j74iLk6iDDXkBPsA4CTdYOGwVpUUBpAA5GaYkHpZD6PXKVLwwHW9U4CmP7rQG8AH6U
-         Vd7mXz81Fhy5bxAJX9i7t29EEyAZVXIrmq42nlonIVGUTLKFrnY2T7i8bOv8vuF4hcqO
-         2AG6nkNUZSeJ0dvO/0up6GKkjWHn50uPAHPBX+jNVI1ug7jSZk8qwydVsrcmeRso7Nuk
-         mcF27eKhC4XkmypwETOGQESPqd2PXlxErfgHAyWMM6KoSlk+OshQI7up0c78ipFXZ8ew
-         dTv9rqhJObUt4xOT4YbyOxGOlbaMkYmYX4nLg1x6qV/VWrtsQnoRkXuki/FrdABNFGr+
-         ayjg==
+        bh=Qk/CudVh/aYmFA4VGFCO8mdbAWkl57VHCd1ZIJWN+1w=;
+        b=Xre+DO5bBquqMu+hdF9c3GWOfwJPU0JSYZ82fhlA0HFoIo0LganFlMRGd90xICWjvh
+         x6VqENjaJX+E6NmE7NvnAmKue5CkshpdqCfHOJDdbjwtbGNakh6+Y2o2MCQzOFHd8mWB
+         Tx6gwJgY9b5m33RdN7MXjvEI7lNExtH3p/MO6RXgh/of/7qxV2dhNwE5Ya8bmsH5mhBC
+         KVvnUlfyjdwVqd5LHb1/V/h1A+eW5DYc5Y2+BZt27U5BtA20FnqlrWGeEQKgYsXSbbew
+         xusxlAqAeT++ykRLTsGvPyIrcRpvzT4IW00uhXW1Wj6u8ayVQwdQHaPEUuR7QMoK/PRD
+         25lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=97u8CGQi5ZioYr1yjrYRCu5eLh5aS+BU1QeP4Xn39iE=;
-        b=eW5iSM5vLBP/bDGgqNbMkGQlGky9rJDRO2TXwyq0nxHWKZUsdEf4dSA4QmaMCYyVj0
-         YFAjEIX3DWgfiOLwp2eiwbXUIK+qe8uHuYIABbjNAgL6Yvz8Sr6QmfSGTC3oSIvfpuup
-         yZg4xIQwpEdgAKwLWjp7JaUPTwVW/aH7Yxvrds0Wd/T8VemzceD++0b8oqHY8pLlS0Eu
-         5FXqOUoIMrd/sYO/1FxMjzW3Nuw7BRgsWnP4iOdvauMyVmEqX+WIYl2RuMbpRxOa9mPa
-         EkZ8Hm2ypHfplUMSyEtz8wrpHItctXyljAN047SU8TFzOHyHRoV9/93Z1vYH6Au/4M3R
-         Yo+g==
-X-Gm-Message-State: AOAM532Dt7vuFlL3Q5SvaRUQt5g/VVciGwCVF+iOXr5Wy8Q0UZUuTemK
-        06/8vwJUtim6Fqx3mS4UPCygpmX1hUXs
-X-Google-Smtp-Source: ABdhPJzlN7mYF/xYvbEh4M34xEGrcIVP0SsMlzIK51wj8kyFYrmeeJcic2UyjCXpcUS7M7+8FR2jTxaHjlig
-X-Received: by 2002:a17:90b:4c12:: with SMTP id na18mr432022pjb.0.1594097667077;
- Mon, 06 Jul 2020 21:54:27 -0700 (PDT)
-Date:   Mon,  6 Jul 2020 21:54:17 -0700
+        bh=Qk/CudVh/aYmFA4VGFCO8mdbAWkl57VHCd1ZIJWN+1w=;
+        b=jQo0gYL9GBMnvIRSdEm7V3HmTb9f+kM5P/DG7g7wunkIJcrQRHMDXL2so4d2xaGrRG
+         kpr+1gjuJyI4GPqVRhJsgzqk8Q9IktHlq753FG8wxzoh00DFAbTbRlcxyO9/c7pG8qHL
+         lqi6cOAziP+YDG3a/+KegqSu5lv2765oYuB/TplKbYsPvbGN80I10S93UdWBHznEWfS4
+         C9Q7ApjBKr1Z7jGnHl/p0mY24spPkpnF/eTm/v0HxvWLOfw2/xeXZA4L6BxLtJkJr5Sj
+         YIFxSJPbFm+FBPpS/7VO3SsxODfT6sgj3e5c0RL8adqmKahGZ8ZBBP4Hi9Hoe5VtXzqf
+         tf6Q==
+X-Gm-Message-State: AOAM531wo1dANz/cePLhJ9Qh9kRUY5tcAEHWaLuVQLHQ2lSHzKlJadjq
+        Cgtk8FBtfQSra9lu94hhn9X+qrXp9l4M
+X-Google-Smtp-Source: ABdhPJxwPXvnk3sNJWoQC6YwOTWi9tymhjLuGByDfNWQcfhaj8ZWG0wbKLQWCrNYPqv0Xn0Z4pBVaY07uBDo
+X-Received: by 2002:a0c:aed6:: with SMTP id n22mr50763155qvd.70.1594097669245;
+ Mon, 06 Jul 2020 21:54:29 -0700 (PDT)
+Date:   Mon,  6 Jul 2020 21:54:18 -0700
 In-Reply-To: <20200707045418.3517076-1-rajatja@google.com>
-Message-Id: <20200707045418.3517076-3-rajatja@google.com>
+Message-Id: <20200707045418.3517076-4-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200707045418.3517076-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v3 3/4] PCI: Treat "external-facing" devices as internal
+Subject: [PATCH v3 4/4] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
+ devices
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -100,144 +101,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "ExternalFacingPort" devices (root ports) are internal devices that
-sit on the internal system fabric. Ref:
-https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
-
-Currently they were treated (marked as untrusted) at par with other
-external devices downstream those external facing rootports.
-
-Use the platform flag to identify the external facing devices and then
-treat them at par with internal devices (don't mark them untrusted).
-Any devices downstream continue to be marked as "untrusted". This was
-discussed here:
-https://lore.kernel.org/linux-pci/20200610230906.GA1528594@bjorn-Precision-5520/
+When enabling ACS, enable translation blocking for external facing ports
+and untrusted devices.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v3: * fix commit log and minor code comment
-    * Don't check for "ExternalFacingPort" on PCI_EXP_TYPE_DOWNSTREAM
-    * Check only for pdev->external_facing in iommu.c
-v2: cosmetic changes in commit log
+v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
+    Minor code comments fixes.
+v2: Commit log change
 
- drivers/iommu/intel/iommu.c |  6 +++---
- drivers/pci/of.c            |  2 +-
- drivers/pci/pci-acpi.c      | 10 +++++-----
- drivers/pci/probe.c         |  2 +-
- include/linux/pci.h         |  8 ++++++++
- 5 files changed, 18 insertions(+), 10 deletions(-)
+ drivers/pci/pci.c    |  7 +++++++
+ drivers/pci/quirks.c | 14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d759e7234e982..4f0f6ee2d4aaa 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4738,12 +4738,12 @@ const struct attribute_group *intel_iommu_groups[] = {
- 	NULL,
- };
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 73a8627822140..497ac05bf36e8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -876,6 +876,13 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+ 	/* Upstream Forwarding */
+ 	ctrl |= (cap & PCI_ACS_UF);
  
--static inline bool has_untrusted_dev(void)
-+static inline bool has_external_pci(void)
- {
- 	struct pci_dev *pdev = NULL;
++	/* Enable Translation Blocking for external devices */
++	if (dev->external_facing || dev->untrusted)
++		if (cap & PCI_ACS_TB)
++			ctrl |= PCI_ACS_TB;
++		else
++			pci_warn(dev, "ACS: No Trans Blocking on ext dev\n");
++
+ 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+ }
  
- 	for_each_pci_dev(pdev)
--		if (pdev->untrusted)
-+		if (pdev->external_facing)
- 			return true;
- 
- 	return false;
-@@ -4751,7 +4751,7 @@ static inline bool has_untrusted_dev(void)
- 
- static int __init platform_optin_force_iommu(void)
- {
--	if (!dmar_platform_optin() || no_platform_optin || !has_untrusted_dev())
-+	if (!dmar_platform_optin() || no_platform_optin || !has_external_pci())
- 		return 0;
- 
- 	if (no_iommu || dmar_disabled)
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 27839cd2459f6..22727fc9558df 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
- 	} else {
- 		node = of_node_get(bus->self->dev.of_node);
- 		if (node && of_property_read_bool(node, "external-facing"))
--			bus->self->untrusted = true;
-+			bus->self->external_facing = true;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b341628e47527..9cc8c1dc215ee 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
  	}
- 
- 	bus->dev.of_node = node;
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 7224b1e5f2a83..43a5158b2b662 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1213,7 +1213,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
- 	ACPI_FREE(obj);
  }
  
--static void pci_acpi_set_untrusted(struct pci_dev *dev)
-+static void pci_acpi_set_external_facing(struct pci_dev *dev)
++/*
++ * Currently this quirk does the equivalent of
++ * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
++ *
++ * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
++ * if dev->external_facing || dev->untrusted
++ */
+ static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
  {
- 	u8 val;
+ 	if (!pci_quirk_intel_pch_acs_match(dev))
+@@ -4973,6 +4980,13 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
+ 	ctrl |= (cap & PCI_ACS_CR);
+ 	ctrl |= (cap & PCI_ACS_UF);
  
-@@ -1223,12 +1223,12 @@ static void pci_acpi_set_untrusted(struct pci_dev *dev)
- 		return;
++	/* Enable Translation Blocking for external devices */
++	if (dev->external_facing || dev->untrusted)
++		if (cap & PCI_ACS_TB)
++			ctrl |= PCI_ACS_TB;
++		else
++			pci_warn(dev, "ACS: No Trans Blocking on ext dev\n");
++
+ 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
  
- 	/*
--	 * These root ports expose PCIe (including DMA) outside of the
--	 * system so make sure we treat them and everything behind as
-+	 * These root/down ports expose PCIe (including DMA) outside of the
-+	 * system so make sure we treat everything behind them as
- 	 * untrusted.
- 	 */
- 	if (val)
--		dev->untrusted = 1;
-+		dev->external_facing = 1;
- }
- 
- static void pci_acpi_setup(struct device *dev)
-@@ -1240,7 +1240,7 @@ static void pci_acpi_setup(struct device *dev)
- 		return;
- 
- 	pci_acpi_optimize_delay(pci_dev, adev->handle);
--	pci_acpi_set_untrusted(pci_dev);
-+	pci_acpi_set_external_facing(pci_dev);
- 	pci_acpi_add_edr_notifier(pci_dev);
- 
- 	pci_acpi_add_pm_notifier(adev, pci_dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 6d87066a5ecc5..8c40c00413e74 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
- 	 * untrusted as well.
- 	 */
- 	parent = pci_upstream_bridge(dev);
--	if (parent && parent->untrusted)
-+	if (parent && (parent->untrusted || parent->external_facing))
- 		dev->untrusted = true;
- }
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 0ca39042507ce..281be857d2430 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -432,6 +432,14 @@ struct pci_dev {
- 	 * mappings to make sure they cannot access arbitrary memory.
- 	 */
- 	unsigned int	untrusted:1;
-+	/*
-+	 * Devices are marked as external-facing using info from platform
-+	 * (ACPI / devicetree). An external-facing device is still an internal
-+	 * trusted device, but it faces external untrusted devices. Thus any
-+	 * device enumerated downstream an external-facing device, is marked
-+	 * as untrusted.
-+	 */
-+	unsigned int	external_facing:1;
- 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
- 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
- 	unsigned int	irq_managed:1;
+ 	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
