@@ -2,214 +2,211 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5314BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CECA7206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B7E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="bZ5qsaBA"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VoeWPTYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgGGVFw (ORCPT
+        id S1728802AbgGGVKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:05:52 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:52713 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGGVFw (ORCPT
+        Tue, 7 Jul 2020 17:10:43 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55315 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGGVKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:05:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=HQwHsSLOGbbfu+RvJtKph55JfGztos9/1WaHqc0svfo=;
-        b=bZ5qsaBAKMZZ64pVaN68mfU5j8qdhWrokgn3LEURbYhAlwfK6DxCuhwFAii+ttnc8YGJ
-        cv0e/NIYsPG+PW5cL/Fpkaqf+xU9a5ewEeei0RquGZHMyISyMmqMWwGKmRGn/JHmChlkWs
-        HePE9KZnRymYbN/BcRxmBAZxPS17BQ3Hw=
-Received: by filterdrecv-p3las1-7754f7d4cc-blxz6 with SMTP id filterdrecv-p3las1-7754f7d4cc-blxz6-19-5F04E3AD-65
-        2020-07-07 21:05:49.733146971 +0000 UTC m=+1047129.013300829
-Received: from [192.168.1.14] (unknown)
-        by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
-        id VzyOxLf3TS-z3j0rGr7bLQ
-        Tue, 07 Jul 2020 21:05:49.292 +0000 (UTC)
-Subject: Re: [PATCH v2 14/14] phy/rockchip: inno-hdmi: Support more pre-pll
- configuration
-References: <20200108210740.28769-1-jonas@kwiboo.se>
- <20200108210740.28769-15-jonas@kwiboo.se>
- <425e10c2-ed03-be64-8153-9bc3657da10e@gmail.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <3124cfc2-8561-beff-5963-63f8f42bc644@kwiboo.se>
-Date:   Tue, 07 Jul 2020 21:05:49 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 17:10:43 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A32958011F;
+        Wed,  8 Jul 2020 09:10:40 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1594156240;
+        bh=LIZaTJsVpo0fc9R6NrZDyGHqCTXkr77kbJtYcUTyeeY=;
+        h=From:To:Cc:Subject:Date;
+        b=VoeWPTYkyjGp1TCIpSRUpTYa41WqdVf2g2Yif/cCo1GmlQOFmMjCI+DSjGUY6oqvr
+         aZGPedZbELz40rAmV06xDppbX7DBnak/JgCqzyoL1jaczE2xqLJBld1o2yxUUh+5ho
+         gglKWRFKGkGA6gVWVhzjLSRiQ8ts2aV4YSo6tlXbu9PIw51H2GlNGSUl39vjalOMA7
+         cmi/HeOD3RX9owELCSXuACs3jXkdSWUJFf3+pNJswwUD9SHGPjTMKnsenCSgMWN/U3
+         HIa93UUSEg1NT8WnIniRloQ7ECy9Lzo4r9/zOnBlYMQvbgr5tdWzA2Lshr1Kkzfzl/
+         cEF2HdcZiCkdA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f04e4d00000>; Wed, 08 Jul 2020 09:10:40 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id 2720D13EDDC;
+        Wed,  8 Jul 2020 09:10:39 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id 3C327341145; Wed,  8 Jul 2020 09:10:40 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     gregory.clement@bootlin.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] i2c: mv64xxx: Add bus error recovery
+Date:   Wed,  8 Jul 2020 09:10:36 +1200
+Message-Id: <20200707211036.12896-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <425e10c2-ed03-be64-8153-9bc3657da10e@gmail.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hyw1I00a5pC6Cn8Pg?=
- =?us-ascii?Q?VuGIRzrvNwwRCA4W3FGC9+j7OAlpVlG7MqBEPmB?=
- =?us-ascii?Q?QrRLojx7WqK6rWFzELAiMtWrLWD7by9pmODglll?=
- =?us-ascii?Q?hiOBk8U7B268bYhiyPxhXXSbLQULPX+J16aFlGQ?=
- =?us-ascii?Q?EPYz5owr14ry1OenCxhc4kayzbLjOpITNEwXqK2?=
- =?us-ascii?Q?eyhBvs5yyBMe0F5CLAYMw=3D=3D?=
-To:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Zheng Yang <zhengyang@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Algea Cao <algea.cao@rock-chips.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Language: sv
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-07 21:53, Johan Jonker wrote:
-> 
-> Hi,
-> 
-> What's the status for this patch?
-> This is just what I needed for A95X Z2 to get the vop+hdmi and monitor
-> working. ;)
-> 
-> Could this become applied to mainline already?
-> The ack is already there.
+This adds i2c bus recovery to the mv64xxx driver.
 
-I will send a v3 of the phy/rockchip parts of this series later tonight/tomorrow.
+Implement bus recovery to recover from SCL/SDA stuck low.
 
-The drm side still need work and I have some pending patches that also
-improve rk3288/rk3399 hdmi support for up to 4k@30hz, should make its way
-onto the list in a few days.
+This uses the generic recovery function, setting the clock/data lines as
+GPIO pins, and sending 9 clocks to try and recover the bus.
 
-Regards,
-Jonas
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+---
+ drivers/i2c/busses/i2c-mv64xxx.c | 77 +++++++++++++++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 1 deletion(-)
 
-> 
-> Thanks,
-> 
-> Johan Jonker
-> 
-> https://lore.kernel.org/lkml/20200620134659.4592-1-jbx6244@gmail.com/
-> 
-> On 1/8/20 10:07 PM, Jonas Karlman wrote:
->> From: Algea Cao <algea.cao@rock-chips.com>
->>
->> Adding the following freq cfg in 8-bit and 10-bit color depth:
->>
->> {
->>   40000000,  65000000,  71000000,  83500000, 85750000,
->>   88750000, 108000000, 119000000, 162000000
->> }
->>
->> New freq has been validated by quantumdata 980.
->>
->> For some freq which can't be got by only using integer freq div,
->> frac freq div is needed, Such as 88.75Mhz 10-bit. But The actual
->> freq is different from the target freq, We must try to narrow
->> the gap between them. RK322X only support integer freq div.
->>
->> The VCO of pre-PLL must be more than 2Ghz, otherwise PLL may be
->> unlocked.
->>
->> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
->> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->> Acked-by: Heiko Stuebner <heiko@sntech.de>
->> ---
->>  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 74 ++++++++++++-------
->>  1 file changed, 49 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
->> index 3719309ad0d0..bb8bdf5e3301 100644
->> --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
->> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
->> @@ -291,32 +291,56 @@ struct inno_hdmi_phy_drv_data {
->>  	const struct phy_config		*phy_cfg_table;
->>  };
->>  
->> +/*
->> + * If only using integer freq div can't get frequency we want, frac
->> + * freq div is needed. For example, pclk 88.75 Mhz and tmdsclk
->> + * 110.9375 Mhz must use frac div 0xF00000. The actual frequency is different
->> + * from the target frequency. Such as the tmds clock 110.9375 Mhz,
->> + * the actual tmds clock we get is 110.93719 Mhz. It is important
->> + * to note that RK322X platforms do not support frac div.
->> + */
->>  static const struct pre_pll_config pre_pll_cfg_table[] = {
->> -	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
->> -	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
->> -	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
->> -	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
->> -	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
->> -	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3, 4, 0, 0xE6AE6B},
->> -	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3, 4, 0, 0},
->> -	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3, 4, 0, 0xE6AE6B},
->> -	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3, 4, 0, 0},
->> -	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3, 4, 0, 0x816817},
->> -	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3, 4, 0, 0},
->> -	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2, 2, 0, 0xE6AE6B},
->> -	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2, 2, 0, 0},
->> -	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2, 2, 0, 0x816817},
->> -	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2, 2, 0, 0},
->> -	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2, 2, 0, 0xE6AE6B},
->> -	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 2, 0, 0},
->> -	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1, 1, 0, 0x816817},
->> -	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 0, 0},
->> -	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2, 1, 0, 0xE6AE6B},
->> -	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 1, 0, 0},
->> -	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1, 1, 1, 0x816817},
->> -	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 1, 0},
->> -	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1, 1, 0, 0xE6AE6B},
->> -	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1, 1, 0, 0},
->> +	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3,  4, 0, 0},
->> +	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3,  4, 0, 0},
->> +	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2,  2, 0, 0},
->> +	{ 40000000,  50000000, 1, 100, 2, 2, 2,  1, 0, 0, 15, 0, 0},
->> +	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3,  4, 0, 0xE6AE6B},
->> +	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3,  4, 0, 0},
->> +	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3,  4, 0, 0xE6AE6B},
->> +	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3,  4, 0, 0},
->> +	{ 65000000,  65000000, 1, 130, 2, 2, 2,  1, 0, 0, 12, 0, 0},
->> +	{ 65000000,  81250000, 3, 325, 0, 3, 3,  1, 0, 0, 10, 0, 0},
->> +	{ 71000000,  71000000, 3, 284, 0, 3, 3,  1, 0, 0,  8, 0, 0},
->> +	{ 71000000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0, 10, 0, 0},
->> +	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3,  4, 0, 0xE6AE6B},
->> +	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3,  4, 0, 0},
->> +	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3,  4, 0, 0x816817},
->> +	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3,  4, 0, 0},
->> +	{ 83500000,  83500000, 2, 167, 2, 1, 1,  1, 0, 0,  6, 0, 0},
->> +	{ 83500000, 104375000, 1, 104, 2, 1, 1,  1, 1, 0,  5, 0, 0x600000},
->> +	{ 85750000,  85750000, 3, 343, 0, 3, 3,  1, 0, 0,  8, 0, 0},
->> +	{ 88750000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0,  8, 0, 0},
->> +	{ 88750000, 110937500, 1, 110, 2, 1, 1,  1, 1, 0,  5, 0, 0xF00000},
->> +	{108000000, 108000000, 1,  90, 3, 0, 0,  1, 0, 0,  5, 0, 0},
->> +	{108000000, 135000000, 1,  90, 0, 2, 2,  1, 0, 0,  5, 0, 0},
->> +	{119000000, 119000000, 1, 119, 2, 1, 1,  1, 0, 0,  6, 0, 0},
->> +	{119000000, 148750000, 1,  99, 0, 2, 2,  1, 0, 0,  5, 0, 0x2AAAAA},
->> +	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2,  2, 0, 0xE6AE6B},
->> +	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2,  2, 0, 0},
->> +	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2,  2, 0, 0x816817},
->> +	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2,  2, 0, 0},
->> +	{162000000, 162000000, 1, 108, 0, 2, 2,  1, 0, 0,  4, 0, 0},
->> +	{162000000, 202500000, 1, 135, 0, 2, 2,  1, 0, 0,  5, 0, 0},
->> +	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2,  2, 0, 0xE6AE6B},
->> +	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  2, 0, 0},
->> +	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1,  1, 0, 0x816817},
->> +	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 0, 0},
->> +	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2,  1, 0, 0xE6AE6B},
->> +	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  1, 0, 0},
->> +	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1,  1, 1, 0x816817},
->> +	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 1, 0},
->> +	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1,  1, 0, 0xE6AE6B},
->> +	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1,  1, 0, 0},
->>  	{ /* sentinel */ }
->>  };
->>  
->>
-> 
+diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv=
+64xxx.c
+index 829b8c98ae51..e58853ba3ef0 100644
+--- a/drivers/i2c/busses/i2c-mv64xxx.c
++++ b/drivers/i2c/busses/i2c-mv64xxx.c
+@@ -21,6 +21,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_irq.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+@@ -147,6 +148,10 @@ struct mv64xxx_i2c_data {
+ 	bool			irq_clear_inverted;
+ 	/* Clk div is 2 to the power n, not 2 to the power n + 1 */
+ 	bool			clk_n_base_0;
++	struct pinctrl		*pinctrl;
++	struct i2c_bus_recovery_info	rinfo;
++	struct pinctrl_state	*pin_default_state;
++	struct pinctrl_state	*pin_gpio_state;
+ };
+=20
+ static struct mv64xxx_i2c_regs mv64xxx_i2c_regs_mv64xxx =3D {
+@@ -325,7 +330,8 @@ mv64xxx_i2c_fsm(struct mv64xxx_i2c_data *drv_data, u3=
+2 status)
+ 			 drv_data->msg->flags);
+ 		drv_data->action =3D MV64XXX_I2C_ACTION_SEND_STOP;
+ 		mv64xxx_i2c_hw_init(drv_data);
+-		drv_data->rc =3D -EIO;
++		i2c_recover_bus(&drv_data->adapter);
++		drv_data->rc =3D -EAGAIN;
+ 	}
+ }
+=20
+@@ -563,6 +569,7 @@ mv64xxx_i2c_wait_for_completion(struct mv64xxx_i2c_da=
+ta *drv_data)
+ 				"time_left: %d\n", drv_data->block,
+ 				(int)time_left);
+ 			mv64xxx_i2c_hw_init(drv_data);
++			i2c_recover_bus(&drv_data->adapter);
+ 		}
+ 	} else
+ 		spin_unlock_irqrestore(&drv_data->lock, flags);
+@@ -872,6 +879,69 @@ mv64xxx_of_config(struct mv64xxx_i2c_data *drv_data,
+ }
+ #endif /* CONFIG_OF */
+=20
++/*
++ * Switch to bit bang mode to prepare for i2c generic recovery.
++ */
++static void mv64xxx_i2c_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct mv64xxx_i2c_data *drv_data =3D i2c_get_adapdata(adap);
++
++	pinctrl_select_state(drv_data->pinctrl, drv_data->pin_gpio_state);
++}
++
++/*
++ * Return to normal i2c operation following recovery.
++ */
++static void mv64xxx_i2c_unprepare_recovery(struct i2c_adapter *adap)
++{
++	struct mv64xxx_i2c_data *drv_data =3D i2c_get_adapdata(adap);
++
++	pinctrl_select_state(drv_data->pinctrl, drv_data->pin_default_state);
++}
++
++static int mv64xxx_i2c_init_recovery_info(struct mv64xxx_i2c_data *drv_d=
+ata,
++					  struct platform_device *pd)
++{
++	struct i2c_bus_recovery_info *rinfo =3D &drv_data->rinfo;
++	struct device *dev =3D &pd->dev;
++
++	drv_data->pinctrl =3D devm_pinctrl_get(dev);
++	if (!drv_data->pinctrl || IS_ERR(drv_data->pinctrl)) {
++		dev_err(dev, "can't get pinctrl, bus recovery not supported\n");
++		return PTR_ERR(drv_data->pinctrl);
++	}
++
++	drv_data->pin_default_state =3D pinctrl_lookup_state(drv_data->pinctrl,
++			PINCTRL_STATE_DEFAULT);
++	drv_data->pin_gpio_state =3D pinctrl_lookup_state(drv_data->pinctrl,
++			"gpio");
++	rinfo->scl_gpiod =3D devm_gpiod_get(dev, "scl",
++					  GPIOD_OUT_HIGH_OPEN_DRAIN);
++	rinfo->sda_gpiod =3D devm_gpiod_get(dev, "sda", GPIOD_IN);
++	if (PTR_ERR(rinfo->scl_gpiod) =3D=3D -EPROBE_DEFER ||
++	    PTR_ERR(rinfo->sda_gpiod) =3D=3D -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
++	if (IS_ERR(rinfo->sda_gpiod) ||
++	    IS_ERR(rinfo->scl_gpiod) ||
++	    IS_ERR(drv_data->pin_default_state) ||
++	    IS_ERR(drv_data->pin_gpio_state)) {
++		dev_dbg(dev, "recovery information incomplete\n");
++		return 0;
++	}
++
++	dev_dbg(dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
++		rinfo->scl_gpiod ? desc_to_gpio(rinfo->scl_gpiod) : -1,
++		rinfo->sda_gpiod ? desc_to_gpio(rinfo->sda_gpiod) : -1);
++
++	rinfo->prepare_recovery =3D mv64xxx_i2c_prepare_recovery;
++	rinfo->unprepare_recovery =3D mv64xxx_i2c_unprepare_recovery;
++	rinfo->recover_bus =3D i2c_generic_scl_recovery;
++	drv_data->adapter.bus_recovery_info =3D rinfo;
++
++	return 0;
++}
++
+ static int
+ mv64xxx_i2c_probe(struct platform_device *pd)
+ {
+@@ -939,6 +1009,10 @@ mv64xxx_i2c_probe(struct platform_device *pd)
+=20
+ 	mv64xxx_i2c_hw_init(drv_data);
+=20
++	rc =3D mv64xxx_i2c_init_recovery_info(drv_data, pd);
++	if (rc =3D=3D -EPROBE_DEFER)
++		goto exit_reset;
++
+ 	rc =3D request_irq(drv_data->irq, mv64xxx_i2c_intr, 0,
+ 			 MV64XXX_I2C_CTLR_NAME, drv_data);
+ 	if (rc) {
+@@ -951,6 +1025,7 @@ mv64xxx_i2c_probe(struct platform_device *pd)
+ 			"mv64xxx: Can't add i2c adapter, rc: %d\n", -rc);
+ 		goto exit_free_irq;
+ 	}
++	i2c_recover_bus(&drv_data->adapter);
+=20
+ 	return 0;
+=20
+--=20
+2.27.0
+
