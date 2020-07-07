@@ -2,209 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B15C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862F520702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1008120702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594120911;
+	bh=LCXyDHmTACa91oTt6HIAuKnB5ZBvshX1CUGP0YfokcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oaaUzGc0S9VB/L0jyKoDllw9OkBHSuPjj1p+VPc/XyZfwZLIwGVNGfTWaHnB6lCcR
+	 g++wsvhqyoD/CtwaNIziDf4NT0TXn4N2Xun9jqqoNAm+dQxvKjWw/HDlbgYoGzP0Hb
+	 JuoBxlAHi040gmj9ce1jziqtghdtwO84nYmhSEO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgGGLTy (ORCPT
+        id S1728183AbgGGLVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:19:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8656 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgGGLTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:19:54 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067B2eG5117663;
-        Tue, 7 Jul 2020 07:19:47 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324ptpja3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:19:46 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067B2fKA117738;
-        Tue, 7 Jul 2020 07:19:46 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324ptpja2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:19:46 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067B0vYs023869;
-        Tue, 7 Jul 2020 11:19:44 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 322hd81puu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 11:19:44 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067BJfuc57934070
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 11:19:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 810A74C046;
-        Tue,  7 Jul 2020 11:19:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB0904C04A;
-        Tue,  7 Jul 2020 11:19:40 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.49.148])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 11:19:40 +0000 (GMT)
-Date:   Tue, 7 Jul 2020 13:19:30 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v4 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200707131930.546d2643.pasic@linux.ibm.com>
-In-Reply-To: <e9976a77-f4a6-841d-6b95-59811751bce9@linux.ibm.com>
-References: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
-        <1594111477-15401-3-git-send-email-pmorel@linux.ibm.com>
-        <20200707114633.68122a00.cohuck@redhat.com>
-        <e9976a77-f4a6-841d-6b95-59811751bce9@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 7 Jul 2020 07:21:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgGGLVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:21:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533D3206CD;
+        Tue,  7 Jul 2020 11:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594120908;
+        bh=LCXyDHmTACa91oTt6HIAuKnB5ZBvshX1CUGP0YfokcA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kf0k8NwYKTwSPgXD/+u13NKY+MI2lSJc8Dhy8uBT0QGrOsRZxpiEENGd6VwYuaAP4
+         Og+T5dw06LVk8ngqh4ov/N1211OKU08qIk/GQjjKrjFdlJ2vNWCSCyWvA5VH31wfcI
+         HyakBUEcls7b0cFcLewMalppZAuDtY+WrInb7wVc=
+Date:   Tue, 7 Jul 2020 12:21:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+Cc:     geert@linux-m68k.org, lukas@wunner.de,
+        kernel test robot <lkp@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
+Message-ID: <20200707112144.GH4870@sirena.org.uk>
+References: <202007040833.xIqR5rAw%lkp@intel.com>
+ <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+ <20200706161810.GB6176@sirena.org.uk>
+ <0072bb03-d6ec-38b8-0c31-61571b77bf93@fastree3d.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_06:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- mlxscore=0 phishscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 adultscore=0 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007070081
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X1xGqyAVbSpAWs5A"
+Content-Disposition: inline
+In-Reply-To: <0072bb03-d6ec-38b8-0c31-61571b77bf93@fastree3d.com>
+X-Cookie: I hate dying.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 12:38:17 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> 
-> 
-> On 2020-07-07 11:46, Cornelia Huck wrote:
-> > On Tue,  7 Jul 2020 10:44:37 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> > 
-> >> S390, protecting the guest memory against unauthorized host access
-> >> needs to enforce VIRTIO I/O device protection through the use of
-> >> VIRTIO_F_VERSION_1 and VIRTIO_F_IOMMU_PLATFORM.
-> > 
-> > Hm... what about:
-> > 
-> > "If protected virtualization is active on s390, the virtio queues are
-> > not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-> > negotiated. Use the new arch_validate_virtio_features() interface to
-> > enforce this."
-> 
-> Yes, thanks.
-> 
-> 
-> > 
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> ---
-> >>   arch/s390/kernel/uv.c | 25 +++++++++++++++++++++++++
+--X1xGqyAVbSpAWs5A
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is this the right place to put this stuff? This file seems to be about
-implementing the interface for interacting with the ultravisor. I would
-rather expect something like arch/s390/kernel/virtio.c 
+On Tue, Jul 07, 2020 at 12:53:38PM +0200, Adrian Fiergolski wrote:
+> On 06.07.2020=A018:18, Mark Brown wrote:
+> > On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
 
-Should we ever get arch hooks for balloon those could go in
-arch/s390/kernel/virtio.c as well.
+> > this.  Perhaps this needs to be a library for devices that can daisy
+> > chain?  It does feel like the instances should be aware of each other
+> > since half the point with building the hardware like this is that it
+> > enables operations on multiple devices to happen in sync.
 
-> >>   1 file changed, 25 insertions(+)
-> >>
-> >> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> >> index c296e5c8dbf9..106330f6eda1 100644
-> >> --- a/arch/s390/kernel/uv.c
-> >> +++ b/arch/s390/kernel/uv.c
-> >> @@ -14,6 +14,7 @@
-> >>   #include <linux/memblock.h>
-> >>   #include <linux/pagemap.h>
-> >>   #include <linux/swap.h>
-> >> +#include <linux/virtio_config.h>
-> >>   #include <asm/facility.h>
-> >>   #include <asm/sections.h>
-> >>   #include <asm/uv.h>
-> >> @@ -413,3 +414,27 @@ static int __init uv_info_init(void)
-> >>   }
-> >>   device_initcall(uv_info_init);
-> >>   #endif
-> >> +
-> >> +/*
-> >> + * arch_validate_virtio_iommu_platform
-> > 
-> > s/arch_validate_virtio_iommu_platform/arch_validate_virtio_features/
-> > 
-> >> + * @dev: the VIRTIO device being added
-> >> + *
-> >> + * Return value: returns -ENODEV if any features of the
-> >> + *               device breaks the protected virtualization
-> >> + *               0 otherwise.
-> > 
-> > I don't think you need to specify the contract here: that belongs to
-> > the definition in the virtio core. What about simply adding a sentence
-> > "Return an error if required features are missing on a guest running
-> > with protected virtualization." ?
-> 
-> OK, right.
-> 
-> > 
-> >> + */
-> >> +int arch_validate_virtio_features(struct virtio_device *dev)
-> >> +{
-> > 
-> > Maybe jump out immediately if the guest is not protected?
-> > 
-> >> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> >> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
-> >> +		return is_prot_virt_guest() ? -ENODEV : 0;
-> >> +	}
-> >> +
-> >> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> >> +		dev_warn(&dev->dev,
-> >> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-> >> +		return is_prot_virt_guest() ? -ENODEV : 0;
-> >> +	}
-> > 
-> > if (!is_prot_virt_guest())
-> > 	return 0;
-> > 
-> > if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> > 	dev_warn(&dev->dev,
-> >                   "legacy virtio is incompatible with protected guests");
-> > 	return -ENODEV;
-> > }
-> > 
-> > if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> > 	dev_warn(&dev->dev,
-> > 		 "device does not work with limited memory access in protected guests");
-> > 	return -ENODEV;
-> > }
-> 
-> Yes, easier to read.
-> 
+> Well, I assume that one can connect completely different SPI devices on
+> a single daisy chain. In order to address all devices in a single
+> access, a controller would need to delay a transaction, wait for a
+> certain moment (how long?), synchronise and then transfer the message. I
+> think it adds unnecessary complexity, as MHO many engineers' issue at
 
-Not only easier to read but does not produce warnings
-if !is_prot_virt_guest(). I strongly prefer the variant proposed by
-Connie.
+I'd imagine something more like regmap's explicit management with
+pausing and unpausing transactions (indeed regmap might be a good
+mechanism for this for devices with a register map) would not be that
+cumbersome to use.  Pause, set the desired target state and then sync
+that state out to the hardware.  This isn't something that can sensibly
+be done at the controller level, the devices do need to be aware of
+what's going on, which is why I'm saying that there's a need for the
+devices to be aware of things.
 
-Otherwise LGTM.
+--X1xGqyAVbSpAWs5A
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Halil
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8EWscACgkQJNaLcl1U
+h9C9CAf/RCKRB0Hy7tmjHtb+eFWn8xEg0QykkkMX2+o03ZcMFdr81ycG2RWsJADv
+Rj64p7v42qb4f7xhn2HTNpbxV+kLasRIUWJmAloPPhLomUzxHP3NStyqaRf0Ts+G
+lvDA4oDzYAulv7SO03//M9p4qv4P2xAXKRKpO7O8YYWU5sx8r7OssJZhUdyEnqLG
+l/EMPP/nRXODodaQiMz60ZtDUb6hmIGYhKeI3tCFiatjFhGb9vKZSQdiInNlZLI8
+mYldBLQQe1cGpOaEI5BHt/KyJSDLkmHjVK1lyczD+1ksSY0OZpHjAxAoeHDexNpq
+hd9q0OOhSNO6Cz9o0+B/MOd7nYMY2Q==
+=in23
+-----END PGP SIGNATURE-----
+
+--X1xGqyAVbSpAWs5A--
