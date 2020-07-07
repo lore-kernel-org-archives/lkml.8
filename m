@@ -2,231 +2,129 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F65C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65393C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22617206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D116206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="D2ypRy0O"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="uxBkYCD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgGGKxm (ORCPT
+        id S1727777AbgGGK5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47064 "EHLO
+        Tue, 7 Jul 2020 06:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgGGKxm (ORCPT
+        with ESMTP id S1725941AbgGGK5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:53:42 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F22EC08C5DF
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:53:41 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w16so46096350ejj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:53:41 -0700 (PDT)
+        Tue, 7 Jul 2020 06:57:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A824C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:57:34 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so33386036wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=xzMc8ThId2/X4pKYDkTZL/dvNCzrhOR7XnxySi0pc/s=;
-        b=D2ypRy0OeuE2marIBj8ZKQqaaGMNwz1Z/07MI2vPrWr2CVg1XoUmhv0A4s2UsgKShF
-         FK5shzg0FG5PT7LYECWo81PyDgnObHrIUuQhIkqVcziEzASHvIuy4k5MZF1/WftjKWI7
-         isILWoilv2u9zLkU8PBltwQ5aI75S7LeDk+ZKrDyIqB+B+dBMgJ2zVw3S3jfvg+3LvqB
-         zu+KiRmXc1HiNgWWXgl/++5nYre/06oALbccRHrp1VdcrdODQ9Q6Zpm1P2fM4dwufgr5
-         DufNmDk2pAJMlrY8XwbYXLIQ6PKMAifacFEI0Gz30KDwwek+j+YHeQLdXwhhEi2bMAKj
-         DFCg==
+        d=googlemail.com; s=20161025;
+        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=q8a6HmZPzdfh5fojW+wd4kULWFylxpCdZMDt/VjHsYk=;
+        b=uxBkYCD9cby7tyOPMcSSy0MbnXsqFwdLtTpXFPUTXV2YGHFOu7ohUGwNBvMsQLZjUq
+         2A5DGPfLNwk94DItzTz0uTkhoNYfoXbtNs9RhrRwIGgKW6PZ4rIog4kzuWibWJ6Fqfw7
+         QWTUTgIFcpzvfxKHVQaaVROk6/YH1ADsDVkX83V7E6G5u0/sjNfM/TE3g4w1t4xyHU+T
+         A5cPFy0ci+Qdc8j/76igytJl6jk6E5TAXXNVt3nYhMY6BxErS1HOujQaZJbaUV64IfVT
+         TQoVWa01dB21tc7IbM3dADeQW8ugON44mS3IUvvom4fxcdDu49KdKtZfZevQiMsziijx
+         Mdfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=xzMc8ThId2/X4pKYDkTZL/dvNCzrhOR7XnxySi0pc/s=;
-        b=WVcN8fRJM+2lWgivxAU19FLC+unigGo+g7VxYAUOLcEnj5QKCUASQaJMc19svZvOsJ
-         n9jVYxXVmKGSw80rlKTNjCp2inwOT93MvgizuE8X17PcPNKJvdFVxP6ZYx4rbIT8XY+O
-         cO9aDkqIgvfUmIXhZK97M0GuDevA/8Ll22eforXYE2sS+ZeLW1j8ZAP00eBTM3x/1nPo
-         dQfvyKjihaUj5zW1EcC/A7fDq9W7Ysed6CSiiA6PadI5HcHVZk6NaZ7co5KdZkjxsQbs
-         w6ZNvdEmgDjtu6/8XGEoLZzDy+7oGwZlwIAzslRiIgSTGuvNHZMiOSMItgCSVsymTOUq
-         6oFg==
-X-Gm-Message-State: AOAM532qPZGjRyw2l0beJ/Ej7buJ3SRu7YAA9hM9NBL5z4jnjZk+DuS0
-        9MtxEGqa0+gWPF3Ag04BGBElzqZVow==
-X-Google-Smtp-Source: ABdhPJwJPMAgTxCR9XDqmuIUqppz4Gli6VJuXH7xTDCYIlqs2VT9w+p7iYuZmUzIkF1cpjcumfCK+w==
-X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr46063060ejb.55.1594119219778;
-        Tue, 07 Jul 2020 03:53:39 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id x19sm24542135eds.43.2020.07.07.03.53.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 03:53:39 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=q8a6HmZPzdfh5fojW+wd4kULWFylxpCdZMDt/VjHsYk=;
+        b=ckOTJfu9hZR9rkuVWmz67/MQCH4k0MwEONezj8AaOWTHhXZQmnoo1BZ/4rFDhl8f4i
+         IHF4QfMgjI6TcNU34zKZGUOoQmnZI51WFZwPsDW3VVQ7ErcsCpy+A3WUpqu938L7ttxx
+         5e4OfAsCjWfQyXoTMvL0+RuD7x6uCke89Z40Pr12/ZHkSoBXKSSWroDAgfixOicUhxNM
+         o01+4uQ3JVIkzM2UI026eDCgTDYGBn1/OFvFe/5G/ZIu3C6+8p1JAejcUcBNP/Yx2w2L
+         6S3cbTezgf/jub9pwJa4q1nrdYC2G5hB1dggmPaDBtpAdOZ4H4bgwKCZpkdRmbbnv13D
+         a8vA==
+X-Gm-Message-State: AOAM531EZ7uroA/kXlGdN87/bDa6EJbfv8rrzpmoO+0UIE4W/zeuwRbE
+        GQSiyatURWXLihVrFROFxo0=
+X-Google-Smtp-Source: ABdhPJy72BFvPskKUMxKOLWyFkJtu2+NGdu5Yeow7LK337w+73BbyRgxAdERs3syVzDZOBPHL9LEZQ==
+X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr54061782wrx.106.1594119452809;
+        Tue, 07 Jul 2020 03:57:32 -0700 (PDT)
+Received: from ?IPv6:2a02:8070:bb9:bc00::fc? ([2a02:8070:bb9:bc00::fc])
+        by smtp.gmail.com with ESMTPSA id d201sm529110wmd.34.2020.07.07.03.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 03:57:32 -0700 (PDT)
+Message-ID: <1c437154873ace65ff738a0ebca511308f1cecc1.camel@googlemail.com>
+Subject: [PATCH] regulator: fan53880: Add support for COMPILE_TEST
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
 To:     Mark Brown <broonie@kernel.org>
-Cc:     geert@linux-m68k.org, lukas@wunner.de,
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com,
         kernel test robot <lkp@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706161810.GB6176@sirena.org.uk>
-Message-ID: <0072bb03-d6ec-38b8-0c31-61571b77bf93@fastree3d.com>
-Date:   Tue, 7 Jul 2020 12:53:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 07 Jul 2020 12:57:31 +0200
+In-Reply-To: <20200707102042.GD4870@sirena.org.uk>
+References: <202007071433.Z3bmcgjU%lkp@intel.com>
+         <da3aece9abd23b12837e9abf908ee67f0c2c988c.camel@googlemail.com>
+         <20200707102042.GD4870@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20200706161810.GB6176@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds support for COMPILE_TEST while fixing a warning when
+no support for device tree is there.
 
-On 06.07.2020 18:18, Mark Brown wrote:
-> On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
->
-> Please don't send new patches in reply to old threads, it buries them
-> and can be confusing.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+---
+ drivers/regulator/Kconfig    | 2 +-
+ drivers/regulator/fan53880.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Ok, thanks. It's my debut in sharing a complete driver patch ;-)
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index d47055db999d..1cc3c93a9621 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -338,7 +338,7 @@ config REGULATOR_FAN53555
+ 
+ config REGULATOR_FAN53880
+ 	tristate "Fairchild FAN53880 Regulator"
+-	depends on I2C
++	depends on I2C && (OF || COMPILE_TEST)
+ 	select REGMAP_I2C
+ 	help
+ 	  This driver supports Fairchild (ON Semiconductor) FAN53880
+diff --git a/drivers/regulator/fan53880.c b/drivers/regulator/fan53880.c
+index 285acc705a55..c45baf581299 100644
+--- a/drivers/regulator/fan53880.c
++++ b/drivers/regulator/fan53880.c
+@@ -152,11 +152,13 @@ static int fan53880_i2c_probe(struct i2c_client *i2c,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
+ static const struct of_device_id fan53880_dt_ids[] = {
+ 	{ .compatible = "onnn,fan53880", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, fan53880_dt_ids);
++#endif
+ 
+ static const struct i2c_device_id fan53880_i2c_id[] = {
+ 	{ "fan53880", },
+-- 
+2.20.1
 
->
->> The implementation is transparent for the SPI devices and doesn't require
->> their modifications. It is based on a virtual SPI device (spi-daisy_chain)
->> and defines two required device tree properties ('spi-daisy-chain-len' and
->> 'spi-daisy-chain-noop') and one optional
-> It would really help to have an example of how a client device will use
-> this, right now it's a bit hard to follow.  Overall it feels like this
-> should be better abstracted, right now there's lots of ifdefs throughout
-> the code which make things unclear and also seem like they're going to
-> be fragile long term since realistically very few systems will be using
-> this.  Perhaps this needs to be a library for devices that can daisy
-> chain?  It does feel like the instances should be aware of each other
-> since half the point with building the hardware like this is that it
-> enables operations on multiple devices to happen in sync.
-
-Well, I assume that one can connect completely different SPI devices on
-a single daisy chain. In order to address all devices in a single
-access, a controller would need to delay a transaction, wait for a
-certain moment (how long?), synchronise and then transfer the message. I
-think it adds unnecessary complexity, as MHO many engineers' issue at
-the moment, including myself, is hardware implementing SPI daisy chain
-without any support in the kernel. Usually, those are simple devices
-where performance is not critical, which need to be accessed only once
-or sporadically.
-
->
-> There are also pervasive coding style issues which are really
-> distracting.
->
->>  drivers/spi/spi-daisy_chain.c       | 428 ++++++++++++++++++++++++++++
-> Please use - and _ consistently.
-Basing on other drivers, I understood that the convention is 'spi-name'.
-My idea was that name is daisy_chain.
->
->> @@ -55,6 +55,14 @@ config SPI_MEM
->>  	  This extension is meant to simplify interaction with SPI memories
->>  	  by providing a high-level interface to send memory-like commands.
->>  
->> +config SPI_DAISY_CHAIN
->> +	bool "SPI daisy chain support"
->> +	depends on OF
-> Please keep Makefile and Kconfig sorted.
-To be done in v3.
->
->> +++ b/drivers/spi/spi-daisy_chain.c
->> @@ -0,0 +1,428 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +
->> +/*
->> + * A driver handling the SPI daisy chaines.
-> Please make the entire comment block a C++ to make things look more
-> intentional.
-To be done in v3.
->
->> +	int rc;
->> +
->> +	//the device is not part of a daisy-chain
->> +	if (spi->daisy_chain_devs == NULL)
-> Coding style for the comment here and throughout the code.  If your code
-> doesn't visually resemble the normal coding style for the code base
-> you're working on then that is a bit of a red flag when reviewing.
-Do you mean '//' vs '/*' ? In the spi.c I tried to follow the original
-style. In spi-daisy_chain.c, which is a new driver added by myself, I
-used '//' which is me personal preference. Is it wrong approach in your
-opinion?
->
->> +	if (!list_is_singular(&message->transfers)) {
->> +		dev_err(&spi->dev,
->> +			"Mutliple transfer segments are not support when on daisy chain");
->> +		return -EINVAL;
->> +	}
-> That seems excessively restrictive?
-Well, with multiple transfers, drivers could request deactivation of SS
-in between them. That would break the daisy chain, as data is latched in
-all devices once SS is de-asserted. How such a transaction should be
-then handled? Do you know any example of drivers/devices using multiple
-transfers?
->
->> +			//check if frequency is not being changed
->> +			if (tr->speed_hz && tr->speed_hz != spi->max_speed_hz) {
->> +				dev_err(&spi->dev,
->> +					"Change of SPI frequency not supported when on daisy chain");
->> +				return -EINVAL;
->> +			}
-> Again this seems unreasonably restrictive, especially given the above
-> single transfer restriction which means the speed can't change during a
-> message?
-We could allow here also slower transfers.
-
-A person defining the daisy chain in the DT knowns the maximum frequency
-(aka propagation delays between different components on PCB + internal
-timing of the devices) at which the whole chain operates properly. Thus,
-the transfer speed of the message can't violate this upper limit.
->
->> +			if (tr->len == spi_chain_dev->no_operation.len) {
->> +				tr->bits_per_word = spi_chain_dev->no_operation
->> +							    .bits_per_word;
->> +				tr->cs_change = 0;
->> +
->> +				list_add_tail(&tr->transfer_list,
->> +					      &message->transfers);
->> +			}
->> +			//daisy chain operation has different than regular length
->> +			else {
-> Coding style on both the if () and placement of the comment.
-It was corrected like that by clang-format-buffer in emacs which uses
-the format defined in the kernel source-tree.
->
->> +				//copy tx buffer
->> +				if (tr->tx_buf) {
->> +					ntr->tx_buf =
->> +						kmalloc(ntr->len, GFP_KERNEL);
->> +					if (!ntr->tx_buf) {
->> +						rc = -ENOMEM;
->> +						goto err_out;
->> +					}
-> Why is this not a kmemdup()?
-Not really. Due to SPI big-endiannes, one needs to apply padding
-(right-justification) properly at the beginning of the new buffer. I
-have been looking for some kernel function, which would copy the buffers
-from their ends in the reverse order. I haven't found a good candidate.
-Any suggestion?
->
->> +					//The daisy-chain padding is assumed to be right-justified,
->> +					//so unused tx bits are transferred first
->> +					memcpy((void *)((char *)ntr->tx_buf +
->> +							ntr->len - tr->len),
->> +					       tr->tx_buf, tr->len);
-> These casts shouldn't be needed, especially the cast to void * - if you
-> need to cast to void * something bad is most likely happening.  Simiar
-> issues apply in other places where you're casting.
-tx_buf is 'const void*' in spi_transfer. spi-daisy_chain could allocate
-a new spi_transfer with the extended tx_buffer, copy rest of fields from
-the original one, swap the transactions in the message and eventually
-(after transmission) copy back the rx buffer to the original transaction
-and swap the transfers again. I think though, it's a bit of unnecessary
-overhead. What do you think?
