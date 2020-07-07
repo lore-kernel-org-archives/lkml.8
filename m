@@ -2,99 +2,175 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D52C20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64B7206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="bduq4eqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgGGVSG (ORCPT
+        id S1728845AbgGGVXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:18:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58260 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgGGVSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:18:06 -0400
-IronPort-SDR: s08QEwv3Tis1s8fIIQmxFOmcNfS/oOHKSwOobsijONUi75HG3JuO37qapZ/eA9hLKG9XNUjZlr
- fIajMym15BCQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135156634"
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="135156634"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:18:05 -0700
-IronPort-SDR: TIfrxbVcaGC/Pu9TN9IpJNJmxgIP0bJlPax8eK6fgIyhwWU8XtEYaojbmBgmUfe0DnbAXgdFqg
- Zsv/bEV3x8FA==
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="427613055"
-Received: from andreead-mobl1.ti.intel.com ([10.252.18.211])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:18:01 -0700
-Message-ID: <08b2713a6f87f78746c22e7168f4813eb753bb0e.camel@linux.intel.com>
-Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Tue, 07 Jul 2020 22:17:59 +0100
-In-Reply-To: <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com>
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-         <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 7 Jul 2020 17:23:08 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:40679 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbgGGVXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:23:07 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id E2A3723E3E;
+        Tue,  7 Jul 2020 23:23:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594156985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MaA+UOQdGrnPbXdEAips7ac3VqRoV6MIg8BZpXkFNGc=;
+        b=bduq4eqmCWCSlXaqLCPdAhzrnDw2q9EdOWa5BfxNXtb9p+tB0yNgVYnShfOoTXcOQTko4C
+        EtN8zb0XX1DGqC/qoXIjiDSQB0ZWtNXtAaRijyCo8b3A1yI96MwQPeAPgITNJjdDsDbbPL
+        ueHVF8PQ+yMukn4BHVV1cROF1md96eY=
+From:   Michael Walle <michael@walle.cc>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Michael Walle <michael@walle.cc>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: [PATCH net-next v5 2/4] net: dsa: felix: (re)use already existing constants
+Date:   Tue,  7 Jul 2020 23:21:29 +0200
+Message-Id: <20200707212131.15690-3-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200707212131.15690-1-michael@walle.cc>
+References: <20200707212131.15690-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-05 at 23:36 -0500, Jassi Brar wrote:
-> On Tue, Jun 16, 2020 at 10:56 AM Daniele Alessandrelli
-> <daniele.alessandrelli@linux.intel.com> wrote:
-> > Hi,
-> > 
-> > This patch-set adds initial support for a new Intel Movidius SoC
-> > code-named
-> > Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
-> > Movidius VPU.
-> > 
-> > This initial patch-set enables only the minimal set of components
-> > required to
-> > make the Keem Bay EVM board boot into initramfs.
-> > 
-> > Brief summary of the patch-set:
-> > * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to
-> > enable SCMI in
-> >   Keem Bay)
-> > * Patch 3 adds the ARCH_KEEMBAY config option
-> > * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay
-> > EVM
-> >   (together with information about the SoC maintainers)
-> > 
-> Please break this into two patchsets - first enabling platform
-> support
-> and second adding mailbox support.
+Now that there are USXGMII constants available, drop the old definitions
+and reuse the generic ones.
 
-Thanks for your feedback Jassi. I will split the patcheset into two
-different patchsets.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/dsa/ocelot/felix_vsc9959.c | 45 +++++++-------------------
+ 1 file changed, 12 insertions(+), 33 deletions(-)
 
-Just one question: should I remove the mailbox and scmi nodes from the
-soc DT or can I keep them there even if the mailbox driver is not
-available yet?
-
-> 
-> thanks.
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index 19614537b1ba..4310b1527022 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -10,35 +10,15 @@
+ #include <soc/mscc/ocelot.h>
+ #include <net/pkt_sched.h>
+ #include <linux/iopoll.h>
++#include <linux/mdio.h>
+ #include <linux/pci.h>
+ #include "felix.h"
+ 
+ #define VSC9959_VCAP_IS2_CNT		1024
+ #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
+ #define VSC9959_VCAP_PORT_CNT		6
+-
+-/* TODO: should find a better place for these */
+-#define USXGMII_BMCR_RESET		BIT(15)
+-#define USXGMII_BMCR_AN_EN		BIT(12)
+-#define USXGMII_BMCR_RST_AN		BIT(9)
+-#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
+-#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
+-#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
+-#define USXGMII_ADVERTISE_FDX		BIT(12)
+-#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
+-#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
+-#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
+-#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
+-
+ #define VSC9959_TAS_GCL_ENTRY_MAX	63
+ 
+-enum usxgmii_speed {
+-	USXGMII_SPEED_10	= 0,
+-	USXGMII_SPEED_100	= 1,
+-	USXGMII_SPEED_1000	= 2,
+-	USXGMII_SPEED_2500	= 4,
+-};
+-
+ static const u32 vsc9959_ana_regmap[] = {
+ 	REG(ANA_ADVLEARN,			0x0089a0),
+ 	REG(ANA_VLANMASK,			0x0089a4),
+@@ -787,11 +767,10 @@ static void vsc9959_pcs_config_usxgmii(struct phy_device *pcs,
+ {
+ 	/* Configure device ability for the USXGMII Replicator */
+ 	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_ADVERTISE,
+-		      USXGMII_ADVERTISE_SPEED(USXGMII_SPEED_2500) |
+-		      USXGMII_ADVERTISE_LNKS(1) |
++		      MDIO_LPA_USXGMII_2500FULL |
++		      MDIO_LPA_USXGMII_LINK |
+ 		      ADVERTISE_SGMII |
+-		      ADVERTISE_LPACK |
+-		      USXGMII_ADVERTISE_FDX);
++		      ADVERTISE_LPACK);
+ }
+ 
+ static void vsc9959_pcs_config(struct ocelot *ocelot, int port,
+@@ -1005,8 +984,8 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
+ 		return;
+ 
+ 	pcs->autoneg = true;
+-	pcs->autoneg_complete = USXGMII_BMSR_AN_CMPL(status);
+-	pcs->link = USXGMII_BMSR_LNKS(status);
++	pcs->autoneg_complete = status & BMSR_ANEGCOMPLETE;
++	pcs->link = status & BMSR_LSTATUS;
+ 
+ 	if (!pcs->link || !pcs->autoneg_complete)
+ 		return;
+@@ -1015,24 +994,24 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
+ 	if (lpa < 0)
+ 		return;
+ 
+-	switch (USXGMII_LPA_SPEED(lpa)) {
+-	case USXGMII_SPEED_10:
++	switch (lpa & MDIO_LPA_USXGMII_SPD_MASK) {
++	case MDIO_LPA_USXGMII_10:
+ 		pcs->speed = SPEED_10;
+ 		break;
+-	case USXGMII_SPEED_100:
++	case MDIO_LPA_USXGMII_100:
+ 		pcs->speed = SPEED_100;
+ 		break;
+-	case USXGMII_SPEED_1000:
++	case MDIO_LPA_USXGMII_1000:
+ 		pcs->speed = SPEED_1000;
+ 		break;
+-	case USXGMII_SPEED_2500:
++	case MDIO_LPA_USXGMII_2500:
+ 		pcs->speed = SPEED_2500;
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 
+-	if (USXGMII_LPA_DUPLEX(lpa))
++	if (lpa & MDIO_LPA_USXGMII_FULL_DUPLEX)
+ 		pcs->duplex = DUPLEX_FULL;
+ 	else
+ 		pcs->duplex = DUPLEX_HALF;
+-- 
+2.20.1
 
