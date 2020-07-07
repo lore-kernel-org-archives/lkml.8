@@ -2,89 +2,295 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B66C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F03C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D52920771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4B520771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcycau1C"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rpJea5M4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgGGOrD (ORCPT
+        id S1728294AbgGGOrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGOrC (ORCPT
+        Tue, 7 Jul 2020 10:47:08 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:28140 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGOrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:47:02 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05691C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:47:03 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id 207so18339532pfu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:47:03 -0700 (PDT)
+        Tue, 7 Jul 2020 10:47:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6tlOiGIRkrS9uWXKb/4KInO3FwOOML3Zfv95QQLQgxA=;
-        b=mcycau1CA3PGVmuNd65V5tCGl3ApSPtJrbE/ErOVtSLMBEKaIR4lsuHbGx92fdWHQA
-         z/4EKird63ykcm1xyAEG6izBjS654Gz1rwPI0q1EblqgXBOPDKdplyt6u7jjNq0DD7iR
-         FYvB/1GCHPLIXwcet91Mzm+3H+hLd+mlVF7UdoO87wpwKwaotWPfQJ/lOvYZjKvc6T6u
-         raiSWLiEFNvKQUN+xrtvb2OP+dQEzSQugcs5E7kLxlyy/p4eCE5MDh+HejzEh7kyFHwn
-         I3V/qz1nvQ438WiWGP0pO/d2ANtJQKpFfy1GCpEXFzOakzsi16kjsHeAPVQyVN/IAMlb
-         wBsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6tlOiGIRkrS9uWXKb/4KInO3FwOOML3Zfv95QQLQgxA=;
-        b=BqsBPdRBFnZ2Pa8NDIFyNrL0sroyv/VqnkW+VVS1Xr67j4MiD6crMxgfRW/6SVaEAM
-         Np6v1KmZzEdyZWL1tC4XtbLLjbvf5fAd8z3TDl9KrKCahtHxVDx0yq2CJdoT3LpdR47U
-         RgUXm+mJC6f2XKNFyGVFElQ4lEz/vpMOWFy5RGDJLhzNdHFJBNDCrPf/wlXn6mYoNPXY
-         Jmji+oDiNTjLUUt2CYCBrQFjD4AgH5wY6kRGyq0bR4EYwuAsP99o825TYEyg13bpiJ2P
-         EN0IQFqZFU0eehe1L4XkiF2mM6d+BBPlD+fn4APP/vUhFevNTrDV+oXP1wW8SGV7SZw7
-         6+zA==
-X-Gm-Message-State: AOAM531Pw6PFOmc4H6+LX6WL+A3COwu0Rjton62u/4IzXQAut2xiNJUz
-        6M3F1ZZKtAbZ4o6xz/a6yCoQi7vRlRvYWU3TyE2JDxWoKcw=
-X-Google-Smtp-Source: ABdhPJzXNAP4zmLUgmxKEMa/hRZ66mp6ZCyan4bLWtEasorvKTD6iVoIohV68lGda+SNRbxu/67OxzRwYvQrHcuzcQM=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr43722681pgn.74.1594133222582;
- Tue, 07 Jul 2020 07:47:02 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594133227; x=1625669227;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=TdYn9I/dab2QRRAdgNTXi0s6WRxFPOrf2d2Y2+9DpV0=;
+  b=rpJea5M4FMpt9+C6MbhZvopVhclDC3YaDXNVXkTYBJB1i04s80Bs17qr
+   NAwMBc21RlS2GAtfTdBXILt6iqyuuEGO+kvVzQ7RZ4JfYtLurWJQ4x+wF
+   rZHaHLROHimwuo+L/1s+Z0L2i38gRony4pGj2O9We84SEzFFoEQEj9Sh2
+   w=;
+IronPort-SDR: 8ISh1n4xJWw6dp4nSl0ozFXxV7tkFl64SD+MQTm+d9hA1LT5Y7jP4I4QI2g70NhYKvz+rYXYgn
+ mmM38HhIjl/A==
+X-IronPort-AV: E=Sophos;i="5.75,324,1589241600"; 
+   d="scan'208";a="49756041"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Jul 2020 14:46:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 65A2CA2038;
+        Tue,  7 Jul 2020 14:46:53 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 14:46:52 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 14:46:33 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v5 01/11] mm/damon/debugfs: Allow users to set initial monitoring target regions
+Date:   Tue, 7 Jul 2020 16:45:30 +0200
+Message-ID: <20200707144540.21216-2-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200707144540.21216-1-sjpark@amazon.com>
+References: <20200707144540.21216-1-sjpark@amazon.com>
 MIME-Version: 1.0
-References: <20200706093822.GC3874@shao2-debian> <BYAPR11MB263209A68F3804CC4436AB50FF690@BYAPR11MB2632.namprd11.prod.outlook.com>
- <20200707094724.GD4087@alley> <BYAPR11MB26321D30CD63D3A03C7CDDF9FF660@BYAPR11MB2632.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB26321D30CD63D3A03C7CDDF9FF660@BYAPR11MB2632.namprd11.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Jul 2020 17:46:46 +0300
-Message-ID: <CAHp75Vd-HwRVYnp9-C3uQVY-7m7t2sDBsX_3pK0tk4Njs=NmWg@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW2t0aHJlYWRdIGE5MDQ3N2YwYzk6IFdBUk5JTkc6YXRfa2VybmVsLw==?=
-        =?UTF-8?B?a3RocmVhZC5jOiNrdGhyZWFkX3F1ZXVlX3dvcms=?=
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D35UWC001.ant.amazon.com (10.43.162.197) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 1:05 PM Zhang, Qiang <Qiang.Zhang@windriver.com> wrote:
-> Thanks for you  reply Pter, if the patch was add , like you said there are more work to do. so need remove the patch from -mm tree.
+From: SeongJae Park <sjpark@amazon.de>
 
-Please do, I spent some time to understand why I got it (I admit, that
-most of it was direct investigation rather than googling, for which I
-spent less than quarter an hour).
+Some users would want to monitor only a part of the entire virtual
+memory address space.  The '->init_target_regions' callback is therefore
+provided, but only programming interface can use it.
 
-P.S. And please avoid top posting.
+For the reason, this commit introduces a new debugfs file,
+'init_region'.  Users can specify which initial monitoring target
+address regions they want by writing special input to the file.  The
+input should describe each region in each line in below form:
 
+    <pid> <start address> <end address>
 
+This commit also makes the default '->init_target_regions' callback,
+'kdamon_init_vm_regions()' to do nothing if the user has set the initial
+target regions already.
 
+Note that the regions will be updated to cover entire memory mapped
+regions after 'regions update interval'.  If you want the regions to not
+be updated after the initial setting, you could set the interval as a
+very long time, say, a few decades.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 156 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 152 insertions(+), 4 deletions(-)
+
+diff --git a/mm/damon.c b/mm/damon.c
+index 937b6bccb7b8..3aecdef4c841 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -1800,6 +1800,147 @@ static ssize_t debugfs_record_write(struct file *file,
+ 	return ret;
+ }
+ 
++static ssize_t sprint_init_regions(struct damon_ctx *c, char *buf, ssize_t len)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	int written = 0;
++	int rc;
++
++	damon_for_each_task(t, c) {
++		damon_for_each_region(r, t) {
++			rc = snprintf(&buf[written], len - written,
++					"%d %lu %lu\n",
++					t->pid, r->ar.start, r->ar.end);
++			if (!rc)
++				return -ENOMEM;
++			written += rc;
++		}
++	}
++	return written;
++}
++
++static ssize_t debugfs_init_regions_read(struct file *file, char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t len;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		mutex_unlock(&ctx->kdamond_lock);
++		return -EBUSY;
++	}
++
++	len = sprint_init_regions(ctx, kbuf, count);
++	mutex_unlock(&ctx->kdamond_lock);
++	if (len < 0)
++		goto out;
++	len = simple_read_from_buffer(buf, count, ppos, kbuf, len);
++
++out:
++	kfree(kbuf);
++	return len;
++}
++
++static int add_init_region(struct damon_ctx *c,
++			 int pid, struct damon_addr_range *ar)
++{
++	struct damon_task *t;
++	struct damon_region *r, *prev;
++	int rc = -EINVAL;
++
++	if (ar->start >= ar->end)
++		return -EINVAL;
++
++	damon_for_each_task(t, c) {
++		if (t->pid == pid) {
++			r = damon_new_region(ar->start, ar->end);
++			if (!r)
++				return -ENOMEM;
++			damon_add_region(r, t);
++			if (nr_damon_regions(t) > 1) {
++				prev = damon_prev_region(r);
++				if (prev->ar.end > r->ar.start) {
++					damon_destroy_region(r);
++					return -EINVAL;
++				}
++			}
++			rc = 0;
++		}
++	}
++	return rc;
++}
++
++static int set_init_regions(struct damon_ctx *c, const char *str, ssize_t len)
++{
++	struct damon_task *t;
++	struct damon_region *r, *next;
++	int pos = 0, parsed, ret;
++	int pid;
++	struct damon_addr_range ar;
++	int err;
++
++	damon_for_each_task(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++
++	while (pos < len) {
++		ret = sscanf(&str[pos], "%d %lu %lu%n",
++				&pid, &ar.start, &ar.end, &parsed);
++		if (ret != 3)
++			break;
++		err = add_init_region(c, pid, &ar);
++		if (err)
++			goto fail;
++		pos += parsed;
++	}
++
++	return 0;
++
++fail:
++	damon_for_each_task(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++	return err;
++}
++
++static ssize_t debugfs_init_regions_write(struct file *file,
++					  const char __user *buf, size_t count,
++					  loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t ret = count;
++	int err;
++
++	kbuf = user_input_str(buf, count, ppos);
++	if (IS_ERR(kbuf))
++		return PTR_ERR(kbuf);
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = set_init_regions(ctx, kbuf, ret);
++	if (err)
++		ret = err;
++
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++	kfree(kbuf);
++	return ret;
++}
++
+ static ssize_t debugfs_attrs_read(struct file *file,
+ 		char __user *buf, size_t count, loff_t *ppos)
+ {
+@@ -1876,6 +2017,12 @@ static const struct file_operations record_fops = {
+ 	.write = debugfs_record_write,
+ };
+ 
++static const struct file_operations init_regions_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_init_regions_read,
++	.write = debugfs_init_regions_write,
++};
++
+ static const struct file_operations attrs_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = debugfs_attrs_read,
+@@ -1886,10 +2033,11 @@ static struct dentry *debugfs_root;
+ 
+ static int __init damon_debugfs_init(void)
+ {
+-	const char * const file_names[] = {"attrs", "record", "schemes",
+-		"pids", "monitor_on"};
+-	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
+-		&schemes_fops, &pids_fops, &monitor_on_fops};
++	const char * const file_names[] = {"attrs", "init_regions", "record",
++		"schemes", "pids", "monitor_on"};
++	const struct file_operations *fops[] = {&attrs_fops,
++		&init_regions_fops, &record_fops, &schemes_fops, &pids_fops,
++		&monitor_on_fops};
+ 	int i;
+ 
+ 	debugfs_root = debugfs_create_dir("damon", NULL);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
