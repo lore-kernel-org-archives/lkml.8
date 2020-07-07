@@ -2,52 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F241EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A007020663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDF020771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135299;
-	bh=WIWDadBtKgpl6P4Z9DDZtnNOYrd0A7kEC6lm9xZ+VXk=;
+	s=default; t=1594135303;
+	bh=XTimTEqhE29dFUv3QdkSkPZe+dBL0kqNKWi0Km7x8j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0s9JwprjWOahk64jVluUD31Gd5eQsVwtSbz3c6CSvSLpaQzEaCnvPo9Iw7aIR2uv
-	 DHqf5SkaDh/ajexMrwioZ/K3jyLzlQvaG6l0URcr5Lm5OkNuO+MopkEjNFiqOCKISG
-	 fkgTQSpOBL8OrqjWva3kmrFEJZu1DuB8fFOzZ2aI=
+	b=ZDGytRLCZ60/Lw8uxXZ9nfB81Sxy6ZTYRRR3OIVKv2z/BudGFDnK8C/tmftY3Ljqy
+	 pcoJr7JoYkQq++gxI15mdDihhvpunTUupCnz0AN1o6p71i+klk+z0+pGR/t2lrHTEp
+	 PSm9JRGvOrRNvtlpwRgwlTGoz8feQKrXBmh5fquU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgGGPVi (ORCPT
+        id S1728728AbgGGPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgGGPVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:31 -0400
+        id S1728100AbgGGPVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022B020771;
-        Tue,  7 Jul 2020 15:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 631B92065D;
+        Tue,  7 Jul 2020 15:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135290;
-        bh=WIWDadBtKgpl6P4Z9DDZtnNOYrd0A7kEC6lm9xZ+VXk=;
+        s=default; t=1594135298;
+        bh=XTimTEqhE29dFUv3QdkSkPZe+dBL0kqNKWi0Km7x8j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vcciL1ACz4ZCPk+35K8TuHwZHyybi4OWUpDl5rkUYC7VFKvbVt/kSyzHYWPulmPaX
-         SUQszYCm/cpbKU/qXU67QJANMaqhnwx2Y3ZM2oy9wDTYaZSQrTtwSLQfD1zEa/4Sn1
-         S1m9f3DVjH/FMoY66QpQpe/1aDZsYYZwcwmK+4z8=
+        b=sDEiCxN8PQPcgEcidX1TDCvaFDy70+KcKc3kvCpV593AP4MpJmF/DCfkqGUgttbJv
+         1ugy7GloSC0IlOlFjdZNl6d1DiSDBZM847+HMmGcGNCUPS7H7EMwNL9Cqmq1kFfOzj
+         CUk65A5u46g35fOTEq3AaveSfY0mBisiB6OCCe4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 5.4 49/65] SMB3: Honor seal flag for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:17:28 +0200
-Message-Id: <20200707145754.834188105@linuxfoundation.org>
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 5.4 34/65] kthread: save thread function
+Date:   Tue,  7 Jul 2020 17:17:13 +0200
+Message-Id: <20200707145754.124544082@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,35 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit cc15461c73d7d044d56c47e869a215e49bd429c8 upstream.
+[ Upstream commit 52782c92ac85c4e393eb4a903a62e6c24afa633f ]
 
-Ensure multiuser SMB3 mounts use encryption for all users' tcons if the
-mount options are configured to require encryption. Without this, only
-the primary tcon and IPC tcons are guaranteed to be encrypted. Per-user
-tcons would only be encrypted if the server was configured to require
-encryption.
+It's handy to keep the kthread_fn just as a unique cookie to identify
+classes of kthreads.  E.g. if you can verify that a given task is
+running your thread_fn, then you may know what sort of type kthread_data
+points to.
 
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We'll use this in nfsd to pass some information into the vfs.  Note it
+will need kthread_data() exported too.
 
+Original-patch-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/kthread.h |  1 +
+ kernel/kthread.c        | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -5285,6 +5285,7 @@ cifs_construct_tcon(struct cifs_sb_info
- 	vol_info->linux_ext = master_tcon->posix_extensions;
- 	vol_info->sectype = master_tcon->ses->sectype;
- 	vol_info->sign = master_tcon->ses->sign;
-+	vol_info->seal = master_tcon->seal;
+diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+index 0f9da966934e2..59bbc63ff8637 100644
+--- a/include/linux/kthread.h
++++ b/include/linux/kthread.h
+@@ -57,6 +57,7 @@ bool kthread_should_stop(void);
+ bool kthread_should_park(void);
+ bool __kthread_should_park(struct task_struct *k);
+ bool kthread_freezable_should_stop(bool *was_frozen);
++void *kthread_func(struct task_struct *k);
+ void *kthread_data(struct task_struct *k);
+ void *kthread_probe_data(struct task_struct *k);
+ int kthread_park(struct task_struct *k);
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index b262f47046ca4..543dff6b576c7 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -46,6 +46,7 @@ struct kthread_create_info
+ struct kthread {
+ 	unsigned long flags;
+ 	unsigned int cpu;
++	int (*threadfn)(void *);
+ 	void *data;
+ 	struct completion parked;
+ 	struct completion exited;
+@@ -152,6 +153,20 @@ bool kthread_freezable_should_stop(bool *was_frozen)
+ }
+ EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
  
- 	rc = cifs_set_vol_auth(vol_info, master_tcon->ses);
- 	if (rc) {
++/**
++ * kthread_func - return the function specified on kthread creation
++ * @task: kthread task in question
++ *
++ * Returns NULL if the task is not a kthread.
++ */
++void *kthread_func(struct task_struct *task)
++{
++	if (task->flags & PF_KTHREAD)
++		return to_kthread(task)->threadfn;
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(kthread_func);
++
+ /**
+  * kthread_data - return data value specified on kthread creation
+  * @task: kthread task in question
+@@ -164,6 +179,7 @@ void *kthread_data(struct task_struct *task)
+ {
+ 	return to_kthread(task)->data;
+ }
++EXPORT_SYMBOL_GPL(kthread_data);
+ 
+ /**
+  * kthread_probe_data - speculative version of kthread_data()
+@@ -237,6 +253,7 @@ static int kthread(void *_create)
+ 		do_exit(-ENOMEM);
+ 	}
+ 
++	self->threadfn = threadfn;
+ 	self->data = data;
+ 	init_completion(&self->exited);
+ 	init_completion(&self->parked);
+-- 
+2.25.1
+
 
 
