@@ -2,90 +2,113 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0889AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513892065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594117369;
-	bh=UHtw6MeLR2PbjZOILpcJU2lXzsz+tYXwTsaXz6IERvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f9rBMlzzhgKT82cvEfTqoh60lJJ7upQ5XwQ3B8oMTg2x7ZdvuBzZ8zbH+u9MDGgKp
-	 Rs0ddWRiTCkxgiU/wBmRUZcXcWAhegvLCkoXIm8oUqeAVIDRw2E/wxzY44MLRdwYQE
-	 6Hvcnq/55E659QYYLLLbB0oa+LA7v34aVSD0cfVM=
+	by mail.kernel.org (Postfix) with ESMTP id DC6EE206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=moxa.com header.i=@moxa.com header.b="EXlPUk05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGGKWs (ORCPT
+        id S1728214AbgGGKXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgGGKTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:19:20 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD11206F6;
-        Tue,  7 Jul 2020 10:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594117159;
-        bh=UHtw6MeLR2PbjZOILpcJU2lXzsz+tYXwTsaXz6IERvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PiF81EvX30apx9Ee27/EN5d/rxv99l+LJ7dLxxuXdcJKRcZjZnDF0WJcR8a7gyMw3
-         mhBm8kGJIOaUYVpOh4g7ix4p+cEbp3rX+2JwnBVSF/9mFa75svG2aZWlr8XPnNCU1b
-         wDGPrrl4HKTWoNVdT4gn7ajWkmKXsVTFT16KiI5A=
-Date:   Tue, 7 Jul 2020 11:19:15 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH 00/28] Clean-up ASoC's W=1 build warnings
-Message-ID: <20200707101915.GC4870@sirena.org.uk>
-References: <20200707101642.1747944-1-lee.jones@linaro.org>
+        Tue, 7 Jul 2020 06:23:36 -0400
+Received: from mail-eopbgr1300044.outbound.protection.outlook.com ([40.107.130.44]:18876
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726879AbgGGKXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:23:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JHuPCp4d3kuHraBt3gLeY1MWgdGyKgQZeH6j88XSI+cNSD6zml+NGXl9DRXcxWV5hBRr7yeRtsOyZcY+fS/9sdfMGWTUQ0UFziYNX+wj0AXmQ44JevNfOYLzWi6bRrQL8VS+mxNe7g38/hsOtQ5eAltmLo6A15V51agqvuBANqrXJm+mFoHUi/H4u6bkBaEL6w2i9gQZBLWuzUOTxalyB1+5nhQ1YAebDA3V3Z2mPsOeICjjO5YaSYx8StOE1mku6HfjYGjsP+28EW2fYxY+i88rOebdxmSsrf1jKUIp1ZHnNCVszPDuW15pmesnNTvAVhaopvk1/PctW3VELZrZ9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o+b6451515xEzZjMxXjD9j85TfBmXAxEmr5wltmRDxI=;
+ b=UP1KZg0LwJBmK5QgwRR+7GrWJVFiWHa+YgAAp/8UGtgpsm5lIJMizUTEUwpAS8B21OTUyZPLuIcknvcHbLvdV358R5f0yyG+a+RNVfg49f+jmICgC74zhdyCoYo3QBs/l1cFTBrZpATFPzcHyUsWqUGKwKyPKLBPBlwyuXTk3VjwhqJveHtZoH8zcgXFnttF3t5X1c0kpCls0hwwaLwdC5RFxXhBcVEh71sFr2OLEdn1tl/kZHLLuS6g9DCs49ijr7SjorqF9+/PzpWBwFzVjGXduNarmoH0Yy/jqo9YiYSBUQj1JgeGt0hiX29CrLpvf7BjHpaBUvN3rg50xCezoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=moxa.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o+b6451515xEzZjMxXjD9j85TfBmXAxEmr5wltmRDxI=;
+ b=EXlPUk05zZ78xIKzFHES+FiAUNe8UD0rI0bk1m7cnTL5iDs7Pynfr4g7VR1CIjOZ2Uq4ybE9+xccpCkLEz6aatvvRal12GvqiYHuClUwA19sS8LSK4/R+fskqtrIpo7qJ7im3x4do2mFE5AT2HIC9oxuQlgjvCuadIgqeAb8hHM=
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ (2603:1096:202:22::12) by HKAPR01MB3650.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:d6::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21; Tue, 7 Jul
+ 2020 10:23:31 +0000
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77]) by HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77%4]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 10:23:31 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        "tony@atomide.com" <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] Add support for Moxa UC-8100A-ME open platform
+Thread-Topic: [PATCH 0/2] Add support for Moxa UC-8100A-ME open platform
+Thread-Index: AQHWVEfbcD8xIBxUWUmnB1PUkm01mQ==
+Date:   Tue, 7 Jul 2020 10:23:31 +0000
+Message-ID: <HK2PR01MB3281876EC1F9FBC5FCE94954FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: baylibre.com; dkim=none (message not signed)
+ header.d=none;baylibre.com; dmarc=none action=none header.from=moxa.com;
+x-originating-ip: [123.51.145.16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 651b4efa-a04e-4230-0bf8-08d8225fcc4d
+x-ms-traffictypediagnostic: HKAPR01MB3650:
+x-microsoft-antispam-prvs: <HKAPR01MB3650648F39FDCE0063D80CFAFA660@HKAPR01MB3650.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uHlhO6qVVyH41p4nXpkl+NbMWGU7QrLMrEUjvRhiRUhFhaPevGHiz57pSnN6QJqDCqNEXlYO0ki1sJ4es0aiiAQAeYCvp8J5ht2IvhZfd43ziIyBlO0siHsKJtCdcfZL56l6C9rbSZIoLE9JUSazBNW2CGPF3bscM123v1QkzQ2dxJ3pfsl0eCY6x32suTuei3JZ0180Y1jCUkc16smrdFugEx/yR5G/ltULammUW1vvxIfrE5zUWRweEE1M5NlG+WEsmctD9iGBbXREaeQzFSF++y3G4F75bpkXTu/4X9hSqbIciyRVOc3H6+o+xma3r/TJpitWUjcBOKkgTbrwGw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK2PR01MB3281.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39850400004)(346002)(366004)(376002)(66946007)(478600001)(2906002)(4744005)(71200400001)(86362001)(8676002)(5660300002)(55016002)(83380400001)(26005)(6506007)(9686003)(186003)(76116006)(66556008)(64756008)(66446008)(7696005)(52536014)(8936002)(66476007)(33656002)(316002)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: pmHntXh20ucr9mGsgL03Z8FcayFCOMQwMBvaZEp3DA36+lPtvYJh/L6mzDUnib84szP4VNt6qtJNWp33FmyopMXTEOcGIZzqZ48djapMZWErYZ75PUdNe8FJ8ZEStcoPqe5yvlklbU6stb32ROD/M1LIgFGArXI77gX8GyYrjE9WgsSnM0vRA9QH6TaVW8yzuYv7vxP/eWUx6yn3B7VDZ6aVkgJTQnR8cwpJaOy3KfP019o+Sfr1yuwwYt025N3N7a7jb3bs5tD1VxAv6jFgH8oGbexh1Osk6mUkq0l1fILAA+HVAx1l6B7BdC+CWS19evQ/qJTb9jGZC1ekrTkcsyt9zs41XEgZ9L0BiTCR8YZ+5+Bbt9USAteYY3sJaAhr9VCdDm21Fky09u9x8eOajEOIHJAYfeajP91Rh4P4Utjxvf0ggKj6Lmbr3/idqXmPFaF0tRhaC8AQLDrTaHJcelZTdFfxBa0pxAT/XxvwN8c=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Content-Disposition: inline
-In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
-X-Cookie: I hate dying.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 651b4efa-a04e-4230-0bf8-08d8225fcc4d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 10:23:31.6504
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E/pUAtoF/s0A/99osC1FgfnOXAB0fxjL5WzfnalJJhQxmZcPOtiGsgDTYGaafmcsSV3ZrRo0+T+lthGh10m17w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR01MB3650
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 07, 2020 at 11:16:14AM +0100, Lee Jones wrote:
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
-
-Please coordinate with Pierre (CCed) who is also submitting patches for
-this issue, there's a whole bunch in flight already.
-
---DIOMP1UsTsWJauNi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ETCIACgkQJNaLcl1U
-h9A2lwf/WHxiQ4N0fIy5r4w2N77ELaYXlxUlx7kooARFaGhCerRy8YXOb+9Zc4Z6
-xGYqdqv7T4xqUsVP8BiO8hqnKfJgQPO2dWOfWO0BZm5BTng2eI/7I3R57cw+luCw
-i6OIo6CncxzZRNlhZiHfkUltuOmZ3snr7dW3jTzrtWJtMKCIdsOcmDKNBeUFEBtA
-sWcqsutEZ5puO5BmS/kKkfmPKEZl3nOFOJOLK8IVNZM8usO9wknx66RGct78t7qc
-vjIoNoVUaqabFnRnZ74RtOxoLRSUXNJ1Wivxj4I4nsZbq6LhlxZk3hg79hq2+pOZ
-r1f85V6q6MI+l6if565oFynaC210rA==
-=Qi7z
------END PGP SIGNATURE-----
-
---DIOMP1UsTsWJauNi--
+SGVsbG8gYWxsLAoKVUMtODEwMEEtTUUgaXMgYWR2YW5jZWQgb2YgVUMtODEwMC1NRS1ULCBhbmQg
+VUMtODEwMC1NRS1UIGlzIGRlcHJlY2F0ZWQuCgpVQy04MTAwQS1NRSBwcm92aWRlcyBsYXJnZXIg
+UkFNIGFuZCBlTU1DLCBiZXR0ZXIgaW5wdXQgY3VycmVudCB0aGFuClVDLTgxMDAtTUUtVCdzLCBh
+bmQgaXQgc3VwcG9ydHMgc2VsZWN0YWJsZSBMVEUgbW9kdWxlIGZvciBVUy9FVS9BUEFDLgoKMS4g
+UmVwbGFjZSBVQy04MTAwLU1FLVQgd2l0aCBVQy04MTAwQS1NRSBmb3IgZHQtYmluZGluZ3MKMi4g
+YWRkIGR0cyBzdXBwb3J0IGZvciBNb3hhIFVDLTgxMDBBLU1FIG9wZW4gcGxhdGZvcm0KClRoYW5r
+cywKSm9obnNvbgoKSm9obnNvbiBDaGVuICgyKToKICBkdC1iaW5kaW5nczogYXJtOiBvbWFwOiBS
+ZXBsYWNlIFVDLTgxMDAtTUUtVCB3aXRoIFVDLTgxMDBBLU1FCiAgQVJNOiBkdHM6IGFtMzM1eDog
+YWRkIHN1cHBvcnQgZm9yIE1veGEgVUMtODEwMEEtTUUgb3BlbiBwbGF0Zm9ybQoKIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2FybS9vbWFwL29tYXAudHh0ICAgICAgICAgIHwgIDQgKy0KIGFyY2gv
+YXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIC4u
+LmMtODEwMC1tZS10LmR0cyA9PiBhbTMzNXgtbW94YS11Yy04MTAwYS1tZS5kdHN9IHwgNTYgKysr
+KysrKysrKy0tLS0tLS0tLS0tLQogMyBmaWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAz
+MyBkZWxldGlvbnMoLSkKIHJlbmFtZSBhcmNoL2FybS9ib290L2R0cy97YW0zMzV4LW1veGEtdWMt
+ODEwMC1tZS10LmR0cyA9PiBhbTMzNXgtbW94YS11Yy04MTAwYS1tZS5kdHN9ICg5MyUpCgotLSAK
+Mi4xMS4wCg==
