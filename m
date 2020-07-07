@@ -2,106 +2,108 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A65DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85EAE206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B004206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gHN/Y9Ht";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j1uRTfXL"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="cE0rViub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgGGKME (ORCPT
+        id S1727834AbgGGKMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40606 "EHLO
+        Tue, 7 Jul 2020 06:12:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGGKME (ORCPT
+        with ESMTP id S1726900AbgGGKMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:12:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F95C061755;
-        Tue,  7 Jul 2020 03:12:04 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 12:12:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594116722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TN3dQ6Y8up4F4+xRJpOHdsTv6BtN9trwRIPiVoj5mfA=;
-        b=gHN/Y9HtYQvJ0XlzC1IBLtJAL/nddtt82FVhFcQJEa4Px8KNYb23wDYLQiOCBWl1ko9lt6
-        RXamDKb76a//kBZG41b9DGRvo4eiRCpoc9+kSNEly7Ih3/CbIaqYlb6GPDiPcQK95+3Ufh
-        JNDO+L3qXDIruVJqnqmmhTgMhtAW6jS2F1/SJchZauuFrHBBqT9a/HAMP6R0P5kQepJJPr
-        hvLX2tFrLVcbJhxAmGvi+aDSsLCfn35/OG3mrsF9Y/H53lXhAsmMx7MRD4xMVqC7F72wxt
-        Wp2COZ8OY7y4WgmxRgZb5V5fy8iLkazMLec4pSlwnnmZueR6XDaumj1RYHjvSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594116722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TN3dQ6Y8up4F4+xRJpOHdsTv6BtN9trwRIPiVoj5mfA=;
-        b=j1uRTfXLiJTDpk3AaEc+Irw5duiYEr3SbB+KqVFVxuDu++fGvZoyLSnRA3Q+VxuX7slF3k
-        Yq+IoMfocnaRNUCQ==
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 01/20] Documentation: locking: Describe seqlock design
- and usage
-Message-ID: <20200707101200.GA4102575@debian-buster-darwi.lab.linutronix.de>
-References: <20200630054452.3675847-1-a.darwish@linutronix.de>
- <20200630054452.3675847-2-a.darwish@linutronix.de>
- <20200706210439.GD5523@worktop.programming.kicks-ass.net>
+        Tue, 7 Jul 2020 06:12:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641FBC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:12:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r12so44463509wrj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ox2ec9xKeqYNpU//N7D5LOrU5GweWdGDzS15Zrqp/JA=;
+        b=cE0rViubzmawGs+s2bNz/HYeJLyTK9UhluVB6bOjXJ+IEJTQNmNzLxv6o7WDhR99GJ
+         7O0NOspsGwaqUUZWZhOk2yYCw9Qgr6sNLKG7r0heK45wZDL45btcODXbBTjyPMAG/mwI
+         x3JLFhxPnnkSuU+jLELEtwEnFdPJS23UVx8g0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ox2ec9xKeqYNpU//N7D5LOrU5GweWdGDzS15Zrqp/JA=;
+        b=JIlsxZLyU81V3Glq5nwhqC7KjRmxnzgXReeOzJaWV7txW90bVpdIMpxaHMLEWl79cx
+         hdudL0wTH48gCfPvvwoyp318Up2T12uH6jsRsoni+2ZvLD/yRSrWRgLzWniMpJMdSq3A
+         N/5BhfQcserXYB1GuJC/kvqI+WzKpM6Lr8BStrqnYzEwQG54YJ4OB8syrgAl0Z6FdQLE
+         PThPCz/afwNrH1z88vIpmIe0LKzN8qMxHhU6G5B0uo3+a3znvDotjpg3MqFTXx19731q
+         OiR9CMwJ+BcrJEgHiDDze14bvFSW0DgaGOu1Ikd05asWmYcZErclSwL+ifRKyj0rJOCL
+         CvkQ==
+X-Gm-Message-State: AOAM531vjzZO+T1ZNkBRtyIBTEfUN3dNzb389P4giMKyFBuzD3nKD4Q3
+        9DlN32J/S2V+LbhoDMz2468OlAhWrKOJIg==
+X-Google-Smtp-Source: ABdhPJxoBYAgdDhWiramJwYkHt3jHpGiUWv4+qul7we1FmarfIbbJjwEpFAWtIooatx3TBXa8a5ikA==
+X-Received: by 2002:a5d:55cb:: with SMTP id i11mr50329141wrw.28.1594116736051;
+        Tue, 07 Jul 2020 03:12:16 -0700 (PDT)
+Received: from panicking.lan (93-46-124-24.ip107.fastwebnet.it. [93.46.124.24])
+        by smtp.gmail.com with ESMTPSA id f12sm363053wrj.48.2020.07.07.03.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 03:12:15 -0700 (PDT)
+From:   Michael Trimarchi <michael@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: Fix VBUS on rk3288-vyasa
+Date:   Tue,  7 Jul 2020 12:12:14 +0200
+Message-Id: <20200707101214.2301768-1-michael@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706210439.GD5523@worktop.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:04:39PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 30, 2020 at 07:44:33AM +0200, Ahmed S. Darwish wrote:
-> > +Sequence counters (:c:type:`seqcount_t`)
-> > +========================================
->
-> > +.. code-block:: c
->
-> I so hate RST, of course it's C. Also, ISTR Jon saying you can leave
-> that all out without issue.
+Connect the voltage regulator of vbus to the otg connector.
+Depending on the current mode this is enabled (in "host" mode")
+or disabled (in "peripheral" mode). The regulator must be updated
+if the controller is configured in "otg" mode and the status changes
+between "host" and "peripheral".
 
-There you go again.
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+---
+ arch/arm/boot/dts/rk3288-vyasa.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-  linux$ git grep 'code-block:: c' | wc -l
-  ==>  470
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index ba06e9f97ddc..5b0263b1be73 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -87,8 +87,6 @@
+ 		pinctrl-0 = <&otg_vbus_drv>;
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+ 		vin-supply = <&vsus_5v>;
+ 	};
+ 
+@@ -405,6 +403,7 @@
+ 
+ &usb_otg {
+ 	status = "okay";
++	vbus-supply = <&vusb1_5v>;
+ };
+ 
+ &vopb {
+-- 
+2.25.1
 
-  linux$ git grep ':ref:' | wc -l
-  ==>  3171
-
-  linux$ git grep ':c:type:' | wc -l
-  ==>  1533
-
-In writing this, Documentation/doc-guide/ was followed, and literally
-the thousands of examples above.
-
-But honestly, I don't want to block merging documentation because of
-this, and the point of making the docs as readable as possible from text
-editors also has merit.
-
-So... I'll just make that file as "RST-lite" as possible.
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
