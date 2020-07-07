@@ -6,89 +6,78 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0174AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC28120722
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D2320715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgGGCNF (ORCPT
+        id S1727949AbgGGCNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:13:05 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:33912 "EHLO loongson.cn"
+        Mon, 6 Jul 2020 22:13:08 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:33904 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726879AbgGGCNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:13:05 -0400
+        id S1726583AbgGGCNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:13:06 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxfesl2gNfyABRAA--.2533S5;
-        Tue, 07 Jul 2020 10:12:54 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxfesl2gNfyABRAA--.2533S9;
+        Tue, 07 Jul 2020 10:12:56 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 3/8] irqchip/loongson-htvec: Fix potential resource leak
-Date:   Tue,  7 Jul 2020 10:12:47 +0800
-Message-Id: <1594087972-21715-4-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 7/8] irqchip/loongson-liointc: Fix potential dead lock
+Date:   Tue,  7 Jul 2020 10:12:51 +0800
+Message-Id: <1594087972-21715-8-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1594087972-21715-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1594087972-21715-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxfesl2gNfyABRAA--.2533S5
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xAFyxXr15KF4DXFy8uFg_yoWkGFg_Cr
-        yIgrn7GrW8Cr13J342kr43XFW2vrWvgF109FW8tFWaq34xtw1xAr42yw13CF47CF4S9ryr
-        Gr4S9ry0kw1xujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
+X-CM-TRANSID: AQAAf9Dxfesl2gNfyABRAA--.2533S9
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF4fWryfGFW5KF13uFWfZrb_yoWfuFc_CF
+        W2qwn7Jr9Fqr15tr1xur45XFy2q345W3Wv9F4YvFW3u34rKw17JrW7Zw13AF48tF48ZFn3
+        CrW8ur4Skw1IyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbh8YjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
         6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CE
-        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6x
-        kF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv
-        6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
-        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvj
-        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr1l42xK82IYc2
-        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4y89DUUUU
+        IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
+        c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2
+        IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2
+        IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+        McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr1l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU76pBUUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function htvec_of_init(), system resource "parent_irq"
-was not released in an error case. Thus add a jump target for
-the completion of the desired exception handling.
+In the function liointc_set_type(), we need to call the function
+irq_gc_unlock_irqrestore() before returning.
 
-Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
+Fixes: dbb152267908 ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
+Reported-by: Jianmin Lv <lvjianmin@loongson.cn>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-liointc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index 1ece933..b36d403 100644
---- a/drivers/irqchip/irq-loongson-htvec.c
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -192,7 +192,7 @@ static int htvec_of_init(struct device_node *node,
- 	if (!priv->htvec_domain) {
- 		pr_err("Failed to create IRQ domain\n");
- 		err = -ENOMEM;
--		goto iounmap_base;
-+		goto irq_dispose;
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 63b6147..6ef86a3 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -114,6 +114,7 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
+ 		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
+ 		break;
+ 	default:
++		irq_gc_unlock_irqrestore(gc, flags);
+ 		return -EINVAL;
  	}
- 
- 	htvec_reset(priv);
-@@ -203,6 +203,9 @@ static int htvec_of_init(struct device_node *node,
- 
- 	return 0;
- 
-+irq_dispose:
-+	for (; i > 0; i--)
-+		irq_dispose_mapping(parent_irq[i - 1]);
- iounmap_base:
- 	iounmap(priv->base);
- free_priv:
+ 	irq_gc_unlock_irqrestore(gc, flags);
 -- 
 2.1.0
 
