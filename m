@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA28320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F402078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135683;
-	bh=0cZEtpLDgDWLJJYDX5oYDaxVIe3w12K+915qYrRErDg=;
+	s=default; t=1594135688;
+	bh=118ez3VeKwoGUQFXrk4+dubd44lWo89gVlRGiV64maM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzWj8pWLpggJGlB2DdK87A5iTdsKZZDxleUTct9PqC1vfNy/xnOiow5vxjov7j6Rq
-	 JOqnp7tN5ZvXffqEpuiTNFbZ5zWgQIky3zUh3k4ejLr2iT+HHHzuNTOgIpqqpiNHhH
-	 HkN2BsyPsd46dIgZtp9DiEc+IX9XNWWHFI5gJ920=
+	b=OQ1ts3AnpY5mfj+qYL8UWcrUPGF8nAu9irkfSx3WiVexNUAkvxg06tzb9R88U4EHA
+	 QzmQ6/b5JBnuAkbVdlNrRpBDSCF0E0WN65M3iPm4W7NAU+J0iipUJ50iezYMMIjlYW
+	 rhjAtuh+Os8kvMxIpRTBsEho9GTfNnqidVTy3NPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgGGP2C (ORCPT
+        id S1730108AbgGGP2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:28:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbgGGP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:35 -0400
+        id S1730282AbgGGP0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839DA2082E;
-        Tue,  7 Jul 2020 15:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B79B20663;
+        Tue,  7 Jul 2020 15:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135595;
-        bh=0cZEtpLDgDWLJJYDX5oYDaxVIe3w12K+915qYrRErDg=;
+        s=default; t=1594135589;
+        bh=118ez3VeKwoGUQFXrk4+dubd44lWo89gVlRGiV64maM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XAT8fH1QdCgXmUaFii5mDwv5BZeTCITjgTskm/FloVPAgY1OD18kda/TERHrSjv3D
-         bP5IFfdFgWDkCRsph9jSw25AFRqZ3W4XLVwIzf7whafiap45mxzc+BHURjTFFSaLq5
-         2AibV75B4zqdMSruXtZkbcyLemHSfiUchXvC4HgM=
+        b=cXUWnr+DpJK2goj/t21RHesj3ET8sMGQk8QU+m8K51XRfwwxYE1P2IftwGcT+Fxbr
+         BaWsYrOHIwo3No9uJvD/H2r3W10GwbxK9yCVY5v9wmsTZ10xpC20VFPPWVw/Q75MPm
+         KeAiHc4dDPaAGUQjllafkZs1Gs5eAPP1ZLV+WnDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
-        Bjorn Nostvold <bjorn.nostvold@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 103/112] drm/amd/powerplay: Fix NULL dereference in lock_bus() on Vega20 w/o RAS
-Date:   Tue,  7 Jul 2020 17:17:48 +0200
-Message-Id: <20200707145805.877030566@linuxfoundation.org>
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.7 101/112] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
+Date:   Tue,  7 Jul 2020 17:17:46 +0200
+Message-Id: <20200707145805.780237884@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,109 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-commit 7e89e4aaa9ae83107d059c186955484b3aa6eb23 upstream.
+commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
 
-I updated my system with Radeon VII from kernel 5.6 to kernel 5.7, and
-following started to happen on each boot:
+This resolves the hazard between the mtc0 in the change_c0_status() and
+the mfc0 in configure_exception_vector(). Without resolving this hazard
+configure_exception_vector() could read an old value and would restore
+this old value again. This would revert the changes change_c0_status()
+did. I checked this by printing out the read_c0_status() at the end of
+per_cpu_trap_init() and the ST0_MX is not set without this patch.
 
-	...
-	BUG: kernel NULL pointer dereference, address: 0000000000000128
-	...
-	CPU: 9 PID: 1940 Comm: modprobe Tainted: G            E     5.7.2-200.im0.fc32.x86_64 #1
-	Hardware name: System manufacturer System Product Name/PRIME X570-P, BIOS 1407 04/02/2020
-	RIP: 0010:lock_bus+0x42/0x60 [amdgpu]
-	...
-	Call Trace:
-	 i2c_smbus_xfer+0x3d/0xf0
-	 i2c_default_probe+0xf3/0x130
-	 i2c_detect.isra.0+0xfe/0x2b0
-	 ? kfree+0xa3/0x200
-	 ? kobject_uevent_env+0x11f/0x6a0
-	 ? i2c_detect.isra.0+0x2b0/0x2b0
-	 __process_new_driver+0x1b/0x20
-	 bus_for_each_dev+0x64/0x90
-	 ? 0xffffffffc0f34000
-	 i2c_register_driver+0x73/0xc0
-	 do_one_initcall+0x46/0x200
-	 ? _cond_resched+0x16/0x40
-	 ? kmem_cache_alloc_trace+0x167/0x220
-	 ? do_init_module+0x23/0x260
-	 do_init_module+0x5c/0x260
-	 __do_sys_init_module+0x14f/0x170
-	 do_syscall_64+0x5b/0xf0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-	...
+The hazard is documented in the MIPS Architecture Reference Manual Vol.
+III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
+6.03 table 8.1 which includes:
 
-Error appears when some i2c device driver tries to probe for devices
-using adapter registered by `smu_v11_0_i2c_eeprom_control_init()`.
-Code supporting this adapter requires `adev->psp.ras.ras` to be not
-NULL, which is true only when `amdgpu_ras_init()` detects HW support by
-calling `amdgpu_ras_check_supported()`.
+   Producer | Consumer | Hazard
+  ----------|----------|----------------------------
+   mtc0     | mfc0     | any coprocessor 0 register
 
-Before 9015d60c9ee1, adapter was registered by
+I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
+There the change_c0_status() function would activate the DSPen by
+setting ST0_MX in the c0_status register. This was reverted and then the
+system got a DSP exception when the DSP registers were saved in
+save_dsp() in the first process switch. The crash looks like this:
 
-	-> amdgpu_device_ip_init()
-	  -> amdgpu_ras_recovery_init()
-	    -> amdgpu_ras_eeprom_init()
-	      -> smu_v11_0_i2c_eeprom_control_init()
+[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
+[    0.113470] Rebooting in 1 seconds..
 
-after verifying that `adev->psp.ras.ras` is not NULL in
-`amdgpu_ras_recovery_init()`. Currently it is registered
-unconditionally by
+We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
+not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
+kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
+did not happen.
 
-	-> amdgpu_device_ip_init()
-	  -> pp_sw_init()
-	    -> hwmgr_sw_init()
-	      -> vega20_smu_init()
-	        -> smu_v11_0_i2c_eeprom_control_init()
+In the kernel I bisected this problem to commit 9012d011660e ("compiler:
+allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
+reverted it also happened after commit 172dcd935c34b ("MIPS: Always
+allocate exception vector for MIPSr2+").
 
-Fix simply adds HW support check (ras == NULL => no support) before
-calling `smu_v11_0_i2c_eeprom_control_{init,fini}()`.
+Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
+does similar changes to a different file. I am not sure if there are
+more places affected by this problem.
 
-Please note that there is a chance that similar fix is also required for
-CHIP_ARCTURUS. I do not know whether any actual Arcturus hardware without
-RAS exist, and whether calling `smu_i2c_eeprom_init()` makes any sense
-when there is no HW support.
-
-Cc: stable@vger.kernel.org
-Fixes: 9015d60c9ee1 ("drm/amdgpu: Move EEPROM I2C adapter to amdgpu_device")
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-Tested-by: Bjorn Nostvold <bjorn.nostvold@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/mips/kernel/traps.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-@@ -508,9 +508,11 @@ static int vega20_smu_init(struct pp_hwm
- 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].version = 0x01;
- 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].size = sizeof(DpmActivityMonitorCoeffInt_t);
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -2121,6 +2121,7 @@ static void configure_status(void)
  
--	ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
--	if (ret)
--		goto err4;
-+	if (adev->psp.ras.ras) {
-+		ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
-+		if (ret)
-+			goto err4;
-+	}
+ 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
+ 			 status_set);
++	back_to_back_c0_hazard();
+ }
  
- 	return 0;
- 
-@@ -546,7 +548,8 @@ static int vega20_smu_fini(struct pp_hwm
- 			(struct vega20_smumgr *)(hwmgr->smu_backend);
- 	struct amdgpu_device *adev = hwmgr->adev;
- 
--	smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
-+	if (adev->psp.ras.ras)
-+		smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
- 
- 	if (priv) {
- 		amdgpu_bo_free_kernel(&priv->smu_tables.entry[TABLE_PPTABLE].handle,
+ unsigned int hwrena;
 
 
