@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85663C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A043C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56037206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF162078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135528;
-	bh=e+BUuIn73IG1vXJkZKD/lrkch6JfVg2iQ/uW9gKnfeQ=;
+	s=default; t=1594135531;
+	bh=LYtkAmNPwTE3I2L0i3DtyAATiDsVjeos3MXb8NnbuBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aisL57gRrZ5wTbV4XJT0eFvy7Qk2MEX9/Bh/OPAdXe2UWZdW2VQ4Xp3Kh7BCQuurs
-	 JKQrBvUcrbyt9wD3hVH+Xc6HfP53mkrUUOpH2h5uGPB7e6BBf2rN+G6AAte+u+g/bs
-	 jkCcvY9VFp0s4hXM1wPgdDUgOZNmgb0B7dV2lyqo=
+	b=xMJvhEKrU4u9PRDmfqKTVWtuYLcFIY37HV39MEcgFpknIcQeKp9Xa02RrM1cS8bPF
+	 XjGo3Yett8wv14FUy0OB/Oqu4I6Kr2RAytZRkjlA3tvp7/VNeAj4bT358uwp9ijC6h
+	 0fPhRIy+fwJLLr+FsSLy3/NJ0qXN0I6qLECVK3T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgGGPZ1 (ORCPT
+        id S1730217AbgGGPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39342 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbgGGPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:20 -0400
+        id S1730194AbgGGPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F4952065D;
-        Tue,  7 Jul 2020 15:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92BEC2065D;
+        Tue,  7 Jul 2020 15:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135520;
-        bh=e+BUuIn73IG1vXJkZKD/lrkch6JfVg2iQ/uW9gKnfeQ=;
+        s=default; t=1594135525;
+        bh=LYtkAmNPwTE3I2L0i3DtyAATiDsVjeos3MXb8NnbuBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r81AqlV3zYJ73TiYjmfYChNs8X1JbYmY9NC7g2DE/l7UIiO78M0uoLxOfm/E9QeWX
-         yVsCfU7pt2k4IWd1U6ADJqYhZzzt1A7UiOLc5xGAOaneaxdM9NYlMlwU9HxIMr+7FS
-         3lfsIbPpa22zbEWGVBcMphf/7L1RGTXw5OZtDTK0=
+        b=PKs01yrNpUs+3mO73YKMmtUg4lHHScCl1ZBbN2/IkYk3tkWhLlkuRx9C7ikLhv1GA
+         Py9xJ2escGbQA5gnUDtBOgRCCNBwTyIBeTkP//jEOKUaQswfxbD+FgAGNnEOf6IVQ1
+         Kx1lvZHOALmUMpudsqntL25HoE3+fNUGkhzS0oe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 074/112] drm: sun4i: hdmi: Remove extra HPD polling
-Date:   Tue,  7 Jul 2020 17:17:19 +0200
-Message-Id: <20200707145804.519886471@linuxfoundation.org>
+Subject: [PATCH 5.7 075/112] virtio-blk: free vblk-vqs in error path of virtblk_probe()
+Date:   Tue,  7 Jul 2020 17:17:20 +0200
+Message-Id: <20200707145804.566974539@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,48 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit bda8eaa6dee7525f4dac950810a85a88bf6c2ba0 ]
+[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
 
-The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
-or less an input-only GPIO. Other GPIO-based HPD implementations
-directly return the current state, instead of polling for a specific
-state and returning the other if that times out.
+Else there will be memory leak if alloc_disk() fails.
 
-Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
-return a known state based on the current reading. This also gets rid
-of excessive CPU usage by kworker as reported on Stack Exchange [1] and
-Armbian forums [2].
-
- [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietruck-with-bug-in-sun4i-drm-hdmi
- [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm_hdmi-a10a20/
-
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200629060032.24134-1-wens@kernel.org
+Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/block/virtio_blk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 68d4644ac2dcc..f07e0c32b93a2 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -262,9 +262,8 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
- 	unsigned long reg;
- 
--	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
--			       reg & SUN4I_HDMI_HPD_HIGH,
--			       0, 500000)) {
-+	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
-+	if (reg & SUN4I_HDMI_HPD_HIGH) {
- 		cec_phys_addr_invalidate(hdmi->cec_adap);
- 		return connector_status_disconnected;
- 	}
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 9d21bf0f155ee..980df853ee497 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -878,6 +878,7 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 	put_disk(vblk->disk);
+ out_free_vq:
+ 	vdev->config->del_vqs(vdev);
++	kfree(vblk->vqs);
+ out_free_vblk:
+ 	kfree(vblk);
+ out_free_index:
 -- 
 2.25.1
 
