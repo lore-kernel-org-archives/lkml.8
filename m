@@ -2,81 +2,114 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E97C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7BB2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594149974;
-	bh=uxcMM/Sf9inJLIkj1U8e0LfZX/0p8ULXiZ2yN0bNMnc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k3KcJvgCbvnexkiHGIsaCm0O4VX8wAaSJ/zQ9GPPBBJ6Ugog1xQ8rNL9MJOWKdB6h
-	 Ry75dB68YoqELPWdJ3MM+hpABpiamZ44qhxGvULp8ko6GQuq7pMr+gJryysVBdxonm
-	 LcIQh2mv80k+5PPRx6heNwBg0ORDzJ5x2Se3TEj0=
+	by mail.kernel.org (Postfix) with ESMTP id D8867206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgGGT0N (ORCPT
+        id S1728634AbgGGT0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 15:26:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:56354 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgGGT0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:26:13 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EB4206BE;
-        Tue,  7 Jul 2020 19:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594149972;
-        bh=uxcMM/Sf9inJLIkj1U8e0LfZX/0p8ULXiZ2yN0bNMnc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OZ9oxJPKMjuAxAmKeMAMKFymbhEyjmXIECfqDtlfmvgSF4TgxNY9YLFoNZb2hIrPd
-         gSeBgN0IW5+L1EdPdkdCwjTulvRa1gyxwU0fX8CJRmFSwYpz0k85UyPielx4nyddEa
-         CWRf3xdhMMl7uifSsvzoml6r7C6cp901pUmd8EQY=
-Date:   Tue, 7 Jul 2020 12:26:12 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Subject: Re: [PATCH 1/6] fs/minix: check return value of sb_getblk()
-Message-Id: <20200707122612.249699c3f136968dd6782452@linux-foundation.org>
-In-Reply-To: <20200628060846.682158-2-ebiggers@kernel.org>
-References: <20200628060846.682158-1-ebiggers@kernel.org>
-        <20200628060846.682158-2-ebiggers@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1728100AbgGGT0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:26:45 -0400
+IronPort-SDR: vCyU8vc5+RJv7pIQdiH9GpymvcyKudBGKgJWwM17YGTl579gXCpdDQnx+5EtdDP3cAVUr6sAWn
+ ojFkM0KssXZw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135925956"
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="135925956"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:26:45 -0700
+IronPort-SDR: PJ2Pr9HKoJiDzpm/sNxhX0XcUkS+HhvcTX+0P0ERPRiYihnaaibWyQwnIrx3s0BYd+UwH1DFjt
+ row3O05nQZsA==
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="297493428"
+Received: from mrtorger-mobl1.amr.corp.intel.com (HELO [10.254.77.62]) ([10.254.77.62])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:26:44 -0700
+Subject: Re: [PATCH 03/11] ASoC: q6asm: make commands specific to streams
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
+        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
+ <20200707163641.17113-4-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9ff595b4-1093-36c8-f27f-f097e24657a0@linux.intel.com>
+Date:   Tue, 7 Jul 2020 11:52:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200707163641.17113-4-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jun 2020 23:08:40 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
 
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> sb_getblk() can fail, so check its return value.
-> 
-> This fixes a NULL pointer dereference.
-> 
-> Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Originally-from: Qiujun Huang <anenbupt@gmail.com>
 
-Originally-from: isn't really a thing.  Did the original come with a
-signed-off-by:?
 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
->
-> ...
->
+> @@ -184,8 +186,8 @@ static void event_handler(uint32_t opcode, uint32_t token,
+>   	switch (opcode) {
+>   	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
+>   		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> -			q6asm_write_async(prtd->audio_client,
+> -				   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
+> +			q6asm_write_async(prtd->audio_client, prtd->stream_id,
+> +				   prtd->pcm_count, 0, 0, 0);
+
+sound/soc/qcom/qdsp6/q6asm.h:#define NO_TIMESTAMP    0xFF00
+
+is the change on the previous line intentional?
+
+>   		break;
+>   	case ASM_CLIENT_EVENT_CMD_EOS_DONE:
+>   		prtd->state = Q6ASM_STREAM_STOPPED;
+> @@ -194,8 +196,8 @@ static void event_handler(uint32_t opcode, uint32_t token,
+>   		prtd->pcm_irq_pos += prtd->pcm_count;
+>   		snd_pcm_period_elapsed(substream);
+>   		if (prtd->state == Q6ASM_STREAM_RUNNING)
+> -			q6asm_write_async(prtd->audio_client,
+> -					   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
+> +			q6asm_write_async(prtd->audio_client, prtd->stream_id,
+> +					   prtd->pcm_count, 0, 0, 0);
+
+ditto for the timestamp change?
+
+
+> @@ -501,8 +514,8 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
+>   	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
+>   		spin_lock_irqsave(&prtd->lock, flags);
+>   		if (!prtd->bytes_sent) {
+> -			q6asm_write_async(prtd->audio_client, prtd->pcm_count,
+> -					  0, 0, NO_TIMESTAMP);
+> +			q6asm_write_async(prtd->audio_client, prtd->stream_id,
+> +					  prtd->pcm_count, 0, 0, 0);
+
+and here as well.
+
+>   			prtd->bytes_sent += prtd->pcm_count;
+>   		}
+>   
+> @@ -527,8 +540,8 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
+>   		avail = prtd->bytes_received - prtd->bytes_sent;
+>   
+>   		if (avail >= prtd->pcm_count) {
+> -			q6asm_write_async(prtd->audio_client,
+> -					   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
+> +			q6asm_write_async(prtd->audio_client, prtd->stream_id,
+> +					   prtd->pcm_count, 0, 0, 0);
+
+and here.
+
