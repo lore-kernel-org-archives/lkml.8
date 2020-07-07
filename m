@@ -7,146 +7,156 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0249FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5D220738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6FC20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UD8JHih7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdVvmbc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgGGOii (ORCPT
+        id S1728606AbgGGOim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53768 "EHLO
+        Tue, 7 Jul 2020 10:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbgGGOi0 (ORCPT
+        with ESMTP id S1728508AbgGGOiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:26 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68004C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 17so46727538wmo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:26 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:23 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024B4C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:23 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id w3so34318978wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mkgQ5GKpYIPow7Og+7iz9PKlHm4fJKjWVXLF1XFMGh8=;
-        b=UD8JHih7QFQAexNXEPUo9QYy4IoMnlLOWLAdsLS0W1nfVGjTq8naimB7im8Phva+RS
-         gUUau5HQAMqWLa8YccTr+ow/31k7oHbGvHF5Q/eORpoCsfrYCZ7lOaJ8RzJefh4U3D2D
-         PO7tDIF64lZSWfAZsj1I5JyRtDE5LfWqPZltzGBMm7PINEPCfa+tUMwFURt40Ii8wuxn
-         /s14XFW1u1fIPanTA+lvRHot2g3gCpv8+2e+01HJOSRiv6j3ooFzsqzsJk27PvXe7IEb
-         Q/gPy1PztvuOr6cQqdKmVXjnN+TKN+N08yu2Wwy3fShpP+7bPvUTHqH0a9BB0enQJW0I
-         8KYQ==
+        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
+        b=hdVvmbc6H8PwBoroBapEBPzE9/EFUUU817fbd+RBL7zPFgItN7L4xyOaxhlf1na/8c
+         LMBNV+oT5rzwx30qpZ+wDWOjMIjUSaVmx+EmRVFKOvVd7i2lCUFSTzZLyUs73kJUsbwM
+         wu6fVue7GztMQ8WruqtI15zrgwytI+/ajgHgzLBEL5m8yLLLpgE8Zq+Qhnm15pWdIyuQ
+         oo/DdwXXxK+QqZ0yKA8UD17YV7EHxNTnjWdN17INYOMbbJClegREeHXngIqUB2WpLPeU
+         zS8/+WxQ0fm6MiMeJEsqhHGXgy5Bbh4EBspUF3t6Nw035JLN08dX71/lvitC55km0PgS
+         rmNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mkgQ5GKpYIPow7Og+7iz9PKlHm4fJKjWVXLF1XFMGh8=;
-        b=OMw21vUxbkEZvosNwCXS2t+IK1VX8DQfrFbNri6sABdM+hIHQfY0S/fMwBb7XCEUH6
-         Ba21icG8obtq35UJ9rROrVTK2D/qUspfpEnaxM/NRmy7toVNbeydpOBiQ3dcrPval895
-         AXMk5N5FQ6BQZ78nVo3oExZURuDP0b+PgEAG8W+Yew78Q29+bMK8Y8YuZXYzwCueNghb
-         lJgg6ZUGg15ZpMHE1qWFoI4GDYqXghGWuiLu7NnvB/RVau0i+pKYh7/ruLtgoTY3EQEG
-         As+L9gpnbXMliPiK7JUP+JxjwnT1drTvs43fRE2AptL+RgvgTasCHAggx3HXaZhnYVat
-         5Iog==
-X-Gm-Message-State: AOAM531iF8oX8gH9sJpi9TNoygKrv2pkGqAuyMlkS8hKt9VBQ7myaE/B
-        mF8rLnGP+7x8U2e8BesuwWdvhg==
-X-Google-Smtp-Source: ABdhPJyaIhhN2E+kYZJHBX3tAa5DHpsKH/SpQGqIHITspt1DcfTehPuTLvLmz0TYDCWQ5N+3uaJdww==
-X-Received: by 2002:a05:600c:2187:: with SMTP id e7mr4500355wme.171.1594132705122;
-        Tue, 07 Jul 2020 07:38:25 -0700 (PDT)
+        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
+        b=qSUHn/cz6x6zcSabqaJEBaX/rwO0THGCZ+rpOaDdPQBj04i6avXzuWvAbq9xdtZQrd
+         7da3xMaqsN/cCztzXfeNGjnVaZENX2p86U/iVauEZLJt2wuxWPZYW0elDTSAR7riSgip
+         1fXui+eSEsnEaP+OpW5hbLEaml8mbEbLcTBdoPVga8HbHE3JLuF9aHTEaW15UX6FEor7
+         0oocSR0CeBAXEKp7rE89G1k3XioVktofyZaGxdWfvK9iwdzvWNeUwDOVnWRZMVQybhBB
+         ZMBOPV5QzgBiRWiFjLy9/Liad5ElyXcCS2hfJW/lGNpS8N7/9F9OueHpZ2+/yMIp/OMc
+         0fyQ==
+X-Gm-Message-State: AOAM530X9UmWPRJAHUmsBuiYE4scyRFPb63UN5Kj0ExMPG8CGMwZI8J7
+        YSd8dt3VPop0nyitFzzKvv6ykw==
+X-Google-Smtp-Source: ABdhPJyIynXVm4wMkx4aYF2hvbtr7ah/gc4UneovvHYT7P6LTuGCXP0MOFSEAqHEfIgZ7mJ6vCRLzQ==
+X-Received: by 2002:a7b:c1cc:: with SMTP id a12mr4748090wmj.112.1594132701677;
+        Tue, 07 Jul 2020 07:38:21 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.24
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:38:24 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:21 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        patches@opensource.cirrus.com
-Subject: [PATCH v2 28/28] ASoC: codecs: wm8400: Remove a bunch of unused variables
-Date:   Tue,  7 Jul 2020 15:37:42 +0100
-Message-Id: <20200707143742.2959960-29-lee.jones@linaro.org>
+        Oder Chiou <oder_chiou@realtek.com>, flove <flove@realtek.com>
+Subject: [PATCH v2 25/28] ASoC: codecs: rt5631: Demote misuse of kerneldoc to standard comment blocks
+Date:   Tue,  7 Jul 2020 15:37:39 +0100
+Message-Id: <20200707143742.2959960-26-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Little or no attempt has been made to document any of the demoted functions here.
+
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/codecs/wm8400.c:443:38: warning: ‘wm8400_dapm_rxvoice_controls’ defined but not used [-Wunused-const-variable=]
- 443 | static const struct snd_kcontrol_new wm8400_dapm_rxvoice_controls[] = {
- | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
- In file included from include/sound/tlv.h:10,
- from sound/soc/codecs/wm8400.c:26:
- sound/soc/codecs/wm8400.c:78:35: warning: ‘out_omix_tlv’ defined but not used [-Wunused-const-variable=]
- 78 | static const DECLARE_TLV_DB_SCALE(out_omix_tlv, -600, 0, 0);
- | ^~~~~~~~~~~~
- include/uapi/sound/tlv.h:64:15: note: in definition of macro ‘SNDRV_CTL_TLVD_DECLARE_DB_SCALE’
- 64 | unsigned int name[] = { | ^~~~
- sound/soc/codecs/wm8400.c:78:14: note: in expansion of macro ‘DECLARE_TLV_DB_SCALE’
- 78 | static const DECLARE_TLV_DB_SCALE(out_omix_tlv, -600, 0, 0);
- | ^~~~~~~~~~~~~~~~~~~~
- sound/soc/codecs/wm8400.c:70:35: warning: ‘rec_mix_tlv’ defined but not used [-Wunused-const-variable=]
- 70 | static const DECLARE_TLV_DB_SCALE(rec_mix_tlv, -1500, 600, 0);
- | ^~~~~~~~~~~
- include/uapi/sound/tlv.h:64:15: note: in definition of macro ‘SNDRV_CTL_TLVD_DECLARE_DB_SCALE’
- 64 | unsigned int name[] = { | ^~~~
- sound/soc/codecs/wm8400.c:70:14: note: in expansion of macro ‘DECLARE_TLV_DB_SCALE’
- 70 | static const DECLARE_TLV_DB_SCALE(rec_mix_tlv, -1500, 600, 0);
- | ^~~~~~~~~~~~~~~~~~~~
+ sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'component' not described in 'rt5631_write_index'
+ sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'reg' not described in 'rt5631_write_index'
+ sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'value' not described in 'rt5631_write_index'
+ sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'component' not described in 'rt5631_read_index'
+ sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'reg' not described in 'rt5631_read_index'
+ sound/soc/codecs/rt5631.c:367: warning: Function parameter or member 'component' not described in 'onebit_depop_power_stage'
+ sound/soc/codecs/rt5631.c:405: warning: Function parameter or member 'component' not described in 'onebit_depop_mute_stage'
+ sound/soc/codecs/rt5631.c:443: warning: Function parameter or member 'component' not described in 'depop_seq_power_stage'
+ sound/soc/codecs/rt5631.c:515: warning: Function parameter or member 'component' not described in 'depop_seq_mute_stage'
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: patches@opensource.cirrus.com
+Cc: Oder Chiou <oder_chiou@realtek.com>
+Cc: flove <flove@realtek.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/codecs/wm8400.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ sound/soc/codecs/rt5631.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8400.c b/sound/soc/codecs/wm8400.c
-index 2551eb0f1868c..35ffa7765c85c 100644
---- a/sound/soc/codecs/wm8400.c
-+++ b/sound/soc/codecs/wm8400.c
-@@ -67,16 +67,12 @@ static void wm8400_component_reset(struct snd_soc_component *component)
- 	wm8400_reset_codec_reg_cache(wm8400->wm8400);
+diff --git a/sound/soc/codecs/rt5631.c b/sound/soc/codecs/rt5631.c
+index b5184f0e10e34..f1ace236c401e 100644
+--- a/sound/soc/codecs/rt5631.c
++++ b/sound/soc/codecs/rt5631.c
+@@ -64,7 +64,7 @@ static const struct reg_default rt5631_reg[] = {
+ 	{ RT5631_PSEUDO_SPATL_CTRL, 0x0553 },
+ };
+ 
+-/**
++/*
+  * rt5631_write_index - write index register of 2nd layer
+  */
+ static void rt5631_write_index(struct snd_soc_component *component,
+@@ -74,7 +74,7 @@ static void rt5631_write_index(struct snd_soc_component *component,
+ 	snd_soc_component_write(component, RT5631_INDEX_DATA, value);
  }
  
--static const DECLARE_TLV_DB_SCALE(rec_mix_tlv, -1500, 600, 0);
--
- static const DECLARE_TLV_DB_SCALE(in_pga_tlv, -1650, 3000, 0);
+-/**
++/*
+  * rt5631_read_index - read index register of 2nd layer
+  */
+ static unsigned int rt5631_read_index(struct snd_soc_component *component,
+@@ -357,7 +357,7 @@ static int check_adcr_select(struct snd_soc_dapm_widget *source,
+ 	return !(reg & RT5631_M_MIC2_TO_RECMIXER_R);
+ }
  
- static const DECLARE_TLV_DB_SCALE(out_mix_tlv, -2100, 0, 0);
+-/**
++/*
+  * onebit_depop_power_stage - auto depop in power stage.
+  * @enable: power on/off
+  *
+@@ -395,7 +395,7 @@ static void onebit_depop_power_stage(struct snd_soc_component *component, int en
+ 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
+ }
  
- static const DECLARE_TLV_DB_SCALE(out_pga_tlv, -7300, 600, 0);
+-/**
++/*
+  * onebit_depop_mute_stage - auto depop in mute stage.
+  * @enable: mute/unmute
+  *
+@@ -433,7 +433,7 @@ static void onebit_depop_mute_stage(struct snd_soc_component *component, int ena
+ 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
+ }
  
--static const DECLARE_TLV_DB_SCALE(out_omix_tlv, -600, 0, 0);
--
- static const DECLARE_TLV_DB_SCALE(out_dac_tlv, -7163, 0, 0);
+-/**
++/*
+  * onebit_depop_power_stage - step by step depop sequence in power stage.
+  * @enable: power on/off
+  *
+@@ -505,7 +505,7 @@ static void depop_seq_power_stage(struct snd_soc_component *component, int enabl
+ 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
+ }
  
- static const DECLARE_TLV_DB_SCALE(in_adc_tlv, -7163, 1763, 0);
-@@ -439,14 +435,6 @@ static SOC_ENUM_SINGLE_DECL(wm8400_ainrmux_enum,
- static const struct snd_kcontrol_new wm8400_dapm_ainrmux_controls =
- SOC_DAPM_ENUM("Route", wm8400_ainrmux_enum);
- 
--/* RXVOICE */
--static const struct snd_kcontrol_new wm8400_dapm_rxvoice_controls[] = {
--SOC_DAPM_SINGLE_TLV("LIN4/RXN", WM8400_INPUT_MIXER5, WM8400_LR4BVOL_SHIFT,
--			WM8400_LR4BVOL_MASK, 0, in_mix_tlv),
--SOC_DAPM_SINGLE_TLV("RIN4/RXP", WM8400_INPUT_MIXER6, WM8400_RL4BVOL_SHIFT,
--			WM8400_RL4BVOL_MASK, 0, in_mix_tlv),
--};
--
- /* LOMIX */
- static const struct snd_kcontrol_new wm8400_dapm_lomix_controls[] = {
- SOC_DAPM_SINGLE("LOMIX Right ADC Bypass Switch", WM8400_OUTPUT_MIXER1,
+-/**
++/*
+  * depop_seq_mute_stage - step by step depop sequence in mute stage.
+  * @enable: mute/unmute
+  *
 -- 
 2.25.1
 
