@@ -2,100 +2,148 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F409C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202EC20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA7320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw7yjM26"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4LDYvuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgGGVvO (ORCPT
+        id S1729122AbgGGVwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgGGVvN (ORCPT
+        Tue, 7 Jul 2020 17:52:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36258 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbgGGVwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:51:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2963CC061755;
-        Tue,  7 Jul 2020 14:51:13 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so26910604ljn.8;
-        Tue, 07 Jul 2020 14:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
-        b=dw7yjM26eD+SivZGQRsSZDI86YkEQwqjUt12OuUAE6YanGKEv//efPK8MbwCtGMxK2
-         Ou/3KrvoV5egqoRVXl0ZMhc7zEG+Oc5OThr9rsr5Pmbxaacgr+Rju+tujny9dBUAHF4R
-         x+/HgM0jgPC+wPSgQLeUNeGi2lSCY9wthNyQwpmUOW0SBMnpKys1XgXGRXTC/IUyJi5p
-         lc29CMXgRNek4RhD3nEECJyf966d2FW6xU3pCXXPRPZxeJ7TXHfbM5twqhQTkQDaQMr1
-         GS1mpzEQx2qk+hM0o1tAV2gvEvQgmYUwIsQ/QjXk7gx03csnqzzp8BSgm0sViAMPfE19
-         Npyg==
+        Tue, 7 Jul 2020 17:52:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594158722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2er0aNLBQV2gIBNyC9uXErvIZxgp1FWSJ0RFq0zI9K0=;
+        b=A4LDYvuLtuSDEKZuK68Sd7ijKVzD8COfHO6UZ4fM8Auq6qbGHS8pBrJWgVmDAu+46+3Old
+        PZTMgndMsTHnqIKxoFWqYw8t8RrdQfikYD3A/ZpqxUU5lZjFUYNX6g7qK3NDfcGiVB/U2Y
+        uZpY7qkjyM5CxIwgy8nHeb5Rayt7uRA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-aEBmCYlmPAyasC5GFCAYXA-1; Tue, 07 Jul 2020 17:52:01 -0400
+X-MC-Unique: aEBmCYlmPAyasC5GFCAYXA-1
+Received: by mail-wm1-f70.google.com with SMTP id c124so782725wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:52:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
-        b=r3GsmxeQmgiut4kByvB1KIqNB1CjD86R//3LcU/kCcTqfO3KSbXdNjVqFvqM4e+kN5
-         hJaGFR/6h287zqa/j8hXrA13zilbhEX7w1qNVrNSC+V7SsN9BaIVmQefYOh212DO9kVR
-         vq3gWrN2TYieK+QebH38g7Sy58sYaB+odl6gnNG+inZeNxUP+nVILmNURW/9vEknh4of
-         nFccUfgtVi5nkiThd8D4q9JKgm/MNfJLDV+F9udoadh/anHd0EUkmzT8DZUIwyVUlS4g
-         62sJuxu0dHLZI8hZn7LowTBo+ul3eKUcVTQFiO7EG0ZmNYGLh/+x5wOEI0c82hmSNIts
-         EeKQ==
-X-Gm-Message-State: AOAM5327HgIixxBUsZLFoMrq75aa66o4LnUOTTPhLOS01JXbfih6jwP1
-        +65mLK3LoJdJyxR+KPTZZtFAeDAYiKGJyyaw+MI=
-X-Google-Smtp-Source: ABdhPJyIqM6oobh1dSUh7r7X71tuzYBiuigwuPWRQWYnubENwrIRTWrX9CzJ9+Ebw6KRfrWkbLadPtj7KITj1K0fIbo=
-X-Received: by 2002:a2e:880e:: with SMTP id x14mr20930708ljh.218.1594158671507;
- Tue, 07 Jul 2020 14:51:11 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2er0aNLBQV2gIBNyC9uXErvIZxgp1FWSJ0RFq0zI9K0=;
+        b=ucx9Byw4aWfIB7+opPHIcPoRuYG7WOXJhMwEOus+J9G+Pzmci+rTHv8yBIg2MWRic3
+         POf6p03yj9Je3DpxpMKJ92AaO5WkfG9fReqcTp9U3H6aUHIr9xzoy7LEjyD40BrCriBy
+         hbzmUnMFFVEZxvvknxUG4+8nEh55UrNXGwzQVPqR75WqUMHkTPTFaoHo/PS9fnCqxfoB
+         7Qb5h0rSD+kIoZgcFHYAPvxsTJoRQzRoxuwjNpNFaO9BQ+eeHyChZeZIDdTdqSqvEHSz
+         W8YP93kuJ8s/tiSnMSt7zuP98AaFIsUvtirxrVge6YIOZqviMlOXRyBzN0UnQqAFkvap
+         AypA==
+X-Gm-Message-State: AOAM530dYEM6ifCu4ZhIc88LkeWpPJ0Jv4VUqoESmGu9VwI72gLqujJD
+        Zn9PzMY3sRvOhf/8QlahvlnFUMEUqIzLx65m+lapk/sRRN0GBQLIUU1SSWo9+9Xgqmp+5fMqAjy
+        DZywDAriVaAqi1DHqM7MF308q
+X-Received: by 2002:a05:600c:241:: with SMTP id 1mr6023769wmj.119.1594158719936;
+        Tue, 07 Jul 2020 14:51:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxIpmpXuw2PJCwb7uqNw0kg7Wrr1nz+wOneSDUnHkzV5klsewRb97ktM0f//9gTqHyZmBrCjg==
+X-Received: by 2002:a05:600c:241:: with SMTP id 1mr6023711wmj.119.1594158719656;
+        Tue, 07 Jul 2020 14:51:59 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7c9b:2885:1733:3575? ([2001:b07:6468:f312:7c9b:2885:1733:3575])
+        by smtp.gmail.com with ESMTPSA id k11sm2922650wrd.23.2020.07.07.14.51.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 14:51:59 -0700 (PDT)
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Andersen, John" <john.s.andersen@intel.com>, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, shuah@kernel.org, liran.alon@oracle.com,
+        drjones@redhat.com, rick.p.edgecombe@intel.com,
+        kristen@linux.intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        mchehab+huawei@kernel.org, gregkh@linuxfoundation.org,
+        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
+        jgross@suse.com, mike.kravetz@oracle.com, oneukum@suse.com,
+        luto@kernel.org, peterz@infradead.org, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
+        dave.hansen@linux.intel.com, arjan@linux.intel.com,
+        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
+        makarandsonare@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-3-john.s.andersen@intel.com>
+ <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
+ <20200618144314.GB23@258ff54ff3c0>
+ <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+ <20200707211244.GN20096@linux.intel.com>
+ <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
+Date:   Tue, 7 Jul 2020 23:51:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200707211359.29906-1-cphealy@gmail.com>
-In-Reply-To: <20200707211359.29906-1-cphealy@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 7 Jul 2020 18:51:00 -0300
-Message-ID: <CAOMZO5CWv7S4iWLWMxQwRs_8qfVRGVgMX3YTkr8H01=6L_V25g@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add node for CAAM
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On 07/07/20 23:48, Dave Hansen wrote:
+> On 7/7/20 2:12 PM, Sean Christopherson wrote:
+>>>>> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
+>>>>> write to kernel memory.  Linux won't set it, but an attacker would go
+>>>>> after it, first thing.
+>> That's an orthogonal to pinning.  KVM never lets the guest set CR4 bits that
+>> are unknown to KVM.  Supporting CR4.NO_MARBLES would require an explicit KVM
+>> change to allow it to be set by the guest, and would also require a userspace
+>> VMM to expose NO_MARBLES to the guest.
+>>
+>> That being said, this series should supporting pinning as much as possible,
+>> i.e. if the bit can be exposed to the guest and doesn't require special
+>> handling in KVM, allow it to be pinned.  E.g. TS is a special case because
+>> pinning would require additional emulator support and IMO isn't interesting
+>> enough to justify the extra complexity.  At a glance, I don't see anything
+>> that would prevent pinning FSGSBASE.
+> 
+> Thanks for filling in the KVM picture.
+> 
+> If we're supporting as much pinning as possible, can we also add
+> something to make it inconvenient for someone to both make a CR4 bit
+> known to KVM *and* ignore the pinning aspects?
+> 
+> We should really make folks think about it.  Something like:
+> 
+> #define KVM_CR4_KNOWN 0xff
+> #define KVM_CR4_PIN_ALLOWED 0xf0
+> #define KVM_CR4_PIN_NOT_ALLOWED 0x0f
+> 
+> BUILD_BUG_ON(KVM_CR4_KNOWN !=
+>              (KVM_CR4_PIN_ALLOWED|KVM_CR4_PIN_NOT_ALLOWED));
+> 
+> So someone *MUST* make an active declaration about new bits being pinned
+> or not?
 
-On Tue, Jul 7, 2020 at 6:15 PM Chris Healy <cphealy@gmail.com> wrote:
->
-> From: Andrey Smirnov <andrew.smirnov@gmail.com>
->
-> Add node for CAAM device in NXP Vybrid SoC.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
->
-> v2:
-> - fixup commit to show that this patch is from Andrey Smirnov.
+I would just make all unknown bits pinnable (or perhaps all CR4 bits in
+general).
 
-We usually put this information below the --- line.
+Paolo
 
-Maybe Shawn could fix it while applying it.
-
-Other that that:
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
