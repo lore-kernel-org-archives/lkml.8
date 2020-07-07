@@ -2,100 +2,97 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D82C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33EF2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDD7206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGGJUK (ORCPT
+        id S1726900AbgGGJWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:20:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:33460 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgGGJUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:20:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60775C0A;
-        Tue,  7 Jul 2020 02:20:09 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45C8E3F68F;
-        Tue,  7 Jul 2020 02:20:08 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 10:20:05 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        paul.gortmaker@windriver.com, valentin.schneider@arm.com
-Subject: Re: weird loadavg on idle machine post 5.7
-Message-ID: <20200707092004.jviycpvzb4l5ytiz@e107158-lin.cambridge.arm.com>
-References: <20200702171548.GA11813@codemonkey.org.uk>
- <20200702213627.GF3183@techsingularity.net>
- <20200703090226.GV4800@hirez.programming.kicks-ass.net>
- <20200703104033.GK117543@hirez.programming.kicks-ass.net>
- <20200703205153.GA19901@codemonkey.org.uk>
- <20200706145952.GB597537@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200706145952.GB597537@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+        Tue, 7 Jul 2020 05:22:49 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:51160 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725825AbgGGJWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:22:48 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxL+jcPgRfsi9RAA--.921S2;
+        Tue, 07 Jul 2020 17:22:36 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: [PATCH] phy: allwinner: Make PHY_SUN6I_MIPI_DPHY depend on COMMON_CLK
+Date:   Tue,  7 Jul 2020 17:22:26 +0800
+Message-Id: <1594113746-25393-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxL+jcPgRfsi9RAA--.921S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar17ur4UKF1DXF4xWFWfKrg_yoW8Cr1xpa
+        yfGrW8uryrtFWYqFsrJrykuFZaganrXFyxGaykGa43ZF98Aa1j93s8CFyqkF4jvr4kJr4f
+        Gas5GFZIgF98t37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0nXo5UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/20 16:59, Peter Zijlstra wrote:
+When CONFIG_ARCH_SUNXI is not set but CONFIG_COMPILE_TEST=y,
+CONFIG_HAVE_CLK=y, CONFIG_HAVE_LEGACY_CLK=y, there exists
+the following build errors with CONFIG_PHY_SUN6I_MIPI_DPHY=y:
 
-[...]
+drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_init':
+phy-sun6i-mipi-dphy.c:(.text+0x320): undefined reference to `clk_set_rate_exclusive'
+drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_exit':
+phy-sun6i-mipi-dphy.c:(.text+0x2c8): undefined reference to `clk_rate_exclusive_put'
 
-> @@ -4104,12 +4108,19 @@ static void __sched notrace __schedule(bool preempt)
->  	local_irq_disable();
->  	rcu_note_context_switch(preempt);
->  
-> +	prev_state = prev->state;
-> +
->  	/*
-> -	 * Make sure that signal_pending_state()->signal_pending() below
-> -	 * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
-> -	 * done by the caller to avoid the race with signal_wake_up().
-> +	 * __set_current_state(@state)
-> +	 * schedule()				signal_wake_up()
-> +	 *   prev_state = p->state		  set_tsk_thread_flag(p, TIF_SIGPENDING)
-> +	 *					  wake_up_state()
-> +	 *   LOCK rq->lock			    LOCK p->pi_state
-> +	 *   smp_mb__after_spinlock()		    smp_mb__after_spinlock()
-> +	 *     if (signal_pending_state()	    if (p->state & @state)
-> +	 *
->  	 *
-> -	 * The membarrier system call requires a full memory barrier
-> +	 * Also, the membarrier system call requires a full memory barrier
->  	 * after coming from user-space, before storing to rq->curr.
->  	 */
->  	rq_lock(rq, &rf);
-> @@ -4120,10 +4131,30 @@ static void __sched notrace __schedule(bool preempt)
->  	update_rq_clock(rq);
->  
->  	switch_count = &prev->nivcsw;
-> -	if (!preempt && prev->state) {
-> -		if (signal_pending_state(prev->state, prev)) {
-> +	/*
-> +	 * We must re-load p->state in case ttwu_runnable() changed it
-> +	 * before we acquired rq->lock.
-> +	 */
-> +	if (!preempt && prev_state && prev_state == prev->state) {
+clk_set_rate_exclusive() and clk_rate_exclusive_put() are defined
+in drivers/clk/clk.c, this file is built under CONFIG_COMMON_CLK,
+so in order to build drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+successful used with various configs, CONFIG_PHY_SUN6I_MIPI_DPHY
+should depend on CONFIG_COMMON_CLK.
 
-I think the compiler won't optimize `prev_state == prev->state` out because of
-the smp_mb__after_spinlock() which implies a compiler barrier. Still not sure
-if it's worth making prev->state accesses a READ_ONCE()?
+Fixes: 133552bf03ed ("phy: Remove CONFIG_ARCH_* check for related subdir in Makefile")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Thanks
+This patch is based on linux-phy.git:
+https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/?h=next
 
---
-Qais Yousef
+ drivers/phy/allwinner/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
+index e760d89..fb584518 100644
+--- a/drivers/phy/allwinner/Kconfig
++++ b/drivers/phy/allwinner/Kconfig
+@@ -22,7 +22,7 @@ config PHY_SUN4I_USB
+ config PHY_SUN6I_MIPI_DPHY
+ 	tristate "Allwinner A31 MIPI D-PHY Support"
+ 	depends on ARCH_SUNXI || COMPILE_TEST
+-	depends on HAS_IOMEM
++	depends on HAS_IOMEM && COMMON_CLK
+ 	depends on RESET_CONTROLLER
+ 	select GENERIC_PHY
+ 	select GENERIC_PHY_MIPI_DPHY
+-- 
+2.1.0
+
