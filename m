@@ -2,123 +2,188 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED9C12065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7148206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lZzBB8vQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+virPP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgGGXDM (ORCPT
+        id S1728847AbgGGXDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:03:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48895 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbgGGXDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 19:03:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1dJW0qcDz9s1x;
-        Wed,  8 Jul 2020 09:03:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594162988;
-        bh=ZyI/3429U87XB0Dgnc42vomRNERSgupm2+gTzZsuAM0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lZzBB8vQfCvQhg6iR19YFVBr5s4z9Jx0lwNYpjDAyp2LFivTrFJ7NBNT8Xk6eNR1S
-         i6GhNs8QfympzmpRcxhiZfHnDlXsPbaWUfA+V7wdOqUe5sChRdCNlgNTzYL9CdpKw6
-         jOPFUYHEMon1dCdLgp9iSX6vZqO9LAMc+/Eff1EYi2cr3dtU6oh2lxkcsYdlLpEWEL
-         LcLc3Dd4pmjkNyQoRsfPef8093qrYHwbgeLDI3LnAR6My+VmEFJqc2iQdalur3Y3Al
-         VcKXv2yHtwSTq/Ag9BhAl7x67pFO4gqX8UdFHUYV2ILzna5XlUF+LT3EctnoP15GNa
-         1vCtxO30SvOkg==
-Date:   Wed, 8 Jul 2020 09:03:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: stop using ->read and ->write for kernel access v3
-Message-ID: <20200708090306.2209802a@canb.auug.org.au>
-In-Reply-To: <20200707174801.4162712-1-hch@lst.de>
-References: <20200707174801.4162712-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zQt_i5i/0wX+K.IyNJL8Y3s";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 7 Jul 2020 19:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgGGXDm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 19:03:42 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D26C061755;
+        Tue,  7 Jul 2020 16:03:41 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dm19so33817171edb.13;
+        Tue, 07 Jul 2020 16:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
+        b=E+virPP7R0DNmaCjVGtSUu/QcvSxTf4R7sOk6VcFsmCvGe0J84CcBd5HeNBiHdEGFF
+         JmZI2QMdJ3elJ5MqdzZR/53PLHZyXBiuCFyv35oO8MHG9CZxR2Iq5EhY68cQJh6tS3FM
+         8criJyFHjuNIStjyC28tRfZTtvROoXe7nu6rzuI3busfBGfKDruR6mMoncEkVbIcPRMU
+         3N/NxjKHK7cc70B3dsJJ2bJ/tFj3dVtUDJmcxY3vtXJ/MTH3h7iZdQ/G7oUXSqNkMlnJ
+         ECGvJ/Ssb2a2O9P/PsgcX12j0Sc5qUzPp+C5ZZ0LsYvGa3vZu43Jj4nfAT10J0pBwVjO
+         sZhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kTq/VH/p4TyQ5wPRzJwyOD8JsPzalLXL/D+9ThOBTJk=;
+        b=qPcEAtJ7p9UsL7lAOBpl+0zewZCrDH8dqEtaTjiXsyae++iZae88IfBCz+6TBKPvYT
+         KGXBTrNLPARMtt7GpDdJsVkpzv6OIVZlkvzPZ3rk5huwbEKzneHwy61IT3TmkY9Z/XTD
+         Rtfbon1E6TX8wHm24CBuDYOYsdVMGWCEpFZ4hV5voARPGI6Ab4mlATOIK3zYXMHxQNah
+         /ymv5Tu6UGJwr4qqA+ZZfvYjIjapZiF3iqIy4eY6zjgxOT7FQf7MiV/9vK1elfKY401B
+         Zj6IJFRI+Lh+WZGu8FqfsTte3oweqfGxWm2SM/ynf1TtR3Q7lgyfv4+lyNEF/fKo4Vp5
+         ne1w==
+X-Gm-Message-State: AOAM5317PrAOBbBOleAhSzdZsff0hux/xPg3vuu0J+jVR2Ftxjc+0TOM
+        sbYEn+MTGuKivZ+VZ0fUbF4=
+X-Google-Smtp-Source: ABdhPJyCkNHIU7Mg/3LR3/ROH8pv8slqj90hjhE3e1+AdXgWeG9fxZ5hQsBoE731r/kg9QH8KEcJqA==
+X-Received: by 2002:aa7:d989:: with SMTP id u9mr46087113eds.85.1594163020678;
+        Tue, 07 Jul 2020 16:03:40 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id f10sm27096310edx.5.2020.07.07.16.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 16:03:39 -0700 (PDT)
+From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        linux-acpi@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Stanislaw Gruszka <stf_xl@wp.pl>
+Subject: [PATCH 0/13] PCI: Remove '*val = 0' from pcie_capability_read_*()
+Date:   Wed,  8 Jul 2020 00:03:11 +0200
+Message-Id: <20200707220324.8425-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zQt_i5i/0wX+K.IyNJL8Y3s
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-Hi Christoph,
+MERGING:
+Only Patch 13/13 depend on all preceeding patchs. All other patches are
+independent of one another. Hence, please merge PATCH 13/13 only after
+other patches in this series have been merged.
 
-On Tue,  7 Jul 2020 19:47:38 +0200 Christoph Hellwig <hch@lst.de> wrote:
->
-> A git branch is available here:
->=20
->     git://git.infradead.org/users/hch/misc.git set_fs-rw
->=20
-> Gitweb:
->=20
->     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/set_f=
-s-rw
->=20
-> Given that this has been out and cooking for a while, is there a chance to
-> add the above as a temp branch to linux-next to get a little more exposure
-> until Al reviews it and (hopefully) picks it up?
+PATCH 6/13:
+Make the function set status to "Power On" by default and only set to
+Set "Power Off" only if pcie_capability_read_word() is successful and
+(slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
 
-No worries, I will add it in later today and drop it after Al grabs it.
+PATCH 1/13 to 12/13:
+Check the return value of pcie_capability_read_*() to ensure success or
+confirm failure. While maintaining these functions, this ensures that the
+changes in PATCH 13/13 does not introduce any bug. 
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+PATCH 13/13:
+There are several reasons why a PCI capability read may fail whether the
+device is present or not. If this happens, pcie_capability_read_*() will
+return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
+and *val is set to 0.
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+This behaviour if further ensured by this code inside
+pcie_capability_read_*()
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
+ ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+ /*
+  * Reset *val to 0 if pci_read_config_dword() fails, it may
+  * have been written as 0xFFFFFFFF if hardware error happens
+  * during pci_read_config_dword().
+  */
+ if (ret)
+	 *val = 0;
+ return ret;
 
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
+a) Since all pci_generic_config_read() does is read a register value,
+it may return success after reading a ~0 which *may* have been fabricated
+by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
+will return success with a fabricated ~0 in *val, indicating a problem.
+In this case, the assumed behaviour of  pcie_capability_read_*() will be
+wrong. To avoid error slipping through, more checks are necessary.
 
---Sig_/zQt_i5i/0wX+K.IyNJL8Y3s
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
+dev->error_state = pci_channel_io_perm_failure (i.e. 
+pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
+device. In both cases *val is initially set to ~0 but as shown in the code
+above pcie_capability_read_*() resets it back to 0. Even with this effort,
+drivers still have to perform validation checks more so if 0 is a valid
+value.
 
------BEGIN PGP SIGNATURE-----
+Most drivers only consider the case (b) and in some cases, there is the 
+expectation that on timeout *val has a fabricated value of ~0, which *may*
+not always be true as explained in (a).
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8E/yoACgkQAVBC80lX
-0GwGjwf+Mat7xlpqLTM/Bvrnt5C85aBmgIUU1wqEjpLFAEI6mEMGIsy+jcN3CirD
-5aGD65LRyq51fE75O+4BNUzKh4arvhTLst+ydJuN3yzIVU5dUv63GwFsyHGnOTB9
-U/h+B/7rXOGtTgxmLBoDswY8cay68JLP+YKoPgrJaLduR49ZICvx1kx6LNIWPfRc
-sphTE0ktVkM4849BkoYYmeDjypr+ig+jugHgna4N2RVZYjgbKY7SDubk6gROXi4s
-7T8BIeO6KFCYltv4joyECkFI20pKdDymemPlnTPRtlXvyRVqh1/pHX/iVSx1eG5Y
-M4n1BWkJ7XWUI6x8yppyykJRHSsfZA==
-=I7ho
------END PGP SIGNATURE-----
+In any case, checks need to be done to validate the value read and maybe
+confirm which error has occurred. It is better left to the drivers to do.
 
---Sig_/zQt_i5i/0wX+K.IyNJL8Y3s--
+Check the return value of pcie_capability_read_dword() to ensure success
+and avoid bug as a result of Patch 13/13.
+Remove the reset of *val to 0 when pci_read_config_*() fails.
+
+
+Bolarinwa Olayemi Saheed (13):
+  IB/hfi1: Check the return value of pcie_capability_read_*()
+  misc: rtsx: Check the return value of pcie_capability_read_*()
+  ath9k: Check the return value of pcie_capability_read_*()
+  iwlegacy: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Make "Power On" the default 
+  PCI/ACPI: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: Check the return value of pcie_capability_read_*()
+  PCI/PM: Check return value of pcie_capability_read_*()
+  PCI/AER: Check the return value of pcie_capability_read_*()
+  PCI/ASPM: Check the return value of pcie_capability_read_*()
+  PCI: Remove '*val = 0' from pcie_capability_read_*()
+
+ drivers/net/wireless/ath/ath9k/pci.c         | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
+ drivers/misc/cardreader/rts5227.c | 5 +++--
+ drivers/misc/cardreader/rts5249.c | 5 +++--
+ drivers/misc/cardreader/rts5260.c | 5 +++--
+ drivers/misc/cardreader/rts5261.c | 5 +++--
+ drivers/pci/pcie/aer.c  |  5 +++--
+ drivers/pci/pcie/aspm.c | 33 +++++++++++++++++----------------
+ drivers/pci/hotplug/pciehp_hpc.c | 47 ++++++++++++++++----------------
+ drivers/pci/pci-acpi.c           | 10 ++++---
+ drivers/pci/probe.c              | 29 ++++++++++++--------
+ drivers/pci/access.c | 14 --------------
+ 13 files changed, 87 insertions(+), 87 deletions(-)
+
+-- 
+2.18.2
+
