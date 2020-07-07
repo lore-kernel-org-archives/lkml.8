@@ -2,129 +2,99 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5075EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3AC20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rug8tm+x"
+	by mail.kernel.org (Postfix) with ESMTP id 1D52C20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgGGVQy (ORCPT
+        id S1729217AbgGGVSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728723AbgGGVQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:16:53 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372F6C08C5E2
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:16:53 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 124so16414328ybb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=LK+EBRynEXsucfX04gFvi+gNnB4EOZ/bB2WzuaaMYIc=;
-        b=Rug8tm+xa2icYOqvro5VOiB7Xb1MvWVSdcHzdKmC5ojZ1nEeGXG4Z7+A9IpOHkU3id
-         vZ14aeY8oW8KS5Ms4Y6CcnEvMMZQEwc+KXXJzM7uvknJPWiNLF4FHQh+MLvz5eK9+1WK
-         2UAS1N5Te+mjL/j3pUa9f+zrdmJxEb2wWf12T6FvlND+IIRhzsmnIW4/SZQ2hGc6GYjy
-         RDRASgQOSHIrzI+59CFyx7vDoXfZ9OoDQObliOx+xsar02qBSpqWD4G4IvCWoOm0jg+U
-         GR+s9JWZ9b2WkUIUCDq6tdDhQ7aR9zUNdO5VOjyfHmebj6JwnfZIBbmQFBZ7md/5ZlTg
-         FdsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=LK+EBRynEXsucfX04gFvi+gNnB4EOZ/bB2WzuaaMYIc=;
-        b=ncEx29mhSWreHHqSN7yg0dqyVYu6RbaJYoDCG2fa1J3bbDpBZCiIREw218MYvrNK4W
-         QD1CtBJnTzwugDARiNFc4Zn8vt0BCWs3Z74fV39NmMdIYjFoOOSDxbeij+2D32zBcHKw
-         rszj3Z98JV8OoIzpax9w/lh/aWMgeKG0M34jfawKL9IzJbaKmjXderYKEpcRPJDLGguw
-         SaN9GD5Em75wMkSpqHdWNeyKax0ABOqveEt4cTKMDr/jj7s2y/ou9zVm9Q2bDSy2WmoL
-         EiopMQngWM07E7migESKAx+S1/gMbv9U9pFJPWPbuzqezUFlh16sLgcWttLMoKh//a1i
-         gqXA==
-X-Gm-Message-State: AOAM532XMkptmsf+dwm9R27K18X/Hy7ReRpaFNwWFDBvDW/Kv0TvHRNd
-        PeBlyEHaBeFkolI9etyRtNY3ZQZ5LV5t7yAn+eg=
-X-Google-Smtp-Source: ABdhPJzn9lxSCriqI2ToiXXIRoLSzrjmr41xe5HIRNGl0I0vjbYHXb13MWkUw/9ODphxfJt2wWrtcsLV1Vf1u8OuiVg=
-X-Received: by 2002:a25:21c5:: with SMTP id h188mr36451509ybh.468.1594156612336;
- Tue, 07 Jul 2020 14:16:52 -0700 (PDT)
-Date:   Tue,  7 Jul 2020 14:16:41 -0700
-Message-Id: <20200707211642.1106946-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH] bitfield.h: don't compile-time validate _val in FIELD_FIT
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, Alex Elder <elder@linaro.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
+        Tue, 7 Jul 2020 17:18:06 -0400
+Received: from mga18.intel.com ([134.134.136.126]:58260 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgGGVSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:18:06 -0400
+IronPort-SDR: s08QEwv3Tis1s8fIIQmxFOmcNfS/oOHKSwOobsijONUi75HG3JuO37qapZ/eA9hLKG9XNUjZlr
+ fIajMym15BCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135156634"
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="135156634"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:18:05 -0700
+IronPort-SDR: TIfrxbVcaGC/Pu9TN9IpJNJmxgIP0bJlPax8eK6fgIyhwWU8XtEYaojbmBgmUfe0DnbAXgdFqg
+ Zsv/bEV3x8FA==
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="427613055"
+Received: from andreead-mobl1.ti.intel.com ([10.252.18.211])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:18:01 -0700
+Message-ID: <08b2713a6f87f78746c22e7168f4813eb753bb0e.camel@linux.intel.com>
+Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Date:   Tue, 07 Jul 2020 22:17:59 +0100
+In-Reply-To: <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+         <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+On Sun, 2020-07-05 at 23:36 -0500, Jassi Brar wrote:
+> On Tue, Jun 16, 2020 at 10:56 AM Daniele Alessandrelli
+> <daniele.alessandrelli@linux.intel.com> wrote:
+> > Hi,
+> > 
+> > This patch-set adds initial support for a new Intel Movidius SoC
+> > code-named
+> > Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
+> > Movidius VPU.
+> > 
+> > This initial patch-set enables only the minimal set of components
+> > required to
+> > make the Keem Bay EVM board boot into initramfs.
+> > 
+> > Brief summary of the patch-set:
+> > * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to
+> > enable SCMI in
+> >   Keem Bay)
+> > * Patch 3 adds the ARCH_KEEMBAY config option
+> > * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay
+> > EVM
+> >   (together with information about the SoC maintainers)
+> > 
+> Please break this into two patchsets - first enabling platform
+> support
+> and second adding mailbox support.
 
-When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
-compiler to deduce a case where _val can only have the value of -1 at
-compile time. Specifically,
+Thanks for your feedback Jassi. I will split the patcheset into two
+different patchsets.
 
-/* struct bpf_insn: _s32 imm */
-u64 imm = insn->imm; /* sign extend */
-if (imm >> 32) { /* non-zero only if insn->imm is negative */
-  /* inlined from ur_load_imm_any */
-  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
-  if (__builtin_constant_p(__imm) && __imm > 255)
-    compiletime_assert_XXX()
+Just one question: should I remove the mailbox and scmi nodes from the
+soc DT or can I keep them there even if the mailbox driver is not
+available yet?
 
-This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
-checks that a given value is representable in one byte (interpreted as
-unsigned).
-
-FIELD_FIT() should return true or false at runtime for whether a value
-can fit for not. Don't break the build over a value that's too large for
-the mask. We'd prefer to keep the inlining and compiler optimizations
-though we know this case will always return false.
-
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
-Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- include/linux/bitfield.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index 48ea093ff04c..4e035aca6f7e 100644
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -77,7 +77,7 @@
-  */
- #define FIELD_FIT(_mask, _val)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
-+		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
- 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
- 	})
- 
--- 
-2.27.0.383.g050319c2ae-goog
+> 
+> thanks.
 
