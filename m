@@ -2,203 +2,241 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE256C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA63820715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kf/6uRcV"
+	by mail.kernel.org (Postfix) with ESMTP id 976E3206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594084017;
+	bh=ziMXvXXiWA3QdBqS7rIWZL/rSGsPD/0+WCWAhwU/hdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bBU+Ns/K2LhXnkJnZE7/cDW2clPC1OLM9TxbvMZKXvOO6NrlcKBUE0y4LwGaA21Ad
+	 NHYVabdZBpp2KQGTaIoi0d5YKmSHEnoPvPs121tzHdNrQL0lwvyMPpdVI5H4fSwXq+
+	 +iNB+/GJ/vDMe2Uftnrudo74norp2OkV5I/4VQFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGGBCm (ORCPT
+        id S1727057AbgGGBGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGGBCm (ORCPT
+        Mon, 6 Jul 2020 21:06:55 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:46127 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgGGBGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:02:42 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18EDC061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 18:02:41 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id m8so13921822qvk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UPLglurd2bXR8gqpRZ4MDKzwYBPMt0K23wQze9gEJ2c=;
-        b=Kf/6uRcVV0NUzFhvPEALeNNkq22wybhmjgUM0n8ASfuhauZ3HRcOdohgRYpPdAT3Se
-         ihj/wwdmvst7WmznaeiX5G0GYcHiRfob0hNOi+TdAiKCU2Tt4562mr/VIa7g9RQ3sBTs
-         DX0E/+DJ2ZLN6dvN8M2xcMVV6FSGbLBXbgva4=
+        Mon, 6 Jul 2020 21:06:55 -0400
+Received: by mail-vs1-f67.google.com with SMTP id x13so16895966vsx.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:06:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPLglurd2bXR8gqpRZ4MDKzwYBPMt0K23wQze9gEJ2c=;
-        b=UBcFGCxKHsXZX6wlAhiATEnFRbdppvUlDvETAnJ3NEBVi6fH48zY57uHPXk1wcXB4+
-         kGodMXVfY8r2jyA6X9/f7YRTkP/77rD8zllkBq57a3ilcxFxd96RINMbyqo0wd6RKgVs
-         xtKPfdkeW1t51F9422OUVvzXeno7smHng7pgmgmT64QdkT7ubM1RLoZze/eAPeYDWbr+
-         GXDT6jwflefYai39ZTsf58ZdFvSa/+XUz2zUamamSd9Jbr/78WYYU4XbpJhySKb5n1NF
-         AyqPCO+Zh0MAVTMRuSNq+48yBQmQ0cuQlUfyI7KPlQMR8gxc9mfUPv5TfjbDEHK94uml
-         gXeA==
-X-Gm-Message-State: AOAM532jYCK/iMngkhGg8xdRRBwHzVYnExgB3lI+X3skfESloHEpi4Pg
-        njNlj+ZJqhysxY9rjN8PQCNM30LKIQBQfeSjfXGx1780
-X-Google-Smtp-Source: ABdhPJy2ipwIBj8S3tAe2nNhvJM3NpT/pnPppOMqhdYDW5SY1bDEYpke03X5ei47wQmgixJ/twrWZDpDXw1PZbgGO8A=
-X-Received: by 2002:a05:6214:3ac:: with SMTP id m12mr45511839qvy.18.1594083760821;
- Mon, 06 Jul 2020 18:02:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0rAY13BVmkOt6oIgOgE5Fk6r9TycBRd+bLvE307vPBA=;
+        b=UvZnxUHAl4FoNp5yvH/hVHfCPOfD9oSgcOe8CIVSPmj286AL1YCcll+hPv0L0MVS90
+         BDfT8Ava8nz+F+85VGWCYRkk6enakQhPt7u0Rcv5YaD/0eQOFQGC+W0xcFcFgESytUrp
+         PEh99/nd4wPZnoebNLTKX4Q0zCyJDDoRej0LJEaGrXYeJBCFMbw9ucHyeA7oBYgoM6dW
+         /8d3xi2oV6eHTSiPMoGmBrC8U8md9ha7ZtPM1E7YYBgVa/9U83TS5Y4A/MkaL14KyqD7
+         CR+qD5IjzLjaeMpVq6wAb6x/0TUq7BJCK3CsXeSbH0dBCBwgE0EoTr1simJlePr9WvRJ
+         b0qw==
+X-Gm-Message-State: AOAM533vrlQFSNxr7hx3dND/PFCZaykHHIoCDpUe8o0+z4iZeMGlQNu6
+        LLyBe48enaXO9ea4mDmBY+I=
+X-Google-Smtp-Source: ABdhPJwLgFN+bIsY/8FQ1xDv6OvVHAUBcYPVJGpT4SuVimv86Vc8B2gcRq32LkK1U+B5AON1k2Jfeg==
+X-Received: by 2002:a05:6102:21b4:: with SMTP id i20mr39117138vsb.164.1594084013542;
+        Mon, 06 Jul 2020 18:06:53 -0700 (PDT)
+Received: from google.com (239.145.196.35.bc.googleusercontent.com. [35.196.145.239])
+        by smtp.gmail.com with ESMTPSA id t23sm76680vsa.20.2020.07.06.18.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 18:06:52 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 01:06:51 +0000
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-ID: <20200707010651.GA2384124@google.com>
+References: <20200705044454.GA90533@shbuild999.sh.intel.com>
+ <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
+ <20200705125854.GA66252@shbuild999.sh.intel.com>
+ <20200705155232.GA608@lca.pw>
+ <20200706014313.GB66252@shbuild999.sh.intel.com>
+ <20200706023614.GA1231@lca.pw>
+ <20200706132443.GA34488@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-References: <20200704142607.171400-1-linux@roeck-us.net> <20200706185230.GA792857@google.com>
- <20200706194120.GB180826@roeck-us.net> <CACeCKadx5vmqT9dnTTr49T3s-ZG1h3YnKZRvFVB4vrUhnD2faw@mail.gmail.com>
- <a6567dcc-8360-6537-3147-9da6ea1bcc64@roeck-us.net>
-In-Reply-To: <a6567dcc-8360-6537-3147-9da6ea1bcc64@roeck-us.net>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 6 Jul 2020 18:02:30 -0700
-Message-ID: <CACeCKafa_Ou_WXSyWs8Agcr=S2H6Gyqdx1dyxieKhJ5VW_MCXg@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to
- Linux error codes
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706132443.GA34488@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 2:38 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 7/6/20 1:07 PM, Prashant Malani wrote:
-> > On Mon, Jul 6, 2020 at 12:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >>
-> >> On Mon, Jul 06, 2020 at 11:52:30AM -0700, Prashant Malani wrote:
-> >>> Hi Guenter,
-> >>>
-> >>> On Sat, Jul 04, 2020 at 07:26:07AM -0700, Guenter Roeck wrote:
-> >>>> The EC reports a variety of error codes. Most of those, with the exception
-> >>>> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-> >>>> error code gets lost. Convert all EC errors to Linux error codes to report
-> >>>> a more meaningful error to the caller to aid debugging.
-> >>>>
-> >>>> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> >>>> Cc: Prashant Malani <pmalani@chromium.org>
-> >>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> >>>> ---
-> >>>>  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
-> >>>>  1 file changed, 29 insertions(+), 8 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> >>>> index 3e745e0fe092..10aa9e483d35 100644
-> >>>> --- a/drivers/platform/chrome/cros_ec_proto.c
-> >>>> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> >>>> @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
-> >>>>  }
-> >>>>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> >>>>
-> >>>> +static const int cros_ec_error_map[] = {
-> >>>> +   [EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-> >>>> +   [EC_RES_ERROR] = -EIO,
-> >>>> +   [EC_RES_INVALID_PARAM] = -EINVAL,
-> >>>> +   [EC_RES_ACCESS_DENIED] = -EACCES,
-> >>>> +   [EC_RES_INVALID_RESPONSE] = -EPROTO,
-> >>>> +   [EC_RES_INVALID_VERSION] = -ENOTSUPP,
-> >>>> +   [EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-> >>>> +   [EC_RES_IN_PROGRESS] = -EINPROGRESS,
-> >>>> +   [EC_RES_UNAVAILABLE] = -ENODATA,
-> >>>> +   [EC_RES_TIMEOUT] = -ETIMEDOUT,
-> >>>> +   [EC_RES_OVERFLOW] = -EOVERFLOW,
-> >>>> +   [EC_RES_INVALID_HEADER] = -EBADR,
-> >>>> +   [EC_RES_REQUEST_TRUNCATED] = -EBADR,
-> >>>> +   [EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-> >>>> +   [EC_RES_BUS_ERROR] = -EFAULT,
-> >>>> +   [EC_RES_BUSY] = -EBUSY,
-> >>>> +   [EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-> >>>> +   [EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-> >>>> +   [EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-> >>>> +   [EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-> >>>> +};
-> >>>> +
-> >>>>  /**
-> >>>>   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
-> >>>>   * @ec_dev: EC device.
-> >>>> @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> >>>>   *
-> >>>>   * Return:
-> >>>>   * >=0 - The number of bytes transferred
-> >>>> - * -ENOTSUPP - Operation not supported
-> >>>> - * -EPROTO - Protocol error
-> >>>> + * <0 - Linux error code
-> >>>>   */
-> >>>>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >>>>                         struct cros_ec_command *msg)
-> >>>> @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >>>>     ret = cros_ec_cmd_xfer(ec_dev, msg);
-> >>>>     if (ret < 0) {
-> >>>>             dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
-> >>>> -   } else if (msg->result == EC_RES_INVALID_VERSION) {
-> >>>> -           dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
-> >>>> -                   msg->result);
-> >>>> -           return -ENOTSUPP;
-> >>>>     } else if (msg->result != EC_RES_SUCCESS) {
-> >>>> -           dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> >>>> -           return -EPROTO;
-> >>>> +           if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
-> >>>
-> >>> Do we expect a case where cros_ec_error_map[msg->result] == 0?
-> >>>
-> >>
-> >> It seemed to be prudent to assume that this code is not going to be
-> >> updated whenever a new EC error code is added. Doing nothing would
-> >> risk returning 0, and addding WARN_ON or dev_warn seemed excessive.
-> >> Having said that, I don't really have a strong opinion one way
-> >> or another, and I'll be happy to change the code to whatever people
-> >> think is appropriate.
-> >
-> > Thanks for providing the rationale. I think if a new EC error code is
-> > added (and this array isn't updated),
-> > msg->result < ARRAY_SIZE(cros_ec_error_map) would return false, and
-> > the code block would return -EPROTO.
-> >
->
-> Some scenarios:
->
-> Developer 1 adds EC_RES_SOME_ERROR, and does not update the array.
-> Developer 2 adds EC_RES_SOME_OTHER_ERROR and updates the array, but
-> does not realize that EC_RES_SOME_ERROR is missing as well, and does
-> not add it.
-> Developer 3 adds two (or more) error codes, and does not update the
-> array. Someone else later finds a -EPROTO return code and adds the
-> necessary translation to the array. That translation happens to be
-> for the last error code. The developer doing that does not realize
-> that other error codes are missing as well, or does not realize
-> the impact, and does not add translations for the other missing
-> error codes.
->
-> Overall there are too many situations where this can go wrong for me
-> to trust that it never will.
+On Mon, Jul 06, 2020 at 09:24:43PM +0800, Feng Tang wrote:
+> Hi All,
+> 
+> Please help to review this fix patch, thanks!
+> 
+> It is against today's linux-mm tree. For easy review, I put the fix
+> into one patch, and I could split it to 2 parts for percpu-counter
+> and mm/util.c if it's preferred.
+> 
+> From 593f9dc139181a7c3bb1705aacd1f625f400e458 Mon Sep 17 00:00:00 2001
+> From: Feng Tang <feng.tang@intel.com>
+> Date: Mon, 6 Jul 2020 14:48:29 +0800
+> Subject: [PATCH] mm/util.c: sync vm_committed_as when changing memory policy
+>  to OVERCOMMIT_NEVER
+> 
+> With the patch to improve scalability of vm_committed_as [1], 0day reported
+> the ltp overcommit_memory test case could fail (fail rate is about 5/50) [2].
+> The root cause is when system is running with loose memory overcommit policy
+> like OVERCOMMIT_GUESS/ALWAYS, the deviation of vm_committed_as could be big,
+> and once the policy is runtime changed to OVERCOMMIT_NEVER, vm_committed_as's 
+> batch is decreased to 1/64 of original one, but the deviation is not
+> compensated accordingly, and following __vm_enough_memory() check for vm
+> overcommit could be wrong due to this deviation, which breaks the ltp
+> overcommit_memory case.
+> 
+> Fix it by forcing a sync for percpu counter vm_committed_as when overcommit
+> policy is changed to OVERCOMMIT_NEVER (sysctl -w vm.overcommit_memory=2).
+> The sync itself is not a fast operation, and is toleratable given user is
+> not expected to frequently changing policy to OVERCOMMIT_NEVER.
+> 
+> [1] https://lore.kernel.org/lkml/1592725000-73486-1-git-send-email-feng.tang@intel.com/
+> [2] https://marc.info/?l=linux-mm&m=159367156428286 (can't find a link in lore.kernel.org)
+> 
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> ---
+>  include/linux/percpu_counter.h |  4 ++++
+>  lib/percpu_counter.c           | 14 ++++++++++++++
+>  mm/util.c                      | 11 ++++++++++-
+>  3 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+> index 0a4f54d..01861ee 100644
+> --- a/include/linux/percpu_counter.h
+> +++ b/include/linux/percpu_counter.h
+> @@ -44,6 +44,7 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount,
+>  			      s32 batch);
+>  s64 __percpu_counter_sum(struct percpu_counter *fbc);
+>  int __percpu_counter_compare(struct percpu_counter *fbc, s64 rhs, s32 batch);
+> +void percpu_counter_sync(struct percpu_counter *fbc);
+>  
+>  static inline int percpu_counter_compare(struct percpu_counter *fbc, s64 rhs)
+>  {
+> @@ -172,6 +173,9 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
+>  	return true;
+>  }
+>  
+> +static inline void percpu_counter_sync(struct percpu_counter *fbc)
+> +{
+> +}
+>  #endif	/* CONFIG_SMP */
+>  
+>  static inline void percpu_counter_inc(struct percpu_counter *fbc)
+> diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+> index a66595b..02d87fc 100644
+> --- a/lib/percpu_counter.c
+> +++ b/lib/percpu_counter.c
+> @@ -98,6 +98,20 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+>  }
+>  EXPORT_SYMBOL(percpu_counter_add_batch);
+>  
+> +void percpu_counter_sync(struct percpu_counter *fbc)
+> +{
+> +	unsigned long flags;
+> +	s64 count;
+> +
+> +	raw_spin_lock_irqsave(&fbc->lock, flags);
+> +	count = __this_cpu_read(*fbc->counters);
+> +	fbc->count += count;
+> +	__this_cpu_sub(*fbc->counters, count);
+> +	raw_spin_unlock_irqrestore(&fbc->lock, flags);
+> +}
+> +EXPORT_SYMBOL(percpu_counter_sync);
+> +
+> +
+>  /*
+>   * Add up all the per-cpu counts, return the result.  This is a more accurate
+>   * but much slower version of percpu_counter_read_positive()
+> diff --git a/mm/util.c b/mm/util.c
+> index 52ed9c1..5fb62c0 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -746,14 +746,23 @@ int overcommit_ratio_handler(struct ctl_table *table, int write, void *buffer,
+>  	return ret;
+>  }
+>  
+> +static void sync_overcommit_as(struct work_struct *dummy)
+> +{
+> +	percpu_counter_sync(&vm_committed_as);
+> +}
+> +
 
-Fair enough.
->
-> > I'll defer to the maintainer's opinion(s), but I think we can remove
-> > the condition after '&&'.
-> >
->
-> I thought about it, but I find that I don't feel comfortable with
-> doing that. If that is what is asked for, would you mind providing
-> a separate patch which doesn't have my name on it ?
->
+This seems like a rather niche use case as it's currently coupled with a
+schedule_on_each_cpu(). I can't imagine a use case where you'd want to
+do this without being called by schedule_on_each_cpu().
 
-Thanks again for your explanation. As someone Cc-ed, I find it
-important (for me) to seek clarification behind the code. Thank you
-for providing that.
-As I alluded to earlier, over to the maintainer(s) now :)
+Would it be better to modify or introduce something akin to
+percpu_counter_sum() which sums and folds in the counter state? I'd be
+curious to see what the cost of always folding would be as this is
+already considered the cold path and would help with the next batch too.
 
-> Thanks,
-> Guenter
+>  int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
+>  		size_t *lenp, loff_t *ppos)
+>  {
+>  	int ret;
+>  
+>  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> -	if (ret == 0 && write)
+> +	if (ret == 0 && write) {
+> +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
+> +			schedule_on_each_cpu(sync_overcommit_as);
+> +
+>  		mm_compute_batch();
+> +	}
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.7.4
+>      
+> 
+> On Sun, Jul 05, 2020 at 10:36:14PM -0400, Qian Cai wrote:
+> > > In my last email, I was not saying OVERCOMMIT_NEVER is not a normal case,
+> > > but I don't think user will too frequently runtime change the overcommit
+> > > policy. And the fix patch of syncing 'vm_committed_as' is only called when
+> > > user calls 'sysctl -w vm.overcommit_memory=2'.
+> > > 
+> > > > The question is now if any of those regression fixes would now regress
+> > > > performance of OVERCOMMIT_NEVER workloads or just in-par with the data
+> > > > before the patchset?
+> > > 
+> > > For the original patchset, it keeps vm_committed_as unchanged for
+> > > OVERCOMMIT_NEVER policy and enlarge it for the other 2 loose policies
+> > > OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS, and I don't expect the "OVERCOMMIT_NEVER
+> > > workloads" performance  will be impacted. If you have suggetions for this
+> > > kind of benchmarks, I can test them to better verify the patchset, thanks!
+> > 
+> > Then, please capture those information into a proper commit log when you
+> > submit the regression fix on top of the patchset, and CC PER-CPU MEMORY
+> > ALLOCATOR maintainers, so they might be able to review it properly.
+> 
+> 
+> 
+
+Thanks,
+Dennis
