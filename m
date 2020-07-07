@@ -2,211 +2,105 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5314BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B7E206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VoeWPTYk"
+	by mail.kernel.org (Postfix) with ESMTP id A555B20672
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgGGVKn (ORCPT
+        id S1728623AbgGGVMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:10:43 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55315 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGGVKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:10:43 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A32958011F;
-        Wed,  8 Jul 2020 09:10:40 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1594156240;
-        bh=LIZaTJsVpo0fc9R6NrZDyGHqCTXkr77kbJtYcUTyeeY=;
-        h=From:To:Cc:Subject:Date;
-        b=VoeWPTYkyjGp1TCIpSRUpTYa41WqdVf2g2Yif/cCo1GmlQOFmMjCI+DSjGUY6oqvr
-         aZGPedZbELz40rAmV06xDppbX7DBnak/JgCqzyoL1jaczE2xqLJBld1o2yxUUh+5ho
-         gglKWRFKGkGA6gVWVhzjLSRiQ8ts2aV4YSo6tlXbu9PIw51H2GlNGSUl39vjalOMA7
-         cmi/HeOD3RX9owELCSXuACs3jXkdSWUJFf3+pNJswwUD9SHGPjTMKnsenCSgMWN/U3
-         HIa93UUSEg1NT8WnIniRloQ7ECy9Lzo4r9/zOnBlYMQvbgr5tdWzA2Lshr1Kkzfzl/
-         cEF2HdcZiCkdA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f04e4d00000>; Wed, 08 Jul 2020 09:10:40 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id 2720D13EDDC;
-        Wed,  8 Jul 2020 09:10:39 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 3C327341145; Wed,  8 Jul 2020 09:10:40 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     gregory.clement@bootlin.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH] i2c: mv64xxx: Add bus error recovery
-Date:   Wed,  8 Jul 2020 09:10:36 +1200
-Message-Id: <20200707211036.12896-1-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
+        Tue, 7 Jul 2020 17:12:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52288 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgGGVMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:12:48 -0400
+IronPort-SDR: 9bLxoIDZriLgmu3OdmsHa06/6JHQiDrg/vNAWXZDyfFw5CD5wN4zP15/9kRkRDSWg25q03qE8Q
+ ziH+3l3whr8w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127292903"
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="127292903"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:12:44 -0700
+IronPort-SDR: JTcQq4O8pgB/WDWxc4jQef5Ro2nDaeHPpTG34Y0JkkFdPUSm/D+lUIgdm39EQVE4KKKPmr10aY
+ 4I46+pIegejw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="279735787"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 07 Jul 2020 14:12:44 -0700
+Date:   Tue, 7 Jul 2020 14:12:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     "Andersen, John" <john.s.andersen@intel.com>, corbet@lwn.net,
+        pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, shuah@kernel.org,
+        liran.alon@oracle.com, drjones@redhat.com,
+        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mchehab+huawei@kernel.org,
+        gregkh@linuxfoundation.org, paulmck@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
+        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
+        peterz@infradead.org, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
+        dave.hansen@linux.intel.com, arjan@linux.intel.com,
+        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
+        makarandsonare@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+Message-ID: <20200707211244.GN20096@linux.intel.com>
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-3-john.s.andersen@intel.com>
+ <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
+ <20200618144314.GB23@258ff54ff3c0>
+ <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds i2c bus recovery to the mv64xxx driver.
+On Thu, Jun 18, 2020 at 07:51:10AM -0700, Dave Hansen wrote:
+> On 6/18/20 7:43 AM, Andersen, John wrote:
+> > On Thu, Jun 18, 2020 at 07:18:09AM -0700, Dave Hansen wrote:
+> >> On 6/17/20 12:07 PM, John Andersen wrote:
+> >>> +#define KVM_CR0_PIN_ALLOWED	(X86_CR0_WP)
+> >>> +#define KVM_CR4_PIN_ALLOWED	(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP)
+> >>
+> >> Why *is* there an allowed set?  Why don't we just allow everything?
+> >>
+> >> Shouldn't we also pin any unknown bits?  The CR4.FSGSBASE bit is an
+> >> example of something that showed up CPUs without Linux knowing about it.
+> >>  If set, it causes problems.  This set couldn't have helped FSGSBASE
+> >> because it is not in the allowed set.
+> >>
+> >> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
+> >> write to kernel memory.  Linux won't set it, but an attacker would go
+> >> after it, first thing.
 
-Implement bus recovery to recover from SCL/SDA stuck low.
+That's an orthogonal to pinning.  KVM never lets the guest set CR4 bits that
+are unknown to KVM.  Supporting CR4.NO_MARBLES would require an explicit KVM
+change to allow it to be set by the guest, and would also require a userspace
+VMM to expose NO_MARBLES to the guest.
 
-This uses the generic recovery function, setting the clock/data lines as
-GPIO pins, and sending 9 clocks to try and recover the bus.
-
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
- drivers/i2c/busses/i2c-mv64xxx.c | 77 +++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv=
-64xxx.c
-index 829b8c98ae51..e58853ba3ef0 100644
---- a/drivers/i2c/busses/i2c-mv64xxx.c
-+++ b/drivers/i2c/busses/i2c-mv64xxx.c
-@@ -21,6 +21,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_irq.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-@@ -147,6 +148,10 @@ struct mv64xxx_i2c_data {
- 	bool			irq_clear_inverted;
- 	/* Clk div is 2 to the power n, not 2 to the power n + 1 */
- 	bool			clk_n_base_0;
-+	struct pinctrl		*pinctrl;
-+	struct i2c_bus_recovery_info	rinfo;
-+	struct pinctrl_state	*pin_default_state;
-+	struct pinctrl_state	*pin_gpio_state;
- };
-=20
- static struct mv64xxx_i2c_regs mv64xxx_i2c_regs_mv64xxx =3D {
-@@ -325,7 +330,8 @@ mv64xxx_i2c_fsm(struct mv64xxx_i2c_data *drv_data, u3=
-2 status)
- 			 drv_data->msg->flags);
- 		drv_data->action =3D MV64XXX_I2C_ACTION_SEND_STOP;
- 		mv64xxx_i2c_hw_init(drv_data);
--		drv_data->rc =3D -EIO;
-+		i2c_recover_bus(&drv_data->adapter);
-+		drv_data->rc =3D -EAGAIN;
- 	}
- }
-=20
-@@ -563,6 +569,7 @@ mv64xxx_i2c_wait_for_completion(struct mv64xxx_i2c_da=
-ta *drv_data)
- 				"time_left: %d\n", drv_data->block,
- 				(int)time_left);
- 			mv64xxx_i2c_hw_init(drv_data);
-+			i2c_recover_bus(&drv_data->adapter);
- 		}
- 	} else
- 		spin_unlock_irqrestore(&drv_data->lock, flags);
-@@ -872,6 +879,69 @@ mv64xxx_of_config(struct mv64xxx_i2c_data *drv_data,
- }
- #endif /* CONFIG_OF */
-=20
-+/*
-+ * Switch to bit bang mode to prepare for i2c generic recovery.
-+ */
-+static void mv64xxx_i2c_prepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct mv64xxx_i2c_data *drv_data =3D i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(drv_data->pinctrl, drv_data->pin_gpio_state);
-+}
-+
-+/*
-+ * Return to normal i2c operation following recovery.
-+ */
-+static void mv64xxx_i2c_unprepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct mv64xxx_i2c_data *drv_data =3D i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(drv_data->pinctrl, drv_data->pin_default_state);
-+}
-+
-+static int mv64xxx_i2c_init_recovery_info(struct mv64xxx_i2c_data *drv_d=
-ata,
-+					  struct platform_device *pd)
-+{
-+	struct i2c_bus_recovery_info *rinfo =3D &drv_data->rinfo;
-+	struct device *dev =3D &pd->dev;
-+
-+	drv_data->pinctrl =3D devm_pinctrl_get(dev);
-+	if (!drv_data->pinctrl || IS_ERR(drv_data->pinctrl)) {
-+		dev_err(dev, "can't get pinctrl, bus recovery not supported\n");
-+		return PTR_ERR(drv_data->pinctrl);
-+	}
-+
-+	drv_data->pin_default_state =3D pinctrl_lookup_state(drv_data->pinctrl,
-+			PINCTRL_STATE_DEFAULT);
-+	drv_data->pin_gpio_state =3D pinctrl_lookup_state(drv_data->pinctrl,
-+			"gpio");
-+	rinfo->scl_gpiod =3D devm_gpiod_get(dev, "scl",
-+					  GPIOD_OUT_HIGH_OPEN_DRAIN);
-+	rinfo->sda_gpiod =3D devm_gpiod_get(dev, "sda", GPIOD_IN);
-+	if (PTR_ERR(rinfo->scl_gpiod) =3D=3D -EPROBE_DEFER ||
-+	    PTR_ERR(rinfo->sda_gpiod) =3D=3D -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (IS_ERR(rinfo->sda_gpiod) ||
-+	    IS_ERR(rinfo->scl_gpiod) ||
-+	    IS_ERR(drv_data->pin_default_state) ||
-+	    IS_ERR(drv_data->pin_gpio_state)) {
-+		dev_dbg(dev, "recovery information incomplete\n");
-+		return 0;
-+	}
-+
-+	dev_dbg(dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
-+		rinfo->scl_gpiod ? desc_to_gpio(rinfo->scl_gpiod) : -1,
-+		rinfo->sda_gpiod ? desc_to_gpio(rinfo->sda_gpiod) : -1);
-+
-+	rinfo->prepare_recovery =3D mv64xxx_i2c_prepare_recovery;
-+	rinfo->unprepare_recovery =3D mv64xxx_i2c_unprepare_recovery;
-+	rinfo->recover_bus =3D i2c_generic_scl_recovery;
-+	drv_data->adapter.bus_recovery_info =3D rinfo;
-+
-+	return 0;
-+}
-+
- static int
- mv64xxx_i2c_probe(struct platform_device *pd)
- {
-@@ -939,6 +1009,10 @@ mv64xxx_i2c_probe(struct platform_device *pd)
-=20
- 	mv64xxx_i2c_hw_init(drv_data);
-=20
-+	rc =3D mv64xxx_i2c_init_recovery_info(drv_data, pd);
-+	if (rc =3D=3D -EPROBE_DEFER)
-+		goto exit_reset;
-+
- 	rc =3D request_irq(drv_data->irq, mv64xxx_i2c_intr, 0,
- 			 MV64XXX_I2C_CTLR_NAME, drv_data);
- 	if (rc) {
-@@ -951,6 +1025,7 @@ mv64xxx_i2c_probe(struct platform_device *pd)
- 			"mv64xxx: Can't add i2c adapter, rc: %d\n", -rc);
- 		goto exit_free_irq;
- 	}
-+	i2c_recover_bus(&drv_data->adapter);
-=20
- 	return 0;
-=20
---=20
-2.27.0
-
+That being said, this series should supporting pinning as much as possible,
+i.e. if the bit can be exposed to the guest and doesn't require special
+handling in KVM, allow it to be pinned.  E.g. TS is a special case because
+pinning would require additional emulator support and IMO isn't interesting
+enough to justify the extra complexity.  At a glance, I don't see anything
+that would prevent pinning FSGSBASE.
