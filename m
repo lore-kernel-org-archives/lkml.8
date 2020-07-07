@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA92C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A885C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097B320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B43D2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135785;
-	bh=ZTajoMUUDkmpT/Bv3inm+yHdJpBzFV9d/bxptjUwfsw=;
+	s=default; t=1594135788;
+	bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+n3A2P6uSwqf4zMXJbYiJLxSEibG4y1tlrBc8/wDyIfGXTF5nDuq7uVY/XXf/sgH
-	 cP//Q05XwP2OnX/2qzfaTO2C5Vhg0Ifi5u9QPXQAjP/u0mCG2eER4TVsKTKoRgcOzT
-	 Obp8uUL99CXwri7dDFLtoX3n9XpL5h0v59Lj70f4=
+	b=t8ebTxX9PIBnhD41FBKqh2CpyomoVDDefhe40g2HP+bExlhiKaoNB/KIKjWowLzl6
+	 6OH83DMNRMyyLibzQ+nKl7hdaP84MXn4ReYG3bK25a+/VoNxnCvaeNSlDd/WEqeAkA
+	 72MZWu4+kBAV5n51rmGO00ac/fSCbXwA8vj97uEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgGGPYk (ORCPT
+        id S1730127AbgGGP3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730102AbgGGPYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:30 -0400
+        id S1730119AbgGGPYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959042065D;
-        Tue,  7 Jul 2020 15:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 247ED2065D;
+        Tue,  7 Jul 2020 15:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135470;
-        bh=ZTajoMUUDkmpT/Bv3inm+yHdJpBzFV9d/bxptjUwfsw=;
+        s=default; t=1594135482;
+        bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxyYi7EQWm1+5mVnSzoLjFji/NDr6wfQTRJsKexLCnXIuPT5RVv6HKGzwIz1O7bY4
-         d8kznXjqBYLhtNPrCaUL6YTYGdvDcNt/SMc6E071r3/XPJQN86QsIg/XqwgCLVN42z
-         kNUiF77KokAwkNKYwG3r4uu5+OkK00c/hKJmAcw8=
+        b=nS2FIXXKrJZHsy0gX8a6N4WFsrczZa4vDNvcYKdixv2DA50ws1qvoFQmZWgQHd+Em
+         oqBNiYxz/ZDlvUZOONYIp6p1QHjw+iopUwwNOwBRjZCNX6e5+sGYTT3cplorE/TcQw
+         mPVPs3SDxZdoJh1ZG0GF8EKX9tgEvo7fZhbhymyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Tesarik <ptesarik@suse.cz>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kyungtae Kim <kt0755@gmail.com>,
+        Zqiang <qiang.zhang@windriver.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 026/112] mm, dump_page(): do not crash with invalid mapping pointer
-Date:   Tue,  7 Jul 2020 17:16:31 +0200
-Message-Id: <20200707145802.233484930@linuxfoundation.org>
+Subject: [PATCH 5.7 029/112] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+Date:   Tue,  7 Jul 2020 17:16:34 +0200
+Message-Id: <20200707145802.371383696@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -65,166 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Zqiang <qiang.zhang@windriver.com>
 
-[ Upstream commit 002ae7057069538aa3afd500f6f60a429cb948b2 ]
+[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
 
-We have seen a following problem on a RPi4 with 1G RAM:
+BUG: memory leak
+unreferenced object 0xffff888055046e00 (size 256):
+  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
+  hex dump (first 32 bytes):
+    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
+    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
+  backtrace:
+    [<00000000d121dccf>] kmemleak_alloc_recursive
+include/linux/kmemleak.h:43 [inline]
+    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
+    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
+    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
+    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
+drivers/usb/misc/usbtest.c:2790
+    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
+drivers/usb/core/driver.c:361
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
+drivers/base/dd.c:831
+    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
+    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
+    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
+    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
+    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
+    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
+drivers/usb/core/message.c:2030
+    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
+    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
+drivers/usb/core/driver.c:266
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
 
-    BUG: Bad page state in process systemd-hwdb  pfn:35601
-    page:ffff7e0000d58040 refcount:15 mapcount:131221 mapping:efd8fe765bc80080 index:0x1 compound_mapcount: -32767
-    Unable to handle kernel paging request at virtual address efd8fe765bc80080
-    Mem abort info:
-      ESR = 0x96000004
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000004
-      CM = 0, WnR = 0
-    [efd8fe765bc80080] address between user and kernel address ranges
-    Internal error: Oops: 96000004 [#1] SMP
-    Modules linked in: btrfs libcrc32c xor xor_neon zlib_deflate raid6_pq mmc_block xhci_pci xhci_hcd usbcore sdhci_iproc sdhci_pltfm sdhci mmc_core clk_raspberrypi gpio_raspberrypi_exp pcie_brcmstb bcm2835_dma gpio_regulator phy_generic fixed sg scsi_mod efivarfs
-    Supported: No, Unreleased kernel
-    CPU: 3 PID: 408 Comm: systemd-hwdb Not tainted 5.3.18-8-default #1 SLE15-SP2 (unreleased)
-    Hardware name: raspberrypi rpi/rpi, BIOS 2020.01 02/21/2020
-    pstate: 40000085 (nZcv daIf -PAN -UAO)
-    pc : __dump_page+0x268/0x368
-    lr : __dump_page+0xc4/0x368
-    sp : ffff000012563860
-    x29: ffff000012563860 x28: ffff80003ddc4300
-    x27: 0000000000000010 x26: 000000000000003f
-    x25: ffff7e0000d58040 x24: 000000000000000f
-    x23: efd8fe765bc80080 x22: 0000000000020095
-    x21: efd8fe765bc80080 x20: ffff000010ede8b0
-    x19: ffff7e0000d58040 x18: ffffffffffffffff
-    x17: 0000000000000001 x16: 0000000000000007
-    x15: ffff000011689708 x14: 3030386362353637
-    x13: 6566386466653a67 x12: 6e697070616d2031
-    x11: 32323133313a746e x10: 756f6370616d2035
-    x9 : ffff00001168a840 x8 : ffff00001077a670
-    x7 : 000000000000013d x6 : ffff0000118a43b5
-    x5 : 0000000000000001 x4 : ffff80003dd9e2c8
-    x3 : ffff80003dd9e2c8 x2 : 911c8d7c2f483500
-    x1 : dead000000000100 x0 : efd8fe765bc80080
-    Call trace:
-     __dump_page+0x268/0x368
-     bad_page+0xd4/0x168
-     check_new_page_bad+0x80/0xb8
-     rmqueue_bulk.constprop.26+0x4d8/0x788
-     get_page_from_freelist+0x4d4/0x1228
-     __alloc_pages_nodemask+0x134/0xe48
-     alloc_pages_vma+0x198/0x1c0
-     do_anonymous_page+0x1a4/0x4d8
-     __handle_mm_fault+0x4e8/0x560
-     handle_mm_fault+0x104/0x1e0
-     do_page_fault+0x1e8/0x4c0
-     do_translation_fault+0xb0/0xc0
-     do_mem_abort+0x50/0xb0
-     el0_da+0x24/0x28
-    Code: f9401025 8b8018a0 9a851005 17ffffca (f94002a0)
-
-Besides the underlying issue with page->mapping containing a bogus value
-for some reason, we can see that __dump_page() crashed by trying to read
-the pointer at mapping->host, turning a recoverable warning into full
-Oops.
-
-It can be expected that when page is reported as bad state for some
-reason, the pointers there should not be trusted blindly.
-
-So this patch treats all data in __dump_page() that depends on
-page->mapping as lava, using probe_kernel_read_strict().  Ideally this
-would include the dentry->d_parent recursively, but that would mean
-changing printk handler for %pd.  Chances of reaching the dentry
-printing part with an initially bogus mapping pointer should be rather
-low, though.
-
-Also prefix printing mapping->a_ops with a description of what is being
-printed.  In case the value is bogus, %ps will print raw value instead
-of the symbol name and then it's not obvious at all that it's printing
-a_ops.
-
-Reported-by: Petr Tesarik <ptesarik@suse.cz>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Link: http://lkml.kernel.org/r/20200331165454.12263-1-vbabka@suse.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/debug.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 50 insertions(+), 6 deletions(-)
+ drivers/usb/misc/usbtest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/debug.c b/mm/debug.c
-index 2189357f09871..f2ede2df585a9 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -110,13 +110,57 @@ void __dump_page(struct page *page, const char *reason)
- 	else if (PageAnon(page))
- 		type = "anon ";
- 	else if (mapping) {
--		if (mapping->host && mapping->host->i_dentry.first) {
--			struct dentry *dentry;
--			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
--			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
--		} else
--			pr_warn("%ps\n", mapping->a_ops);
-+		const struct inode *host;
-+		const struct address_space_operations *a_ops;
-+		const struct hlist_node *dentry_first;
-+		const struct dentry *dentry_ptr;
-+		struct dentry dentry;
-+
-+		/*
-+		 * mapping can be invalid pointer and we don't want to crash
-+		 * accessing it, so probe everything depending on it carefully
-+		 */
-+		if (probe_kernel_read_strict(&host, &mapping->host,
-+						sizeof(struct inode *)) ||
-+		    probe_kernel_read_strict(&a_ops, &mapping->a_ops,
-+				sizeof(struct address_space_operations *))) {
-+			pr_warn("failed to read mapping->host or a_ops, mapping not a valid kernel address?\n");
-+			goto out_mapping;
-+		}
-+
-+		if (!host) {
-+			pr_warn("mapping->a_ops:%ps\n", a_ops);
-+			goto out_mapping;
-+		}
-+
-+		if (probe_kernel_read_strict(&dentry_first,
-+			&host->i_dentry.first, sizeof(struct hlist_node *))) {
-+			pr_warn("mapping->a_ops:%ps with invalid mapping->host inode address %px\n",
-+				a_ops, host);
-+			goto out_mapping;
-+		}
-+
-+		if (!dentry_first) {
-+			pr_warn("mapping->a_ops:%ps\n", a_ops);
-+			goto out_mapping;
-+		}
-+
-+		dentry_ptr = container_of(dentry_first, struct dentry, d_u.d_alias);
-+		if (probe_kernel_read_strict(&dentry, dentry_ptr,
-+							sizeof(struct dentry))) {
-+			pr_warn("mapping->aops:%ps with invalid mapping->host->i_dentry.first %px\n",
-+				a_ops, dentry_ptr);
-+		} else {
-+			/*
-+			 * if dentry is corrupted, the %pd handler may still
-+			 * crash, but it's unlikely that we reach here with a
-+			 * corrupted struct page
-+			 */
-+			pr_warn("mapping->aops:%ps dentry name:\"%pd\"\n",
-+								a_ops, &dentry);
-+		}
- 	}
-+out_mapping:
- 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 98ada1a3425c6..bae88893ee8e3 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2873,6 +2873,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
  
- 	pr_warn("%sflags: %#lx(%pGp)%s\n", type, page->flags, &page->flags,
+ 	usb_set_intfdata(intf, NULL);
+ 	dev_dbg(&intf->dev, "disconnect\n");
++	kfree(dev->buf);
+ 	kfree(dev);
+ }
+ 
 -- 
 2.25.1
 
