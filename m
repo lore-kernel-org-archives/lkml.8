@@ -2,100 +2,349 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3654AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D073FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 159AD206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEgzrmFO"
+	by mail.kernel.org (Postfix) with ESMTP id B3D65206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgGGLgP (ORCPT
+        id S1728073AbgGGLgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgGGLgO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:36:14 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB4FC08C5E0
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:36:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so24526479lfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BaUdPMwTbym0/FOb53irCXsw858iJMpd+U7fSCxbrZw=;
-        b=EEgzrmFOPBRJPWSIHRYyePa9lAGoPCoxXqN3mLLCIQDZuRhWVmoWdIo9koYco7oq32
-         vFLlttQN2LTQr2685xKsPGTcpR+SI/aGR9ptBAspLpMDLtnyIVcelAgEmNvUgUNT3Aw2
-         5gDlCgfPKeKuRHTfhOvblO0quMu/M2GIaqhvEdyA4m0TtDrgBd9nLiKs+XRoNuQIxx5r
-         xFw4hBR6ouQOf264O3KjYNKNtoiN1ZXqrS8VAVcqrL9tKo7cEpwCl77SdvW1KJAEuA12
-         ZXDeXEgnbXWq7SkuqBrrVcROSIOaA257MsCDJHIFHBVIM8DlWdeE3/nbJvAeiXXL5aXt
-         fYRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BaUdPMwTbym0/FOb53irCXsw858iJMpd+U7fSCxbrZw=;
-        b=h5JPNM2nNQ4wrUQ0bPYaOYCZjBJQwpzWEljzoDitSo6DenWLsC40lvzbcFAqUx5dGZ
-         2XWhh/Dv2t2XdtD0m72p1a2x6Uf+IJlYLcg9a92sJ9wULqRpMuu6+lH3JJHh9nvxEPD0
-         Hg0foRI9tcZJiIyH8jpG8Zdw+xlJSqYr1mUqsCoGRCS2UbXUQl1IFpBfFAb74kkxcE77
-         DzdMIMeY67xF7vGiG6rpA+snIlp2IoVi6WJP71a5+KGwoGn73Xt/Z4IUrm33VJlCKaaE
-         JwPACtAEFXOMyMWHXx+OZ0zK4DnF3ATyasgXGALdhmjRCQ+oJVkLXeL38MbJs00ZNiXb
-         wQCA==
-X-Gm-Message-State: AOAM531Najq574DlqHAVONLl1i047RIMHdtDYR5m5a/P7vvEXLWjRTos
-        YkjtWUcAr+5asCx6jpy0XKAYcz1vOpa1SpSat6AOSkKoMwg=
-X-Google-Smtp-Source: ABdhPJwURK8xxItk20LIQyik7OCxh3Na7DKcSEzSy2t02n+xFYxkh4Kdd3MsRtyCZLblZdRY6s0fjloV3UCAX3MmsHk=
-X-Received: by 2002:a19:7407:: with SMTP id v7mr31140846lfe.4.1594121771982;
- Tue, 07 Jul 2020 04:36:11 -0700 (PDT)
+        Tue, 7 Jul 2020 07:36:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42538 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726745AbgGGLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:36:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 353A41FB;
+        Tue,  7 Jul 2020 04:36:46 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 889143F71E;
+        Tue,  7 Jul 2020 04:36:44 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] drm/msm: Add support to create a local pagetable
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno@lists.freedesktop.org
+References: <20200626200414.14382-1-jcrouse@codeaurora.org>
+ <20200626200414.14382-5-jcrouse@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3feed674-5eb9-ca2f-76a7-f888f431c409@arm.com>
+Date:   Tue, 7 Jul 2020 12:36:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-6-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1592480018-3340-6-git-send-email-hanks.chen@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:36:01 +0200
-Message-ID: <CACRpkdZc+PVGOXwba=ocs-VBh-sJT_1dpEVSxnjdwbmM_d0LFw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/7] pinctrl: mediatek: add mt6779 eint support
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200626200414.14382-5-jcrouse@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
+On 2020-06-26 21:04, Jordan Crouse wrote:
+> Add support to create a io-pgtable for use by targets that support
+> per-instance pagetables.  In order to support per-instance pagetables the
+> GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
+> split pagetables and auxiliary domains need to be supported and enabled.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>   drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
+>   drivers/gpu/drm/msm/msm_iommu.c  | 180 ++++++++++++++++++++++++++++++-
+>   drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
+>   3 files changed, 195 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+> index 310a31b05faa..aab121f4beb7 100644
+> --- a/drivers/gpu/drm/msm/msm_gpummu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
+> @@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
+>   	}
+>   
+>   	gpummu->gpu = gpu;
+> -	msm_mmu_init(&gpummu->base, dev, &funcs);
+> +	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
+>   
+>   	return &gpummu->base;
+>   }
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index 1b6635504069..f455c597f76d 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -4,15 +4,192 @@
+>    * Author: Rob Clark <robdclark@gmail.com>
+>    */
+>   
+> +#include <linux/io-pgtable.h>
+>   #include "msm_drv.h"
+>   #include "msm_mmu.h"
+>   
+>   struct msm_iommu {
+>   	struct msm_mmu base;
+>   	struct iommu_domain *domain;
+> +	struct iommu_domain *aux_domain;
+>   };
+> +
+>   #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+>   
+> +struct msm_iommu_pagetable {
+> +	struct msm_mmu base;
+> +	struct msm_mmu *parent;
+> +	struct io_pgtable_ops *pgtbl_ops;
+> +	phys_addr_t ttbr;
+> +	u32 asid;
+> +};
+> +
+> +static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
+> +{
+> +	return container_of(mmu, struct msm_iommu_pagetable, base);
+> +}
+> +
+> +static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
+> +		size_t size)
+> +{
+> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
+> +	size_t unmapped = 0;
+> +
+> +	/* Unmap the block one page at a time */
+> +	while (size) {
+> +		unmapped += ops->unmap(ops, iova, 4096, NULL);
+> +		iova += 4096;
+> +		size -= 4096;
+> +	}
+> +
+> +	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
+> +
+> +	return (unmapped == size) ? 0 : -EINVAL;
+> +}
 
-> add driver setting to support mt6779 eint
->
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+Remember in patch #1 when you said "Then 'domain' can be used like any 
+other iommu domain to map and unmap iova addresses in the pagetable."?
 
-Patch applied.
+This appears to be very much not that :/
 
-Yours,
-Linus Walleij
+Robin.
+
+> +
+> +static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
+> +		struct sg_table *sgt, size_t len, int prot)
+> +{
+> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
+> +	struct scatterlist *sg;
+> +	size_t mapped = 0;
+> +	u64 addr = iova;
+> +	unsigned int i;
+> +
+> +	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+> +		size_t size = sg->length;
+> +		phys_addr_t phys = sg_phys(sg);
+> +
+> +		/* Map the block one page at a time */
+> +		while (size) {
+> +			if (ops->map(ops, addr, phys, 4096, prot)) {
+> +				msm_iommu_pagetable_unmap(mmu, iova, mapped);
+> +				return -EINVAL;
+> +			}
+> +
+> +			phys += 4096;
+> +			addr += 4096;
+> +			size -= 4096;
+> +			mapped += 4096;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
+> +{
+> +	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +
+> +	free_io_pgtable_ops(pagetable->pgtbl_ops);
+> +	kfree(pagetable);
+> +}
+> +
+> +/*
+> + * Given a parent device, create and return an aux domain. This will enable the
+> + * TTBR0 region
+> + */
+> +static struct iommu_domain *msm_iommu_get_aux_domain(struct msm_mmu *parent)
+> +{
+> +	struct msm_iommu *iommu = to_msm_iommu(parent);
+> +	struct iommu_domain *domain;
+> +	int ret;
+> +
+> +	if (iommu->aux_domain)
+> +		return iommu->aux_domain;
+> +
+> +	if (!iommu_dev_has_feature(parent->dev, IOMMU_DEV_FEAT_AUX))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	domain = iommu_domain_alloc(&platform_bus_type);
+> +	if (!domain)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	ret = iommu_aux_attach_device(domain, parent->dev);
+> +	if (ret) {
+> +		iommu_domain_free(domain);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	iommu->aux_domain = domain;
+> +	return domain;
+> +}
+> +
+> +int msm_iommu_pagetable_params(struct msm_mmu *mmu,
+> +		phys_addr_t *ttbr, int *asid)
+> +{
+> +	struct msm_iommu_pagetable *pagetable;
+> +
+> +	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
+> +		return -EINVAL;
+> +
+> +	pagetable = to_pagetable(mmu);
+> +
+> +	if (ttbr)
+> +		*ttbr = pagetable->ttbr;
+> +
+> +	if (asid)
+> +		*asid = pagetable->asid;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct msm_mmu_funcs pagetable_funcs = {
+> +		.map = msm_iommu_pagetable_map,
+> +		.unmap = msm_iommu_pagetable_unmap,
+> +		.destroy = msm_iommu_pagetable_destroy,
+> +};
+> +
+> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
+> +{
+> +	static int next_asid = 16;
+> +	struct msm_iommu_pagetable *pagetable;
+> +	struct iommu_domain *aux_domain;
+> +	struct io_pgtable_cfg cfg;
+> +	int ret;
+> +
+> +	/* Make sure that the parent has a aux domain attached */
+> +	aux_domain = msm_iommu_get_aux_domain(parent);
+> +	if (IS_ERR(aux_domain))
+> +		return ERR_CAST(aux_domain);
+> +
+> +	/* Get the pagetable configuration from the aux domain */
+> +	ret = iommu_domain_get_attr(aux_domain, DOMAIN_ATTR_PGTABLE_CFG, &cfg);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
+> +	if (!pagetable)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
+> +		MSM_MMU_IOMMU_PAGETABLE);
+> +
+> +	cfg.tlb = NULL;
+> +
+> +	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
+> +		&cfg, aux_domain);
+> +
+> +	if (!pagetable->pgtbl_ops) {
+> +		kfree(pagetable);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +
+> +	/* Needed later for TLB flush */
+> +	pagetable->parent = parent;
+> +	pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
+> +
+> +	pagetable->asid = next_asid;
+> +	next_asid = (next_asid + 1)  % 255;
+> +	if (next_asid < 16)
+> +		next_asid = 16;
+> +
+> +	return &pagetable->base;
+> +}
+> +
+>   static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+>   		unsigned long iova, int flags, void *arg)
+>   {
+> @@ -40,6 +217,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+>   	if (iova & BIT_ULL(48))
+>   		iova |= GENMASK_ULL(63, 49);
+>   
+> +
+>   	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+>   	WARN_ON(!ret);
+>   
+> @@ -85,7 +263,7 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+>   		return ERR_PTR(-ENOMEM);
+>   
+>   	iommu->domain = domain;
+> -	msm_mmu_init(&iommu->base, dev, &funcs);
+> +	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
+>   	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+>   
+>   	ret = iommu_attach_device(iommu->domain, dev);
+> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+> index 3a534ee59bf6..61ade89d9e48 100644
+> --- a/drivers/gpu/drm/msm/msm_mmu.h
+> +++ b/drivers/gpu/drm/msm/msm_mmu.h
+> @@ -17,18 +17,26 @@ struct msm_mmu_funcs {
+>   	void (*destroy)(struct msm_mmu *mmu);
+>   };
+>   
+> +enum msm_mmu_type {
+> +	MSM_MMU_GPUMMU,
+> +	MSM_MMU_IOMMU,
+> +	MSM_MMU_IOMMU_PAGETABLE,
+> +};
+> +
+>   struct msm_mmu {
+>   	const struct msm_mmu_funcs *funcs;
+>   	struct device *dev;
+>   	int (*handler)(void *arg, unsigned long iova, int flags);
+>   	void *arg;
+> +	enum msm_mmu_type type;
+>   };
+>   
+>   static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
+> -		const struct msm_mmu_funcs *funcs)
+> +		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
+>   {
+>   	mmu->dev = dev;
+>   	mmu->funcs = funcs;
+> +	mmu->type = type;
+>   }
+>   
+>   struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+> @@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
+>   	mmu->handler = handler;
+>   }
+>   
+> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
+> +
+>   void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
+>   		dma_addr_t *tran_error);
+>   
+> +
+> +int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
+> +		int *asid);
+> +
+>   #endif /* __MSM_MMU_H__ */
+> 
