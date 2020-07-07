@@ -2,131 +2,115 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357F0C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169A220719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49541206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOfLIPJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgGGBom (ORCPT
+        id S1728073AbgGGBvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 21:44:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40649 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgGGBok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 21:44:40 -0400
-IronPort-SDR: xgUEFSrAjaUt1BegHfgMMTpe5IKP7yM2DGew1pXlkKh2ElSoDWvHwrp9E/If7aVBxafM47U+I5
- xY9DDQgIFHow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="147536135"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="147536135"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 18:44:40 -0700
-IronPort-SDR: wwrLt2T9DDD/0MUuMNOzDmBrc56X+9bu9H8+XJmtI5OICVSouPK5Sp2RJ+tpk7dmuZ2sTinZRA
- vUF+WTYzI2aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="266688936"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jul 2020 18:44:38 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 2/2] iommu: Add aux_domain_attached flag to iommu_group
-Date:   Tue,  7 Jul 2020 09:39:57 +0800
-Message-Id: <20200707013957.23672-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200707013957.23672-1-baolu.lu@linux.intel.com>
-References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
+        Mon, 6 Jul 2020 21:51:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgGGBvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 21:51:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CA0C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 18:51:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id e13so36800986qkg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qx/C0isL60DPbKTPxrph0kJVnu1AM2M66vCo2gvDUxo=;
+        b=JOfLIPJL+2nxndCtc9jPaSJdkd+AmzkyaD1JzoVZhJb34tgPdJuaPVJbdhGbbmlot1
+         nP0PCUA2MnDCVjOTzLofNt5MbSHBNXQxCZtyBJJABBz2HfoEZbvQdmxYmb7leoUTt+DX
+         hLzm1z/RZbt8s91F2R4d+0vl+3C0GK31Catd+BJ3duwE76ybY8oTZisVGdhKSxuv+eQJ
+         HnaAvpjQGIkO0c1lLMZNsMXGcVW/f8n8D9tDW/DKceRkvWp9rTl9lqt0AOwOMH3hp17c
+         g+nXeOpHlQsh/gG9W0Nkmgnc6EpRs9y15S8Up7ybEJLf3nOF7TMorGn6XpoLBKi0AF8+
+         vY4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qx/C0isL60DPbKTPxrph0kJVnu1AM2M66vCo2gvDUxo=;
+        b=VtAldLmAGRmDjF/HB+Aq9fZ/t/TZChzET4UH1RAOXFGEQSs+/1qYNvJ1PcnvlWRisT
+         XotVDvUe0Hg1a9ELXS4E8H+pK0O4re+683A8cLTofSgnqe5bObNqSBYy511KjfXuvksI
+         zQNictVeXFX205mD1Mgs6hs9tkuG42A/XbGQ0fmXgi1lYf52r/icqCv7y6E7VTd+CLOA
+         stb5kN9RAxWEulI37KoHa5o166GSfRzWmUdQxtFp1MUj2UjO0qd+jdm4kWK7N2+Fo2B2
+         /ggS4Qctxf9yrjNzND5KHGuXk0tUXOXw4SvPXrt8UhvJEtRfrXiXPn9pDvyxvk5NoJ8U
+         LV5g==
+X-Gm-Message-State: AOAM533Sz5j84l55RFKXQnRo7pz7/CMjQkjVOpwpS/b+ExYDg4O3wBd/
+        CocV4qZURinw83r68yA7eQtk01CiuXCw+vIfAeZW3qdJ
+X-Google-Smtp-Source: ABdhPJxbdu1UR0UwC4VJ18/+W8RImTA2mJWd60dbnKAprt4YwcWVw4xJ/jqDfQmncoedyIwf0fGD5hIXQ2ivhdVou/E=
+X-Received: by 2002:a37:bcb:: with SMTP id 194mr51351661qkl.103.1594086702672;
+ Mon, 06 Jul 2020 18:51:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702193102.25282-1-nicoleotsuka@gmail.com>
+In-Reply-To: <20200702193102.25282-1-nicoleotsuka@gmail.com>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Tue, 7 Jul 2020 09:51:31 +0800
+Message-ID: <CAA+D8AMMKKDyPXXN0790LswNh_sOfUUDVw5PiMoLB-U4qX8G9w@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add Shengjiu to reviewer list of sound/soc/fsl
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, timur@tabi.org,
+        Li.Xiubo@freescale.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The normal domain at(de)tach is parallel with aux-domain at(de)tach. In
-another word, once an iommu_group is attached through the normal domain
-attach api's, it should not go through the aux-domain at(de)tach api's
-until the domain is detached. And, vice versa.
+On Fri, Jul 3, 2020 at 3:33 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> Add Shengjiu who's actively working on the latest fsl/nxp audio drivers.
+>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> Cc: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+> To Shengjiu, please ack if you feel okay with this (your email address too).
 
-Currently, we prohibit an iommu_group to go through aux-domain api's if
-group->domain != NULL; but we don't check aux-domain attachment in the
-normal attach api's. This marks an iommu_group after an aux-domain is
-attached, so that normal domain at(de)tach api's should never be used
-after that.
+Thanks Nicolin for nominating me as a reviewer.
 
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/iommu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I'd like to use my gmail address "shengjiu.wang@gmail.com".
+with this then
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 435835058209..3e7489ea2010 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -45,6 +45,7 @@ struct iommu_group {
- 	struct iommu_domain *default_domain;
- 	struct iommu_domain *domain;
- 	struct list_head entry;
-+	unsigned int aux_domain_attached:1;
- };
- 
- struct group_device {
-@@ -2074,6 +2075,9 @@ static int __iommu_attach_group(struct iommu_domain *domain,
- {
- 	int ret;
- 
-+	if (group->aux_domain_attached)
-+		return -EINVAL;
-+
- 	if (group->default_domain && group->domain != group->default_domain)
- 		return -EBUSY;
- 
-@@ -2111,6 +2115,9 @@ static void __iommu_detach_group(struct iommu_domain *domain,
- {
- 	int ret;
- 
-+	if (WARN_ON(group->aux_domain_attached))
-+		return;
-+
- 	if (!group->default_domain) {
- 		__iommu_group_for_each_dev(group, domain,
- 					   iommu_group_do_detach_device);
-@@ -2769,6 +2776,7 @@ int iommu_aux_attach_device(struct iommu_domain *domain,
- 	if (!ret) {
- 		trace_attach_device_to_domain(phys_dev);
- 		group->domain = domain;
-+		group->aux_domain_attached = true;
- 	}
- 
- out_unlock:
-@@ -2802,8 +2810,12 @@ void iommu_aux_detach_device(struct iommu_domain *domain,
- 	if (WARN_ON(iommu_group_device_count(group) != 1))
- 		goto out_unlock;
- 
-+	if (WARN_ON(!group->aux_domain_attached))
-+		goto out_unlock;
-+
- 	domain->ops->aux_detach_dev(domain, phys_dev);
- 	group->domain = NULL;
-+	group->aux_domain_attached = false;
- 	trace_detach_device_from_domain(phys_dev);
- 
- out_unlock:
--- 
-2.17.1
+Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
 
+best regards
+wang shengjiu
+
+>
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 496fd4eafb68..54aab083bb88 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6956,6 +6956,7 @@ M:        Timur Tabi <timur@kernel.org>
+>  M:     Nicolin Chen <nicoleotsuka@gmail.com>
+>  M:     Xiubo Li <Xiubo.Lee@gmail.com>
+>  R:     Fabio Estevam <festevam@gmail.com>
+> +R:     Shengjiu Wang <shengjiu.wang@nxp.com>
+>  L:     alsa-devel@alsa-project.org (moderated for non-subscribers)
+>  L:     linuxppc-dev@lists.ozlabs.org
+>  S:     Maintained
+> --
+> 2.17.1
+>
