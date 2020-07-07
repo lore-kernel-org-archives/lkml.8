@@ -2,52 +2,53 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89017206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454520663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135723;
-	bh=1Z+7no7gf04ZuYcu1e6IVYtdl7iOtPRL5GHl8583tg8=;
+	s=default; t=1594135726;
+	bh=pIrYhNhOIbV7GXkWdXf2eALo3Mmav0+oG7s4Y503agA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0bAMJIp90PF/hkWt0t1Qb5s0SCYkTj8an7MCNerbzQnNwTAQMLZMzizgXdPuuq0S
-	 LISAV8TzlmwBgbCD3k+cXLjB9OaLInwvhvh5atXe6GkH4xSknLHvpNY0kdE0Z0gCee
-	 nbQISE9UN02+hTvZUgrOHjI81Tghr2DLxAnw2C4s=
+	b=eMKauJiiznyeFmYzjkNzWVWTJAih+JZ+mCQ48SG+uAEYLNJcKebajkgJqIWivSzSx
+	 JDjdcZHmeH2QEXuD/0Udm5OiKSE6OJfiDMc/4+I4PAV52AsKjlPGKqQarVLGsi/qCz
+	 U3OMtVuHXVWo5OK/Ika0hABmXdHzsF5glRp7LaOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgGGP2m (ORCPT
+        id S1729971AbgGGP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbgGGPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:55 -0400
+        id S1729586AbgGGP0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A655207D0;
-        Tue,  7 Jul 2020 15:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E292A2082F;
+        Tue,  7 Jul 2020 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135555;
-        bh=1Z+7no7gf04ZuYcu1e6IVYtdl7iOtPRL5GHl8583tg8=;
+        s=default; t=1594135560;
+        bh=pIrYhNhOIbV7GXkWdXf2eALo3Mmav0+oG7s4Y503agA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kcvzb+eCjtjCg6Fefg701r351dOvz8R9FTV7vZ5NRBCu6QfShKg1fboLHapT9tL5
-         G1Rz7n4iIbPJ4iApBYfR+qRrtnFqels9FWoOEzevHBFj9kIXWivpvNWx2Or2DjZccp
-         kbVkNn6Z10h/W0hwhDqYSecGjSaBwA/SqKKbDY/A=
+        b=p9QwioGC/XgO2JfG1z1H6JJA9PGhdZxSK/4c/Q2RwmuNr6DMTKwUP5g95NraSTMA/
+         qYddhyjz/LCZWE5MLcAbPyLFfMLuER0dpxSHrJ61M3f9VoD/ySbtNdvZVr4rz52MuN
+         tr3MwWxXaLETmqb2iik7IfZwLtuQhjaz4+Ag2bJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elliott Mitchell <ehem+debian@m5p.com>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.7 086/112] nfsd: apply umask on fs without ACL support
-Date:   Tue,  7 Jul 2020 17:17:31 +0200
-Message-Id: <20200707145805.073625596@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 059/112] cxgb4: parse TC-U32 key values and masks natively
+Date:   Tue,  7 Jul 2020 17:17:04 +0200
+Message-Id: <20200707145803.808313576@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,56 +61,348 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-commit 22cf8419f1319ff87ec759d0ebdff4cbafaee832 upstream.
+[ Upstream commit 27f78cb245abdb86735529c13b0a579f57829e71 ]
 
-The server is failing to apply the umask when creating new objects on
-filesystems without ACL support.
+TC-U32 passes all keys values and masks in __be32 format. The parser
+already expects this and hence pass the value and masks in __be32
+natively to the parser.
 
-To reproduce this, you need to use NFSv4.2 and a client and server
-recent enough to support umask, and you need to export a filesystem that
-lacks ACL support (for example, ext4 with the "noacl" mount option).
+Fixes following sparse warnings in several places:
+cxgb4_tc_u32.c:57:21: warning: incorrect type in assignment (different base
+types)
+cxgb4_tc_u32.c:57:21:    expected unsigned int [usertype] val
+cxgb4_tc_u32.c:57:21:    got restricted __be32 [usertype] val
+cxgb4_tc_u32_parse.h:48:24: warning: cast to restricted __be32
 
-Filesystems with ACL support are expected to take care of the umask
-themselves (usually by calling posix_acl_create).
-
-For filesystems without ACL support, this is up to the caller of
-vfs_create(), vfs_mknod(), or vfs_mkdir().
-
-Reported-by: Elliott Mitchell <ehem+debian@m5p.com>
-Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-Fixes: 47057abde515 ("nfsd: add support for the umask attribute")
-Cc: stable@vger.kernel.org
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 2e8aad7bf203 ("cxgb4: add parser to translate u32 filters to internal spec")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c |  18 +--
+ .../chelsio/cxgb4/cxgb4_tc_u32_parse.h        | 122 ++++++++++++------
+ 2 files changed, 91 insertions(+), 49 deletions(-)
 
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1225,6 +1225,9 @@ nfsd_create_locked(struct svc_rqst *rqst
- 		iap->ia_mode = 0;
- 	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c
+index 3f3c11e54d970..dede02505ceb5 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c
+@@ -48,7 +48,7 @@ static int fill_match_fields(struct adapter *adap,
+ 			     bool next_header)
+ {
+ 	unsigned int i, j;
+-	u32 val, mask;
++	__be32 val, mask;
+ 	int off, err;
+ 	bool found;
  
-+	if (!IS_POSIXACL(dirp))
-+		iap->ia_mode &= ~current_umask();
-+
- 	err = 0;
- 	host_err = 0;
- 	switch (type) {
-@@ -1457,6 +1460,9 @@ do_nfsd_create(struct svc_rqst *rqstp, s
- 		goto out;
- 	}
+@@ -228,7 +228,7 @@ int cxgb4_config_knode(struct net_device *dev, struct tc_cls_u32_offload *cls)
+ 		const struct cxgb4_next_header *next;
+ 		bool found = false;
+ 		unsigned int i, j;
+-		u32 val, mask;
++		__be32 val, mask;
+ 		int off;
  
-+	if (!IS_POSIXACL(dirp))
-+		iap->ia_mode &= ~current_umask();
-+
- 	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
- 	if (host_err < 0) {
- 		fh_drop_write(fhp);
+ 		if (t->table[link_uhtid - 1].link_handle) {
+@@ -242,10 +242,10 @@ int cxgb4_config_knode(struct net_device *dev, struct tc_cls_u32_offload *cls)
+ 
+ 		/* Try to find matches that allow jumps to next header. */
+ 		for (i = 0; next[i].jump; i++) {
+-			if (next[i].offoff != cls->knode.sel->offoff ||
+-			    next[i].shift != cls->knode.sel->offshift ||
+-			    next[i].mask != cls->knode.sel->offmask ||
+-			    next[i].offset != cls->knode.sel->off)
++			if (next[i].sel.offoff != cls->knode.sel->offoff ||
++			    next[i].sel.offshift != cls->knode.sel->offshift ||
++			    next[i].sel.offmask != cls->knode.sel->offmask ||
++			    next[i].sel.off != cls->knode.sel->off)
+ 				continue;
+ 
+ 			/* Found a possible candidate.  Find a key that
+@@ -257,9 +257,9 @@ int cxgb4_config_knode(struct net_device *dev, struct tc_cls_u32_offload *cls)
+ 				val = cls->knode.sel->keys[j].val;
+ 				mask = cls->knode.sel->keys[j].mask;
+ 
+-				if (next[i].match_off == off &&
+-				    next[i].match_val == val &&
+-				    next[i].match_mask == mask) {
++				if (next[i].key.off == off &&
++				    next[i].key.val == val &&
++				    next[i].key.mask == mask) {
+ 					found = true;
+ 					break;
+ 				}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+index 125868c6770a2..f59dd4b2ae6f9 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+@@ -38,12 +38,12 @@
+ struct cxgb4_match_field {
+ 	int off; /* Offset from the beginning of the header to match */
+ 	/* Fill the value/mask pair in the spec if matched */
+-	int (*val)(struct ch_filter_specification *f, u32 val, u32 mask);
++	int (*val)(struct ch_filter_specification *f, __be32 val, __be32 mask);
+ };
+ 
+ /* IPv4 match fields */
+ static inline int cxgb4_fill_ipv4_tos(struct ch_filter_specification *f,
+-				      u32 val, u32 mask)
++				      __be32 val, __be32 mask)
+ {
+ 	f->val.tos  = (ntohl(val)  >> 16) & 0x000000FF;
+ 	f->mask.tos = (ntohl(mask) >> 16) & 0x000000FF;
+@@ -52,7 +52,7 @@ static inline int cxgb4_fill_ipv4_tos(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv4_frag(struct ch_filter_specification *f,
+-				       u32 val, u32 mask)
++				       __be32 val, __be32 mask)
+ {
+ 	u32 mask_val;
+ 	u8 frag_val;
+@@ -74,7 +74,7 @@ static inline int cxgb4_fill_ipv4_frag(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv4_proto(struct ch_filter_specification *f,
+-					u32 val, u32 mask)
++					__be32 val, __be32 mask)
+ {
+ 	f->val.proto  = (ntohl(val)  >> 16) & 0x000000FF;
+ 	f->mask.proto = (ntohl(mask) >> 16) & 0x000000FF;
+@@ -83,7 +83,7 @@ static inline int cxgb4_fill_ipv4_proto(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv4_src_ip(struct ch_filter_specification *f,
+-					 u32 val, u32 mask)
++					 __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.fip[0],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.fip[0], &mask, sizeof(u32));
+@@ -92,7 +92,7 @@ static inline int cxgb4_fill_ipv4_src_ip(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv4_dst_ip(struct ch_filter_specification *f,
+-					 u32 val, u32 mask)
++					 __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.lip[0],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.lip[0], &mask, sizeof(u32));
+@@ -111,7 +111,7 @@ static const struct cxgb4_match_field cxgb4_ipv4_fields[] = {
+ 
+ /* IPv6 match fields */
+ static inline int cxgb4_fill_ipv6_tos(struct ch_filter_specification *f,
+-				      u32 val, u32 mask)
++				      __be32 val, __be32 mask)
+ {
+ 	f->val.tos  = (ntohl(val)  >> 20) & 0x000000FF;
+ 	f->mask.tos = (ntohl(mask) >> 20) & 0x000000FF;
+@@ -120,7 +120,7 @@ static inline int cxgb4_fill_ipv6_tos(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_proto(struct ch_filter_specification *f,
+-					u32 val, u32 mask)
++					__be32 val, __be32 mask)
+ {
+ 	f->val.proto  = (ntohl(val)  >> 8) & 0x000000FF;
+ 	f->mask.proto = (ntohl(mask) >> 8) & 0x000000FF;
+@@ -129,7 +129,7 @@ static inline int cxgb4_fill_ipv6_proto(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_src_ip0(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.fip[0],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.fip[0], &mask, sizeof(u32));
+@@ -138,7 +138,7 @@ static inline int cxgb4_fill_ipv6_src_ip0(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_src_ip1(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.fip[4],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.fip[4], &mask, sizeof(u32));
+@@ -147,7 +147,7 @@ static inline int cxgb4_fill_ipv6_src_ip1(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_src_ip2(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.fip[8],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.fip[8], &mask, sizeof(u32));
+@@ -156,7 +156,7 @@ static inline int cxgb4_fill_ipv6_src_ip2(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_src_ip3(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.fip[12],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.fip[12], &mask, sizeof(u32));
+@@ -165,7 +165,7 @@ static inline int cxgb4_fill_ipv6_src_ip3(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_dst_ip0(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.lip[0],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.lip[0], &mask, sizeof(u32));
+@@ -174,7 +174,7 @@ static inline int cxgb4_fill_ipv6_dst_ip0(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_dst_ip1(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.lip[4],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.lip[4], &mask, sizeof(u32));
+@@ -183,7 +183,7 @@ static inline int cxgb4_fill_ipv6_dst_ip1(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_dst_ip2(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.lip[8],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.lip[8], &mask, sizeof(u32));
+@@ -192,7 +192,7 @@ static inline int cxgb4_fill_ipv6_dst_ip2(struct ch_filter_specification *f,
+ }
+ 
+ static inline int cxgb4_fill_ipv6_dst_ip3(struct ch_filter_specification *f,
+-					  u32 val, u32 mask)
++					  __be32 val, __be32 mask)
+ {
+ 	memcpy(&f->val.lip[12],  &val,  sizeof(u32));
+ 	memcpy(&f->mask.lip[12], &mask, sizeof(u32));
+@@ -216,7 +216,7 @@ static const struct cxgb4_match_field cxgb4_ipv6_fields[] = {
+ 
+ /* TCP/UDP match */
+ static inline int cxgb4_fill_l4_ports(struct ch_filter_specification *f,
+-				      u32 val, u32 mask)
++				      __be32 val, __be32 mask)
+ {
+ 	f->val.fport  = ntohl(val)  >> 16;
+ 	f->mask.fport = ntohl(mask) >> 16;
+@@ -237,19 +237,13 @@ static const struct cxgb4_match_field cxgb4_udp_fields[] = {
+ };
+ 
+ struct cxgb4_next_header {
+-	unsigned int offset; /* Offset to next header */
+-	/* offset, shift, and mask added to offset above
++	/* Offset, shift, and mask added to beginning of the header
+ 	 * to get to next header.  Useful when using a header
+ 	 * field's value to jump to next header such as IHL field
+ 	 * in IPv4 header.
+ 	 */
+-	unsigned int offoff;
+-	u32 shift;
+-	u32 mask;
+-	/* match criteria to make this jump */
+-	unsigned int match_off;
+-	u32 match_val;
+-	u32 match_mask;
++	struct tc_u32_sel sel;
++	struct tc_u32_key key;
+ 	/* location of jump to make */
+ 	const struct cxgb4_match_field *jump;
+ };
+@@ -258,26 +252,74 @@ struct cxgb4_next_header {
+  * IPv4 header.
+  */
+ static const struct cxgb4_next_header cxgb4_ipv4_jumps[] = {
+-	{ .offset = 0, .offoff = 0, .shift = 6, .mask = 0xF,
+-	  .match_off = 8, .match_val = 0x600, .match_mask = 0xFF00,
+-	  .jump = cxgb4_tcp_fields },
+-	{ .offset = 0, .offoff = 0, .shift = 6, .mask = 0xF,
+-	  .match_off = 8, .match_val = 0x1100, .match_mask = 0xFF00,
+-	  .jump = cxgb4_udp_fields },
+-	{ .jump = NULL }
++	{
++		/* TCP Jump */
++		.sel = {
++			.off = 0,
++			.offoff = 0,
++			.offshift = 6,
++			.offmask = cpu_to_be16(0x0f00),
++		},
++		.key = {
++			.off = 8,
++			.val = cpu_to_be32(0x00060000),
++			.mask = cpu_to_be32(0x00ff0000),
++		},
++		.jump = cxgb4_tcp_fields,
++	},
++	{
++		/* UDP Jump */
++		.sel = {
++			.off = 0,
++			.offoff = 0,
++			.offshift = 6,
++			.offmask = cpu_to_be16(0x0f00),
++		},
++		.key = {
++			.off = 8,
++			.val = cpu_to_be32(0x00110000),
++			.mask = cpu_to_be32(0x00ff0000),
++		},
++		.jump = cxgb4_udp_fields,
++	},
++	{ .jump = NULL },
+ };
+ 
+ /* Accept a rule with a jump directly past the 40 Bytes of IPv6 fixed header
+  * to get to transport layer header.
+  */
+ static const struct cxgb4_next_header cxgb4_ipv6_jumps[] = {
+-	{ .offset = 0x28, .offoff = 0, .shift = 0, .mask = 0,
+-	  .match_off = 4, .match_val = 0x60000, .match_mask = 0xFF0000,
+-	  .jump = cxgb4_tcp_fields },
+-	{ .offset = 0x28, .offoff = 0, .shift = 0, .mask = 0,
+-	  .match_off = 4, .match_val = 0x110000, .match_mask = 0xFF0000,
+-	  .jump = cxgb4_udp_fields },
+-	{ .jump = NULL }
++	{
++		/* TCP Jump */
++		.sel = {
++			.off = 40,
++			.offoff = 0,
++			.offshift = 0,
++			.offmask = 0,
++		},
++		.key = {
++			.off = 4,
++			.val = cpu_to_be32(0x00000600),
++			.mask = cpu_to_be32(0x0000ff00),
++		},
++		.jump = cxgb4_tcp_fields,
++	},
++	{
++		/* UDP Jump */
++		.sel = {
++			.off = 40,
++			.offoff = 0,
++			.offshift = 0,
++			.offmask = 0,
++		},
++		.key = {
++			.off = 4,
++			.val = cpu_to_be32(0x00001100),
++			.mask = cpu_to_be32(0x0000ff00),
++		},
++		.jump = cxgb4_udp_fields,
++	},
++	{ .jump = NULL },
+ };
+ 
+ struct cxgb4_link {
+-- 
+2.25.1
+
 
 
