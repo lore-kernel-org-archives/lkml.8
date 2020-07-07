@@ -2,80 +2,140 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9480CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95515C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9D2207BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6602B2063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsjW0Kip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgGGIDw (ORCPT
+        id S1728479AbgGGIEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:03:52 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:50360 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgGGIDu (ORCPT
+        Tue, 7 Jul 2020 04:04:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726434AbgGGIEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:03:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id AC3CD2016B15;
-        Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id z6WMaQd-Zdfo; Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 87C1C20160D4;
-        Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.79])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 0C3ECC01F9E;
-        Tue,  7 Jul 2020 16:03:47 +0800 (HKT)
-Subject: Re: [PATCH v3 0/2] shtc1: add support for device tree bindings
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200707080104.23711-1-chris.ruehl@gtsys.com.hk>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <c7f4805a-0cdf-ea5b-7557-c4f00fec6ee8@gtsys.com.hk>
-Date:   Tue, 7 Jul 2020 16:03:47 +0800
+        Tue, 7 Jul 2020 04:04:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594109086;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c0mh35xkHSMPfz/goX6QsqA4ztMFVQSPiIBdm0V+Pjk=;
+        b=BsjW0KipkM4JmSADFcWJ1iczZ2vRiHxe9Hu6afOXE94KIeC9lGiQTuwEZNOnwyQ0t0bpeZ
+        VeMohP/UNjEjXa4h2ewfFO5djjiswOo1r7D7EsvxSWa67oQ3QdlEqNv1/QoW9X6XFMiE94
+        8OouUv4c40EmRRM9ieJ+cqdB/Pstat8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-yfVvA9w4PwqwLeJWX5rndA-1; Tue, 07 Jul 2020 04:04:41 -0400
+X-MC-Unique: yfVvA9w4PwqwLeJWX5rndA-1
+Received: by mail-wr1-f69.google.com with SMTP id i10so47821965wrn.21
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:04:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c0mh35xkHSMPfz/goX6QsqA4ztMFVQSPiIBdm0V+Pjk=;
+        b=EtIs8gd8JMW7swKh6OpmLHL+XqmSoVL6ocPdunKhBg2BfvBnH5a3NEBlZf+6iqvfJp
+         2Iook4N33fc/GWTL2qkIIzMeixSHKDyd0tsfjhTUemZk8n09VTfDCODsTUkTsrPqb41G
+         6ULiZTYX30csIljSn0UAWpeS34Vdli/YcI2R9YcSSLEF+ahjBLEWtaO806ZyFAw9ovgR
+         x1bEv3eAr79pE3AGKRiouCZZ3U6AyYm+jJTOtMd4YQrZ8ND/tmefzu5jM2hQsYXkyL58
+         7bxvV5pRcdV6gq45Uc1G/7K/MEr6WJkzo9vR9N1eOc5XMlvRf6H0a1Dc9to8iu5i9tOm
+         GV0g==
+X-Gm-Message-State: AOAM533+l2QQFlzL/+QULT7AH1BvdkfZJiQX+Uymgqph7JvVv7E9GQUk
+        peSzSjI6nkQUKbK+jZQjxs9oOeduExa0yLh7w1C5D8nJcmiwsa/TUkMzyIPh8LxDC2XPy1OH5GD
+        hYE/NIM6OuNrp/vTRotOvuMGy
+X-Received: by 2002:a1c:2157:: with SMTP id h84mr2804175wmh.35.1594109080790;
+        Tue, 07 Jul 2020 01:04:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEXYEc8WO2QrC4l1AhnZ0dwyI2sMS9xYnpCs4+uKJSHDlLUn+io3PXSQkdxcCMVou80aHRHA==
+X-Received: by 2002:a1c:2157:: with SMTP id h84mr2802969wmh.35.1594109064788;
+        Tue, 07 Jul 2020 01:04:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e95f:9718:ec18:4c46? ([2001:b07:6468:f312:e95f:9718:ec18:4c46])
+        by smtp.gmail.com with ESMTPSA id b62sm2419356wmh.38.2020.07.07.01.04.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 01:04:24 -0700 (PDT)
+Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200702174455.282252-1-mlevitsk@redhat.com>
+ <20200702181606.GF3575@linux.intel.com>
+ <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
+ <20200707061105.GH5208@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
+Date:   Tue, 7 Jul 2020 10:04:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200707080104.23711-1-chris.ruehl@gtsys.com.hk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200707061105.GH5208@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/07/20 08:11, Sean Christopherson wrote:
+> One oddity with this whole thing is that by passing through the MSR, KVM is
+> allowing the guest to write bits it doesn't know about, which is definitely
+> not normal.  It also means the guest could write bits that the host VMM
+> can't.
 
-On 7/7/2020 4:01 pm, Chris Ruehl wrote:
-> Add support for DTS bindings to the shtc driver
-> The patches add the compatible table and of_property_read_bool to the
-> shtc1.c. Newly created Yaml document has been released to the
-> Documentation/devicetree/hwmon/sensirion,shtc1.yaml
+That's true.  However, the main purpose of the kvm_spec_ctrl_valid_bits
+check is to ensure that host-initiated writes are valid; this way, you
+don't get a #GP on the next vmentry's WRMSR to MSR_IA32_SPEC_CTRL.
+Checking the guest CPUID bit is not even necessary.
+
+Paolo
+
+> Somehwat crazy idea inbound... rather than calculating the valid bits in
+> software, what if we throw the value at the CPU and see if it fails?  At
+> least that way the host and guest are subject to the same rules.  E.g.
 > 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->   Version 3
-> 	Fix errors report with checkpatch.pl
-> 	Correct logic, add (!) when check for sensirion,low_precision
->   Version 2
-> 	remove the #ifdef CONFIG_OF
-> 	ignore platform data if dev->of_node is valid
-> 	use boolean only therefor use sensirion,low_precise to fit the logic
-> 	add missing driver.of_match_table entry
->   Version 1
-> 	initial version
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2062,11 +2062,19 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>                     !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>                         return 1;
+> 
+> -               if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
+> -                       return 1;
+> -
+> +               ret = 0;
+>                 vmx->spec_ctrl = data;
+> -               if (!data)
+> +
+> +               local_irq_disable();
+> +               if (rdmsrl_safe(MSR_IA32_SPEC_CTRL, &data))
+> +                       ret = 1;
+> +               else if (wrmsrl_safe(MSR_IA32_SPEC_CTRL, vmx->spec_ctrl))
+> +                       ret = 1;
+> +               else
+> +                       wrmsrl(MSR_IA32_SPEC_CTRL, data))
+> +               local_irq_enable();
+> +
+> +               if (ret || !vmx->spec_ctrl)
+>                         break;
+> 
+>                 /*
 > 
 
-I didn't fix the WARNINGS coming up with checkpatch, they are initial commit 
-errors when added to the kernel.
-But I have a patch pending to fix the format issue , once this is accepted.
