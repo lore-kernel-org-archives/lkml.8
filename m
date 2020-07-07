@@ -2,51 +2,56 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31011C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0430320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1537A20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134657;
-	bh=gD03nvGzSUO+Oo71OUhqcW4bS147QATjZu1+N0L9dtw=;
+	s=default; t=1594134663;
+	bh=R9EwwA6AK/zBvSj0CsYkvaJSp1NyC8UJa2jfs0xmbbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIJ6+FOOr4aK1vFDRwLozvm8nmhTHeJw0AHlHSBuE7bCz4EWlIjjEIPQmi3AwgSRT
-	 ZHqEEl0Um85mdj57KTx+je9PuSFZaQkhOO17OWKYQpaO0mfAm6H+fTNogC7w7woMhy
-	 QhCL9XHzjGg+hKlj1bNSEp34p9jlDm7/wxc3nIWk=
+	b=NAK8UklbfUSTRMqLuWL3hEo+VzQwEMBb7Tc5x2r5NYWf4q8jg6ssQkh//d675NNBP
+	 BQxoPF/cLW7KdZLtR2dWhUQsqg41L7eMtpnEysOnSTsj0ybxwPFB32gWEYo/NGAwW5
+	 KQm6mf0+KMrs9I+BEl7SR47E2IDA1nJ1iI80Kb4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgGGPKz (ORCPT
+        id S1728562AbgGGPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:11:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgGGPKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:10:53 -0400
+        id S1728100AbgGGPK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D6C6207BB;
-        Tue,  7 Jul 2020 15:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4192120674;
+        Tue,  7 Jul 2020 15:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134652;
-        bh=gD03nvGzSUO+Oo71OUhqcW4bS147QATjZu1+N0L9dtw=;
+        s=default; t=1594134657;
+        bh=R9EwwA6AK/zBvSj0CsYkvaJSp1NyC8UJa2jfs0xmbbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ipMXGHIe6REMLEXkXRAxaSLpyTydjJ5Y0+yWbezg8DWGysPOGz0KgwC9L3gGIqMa2
-         6Gd0iD8hf3rgX/hxWcH+4nWTyt+kNTmp8xybYXyBfl3eGW6ZTeKlQaRHngF+X2XkRy
-         207t3Qxw17LnvwhGGuoOF4obGUKA7spGbDPNOSJM=
+        b=WLuSlMsKn6Deu9Y8AEqKhswdnTrmwI4ubWSQjBNPfDCziRuqoJyV1NAnkxAa6U3SC
+         vBnwpr5Iec5XlGTjVoA0JXba0y/U69ItzOddiAdzEitb5bZKD2d/bgwfmLeNYYRAp4
+         KCy0v5y0sR8b2k2P7CyPb3APfNx6JlptYGKat3es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH 4.4 19/19] netfilter: nf_conntrack_h323: lost .data_len definition for Q.931/ipv6
-Date:   Tue,  7 Jul 2020 17:10:22 +0200
-Message-Id: <20200707145748.453060963@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Chris Murphy <lists@colorremedies.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 03/19] mm: fix swap cache node allocation mask
+Date:   Tue,  7 Jul 2020 17:10:06 +0200
+Message-Id: <20200707145747.665985832@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
 References: <20200707145747.493710555@linuxfoundation.org>
@@ -59,39 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Hugh Dickins <hughd@google.com>
 
-Could you please push this patch into stable@?
-it fixes memory corruption in kernels  v3.5 .. v4.10
+[ Upstream commit 243bce09c91b0145aeaedd5afba799d81841c030 ]
 
-Lost .data_len definition leads to write beyond end of
-struct nf_ct_h323_master. Usually it corrupts following
-struct nf_conn_nat, however if nat is not loaded it corrupts
-following slab object.
+Chris Murphy reports that a slightly overcommitted load, testing swap
+and zram along with i915, splats and keeps on splatting, when it had
+better fail less noisily:
 
-In mainline this problem went away in v4.11,
-after commit 9f0f3ebeda47 ("netfilter: helpers: remove data_len usage
-for inkernel helpers") however many stable kernels are still affected.
+  gnome-shell: page allocation failure: order:0,
+  mode:0x400d0(__GFP_IO|__GFP_FS|__GFP_COMP|__GFP_RECLAIMABLE),
+  nodemask=(null),cpuset=/,mems_allowed=0
+  CPU: 2 PID: 1155 Comm: gnome-shell Not tainted 5.7.0-1.fc33.x86_64 #1
+  Call Trace:
+    dump_stack+0x64/0x88
+    warn_alloc.cold+0x75/0xd9
+    __alloc_pages_slowpath.constprop.0+0xcfa/0xd30
+    __alloc_pages_nodemask+0x2df/0x320
+    alloc_slab_page+0x195/0x310
+    allocate_slab+0x3c5/0x440
+    ___slab_alloc+0x40c/0x5f0
+    __slab_alloc+0x1c/0x30
+    kmem_cache_alloc+0x20e/0x220
+    xas_nomem+0x28/0x70
+    add_to_swap_cache+0x321/0x400
+    __read_swap_cache_async+0x105/0x240
+    swap_cluster_readahead+0x22c/0x2e0
+    shmem_swapin+0x8e/0xc0
+    shmem_swapin_page+0x196/0x740
+    shmem_getpage_gfp+0x3a2/0xa60
+    shmem_read_mapping_page_gfp+0x32/0x60
+    shmem_get_pages+0x155/0x5e0 [i915]
+    __i915_gem_object_get_pages+0x68/0xa0 [i915]
+    i915_vma_pin+0x3fe/0x6c0 [i915]
+    eb_add_vma+0x10b/0x2c0 [i915]
+    i915_gem_do_execbuffer+0x704/0x3430 [i915]
+    i915_gem_execbuffer2_ioctl+0x1ea/0x3e0 [i915]
+    drm_ioctl_kernel+0x86/0xd0 [drm]
+    drm_ioctl+0x206/0x390 [drm]
+    ksys_ioctl+0x82/0xc0
+    __x64_sys_ioctl+0x16/0x20
+    do_syscall_64+0x5b/0xf0
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: 1afc56794e03 ("netfilter: nf_ct_helper: implement variable length helper private data") # v3.5
-cc: stable@vger.kernel.org
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported on 5.7, but it goes back really to 3.1: when
+shmem_read_mapping_page_gfp() was implemented for use by i915, and
+allowed for __GFP_NORETRY and __GFP_NOWARN flags in most places, but
+missed swapin's "& GFP_KERNEL" mask for page tree node allocation in
+__read_swap_cache_async() - that was to mask off HIGHUSER_MOVABLE bits
+from what page cache uses, but GFP_RECLAIM_MASK is now what's needed.
 
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208085
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2006151330070.11064@eggly.anvils
+Fixes: 68da9f055755 ("tmpfs: pass gfp to shmem_getpage_gfp")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reported-by: Chris Murphy <lists@colorremedies.com>
+Analyzed-by: Vlastimil Babka <vbabka@suse.cz>
+Analyzed-by: Matthew Wilcox <willy@infradead.org>
+Tested-by: Chris Murphy <lists@colorremedies.com>
+Cc: <stable@vger.kernel.org>	[3.1+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_h323_main.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/swap_state.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/nf_conntrack_h323_main.c
-+++ b/net/netfilter/nf_conntrack_h323_main.c
-@@ -1225,6 +1225,7 @@ static struct nf_conntrack_helper nf_con
- 	{
- 		.name			= "Q.931",
- 		.me			= THIS_MODULE,
-+		.data_len		= sizeof(struct nf_ct_h323_master),
- 		.tuple.src.l3num	= AF_INET6,
- 		.tuple.src.u.tcp.port	= cpu_to_be16(Q931_PORT),
- 		.tuple.dst.protonum	= IPPROTO_TCP,
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index d504adb7fa5f0..9e587464e6343 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -19,6 +19,7 @@
+ #include <linux/migrate.h>
+ 
+ #include <asm/pgtable.h>
++#include "internal.h"
+ 
+ /*
+  * swapper_space is a fiction, retained to simplify the path through
+@@ -319,7 +320,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 		/*
+ 		 * call radix_tree_preload() while we can wait.
+ 		 */
+-		err = radix_tree_maybe_preload(gfp_mask & GFP_KERNEL);
++		err = radix_tree_maybe_preload(gfp_mask & GFP_RECLAIM_MASK);
+ 		if (err)
+ 			break;
+ 
+-- 
+2.25.1
+
 
 
