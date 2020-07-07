@@ -6,104 +6,121 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30052C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 330B32063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5E02063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmiwBLiG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfqqS+lW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgGGICW (ORCPT
+        id S1728413AbgGGIDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        Tue, 7 Jul 2020 04:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgGGICW (ORCPT
+        with ESMTP id S1726817AbgGGIDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:02:22 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83475C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:02:21 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s9so48771351ljm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:02:21 -0700 (PDT)
+        Tue, 7 Jul 2020 04:03:15 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0820DC08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:03:15 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so44139204wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
-        b=kmiwBLiGpZZvtNTeKIU15ceN7oNeR238ooJAt0CvbsVCRioMTMtD1x4K9zbkRWKQfj
-         W7RgeINwBObWyC5/fs3l+iztnAPnFlO+7+rT6TlvFxObY1g1gx3t3JQjKxE6FyUa9juo
-         5N8AYr3CY5BYyDuMbcSRhA0X+wn/rOYZ8rkv5KuIj68/y3Xy1IWztOLZ/SwuJntz+jrv
-         Vt9rGJw2piKJn4szUdPZwshV+vMr/O1n7q77GXP+6ZIdII0HAE3ejY83wE1+z2nQ/E+d
-         7uBzrhj0+a6r2uqpZpQ5jycmEYlAqNFMZ6fT6hAcoUqpziWRbqwswmZSjiDqbSu9jA0q
-         nVNQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=mMZpUKfqpJCdbAhsZp+bXjqEnQ4z2yPe16N+eOasptM=;
+        b=CfqqS+lWIiN0P+noAXvDnsJP+vvKJH1pGpe6wR/eDn+gDpTDB6XlzvA1O82fWtEMno
+         Ki7iRep7tGg2zVXbSxW27Q950XkwGmY2uQBXwEAsbViVMf/cldEOS2mX30FrDp8KTKyK
+         a57MleK0nWcnTlQ/TsoFxGTvUHatmaqb65XI6F4BpZ6d7Nv0cK9fzhJ2V7pnYfq6iKc7
+         M8qAuVUB4WjUSdt97tDmgEZY4HpyexXnpJPOTG4mLJF/fQcIIuqeHasmLXgoAaea2Luu
+         AITsf8jPhP0+M1Jx3eP3yAP/AE4ZG5UxcPnSH8Y5idwstO/Dc9K2lFQ74GY1Aynb17LO
+         gC9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
-        b=aHt/PMWsuPXNAQlAlr86qEc2/9xNySaLcyoByAX090WoS4GVW6GKqYW/Z2wFqMbaUt
-         kHRBEQ/yOLK2EYd3eXMwUcp2CT0RVyqJyteRwEugmIeh1u/oXXKs1GkjBBRJKrOIgJRu
-         SyRnbzAuGOWzNZiB/YreCpxAsMlwFDtQKBKhfhM1tywmwGl22BFyjGidIg3Tt2e/J8W2
-         hBdzPYapR0azBi6yZ1SCdqVhDx9gCTqByWtdcdSm7WlNhnpT/EL5GAHPb9p7WgQtfhgz
-         tVo7DsroBRx0Gw6Y7WACRqvNfbmQNrkhIdK7UWCpSyEEyL1ORH0LacHiNgdz7YvWLZt+
-         aa5g==
-X-Gm-Message-State: AOAM532DR6q82E+T8sPXV8iVZYmXe89f1OdBGWA0SKqao0iuZLwRALpj
-        XmqdsCuy94u3+T1Eu9sg/+dtxxoB5N0IYjocuQPDSw==
-X-Google-Smtp-Source: ABdhPJyCTsje409P42BtkQ0ytfSdmbTULZn92mJJL2yEDwiZIrlVL3eLoJyeVqyBJtF11vUkJyptRe6bOJBOKNMOG8s=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr15386545ljg.100.1594108939830;
- Tue, 07 Jul 2020 01:02:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mMZpUKfqpJCdbAhsZp+bXjqEnQ4z2yPe16N+eOasptM=;
+        b=dHfkxm5hcXU6LQMIhNxOUXKW/6pnBs2NUpXVMQ/ln7o2fN2ykAWV9M6KDm5S5hgNep
+         QaN/78d1lB2u3fUiBBvtyhzqJ6dgktak1rCDNuDJDCd3Tog6776fCeuP1Cb8GylCs4ly
+         7bWlRImiGowhj1emtYoZpJTNT3aqw7mxupfdVJpVp101NgKUUiJ4UuYyFZuIPN1c8hKW
+         akOQ7bozC6mEy+29hkLNy5pbFNimFnfj0Qx4LwezvdvqNVpYz8OvJrvf0FfqVgd0o8CW
+         kBbFO++Lg88HhaNG1xgm58TKGarRgYNxqWmxtB4loZgrK6lC8F/DCXwLyl2Q3LXv0cDB
+         YZOA==
+X-Gm-Message-State: AOAM533s8efOWfuTrFkEqUUknkH8q0YtcuT9L+GBwLFSfWKobVSa43MP
+        q6365zM6Xvlf0HslM11lrseVmA==
+X-Google-Smtp-Source: ABdhPJwcpPtoD7n14Ffrr43fIwA5zL6dutKmKygss05H+0o2d5I4bzNNKViRKd4dKqbjeRyRASpwzw==
+X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr53367032wrx.106.1594108993639;
+        Tue, 07 Jul 2020 01:03:13 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id 12sm2340143wmg.6.2020.07.07.01.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 01:03:12 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 09:03:11 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Winischhofer <thomas@winischhofer.net>
+Subject: Re: [PATCH 04/30] usb: misc: sisusbvga: sisusb_init: Mark all
+ 'static const' arrays as __maybe_unused
+Message-ID: <20200707080311.GE3500@dell>
+References: <20200703174148.2749969-1-lee.jones@linaro.org>
+ <20200703174148.2749969-5-lee.jones@linaro.org>
+ <af66b6e94a26ebd500c1376631891b0bdd0912f0.camel@perches.com>
 MIME-Version: 1.0
-References: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 10:02:08 +0200
-Message-ID: <CACRpkdYYJfA9uur0R+9ONkEk1pEABJnzrPe7U0VX4-QVQHgLcQ@mail.gmail.com>
-Subject: Re: [PATCH V6 0/9] Support i.MX8 SoCs pinctrl drivers built as module
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af66b6e94a26ebd500c1376631891b0bdd0912f0.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 8:35 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+On Fri, 03 Jul 2020, Joe Perches wrote:
 
-> There are more and mroe requirements that SoC specific modules should be built
-> as module in order to support generic kernel image, such as Android GKI concept.
->
-> This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
-> including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, i.MX common pinctrl driver and i.MX
-> SCU common pinctrl driver as still built-in.
->
-> Compared to V5, the changes are as below:
->         - Keep i.MX common pinctrl libary built in, ONLY i.MX SoC pinctrl driver
->           support built as module.
->
-> Anson Huang (9):
->   pinctrl: imx: Support i.MX8 SoCs pinctrl driver built as module
->   pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as
->     module
->   pinctrl: imx8mm: Support building as module
->   pinctrl: imx8mn: Support building as module
->   pinctrl: imx8mq: Support building as module
->   pinctrl: imx8mp: Support building as module
->   pinctrl: imx8qxp: Support building as module
->   pinctrl: imx8qm: Support building as module
->   pinctrl: imx8dxl: Support building as module
+> On Fri, 2020-07-03 at 18:41 +0100, Lee Jones wrote:
+> > drivers/usb/misc/sisusbvga/sisusb_init.h is included by a few
+> > source files.  Most of which do not use the majority of the
+> > shared static const arrays which have been declared.  This
+> > causes the build system to spew 100's of warnings.
+> > 
+> > Fixes the following W=1 kernel build warning(s) - and a whole lot more:
+> > 
+> >  In file included from drivers/usb/misc/sisusbvga/sisusb.c:54:
+> >  drivers/usb/misc/sisusbvga/sisusb_init.h:695:34: warning: ‘SiSUSB_VCLKData’ defined but not used [-Wunused-const-variable=]
+> >  695 | static const struct SiS_VCLKData SiSUSB_VCLKData[] = {
+> >  | ^~~~~~~~~~~~~~~
+> > [10's of lines snipped]
+> >  drivers/usb/misc/sisusbvga/sisusb_init.h:206:28: warning: ‘SiS_VGA_DAC’ defined but not used [-Wunused-const-variable=]
+> >  206 | static const unsigned char SiS_VGA_DAC[] = {
+> >  | ^~~~~~~~~~~
+> > [10's of lines snipped]
+> >  drivers/usb/misc/sisusbvga/sisusb_init.h:171:29: warning: ‘ModeIndex_1280x1024’ defined but not used [-Wunused-const-variable=]
+> >  171 | static const unsigned short ModeIndex_1280x1024[] = { 0x3a, 0x4d, 0x00, 0x65 };
+> >  | ^~~~~~~~~~~~~~~~~~~
+> > [10's of lines snipped]
+> 
+> They are not __maybe_unused, they _are_ used.
 
-Patches applied to the pinctrl devel branch for v5.9.
+Actually, it looks like all of the ModeIndex_* table are *not* used,
+so those will be removed.
 
-Yours,
-Linus Walleij
+> I think these instead should be moved to where
+> they are used instead of being declared in an
+> #include file.
+
+The remaining tables are many and large, so stuffing them into the
+source file does not seem like the correct thing to do.  Instead I
+shall move them to their own "sisusb_tables.h" include file where they
+can be referenced only by the file(s) which make use of them.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
