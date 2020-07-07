@@ -2,136 +2,61 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C84EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93AC3206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjrGDumG"
+	by mail.kernel.org (Postfix) with ESMTP id EFF44206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgGGR4p (ORCPT
+        id S1728559AbgGGR5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgGGR4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:56:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4EAC061755;
-        Tue,  7 Jul 2020 10:56:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f5so35131398ljj.10;
-        Tue, 07 Jul 2020 10:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=s4ASXWRqt7B/fSAjfNTkmF4ncRZJGdBqXXpHtUFPDvo=;
-        b=cjrGDumGQU3hV8ADB/oAZCirX/i/FhVQU5lKQsB0f/MDCsKCseSYWqK24HlxflKOVx
-         +IG7hETH2Oblm1REM1sEdqbMbIX+KjgtpSYbL5Y98EgLoRH27rH+27Wju09vgKZmFBGa
-         h1j9WgnSL/C3S6Tjt4v4i9CqMU+sLfkrGbhI+OH1iMrFgLr8NEsWzGS6m27O6J6KRIkc
-         Mz7bw9sY0wuL2C7hgK85eW3Ssw9GTEuS9vtl0fSqJPnXqWlYmiSHC5ltaATcBkPExdox
-         aKONdLMytbYHlSCCQzcbQYMgraPFp51rsWQ8xo8cHs7qvONZANvhvwwBKr45Jfp0dnHe
-         k3WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=s4ASXWRqt7B/fSAjfNTkmF4ncRZJGdBqXXpHtUFPDvo=;
-        b=qpmldu8d99ztwdwsJPnYqjfuSSMR7X+4kN1bN/DnMMSwUAYHOnf3K8mYn2hheK56yh
-         cPijYwJ58ESPRt3Ew1ePIHkMggyPSM8rjxX65pcciRDxcCpfcoYAPcTLqxPCAhTCLlWP
-         7VQNPsHywmKaFz5IbwfL5yNO5ZmFesfEA5FQ7NbtVNEb2vboFcl2J3kuKL37ydXf5ZiE
-         smGbE195Kw/G6F24Xhk8GgcxGFEGgDj7hFhlHf+V8leLyOSIz0AgyIc8hjBLg1pTnWuy
-         G61DhJOUC6NUBSmN+9E0+p5VvcD0ePrG6IegYdZncCSb52C4ZT0Hkx7pwML+2oSUvLDp
-         +xzA==
-X-Gm-Message-State: AOAM533NVed1EWhc853iTZYSe7waX0EY7rtOfXvSXYPh++R1TvxWWvDy
-        5UUdI23FZhfovcdKQ+g82e0=
-X-Google-Smtp-Source: ABdhPJw9ocGXnFi3OkjyF7UUNhB8Fz5ZxAaswtgQ/mqjKfTsB4+vMoKofcU3MPsuwHA1dS8/wyKACw==
-X-Received: by 2002:a2e:9316:: with SMTP id e22mr29068635ljh.393.1594144603196;
-        Tue, 07 Jul 2020 10:56:43 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id k11sm307187ljg.37.2020.07.07.10.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 10:56:42 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-References: <20200706142616.25192-1-sorganov@gmail.com>
-        <20200706142616.25192-4-sorganov@gmail.com>
-        <20200706152721.3j54m73bm673zlnj@skbuf> <874kqksdrb.fsf@osv.gnss.ru>
-        <20200707063651.zpt6bblizo5r3kir@skbuf> <87sge371hv.fsf@osv.gnss.ru>
-        <20200707164329.pm4p73nzbsda3sfv@skbuf> <87sge345ho.fsf@osv.gnss.ru>
-        <20200707171233.et6zrwfqq7fddz2r@skbuf>
-Date:   Tue, 07 Jul 2020 20:56:41 +0300
-In-Reply-To: <20200707171233.et6zrwfqq7fddz2r@skbuf> (Vladimir Oltean's
-        message of "Tue, 7 Jul 2020 20:12:33 +0300")
-Message-ID: <87zh8b1a5i.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Tue, 7 Jul 2020 13:57:05 -0400
+Received: from muru.com ([72.249.23.125]:32770 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbgGGR5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 13:57:05 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2BD7F80FB;
+        Tue,  7 Jul 2020 17:57:56 +0000 (UTC)
+Date:   Tue, 7 Jul 2020 10:56:55 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
+ open platform
+Message-ID: <20200707175655.GA5849@atomide.com>
+References: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vladimir Oltean <olteanv@gmail.com> writes:
+* Johnson CH Chen (陳昭勳) <JohnsonCH.Chen@moxa.com> [200707 03:24]:
+> UC-8100A-ME is advanced of UC-8100-ME-T, and UC-8100-ME-T is deprecated.
+> 
+> UC-8100A-ME provides larger RAM and eMMC, better input current than
+> UC-8100-ME-T's, and it supports selectable LTE module for US/EU/APAC.
 
-> On Tue, Jul 07, 2020 at 08:09:07PM +0300, Sergey Organov wrote:
->> Vladimir Oltean <olteanv@gmail.com> writes:
->> 
->> > On Tue, Jul 07, 2020 at 07:07:08PM +0300, Sergey Organov wrote:
->> >> Vladimir Oltean <olteanv@gmail.com> writes:
->> >> >
->> >> > What do you mean 'no ticking', and what do you mean by 'non-initialized
->> >> > clock' exactly? I don't know if the fec driver is special in any way, do
->> >> > you mean that multiple runs of $(phc_ctl /dev/ptp0 get) from user space
->> >> > all return 0? That is not at all what is to be expected, I think. The
->> >> > PHC is always ticking. Its time is increasing.
->> >> 
->> >> That's how it is right now. My point is that it likely shouldn't. Why is
->> >> it ticking when nobody needs it? Does it draw more power due to that?
->> >> 
->> >> > What would be that initialization procedure that makes it tick, and
->> >> > who is doing it (and when)?
->> >> 
->> >> The user space code that cares, obviously. Most probably some PTP stack
->> >> daemon. I'd say that any set clock time ioctl() should start the clock,
->> >> or yet another ioctl() that enables/disables the clock, whatever.
->> >> 
->> >
->> > That ioctl doesn't exist, at least not in PTP land. This also addresses
->> > your previous point.
->> 
->> struct timespec ts;
->> ...
->> clock_settime(clkid, &ts)
->> 
->> That's the starting point of my own code, and I bet it's there in PTP
->> for Linux, as well as in PTPD, as I fail to see how it could possibly
->> work without it.
->> 
->
-> This won't stop it from ticking, which is what we were talking about,
-> will it?
+So what about the existing users of UC-8100-ME-T?
 
-It won't. Supposedly it'd force clock (that doesn't tick by default and
-stays at 0) to start ticking.
+To me it seems you should just add am335x-moxa-uc-8100-common.dtsi
+or similar. And then have minimal dts files for each model. That way
+you can easily keep the support UC-8100-ME-T around.
 
-If the ability to stop the clock is in fact useful (I don't immediately
-see how it could), and how to do it if it is, is a separate issue. I'd
-then expect clock_stop(clkid), or clock_settime(clkid, NULL) to do the
-job.
+Regards,
 
-Thanks,
--- Sergey
+Tony
