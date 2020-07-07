@@ -3,82 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FD3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92661206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19159206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="S2e8YozD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZJnkQyXb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAsb8bSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGGHmr (ORCPT
+        id S1728191AbgGGHny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:42:47 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:34915 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726434AbgGGHmp (ORCPT
+        Tue, 7 Jul 2020 03:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGHnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:42:45 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DF6FEAB6;
-        Tue,  7 Jul 2020 03:42:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 07 Jul 2020 03:42:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=3p7X8ygQrONcSrHJ+dzFyPMuAc
-        Gioe82upxmwDopNqs=; b=S2e8YozD6edpoBaX+XcOsJKGC9lb3bIGdhfKW1NXn0
-        60Y7hU6lGPO+ePfA36zBWnnKbiD9hNRsU+xbSkr7ROBcUnZT4EeM+gNUibK4fh2X
-        CkR1CAv9JBYrrlhKURLDqMwLKsOgMzS3kgle7fbvy/inQgOSsYXVjQduVyR9Waej
-        UFpn6xxG6/61Pwyx4zlAs8SLqb36rovjCSa1bSjzSuYR0jiVK43h0L1anAbiKuHH
-        ivInHJz0MbqSdvbYX9abQHzDhyMV3C8aa6/JNZwHpf2zOJ3M8Xdb2aADkWY3lgfh
-        nAaQ2vIToIjyKPq9hNspCuE0ELa1tHmeSygW5UGpqnHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3p7X8ygQrONcSrHJ+
-        dzFyPMuAcGioe82upxmwDopNqs=; b=ZJnkQyXbGFPl0i9CTA5b4zv4JgQzpUqj/
-        NW7Gkq/osACIeRJDcPMP7C0FAVGlLA/KFl85Ts6OVG054+5UDh0F5ztPhK8n0BFL
-        dcYYwXOXijVDU6S1VEwIu1CSuwqB3VAXWqSrmPyLeqxnP4dRP92aouAIyjnZHNNs
-        0VR5xwSsLavOxn2f8RfOkSY/FluK3Fs7q8+ohk+fN7z41FOtZ7RzSWiW0JYpUDBR
-        Z+oPN1QxO5DGnbS/oG0ivHC9mv38AoddOKZpP+txqv7zNiNjY2ArYetxgO1/1fWj
-        DRi59nAP2I7IDkrr8Vn1Kho6jnZzRzX3E6bsxBzu648VG4k2bY/Kw==
-X-ME-Sender: <xms:cicEXygAVgGnS4oRPQsZmgj6JgeVxpxmOUg8mRO9YDk9JqeDOy53QQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudeggdduvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
-    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
-    hrnhepjeffheduvddvvdelhfegleelfffgieejvdehgfeijedtieeuteejteefueekjeeg
-    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:cicEXzAdmPKbWqbxeD7Xb_1yjSImw4IYBXsNqzG1MRh3ItbwNrP8dg>
-    <xmx:cicEX6HlnXSkW_cLAuD5V9xNsIg9It04CrG27liaspfpeRixucpClg>
-    <xmx:cicEX7TX2Bahva1IBz1kceus9Y8Ox4OzzT-2p4MOpBskxP7C5LmFyw>
-    <xmx:cycEX2xTA_W73xh5kzDli2Se9JX59KNJErj42KGj0euXv3u0mTz_MEorBcM>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 165583280066;
-        Tue,  7 Jul 2020 03:42:41 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] ASoC: core: Remove only the registered component in devm functions
-Date:   Tue,  7 Jul 2020 09:42:37 +0200
-Message-Id: <20200707074237.287171-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
+        Tue, 7 Jul 2020 03:43:53 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBA5C061755;
+        Tue,  7 Jul 2020 00:43:53 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so16651271pgf.0;
+        Tue, 07 Jul 2020 00:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oqg0waFV1lp8h1+Iq31KyC6DKlnZLj0Pwy1UxBj6Ho8=;
+        b=DAsb8bSZtj79L46P+civ1l7WY7x77+BCU4mrZLoBfLIpXtNgH1HY/lGwcKX2o3IbLD
+         5YRotXnwFtE0/TLB7mK53OSZivzhuVYrhazRzq+ZZ6HVXVsn2BmZBf8z8/XZ+m2Uh8ev
+         bBcfzjmSV01aIEj+gdxVZvQ48Qx50LPHGWxHhGlnK2wC7rrJAiUw3wfAAm1GYV1VrnTs
+         RTPqS5j1+9Cxw44HyDO6ExYYCPzmdqCqvIj+0AZGi/cL34fB+11+/LIPWONa2K4EA4/q
+         19V0Al4aVIL718Dqf1AvU/RGpCkCwOrFh29Egcac8Nn27l613DujT9givcMQe+j6yewv
+         dCaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oqg0waFV1lp8h1+Iq31KyC6DKlnZLj0Pwy1UxBj6Ho8=;
+        b=nKPlFdosCkykiq48AAwmA1V4p+cWiapFvAodt1v2595pxbC9S4DLWDeFPQx98aWKCK
+         W9QSrAQeopJmojHDXOj/X1TS4YxqkNBnviDgtXAUvWSgNIlEGKQZgHZkDx+DOcVck5Pk
+         r45EwR2cXQziTro1QW3a3NpUD6hn/fXtYXrlYaS4TsMoK0dDG/w4TEcq9bFowAX3f6FP
+         /A+wBnp7FK2L6bZ5tWNWlKdxooZh+JVSQUlHQzQ9eeTUemwlmjfgv0bZWfnBl37T2cXZ
+         mEK51aNCdx5A4LUiqvlYcGv3IzCkRQKWK+0ukXZukOIKSKbj80E4lj7Opblxw/Nk9Ucx
+         MPnw==
+X-Gm-Message-State: AOAM533n923SLP9MD/ycY5zp+2psE1L4KyfUrc7C4op32Z4pwaHHbkR0
+        84tRQ4l3PhEGzS30tirC2vU=
+X-Google-Smtp-Source: ABdhPJyZxivWa3Zwd3TiXVj2C5Co1Tk0OgrJzdk8Va7YqEXPvY+3BH4n2OB5Ix08Z3T1moPGNugPhA==
+X-Received: by 2002:a62:fb06:: with SMTP id x6mr48186275pfm.28.1594107832958;
+        Tue, 07 Jul 2020 00:43:52 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id s30sm21439248pgn.34.2020.07.07.00.43.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 00:43:52 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH net-next] sun/niu: add __maybe_unused attribute to PM functions
+Date:   Tue,  7 Jul 2020 13:11:22 +0530
+Message-Id: <20200707074121.230686-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,152 +82,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ASoC devm_ functions that register a component
-(devm_snd_soc_register_component and devm_snd_dmaengine_pcm_register) will
-clean their component by running snd_soc_unregister_component.
+The upgraded .suspend() and .resume() throw
+"defined but not used [-Wunused-function]" warning for certain
+configurations.
 
-snd_soc_unregister_component will then remove all the components for the
-device that was used to register the component in the first place.
+Mark them with "__maybe_unused" attribute.
 
-However, some drivers register several components (such as a DAI and a
-dmaengine PCM) on the same device, and if the dmaengine PCM is registered
-first, then the DAI will be cleaned up first and
-snd_dmaengine_pcm_unregister will be called next.
+Compile-tested only.
 
-snd_dmaengine_pcm_unregister will then lookup the dmaengine PCM component
-on the device, and if there's one unregister that component and release its
-dmaengine channels. That doesn't happen in practice though since the first
-call to snd_soc_unregister_component removed all the components, so we
-never get the chance to release the dmaengine channels.
-
-In order to fix this, instead of removing all the components for a given
-device, we can simply remove the component that was registered in the first
-place. We should have the same number of component registration than we
-have components, so it should work just fine.
-
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
+Fixes: b0db0cc2f695 ("sun/niu: use generic power management")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
+ drivers/net/ethernet/sun/niu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This was observed on a RaspberryPi that uses the vc4_hdmi driver
-(drivers/gpu/drm/vc4/vc4_hdmi.c). This driver will register a dmaengine PCM
-and two components. If the MIPI-DSI controller is enabled, it will create
-an EPROBE_DEFER across the entire display pipeline, leading to multiple
-bind/unbind cycles in the other display drivers including vc4_hdmi, leading
-to multiple warnings since we request the same dmaengine channels on the
-same device without ever releasing them.
-
-It's not really clear to me when that bug was introduced exactly, since it
-can only be seen on a rather unusual setup, and with all the drivers
-built-in (otherwise we probably wouldn't get an EPROBE_DEFER for DSI), but
-it still looks like something that should probably go to stable?
-
-Changes from v1:
-  - Rebased on top of next-20200706
----
- include/sound/soc.h                   |  2 ++
- sound/soc/soc-core.c                  | 27 +++++++++++++++++++++++++++
- sound/soc/soc-devres.c                |  8 +++++---
- sound/soc/soc-generic-dmaengine-pcm.c |  2 +-
- 4 files changed, 35 insertions(+), 4 deletions(-)
-
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 6791b7570a67..59235e553630 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -426,6 +426,8 @@ int devm_snd_soc_register_component(struct device *dev,
- 			 const struct snd_soc_component_driver *component_driver,
- 			 struct snd_soc_dai_driver *dai_drv, int num_dai);
- void snd_soc_unregister_component(struct device *dev);
-+void snd_soc_unregister_component_by_driver(struct device *dev,
-+			 const struct snd_soc_component_driver *component_driver);
- struct snd_soc_component *snd_soc_lookup_component_nolocked(struct device *dev,
- 							    const char *driver_name);
- struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index adedadcb0efb..7c58e45c1c3f 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -2513,6 +2513,33 @@ int snd_soc_register_component(struct device *dev,
+diff --git a/drivers/net/ethernet/sun/niu.c b/drivers/net/ethernet/sun/niu.c
+index 68541c823245..b4e20d15d138 100644
+--- a/drivers/net/ethernet/sun/niu.c
++++ b/drivers/net/ethernet/sun/niu.c
+@@ -9873,7 +9873,7 @@ static void niu_pci_remove_one(struct pci_dev *pdev)
+ 	}
  }
- EXPORT_SYMBOL_GPL(snd_soc_register_component);
  
-+/**
-+ * snd_soc_unregister_component_by_driver - Unregister component using a given driver
-+ * from the ASoC core
-+ *
-+ * @dev: The device to unregister
-+ * @component_driver: The component driver to unregister
-+ */
-+void snd_soc_unregister_component_by_driver(struct device *dev,
-+					    const struct snd_soc_component_driver *component_driver)
-+{
-+	struct snd_soc_component *component;
-+
-+	if (!component_driver)
-+		return;
-+
-+	mutex_lock(&client_mutex);
-+	component = snd_soc_lookup_component_nolocked(dev, component_driver->name);
-+	if (!component)
-+		goto out;
-+
-+	snd_soc_del_component_unlocked(component);
-+
-+out:
-+	mutex_unlock(&client_mutex);
-+}
-+EXPORT_SYMBOL_GPL(snd_soc_unregister_component_by_driver);
-+
- /**
-  * snd_soc_unregister_component - Unregister all related component
-  * from the ASoC core
-diff --git a/sound/soc/soc-devres.c b/sound/soc/soc-devres.c
-index 11e5d7962370..4534a1c03e8e 100644
---- a/sound/soc/soc-devres.c
-+++ b/sound/soc/soc-devres.c
-@@ -48,7 +48,9 @@ EXPORT_SYMBOL_GPL(devm_snd_soc_register_dai);
- 
- static void devm_component_release(struct device *dev, void *res)
+-static int niu_suspend(struct device *dev_d)
++static int __maybe_unused niu_suspend(struct device *dev_d)
  {
--	snd_soc_unregister_component(*(struct device **)res);
-+	const struct snd_soc_component_driver **cmpnt_drv = res;
-+
-+	snd_soc_unregister_component_by_driver(dev, *cmpnt_drv);
+ 	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct niu *np = netdev_priv(dev);
+@@ -9900,7 +9900,7 @@ static int niu_suspend(struct device *dev_d)
+ 	return 0;
  }
  
- /**
-@@ -65,7 +67,7 @@ int devm_snd_soc_register_component(struct device *dev,
- 			 const struct snd_soc_component_driver *cmpnt_drv,
- 			 struct snd_soc_dai_driver *dai_drv, int num_dai)
+-static int niu_resume(struct device *dev_d)
++static int __maybe_unused niu_resume(struct device *dev_d)
  {
--	struct device **ptr;
-+	const struct snd_soc_component_driver **ptr;
- 	int ret;
- 
- 	ptr = devres_alloc(devm_component_release, sizeof(*ptr), GFP_KERNEL);
-@@ -74,7 +76,7 @@ int devm_snd_soc_register_component(struct device *dev,
- 
- 	ret = snd_soc_register_component(dev, cmpnt_drv, dai_drv, num_dai);
- 	if (ret == 0) {
--		*ptr = dev;
-+		*ptr = cmpnt_drv;
- 		devres_add(dev, ptr);
- 	} else {
- 		devres_free(ptr);
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 80a4e71f2d95..61844403f181 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -478,7 +478,7 @@ void snd_dmaengine_pcm_unregister(struct device *dev)
- 
- 	pcm = soc_component_to_pcm(component);
- 
--	snd_soc_unregister_component(dev);
-+	snd_soc_unregister_component_by_driver(dev, component->driver);
- 	dmaengine_pcm_release_chan(pcm);
- 	kfree(pcm);
- }
+ 	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct niu *np = netdev_priv(dev);
 -- 
-2.26.2
+2.27.0
 
