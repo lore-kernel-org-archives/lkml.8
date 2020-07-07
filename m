@@ -2,52 +2,54 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95504C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B528C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C037204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2D2204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135936;
-	bh=qgGbNJG4nd3LubWPiEUpdZ0qQCUI8bbZP2/rBN+YpkY=;
+	s=default; t=1594135945;
+	bh=pOz1h0Kui2vd4TQTtCN/LUp1rK8LonyhxFM4eNU/vBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wduUcMLazVqr7rs+be+OTIKzhGuZ9FOw7Au2JB0edKqGdiqN9oYrXTAohdBTcAGWA
-	 YTSh62LanbfOWyN244J1e2lAkeOJ+Ambzh376ZknLPujE1JojtZNKFvH6FZjAZS7ut
-	 xAJXSbMIAdirmUnQ9M7jq+8f0uYVnHTzxIekClBQ=
+	b=ZJybKDy9bcR6dllAltTufRalli34oiVN/9Qa3U5ziZo+GkllNFkdIpFACiiqdME9N
+	 C9YzoKrbpf0/yrMVUIjB9FUwwwNZ2vaB7HmwPIDvvnw3ql9tyeXFa0m60/3hRL7+qh
+	 K/fw+2XaKQ/YcL5KuoliMIZsiCF/a+rUV4SOyYkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgGGPcP (ORCPT
+        id S1729803AbgGGPWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34900 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbgGGPWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:22 -0400
+        id S1729791AbgGGPWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DA8207C4;
-        Tue,  7 Jul 2020 15:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B39206E2;
+        Tue,  7 Jul 2020 15:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135342;
-        bh=qgGbNJG4nd3LubWPiEUpdZ0qQCUI8bbZP2/rBN+YpkY=;
+        s=default; t=1594135324;
+        bh=pOz1h0Kui2vd4TQTtCN/LUp1rK8LonyhxFM4eNU/vBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ngi27wKPY1FaWC18Ko58gelO/svEdu6sw3SJXVhNAV5IbnHxEZe8HgEKBHUktUoaa
-         IQSlfrwRkLcc3lZwXhU+u67BbTpNUTCZqfFibE2YcIuPNcPXGrQqEVskeC6LNhrMpP
-         r+XWFMRLjTTkk9/g9kq1+TdPIcNlxnlEosUFu3IM=
+        b=QIfuaEVJrJJ0FU73iXlHgr1gZ8D9Kl57Psqfy7QOt/cIL42LLZXKn63mbKvVBEAaC
+         XCvEZ/wS2JdxgPecYxcWG0tPPOac+dD6pubRUuBFy2hBRuKv+3KWE3QaPyJb5oYQHk
+         SWCdoZVFANRNOy6m26o8so6qARrohC23/XzaX+GI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 38/65] drm: sun4i: hdmi: Remove extra HPD polling
-Date:   Tue,  7 Jul 2020 17:17:17 +0200
-Message-Id: <20200707145754.304409925@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 61/65] mm, compaction: fully assume capture is not NULL in compact_zone_order()
+Date:   Tue,  7 Jul 2020 17:17:40 +0200
+Message-Id: <20200707145755.418273739@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,50 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-[ Upstream commit bda8eaa6dee7525f4dac950810a85a88bf6c2ba0 ]
+commit 6467552ca64c4ddd2b83ed73192107d7145f533b upstream.
 
-The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
-or less an input-only GPIO. Other GPIO-based HPD implementations
-directly return the current state, instead of polling for a specific
-state and returning the other if that times out.
+Dan reports:
 
-Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
-return a known state based on the current reading. This also gets rid
-of excessive CPU usage by kworker as reported on Stack Exchange [1] and
-Armbian forums [2].
+The patch 5e1f0f098b46: "mm, compaction: capture a page under direct
+compaction" from Mar 5, 2019, leads to the following Smatch complaint:
 
- [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietruck-with-bug-in-sun4i-drm-hdmi
- [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm_hdmi-a10a20/
+    mm/compaction.c:2321 compact_zone_order()
+     error: we previously assumed 'capture' could be null (see line 2313)
 
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200629060032.24134-1-wens@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+mm/compaction.c
+  2288  static enum compact_result compact_zone_order(struct zone *zone, int order,
+  2289                  gfp_t gfp_mask, enum compact_priority prio,
+  2290                  unsigned int alloc_flags, int classzone_idx,
+  2291                  struct page **capture)
+                                      ^^^^^^^
+
+  2313		if (capture)
+                    ^^^^^^^
+Check for NULL
+
+  2314			current->capture_control = &capc;
+  2315
+  2316		ret = compact_zone(&cc, &capc);
+  2317
+  2318		VM_BUG_ON(!list_empty(&cc.freepages));
+  2319		VM_BUG_ON(!list_empty(&cc.migratepages));
+  2320
+  2321		*capture = capc.page;
+                ^^^^^^^^
+Unchecked dereference.
+
+  2322		current->capture_control = NULL;
+  2323
+
+In practice this is not an issue, as the only caller path passes non-NULL
+capture:
+
+__alloc_pages_direct_compact()
+  struct page *page = NULL;
+  try_to_compact_pages(capture = &page);
+    compact_zone_order(capture = capture);
+
+So let's remove the unnecessary check, which should also make Smatch happy.
+
+Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Link: http://lkml.kernel.org/r/18b0df3c-0589-d96c-23fa-040798fee187@suse.cz
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ mm/compaction.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 9c3bdfd203373..63b4de81686ac 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -262,9 +262,8 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
- 	unsigned long reg;
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2310,8 +2310,7 @@ static enum compact_result compact_zone_
+ 		.page = NULL,
+ 	};
  
--	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
--			       reg & SUN4I_HDMI_HPD_HIGH,
--			       0, 500000)) {
-+	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
-+	if (reg & SUN4I_HDMI_HPD_HIGH) {
- 		cec_phys_addr_invalidate(hdmi->cec_adap);
- 		return connector_status_disconnected;
- 	}
--- 
-2.25.1
-
+-	if (capture)
+-		current->capture_control = &capc;
++	current->capture_control = &capc;
+ 
+ 	ret = compact_zone(&cc, &capc);
+ 
+@@ -2333,6 +2332,7 @@ int sysctl_extfrag_threshold = 500;
+  * @alloc_flags: The allocation flags of the current allocation
+  * @ac: The context of current allocation
+  * @prio: Determines how hard direct compaction should try to succeed
++ * @capture: Pointer to free page created by compaction will be stored here
+  *
+  * This is the main entry point for direct page compaction.
+  */
 
 
