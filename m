@@ -7,121 +7,116 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F21207BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64D820771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LShq89WJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+DvgwtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGGOiq (ORCPT
+        id S1728637AbgGGOit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
+        Tue, 7 Jul 2020 10:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbgGGOiT (ORCPT
+        with ESMTP id S1728479AbgGGOiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:19 -0400
+        Tue, 7 Jul 2020 10:38:18 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991D0C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j4so42988476wrp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B932C08C5E2
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so45417414wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U3fyU5lC2kiQoR/Tx6i2htjANdo4PmUgTNG8kh6JAhc=;
-        b=LShq89WJxb94MrlLI3/486aK65cDtxG0oE+rhlgTmASAYfb/Np7yb+JavN6r2ft9ig
-         AwQPAs5kHPqycz2QUKlP4nkN/SKskU0kSdYnqHPC74v0/benUGDSMuVmY2/f9Kipk6RW
-         gZmZE9RA44h5S5//yiG8puSQxxYPDXovIrKY8v5f+Mu99NOeUtvlkmdl6/y/m2bq0Eze
-         5J3TuNo5qLEoDrceDVnvkr9q/2nSp7tHNv64ApVICS1NVKPt1+GK6szIpP0evAVdgyBt
-         S8R/3ZsAgU0rXkkv/pvPnnvYjSwjwm1cv4QUDBxGcUOalIMy5y5VPw2rQ+iAfJLU5D5R
-         5AZQ==
+        bh=wlcleqYJY5jQ1OZcMa4GgQUjEFsprvthMn+zX7CdCH0=;
+        b=C+DvgwtImCJiiCVNxFwI9tT6IRQA5rXY9b0UMNq/qhCDZJquNaMLx1Q027QICk1xw6
+         GOcMf0ZeJzxE16mOIP1eh8YHcFNXeCt6BMeMYGeSxEzmXLFRTkUS20lyaPihXAlgOo7n
+         3wNkADF2GRmNbauV/DltdxYgl0GoSQPwvkmZyKXUOpKKk3ipTlo7/NkL4p8cA6Z6ECdJ
+         ZR4HMK2QM2YJBpGt8wfV72UC6VNVFCCY4ahwb+tPnvIGzY3H8OnSZTNZYWvHp9e/gjvg
+         cX0wPlpkVMbw3sBrQkauQHX6xvWLsYdN2dMTjhVYzzzbh/g01qqPoVl3KyHSgRAuL6R8
+         1IXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U3fyU5lC2kiQoR/Tx6i2htjANdo4PmUgTNG8kh6JAhc=;
-        b=H/tFZNMl3a2Fk4eolN1DLeYKr0mvdmQ4lJLfWUtqTQjZTQguAYYIGEe44F8D9CcYSE
-         CqLWei5IYBl+b/+Vk3hIM17XcY/iSX0kR1xrur73Hu5ADYtaDZ0UTeY55RVQMgTJZIPG
-         w2UZigW4KWutWBtUi5Oap0SrIgDBypJYhBX2K9WJRwDL4KQhMar2uutoQkyi4yFFEuRZ
-         3BeWtZFMMlWbZ7iMa4BPHEbWZZAL0kjgNzmpPNEc0IchnXdX/xjYVRVfil/o1UX0e+nc
-         9t2QPL/XkEEuJoer+vTVKSgq57qaaAARXDQ8tj8lSkV4L+5tu2fq5lDj5zUJ6hIOjaU3
-         Lomw==
-X-Gm-Message-State: AOAM53023ioHa/WMnpqHwU2PW9Jub3rCST1ju2UAMbLvBi/QKRFiO+go
-        mtf8oqPiI1+E6xqXwPoXueJNrA==
-X-Google-Smtp-Source: ABdhPJzqqvWG7oi6hsuXMzqyAR794fl+k3BzyasAa7HE9dNDChNhc30Io0ZzoSOzpgV3OPJPWurV5A==
-X-Received: by 2002:a5d:4607:: with SMTP id t7mr58171903wrq.251.1594132698293;
-        Tue, 07 Jul 2020 07:38:18 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=wlcleqYJY5jQ1OZcMa4GgQUjEFsprvthMn+zX7CdCH0=;
+        b=Or2ym6nhb2o5mtVsYs17RJ/ZAg/wid0qCW5ysMYMz6Tert/9uO5qH87No3YUF2Ma6B
+         GW2QwoRLFRsbgUJRyYosN/LHVtRdn2qOQygCDXaSxQlRLxcJNxfnuBCCaNRMDx1+kRyz
+         EGUxU529EcQkLJ3nzD5Dh9/9eQQm5DQZ8tqMmjg9sw3YMJ5pyhI1RHcN9gVhNl2YXDB1
+         BdQu3wDclN+CGzRoNniMTOXveuhL4xa46Ja+PIFwq9Wn3/bYCu0g8SXpWT46mo/rwkJT
+         vJQ98/sY0sOBxGSJq3W2ixif8cNMp+DS63R8sRtZeJpXpA/ePbcAEJ4hFUPKSrpCABv0
+         cX4g==
+X-Gm-Message-State: AOAM533U8g0nGLcQBb+bGrvVSM553szj+NwpL+9lcHiomkw/X+RsC/kn
+        DJmZEEZdqjRXgIOoSGo6OdymOA==
+X-Google-Smtp-Source: ABdhPJwKOPKcRllwzqIDBY+TgIWIRPSnExaAAvyTfdJWtFOiySyUOdAS4Vf5gq6RLSb6KEqnudtfkg==
+X-Received: by 2002:adf:f10a:: with SMTP id r10mr23439173wro.406.1594132697074;
         Tue, 07 Jul 2020 07:38:17 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 07:38:16 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        David Chen <Dajun.chen@diasemi.com>,
-        Kuninori Morimoto <morimoto.kuninori@renesas.com>
-Subject: [PATCH v2 22/28] ASoC: codecs: da7210: Fix formatting issues in da7210_set_dai_pll() header
-Date:   Tue,  7 Jul 2020 15:37:36 +0100
-Message-Id: <20200707143742.2959960-23-lee.jones@linaro.org>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Samuel Ortiz <samuel.ortiz@nokia.com>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH v2 21/28] ASoC: ti: omap-mcbsp-st: Remove set, but unused variable 'w'
+Date:   Tue,  7 Jul 2020 15:37:35 +0100
+Message-Id: <20200707143742.2959960-22-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc expects parameter documentation to be in the format '@.*: '.
-If that convention is not followed, the kerneldoc checker gets confused.
+Looks like 'w' has remained unchecked since the driver's inception.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'codec_dai' not described in 'da7210_set_dai_pll'
- sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'pll_id' not described in 'da7210_set_dai_pll'
- sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'source' not described in 'da7210_set_dai_pll'
- sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'fref' not described in 'da7210_set_dai_pll'
- sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'fout' not described in 'da7210_set_dai_pll'
+ sound/soc/ti/omap-mcbsp-st.c: In function ‘omap_mcbsp_st_chgain’:
+ sound/soc/ti/omap-mcbsp-st.c:145:6: warning: variable ‘w’ set but not used [-Wunused-but-set-variable]
 
-Cc: Support Opensource <support.opensource@diasemi.com>
-Cc: David Chen <Dajun.chen@diasemi.com>
-Cc: Kuninori Morimoto <morimoto.kuninori@renesas.com>
+Peter suggested that the whole read can be removed, so that's
+been done too.
+
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Cc: Samuel Ortiz <samuel.ortiz@nokia.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/codecs/da7210.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ sound/soc/ti/omap-mcbsp-st.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/sound/soc/codecs/da7210.c b/sound/soc/codecs/da7210.c
-index 0c99dcf242e42..159b5f0eb7100 100644
---- a/sound/soc/codecs/da7210.c
-+++ b/sound/soc/codecs/da7210.c
-@@ -971,11 +971,13 @@ static int da7210_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+diff --git a/sound/soc/ti/omap-mcbsp-st.c b/sound/soc/ti/omap-mcbsp-st.c
+index 5a32b54bbf3bb..0bc7d26c660aa 100644
+--- a/sound/soc/ti/omap-mcbsp-st.c
++++ b/sound/soc/ti/omap-mcbsp-st.c
+@@ -142,11 +142,8 @@ static void omap_mcbsp_st_fir_write(struct omap_mcbsp *mcbsp, s16 *fir)
  
- /**
-  * da7210_set_dai_pll	:Configure the codec PLL
-- * @param codec_dai	: pointer to codec DAI
-- * @param pll_id	: da7210 has only one pll, so pll_id is always zero
-- * @param fref		: MCLK frequency, should be < 20MHz
-- * @param fout		: FsDM value, Refer page 44 & 45 of datasheet
-- * @return int		: Zero for success, negative error code for error
-+ * @codec_dai:	pointer to codec DAI
-+ * @pll_id:	da7210 has only one pll, so pll_id is always zero
-+ * @source:	unused
-+ * @fref:	MCLK frequency, should be < 20MHz
-+ * @fout:	FsDM value, Refer page 44 & 45 of datasheet
-+ *
-+ * Returns: Zero for success, negative error code for error
-  *
-  * Note: Supported PLL input frequencies are 12MHz, 13MHz, 13.5MHz, 14.4MHz,
-  *       19.2MHz, 19.6MHz and 19.8MHz
+ static void omap_mcbsp_st_chgain(struct omap_mcbsp *mcbsp)
+ {
+-	u16 w;
+ 	struct omap_mcbsp_st_data *st_data = mcbsp->st_data;
+ 
+-	w = MCBSP_ST_READ(mcbsp, SSELCR);
+-
+ 	MCBSP_ST_WRITE(mcbsp, SGAINCR, ST_CH0GAIN(st_data->ch0gain) |
+ 		       ST_CH1GAIN(st_data->ch1gain));
+ }
 -- 
 2.25.1
 
