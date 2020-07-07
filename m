@@ -2,55 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDFFE204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3075A204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135828;
-	bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
+	s=default; t=1594135835;
+	bh=2ZNNi2geWKQy6z4LM6BHlQI2VVnnJCfcD3MR22KGryc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FkzBPdjiU/3T3hw2TR9WjCQYW5q+uJBYL4vyx3U8LqhCOH8dLjkWdPbFIJ1InWXg
-	 W6LcXqbMLT9QesJacudLtbg8IGkeynwV+zrJQiFUhqIiWszkt1V4sPllwSr65eaKOT
-	 Dq5VlRTgY9qtQLHwLiiiCIPfH8o1u2STFe8KJbqI=
+	b=SEALM9IVukRvNW4wnKxDV58ofNSQaNmyZVOdOWd3JS/ZI3VQhI89FAke9vX5uOmBM
+	 LOvc9I3mQVPA7N63v7FAWlFQ3de7QUgdrTa6x4O7k7KEWQwW19NAfMJsvDqNUmZ1wb
+	 IWRqcTO8VNmyXZ7CIR8Ht6NB1juDzcqPud9gnpCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgGGPYN (ORCPT
+        id S1730182AbgGGPac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbgGGPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:05 -0400
+        id S1730048AbgGGPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A331E207CD;
-        Tue,  7 Jul 2020 15:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD74207D0;
+        Tue,  7 Jul 2020 15:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135445;
-        bh=TQp5hTbDD5CfDkkOPSDPVU3Tk7aX4S5pNwxMCWt8qv0=;
+        s=default; t=1594135452;
+        bh=2ZNNi2geWKQy6z4LM6BHlQI2VVnnJCfcD3MR22KGryc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sa4NlwW5JDa2CtXfGPRu5l9xl2cT8Lbq3g7AipLpJ7k0srXjgo0/HUg02CGoe6EbC
-         rk+ZUceUbHpkH0sGsz5P/EVC0oZtoiwo9g5kCLrnwz1mDwrTvjwEHJjWSrb79z+CPk
-         Bn4xay0yWlTfIDVpiWpjcfTDDO2Kq33TreZcgFRc=
+        b=0s2KL7/RzkEETxZudWzUtJ8oPnk+cVQDDlBFIBgHHvZ1bMQfVheN11r/dh5FIIbSc
+         ylFef4JRHu3l5lU1eKgXqTfWcIRfSqbt4X0rAF58qkqKLfFAbkpjLCj4sFgiZ0+vsQ
+         ijX+1FRInubWhIU805eoZ7+5Xql6i8hnmhTsxyho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Alex Guzman <alex@guzman.io>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.7 043/112] tpm: Fix TIS locality timeout problems
-Date:   Tue,  7 Jul 2020 17:16:48 +0200
-Message-Id: <20200707145803.049491500@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 046/112] io_uring: use signal based task_work running
+Date:   Tue,  7 Jul 2020 17:16:51 +0200
+Message-Id: <20200707145803.190649104@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -63,73 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 7862840219058436b80029a0263fd1ef065fb1b3 upstream.
+[ Upstream commit ce593a6c480a22acba08795be313c0c6d49dd35d ]
 
-It has been reported that some TIS based TPMs are giving unexpected
-errors when using the O_NONBLOCK path of the TPM device. The problem
-is that some TPMs don't like it when you get and then relinquish a
-locality (as the tpm_try_get_ops()/tpm_put_ops() pair does) without
-sending a command.  This currently happens all the time in the
-O_NONBLOCK write path. Fix this by moving the tpm_try_get_ops()
-further down the code to after the O_NONBLOCK determination is made.
-This is safe because the priv->buffer_mutex still protects the priv
-state being modified.
+Since 5.7, we've been using task_work to trigger async running of
+requests in the context of the original task. This generally works
+great, but there's a case where if the task is currently blocked
+in the kernel waiting on a condition to become true, it won't process
+task_work. Even though the task is woken, it just checks whatever
+condition it's waiting on, and goes back to sleep if it's still false.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206275
-Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
-Reported-by: Mario Limonciello <Mario.Limonciello@dell.com>
-Tested-by: Alex Guzman <alex@guzman.io>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is a problem if that very condition only becomes true when that
+task_work is run. An example of that is the task registering an eventfd
+with io_uring, and it's now blocked waiting on an eventfd read. That
+read could depend on a completion event, and that completion event
+won't get trigged until task_work has been run.
 
+Use the TWA_SIGNAL notification for task_work, so that we ensure that
+the task always runs the work when queued.
+
+Cc: stable@vger.kernel.org # v5.7
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-dev-common.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/io_uring.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/char/tpm/tpm-dev-common.c
-+++ b/drivers/char/tpm/tpm-dev-common.c
-@@ -189,15 +189,6 @@ ssize_t tpm_common_write(struct file *fi
- 		goto out;
- 	}
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 71d281f68ed83..51362a619fd50 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4136,6 +4136,21 @@ struct io_poll_table {
+ 	int error;
+ };
  
--	/* atomic tpm command send and result receive. We only hold the ops
--	 * lock during this period so that the tpm can be unregistered even if
--	 * the char dev is held open.
--	 */
--	if (tpm_try_get_ops(priv->chip)) {
--		ret = -EPIPE;
--		goto out;
--	}
--
- 	priv->response_length = 0;
- 	priv->response_read = false;
- 	*off = 0;
-@@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *fi
- 	if (file->f_flags & O_NONBLOCK) {
- 		priv->command_enqueued = true;
- 		queue_work(tpm_dev_wq, &priv->async_work);
--		tpm_put_ops(priv->chip);
- 		mutex_unlock(&priv->buffer_mutex);
- 		return size;
- 	}
- 
-+	/* atomic tpm command send and result receive. We only hold the ops
-+	 * lock during this period so that the tpm can be unregistered even if
-+	 * the char dev is held open.
-+	 */
-+	if (tpm_try_get_ops(priv->chip)) {
-+		ret = -EPIPE;
-+		goto out;
-+	}
++static int io_req_task_work_add(struct io_kiocb *req, struct callback_head *cb,
++				int notify)
++{
++	struct task_struct *tsk = req->task;
++	int ret;
 +
- 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
- 			       sizeof(priv->data_buffer));
- 	tpm_put_ops(priv->chip);
++	if (req->ctx->flags & IORING_SETUP_SQPOLL)
++		notify = 0;
++
++	ret = task_work_add(tsk, cb, notify);
++	if (!ret)
++		wake_up_process(tsk);
++	return ret;
++}
++
+ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
+ 			   __poll_t mask, task_work_func_t func)
+ {
+@@ -4159,13 +4174,13 @@ static int __io_async_wake(struct io_kiocb *req, struct io_poll_iocb *poll,
+ 	 * of executing it. We can't safely execute it anyway, as we may not
+ 	 * have the needed state needed for it anyway.
+ 	 */
+-	ret = task_work_add(tsk, &req->task_work, true);
++	ret = io_req_task_work_add(req, &req->task_work, TWA_SIGNAL);
+ 	if (unlikely(ret)) {
+ 		WRITE_ONCE(poll->canceled, true);
+ 		tsk = io_wq_get_task(req->ctx->io_wq);
+-		task_work_add(tsk, &req->task_work, true);
++		task_work_add(tsk, &req->task_work, 0);
++		wake_up_process(tsk);
+ 	}
+-	wake_up_process(tsk);
+ 	return 1;
+ }
+ 
+@@ -6260,19 +6275,20 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	do {
+ 		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq,
+ 						TASK_INTERRUPTIBLE);
++		/* make sure we run task_work before checking for signals */
+ 		if (current->task_works)
+ 			task_work_run();
+-		if (io_should_wake(&iowq, false))
+-			break;
+-		schedule();
+ 		if (signal_pending(current)) {
+-			ret = -EINTR;
++			ret = -ERESTARTSYS;
+ 			break;
+ 		}
++		if (io_should_wake(&iowq, false))
++			break;
++		schedule();
+ 	} while (1);
+ 	finish_wait(&ctx->wait, &iowq.wq);
+ 
+-	restore_saved_sigmask_unless(ret == -EINTR);
++	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
+ 
+ 	return READ_ONCE(rings->cq.head) == READ_ONCE(rings->cq.tail) ? ret : 0;
+ }
+-- 
+2.25.1
+
 
 
