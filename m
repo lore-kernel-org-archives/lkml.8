@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D149C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C9A20853
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE362065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135547;
-	bh=3fZqCq27fp8l+1dIvBNv3c0JEQIzEhLcC9QqoEuXH5g=;
+	s=default; t=1594135550;
+	bh=u5hZZbFiRo5yvKUXbV5TVcAyrT/PdqV0ctTx9a77ELA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnoVIq8uCUBbMopDFIZh6ekP7gUhK5k8dEYrw+FIPxrjPUTbdoVhy0XbnoXym9rFZ
-	 yi80NiqfsGIVvcycA0greAMR42fMKcAq/BS7whL4CmV3q0HNugaQTdMw2wF6ZF7bd1
-	 j0RtbT9HwirnGlhUeq8WpBM038Gbxwi8KQGaCrqc=
+	b=kggrJ1jFxxxMbqY21FLty+8ngl8sZNFOnnJ1vxwC3G/RW5YAxEWx8F9bN1Vx/5fqn
+	 36ZeBm903Wbys4E8nA4vlUZlF1sOYJttyLQ1ZN56OM4r24KdWK0L9/uV9IAExkeMfb
+	 ACxtJH9HPK1EpjTxPWZZik7pS6aVgM1N0q04xB5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgGGPZq (ORCPT
+        id S1730251AbgGGPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39750 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbgGGPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:35 -0400
+        id S1730239AbgGGPZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B1362065D;
-        Tue,  7 Jul 2020 15:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C462088E;
+        Tue,  7 Jul 2020 15:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135535;
-        bh=3fZqCq27fp8l+1dIvBNv3c0JEQIzEhLcC9QqoEuXH5g=;
+        s=default; t=1594135542;
+        bh=u5hZZbFiRo5yvKUXbV5TVcAyrT/PdqV0ctTx9a77ELA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lldy8+j7pwpND/9vvs2gYy0z68CIteVmQMFGyFhjyhpbIg3wkp/9wB1ZFP5oMKZTZ
-         khQ+LI5IfzWZUfKXQ9P6H1057Zc837QrXXaS4Nc+q0KbWfswl0E0zoOVJIfHHj9gA6
-         HyrPmH19yfKuRgXKYRpUhKkJhXhOd6ySIJpn8qTA=
+        b=BO3JBi2A2KnkJ0xUlg13Z+2aZXhOAiJKPOlWVrscxyK8eZPdZjsW39owCpklYp4V+
+         dN4EDX4gag446GBOkf3SOyq/ME0tCaIHd3AsjQ4iONYz4+vUNVZIsXEeSuVzGHY+Jt
+         CGO8Zhb6VJmEefbEKV0TYQtck+hMWVdW1xow0Umc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 079/112] tpm: ibmvtpm: Wait for ready buffer before probing for TPM2 attributes
-Date:   Tue,  7 Jul 2020 17:17:24 +0200
-Message-Id: <20200707145804.749754189@linuxfoundation.org>
+        stable@vger.kernel.org, Ricardo Ribalda <ribalda@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 082/112] i2c: designware: platdrv: Set class based on DMI
+Date:   Tue,  7 Jul 2020 17:17:27 +0200
+Message-Id: <20200707145804.885886148@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,65 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Ricardo Ribalda <ribalda@kernel.org>
 
-[ Upstream commit 72d0556dca39f45eca6c4c085e9eb0fc70aec025 ]
+[ Upstream commit db2a8b6f1df93d5311970cca03052c01178de674 ]
 
-The tpm2_get_cc_attrs_tbl() call will result in TPM commands being issued,
-which will need the use of the internal command/response buffer.  But,
-we're issuing this *before* we've waited to make sure that buffer is
-allocated.
+Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-This can result in intermittent failures to probe if the hypervisor / TPM
-implementation doesn't respond quickly enough.  I find it fails almost
-every time with an 8 vcpu guest under KVM with software emulated TPM.
+With this patch we re-enable autodetection of hwmon-alike devices, so
+lm-sensors will be able to work automatically.
 
-To fix it, just move the tpm2_get_cc_attrs_tlb() call after the
-existing code to wait for initialization, which will ensure the buffer
-is allocated.
+It does not affect the boot-time of embedded devices, as the class is
+set based on the DMI information.
 
-Fixes: 18b3670d79ae9 ("tpm: ibmvtpm: Add support for TPM2")
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+DMI is probed only on Qtechnology QT5222 Industrial Camera Platform.
+
+DocLink: https://qtec.com/camera-technology-camera-platforms/
+Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_ibmvtpm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/i2c/busses/i2c-designware-platdrv.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-index 09fe45246b8cc..994385bf37c0c 100644
---- a/drivers/char/tpm/tpm_ibmvtpm.c
-+++ b/drivers/char/tpm/tpm_ibmvtpm.c
-@@ -683,13 +683,6 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
- 	if (rc)
- 		goto init_irq_cleanup;
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 5536673060cc6..3a9c2cfbef974 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -234,6 +234,17 @@ static const u32 supported_speeds[] = {
+ 	I2C_MAX_STANDARD_MODE_FREQ,
+ };
  
--	if (!strcmp(id->compat, "IBM,vtpm20")) {
--		chip->flags |= TPM_CHIP_FLAG_TPM2;
--		rc = tpm2_get_cc_attrs_tbl(chip);
--		if (rc)
--			goto init_irq_cleanup;
--	}
--
- 	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
- 				ibmvtpm->rtce_buf != NULL,
- 				HZ)) {
-@@ -697,6 +690,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
- 		goto init_irq_cleanup;
- 	}
- 
-+	if (!strcmp(id->compat, "IBM,vtpm20")) {
-+		chip->flags |= TPM_CHIP_FLAG_TPM2;
-+		rc = tpm2_get_cc_attrs_tbl(chip);
-+		if (rc)
-+			goto init_irq_cleanup;
-+	}
++static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
++	{
++		.ident = "Qtechnology QT5222",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
++		},
++	},
++	{ } /* terminate list */
++};
 +
- 	return tpm_chip_register(chip);
- init_irq_cleanup:
- 	do {
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
+ 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -349,7 +360,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 
+ 	adap = &dev->adapter;
+ 	adap->owner = THIS_MODULE;
+-	adap->class = I2C_CLASS_DEPRECATED;
++	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
++					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
+ 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->nr = -1;
 -- 
 2.25.1
 
