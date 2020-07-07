@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85608C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CAB20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11B82078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135497;
-	bh=c+QW1mE2tGRPZcQtySA3Jab8B8UJPsk/3gFArtC+8zc=;
+	s=default; t=1594135498;
+	bh=W6ZCKqVWmrvLUaqsfEod1eJbx0YNy6bRzf5/LmCVh4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vx7Va7+Nloug29HkWl+4szuNdrCEhvdhxRTnaN6XdJ6WluLyt1KSyhFEvT+89HPng
-	 HS7LMggOuzaarRKGhJ0UKKmMeaDKZKLy8Ei8VPO0ZUiISHzB3XnuPNhFgig66cKOmm
-	 yBKOHHnVPDQQEyKLOIN4+1Jd5rN29o0BiscnR698=
+	b=th0mBYxbqB42ogBr6eFPanLu8VgAEDSoDiBOEpJC6H0AdzapZC4EQsf5dxzfsP2G9
+	 3omDQrq6220TEhW/1tDJAaFpOz0kKC4CK5AGMyeDkPjSXi/alaLF2JDdNO97mycU34
+	 8Acw3A/f4DC9voKswObfe/evdrS7/kPNxzM22q1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgGGPYz (ORCPT
+        id S1730149AbgGGPYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38528 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730140AbgGGPYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:50 -0400
+        id S1730134AbgGGPYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B0520663;
-        Tue,  7 Jul 2020 15:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05764206F6;
+        Tue,  7 Jul 2020 15:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135489;
-        bh=c+QW1mE2tGRPZcQtySA3Jab8B8UJPsk/3gFArtC+8zc=;
+        s=default; t=1594135487;
+        bh=W6ZCKqVWmrvLUaqsfEod1eJbx0YNy6bRzf5/LmCVh4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsZuysiHa0JV4RGL2t4M9iPHO/DZsHOGPqdzCeUr8IpTq/v/HI+kw5zC4bu8gfxJ+
-         htYGHFWSwPcJWnx5Xlq7MKUJ/TOuSVdV2f1ARUTutsjwO39ytA2TzfCuN+9OgeBN3U
-         u7qpa91fSbXn/zVjDXOPUsyYuMZAuAOMpgKaLMZ0=
+        b=Slzv2ZvB469YModFStwUPPWyAosKdk3rj+WiiRZojZLyBla4VYSkip/12E+NBS+M1
+         RLqQR/L54+eqZMBzXUxSFU4pvlp1/VkiCKlsFWj/1XA09HR0bjSsuAtOdfSvKxtPsc
+         HBKygFj74HSRUD+gWtHcR6+44XS8PvQEG6ssMBMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaewon Kim <jaewon31.kim@samsung.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kees Kook <keescook@chromium.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 032/112] s390/debug: avoid kernel warning on too large number of pages
-Date:   Tue,  7 Jul 2020 17:16:37 +0200
-Message-Id: <20200707145802.515465308@linuxfoundation.org>
+Subject: [PATCH 5.7 031/112] tools lib traceevent: Handle __attribute__((user)) in field names
+Date:   Tue,  7 Jul 2020 17:16:36 +0200
+Message-Id: <20200707145802.467329359@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,39 +68,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 827c4913923e0b441ba07ba4cc41e01181102303 ]
+[ Upstream commit 74621d929d944529a5e2878a84f48bfa6fb69a66 ]
 
-When specifying insanely large debug buffers a kernel warning is
-printed. The debug code does handle the error gracefully, though.
-Instead of duplicating the check let us silence the warning to
-avoid crashes when panic_on_warn is used.
+Commit c61f13eaa1ee1 ("gcc-plugins: Add structleak for more stack
+initialization") added "__attribute__((user))" to the user when
+stackleak detector is enabled. This now appears in the field format of
+system call trace events for system calls that have user buffers. The
+"__attribute__((user))" breaks the parsing in libtraceevent. That needs
+to be handled.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jaewon Kim <jaewon31.kim@samsung.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kees Kook <keescook@chromium.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200324200956.663647256@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/debug.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 39 +++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/debug.c b/arch/s390/kernel/debug.c
-index 6d321f5f101d6..7184d55d87aae 100644
---- a/arch/s390/kernel/debug.c
-+++ b/arch/s390/kernel/debug.c
-@@ -198,9 +198,10 @@ static debug_entry_t ***debug_areas_alloc(int pages_per_area, int nr_areas)
- 	if (!areas)
- 		goto fail_malloc_areas;
- 	for (i = 0; i < nr_areas; i++) {
-+		/* GFP_NOWARN to avoid user triggerable WARN, we handle fails */
- 		areas[i] = kmalloc_array(pages_per_area,
- 					 sizeof(debug_entry_t *),
--					 GFP_KERNEL);
-+					 GFP_KERNEL | __GFP_NOWARN);
- 		if (!areas[i])
- 			goto fail_malloc_areas2;
- 		for (j = 0; j < pages_per_area; j++) {
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index eec96c31ea9e5..010e60d5a0817 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -1444,6 +1444,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 	enum tep_event_type type;
+ 	char *token;
+ 	char *last_token;
++	char *delim = " ";
+ 	int count = 0;
+ 	int ret;
+ 
+@@ -1504,13 +1505,49 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 					field->flags |= TEP_FIELD_IS_POINTER;
+ 
+ 				if (field->type) {
+-					ret = append(&field->type, " ", last_token);
++					ret = append(&field->type, delim, last_token);
+ 					free(last_token);
+ 					if (ret < 0)
+ 						goto fail;
+ 				} else
+ 					field->type = last_token;
+ 				last_token = token;
++				delim = " ";
++				continue;
++			}
++
++			/* Handle __attribute__((user)) */
++			if ((type == TEP_EVENT_DELIM) &&
++			    strcmp("__attribute__", last_token) == 0 &&
++			    token[0] == '(') {
++				int depth = 1;
++				int ret;
++
++				ret = append(&field->type, " ", last_token);
++				ret |= append(&field->type, "", "(");
++				if (ret < 0)
++					goto fail;
++
++				delim = " ";
++				while ((type = read_token(&token)) != TEP_EVENT_NONE) {
++					if (type == TEP_EVENT_DELIM) {
++						if (token[0] == '(')
++							depth++;
++						else if (token[0] == ')')
++							depth--;
++						if (!depth)
++							break;
++						ret = append(&field->type, "", token);
++						delim = "";
++					} else {
++						ret = append(&field->type, delim, token);
++						delim = " ";
++					}
++					if (ret < 0)
++						goto fail;
++					free(last_token);
++					last_token = token;
++				}
+ 				continue;
+ 			}
+ 			break;
 -- 
 2.25.1
 
