@@ -2,100 +2,116 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF769C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA359C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A698720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594104366;
-	bh=7vWpkwbpVurvhqJvg651ncehNiMGpNzfY8nAefCyU0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CvT/5eTQ95XNyhiRG+7+Uuc2lz3085mGAv1AH8I7bSkeFtPbmdgAkK3qV2WVIEIxh
-	 ahuiuRb2sJJ/VZ88Es9Wgh+UdSKrROfGQwQgFBt8xLmMBhOP08wBzsxCRisWGRWteO
-	 akDFb7iaizIGbfkMbh8hLJSTGkN5drd0bpL8vyWI=
+	by mail.kernel.org (Postfix) with ESMTP id 9467420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RcxeUoQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgGGGqF (ORCPT
+        id S1728163AbgGGGrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:46:05 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:33692 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGGqF (ORCPT
+        Tue, 7 Jul 2020 02:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgGGGrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:46:05 -0400
-Received: by mail-wm1-f41.google.com with SMTP id a6so1028864wmm.0;
-        Mon, 06 Jul 2020 23:46:03 -0700 (PDT)
+        Tue, 7 Jul 2020 02:47:05 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF05C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 23:47:05 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id k6so43928169wrn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 23:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pAUaHQGnD3+ZIQQ0Oy5xYapqsREaQJS2n89f+4B15KI=;
+        b=RcxeUoQCIgWgnkUSLjmg4dR9sste/vAvBkd1Op5/YaTwssHXSeVR5xiejR22wncB2a
+         8Uw9tPYNBl5p5Kj4Hkq+/DMOXE1y0AdFAr2ozkV3c1eIApLwPoQwwdqY2rGztBkf6GJb
+         P92aouXq2/SYzxIFHEBXJt6ATRyUuAlJWmhbQfznUC/Qx2FTiAu7vCiPZOCi7a+cwPCo
+         dXL8QeCYXg9L+YfGSYnn1q0C5vEMfitOXAoz9a/6/ZhJ5JjD45/YhsJNQw+w6kGMkrrd
+         focvXNgM6OYhXUegweM2C+oISvCa5HGv+OTgKeAb58vB71CIHXjx2NUEMgyjDPO7nNYm
+         Ribw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LZY4QYexNFxT6TqFL0Caw2AQdp+94mhDbGktkxzUk58=;
-        b=aRtzeXJoQq3zvtGUfShYA172LUEHdOCo5dyYJ2ccfSLsGjoJTJEL3yQlcx+sfUwfLW
-         CjUoEMhDmRbcvp1bMzKIKHaYx5/OuP/2sBAbCKohVGuGrH27QenaTlvL1mK7p6WDFnAR
-         za9CQ6er2rwM/i9UTiQ90LpSk6mD3h3WvB2tOyhk44p8WltT9kSjd94FAsthdlqoy7v3
-         I1qNVyUaTRsPkw93XKTrsXHQs2glNUJIawUVO44AFVSDXpcFQeuGHrwdPZtZtueLxQ2r
-         H8SFCX/eY081/5mm03Fw761rSCuclieVM/B2GsEBUHoWCLAbULLtx3TuvcFky4kE1BLU
-         OHyA==
-X-Gm-Message-State: AOAM533PulPs5R/IZx05Ll3g4E7sYZW/9uuror0JX5aIpGuuA0Ve/q8k
-        Oc0C3lslU+jU1S85jKBJhZ0=
-X-Google-Smtp-Source: ABdhPJziNI/S3TzI2xPuhc6soNVAjOlNsFWHMGrc0DQfWgB7P9NwL35zvKimFDVT4ifwVkQ5s668Ow==
-X-Received: by 2002:a1c:804c:: with SMTP id b73mr2530042wmd.59.1594104363178;
-        Mon, 06 Jul 2020 23:46:03 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id 51sm22103085wrc.44.2020.07.06.23.46.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jul 2020 23:46:02 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 08:46:00 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [RFT 3/3] arm64: dts: exynos: Add unit address to soc node and
- move thermal zones on Exynos7
-Message-ID: <20200707064600.GD15031@kozik-lap>
-References: <20200629193338.29540-1-krzk@kernel.org>
- <20200629193338.29540-3-krzk@kernel.org>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pAUaHQGnD3+ZIQQ0Oy5xYapqsREaQJS2n89f+4B15KI=;
+        b=gnjOw8oGqb4rGQGx3ZkWygzi3KzqFLTlyowJ6nLkJf1gE5p0yI5y8l1mZt25zLY+jq
+         Gjf+p8OntoXOPUtUz/IrsGAy4i0Gw01YB9wrYxSelpIS+H5Zo94ZyJ6RRrp/ZJZZEs40
+         0Wp6VywASdo7YmPZ4A0gVVWEb5u4Tgay6rQS0APfsnq/y1yod+1qjPBzDnftee7ExWZ+
+         lx+WJCjZaGbkFjIUrAwNSHw/AjLCZ9synwJLPtmSmMWIB5E5nZ69bO9eY3R6cANxVyuR
+         vkGqr+9aPwWxCrZGC19Ore3Xf7dI2ulV1zsPbw+h6zjl1nlMNy1fYBo2QG2WrX0G+R0C
+         kS9g==
+X-Gm-Message-State: AOAM533nmZrRlXA4L0EXBCpJ2wtDVx46DXmaV17qGZvbrn+CKc00Tgpw
+        lK/MIM3iqWHzHURvppEEbwFNBQ==
+X-Google-Smtp-Source: ABdhPJxYZ9YrCD0dzxdBWyfKxvHKA5xY3Xb6yXZlFWOzNnNc4LwDgOikVdB+P6BMLX5ckmH/XmThTw==
+X-Received: by 2002:a5d:540d:: with SMTP id g13mr48558121wrv.380.1594104424095;
+        Mon, 06 Jul 2020 23:47:04 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id d2sm27489648wrs.95.2020.07.06.23.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 23:47:03 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 07:47:01 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     ulf.hansson@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH v2 15/15] mmc: host: sdhci-iproc: Do not define 'struct
+ acpi_device_id' when !CONFIG_ACPI
+Message-ID: <20200707064701.GC3500@dell>
+References: <20200701124702.908713-1-lee.jones@linaro.org>
+ <20200701124702.908713-16-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200629193338.29540-3-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701124702.908713-16-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:33:38PM +0200, Krzysztof Kozlowski wrote:
-> Add @0 unit address to 'soc' node match its 'reg' property and move the
-> thermal zones out of 'soc' to main root as it this is usually not a
-> property of a Soc.
-> 
-> This silences DTC warnings:
-> 
->     Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
->     Warning (simple_bus_reg): /soc/thermal-zones: missing or empty reg/ranges property
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Not tested on HW.
-> ---
->  arch/arm64/boot/dts/exynos/exynos7.dtsi | 20 ++++++++++----------
+Since ACPI_PTR() is used to NULLify the value when !CONFIG_ACPI,
+'struct sdhci_iproc_acpi_ids' becomes defined but unused.
 
-Applied.
+Fixes the following W=1 kernel build warning:
 
-Best regards,
-Krzysztof
+ mmc/host/sdhci-iproc.c:297:36: warning: ‘sdhci_iproc_acpi_ids’ defined but not used [-Wunused-const-variable=]
 
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+index 225603148d7de..e2d8dfe90077e 100644
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -294,12 +294,14 @@ static const struct of_device_id sdhci_iproc_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, sdhci_iproc_of_match);
+ 
++#ifdef CONFIG_ACPI
+ static const struct acpi_device_id sdhci_iproc_acpi_ids[] = {
+        { .id = "BRCM5871", .driver_data = (kernel_ulong_t)&iproc_cygnus_data },
+        { .id = "BRCM5872", .driver_data = (kernel_ulong_t)&iproc_data },
+        { /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(acpi, sdhci_iproc_acpi_ids);
++#endif
+ 
+ static int sdhci_iproc_probe(struct platform_device *pdev)
+ {
