@@ -2,173 +2,157 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E37CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C04C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1450620771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21A320771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nQs45AXP"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eYlXbUd5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VbRropzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgGGOwy (ORCPT
+        id S1728225AbgGGOyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGOwy (ORCPT
+        Tue, 7 Jul 2020 10:54:47 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46913 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727987AbgGGOyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:52:54 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09948C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:52:54 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id m25so22625447vsp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=98AdsqqRjlaGJp91iQRXkQZz+bGHVBhDqISPcBVmDps=;
-        b=nQs45AXPESmHetUd58Ao+aWwmBOtzz/7S1co6O1GFiXjNCivyMqRG2UQ79V74PRLhS
-         0vwvOIRMP5SSEVhDnT2rYFzz66hQd1L1gU6YUFMtiOsYKEafmoRV893Ea6wOzcCs1yZL
-         QBSRtabSV8YH8jooW8U58um0Xh6MhGSmsAM3U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=98AdsqqRjlaGJp91iQRXkQZz+bGHVBhDqISPcBVmDps=;
-        b=hFE2y+R0G0/VyLJA39pPe2HFbx+OCsgD5bXow+vubK3I2r/4RHddiNPNwffWpbV+jk
-         Xple6MdPP+mFI41zQyfPRr3Ta5zlcTK/dl6VBEyoWVNTStYgV/flAPylNarPhhzmUfJr
-         4pc8CG/Wtqh3rnNGdOvt6MPnOzYY2V897HuSLZYSqyaLjfswzholAZDoNEPKP1CZrYwH
-         pqf8Gsg/D+f2/8fCUibis0huh0ia1J5XynnaU6EYOIolbPosmCX37LjQhSMRNhMhTbKV
-         /+SHgFL+T8LoALBoFX4fctqyUPNxlmTCW2A15t2q/HtJJ5+hdeX4CyuOLx8VVTNmzPFv
-         +XPQ==
-X-Gm-Message-State: AOAM532r7ffbQq7fLg46Q7VH1UNWbcgeznLLS+uOl2oRyd0BplTTb9Qp
-        gSv6Dplfdr/2AcqZTt6Bn8uyX30YJJg=
-X-Google-Smtp-Source: ABdhPJxvc9JMCEojJgaie/18fQS5710b2WS+HFxnNmpW1X3mjdmOjmUlXHhoMYtSe9SVqM3M73i2bQ==
-X-Received: by 2002:a67:fa53:: with SMTP id j19mr22547957vsq.43.1594133573010;
-        Tue, 07 Jul 2020 07:52:53 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id p123sm89710vsd.9.2020.07.07.07.52.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 07:52:52 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id p25so14865935vsg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:52:51 -0700 (PDT)
-X-Received: by 2002:a67:31cc:: with SMTP id x195mr41265042vsx.101.1594133571467;
- Tue, 07 Jul 2020 07:52:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622144929.230498-1-dianders@chromium.org> <20200622074845.v4.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
-In-Reply-To: <20200622074845.v4.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 7 Jul 2020 07:52:38 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UJ9fm0z-6kAm4wDCfb8Ugr53i4RciCHTJT91ec27Mm4A@mail.gmail.com>
-Message-ID: <CAD=FV=UJ9fm0z-6kAm4wDCfb8Ugr53i4RciCHTJT91ec27Mm4A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] nvmem: qfprom: Add fuse blowing support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Tue, 7 Jul 2020 10:54:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B06515803FE;
+        Tue,  7 Jul 2020 10:54:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Jul 2020 10:54:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=z
+        2MF8pM2yUhzEcAqtjG/BkSK1B6kF9HAsHHt2JjHLuc=; b=eYlXbUd5rBjRoIDgO
+        Ac1T/2aLAw3Q7djwyIkgIQ/pwVqIVfIr2z3WJZY83Ya0wIMTDJMeKhrCKphOlErR
+        V2MsPmOGqgtYqbSaGYLuK6TBmynzFgX9JdllVSJwGFQSk7rpTIotuH5S8SL8rKL4
+        pmD+QLJYk+pgiFf6h/4DeCPq+HjqSLpuSLVB24wq2EUcw0w3AtZVdV2mObZm2gJ7
+        QQgUrDhFXoVDICgURqP+h9AyRL+ITGkxU1KSlVzfbUyhEJ2mKi6VxPjWFNE0piTb
+        Nq1P/0BsYEjwNgMyN6c3kR8fMn3Y91s7lBagBdWjLLntZ1DMW0BwNkqqWC6LobKL
+        5bmzg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=z2MF8pM2yUhzEcAqtjG/BkSK1B6kF9HAsHHt2JjHL
+        uc=; b=VbRropztsuRUvmMR9Gly4Ig+dMb6KjWmOw2v3I0f1QAeuwbUXldQAq90s
+        kHUlIlURW7q75/piHuxcm+p+gHG1KJpvhnVKJ1QTV7BVfFKBaQXulFEnLRRz1sfo
+        w712f9lYvchiGBW1Oum6uVwAAamdRdfJdQ1sFvTzsGoF+qZxvXK87SbASKRXjXlT
+        kICpquzxdrebQvZCSCZXdh75HOjQgycyHjFCJl+m/b7L0xRlzQsjAx1DGnkAJD2h
+        ilpv/yWO0UQQdMQ5LEp7EIHfJxfilPbf6xT4Z+4jSDj9N55eRg7nIadZxtPZxDpz
+        8aAtT+i1PT9+RlPSWz7z41eLamY+Q==
+X-ME-Sender: <xms:sowEX1H0QJAO5L6cQdGRPW-LnVtsIsmhFw_xM7wuzo6UH2e2NttRyA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgdejiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepkeeileetveejffegueetjeeigffgfefgkeeuueetfffhheegveefhfekheev
+    kedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrieekrd
+    ejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
+    rgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:sowEX6Xoyoe1WyG76_Fdw1UgpF3BMlNJ3TroWzGckBq2lM8_EFtnZQ>
+    <xmx:sowEX3Kk5aNbOepYGJDA63OeocgrY_RWrDJFTFeVNPnWJpFA64VTQA>
+    <xmx:sowEX7HcgNQ5LdORDRy3MJdTydZuCOFXpwzXoW97cbmOzMk5ISi5jA>
+    <xmx:tYwEX3qN7uPJP8D3PESct64wdCiMceepEpRSQre8v34RdO7iicEFkw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3D704328006F;
+        Tue,  7 Jul 2020 10:54:42 -0400 (EDT)
+Date:   Tue, 7 Jul 2020 16:54:40 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     mturney@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, dhavalp@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        sparate@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        mkurumel@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
+Subject: Re: PHY reset handling during DT parsing
+Message-ID: <20200707145440.teimwt6kmsnyi5dz@gilmour.lan>
+References: <20200706181331.x2tn5cl5jn5kqmhx@gilmour.lan>
+ <20200707141918.GA928075@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200707141918.GA928075@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Andrew,
 
-On Mon, Jun 22, 2020 at 7:49 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
->
-> This patch adds support for blowing fuses to the qfprom driver if the
-> required properties are defined in the device tree.
->
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v4:
-> - Only get clock/regulator if all address ranges are provided.
-> - Don't use optional version of clk_get now.
-> - Clock name is "core", not "sec".
-> - Cleaned up error message if couldn't get clock.
-> - Fixed up minor version mask.
-> - Use GENMASK to generate masks.
->
-> Changes in v3:
-> - Don't provide "reset" value for things; just save/restore.
-> - Use the major/minor version read from 0x6000.
-> - Reading should still read "corrected", not "raw".
-> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
-> - Simplified the SoC data structure.
-> - No need for quite so many levels of abstraction for clocks/regulator.
-> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
-> - Properly undo things in the case of failure.
-> - Don't just keep enabling the regulator over and over again.
-> - Enable / disable the clock each time
-> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
-> - No reason for 100 us to be SoC specific.
-> - No need for reg-names.
-> - We shouldn't be creating two separate nvmem devices.
->
->  drivers/nvmem/qfprom.c | 314 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 303 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-> index 8a91717600be..0a8576f2d4c6 100644
-> --- a/drivers/nvmem/qfprom.c
-> +++ b/drivers/nvmem/qfprom.c
-> @@ -3,57 +3,349 @@
->   * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->   */
->
-> +#include <linux/clk.h>
->  #include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mod_devicetable.h>
-> -#include <linux/io.h>
->  #include <linux/nvmem-provider.h>
->  #include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +/* Blow timer clock frequency in Mhz */
-> +#define QFPROM_BLOW_TIMER_OFFSET 0x03c
-> +
-> +/* Amount of time required to hold charge to blow fuse in micro-seconds */
-> +#define QFPROM_FUSE_BLOW_POLL_US       10
-> +#define QFPROM_FUSE_BLOW_TIMEOUT_US    100
+On Tue, Jul 07, 2020 at 04:19:18PM +0200, Andrew Lunn wrote:
+> On Mon, Jul 06, 2020 at 08:13:31PM +0200, Maxime Ripard wrote:
+> > I came across an issue today on an Allwinner board, but I believe it's a
+> > core issue.
+> >=20
+> > That board is using the stmac driver together with a phy that happens to
+> > have a reset GPIO, except that that GPIO will never be claimed, and the
+> > PHY will thus never work.
+> >=20
+> > You can find an example of such a board here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/arch/arm/boot/dts/sun6i-a31-hummingbird.dts#n195
+> >=20
+> > It looks like when of_mdiobus_register() will parse the DT, it will then
+> > call of_mdiobus_register_phy() for each PHY it encounters [1].
+> > of_mdiobus_register_phy() will then if the phy doesn't have an
+> > ethernet-phy-id* compatible call get_phy_device() [2], and will later on
+> > call phy_register_device [3].
+> >=20
+> > get_phy_device() will then call get_phy_id() [4], that will try to
+> > access the PHY through the MDIO bus [5].
+> >=20
+> > The code that deals with the PHY reset line / GPIO is however only done
+> > in mdiobus_device_register, called through phy_device_register. Since
+> > this is happening way after the call to get_phy_device, our PHY might
+> > still very well be in reset if the bootloader hasn't put it out of reset
+> > and left it there.
+>=20
+> Hi Maxime
+>=20
+> If you look at the history of this code,
+>=20
+> commit bafbdd527d569c8200521f2f7579f65a044271be
+> Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Date:   Mon Dec 4 13:35:05 2017 +0100
+>=20
+>     phylib: Add device reset GPIO support
+>=20
+> you will see there is an assumption the PHY can be detected while in
+> reset. The reset was originally handled inside the at803x PHY driver
+> probe function, before it got moved into the core.
+>=20
+> What you are asking for it reasonable, but you have some history to
+> deal with, changing some assumptions as to what the reset is all
+> about.
 
-A quick follow up found that, in some cases, a timeout of 100 us
-wasn't enough.  Changing the above to:
+Thanks for the pointer.
 
-poll - 100 us
-timeout - 1000 us
+It looks to me from the commit log that the assumption was that a
+bootloader could leave the PHY into reset though?
 
-...fixed the problems.  I'm happy to:
+It starts with:
 
-* Spin the whole series to change those 2 numbers.
+> The PHY devices sometimes do have their reset signal (maybe even power
+> supply?) tied to some GPIO and sometimes it also does happen that a
+> boot loader does not leave it deasserted.
 
-* Have those numbers changed by a maintainer when patches are applied.
+This is exactly the case I was discussing. The bootloader hasn't used
+the PHY, and thus the PHY reset signal is still asserted?
 
-* Sit tight and wait for additional feedback before taking action.
-
-Given that I've resolved previous feedback, I've been assuming that
-the series looks fine and we're sitting waiting for Rob Herring's
-blessings on the bindings before landing.  Is that correct?
-
--Doug
+Maxime
