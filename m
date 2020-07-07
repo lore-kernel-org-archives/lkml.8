@@ -7,57 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC486C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4449AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52312064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CFA2064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBoPjreR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pXZcXhxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbgGGWqJ (ORCPT
+        id S1729493AbgGGWqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
+        Tue, 7 Jul 2020 18:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbgGGWqI (ORCPT
+        with ESMTP id S1729436AbgGGWqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:46:08 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB58AC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:46:08 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id i4so23154942ybh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:46:08 -0700 (PDT)
+        Tue, 7 Jul 2020 18:46:12 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B45C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:46:12 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id a12so22374125qvt.22
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=IEfZLZ78xcvl63YOGXYJYdTw/XucW2SRwmLFdcRTwIE=;
-        b=eBoPjreRWiU8NjeW0Fu/7efs7C8GadIPXxLb/b4W5z53Uu77vk+4febcwq1JkQeMf2
-         4H/ljOzw8mCmTooOmnt6GTFSbciL3mt1aeUEH4vXypwvYUAt/br50PHlR9O93yw1uz50
-         P5Z3GylpA0obhYQ4nFfgyViY67nhALdrKqOadGfpMwgmh/wg4DJQWkH6oiXAXR1+hk66
-         JVswL/NopEugGFHnkAXeD9cuoksXiQqw5s9qdAYbVgxJsaBCyu15+e//XDy+MSlpV3XL
-         7yAgS1UvTX8hmQd3/1kGtTB7NBQRMFzrH8jTJjOSbDe2ogGDcE4PST808XY3R4jmRHol
-         VzpA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=+Rqxcc67bWamHPT9UuHLq9P/O36CYZQMOcdNpnmmIao=;
+        b=pXZcXhxz7mxW6RS7gJAv+NztP6PWIdXUddf5RV8kHRHOgSQsBTRWQ1kS6KDZwaXyYH
+         yoGbwYV+lo5tqx0FRClBaQgvoKziBo4h6Z7fY1r8opn1GwexWSqz0HsRK5lgFzCx7Hto
+         oJF9FQRenEaECQh4qFBYY48A456Srf7zC3wEtpl4CRGFVns2fUaYYgnA3QLbCwBlEBGe
+         r2o2LBmx6Z1RS0/swh8B4gpLLRumQtdkajRNwjGtDHeKjMr7XzLJ7xp7rZtaSPPwl75U
+         lK06Fba7oS0Ta8x3kR5Y+4Elrw6RS0PJg+Obk1PPaGMj5vur2Pd782/vmR1grIYi8RhN
+         VFLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=IEfZLZ78xcvl63YOGXYJYdTw/XucW2SRwmLFdcRTwIE=;
-        b=qXRvVa/PQaVu5B+CaYg6SH5jqWTpir9rB0TvwNTCieieN6zWA9X8SiNFKAulRI1NKd
-         Ks/wKBPgzQrc9NsQt3aE/65C3kc5U3+L6x7EQlNZ/c4ZDcNC2vpgABEoWJrUa9UCMqw4
-         7COVvkLxl0Gl2IVSvUvhRDoU0sUr+gQ6ZO7kGDxlCkxeuj+iaJGwAbysWP7OHMootY02
-         GFeu9G5jc/Ujh3dWhi1UboK8t73g0/n/sRC7665//4U3m4jW18ddMHIuMNdVUlc3SoGe
-         Lde4RlehMyiK8x8uWrvxK4sksZYuQlSFE+t9OarwPa7NrL2f9BsT4A9R71T9vI5Ej2gt
-         OSzw==
-X-Gm-Message-State: AOAM533OnW9KuPS4I9V8AGD0fq2VOF4p4fhv/oIIcvJEMBPohjh3EktZ
-        PRiefxdptk0D/TAoPuahWUJTYVhb5KxI
-X-Google-Smtp-Source: ABdhPJz62vzOsYrjFc5Vg2wRsVItzBkR3EFMlTaNhnQrwZLPYqgptPIriecmFQNCxJnn+co+nTLjrfOxXlzl
-X-Received: by 2002:a25:7755:: with SMTP id s82mr34709305ybc.275.1594161967387;
- Tue, 07 Jul 2020 15:46:07 -0700 (PDT)
-Date:   Tue,  7 Jul 2020 15:46:01 -0700
-Message-Id: <20200707224604.3737893-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=+Rqxcc67bWamHPT9UuHLq9P/O36CYZQMOcdNpnmmIao=;
+        b=RE1gPRpkIFgz3FUqT2x9nQ/jaqBdS8SN+bNpTXFACFuoMq2piR8iyFXuKEiIwejFgM
+         Tg3W//GjOTt/EeeucsbURxkIbHExFZC77+lmK7Q+ShvqRNPFpGezBIQ9S/LYyrpZR8zv
+         CKsVSFZYNRkbXoq5aDf1i4EKmHC9WNQzIhRKovonXp3YV7dVjDCFLP3+pQkGEdnC0FIf
+         fkYJcIasvhobNmik0T9fHItTddKpDhTPFfIm28W6+LeBfw5piQMQ699TE2PE+DwUnD0e
+         TAbYrUTcnhiXFR2KAq8SgSHoE1UUrDJRaTLAUBhm+2JgY8GGjUMtr2FtXgQ+o4lMDkNh
+         bWAA==
+X-Gm-Message-State: AOAM533MFU8s9bROkbcPdfGzGwJP0cd8oXtm92zdeuoBgzX+B3LMUfV6
+        DyFhfdX/BaURTDUxD7snCpfkdLZSeoG8
+X-Google-Smtp-Source: ABdhPJxnH+92NoVCcK7NZHV4Ls6bngx8p8nimLUooSLS2gVZpS5/6IxaAi2WM9zBZzRgEB7nYKaxRQqv7qfK
+X-Received: by 2002:a05:6214:18f2:: with SMTP id ep18mr41966212qvb.96.1594161971125;
+ Tue, 07 Jul 2020 15:46:11 -0700 (PDT)
+Date:   Tue,  7 Jul 2020 15:46:03 -0700
+In-Reply-To: <20200707224604.3737893-1-rajatja@google.com>
+Message-Id: <20200707224604.3737893-3-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200707224604.3737893-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v4 1/4] PCI: Move pci_enable_acs() and its dependencies up in pci.c
+Subject: [PATCH v4 3/4] PCI: Treat "external-facing" devices as internal
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -96,292 +100,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move pci_enable_acs() and the functions it depends on, further up in the
-source code to avoid having to forward declare it when we make it static
-in near future (next patch).
+The "ExternalFacingPort" devices (root ports) are internal devices that
+sit on the internal system fabric. Ref:
+https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
 
-No functional changes intended.
+Currently they were treated (marked as untrusted) at par with other
+external devices downstream those external facing rootports.
+
+Use the platform flag to identify the external facing devices and then
+treat them at par with internal devices (don't mark them untrusted).
+Any devices downstream continue to be marked as "untrusted". This was
+discussed here:
+https://lore.kernel.org/linux-pci/20200610230906.GA1528594@bjorn-Precision-5520/
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v4: Same as v3
-v3: Initial version of the patch, created per Bjorn's suggestion
+v4: No change
+v3: * fix commit log and minor code comment
+    * Don't check for "ExternalFacingPort" on PCI_EXP_TYPE_DOWNSTREAM
+    * Check only for pdev->external_facing in iommu.c
+v2: cosmetic changes in commit log
 
- drivers/pci/pci.c | 254 +++++++++++++++++++++++-----------------------
- 1 file changed, 127 insertions(+), 127 deletions(-)
+ drivers/iommu/intel/iommu.c |  6 +++---
+ drivers/pci/of.c            |  2 +-
+ drivers/pci/pci-acpi.c      | 10 +++++-----
+ drivers/pci/probe.c         |  2 +-
+ include/linux/pci.h         |  8 ++++++++
+ 5 files changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b1..eec625f0e594e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -777,6 +777,133 @@ int pci_wait_for_pending(struct pci_dev *dev, int pos, u16 mask)
- 	return 0;
- }
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d759e7234e982..4f0f6ee2d4aaa 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4738,12 +4738,12 @@ const struct attribute_group *intel_iommu_groups[] = {
+ 	NULL,
+ };
  
-+static int pci_acs_enable;
-+
-+/**
-+ * pci_request_acs - ask for ACS to be enabled if supported
-+ */
-+void pci_request_acs(void)
-+{
-+	pci_acs_enable = 1;
-+}
-+
-+static const char *disable_acs_redir_param;
-+
-+/**
-+ * pci_disable_acs_redir - disable ACS redirect capabilities
-+ * @dev: the PCI device
-+ *
-+ * For only devices specified in the disable_acs_redir parameter.
-+ */
-+static void pci_disable_acs_redir(struct pci_dev *dev)
-+{
-+	int ret = 0;
-+	const char *p;
-+	int pos;
-+	u16 ctrl;
-+
-+	if (!disable_acs_redir_param)
-+		return;
-+
-+	p = disable_acs_redir_param;
-+	while (*p) {
-+		ret = pci_dev_str_match(dev, p, &p);
-+		if (ret < 0) {
-+			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
-+				     disable_acs_redir_param);
-+
-+			break;
-+		} else if (ret == 1) {
-+			/* Found a match */
-+			break;
-+		}
-+
-+		if (*p != ';' && *p != ',') {
-+			/* End of param or invalid format */
-+			break;
-+		}
-+		p++;
-+	}
-+
-+	if (ret != 1)
-+		return;
-+
-+	if (!pci_dev_specific_disable_acs_redir(dev))
-+		return;
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	if (!pos) {
-+		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
-+		return;
-+	}
-+
-+	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-+
-+	/* P2P Request & Completion Redirect */
-+	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
-+
-+	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-+
-+	pci_info(dev, "disabled ACS redirect\n");
-+}
-+
-+/**
-+ * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-+ * @dev: the PCI device
-+ */
-+static void pci_std_enable_acs(struct pci_dev *dev)
-+{
-+	int pos;
-+	u16 cap;
-+	u16 ctrl;
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-+	if (!pos)
-+		return;
-+
-+	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-+	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-+
-+	/* Source Validation */
-+	ctrl |= (cap & PCI_ACS_SV);
-+
-+	/* P2P Request Redirect */
-+	ctrl |= (cap & PCI_ACS_RR);
-+
-+	/* P2P Completion Redirect */
-+	ctrl |= (cap & PCI_ACS_CR);
-+
-+	/* Upstream Forwarding */
-+	ctrl |= (cap & PCI_ACS_UF);
-+
-+	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-+}
-+
-+/**
-+ * pci_enable_acs - enable ACS if hardware support it
-+ * @dev: the PCI device
-+ */
-+void pci_enable_acs(struct pci_dev *dev)
-+{
-+	if (!pci_acs_enable)
-+		goto disable_acs_redir;
-+
-+	if (!pci_dev_specific_enable_acs(dev))
-+		goto disable_acs_redir;
-+
-+	pci_std_enable_acs(dev);
-+
-+disable_acs_redir:
-+	/*
-+	 * Note: pci_disable_acs_redir() must be called even if ACS was not
-+	 * enabled by the kernel because it may have been enabled by
-+	 * platform firmware.  So if we are told to disable it, we should
-+	 * always disable it after setting the kernel's default
-+	 * preferences.
-+	 */
-+	pci_disable_acs_redir(dev);
-+}
-+
- /**
-  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
-  * @dev: PCI device to have its BARs restored
-@@ -3230,133 +3357,6 @@ void pci_configure_ari(struct pci_dev *dev)
- 	}
- }
- 
--static int pci_acs_enable;
--
--/**
-- * pci_request_acs - ask for ACS to be enabled if supported
-- */
--void pci_request_acs(void)
--{
--	pci_acs_enable = 1;
--}
--
--static const char *disable_acs_redir_param;
--
--/**
-- * pci_disable_acs_redir - disable ACS redirect capabilities
-- * @dev: the PCI device
-- *
-- * For only devices specified in the disable_acs_redir parameter.
-- */
--static void pci_disable_acs_redir(struct pci_dev *dev)
--{
--	int ret = 0;
--	const char *p;
--	int pos;
--	u16 ctrl;
--
--	if (!disable_acs_redir_param)
--		return;
--
--	p = disable_acs_redir_param;
--	while (*p) {
--		ret = pci_dev_str_match(dev, p, &p);
--		if (ret < 0) {
--			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
--				     disable_acs_redir_param);
--
--			break;
--		} else if (ret == 1) {
--			/* Found a match */
--			break;
--		}
--
--		if (*p != ';' && *p != ',') {
--			/* End of param or invalid format */
--			break;
--		}
--		p++;
--	}
--
--	if (ret != 1)
--		return;
--
--	if (!pci_dev_specific_disable_acs_redir(dev))
--		return;
--
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
--	if (!pos) {
--		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
--		return;
--	}
--
--	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
--
--	/* P2P Request & Completion Redirect */
--	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
--
--	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
--
--	pci_info(dev, "disabled ACS redirect\n");
--}
--
--/**
-- * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-- * @dev: the PCI device
-- */
--static void pci_std_enable_acs(struct pci_dev *dev)
--{
--	int pos;
--	u16 cap;
--	u16 ctrl;
--
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
--	if (!pos)
--		return;
--
--	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
--	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
--
--	/* Source Validation */
--	ctrl |= (cap & PCI_ACS_SV);
--
--	/* P2P Request Redirect */
--	ctrl |= (cap & PCI_ACS_RR);
--
--	/* P2P Completion Redirect */
--	ctrl |= (cap & PCI_ACS_CR);
--
--	/* Upstream Forwarding */
--	ctrl |= (cap & PCI_ACS_UF);
--
--	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
--}
--
--/**
-- * pci_enable_acs - enable ACS if hardware support it
-- * @dev: the PCI device
-- */
--void pci_enable_acs(struct pci_dev *dev)
--{
--	if (!pci_acs_enable)
--		goto disable_acs_redir;
--
--	if (!pci_dev_specific_enable_acs(dev))
--		goto disable_acs_redir;
--
--	pci_std_enable_acs(dev);
--
--disable_acs_redir:
--	/*
--	 * Note: pci_disable_acs_redir() must be called even if ACS was not
--	 * enabled by the kernel because it may have been enabled by
--	 * platform firmware.  So if we are told to disable it, we should
--	 * always disable it after setting the kernel's default
--	 * preferences.
--	 */
--	pci_disable_acs_redir(dev);
--}
--
- static bool pci_acs_flags_enabled(struct pci_dev *pdev, u16 acs_flags)
+-static inline bool has_untrusted_dev(void)
++static inline bool has_external_pci(void)
  {
- 	int pos;
+ 	struct pci_dev *pdev = NULL;
+ 
+ 	for_each_pci_dev(pdev)
+-		if (pdev->untrusted)
++		if (pdev->external_facing)
+ 			return true;
+ 
+ 	return false;
+@@ -4751,7 +4751,7 @@ static inline bool has_untrusted_dev(void)
+ 
+ static int __init platform_optin_force_iommu(void)
+ {
+-	if (!dmar_platform_optin() || no_platform_optin || !has_untrusted_dev())
++	if (!dmar_platform_optin() || no_platform_optin || !has_external_pci())
+ 		return 0;
+ 
+ 	if (no_iommu || dmar_disabled)
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 27839cd2459f6..22727fc9558df 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+ 	} else {
+ 		node = of_node_get(bus->self->dev.of_node);
+ 		if (node && of_property_read_bool(node, "external-facing"))
+-			bus->self->untrusted = true;
++			bus->self->external_facing = true;
+ 	}
+ 
+ 	bus->dev.of_node = node;
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 7224b1e5f2a83..43a5158b2b662 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -1213,7 +1213,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+ 	ACPI_FREE(obj);
+ }
+ 
+-static void pci_acpi_set_untrusted(struct pci_dev *dev)
++static void pci_acpi_set_external_facing(struct pci_dev *dev)
+ {
+ 	u8 val;
+ 
+@@ -1223,12 +1223,12 @@ static void pci_acpi_set_untrusted(struct pci_dev *dev)
+ 		return;
+ 
+ 	/*
+-	 * These root ports expose PCIe (including DMA) outside of the
+-	 * system so make sure we treat them and everything behind as
++	 * These root/down ports expose PCIe (including DMA) outside of the
++	 * system so make sure we treat everything behind them as
+ 	 * untrusted.
+ 	 */
+ 	if (val)
+-		dev->untrusted = 1;
++		dev->external_facing = 1;
+ }
+ 
+ static void pci_acpi_setup(struct device *dev)
+@@ -1240,7 +1240,7 @@ static void pci_acpi_setup(struct device *dev)
+ 		return;
+ 
+ 	pci_acpi_optimize_delay(pci_dev, adev->handle);
+-	pci_acpi_set_untrusted(pci_dev);
++	pci_acpi_set_external_facing(pci_dev);
+ 	pci_acpi_add_edr_notifier(pci_dev);
+ 
+ 	pci_acpi_add_pm_notifier(adev, pci_dev);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 6d87066a5ecc5..8c40c00413e74 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+ 	 * untrusted as well.
+ 	 */
+ 	parent = pci_upstream_bridge(dev);
+-	if (parent && parent->untrusted)
++	if (parent && (parent->untrusted || parent->external_facing))
+ 		dev->untrusted = true;
+ }
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 0ca39042507ce..281be857d2430 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -432,6 +432,14 @@ struct pci_dev {
+ 	 * mappings to make sure they cannot access arbitrary memory.
+ 	 */
+ 	unsigned int	untrusted:1;
++	/*
++	 * Devices are marked as external-facing using info from platform
++	 * (ACPI / devicetree). An external-facing device is still an internal
++	 * trusted device, but it faces external untrusted devices. Thus any
++	 * device enumerated downstream an external-facing device, is marked
++	 * as untrusted.
++	 */
++	unsigned int	external_facing:1;
+ 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
+ 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+ 	unsigned int	irq_managed:1;
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
