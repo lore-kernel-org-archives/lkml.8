@@ -4,101 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706ADC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D30C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7EC206E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37740206E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgGGTGt (ORCPT
+        id S1728900AbgGGTGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:06:49 -0400
+        Tue, 7 Jul 2020 15:06:52 -0400
 Received: from mga17.intel.com ([192.55.52.151]:46557 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbgGGTGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:06:47 -0400
-IronPort-SDR: oC/Wi2mamMMEbCuYlglLfD9Mcuzf7qKuMciYrToTos7ylhlpZ+brEgGBYlZz03aMXyQyhjOKL9
- f7VqjFqryh5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127764324"
+        id S1728881AbgGGTGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:06:49 -0400
+IronPort-SDR: SrUvDSdRiR5gak0HQ2N33GMifXrnKR5Dt7WW6VOUcywBnn6VL/SvlOrYnVU0g563DGIBHH7xQP
+ 3j9NPB59o55A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127764333"
 X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="127764324"
+   d="scan'208";a="127764333"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:06:47 -0700
-IronPort-SDR: np5h6z3uYM5ayhkdF+jDw9VOs2oMJMXG8Ow97LTi0iDGjwbWyuFe1MCE7Ift8BwN9owYOHxmc5
- F7aYlZdLp3Kw==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:06:48 -0700
+IronPort-SDR: /MWEQ/MISJuXsx3lIK1n7URj93S1QqdpW4WkcuEGVLhoJ+JnxJFPLTRfn1EiE+uynwHJ3g1eHH
+ 1JAcCX0XYWCg==
 X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="268278616"
+   d="scan'208";a="268278623"
 Received: from mrtorger-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.77.62])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:06:45 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:06:47 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Samuel Ortiz <samuel.ortiz@nokia.com>,
-        linux-omap@vger.kernel.org,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 09/13] ASoC: ti: omap-mcbsp-st: Remove set, but unused variable 'w'
-Date:   Tue,  7 Jul 2020 14:06:08 -0500
-Message-Id: <20200707190612.97799-10-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 10/13] ASoC: codecs: cros_ec_codec: fix 'defined but not used' warning
+Date:   Tue,  7 Jul 2020 14:06:09 -0500
+Message-Id: <20200707190612.97799-11-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707190612.97799-1-pierre-louis.bossart@linux.intel.com>
 References: <20200707190612.97799-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+fix W=1 warning
 
-Looks like 'w' has remained unchecked since the driver's inception.
+sound/soc/codecs/cros_ec_codec.c:1056:36: warning:
+'cros_ec_codec_acpi_id' defined but not used
+[-Wunused-const-variable=]
+ 1056 | static const struct acpi_device_id cros_ec_codec_acpi_id[] = {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
 
-Fixes the following W=1 kernel build warning(s):
-
- sound/soc/ti/omap-mcbsp-st.c: In function ‘omap_mcbsp_st_chgain’:
- sound/soc/ti/omap-mcbsp-st.c:145:6: warning: variable ‘w’ set but not used [-Wunused-but-set-variable]
-
-Peter suggested that the whole read can be removed, so that's
-been done too.
-
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Cc: Samuel Ortiz <samuel.ortiz@nokia.com>
-Cc: linux-omap@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/ti/omap-mcbsp-st.c | 3 ---
- 1 file changed, 3 deletions(-)
+ sound/soc/codecs/cros_ec_codec.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/ti/omap-mcbsp-st.c b/sound/soc/ti/omap-mcbsp-st.c
-index 5a32b54bbf3b..0bc7d26c660a 100644
---- a/sound/soc/ti/omap-mcbsp-st.c
-+++ b/sound/soc/ti/omap-mcbsp-st.c
-@@ -142,11 +142,8 @@ static void omap_mcbsp_st_fir_write(struct omap_mcbsp *mcbsp, s16 *fir)
+diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+index 8d45c628e988..f23956cf4ed8 100644
+--- a/sound/soc/codecs/cros_ec_codec.c
++++ b/sound/soc/codecs/cros_ec_codec.c
+@@ -1053,11 +1053,13 @@ static const struct of_device_id cros_ec_codec_of_match[] = {
+ MODULE_DEVICE_TABLE(of, cros_ec_codec_of_match);
+ #endif
  
- static void omap_mcbsp_st_chgain(struct omap_mcbsp *mcbsp)
- {
--	u16 w;
- 	struct omap_mcbsp_st_data *st_data = mcbsp->st_data;
++#ifdef CONFIG_ACPI
+ static const struct acpi_device_id cros_ec_codec_acpi_id[] = {
+ 	{ "GOOG0013", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, cros_ec_codec_acpi_id);
++#endif
  
--	w = MCBSP_ST_READ(mcbsp, SSELCR);
--
- 	MCBSP_ST_WRITE(mcbsp, SGAINCR, ST_CH0GAIN(st_data->ch0gain) |
- 		       ST_CH1GAIN(st_data->ch1gain));
- }
+ static struct platform_driver cros_ec_codec_platform_driver = {
+ 	.driver = {
 -- 
 2.25.1
 
