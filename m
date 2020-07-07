@@ -2,120 +2,153 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A026AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF0B206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kh7nComz"
+	by mail.kernel.org (Postfix) with ESMTP id C276D2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgGGQFj (ORCPT
+        id S1728194AbgGGQGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbgGGQFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:05:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17FBC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:05:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j19so13346646pgm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BauIxngYcl8jd5OtL8hzkCrhdMv4YPyYU2tM2gh0/zA=;
-        b=Kh7nComzMNl6xsg1nwO6fTiV+447hKNoK6M36Sv6NGey7FnS2nbTYWy8lHEpSDOcWo
-         4SZpHdhE0vPOCZrLWLvUJOXmOSR8Gz0owQI+bbcY+s+LsNbCgXfdxmGINNOc3+OKJSEQ
-         2u6uTR/n4oEx4IA4WPkbLFvCRTsqJQgdkA4/RHz0JUrD5DCmtPUS6lEOlEKwOu+XAqvh
-         gr91UwjGRhE2Bo40UIkl4Z5vIAwl8OKTz32MsAM4e2vgnAlsinZ/e9QSyBdyERrQzk4E
-         y2Omj76am6hjUTfQD5hz2Tiyvs2LsHeHNRlGxwsexsoYrijIaIiXs/D6btrWCA81JdA6
-         s9vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BauIxngYcl8jd5OtL8hzkCrhdMv4YPyYU2tM2gh0/zA=;
-        b=GYk1GOlvEO7x3nCLmiSgZ8IfpKGOVvxzQRn4wNgdyydmUc3pHBo8K87LD5LQ19xa8b
-         XvVghKmACCp135g403UhUeYkgh56t94Qax2NsmoevBboSMicAnkoWd48TteNCv/IDmMl
-         GItOt3GZq2XzOcVAK8s4GRhJp4V/dnVKzYXwv3uJeMN8hJzyxgrKu3MSrt6VxD6xVnWM
-         ecmo4Kwiu/SUAvJltTW4dOSOkXfEO1L3HQDZp4Py3Crq2WuMovy8PaeO0Aqooy5+JSLM
-         j+pLieGjh6ps90TW9CX+SVVX7UC3LLGARqSbeQRrHNPQCcISvY0G9H8uYjI5ciJyQVss
-         cJYA==
-X-Gm-Message-State: AOAM531xWY6w+jHTE3blfBQ8bIfqX9HKLIqwHHZpviAsqERU5ncolue0
-        uoYSdkrkNfxOZR+uBnQwbgQp2w==
-X-Google-Smtp-Source: ABdhPJzJoQVw/SVeuV11W977gCqEtq+6LHotqK+2sy2PsCIQUHIzgnZiA2b8Kfx/70bokWXpdDZzGg==
-X-Received: by 2002:a63:5110:: with SMTP id f16mr44344138pgb.377.1594137935802;
-        Tue, 07 Jul 2020 09:05:35 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id j17sm1222342pgn.87.2020.07.07.09.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 09:05:34 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 09:05:28 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200707160528.GA1300535@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
- <20200629232059.GA3787278@google.com>
- <20200707155107.GA3357035@google.com>
+        Tue, 7 Jul 2020 12:06:31 -0400
+Received: from mga12.intel.com ([192.55.52.136]:19446 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726911AbgGGQGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 12:06:31 -0400
+IronPort-SDR: YqB4kZJO2P0zJs7uIGd3jiRTih8PbhFPvUpxfLq5pVJuC8kdzl9d2nsgDK0YE26ztSwU/m6i5J
+ ZYM06F+IG3iw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127223810"
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="127223810"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 09:06:30 -0700
+IronPort-SDR: nWzZSRwTYFqoBfaDlAkFLsCJyfwsTGyETLYfq5n1HLZ0dF0GicOQgpoHJU44M6tg9L8HxECkUI
+ Lekna+wYWHUg==
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="305713010"
+Received: from stortizs-mobl1.amr.corp.intel.com (HELO [10.254.109.228]) ([10.254.109.228])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 09:06:29 -0700
+Subject: Re: [PATCH v5] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix
+ kabylake_ssp_fixup function
+To:     Lukasz Majczak <lma@semihalf.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Harsha Priya <harshapriya.n@intel.com>
+Cc:     alsa-devel@alsa-project.org, Radoslaw Biernacki <rad@semihalf.com>,
+        Ross Zwisler <zwisler@google.com>,
+        linux-kernel@vger.kernel.org,
+        Sathya Prakash <sathya.prakash.m.r@intel.com>,
+        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
+        Alex Levin <levinale@chromium.org>,
+        Gopal Vamshi Krishna <vamshi.krishna.gopal@intel.com>
+References: <20200703121650.547944-1-lma@semihalf.com>
+ <20200707083404.3846-1-lma@semihalf.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <4cb5ea5a-60b3-7f74-0f68-e66d2f2872bf@linux.intel.com>
+Date:   Tue, 7 Jul 2020 10:47:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707155107.GA3357035@google.com>
+In-Reply-To: <20200707083404.3846-1-lma@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 08:51:07AM -0700, Sami Tolvanen wrote:
-> After spending some time debugging this with Nick, it looks like the
-> error is caused by a recent optimization change in LLVM, which together
-> with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
-> check in FIELD_FIT that would always fail, to a compile-time check that
-> breaks the build. In jeq_imm, we have:
+
+
+On 7/7/20 3:34 AM, Lukasz Majczak wrote:
+> Fix kabylake_ssp_fixup function to distinguish codecs DAIs by names,
+> as current approach, leads to crash while trying to get snd_soc_dpcm with
+> container_of() macro in kabylake_ssp_fixup().
+> The crash call path looks as below:
+> soc_pcm_hw_params()
+> snd_soc_dai_hw_params(codec_dai, substream, &codec_params);
+> rtd->dai_link->be_hw_params_fixup(rtd, params)
+> kabylake_ssp_fixup()
+> In this case, codec_params is just a copy of an internal structure and is
+> not embedded into struct snd_soc_dpcm thus we cannot use
+> container_of() on it.
 > 
->     /* struct bpf_insn: _s32 imm */
->     u64 imm = insn->imm; /* sign extend */
->     ...
->     if (imm >> 32) { /* non-zero only if insn->imm is negative */
->     	/* inlined from ur_load_imm_any */
-> 	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+> Signed-off-by: Lukasz Majczak <lma@semihalf.com>
+> Signed-off-by: Harsha Priya <harshapriya.n@intel.com>
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+> ---
+> v1 -> v2:
+> - Extract dmic from SSP0 as every BE should have own fixup function.
+> v2 -> v3:
+> - Restore naming in the dapm route table to not confuse with other
+> drivers
+> - Fixed indentations
+> v3 -> v4:
+> - Updated code and commit description according to
+> solution proposed by Harsha
+> ---
+>   .../intel/boards/kbl_rt5663_rt5514_max98927.c | 28 ++++++++-----------
+>   1 file changed, 12 insertions(+), 16 deletions(-)
 > 
->         /*
-> 	 * __imm has a value known at compile-time, which means
-> 	 * __builtin_constant_p(__imm) is true and we end up with
-> 	 * essentially this in __BF_FIELD_CHECK:
-> 	 */
-> 	if (__builtin_constant_p(__imm) && __imm <= 255)
-
-Should be __imm > 255, of course, which means the compiler will generate
-a call to __compiletime_assert.
-
-> Jiong, Jakub, do you see any issues here?
-
-(Jiong's email bounced, so removing from the recipient list.)
-
-Sami
+> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> index b34cf6cf11395..df454de40739a 100644
+> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> @@ -333,36 +333,32 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
+>   {
+>   	struct snd_interval *rate = hw_param_interval(params,
+>   			SNDRV_PCM_HW_PARAM_RATE);
+> -	struct snd_interval *chan = hw_param_interval(params,
+> +	struct snd_interval *channels = hw_param_interval(params,
+>   			SNDRV_PCM_HW_PARAM_CHANNELS);
+>   	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+> -	struct snd_soc_dpcm *dpcm = container_of(
+> -			params, struct snd_soc_dpcm, hw_params);
+> -	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
+> -	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
+> +	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
+>   
+>   	/*
+>   	 * The ADSP will convert the FE rate to 48k, stereo, 24 bit
+>   	 */
+> -	if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
+> -	    !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
+> -	    !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
+> +
+> +	if (!strcmp(codec_dai->name, KBL_REALTEK_DMIC_CODEC_DAI)) {
+> +		if (params_channels(params) == 2 ||
+> +			DMIC_CH(dmic_constraints) == 2)
+> +			channels->min = channels->max = 2;
+> +		else
+> +			channels->min = channels->max = 4;
+> +	} else {
+>   		rate->min = rate->max = 48000;
+> -		chan->min = chan->max = 2;
+> +		channels->min = channels->max = 2;
+>   		snd_mask_none(fmt);
+>   		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
+> -	} else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
+> -		if (params_channels(params) == 2 ||
+> -				DMIC_CH(dmic_constraints) == 2)
+> -			chan->min = chan->max = 2;
+> -		else
+> -			chan->min = chan->max = 4;
+>   	}
+>   	/*
+>   	 * The speaker on the SSP0 supports S16_LE and not S24_LE.
+>   	 * thus changing the mask here
+>   	 */
+> -	if (!strcmp(be_dai_link->name, "SSP0-Codec"))
+> +	if (!strcmp(codec_dai->name, KBL_MAXIM_CODEC_DAI))
+>   		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
+>   
+>   	return 0;
+> 
