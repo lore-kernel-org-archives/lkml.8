@@ -2,73 +2,90 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B38C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC45C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E242067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6987206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iZm8ucIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgGGTpf (ORCPT
+        id S1728520AbgGGTpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgGGTpf (ORCPT
+        Tue, 7 Jul 2020 15:45:44 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:53820 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbgGGTpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:45:35 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F75DC061755;
-        Tue,  7 Jul 2020 12:45:35 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A8F9E120F19EC;
-        Tue,  7 Jul 2020 12:45:34 -0700 (PDT)
-Date:   Tue, 07 Jul 2020 12:45:33 -0700 (PDT)
-Message-Id: <20200707.124533.441490036034384806.davem@davemloft.net>
-To:     cphealy@gmail.com
-Cc:     linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] net: sfp: Unique GPIO interrupt names
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200707012707.13267-1-cphealy@localhost.localdomain>
-References: <20200707012707.13267-1-cphealy@localhost.localdomain>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 12:45:35 -0700 (PDT)
+        Tue, 7 Jul 2020 15:45:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594151165; x=1625687165;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rYdMBPFrRbVbk8DFcQNubWpbbG2Xb3oRsw/dpkB/QeY=;
+  b=iZm8ucIwss395xYeuy6/lyIrXg/lxl1aIE5T381krOpDcgWMl3grSISR
+   mrK4r8gy0I00VkRsnzbxxmAPUEMc1R6YLP2wZroapQofD8IpYEA9mKXBx
+   oueGgieWW4x8mD7y+oQwQaq3wZMQeoGTUINhyO22+my56JJjxG4SP9zzM
+   0mWveAUEdJXsqP4jWs9hWbTyFeL6JbL4w5mzNeApk0D/WuF+kJyu6aG9j
+   8gsnyb8e5OtI58FrupM9Rit/yQsIEC8kdRBJnTxE04mEVwmcBndF7QoWX
+   d1v3udBqXVZQNyaXtp7ckgwk7L4ZK9DP/H0ITIX+u99aN6QRlCAm2+9F3
+   A==;
+IronPort-SDR: btQDLBa3Z1VKjRGWwi659ExoF2P0emFH899iYeQnMViGMOHIDHsdHiDetDykHUa3eThgOOHg3x
+ ex/TEPcMztWkaWiRoPs3mQunupN/GPH6WgKJLXWqC5hXo1YmmUfuIP3UxZvQ/SGl3AOs0oXh5B
+ aPgLqNudufRl0DSuyJ3FN8r7zDiG1+ztjK/576iJ0mmeBZEDQj2dnDrFqnkvSHBzlRCN3qqLhX
+ o5OKeG53Z9+ZuQCdd+kQZhvtGhyHR+x+4WMWYrtoLIYeixNZhx9UhI09YbtC2/J8XIQZyUDHXv
+ JiE=
+X-IronPort-AV: E=Sophos;i="5.75,324,1589212800"; 
+   d="scan'208";a="244884702"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 08 Jul 2020 03:46:05 +0800
+IronPort-SDR: nSKFKD1wIQuP7Y1kcmCly4O9Vqh8RONK/bvL3DW8BFAiw6pb0y/ftDYK9eaXpjZCpblbjU9Ea8
+ cwv5oboEtpM1DCNFfrhwOzsXb7+HqlISI=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:34:22 -0700
+IronPort-SDR: y0nVZrUYU/RZaOg80bWjddoYfs2s76PYymRZwFgUvzefJHjOwJCL/zV/TdKh9Mp88c3v2Rhp/u
+ e6i0JrmsTDhw==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 12:45:42 -0700
+Date:   Tue, 7 Jul 2020 20:45:38 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
+In-Reply-To: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <alpine.LFD.2.21.2007072043250.31807@redsun52.ssa.fujisawa.hgst.com>
+References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Healy <cphealy@gmail.com>
-Date: Mon,  6 Jul 2020 18:27:07 -0700
+On Tue, 7 Jul 2020, Tiezhu Yang wrote:
 
-> From: Chris Healy <cphealy@gmail.com>
+> In the MIPS architecture, we should clear the security-relevant
+> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
+> file arch/mips/include/asm/elf.h.
 > 
-> Dynamically generate a unique GPIO interrupt name, based on the
-> device name and the GPIO name.  For example:
-> 
-> 103:          0   sx1503q  12 Edge      sff2-los
-> 104:          0   sx1503q  13 Edge      sff2-tx-fault
-> 
-> The sffX indicates the SFP the los and tx-fault are associated with.
-> 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
-> 
-> v3:
-> - reverse Christmas tree new variable
-> - fix spaces vs tabs
-> v2:
-> - added net-next to PATCH part of subject line
-> - switched to devm_kasprintf()
+> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
+> mmap to make memory executable that is not safe, because this
+> condition allows an attacker to simply jump to and execute bytes
+> that are considered to be just data [1].
 
-Applied.
+ Why isn't the arrangement made with `mips_elf_read_implies_exec' 
+sufficient?
+
+  Maciej
