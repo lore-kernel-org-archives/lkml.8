@@ -2,96 +2,119 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40715C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6F220656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4E1206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YPAO/bHb"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fq9dqb9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgGGKtk (ORCPT
+        id S1727789AbgGGKvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:49:40 -0400
-Received: from crapouillou.net ([89.234.176.41]:55324 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGGKtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:49:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594118977; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZmDFVd32HVWpn2fLFFX5aBkZfhcHoubKvi/z02gqnBE=;
-        b=YPAO/bHbTjq1Sm6NWJD8vbC8leRKZZL/co7H4rMR+AnM+37r3oae3RMy+uH+OcA1rBYg8P
-        9WH4Y0Qvg9vKpEU8UWt0zuX1MiDJh76iM5kL9ogH3jbYSWZvadOzV5qsGOmc1Q0iB5Ocu5
-        CRije11Vqkq6KZB8MabZLVMumce5eJQ=
-Date:   Tue, 07 Jul 2020 12:49:27 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 0/2] remoteproc: Address runtime PM issues
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <F2I3DQ.SZMCCDC0DNAD3@crapouillou.net>
-In-Reply-To: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
-References: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+        Tue, 7 Jul 2020 06:51:46 -0400
+Received: from mail.efficios.com ([167.114.26.124]:50334 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGKvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:51:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 17D5725B0;
+        Tue,  7 Jul 2020 06:51:45 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ZPLoVSiFp3tp; Tue,  7 Jul 2020 06:51:44 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CEC762900;
+        Tue,  7 Jul 2020 06:51:44 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CEC762900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594119104;
+        bh=65U6cZeoHJ0b5uwyqFXxHAmikJcNMvEpm9mPm7idWLY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fq9dqb9+7BWAfcO430hyxnqpMmln7WEUOJxaiSvhFT5vjgIiTRME3SMA89I0xOYBo
+         3l1WfNUVziv3M7PJ0PAm2UrR8OZmYz7DFbZZlGKJJxTzA4xOOz33A46RlhPtK1L0/T
+         KfwrtjK1g0e6aog9RyLPwa/SedSVpaVPEtl517OC9NHeIuLP/q3GP4SGMGq9Adw8ud
+         pqrrVg2oIcUXwGmw5hQfZ5+KvK2CzhJI1XcTzju9gkXFCiJtdsDwZw/CYZ58fCN0dS
+         74mk4Op2uv1LeFQGp4s6g1EQWjSQ6S83FO/6v9FjbMdnEUzJ6r1i5kckncUWvuH9Xa
+         bS/VGsbxKiKXA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6rXMaviP4Q9e; Tue,  7 Jul 2020 06:51:44 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BC4FD263A;
+        Tue,  7 Jul 2020 06:51:44 -0400 (EDT)
+Date:   Tue, 7 Jul 2020 06:51:44 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>,
+        stable <stable@vger.kernel.org>
+Message-ID: <1513249086.945.1594119104750.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87blkrzssa.fsf@mid.deneb.enyo.de>
+References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com> <20200706204913.20347-2-mathieu.desnoyers@efficios.com> <87blkrzssa.fsf@mid.deneb.enyo.de>
+Subject: Re: [RFC PATCH for 5.8 1/4] sched: Fix unreliable rseq cpu_id for
+ new tasks
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: sched: Fix unreliable rseq cpu_id for new tasks
+Thread-Index: +EFr9o+gVaPjCkmbkUIMJ25jGoinrQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+----- On Jul 7, 2020, at 3:30 AM, Florian Weimer fw@deneb.enyo.de wrote:
 
-Le mar. 30 juin 2020 =E0 10:31, Mathieu Poirier=20
-<mathieu.poirier@linaro.org> a =E9crit :
-> This set follows the conversation that took place here[1] and provides
-> the "two small patches" I alluded to at the end of the thread.
->=20
-> Paul Cercueil: patch 1/2 is compile tested only - please see that it=20
-> does what
-> you want.
+> * Mathieu Desnoyers:
+> 
+>> While integrating rseq into glibc and replacing glibc's sched_getcpu
+>> implementation with rseq, glibc's tests discovered an issue with
+>> incorrect __rseq_abi.cpu_id field value right after the first time
+>> a newly created process issues sched_setaffinity.
+>>
+>> For the records, it triggers after building glibc and running tests, and
+>> then issuing:
+>>
+>>   for x in {1..2000} ; do posix/tst-affinity-static  & done
+>>
+>> and shows up as:
+>>
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 2, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+>> error: Unexpected CPU 138, expected 0
+> 
+> As far as I can tell, the glibc reproducer no longer shows the issue
+> with this patch applied.
+> 
+> Tested-By: Florian Weimer <fweimer@redhat.com>
 
-Still works fine, so
-Tested-by: Paul Cercueil <paul@crapouillou.net>
+Thanks a lot Florian for your thorough review and testing !
 
-for the patchset.
-
-Cheers,
--Paul
-
-> Suman Anna: Please test on your side and confirm that it addresses=20
-> the Omap
-> regression.
->=20
-> Applies on top of rproc-next (7dcef3988eed)
->=20
-> Thanks,
-> Mathieu
->=20
-> [1].=20
-> https://lore.kernel.org/linux-remoteproc/20200515104340.10473-1-paul@crap=
-ouillou.net/T/#t
->=20
-> Mathieu Poirier (2):
->   remoteproc: ingenic: Move clock handling to prepare/unprepare
->     callbacks
->   Revert "remoteproc: Add support for runtime PM"
->=20
->  drivers/remoteproc/ingenic_rproc.c   | 84=20
-> +++++++++-------------------
->  drivers/remoteproc/remoteproc_core.c | 17 +-----
->  2 files changed, 27 insertions(+), 74 deletions(-)
->=20
-> --
-> 2.25.1
->=20
+Mathieu
 
 
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
