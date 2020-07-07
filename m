@@ -2,91 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E44C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F2D20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594145412;
-	bh=rvnU/JSMgTQ4ezgAJ8wlMxfyHZRX9bjgixDnhUVnFuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m+ieJhc5BNBVvfxUXhTPqcAdxrkBxh8bT4utF1v5aCVeSq0wyTCA1xNMOPY086CpA
-	 XCl5r2hC87vzZI2C8hJ1YTFb1zZYHvV1Ggjoa1RiRY7zzTXMbh1LZ8xRC0tsn/ZE1T
-	 8dhB/ZHEDrrGB5ED4Q8FlZlUTK2iPD9HybQQf1Q8=
+	by mail.kernel.org (Postfix) with ESMTP id 07FB92065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:12:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NLyyVFbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgGGSKL (ORCPT
+        id S1728299AbgGGSMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgGGSKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:10:10 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6656420708;
-        Tue,  7 Jul 2020 18:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594145409;
-        bh=rvnU/JSMgTQ4ezgAJ8wlMxfyHZRX9bjgixDnhUVnFuc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f0bR1Iq6mutvhR5+xI2ajkl+iuZwNxvp8VjIWUA7BC2h0bwliZ6P1/89CTaxsVOFI
-         IiiWWUHDcqqvH1GLqSyBVD38E9ETG70IpKSWfdhuvgJm5SEMFF16ghslfpKiXeRX/l
-         9TjgqN/cJDaq9wvjltU+DZmzK4ZiN8TuMNVpzE44=
-Date:   Tue, 7 Jul 2020 11:10:08 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, Ian Kent <raven@themaw.net>,
-        autofs@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        linux-cachefs@redhat.com, Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, "Theodore Y . Ts'o" <tytso@mit.edu>,
-        linux-fscrypt@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-        linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH 05/10] Documentation: filesystems: fsverity: drop doubled
- word
-Message-ID: <20200707181008.GC839@sol.localdomain>
-References: <20200703214325.31036-1-rdunlap@infradead.org>
- <20200703214325.31036-6-rdunlap@infradead.org>
+        Tue, 7 Jul 2020 14:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGGSMH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 14:12:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAD7C08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:12:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so72836wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=dkBGZFFrCFaqqtw2dRtcsDkg6EDJqwN1Ag4JpnmvXE0=;
+        b=NLyyVFbfJQcGzxnQAhzuP9IWH4cBGwOkHvRTVHy7EmlYu877w37ArkMeHogVl2ySlm
+         YeADM9JYuwx9Ps6Aa9mRTMui4YBBm5XJXfOpsS+OWtvDusfwButaxMJ8F+pMTB58fTdw
+         cP16lfPTR7nSBCfpR5nmCeHVQseIlH5qg8gTo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=dkBGZFFrCFaqqtw2dRtcsDkg6EDJqwN1Ag4JpnmvXE0=;
+        b=N+lQFOxVt4+Qxp0UC4LDNUgEqmmCuwYrSIt9bUKuHxP+Px8YK0Pg8QyECQ0jQ+c4OE
+         TYY8nZyATAnBbpX+jD2uSfV71I1erUFztYUJW7EnelWOD84Hsy9IxoFhT3fOVIsnc83L
+         q2TiSL0xJwI0+Z8Mxxwj2sSmjTdNeFizeSNTtE2XBd/aUDWm6H+tUYYSe+/ek5jtsOVr
+         IDgsjNnYMD8hXidKsXYlK2uNfDei759HvYdKpOMzXMn0sXw39bQBI4Pq4EfWZtZ1C4w4
+         SSHmlxHqzBvn+SqWIRfn85D1znAmbAvxIG6BF/LrSxOWj+vGVikrGma2YBvUwlO3EFXT
+         XEuQ==
+X-Gm-Message-State: AOAM5318V9i9Xz0NsBYtMTcJ5FSfnq9GoVWuo+mSWW1uonhgp+ZrzFbJ
+        H9pCGeLAjZFhr5whPmRarPIPtw==
+X-Google-Smtp-Source: ABdhPJx80fTYHbVtP4tLN7pHRKrDlRSW1jaNL//yM4e+PTmPZAQS/FYK//pDzT11nfP43EpwYlgB+g==
+X-Received: by 2002:a7b:cd10:: with SMTP id f16mr5505804wmj.86.1594145525392;
+        Tue, 07 Jul 2020 11:12:05 -0700 (PDT)
+Received: from [192.168.1.237] (ip68-5-85-189.oc.oc.cox.net. [68.5.85.189])
+        by smtp.gmail.com with ESMTPSA id k11sm2247410wrd.23.2020.07.07.11.12.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 11:12:04 -0700 (PDT)
+Subject: Re: linux-next: Tree for Jul 7 (scsi/lpfc/lpfc_init.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        dick kennedy <dick.kennedy@broadcom.com>
+References: <20200707180800.549b561b@canb.auug.org.au>
+ <2f85f3c4-a58b-f225-a533-86e209a4651c@infradead.org>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <7ae1c7e3-ce8d-836b-1ae7-d4d00bd8f95c@broadcom.com>
+Date:   Tue, 7 Jul 2020 11:12:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703214325.31036-6-rdunlap@infradead.org>
+In-Reply-To: <2f85f3c4-a58b-f225-a533-86e209a4651c@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:43:20PM -0700, Randy Dunlap wrote:
-> Drop the doubled word "the".
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: Theodore Y. Ts'o <tytso@mit.edu>
-> Cc: linux-fscrypt@vger.kernel.org
-> ---
->  Documentation/filesystems/fsverity.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200701.orig/Documentation/filesystems/fsverity.rst
-> +++ linux-next-20200701/Documentation/filesystems/fsverity.rst
-> @@ -659,7 +659,7 @@ weren't already directly answered in oth
->        retrofit existing filesystems with new consistency mechanisms.
->        Data journalling is available on ext4, but is very slow.
->  
-> -    - Rebuilding the the Merkle tree after every write, which would be
-> +    - Rebuilding the Merkle tree after every write, which would be
->        extremely inefficient.  Alternatively, a different authenticated
->        dictionary structure such as an "authenticated skiplist" could
->        be used.  However, this would be far more complex.
+On 7/7/2020 10:09 AM, Randy Dunlap wrote:
+> On 7/7/20 1:08 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200706:
+>>
+> on i386:
+>
+> when CONFIG_ACPI is not set/enabled:
+>
+>
+> ../drivers/scsi/lpfc/lpfc_init.c:1265:15: error: implicit declaration of function 'get_cpu_idle_time'; did you mean 'get_cpu_device'? [-Werror=implicit-function-declaration]
+>
+>
+> The cpufreq people want justification for using
+> get_cpu_idle_time().  Please see
+> https://lore.kernel.org/linux-scsi/20200707030943.xkocccy6qy2c3hrx@vireshk-i7/
+>
+>
+>
 
-Acked-by: Eric Biggers <ebiggers@google.com>
+The driver is using cpu utilization in order to choose between softirq 
+or work queues in handling an interrupt. Less-utilized, softirq is used. 
+higher utilized, work queue is used.  The utilization is checked 
+periodically via a heartbeat.
+
+-- james
+
