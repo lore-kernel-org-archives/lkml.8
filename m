@@ -2,89 +2,114 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C04EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA132207C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MO7Ppzm9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qaqbbubx"
+	by mail.kernel.org (Postfix) with ESMTP id 3736B206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594114296;
+	bh=7EJPV5cge5x3+J13JIKyNgux4EwJmANov4vu3RAeYAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jxe4jZY2uqM/gdHAxRZuxfjffnSpds7oI2KlYZrZeBbDNSQl2cIpzbg3AAVIRZ1yV
+	 1jWpdWZXLiZZQ1q4Vxh/ON7GX7D7Ebyr3E5Mt+7n7+wNzL2RxWaWOInGeEGDGGEGef
+	 ymLtG3WCYA+Oa8/e7qJF+m0d9QuxK6OuNDtZN89k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgGGJ1N (ORCPT
+        id S1726946AbgGGJbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727886AbgGGJ1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:27:10 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF8FC061755;
-        Tue,  7 Jul 2020 02:27:10 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 11:27:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594114028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QLBTzIwDXRw8Ngy3frJIgWMDMydSG5GmWktyqhaqBeo=;
-        b=MO7Ppzm9g4auQbN/35wAZgxdqPFOCGkJIsA1FU6fXW8rDsAD8z98NHJL4EpFs1MWQnqT0Z
-        UX6AaIaphrgEw7cpzAqVHdV0VsaUoT3XlakzRjgZrWgyiuhTEi26xzLuvYLakLjK+w/LZS
-        y6x6ShETS2+aKEkISOeG49AJBOS3SfNknmo3MqnZ2WBEt+9t7LQuw3pNcSQrP+oehQMTwh
-        GXkDJTuKLDh1rQrDqQUH/lmmkyg3VUU5IHG4OmkDnQCxk6LSsFZEv18p4qryygjCNZnEWS
-        VU0O4OxM761HgnjDn8/3wKBniuB2CRFu6m53V+6Tn2EcPUyAZum7sERzjKS2bg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594114028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QLBTzIwDXRw8Ngy3frJIgWMDMydSG5GmWktyqhaqBeo=;
-        b=qaqbbubx9fvSPosR3yx7SvkqXwsNksqEypCk+pQW1mWQ0c7qkSnxMlduSpzkWLB7IvJMLB
-        9ZBQWb3vznwTUxCg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200707092707.eos6yiq5t6h7d7ko@linutronix.de>
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
- <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
- <20200702194506.GA31478@pc636>
- <20200706194232.GA233429@google.com>
- <20200706195557.GA24082@pc636>
- <20200706202949.GB233429@google.com>
+        Tue, 7 Jul 2020 05:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgGGJbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:31:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47DBE2065F;
+        Tue,  7 Jul 2020 09:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594114293;
+        bh=7EJPV5cge5x3+J13JIKyNgux4EwJmANov4vu3RAeYAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G5b57d5VluIkuQJOC73on6FYdeC3Z9X1U3EH8Y6N35tSs1ybjw+w2UaJMRNvNiI0C
+         Ztuon0HGC5mXaRIHbnMgXBEjgnZ8st6X1f0tTkpVWTVYNchlfy/EsoIrbhNasxpjrD
+         b4O5dyY2lR6K9uqQZ+lUSMciMwebhkosO8EJSxJE=
+Date:   Tue, 7 Jul 2020 11:31:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 0/4] Fix misused kernel_read_file() enums
+Message-ID: <20200707093131.GA2592640@kroah.com>
+References: <20200707081926.3688096-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706202949.GB233429@google.com>
+In-Reply-To: <20200707081926.3688096-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-06 16:29:49 [-0400], Joel Fernandes wrote:
-> Anyway, I think as we discussed on IRC, your proposal will work for both
-> kernels while allowing us to keep the internal lock as raw.
-
-Why can't we use the migrate_disable() and spinlock_t?
-
-> thanks,
+On Tue, Jul 07, 2020 at 01:19:22AM -0700, Kees Cook wrote:
+> Hi,
 > 
->  - Joel
+> In looking for closely at the additions that got made to the
+> kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
+> and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
+> *kinds* of files for the LSM to reason about. They are a "how" and
+> "where", respectively. Remove these improper aliases and refactor the
+> code to adapt to the changes.
+> 
+> Additionally adds in missing calls to security_kernel_post_read_file()
+> in the platform firmware fallback path (to match the sysfs firmware
+> fallback path) and in module loading. I considered entirely removing
+> security_kernel_post_read_file() hook since it is technically unused,
+> but IMA probably wants to be able to measure EFI-stored firmware images,
+> so I wired it up and matched it for modules, in case anyone wants to
+> move the module signature checks out of the module core and into an LSM
+> to avoid the current layering violations.
+> 
+> This touches several trees, and I suspect it would be best to go through
+> James's LSM tree.
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> Kees Cook (4):
+>   firmware_loader: EFI firmware loader must handle pre-allocated buffer
+>   fs: Remove FIRMWARE_PREALLOC_BUFFER from kernel_read_file() enums
+>   fs: Remove FIRMWARE_EFI_EMBEDDED from kernel_read_file() enums
+>   module: Add hook for security_kernel_post_read_file()
 
-Sebastian
+Looks good to me, thanks for fixing this up:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
