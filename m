@@ -2,89 +2,80 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73758C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C42C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD62206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:40:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KPAdAAqx"
+	by mail.kernel.org (Postfix) with ESMTP id EAC1620663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGGAkN (ORCPT
+        id S1727079AbgGGAkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgGGAkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:40:12 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C51BC061755;
-        Mon,  6 Jul 2020 17:40:12 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q17so1585598pls.9;
-        Mon, 06 Jul 2020 17:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5pYsjN60NJ47D/Ig9H9v6N4wpATsBohPpYZDtHcHnWg=;
-        b=KPAdAAqxaECfbaIMMLlyVjjbvG+1HW+YC5dbtcvGnh36Y1dYKeCMRX65Ed422fO66U
-         fvTnCV5nRBjPvID0tuQfs/6RbJqwqByhFiC1ZoWMjxBvKIe1M3K/wd4/Ql/STKw7ZHoJ
-         4HEUC0mtxyXZWsIJ5WWY0XtMlBKHB6/aOL5JJULCG/ikgLDlkHN20/SDUFdFLyJ2y1A6
-         dn87NxZ0iHoqLZIIwOAqk0r0iXbkc1FtCochtC58PNMxjPAfndNlHSjuAqdDqbgIRck1
-         gPy/ChyBbwha5z0pyNZmAnS/lXIm1xDzXtBnDDZoxxhZcKlqPmBcMXfzZ9WvQbIqymv9
-         m70g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5pYsjN60NJ47D/Ig9H9v6N4wpATsBohPpYZDtHcHnWg=;
-        b=Q1mhrLadkMEbB5ikfO2QthCXe8d2lcDAn2AzG8t6Y52fVJlt0MPQIkYArwJ76L4lQJ
-         CXjjLnZC3urCmXlNDa/ztuIhrNl0gRVBGT3BRzUbJdnxEYT404DVidattJmSoSCNrJpE
-         kliiQ5k5gkb7qPCHNTnCIjdfuVtiNitkG2d+zWv2nN2Y5hHbVeCyTCMhcvcZ7r99u1ds
-         mj0RMCUrI/s71WjCy8cGKozv8mF8Qp8M/wwBIYGxx0OtNP7rA1Mol2VOXGbUc9fpAXO3
-         3KIXFc5kd6Tk58ZQLvjun581mZB9TjO16retA1JXeiJVcsabPfF29Flf9xjHskuNeuKs
-         dpaQ==
-X-Gm-Message-State: AOAM5328okXVrHDHxskwHVn6dIz0N718z0bFknzKtjj28YoJY+LVYirU
-        sUuFC6ao7K4fQ9WY5puaHOI=
-X-Google-Smtp-Source: ABdhPJyi2JbLC/ZDrwY/hX3+vuEPEEQ5oxgLAUew7kQokGQYn9wtyMxVOPBo75lqQ34HqUJNeA8ZCg==
-X-Received: by 2002:a17:902:b086:: with SMTP id p6mr7825796plr.164.1594082411944;
-        Mon, 06 Jul 2020 17:40:11 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id m22sm5601703pff.152.2020.07.06.17.40.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 17:40:11 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 17:40:09 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Derek Basehore <dbasehore@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        jiada_wang@mentor.com
-Subject: Re: [PATCH v2] Input: elan_i2c - only increment wakeup count on touch
-Message-ID: <20200707004009.GB3273837@dtor-ws>
-References: <20200706235046.1984283-1-dbasehore@chromium.org>
+        Mon, 6 Jul 2020 20:40:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50090 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbgGGAkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 20:40:42 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jsbf0-003vqW-Tz; Tue, 07 Jul 2020 02:40:34 +0200
+Date:   Tue, 7 Jul 2020 02:40:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] net: sfp: Unique GPIO interrupt names
+Message-ID: <20200707004034.GA935794@lunn.ch>
+References: <CAFXsbZoOoOkgkxXNbG5JTXHdJiSoxu2OiHKHh39m3GfYE2jGcg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706235046.1984283-1-dbasehore@chromium.org>
+In-Reply-To: <CAFXsbZoOoOkgkxXNbG5JTXHdJiSoxu2OiHKHh39m3GfYE2jGcg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:50:46PM -0700, Derek Basehore wrote:
-> This moves the wakeup increment for elan devices to the touch report.
-> This prevents the drivers from incorrectly reporting a wakeup when the
-> resume callback resets then device, which causes an interrupt to
-> occur.
+> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> index 73c2969f11a4..193a124c26c4 100644
+> --- a/drivers/net/phy/sfp.c
+> +++ b/drivers/net/phy/sfp.c
+> @@ -2239,6 +2239,7 @@ static int sfp_probe(struct platform_device *pdev)
+>      const struct sff_data *sff;
+>      struct i2c_adapter *i2c;
+>      struct sfp *sfp;
+> +    char *sfp_irq_name;
+>      int err, i;
+
+Hi Chris
+
+Reverse Christmas tree.
+
 > 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+>      sfp = sfp_alloc(&pdev->dev);
+> @@ -2349,12 +2350,16 @@ static int sfp_probe(struct platform_device *pdev)
+>              continue;
+>          }
+> 
+> +        sfp_irq_name = devm_kasprintf(sfp->dev, GFP_KERNEL,
+> +                          "%s-%s", dev_name(sfp->dev),
+> +                          gpio_of_names[i]);
+> +
 
-Applied, thank you.
+Did you run ./scripts/checkpatch.pl on this patch? I suspect it will
+complain about spaces, not tabs.
 
--- 
-Dmitry
+Humm, actually, all tabs seem to of been converted to spaces.
+
+Something David often recommends. email the patch to yourself, and
+then apply it using git am. If it does not apply cleanly, something
+has mangled it.
+
+    Andrew
