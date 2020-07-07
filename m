@@ -2,160 +2,257 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B015C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52368C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0235520708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2099D20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:14:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFx744Kk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGGEMG (ORCPT
+        id S1726911AbgGGEOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:12:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22633 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgGGEMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:12:06 -0400
-IronPort-SDR: 0W/5Vy1dfoxvbNGDIHUC8W6lLn2fgTx3XoVW6MAVLnQ6FsJE/doVeitgQfIzhHimfdtYHpXLvu
- aLk53coCoOFA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="135001683"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="135001683"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 21:12:05 -0700
-IronPort-SDR: YHarQfFVnkfUOum/EoAPHkcF95ItQQCHMuQQp34Q+s/pMrOJeo8DrUZ9F4+e8CxeNfxTKxYD6k
- MMs02+aqpxGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="268078883"
-Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Jul 2020 21:11:52 -0700
-Date:   Tue, 7 Jul 2020 07:11:51 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v34 11/24] x86/sgx: Add SGX enclave driver
-Message-ID: <20200707041151.GE143804@linux.intel.com>
-References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
- <20200707030204.126021-12-jarkko.sakkinen@linux.intel.com>
- <20200707033617.GF25523@casper.infradead.org>
+        Tue, 7 Jul 2020 00:14:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGEOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:14:46 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25864C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 21:14:46 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so19402104pgc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 21:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qEprmOlTY6puSyCIWCfUXtLm8xXvjpiYlwOcozAIUio=;
+        b=JFx744KkwGkk5wwXPaVDr5ZU7Bn4Ub8uJ+sZzrgPDW8cUa/LPJUjgyYTdCAobx4Yyi
+         Ne5k7D5yBQ7+33dJ37Bw+Wjbp2u+woknlkfXziwyldKDluEk6w9jtbS4Ns/yQJDgTtKO
+         KfJMbz1oxLHsOxgSe+0vKeD/FZlV1V0UE0Y1zR2qc2HRvXKleTu39hx+ML5IGsFW6oXb
+         BnxAMfn0ZsIxcUtTHGsvlefYLDu6VCfd2begQ0+CzFvQsuimvMamn7jfkqtN2u6g1vKO
+         s3P3FXTdkQP44SkmuDyrLCK03x2W8wq8GLXAHmO04vJLI4I7NrK7TFzDI08iluVGlzJ1
+         KeTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qEprmOlTY6puSyCIWCfUXtLm8xXvjpiYlwOcozAIUio=;
+        b=Vyb90AdU9E9EPEbMSMkOMg1KH+VUg8dXkcyN28jXr5/pSK56h9vkRzGiQDg4/UoTK1
+         bq8mOq+iVLdcXJ2RGSdUOMnYAeMQ9Bemd0y0bUV7qSaeJBK6ztuIdjYb/AK0vt5Tve1d
+         2uPq0lE7TFAT9Zx2rizkcy4dNcpXk7B2Ji1d1VLWsf0YrC3jvSUpvhSDEBqqwUfaKU7A
+         p+WsDCXQOyE/h9nqdXxVIMZ8bUyxaQaFQrj37nvaZBOsRn4c8gFxAzQJOzTPvQCN8Tl9
+         x7EIeEf7t+rQDe/BA1Uk5RftvC+kgFsTeqMv9kFlMq7ZrFW8Av4Qv8aGdjnyZl7cbvXe
+         9qoQ==
+X-Gm-Message-State: AOAM530D9P0q5jKXrgKpO38kHTlbx+DPn58kX8nRu97nlYwFHxGvZtyt
+        DN8FekSL/czdlS+3UAKgfEc=
+X-Google-Smtp-Source: ABdhPJwJV1fYmtkHPRdr0loU/ctwB/AbXfQRm/jbU4vXCvCYppXxNN7/AvhjbSvunGHm4gJcJCW29Q==
+X-Received: by 2002:a05:6a00:5c:: with SMTP id i28mr30727237pfk.274.1594095285301;
+        Mon, 06 Jul 2020 21:14:45 -0700 (PDT)
+Received: from dtor-ws ([100.99.132.186])
+        by smtp.gmail.com with ESMTPSA id b21sm11277073pfb.45.2020.07.06.21.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 21:14:44 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 21:14:42 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v6 2/4] driver core: add deferring probe reason to
+ devices_deferred property
+Message-ID: <20200707041442.GE3273837@dtor-ws>
+References: <20200626100103.18879-1-a.hajda@samsung.com>
+ <CGME20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e@eucas1p2.samsung.com>
+ <20200626100103.18879-3-a.hajda@samsung.com>
+ <5f159e00-44fd-515b-dd8c-4db9845dc9e6@ti.com>
+ <7e3c924b-c025-a829-6868-78e2935c70eb@samsung.com>
+ <66faa188-5ef6-d449-07fe-28c8be5e559c@ti.com>
+ <21f5ec9c-2d1d-5f28-5aeb-ac0db144a55e@samsung.com>
+ <CAKdAkRRLBLCLGH2qhEjaVnt8wNjoyGAfQimNWHZUvzx2m6Mwng@mail.gmail.com>
+ <e6057292-39de-831c-0b8d-b3f0b66937dc@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200707033617.GF25523@casper.infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6057292-39de-831c-0b8d-b3f0b66937dc@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:36:17AM +0100, Matthew Wilcox wrote:
-> On Tue, Jul 07, 2020 at 06:01:51AM +0300, Jarkko Sakkinen wrote:
-> > Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> > can be used by applications to set aside private regions of code and
-> > data. The code outside the SGX hosted software entity is disallowed to
+On Thu, Jul 02, 2020 at 08:57:55AM +0200, Andrzej Hajda wrote:
 > 
-> s/disallowed to/prevented from/
+> On 30.06.2020 20:00, Dmitry Torokhov wrote:
+> > On Tue, Jun 30, 2020 at 8:42 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> >>
+> >> On 30.06.2020 10:59, Grygorii Strashko wrote:
+> >>> Hi
+> >>>
+> >>> On 29/06/2020 14:28, Andrzej Hajda wrote:
+> >>>> Hi Grygorii,
+> >>>>
+> >>>> (...)
+> >>>>
+> >>>>>>     /*
+> >>>>>>      * deferred_devs_show() - Show the devices in the deferred probe
+> >>>>>> pending list.
+> >>>>>>      */
+> >>>>>> @@ -221,7 +241,8 @@ static int deferred_devs_show(struct seq_file *s,
+> >>>>>> void *data)
+> >>>>>>         mutex_lock(&deferred_probe_mutex);
+> >>>>>>           list_for_each_entry(curr, &deferred_probe_pending_list,
+> >>>>>> deferred_probe)
+> >>>>>> -        seq_printf(s, "%s\n", dev_name(curr->device));
+> >>>>>> +        seq_printf(s, "%s\t%s", dev_name(curr->device),
+> >>>>>> + curr->device->p->deferred_probe_reason ?: "\n");
+> >>>>>>           mutex_unlock(&deferred_probe_mutex);
+> >>>>>>
+> >>>>> Sry, may be i missing smth, but shouldn't it be optional
+> >>>>> (CONFIG_DEBUG_FS is probably too generic).
+> >>>>>
+> >>>> I am not sure what exactly are you referring to, but this patch does not
+> >>>> add new property, it just extends functionality of existing one.
+> >>> Sry, needed to be more specific.
+> >>>
+> >>> You've added  device_set_deferred_probe_reson(dev, &vaf);
+> >>> which expected to be used on every EPROBE_DEFER in dev_err_probe() in
+> >>> combination with
+> >>>
+> >>> +       } else {
+> >>> +               device_set_deferred_probe_reson(dev, &vaf);
+> >>>                  dev_dbg(dev, "error %d: %pV", err, &vaf);
+> >>>
+> >>> ^^ dev_dbg() does not add any runtime overhead during boot unless enabled
+> >>> +       }
+> >>>
+> >>> But:
+> >>>
+> >>> +void device_set_deferred_probe_reson(const struct device *dev, struct
+> >>> va_format *vaf)
+> >>> +{
+> >>> +       const char *drv = dev_driver_string(dev);
+> >>> +
+> >>> +       mutex_lock(&deferred_probe_mutex);
+> >>> +
+> >>> +       kfree(dev->p->deferred_probe_reason);
+> >>> +       dev->p->deferred_probe_reason = kasprintf(GFP_KERNEL, "%s:
+> >>> %pV", drv, vaf);
+> >>> +
+> >>> +       mutex_unlock(&deferred_probe_mutex);
+> >>> +}
+> >>>
+> >>> ^^ Adds locking, kfree() and kasprintf() for every deferred probe
+> >>> during boot and can't be disabled.
+> >>>
+> >>> Right?
+> >>
+> >> Right, but usually the burden should be insignificant in comparison to
+> >> probe time, so I do not think it is worth optimizing.
+> > I do not think this is going to take. You are suggesting that we
+> > modify pretty much every driver to supply this deferral reason, and I
+> > doubt it will happen. Can we put this burden on providers that raise
+> > the deferral?
 > 
-> > access the memory inside the enclave enforced by the CPU. We call these
 > 
-> s/enforced//
-> 
-> > entities enclaves.
-> > 
-> > Add a driver that provides an ioctl API to construct and run enclaves.
-> > Enclaves are constructed from pages residing in reserved physical memory
-> > areas. The contents of these pages can only be accessed when they are
-> > mapped as part of an enclave, by a hardware thread running inside the
-> > enclave.
-> > 
-> > The starting state of an enclave consists of a fixed measured set of
-> > pages that are copied to the EPC during the construction process by
-> > using ENCLS leaf functions and Software Enclave Control Structure (SECS)
-> > that defines the enclave properties.
-> > 
-> > Enclaves are constructed by using ENCLS leaf functions ECREATE, EADD and
-> > EINIT. ECREATE initializes SECS, EADD copies pages from system memory to
-> > the EPC and EINIT checks a given signed measurement and moves the enclave
-> > into a state ready for execution.
-> 
-> What's a leaf function?  Is it like a CPU instruction?
+> I wouldn't say they raise the deferral, they just inform resource is not 
+> yet available. Only device driver, and only in its probe function can 
+> "raise the deferral".
 
-Yeah, the opcode is ENCLS for ring-0 (enclave management and
-construction) and ENCLU for ring-3 (entrance to the enclave etc).
-The leaf function number goes to EAX.
+Well, this is a matter of perspective. If devm_gpiod_get() returns
+-EBUSY and this is returned to driver core, is it GPIO line signals that
+line is busy, or is it the driver applies its knowledge. I say that in
+majority of cases driver does not really get a say in this and simply
+has to pass whatever error condition that is signalled by providers up
+the stack.
+
+I would consider whenever a driver does not propagate -EPROBE_DEFER to
+the driver code a bug that needs fixing, because it should not degrade
+functionality and/or performance just because we have not figured out
+how to order probing properly and have to rely on deferrals.
 
 > 
-> > The mmap() permissions are capped by the contained enclave page
-> > permissions. The mapped areas must also be opaque, i.e. each page address
-> > must contain a page. This logic is implemented in sgx_encl_may_map().
 > 
-> do you mean "populated" instead of "opaque"?
-
-Yes, that would be a better word to use. I'll change this.
-
+> >   I.e. majority of code are using devm API now, so we most
+> > likely know the device for which deferral is being raised. We can have
+> > a list of deferral reasons and their devices and when in device code
+> > once probe is done we could try reconciling it with the deferred
+> > devicelist, and this would mean you only need to implement this in
+> > gpiolib, regulator core, clocks core, etc.
 > 
-> > +	atomic_set(&encl->flags, 0);
-> > +	kref_init(&encl->refcount);
-> > +	INIT_RADIX_TREE(&encl->page_tree, GFP_KERNEL);
 > 
-> Why are you using a radix tree instead of an xarray?
-
-Because xarray did not exist in 2017 and nobody has pointed out to use
-it. Now I know it exists (yet do not know what it is).
-
+> This patchset tries to solve simple issue - replace multiple lines of 
+> code present in multiple probe functions (additionally fixing lot of 
+> them) with single call and then enhance it little bit, nothing more.
 > 
-> > +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> > +		     unsigned long end, unsigned long vm_prot_bits)
-> > +{
-> > +	unsigned long idx, idx_start, idx_end;
-> > +	struct sgx_encl_page *page;
-> > +
-> > +	/*
-> > +	 * Disallow RIE tasks as their VMA permissions might conflict with the
-> > +	 * enclave page permissions.
-> > +	 */
-> > +	if (!!(current->personality & READ_IMPLIES_EXEC))
-> > +		return -EACCES;
-> > +
-> > +	idx_start = PFN_DOWN(start);
-> > +	idx_end = PFN_DOWN(end - 1);
-> > +
-> > +	for (idx = idx_start; idx <= idx_end; ++idx) {
-> > +		mutex_lock(&encl->lock);
-> > +		page = radix_tree_lookup(&encl->page_tree, idx);
-> > +		mutex_unlock(&encl->lock);
-> > +
-> > +		if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
-> > +			return -EACCES;
+> What you are proposing is blurry at the moment for me, provider does not 
+> know if consumer want to defer,
+
+This is my point - the consumer does not get to decide. If deferral is
+raised, it must be honored.
+
+> or will continue working without missing resource,
+
+Deferral does not mean resource does not exist and the driver has to get
+by if it can. It means the resource is not ready, and even if the system
+can work without it, it will not be working optimally.
+
+> moreover some consumers can acquire resources after probe - again no
+> probe deferral.
+
+In this case we should not signal deferral either.
+
+> Even if it will be done (it can be, for 
+> example by creating probe version of all resource get functions), it 
+> will require much more changes but finally it will look like:
 > 
-> You should really use an iterator here instead of repeated lookups.
-> xas_for_each() will probably be what you want.
+> res = devm_get_resource_from_probe(....)
+> 
+> if (IS_ERR(res))
+> 
+>      return PTR_ERR(res);
+> 
+> vs:
+> 
+> res = devm_get_resource(...)
+> 
+> if (IS_ERR(res))
+> 
+>      return dev_err_probe(dev, PTR_ERR(res), ...);
 
-Thank you for your remarks. I'll look into using xarray for this.
+And we will need to adjust how many hundreds of drivers?
 
-/Jarkko
+Consider that most drivers use devm_clk_get(), devm_gpiod_get() and
+devm_regulator_get() and their friends. All these APIs already have
+device for which resource is being allocated, and moreover their use
+outside of probe() path is highly suspicious (because devm outside of
+probe() typically result in unwinding in really surprising order). So if
+you could stash device and deferral reason in a list and then scan this
+list in driver core when handling the raised deferral you would not need
+to change anything in individual drivers.
+
+Hope this clears what I had in mind.
+
+Thanks.
+
+-- 
+Dmitry
