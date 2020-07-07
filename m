@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C76EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF99DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B29120663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13C820663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135489;
-	bh=djgJv5sPGtFSvjLrP1dLw1yMBUcbSp0t7Xs692s/lq0=;
+	s=default; t=1594135491;
+	bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=baEGLWYVu5mKBepnrJFY6FrzS8zo9lL7EesyZl4KtI1VRWSALZ5zHgVZIOvB1kMCa
-	 6Ght1+O5j4ZHfeVv+quRaN5P2aptrw2P13Bm0W11ASXfFyCHZYvAelOgaWcFiTGzOA
-	 sS7ctBqCgRwTJtpOlcM7WoYkCPOgCPRDosCRtSU8=
+	b=FvmP8jOoTxQH8UY0TB67y6ldSUqbxj/jJT9pHO5j1wv/zvL1lpkjU67sTqVGqUDUu
+	 d+T+1/3VDGKLMSx2GzY2h4oVqAsJvEzkSRQsoLwwmiZqjtIqJZQlhwcAolbcYmCWTM
+	 IGntIKwOg+XcIKmIm/u43DFVw0l0O+1UXpYgMggQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgGGPYr (ORCPT
+        id S1729126AbgGGPYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38240 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729674AbgGGPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:38 -0400
+        id S1730115AbgGGPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF7A420663;
-        Tue,  7 Jul 2020 15:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865302065D;
+        Tue,  7 Jul 2020 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135477;
-        bh=djgJv5sPGtFSvjLrP1dLw1yMBUcbSp0t7Xs692s/lq0=;
+        s=default; t=1594135480;
+        bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZagKn0gGBfTMyxashLJd6+P2Xf6vmj4SckOJb6vmmGMU+ClDgmOQiXziDsoAv84EX
-         O18pevPw4EYZUlbDGAX9YOETuMemLidxy0xmThXw/wqpBOfODlY+2IbPShldLKk07L
-         XCu3FfmtGrvtNjw7PEVWAkKojbds+3rgJYHQUud4=
+        b=stsIRyTw5BC/gOI5khT4ngkd6gso54Z9zGJWCKC4i90/T4T7iR6xhSxcRjUEHicde
+         I0QCUTjo2t5jUWWjObDnvbMQ87NBnII6VXRfNHmgUlma6yWVPCmtwTnt4hD/6hpDEF
+         yLYWPFJgoVdX0IJayhzu92FV30pQmYMU7YEsKDv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 027/112] io_uring: fix {SQ,IO}POLL with unsupported opcodes
-Date:   Tue,  7 Jul 2020 17:16:32 +0200
-Message-Id: <20200707145802.280728361@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 028/112] rxrpc: Fix race between incoming ACK parser and retransmitter
+Date:   Tue,  7 Jul 2020 17:16:33 +0200
+Message-Id: <20200707145802.326535482@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -59,126 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 3232dd02af65f2d01be641120d2a710176b0c7a7 ]
+[ Upstream commit 2ad6691d988c0c611362ddc2aad89e0fb50e3261 ]
 
-IORING_SETUP_IOPOLL is defined only for read/write, other opcodes should
-be disallowed, otherwise it'll get an error as below. Also refuse
-open/close with SQPOLL, as the polling thread wouldn't know which file
-table to use.
+There's a race between the retransmission code and the received ACK parser.
+The problem is that the retransmission loop has to drop the lock under
+which it is iterating through the transmission buffer in order to transmit
+a packet, but whilst the lock is dropped, the ACK parser can crank the Tx
+window round and discard the packets from the buffer.
 
-RIP: 0010:io_iopoll_getevents+0x111/0x5a0
-Call Trace:
- ? _raw_spin_unlock_irqrestore+0x24/0x40
- ? do_send_sig_info+0x64/0x90
- io_iopoll_reap_events.part.0+0x5e/0xa0
- io_ring_ctx_wait_and_kill+0x132/0x1c0
- io_uring_release+0x20/0x30
- __fput+0xcd/0x230
- ____fput+0xe/0x10
- task_work_run+0x67/0xa0
- do_exit+0x353/0xb10
- ? handle_mm_fault+0xd4/0x200
- ? syscall_trace_enter+0x18c/0x2c0
- do_group_exit+0x43/0xa0
- __x64_sys_exit_group+0x18/0x20
- do_syscall_64+0x60/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The retransmission code then updated the annotations for the wrong packet
+and a later retransmission thought it had to retransmit a packet that
+wasn't there, leading to a NULL pointer dereference.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-[axboe: allow provide/remove buffers and files update]
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by:
+
+ (1) Moving the annotation change to before we drop the lock prior to
+     transmission.  This means we can't vary the annotation depending on
+     the outcome of the transmission, but that's fine - we'll retransmit
+     again later if it failed now.
+
+ (2) Skipping the packet if the skb pointer is NULL.
+
+The following oops was seen:
+
+	BUG: kernel NULL pointer dereference, address: 000000000000002d
+	Workqueue: krxrpcd rxrpc_process_call
+	RIP: 0010:rxrpc_get_skb+0x14/0x8a
+	...
+	Call Trace:
+	 rxrpc_resend+0x331/0x41e
+	 ? get_vtime_delta+0x13/0x20
+	 rxrpc_process_call+0x3c0/0x4ac
+	 process_one_work+0x18f/0x27f
+	 worker_thread+0x1a3/0x247
+	 ? create_worker+0x17d/0x17d
+	 kthread+0xe6/0xeb
+	 ? kthread_delayed_work_timer_fn+0x83/0x83
+	 ret_from_fork+0x1f/0x30
+
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ net/rxrpc/call_event.c | 29 +++++++++++------------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 4ab1728de247c..bb74e45941af2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2748,6 +2748,8 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
+index 2a65ac41055f5..985fb89202d0c 100644
+--- a/net/rxrpc/call_event.c
++++ b/net/rxrpc/call_event.c
+@@ -248,7 +248,18 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
+ 		if (anno_type != RXRPC_TX_ANNO_RETRANS)
+ 			continue;
  
- 	if (req->flags & REQ_F_NEED_CLEANUP)
- 		return 0;
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
++		/* We need to reset the retransmission state, but we need to do
++		 * so before we drop the lock as a new ACK/NAK may come in and
++		 * confuse things
++		 */
++		annotation &= ~RXRPC_TX_ANNO_MASK;
++		annotation |= RXRPC_TX_ANNO_RESENT;
++		call->rxtx_annotations[ix] = annotation;
++
+ 		skb = call->rxtx_buffer[ix];
++		if (!skb)
++			continue;
++
+ 		rxrpc_get_skb(skb, rxrpc_skb_got);
+ 		spin_unlock_bh(&call->lock);
  
- 	sp->file_in = NULL;
- 	sp->off_in = READ_ONCE(sqe->splice_off_in);
-@@ -2910,6 +2912,8 @@ static int io_fallocate_prep(struct io_kiocb *req,
- {
- 	if (sqe->ioprio || sqe->buf_index || sqe->rw_flags)
- 		return -EINVAL;
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
+@@ -262,24 +273,6 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
  
- 	req->sync.off = READ_ONCE(sqe->off);
- 	req->sync.len = READ_ONCE(sqe->addr);
-@@ -2935,6 +2939,8 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	const char __user *fname;
- 	int ret;
- 
-+	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-+		return -EINVAL;
- 	if (sqe->ioprio || sqe->buf_index)
- 		return -EINVAL;
- 	if (req->flags & REQ_F_FIXED_FILE)
-@@ -2968,6 +2974,8 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	size_t len;
- 	int ret;
- 
-+	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-+		return -EINVAL;
- 	if (sqe->ioprio || sqe->buf_index)
- 		return -EINVAL;
- 	if (req->flags & REQ_F_FIXED_FILE)
-@@ -3207,6 +3215,8 @@ static int io_epoll_ctl_prep(struct io_kiocb *req,
- #if defined(CONFIG_EPOLL)
- 	if (sqe->ioprio || sqe->buf_index)
- 		return -EINVAL;
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
- 
- 	req->epoll.epfd = READ_ONCE(sqe->fd);
- 	req->epoll.op = READ_ONCE(sqe->len);
-@@ -3251,6 +3261,8 @@ static int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)
- 	if (sqe->ioprio || sqe->buf_index || sqe->off)
- 		return -EINVAL;
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
- 
- 	req->madvise.addr = READ_ONCE(sqe->addr);
- 	req->madvise.len = READ_ONCE(sqe->len);
-@@ -3285,6 +3297,8 @@ static int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- {
- 	if (sqe->ioprio || sqe->buf_index || sqe->addr)
- 		return -EINVAL;
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
- 
- 	req->fadvise.offset = READ_ONCE(sqe->off);
- 	req->fadvise.len = READ_ONCE(sqe->len);
-@@ -3322,6 +3336,8 @@ static int io_statx_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	unsigned lookup_flags;
- 	int ret;
- 
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
- 	if (sqe->ioprio || sqe->buf_index)
- 		return -EINVAL;
- 	if (req->flags & REQ_F_FIXED_FILE)
-@@ -3402,6 +3418,8 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	 */
- 	req->work.flags |= IO_WQ_WORK_NO_CANCEL;
- 
-+	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-+		return -EINVAL;
- 	if (sqe->ioprio || sqe->off || sqe->addr || sqe->len ||
- 	    sqe->rw_flags || sqe->buf_index)
- 		return -EINVAL;
+ 		rxrpc_free_skb(skb, rxrpc_skb_freed);
+ 		spin_lock_bh(&call->lock);
+-
+-		/* We need to clear the retransmit state, but there are two
+-		 * things we need to be aware of: A new ACK/NAK might have been
+-		 * received and the packet might have been hard-ACK'd (in which
+-		 * case it will no longer be in the buffer).
+-		 */
+-		if (after(seq, call->tx_hard_ack)) {
+-			annotation = call->rxtx_annotations[ix];
+-			anno_type = annotation & RXRPC_TX_ANNO_MASK;
+-			if (anno_type == RXRPC_TX_ANNO_RETRANS ||
+-			    anno_type == RXRPC_TX_ANNO_NAK) {
+-				annotation &= ~RXRPC_TX_ANNO_MASK;
+-				annotation |= RXRPC_TX_ANNO_UNACK;
+-			}
+-			annotation |= RXRPC_TX_ANNO_RESENT;
+-			call->rxtx_annotations[ix] = annotation;
+-		}
+-
+ 		if (after(call->tx_hard_ack, seq))
+ 			seq = call->tx_hard_ack;
+ 	}
 -- 
 2.25.1
 
