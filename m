@@ -7,67 +7,69 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6FC20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F21207BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdVvmbc6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LShq89WJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgGGOim (ORCPT
+        id S1728620AbgGGOiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        Tue, 7 Jul 2020 10:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbgGGOiX (ORCPT
+        with ESMTP id S1728491AbgGGOiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:23 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024B4C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:23 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w3so34318978wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:22 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991D0C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:19 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j4so42988476wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
-        b=hdVvmbc6H8PwBoroBapEBPzE9/EFUUU817fbd+RBL7zPFgItN7L4xyOaxhlf1na/8c
-         LMBNV+oT5rzwx30qpZ+wDWOjMIjUSaVmx+EmRVFKOvVd7i2lCUFSTzZLyUs73kJUsbwM
-         wu6fVue7GztMQ8WruqtI15zrgwytI+/ajgHgzLBEL5m8yLLLpgE8Zq+Qhnm15pWdIyuQ
-         oo/DdwXXxK+QqZ0yKA8UD17YV7EHxNTnjWdN17INYOMbbJClegREeHXngIqUB2WpLPeU
-         zS8/+WxQ0fm6MiMeJEsqhHGXgy5Bbh4EBspUF3t6Nw035JLN08dX71/lvitC55km0PgS
-         rmNQ==
+        bh=U3fyU5lC2kiQoR/Tx6i2htjANdo4PmUgTNG8kh6JAhc=;
+        b=LShq89WJxb94MrlLI3/486aK65cDtxG0oE+rhlgTmASAYfb/Np7yb+JavN6r2ft9ig
+         AwQPAs5kHPqycz2QUKlP4nkN/SKskU0kSdYnqHPC74v0/benUGDSMuVmY2/f9Kipk6RW
+         gZmZE9RA44h5S5//yiG8puSQxxYPDXovIrKY8v5f+Mu99NOeUtvlkmdl6/y/m2bq0Eze
+         5J3TuNo5qLEoDrceDVnvkr9q/2nSp7tHNv64ApVICS1NVKPt1+GK6szIpP0evAVdgyBt
+         S8R/3ZsAgU0rXkkv/pvPnnvYjSwjwm1cv4QUDBxGcUOalIMy5y5VPw2rQ+iAfJLU5D5R
+         5AZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ud7YS/nxWFCEKdfNWplmyakfpWkMMmFHvetIuQwMK9A=;
-        b=qSUHn/cz6x6zcSabqaJEBaX/rwO0THGCZ+rpOaDdPQBj04i6avXzuWvAbq9xdtZQrd
-         7da3xMaqsN/cCztzXfeNGjnVaZENX2p86U/iVauEZLJt2wuxWPZYW0elDTSAR7riSgip
-         1fXui+eSEsnEaP+OpW5hbLEaml8mbEbLcTBdoPVga8HbHE3JLuF9aHTEaW15UX6FEor7
-         0oocSR0CeBAXEKp7rE89G1k3XioVktofyZaGxdWfvK9iwdzvWNeUwDOVnWRZMVQybhBB
-         ZMBOPV5QzgBiRWiFjLy9/Liad5ElyXcCS2hfJW/lGNpS8N7/9F9OueHpZ2+/yMIp/OMc
-         0fyQ==
-X-Gm-Message-State: AOAM530X9UmWPRJAHUmsBuiYE4scyRFPb63UN5Kj0ExMPG8CGMwZI8J7
-        YSd8dt3VPop0nyitFzzKvv6ykw==
-X-Google-Smtp-Source: ABdhPJyIynXVm4wMkx4aYF2hvbtr7ah/gc4UneovvHYT7P6LTuGCXP0MOFSEAqHEfIgZ7mJ6vCRLzQ==
-X-Received: by 2002:a7b:c1cc:: with SMTP id a12mr4748090wmj.112.1594132701677;
-        Tue, 07 Jul 2020 07:38:21 -0700 (PDT)
+        bh=U3fyU5lC2kiQoR/Tx6i2htjANdo4PmUgTNG8kh6JAhc=;
+        b=H/tFZNMl3a2Fk4eolN1DLeYKr0mvdmQ4lJLfWUtqTQjZTQguAYYIGEe44F8D9CcYSE
+         CqLWei5IYBl+b/+Vk3hIM17XcY/iSX0kR1xrur73Hu5ADYtaDZ0UTeY55RVQMgTJZIPG
+         w2UZigW4KWutWBtUi5Oap0SrIgDBypJYhBX2K9WJRwDL4KQhMar2uutoQkyi4yFFEuRZ
+         3BeWtZFMMlWbZ7iMa4BPHEbWZZAL0kjgNzmpPNEc0IchnXdX/xjYVRVfil/o1UX0e+nc
+         9t2QPL/XkEEuJoer+vTVKSgq57qaaAARXDQ8tj8lSkV4L+5tu2fq5lDj5zUJ6hIOjaU3
+         Lomw==
+X-Gm-Message-State: AOAM53023ioHa/WMnpqHwU2PW9Jub3rCST1ju2UAMbLvBi/QKRFiO+go
+        mtf8oqPiI1+E6xqXwPoXueJNrA==
+X-Google-Smtp-Source: ABdhPJzqqvWG7oi6hsuXMzqyAR794fl+k3BzyasAa7HE9dNDChNhc30Io0ZzoSOzpgV3OPJPWurV5A==
+X-Received: by 2002:a5d:4607:: with SMTP id t7mr58171903wrq.251.1594132698293;
+        Tue, 07 Jul 2020 07:38:18 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.20
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:38:21 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:17 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Oder Chiou <oder_chiou@realtek.com>, flove <flove@realtek.com>
-Subject: [PATCH v2 25/28] ASoC: codecs: rt5631: Demote misuse of kerneldoc to standard comment blocks
-Date:   Tue,  7 Jul 2020 15:37:39 +0100
-Message-Id: <20200707143742.2959960-26-lee.jones@linaro.org>
+        Support Opensource <support.opensource@diasemi.com>,
+        David Chen <Dajun.chen@diasemi.com>,
+        Kuninori Morimoto <morimoto.kuninori@renesas.com>
+Subject: [PATCH v2 22/28] ASoC: codecs: da7210: Fix formatting issues in da7210_set_dai_pll() header
+Date:   Tue,  7 Jul 2020 15:37:36 +0100
+Message-Id: <20200707143742.2959960-23-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
@@ -78,85 +80,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Little or no attempt has been made to document any of the demoted functions here.
+Kerneldoc expects parameter documentation to be in the format '@.*: '.
+If that convention is not followed, the kerneldoc checker gets confused.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'component' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'reg' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:72: warning: Function parameter or member 'value' not described in 'rt5631_write_index'
- sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'component' not described in 'rt5631_read_index'
- sound/soc/codecs/rt5631.c:82: warning: Function parameter or member 'reg' not described in 'rt5631_read_index'
- sound/soc/codecs/rt5631.c:367: warning: Function parameter or member 'component' not described in 'onebit_depop_power_stage'
- sound/soc/codecs/rt5631.c:405: warning: Function parameter or member 'component' not described in 'onebit_depop_mute_stage'
- sound/soc/codecs/rt5631.c:443: warning: Function parameter or member 'component' not described in 'depop_seq_power_stage'
- sound/soc/codecs/rt5631.c:515: warning: Function parameter or member 'component' not described in 'depop_seq_mute_stage'
+ sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'codec_dai' not described in 'da7210_set_dai_pll'
+ sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'pll_id' not described in 'da7210_set_dai_pll'
+ sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'source' not described in 'da7210_set_dai_pll'
+ sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'fref' not described in 'da7210_set_dai_pll'
+ sound/soc/codecs/da7210.c:985: warning: Function parameter or member 'fout' not described in 'da7210_set_dai_pll'
 
-Cc: Oder Chiou <oder_chiou@realtek.com>
-Cc: flove <flove@realtek.com>
+Cc: Support Opensource <support.opensource@diasemi.com>
+Cc: David Chen <Dajun.chen@diasemi.com>
+Cc: Kuninori Morimoto <morimoto.kuninori@renesas.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/codecs/rt5631.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/codecs/da7210.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5631.c b/sound/soc/codecs/rt5631.c
-index b5184f0e10e34..f1ace236c401e 100644
---- a/sound/soc/codecs/rt5631.c
-+++ b/sound/soc/codecs/rt5631.c
-@@ -64,7 +64,7 @@ static const struct reg_default rt5631_reg[] = {
- 	{ RT5631_PSEUDO_SPATL_CTRL, 0x0553 },
- };
+diff --git a/sound/soc/codecs/da7210.c b/sound/soc/codecs/da7210.c
+index 0c99dcf242e42..159b5f0eb7100 100644
+--- a/sound/soc/codecs/da7210.c
++++ b/sound/soc/codecs/da7210.c
+@@ -971,11 +971,13 @@ static int da7210_set_dai_sysclk(struct snd_soc_dai *codec_dai,
  
--/**
-+/*
-  * rt5631_write_index - write index register of 2nd layer
-  */
- static void rt5631_write_index(struct snd_soc_component *component,
-@@ -74,7 +74,7 @@ static void rt5631_write_index(struct snd_soc_component *component,
- 	snd_soc_component_write(component, RT5631_INDEX_DATA, value);
- }
- 
--/**
-+/*
-  * rt5631_read_index - read index register of 2nd layer
-  */
- static unsigned int rt5631_read_index(struct snd_soc_component *component,
-@@ -357,7 +357,7 @@ static int check_adcr_select(struct snd_soc_dapm_widget *source,
- 	return !(reg & RT5631_M_MIC2_TO_RECMIXER_R);
- }
- 
--/**
-+/*
-  * onebit_depop_power_stage - auto depop in power stage.
-  * @enable: power on/off
+ /**
+  * da7210_set_dai_pll	:Configure the codec PLL
+- * @param codec_dai	: pointer to codec DAI
+- * @param pll_id	: da7210 has only one pll, so pll_id is always zero
+- * @param fref		: MCLK frequency, should be < 20MHz
+- * @param fout		: FsDM value, Refer page 44 & 45 of datasheet
+- * @return int		: Zero for success, negative error code for error
++ * @codec_dai:	pointer to codec DAI
++ * @pll_id:	da7210 has only one pll, so pll_id is always zero
++ * @source:	unused
++ * @fref:	MCLK frequency, should be < 20MHz
++ * @fout:	FsDM value, Refer page 44 & 45 of datasheet
++ *
++ * Returns: Zero for success, negative error code for error
   *
-@@ -395,7 +395,7 @@ static void onebit_depop_power_stage(struct snd_soc_component *component, int en
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * onebit_depop_mute_stage - auto depop in mute stage.
-  * @enable: mute/unmute
-  *
-@@ -433,7 +433,7 @@ static void onebit_depop_mute_stage(struct snd_soc_component *component, int ena
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * onebit_depop_power_stage - step by step depop sequence in power stage.
-  * @enable: power on/off
-  *
-@@ -505,7 +505,7 @@ static void depop_seq_power_stage(struct snd_soc_component *component, int enabl
- 	snd_soc_component_write(component, RT5631_INT_ST_IRQ_CTRL_2, hp_zc);
- }
- 
--/**
-+/*
-  * depop_seq_mute_stage - step by step depop sequence in mute stage.
-  * @enable: mute/unmute
-  *
+  * Note: Supported PLL input frequencies are 12MHz, 13MHz, 13.5MHz, 14.4MHz,
+  *       19.2MHz, 19.6MHz and 19.8MHz
 -- 
 2.25.1
 
