@@ -2,130 +2,135 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0540C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1BC20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="SQauLQ9k"
+	by mail.kernel.org (Postfix) with ESMTP id A51F820708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGGP6v (ORCPT
+        id S1728386AbgGGP7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgGGP6v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:58:51 -0400
-Received: from mail-ed1-x561.google.com (mail-ed1-x561.google.com [IPv6:2a00:1450:4864:20::561])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B63C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:58:50 -0700 (PDT)
-Received: by mail-ed1-x561.google.com with SMTP id e22so38867463edq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hGGzB42iFy6ghF2u4QUqQFvdM4Y3ZVYyPzuZ+b6j5U8=;
-        b=SQauLQ9kLevGI1sjapbckHVSOl/rItba2jDiiEVbyk6vgD+ekaU79GMgdlUfeg7csN
-         k3FdKEQUQbUTZHGuSDJ6Hc1TCopRcYom+7PnjG012s215/7xWz96ysJjtfamTV2vBUIk
-         GTH3Tt9sXgLdclGWvy/420eUO0eSeRH3Lj7hEo1jcNtzrhX3DFCuZgX20Lw6tJLifJ/y
-         5lFyyEB9m8vy15HwlJmM9Fmxyw8y1jMDeQMUWteqGLSYd3fPNmPoVdfmM28eLKdieewY
-         Un2WtQzZYAELNz1E0JK3TaPSXrIkbgrzYXuv2CcIW/dhpW5JgfdO4BL74R7Q2uxoCwXE
-         XZdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hGGzB42iFy6ghF2u4QUqQFvdM4Y3ZVYyPzuZ+b6j5U8=;
-        b=o3zWK3fA4C9K/rF0tsX94pdWPl9GkejDuklcwqHQWmueXxgN2wHJB/om2OPjxOKiLg
-         H2GVIKI6QcXO1kSVr8cX4mwItmWHwSxfaC7EwYoy7AEuf8l7v4IC056hZ7Q/L/xBMk7K
-         F0bpGz1pwlwevU9xBnnL+uJMvG1V596t6QLOzrDSti76oj6955wuJhmGbiQ/aVVoZfra
-         RJe1qHr+zmr9DCNb0AOq7vovMiw40cea1AnzMpv0rg/S74b+wi6/KFS7f8lIGKujgiqO
-         ZTTHTdEdNcr42SjusrsHXaPlhSScz0vtASPmJkF0PDnKc9GUr2Jt8nd0oJXzTJIx4Bv+
-         /rBg==
-X-Gm-Message-State: AOAM532QTkTWcitoi+ZTOnwgNuiSLYt4K2Gxc0XIYYxqQ/hsGHYd75Oq
-        rD7bzV45CeiXEYS62VDIi+esZY1cyooMcpybdmrrku/AfROB
-X-Google-Smtp-Source: ABdhPJw3Tm43QgiqUvFQKRBYj1WOXo2yPNyh9gnBzpc4EcPlPdfH4671tIhDdJpTzLcWR0pDV42EoW7gLio1
-X-Received: by 2002:a50:acc5:: with SMTP id x63mr39384755edc.99.1594137528113;
-        Tue, 07 Jul 2020 08:58:48 -0700 (PDT)
-Received: from mta1.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id dn20sm5596ejc.142.2020.07.07.08.58.48
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 07 Jul 2020 08:58:48 -0700 (PDT)
-X-Relaying-Domain: flowbird.group
-Received: from [172.16.14.70] (port=54136 helo=PC12445-BES.dynamic.besancon.parkeon.com)
-        by mta1.parkeon.com with esmtp (Exim 4.71)
-        (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1jspzb-00069x-Mi; Tue, 07 Jul 2020 17:58:47 +0200
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: imx: Fix occasional screen corruption on modeset.
-Date:   Tue,  7 Jul 2020 17:56:59 +0200
-Message-Id: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
-X-Mailer: git-send-email 1.9.1
+        Tue, 7 Jul 2020 11:59:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27064 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728110AbgGGP7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:59:07 -0400
+IronPort-SDR: zIx8mHwfzqnmQ8rGu5OH4gtH/3rAEqEwh8w7IAxA0US8qmc/ndCsYX2ifffv6/6/N+VL2d8gyc
+ bwDE5xwx+YAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135098093"
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="135098093"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 08:59:05 -0700
+IronPort-SDR: ecctsqBL/nqF2OifVsSD3NjgWHb+/wN5P/fusefWSqr4U/+mBUlM7rxByfUJhOdF32llWvorQm
+ SfiCuUYNT1Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
+   d="scan'208";a="305709944"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Jul 2020 08:59:04 -0700
+From:   richard.gong@linux.intel.com
+To:     mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinguyen@kernel.org, richard.gong@linux.intel.com,
+        richard.gong@intel.com
+Subject: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
+Date:   Tue,  7 Jul 2020 11:14:07 -0500
+Message-Id: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When performing a modeset the atomic core calls
-ipu_crtc_atomic_disable() which switches off the DC and DI.
+From: Richard Gong <richard.gong@intel.com>
 
-When we immediately restart as in the modeset case this sometimes
-leads to corruption at the bottom of the screen looking like a mirror
-image of the top.
+When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
+reconfiguration process stops and the user can't perform a new FPGA
+reconfiguration properly.
 
-The exact reason isn't understood but it seems timing related.
+Set FPGA complete task to be not interruptible so that the user can
+properly perform FPGA reconfiguration after CTRL+C event.
 
-This was observed on i.MX6DL on a system that does 2 mode
-transitions on boot (fbcon->android boot animation->android homescreen)
-then no more during normal operation resulting in corruption
-about once every 10 boots that lasted for variable durations
-from a few seconds to several hours.
-
-Dumping the buffers confirmed that they were correct in memory,
-just the display was wrong.
-
-For tests the problem was reproduced systematically by forcing
-a full modeset every 10 frames even if when not required.
-
-Leaving the DC and DI on if the CRTC is staying on fixes this.
-
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+Signed-off-by: Richard Gong <richard.gong@intel.com>
 ---
- drivers/gpu/drm/imx/ipuv3-crtc.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/fpga/stratix10-soc.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-index 63c0284..9137b64 100644
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -84,8 +84,15 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
- 	struct ipu_crtc *ipu_crtc = to_ipu_crtc(crtc);
- 	struct ipu_soc *ipu = dev_get_drvdata(ipu_crtc->dev->parent);
+diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+index 44b7c56..657a70c 100644
+--- a/drivers/fpga/stratix10-soc.c
++++ b/drivers/fpga/stratix10-soc.c
+@@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+ 	if (ret < 0)
+ 		goto init_done;
  
--	ipu_dc_disable_channel(ipu_crtc->dc);
--	ipu_di_disable(ipu_crtc->di);
-+	/*
-+	 * If we are just doing a modeset don't disable dc/di as that
-+	 * sometimes leads to corruption at the bottom of the screen
-+	 */
-+	if (!crtc->state->active) {
-+		ipu_dc_disable_channel(ipu_crtc->dc);
-+		ipu_di_disable(ipu_crtc->di);
-+	}
-+
- 	/*
- 	 * Planes must be disabled before DC clock is removed, as otherwise the
- 	 * attached IDMACs will be left in undefined state, possibly hanging
+-	ret = wait_for_completion_interruptible_timeout(
++	ret = wait_for_completion_timeout(
+ 		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+ 	if (!ret) {
+ 		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+ 		ret = -ETIMEDOUT;
+ 		goto init_done;
+ 	}
+-	if (ret < 0) {
+-		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+-		goto init_done;
+-	}
+ 
+ 	ret = 0;
+ 	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+@@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+ 		 */
+ 		wait_status = 1; /* not timed out */
+ 		if (!priv->status)
+-			wait_status = wait_for_completion_interruptible_timeout(
++			wait_status = wait_for_completion_timeout(
+ 				&priv->status_return_completion,
+ 				S10_BUFFER_TIMEOUT);
+ 
+@@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+ 			ret = -ETIMEDOUT;
+ 			break;
+ 		}
+-		if (wait_status < 0) {
+-			ret = wait_status;
+-			dev_err(dev,
+-				"error (%d) waiting for svc layer buffers\n",
+-				ret);
+-			break;
+-		}
+ 	}
+ 
+ 	if (!s10_free_buffers(mgr))
+@@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+ 		if (ret < 0)
+ 			break;
+ 
+-		ret = wait_for_completion_interruptible_timeout(
++		ret = wait_for_completion_timeout(
+ 			&priv->status_return_completion, timeout);
+ 		if (!ret) {
+ 			dev_err(dev,
+@@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+ 			ret = -ETIMEDOUT;
+ 			break;
+ 		}
+-		if (ret < 0) {
+-			dev_err(dev,
+-				"error (%d) waiting for RECONFIG_COMPLETED\n",
+-				ret);
+-			break;
+-		}
+ 		/* Not error or timeout, so ret is # of jiffies until timeout */
+ 		timeout = ret;
+ 		ret = 0;
 -- 
-1.9.1
+2.7.4
 
