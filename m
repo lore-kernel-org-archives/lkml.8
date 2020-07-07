@@ -2,51 +2,53 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69092C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F4020773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609DC2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135027;
-	bh=PsNR15jicgNTtR5rZ/Yn4vYqsdSUwsq5zF9gBWOM4wc=;
+	s=default; t=1594135033;
+	bh=TFcdCfvYJ7iy0Bl2IrPcojqeLuEsw+SucB4ANliI+PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8RXQgP0hm3eyBHDxIlD+pXMXeUidb+ERoBxZUawVdhrxTc5E0RuaWL3RNNN5tAeo
-	 YiRMdWxEG0Lq7H4rSJgl+3Fa6MT9BHIlzNJDw9VvS6nnG6EMuGrebSHJvcbYvGz/mu
-	 Qoc3MqWTxaBRTQweevMMCgI75o5BFApCp7NZ/ItQ=
+	b=K1oA7VU84GRrDku6UDfbLvuW1rF3mZJBFzvPV8yK0EaIpgf8A9QPhb0pCesmcb8bn
+	 2Ljz14ELa24T3azAPnFIqwLlgMM4MOpCa4B+sj+7voaO+Gbhz1EdGwCsz2I96HSU3R
+	 R/wUDscsafLB3+Npf3wITnAEvO8F8PrZonjelwFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGGPRG (ORCPT
+        id S1729180AbgGGPRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56656 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgGGPRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:17:02 -0400
+        id S1728335AbgGGPRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:17:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA13C207C4;
-        Tue,  7 Jul 2020 15:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D762078A;
+        Tue,  7 Jul 2020 15:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135022;
-        bh=PsNR15jicgNTtR5rZ/Yn4vYqsdSUwsq5zF9gBWOM4wc=;
+        s=default; t=1594135029;
+        bh=TFcdCfvYJ7iy0Bl2IrPcojqeLuEsw+SucB4ANliI+PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imAkXyhDW42jdBkGZv0xegivW4ETqciYSofqSKD5JiriOJu/k2SE9CqbQA+octy64
-         92X5+ICk0xVqWrGe2Hjpr9JdJAjR2uWKmoyvctECfU1FzFaG7nDBgFG9vVbnMQMO4P
-         v8qG0oerW9vy8Ur/vKE5MYWpobFUwMTfW+DaMpH0=
+        b=tNnQzCPcfqEgMyLEfmIwgWoFmxp6kQ28J+a7PKSQJocSHmp7Wr6SZUCnYwMFJJ6k9
+         b8t0mAy5sRux0W9hliwCmesl1uwbI3M3QKY8tVW/IL/iBpEjYt2pwPx2ipAOuR0Ir8
+         kSHHIWYgXRuehzMqFlw+RFznRTP7BcLvBEUqSmtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 4.14 24/27] MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
-Date:   Tue,  7 Jul 2020 17:15:51 +0200
-Message-Id: <20200707145750.098473606@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 17/27] virtio-blk: free vblk-vqs in error path of virtblk_probe()
+Date:   Tue,  7 Jul 2020 17:15:44 +0200
+Message-Id: <20200707145749.774950267@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -59,68 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Hou Tao <houtao1@huawei.com>
 
-commit fcec538ef8cca0ad0b84432235dccd9059c8e6f8 upstream.
+[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
 
-This resolves the hazard between the mtc0 in the change_c0_status() and
-the mfc0 in configure_exception_vector(). Without resolving this hazard
-configure_exception_vector() could read an old value and would restore
-this old value again. This would revert the changes change_c0_status()
-did. I checked this by printing out the read_c0_status() at the end of
-per_cpu_trap_init() and the ST0_MX is not set without this patch.
+Else there will be memory leak if alloc_disk() fails.
 
-The hazard is documented in the MIPS Architecture Reference Manual Vol.
-III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
-6.03 table 8.1 which includes:
-
-   Producer | Consumer | Hazard
-  ----------|----------|----------------------------
-   mtc0     | mfc0     | any coprocessor 0 register
-
-I saw this hazard on an Atheros AR9344 rev 2 SoC with a MIPS 74Kc CPU.
-There the change_c0_status() function would activate the DSPen by
-setting ST0_MX in the c0_status register. This was reverted and then the
-system got a DSP exception when the DSP registers were saved in
-save_dsp() in the first process switch. The crash looks like this:
-
-[    0.089999] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.097796] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-[    0.107070] Kernel panic - not syncing: Unexpected DSP exception
-[    0.113470] Rebooting in 1 seconds..
-
-We saw this problem in OpenWrt only on the MIPS 74Kc based Atheros SoCs,
-not on the 24Kc based SoCs. We only saw it with kernel 5.4 not with
-kernel 4.19, in addition we had to use GCC 8.4 or 9.X, with GCC 8.3 it
-did not happen.
-
-In the kernel I bisected this problem to commit 9012d011660e ("compiler:
-allow all arches to enable CONFIG_OPTIMIZE_INLINING"), but when this was
-reverted it also happened after commit 172dcd935c34b ("MIPS: Always
-allocate exception vector for MIPSr2+").
-
-Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
-does similar changes to a different file. I am not sure if there are
-more places affected by this problem.
-
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/traps.c |    1 +
+ drivers/block/virtio_blk.c | 1 +
  1 file changed, 1 insertion(+)
 
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -2135,6 +2135,7 @@ static void configure_status(void)
- 
- 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
- 			 status_set);
-+	back_to_back_c0_hazard();
- }
- 
- unsigned int hwrena;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 0e18eed62c575..2f15e38fb3f8c 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -879,6 +879,7 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 	put_disk(vblk->disk);
+ out_free_vq:
+ 	vdev->config->del_vqs(vdev);
++	kfree(vblk->vqs);
+ out_free_vblk:
+ 	kfree(vblk);
+ out_free_index:
+-- 
+2.25.1
+
 
 
