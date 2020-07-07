@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68195C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6074AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3C120708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4008B20702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGGLMP (ORCPT
+        id S1728265AbgGGLMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:12:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728169AbgGGLMJ (ORCPT
+        Tue, 7 Jul 2020 07:12:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46348 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727962AbgGGLMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:12:09 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067B2qUv056292;
-        Tue, 7 Jul 2020 07:12:06 -0400
+        Tue, 7 Jul 2020 07:12:07 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067B1aN6159350;
+        Tue, 7 Jul 2020 07:12:02 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3249rce3dd-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffdweur-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:12:06 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067B4ZAe062109;
-        Tue, 7 Jul 2020 07:12:05 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3249rce3ct-1
+        Tue, 07 Jul 2020 07:12:02 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067B1iFC160156;
+        Tue, 7 Jul 2020 07:12:01 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 324ffdweuc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 07:12:05 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067B0iic018990;
-        Tue, 7 Jul 2020 11:12:04 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03wdc.us.ibm.com with ESMTP id 322hd8f8ae-1
+        Tue, 07 Jul 2020 07:12:01 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067B0HGh032108;
+        Tue, 7 Jul 2020 11:12:00 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 324qfur48q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 11:12:04 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067BC3Va42140088
+        Tue, 07 Jul 2020 11:12:00 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067BC0Jv50659838
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 11:12:03 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A0A9AC05F;
-        Tue,  7 Jul 2020 11:12:03 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3806BAC060;
-        Tue,  7 Jul 2020 11:12:03 +0000 (GMT)
+        Tue, 7 Jul 2020 11:12:00 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BAF0B2065;
+        Tue,  7 Jul 2020 11:12:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D007EB205F;
+        Tue,  7 Jul 2020 11:11:59 +0000 (GMT)
 Received: from sofia.ibm.com (unknown [9.85.70.202])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 11:12:03 +0000 (GMT)
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jul 2020 11:11:59 +0000 (GMT)
 Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id A34E02E48CE; Tue,  7 Jul 2020 16:41:54 +0530 (IST)
+        id 509982E48B9; Tue,  7 Jul 2020 16:41:54 +0530 (IST)
 From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 To:     Nicholas Piggin <npiggin@gmail.com>,
         Anton Blanchard <anton@ozlabs.org>,
@@ -66,21 +66,20 @@ To:     Nicholas Piggin <npiggin@gmail.com>,
 Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org,
         "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH 5/5] cpuidle-pseries: Block Extended CEDE(1) which adds no additional value.
-Date:   Tue,  7 Jul 2020 16:41:39 +0530
-Message-Id: <1594120299-31389-6-git-send-email-ego@linux.vnet.ibm.com>
+Subject: [PATCH 1/5] cpuidle-pseries: Set the latency-hint before entering CEDE
+Date:   Tue,  7 Jul 2020 16:41:35 +0530
+Message-Id: <1594120299-31389-2-git-send-email-ego@linux.vnet.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
 References: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_07:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
- cotscore=-2147483648 clxscore=1015 phishscore=0 suspectscore=0
- adultscore=0 mlxlogscore=845 mlxscore=0 malwarescore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007070085
+ definitions=2020-07-07_06:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ impostorscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0
+ adultscore=0 mlxlogscore=776 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007070081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -88,99 +87,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-The Extended CEDE state with latency-hint = 1 is only different from
-normal CEDE (with latency-hint = 0) in that a CPU in Extended CEDE(1)
-does not wakeup on timer events. Both CEDE and Extended CEDE(1) map to
-the same hardware idle state. Since we already get SMT folding from
-the normal CEDE, the Extended CEDE(1) doesn't provide any additional
-value. This patch blocks Extended CEDE(1).
+As per the PAPR, each H_CEDE call is associated with a latency-hint to
+be passed in the VPA field "cede_latency_hint". The CEDE states that
+we were implicitly entering so far is CEDE with latency-hint = 0.
+
+This patch explicitly sets the latency hint corresponding to the CEDE
+state that we are currently entering. While at it, we save the
+previous hint, to be restored once we wakeup from CEDE. This will be
+required in the future when we expose extended-cede states through the
+cpuidle framework, where each of them will have a different
+cede-latency hint.
 
 Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 ---
- drivers/cpuidle/cpuidle-pseries.c | 57 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 3 deletions(-)
+ drivers/cpuidle/cpuidle-pseries.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-index 6f893cd..be0b8b2 100644
+index 4a37252..39d4bb6 100644
 --- a/drivers/cpuidle/cpuidle-pseries.c
 +++ b/drivers/cpuidle/cpuidle-pseries.c
-@@ -350,6 +350,43 @@ static int pseries_cpuidle_driver_init(void)
- 	return 0;
+@@ -105,19 +105,27 @@ static void check_and_cede_processor(void)
+ 	}
  }
  
-+#define XCEDE1_HINT	1
-+#define ERR_NO_VALUE_ADD	(-1)
-+#define ERR_NO_EE_WAKEUP	(-2)
++#define NR_CEDE_STATES		1  /* CEDE with latency-hint 0 */
++#define NR_DEDICATED_STATES	(NR_CEDE_STATES + 1) /* Includes snooze */
 +
-+/*
-+ * Returns 0 if the Extende CEDE state with @hint is not blocked in
-+ * cpuidle framework.
-+ *
-+ * Returns ERR_NO_EE_WAKEUP if the Extended CEDE state is blocked due
-+ * to not being responsive to external interrupts.
-+ *
-+ * Returns ERR_NO_VALUE_ADD if the Extended CEDE state does not provide
-+ * added value addition over the normal CEDE.
-+ */
-+static int cpuidle_xcede_blocked(u8 hint, u64 latency_us, u8 responsive_to_irqs)
-+{
-+
-+	/*
-+	 * We will only allow extended CEDE states that are responsive
-+	 * to irqs do not require an H_PROD to be woken up.
-+	 */
-+	if (!responsive_to_irqs)
-+		return ERR_NO_EE_WAKEUP;
-+
-+	/*
-+	 * We already obtain SMT folding benefits from CEDE (which is
-+	 * CEDE with hint 0). Furthermore, CEDE is also responsive to
-+	 * timer-events, while XCEDE1 requires an external
-+	 * interrupt/H_PROD to be woken up. Hence, block XCEDE1 since
-+	 * it adds no further value.
-+	 */
-+	if (hint == XCEDE1_HINT)
-+		return ERR_NO_VALUE_ADD;
-+
-+	return 0;
-+}
-+
- static int add_pseries_idle_states(void)
++u8 cede_latency_hint[NR_DEDICATED_STATES];
+ static int dedicated_cede_loop(struct cpuidle_device *dev,
+ 				struct cpuidle_driver *drv,
+ 				int index)
  {
- 	int nr_states = 2; /* By default we have snooze, CEDE */
-@@ -365,15 +402,29 @@ static int add_pseries_idle_states(void)
- 		char name[CPUIDLE_NAME_LEN];
- 		unsigned int latency_hint = xcede_records[i].latency_hint;
- 		u64 residency_us;
-+		int rc;
-+
-+		if (latency_us < min_latency_us)
-+			min_latency_us = latency_us;
-+
-+		rc = cpuidle_xcede_blocked(latency_hint, latency_us,
-+					   xcede_records[i].responsive_to_irqs);
++	u8 old_latency_hint;
  
--		if (!xcede_records[i].responsive_to_irqs) {
-+		if (rc) {
-+			switch (rc) {
-+			case ERR_NO_VALUE_ADD:
-+				pr_info("cpuidle : Skipping XCEDE%d. No additional value-add\n",
-+					latency_hint);
-+				break;
-+			case ERR_NO_EE_WAKEUP:
- 			pr_info("cpuidle : Skipping XCEDE%d. Not responsive to IRQs\n",
- 				latency_hint);
-+			break;
-+			}
-+
- 			continue;
- 		}
+ 	pseries_idle_prolog();
+ 	get_lppaca()->donate_dedicated_cpu = 1;
++	old_latency_hint = get_lppaca()->cede_latency_hint;
++	get_lppaca()->cede_latency_hint = cede_latency_hint[index];
  
--		if (latency_us < min_latency_us)
--			min_latency_us = latency_us;
- 		snprintf(name, CPUIDLE_NAME_LEN, "XCEDE%d", latency_hint);
+ 	HMT_medium();
+ 	check_and_cede_processor();
  
- 		/*
+ 	local_irq_disable();
+ 	get_lppaca()->donate_dedicated_cpu = 0;
++	get_lppaca()->cede_latency_hint = old_latency_hint;
+ 
+ 	pseries_idle_epilog();
+ 
+@@ -149,7 +157,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
+ /*
+  * States for dedicated partition case.
+  */
+-static struct cpuidle_state dedicated_states[] = {
++static struct cpuidle_state dedicated_states[NR_DEDICATED_STATES] = {
+ 	{ /* Snooze */
+ 		.name = "snooze",
+ 		.desc = "snooze",
 -- 
 1.9.4
 
