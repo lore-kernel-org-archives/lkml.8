@@ -2,53 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E46742078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67A220786
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134643;
-	bh=PYh1fCQG7WWfJwewoYwDkRwfFV62qVto3c/0VQwHKQc=;
+	s=default; t=1594134644;
+	bh=cxJiWOM42gPyU4doFVuWlDU6KkXL+OmhT3JzMljynJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoXE0ul2kgQNkHG/WvutNb4xrYVSHxOKrY10ms2aIzvlgD/2X63H6XC7qFCoUCeAF
-	 hhtBOfTZg4UMBLkATeBnaKJxESz7GsBkOmdWyl6ABNN7FE686x5bnAsggnyEX5mA9b
-	 xYeoNNM62K877yQA7gO1SdN89ugnN4lDRX0f9XwA=
+	b=rFUlKXy67dG+4BSha4K3sbLoXZF5TgJ6eCfco0iZUi5m4tEKMK2PPIh5pM6dFRM17
+	 FL3BcFymlf/hI9Xi6mKy5uUAFZ/Ao/9J8JtLirLVVgmM/FqpmhRTik597i7K41PcR9
+	 o4xBdcCGjYkfvGbas+pxgIitS7kfLxqzgbPVu+lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgGGPKi (ORCPT
+        id S1728466AbgGGPKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgGGPKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:10:35 -0400
+        id S1728392AbgGGPKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:10:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B782920663;
-        Tue,  7 Jul 2020 15:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8735D20773;
+        Tue,  7 Jul 2020 15:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134635;
-        bh=PYh1fCQG7WWfJwewoYwDkRwfFV62qVto3c/0VQwHKQc=;
+        s=default; t=1594134640;
+        bh=cxJiWOM42gPyU4doFVuWlDU6KkXL+OmhT3JzMljynJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Su6f7jq7fZDMtzdkxDp8n8XD7N974asHei64Y2TXk3nDZJ8xiPyAHk9923MV92d2U
-         udhK+qPcNtVy6qaFbnF3v+KNwHWrWMzGf+7aL/qv7IvFtggwVcqKd/mdgnFK4m8OfW
-         vyzLzSh6I3CLugGzyzbKt5bxpDq//wiLzkDXwDbs=
+        b=KxaDbjFfgZqkgvZrL9Q5DHYXPJvee+kbbMocRXRfc94jfRSQHFa6hEmii1E0xvsph
+         3b1YOv7Se/A9djKOH+pPvuG/GMd1UKqqQ7tZVrEvAPWp9jRFBzN7pQWW95e7Zy9qvS
+         xiY4YOVHHxXqmkq7ZH+d+BFOGU/urpr4dTjlL0/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/19] virtio-blk: free vblk-vqs in error path of virtblk_probe()
-Date:   Tue,  7 Jul 2020 17:10:15 +0200
-Message-Id: <20200707145748.120342745@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Tsoy <alexander@tsoy.me>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        Hans de Goede <jwrdegoede@fedoraproject.org>
+Subject: [PATCH 4.4 14/19] Revert "ALSA: usb-audio: Improve frames size computation"
+Date:   Tue,  7 Jul 2020 17:10:17 +0200
+Message-Id: <20200707145748.216607526@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
 References: <20200707145747.493710555@linuxfoundation.org>
@@ -61,36 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
+This reverts commit 02c56650f3c118d3752122996d96173d26bb13aa which is
+commit f0bd62b64016508938df9babe47f65c2c727d25c upstream.
 
-Else there will be memory leak if alloc_disk() fails.
+It causes a number of reported issues and a fix for it has not hit
+Linus's tree yet.  Revert this to resolve those problems.
 
-Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Alexander Tsoy <alexander@tsoy.me>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Hans de Goede <jwrdegoede@fedoraproject.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/virtio_blk.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/card.h     |    4 ----
+ sound/usb/endpoint.c |   43 +++++--------------------------------------
+ sound/usb/endpoint.h |    1 -
+ sound/usb/pcm.c      |    2 --
+ 4 files changed, 5 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 1e5cd39d0cc2f..bdc3efacd0d25 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -757,6 +757,7 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	put_disk(vblk->disk);
- out_free_vq:
- 	vdev->config->del_vqs(vdev);
-+	kfree(vblk->vqs);
- out_free_vblk:
- 	kfree(vblk);
- out_free_index:
--- 
-2.25.1
-
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -80,10 +80,6 @@ struct snd_usb_endpoint {
+ 	dma_addr_t sync_dma;		/* DMA address of syncbuf */
+ 
+ 	unsigned int pipe;		/* the data i/o pipe */
+-	unsigned int framesize[2];	/* small/large frame sizes in samples */
+-	unsigned int sample_rem;	/* remainder from division fs/fps */
+-	unsigned int sample_accum;	/* sample accumulator */
+-	unsigned int fps;		/* frames per second */
+ 	unsigned int freqn;		/* nominal sampling rate in fs/fps in Q16.16 format */
+ 	unsigned int freqm;		/* momentary sampling rate in fs/fps in Q16.16 format */
+ 	int	   freqshift;		/* how much to shift the feedback value to get Q16.16 */
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -137,12 +137,12 @@ int snd_usb_endpoint_implicit_feedback_s
+ 
+ /*
+  * For streaming based on information derived from sync endpoints,
+- * prepare_outbound_urb_sizes() will call slave_next_packet_size() to
++ * prepare_outbound_urb_sizes() will call next_packet_size() to
+  * determine the number of samples to be sent in the next packet.
+  *
+- * For implicit feedback, slave_next_packet_size() is unused.
++ * For implicit feedback, next_packet_size() is unused.
+  */
+-int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep)
++int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+ {
+ 	unsigned long flags;
+ 	int ret;
+@@ -159,29 +159,6 @@ int snd_usb_endpoint_slave_next_packet_s
+ 	return ret;
+ }
+ 
+-/*
+- * For adaptive and synchronous endpoints, prepare_outbound_urb_sizes()
+- * will call next_packet_size() to determine the number of samples to be
+- * sent in the next packet.
+- */
+-int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+-{
+-	int ret;
+-
+-	if (ep->fill_max)
+-		return ep->maxframesize;
+-
+-	ep->sample_accum += ep->sample_rem;
+-	if (ep->sample_accum >= ep->fps) {
+-		ep->sample_accum -= ep->fps;
+-		ret = ep->framesize[1];
+-	} else {
+-		ret = ep->framesize[0];
+-	}
+-
+-	return ret;
+-}
+-
+ static void retire_outbound_urb(struct snd_usb_endpoint *ep,
+ 				struct snd_urb_ctx *urb_ctx)
+ {
+@@ -226,8 +203,6 @@ static void prepare_silent_urb(struct sn
+ 
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
+-		else if (ep->sync_master)
+-			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
+@@ -904,17 +879,10 @@ int snd_usb_endpoint_set_params(struct s
+ 	ep->maxpacksize = fmt->maxpacksize;
+ 	ep->fill_max = !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX);
+ 
+-	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL) {
++	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL)
+ 		ep->freqn = get_usb_full_speed_rate(rate);
+-		ep->fps = 1000;
+-	} else {
++	else
+ 		ep->freqn = get_usb_high_speed_rate(rate);
+-		ep->fps = 8000;
+-	}
+-
+-	ep->sample_rem = rate % ep->fps;
+-	ep->framesize[0] = rate / ep->fps;
+-	ep->framesize[1] = (rate + (ep->fps - 1)) / ep->fps;
+ 
+ 	/* calculate the frequency in 16.16 format */
+ 	ep->freqm = ep->freqn;
+@@ -973,7 +941,6 @@ int snd_usb_endpoint_start(struct snd_us
+ 	ep->active_mask = 0;
+ 	ep->unlink_mask = 0;
+ 	ep->phase = 0;
+-	ep->sample_accum = 0;
+ 
+ 	snd_usb_endpoint_start_quirk(ep);
+ 
+--- a/sound/usb/endpoint.h
++++ b/sound/usb/endpoint.h
+@@ -27,7 +27,6 @@ void snd_usb_endpoint_release(struct snd
+ void snd_usb_endpoint_free(struct snd_usb_endpoint *ep);
+ 
+ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
+-int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep);
+ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep);
+ 
+ void snd_usb_handle_sync_urb(struct snd_usb_endpoint *ep,
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1473,8 +1473,6 @@ static void prepare_playback_urb(struct
+ 	for (i = 0; i < ctx->packets; i++) {
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
+-		else if (ep->sync_master)
+-			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
 
 
