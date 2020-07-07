@@ -2,269 +2,61 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F08C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289362064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054AA2064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgGGWkn (ORCPT
+        id S1729235AbgGGWle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:40:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24631 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgGGWkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:40:43 -0400
-IronPort-SDR: o0g3Yrc8I3c/J2OmyP+wCj4ZawLcTADah6yFbU8CoR9c4m3AlNRRBcul2Wpr10KogFIjCHOE/p
- /iwRRNbMKz7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212650854"
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="212650854"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 15:40:42 -0700
-IronPort-SDR: I0bH2pXwvn8WJCYfhPyyMFQqvk4chhDK7gQIoYQAgrM+/pf7EG4xvSsK0CPQCypMk3G0A2n/68
- f+TXuxmrYuSA==
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="457275235"
-Received: from ideak-desk.fi.intel.com ([10.237.72.183])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 15:40:40 -0700
-Date:   Wed, 8 Jul 2020 01:40:36 +0300
-From:   Imre Deak <imre.deak@intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lee Shawn C <shawn.c.lee@intel.com>
-Subject: Re: [PATCH 1/2] drm/probe_helper: Add
- drm_connector_helper_funcs.mode_valid_ctx
-Message-ID: <20200707224036.GA22747@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
-References: <20200526182313.4005-1-lyude@redhat.com>
- <20200526182313.4005-2-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526182313.4005-2-lyude@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 7 Jul 2020 18:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgGGWle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:41:34 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31228C061755;
+        Tue,  7 Jul 2020 15:41:34 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0F15F120F19EC;
+        Tue,  7 Jul 2020 15:41:33 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 15:41:32 -0700 (PDT)
+Message-Id: <20200707.154132.1774969731747787399.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, kuba@kernel.org, mkubecek@suse.cz,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/3] net: ethtool: Untangle PHYLIB
+ dependency
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200706042758.168819-1-f.fainelli@gmail.com>
+References: <20200706042758.168819-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 15:41:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delay, the review as I promised:
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Sun,  5 Jul 2020 21:27:55 -0700
 
-On Tue, May 26, 2020 at 02:23:09PM -0400, Lyude Paul wrote:
-> This is just an atomic version of mode_valid, which is intended to be
-> used for situations where a driver might need to check the atomic state
-> of objects other than the connector itself. One such example is with
-> MST, where the maximum possible bandwidth on a connector can change
-> dynamically irregardless of the display configuration.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Lee Shawn C <shawn.c.lee@intel.com>
-> Tested-by: Lee Shawn C <shawn.c.lee@intel.com>
-> ---
->  drivers/gpu/drm/drm_crtc_helper_internal.h |  6 +-
->  drivers/gpu/drm/drm_probe_helper.c         | 65 ++++++++++++++--------
->  include/drm/drm_modeset_helper_vtables.h   | 41 ++++++++++++++
->  3 files changed, 88 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_crtc_helper_internal.h b/drivers/gpu/drm/drm_crtc_helper_internal.h
-> index f0a66ef47e5ad..ca767cba6094d 100644
-> --- a/drivers/gpu/drm/drm_crtc_helper_internal.h
-> +++ b/drivers/gpu/drm/drm_crtc_helper_internal.h
-> @@ -73,8 +73,10 @@ enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc *crtc,
->  					 const struct drm_display_mode *mode);
->  enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
->  					    const struct drm_display_mode *mode);
-> -enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
-> -					      struct drm_display_mode *mode);
-> +enum drm_mode_status
-> +drm_connector_mode_valid(struct drm_connector *connector,
-> +			 struct drm_display_mode *mode,
-> +			 struct drm_modeset_acquire_ctx *ctx);
->  
->  struct drm_encoder *
->  drm_connector_get_single_encoder(struct drm_connector *connector);
-> diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-> index 466dfbba82564..3132784736841 100644
-> --- a/drivers/gpu/drm/drm_probe_helper.c
-> +++ b/drivers/gpu/drm/drm_probe_helper.c
-> @@ -86,16 +86,17 @@ drm_mode_validate_flag(const struct drm_display_mode *mode,
->  	return MODE_OK;
->  }
->  
-> -static enum drm_mode_status
-> +static int
->  drm_mode_validate_pipeline(struct drm_display_mode *mode,
-> -			    struct drm_connector *connector)
-> +			   struct drm_connector *connector,
-> +			   struct drm_modeset_acquire_ctx *ctx)
->  {
->  	struct drm_device *dev = connector->dev;
-> -	enum drm_mode_status ret = MODE_OK;
->  	struct drm_encoder *encoder;
-> +	int ret = MODE_OK;
->  
->  	/* Step 1: Validate against connector */
-> -	ret = drm_connector_mode_valid(connector, mode);
-> +	ret = drm_connector_mode_valid(connector, mode, ctx);
->  	if (ret != MODE_OK)
->  		return ret;
->  
-> @@ -196,16 +197,23 @@ enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
->  	return encoder_funcs->mode_valid(encoder, mode);
->  }
->  
-> -enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
-> -					      struct drm_display_mode *mode)
-> +int
-> +drm_connector_mode_valid(struct drm_connector *connector,
-> +			 struct drm_display_mode *mode,
-> +			 struct drm_modeset_acquire_ctx *ctx)
->  {
->  	const struct drm_connector_helper_funcs *connector_funcs =
->  		connector->helper_private;
->  
-> -	if (!connector_funcs || !connector_funcs->mode_valid)
-> +	if (!connector_funcs)
->  		return MODE_OK;
->  
-> -	return connector_funcs->mode_valid(connector, mode);
-> +	if (connector_funcs->mode_valid_ctx)
-> +		return connector_funcs->mode_valid_ctx(connector, mode, ctx);
-> +	else if (connector_funcs->mode_valid)
-> +		return connector_funcs->mode_valid(connector, mode);
-> +	else
-> +		return MODE_OK;
->  }
->  
->  #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
-> @@ -375,8 +383,9 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
->   *      (if specified)
->   *    - drm_mode_validate_flag() checks the modes against basic connector
->   *      capabilities (interlace_allowed,doublescan_allowed,stereo_allowed)
-> - *    - the optional &drm_connector_helper_funcs.mode_valid helper can perform
-> - *      driver and/or sink specific checks
-> + *    - the optional &drm_connector_helper_funcs.mode_valid or
-> + *      &drm_connector_helper_funcs.mode_valid_ctx helpers can perform driver
-> + *      and/or sink specific checks
->   *    - the optional &drm_crtc_helper_funcs.mode_valid,
->   *      &drm_bridge_funcs.mode_valid and &drm_encoder_helper_funcs.mode_valid
->   *      helpers can perform driver and/or source specific checks which are also
-> @@ -507,22 +516,34 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
->  		mode_flags |= DRM_MODE_FLAG_3D_MASK;
->  
->  	list_for_each_entry(mode, &connector->modes, head) {
-> -		if (mode->status == MODE_OK)
-> -			mode->status = drm_mode_validate_driver(dev, mode);
-> +		if (mode->status != MODE_OK)
-> +			continue;
-> +
-> +		mode->status = drm_mode_validate_driver(dev, mode);
-> +		if (mode->status != MODE_OK)
-> +			continue;
->  
-> -		if (mode->status == MODE_OK)
-> -			mode->status = drm_mode_validate_size(mode, maxX, maxY);
-> +		mode->status = drm_mode_validate_size(mode, maxX, maxY);
-> +		if (mode->status != MODE_OK)
-> +			continue;
->  
-> -		if (mode->status == MODE_OK)
-> -			mode->status = drm_mode_validate_flag(mode, mode_flags);
-> +		mode->status = drm_mode_validate_flag(mode, mode_flags);
-> +		if (mode->status != MODE_OK)
-> +			continue;
->  
-> -		if (mode->status == MODE_OK)
-> -			mode->status = drm_mode_validate_pipeline(mode,
-> -								  connector);
-> +		ret = drm_mode_validate_pipeline(mode, connector, &ctx);
-> +		if (ret == -EDEADLK) {
-> +			drm_modeset_backoff(&ctx);
-> +			goto retry;
-> +		} else if (WARN_ON_ONCE(ret < 0)) {
-> +			mode->status = MODE_BAD;
-> +		} else {
-> +			mode->status = ret;
-> +		}
->  
-> -		if (mode->status == MODE_OK)
-> -			mode->status = drm_mode_validate_ycbcr420(mode,
-> -								  connector);
-> +		if (mode->status != MODE_OK)
-> +			continue;
-> +		mode->status = drm_mode_validate_ycbcr420(mode, connector);
->  	}
->  
->  prune:
-> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-> index 421a30f084631..8f020c3424b2b 100644
-> --- a/include/drm/drm_modeset_helper_vtables.h
-> +++ b/include/drm/drm_modeset_helper_vtables.h
-> @@ -968,6 +968,47 @@ struct drm_connector_helper_funcs {
->  	 */
->  	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
->  					   struct drm_display_mode *mode);
-> +
-> +	/**
-> +	 * @mode_valid_ctx:
-> +	 *
-> +	 * Callback to validate a mode for a connector, irrespective of the
-> +	 * specific display configuration.
-> +	 *
-> +	 * This callback is used by the probe helpers to filter the mode list
-> +	 * (which is usually derived from the EDID data block from the sink).
-> +	 * See e.g. drm_helper_probe_single_connector_modes().
-> +	 *
-> +	 * This function is optional, and is the atomic version of
-> +	 * &drm_connector_funcs.mode_valid.
-> +	 *
-> +	 * To allow for accessing the atomic state of modesetting objects, the
-> +	 * helper libraries always call this with ctx set to a valid context,
-> +	 * and &drm_mode_config.connection_mutex will always be locked with
-> +	 * the ctx parameter set to @ctx. This allows for taking additional
-> +	 * locks as required.
-> +	 *
-> +	 * Even though additional locks may be acquired, this callback is
-> +	 * still expected not to take any constraints into account which would
-> +	 * be influenced by the currently set display state - such constraints
-> +	 * should be handled in the driver's atomic check. For example, if a
-> +	 * connector shares display bandwidth with other connectors then it
-> +	 * would be ok to validate a mode uses against the maximum possible
-                                     ^mode against?
+> This patch series untangles the ethtool netlink dependency with PHYLIB
+> which exists because the cable test feature calls directly into PHY
+> library functions. The approach taken here is to introduce
+> ethtool_phy_ops function pointers which can be dynamically registered
+> when PHYLIB loads.
 
-Reviewed-by: Imre Deak <imre.deak@intel.com>
-
-> +	 * bandwidth of the connector. But it wouldn't be ok to take the
-> +	 * current bandwidth usage of other connectors into account, as this
-> +	 * would change depending on the display state.
-> +	 *
-> +	 * Returns:
-> +	 *
-> +	 * Either &drm_mode_status.MODE_OK, one of the failure reasons in
-> +	 * &enum drm_mode_status, or -EDEADLK if a deadlock would have
-> +	 * occurred and we need to backoff.
-> +	 *
-> +	 */
-> +	int (*mode_valid_ctx)(struct drm_connector *connector,
-> +			      struct drm_display_mode *mode,
-> +			      struct drm_modeset_acquire_ctx *ctx);
-> +
->  	/**
->  	 * @best_encoder:
->  	 *
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Series applied, thanks for doing this work Florian.
