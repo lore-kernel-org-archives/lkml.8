@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0752206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3F7206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:15:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHVP5Ibh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDNNtFX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgGGIOt (ORCPT
+        id S1728386AbgGGIP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50742 "EHLO
+        Tue, 7 Jul 2020 04:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGIOs (ORCPT
+        with ESMTP id S1725825AbgGGIP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:14:48 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F34C061755;
-        Tue,  7 Jul 2020 01:14:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d10so16449043pls.5;
-        Tue, 07 Jul 2020 01:14:48 -0700 (PDT)
+        Tue, 7 Jul 2020 04:15:56 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2410C061755;
+        Tue,  7 Jul 2020 01:15:55 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id q17so2025206pls.9;
+        Tue, 07 Jul 2020 01:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0C0wcrNGaktDjuYvX7l+qcJPA3Xk9qtFSM1cNlh6Gqw=;
-        b=MHVP5Ibh0HfJIKkVSxQSJqtyapKe7AmeX3KHnvylIYdLmkrFdK+BdWnLHlnA6xX0wO
-         olcwcJxLWCZ+G9sSZ5n51OjJUvX0MT95bQeWi7ndH0ZDenKaIga4mFRwOlzEsTw4Q5BV
-         K6TkhASmK++WOvxa+gmi30ZuR6c2c8hFGS3xC4waI/0c3l5eWwM4018gJmHsqOrBOx0y
-         9GdKpXvIVj6hcXvGYMZf9t4mtO634XsEsFayB4WviwtpQkX6mVG6O5AGzl8+E+8CHMMu
-         TapQFobQonVp/XH4BjQgbvmdajDWK/QnmWsWIqdlk8kpwiNg8/HnvVXubdySHmpCFLYE
-         kCIw==
+        bh=z3vMc4LhkvM4yfF4xOZK+pZlrg4hJ502eupJwkHg5Rc=;
+        b=UDNNtFX98E/fTkhc2Afidv/EWSDyn0nLvUNCO+zlbg7W/OPb3QFkEvmJoc8RfbEqBV
+         WB4zew9K5k+ZQ5i1MswUGRUfnZZlA/LixXwTR3M6rt23zQOHmJJ6i6qshGsSIdLVosOD
+         rAZdeCGxliI6pRLJa2DB8QjoFAiUNGzDvYTUt6JcSBQkOnE2MplH0606l8RMZmHIVqTc
+         mWEj1oUSoCR5JGyWun+ji8Ju9+9xr9SNo0g9+Rs8Aa0Q4FgLS+mDL+Q0hZWCoEGnnUTD
+         u8X15EdjjZ5vM5oaPFbOsyoJBGkeWKTC8Z1eSumozr+pRMpx8hqVznNSBOmVyrBzk/9Z
+         S0Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:subject:date:message-id
          :mime-version:content-transfer-encoding;
-        bh=0C0wcrNGaktDjuYvX7l+qcJPA3Xk9qtFSM1cNlh6Gqw=;
-        b=F++R2zlwwvz/6UJvOKX1jQTapJC8cbBlTomUup/WQT1peKtEDHW2LlxgBBfQ81f0dc
-         cImVKDcRMykArL7D5PdGjpKXz0H5jjkjdB2kzmw/Mzq41tFd8nAUie7ecEopFKpKvSlx
-         ktVUz0fxOQmy9Jrd+Ve3KTdqQayf6tbUWheY7i0dc6qGvu8CECx+KRHL/KA9gzZUGbjl
-         dSwgQFfBG8H7UyoNFmY1BUtx1jYEY1xG4oLoCnCjT6RIG2uzsylWBDtxYEnpoznO+sjc
-         Nxekh2yTEPLgPOWpipaYhjfnIp8jYgYP5/bFuJzK2JXxAkIp5fnPtzkauO4icKiuruqq
-         c2hg==
-X-Gm-Message-State: AOAM5339Ct/U+JOE7CZOqa53Lep7e9Fy5QFjHjjPitz2aQrdPW4NTziT
-        CfkO4RISOYVdPr4EueR4+nlxZ8985Xc=
-X-Google-Smtp-Source: ABdhPJzH5j0mGQivJNGvT6+qUs8TD2MzZMPQcNhcl+65cjsduM7sELqERvmAeUCCagK7ZJVhlZ9ytA==
-X-Received: by 2002:a17:90a:ad8e:: with SMTP id s14mr3331658pjq.36.1594109687736;
-        Tue, 07 Jul 2020 01:14:47 -0700 (PDT)
+        bh=z3vMc4LhkvM4yfF4xOZK+pZlrg4hJ502eupJwkHg5Rc=;
+        b=A41DzoHTGwJprmcOTHGCSvmBGL1n0cM2DcCVSLgNamgFJrpm/Y+MRv+X9s9H3YnEdP
+         XFmz4Nf4uLOaXbyd1H73e00LUc74SDjkKwUxwJ7qu7IW2Ob9Khp2myP1gE71dY1UGtPT
+         bDq+Heh+ucsPcb7uxUoRrZJVQPtTL8siBb7yamTzIoVo5B4rVikEpne+ymGg+7yprLyk
+         8XBR2myDmZtvHsz01JIYcOTWb9liS25lI0yTvVMFwhB+4iLh49ZZ2Q/HLqj1qxM2UIXg
+         TdQU+NJk+RxhSgJbmr6jG6UaxPD7y1BCcXN19vVcoDy1ZD9Cv8JsjsIphTmCZQX3KuLU
+         Zmtg==
+X-Gm-Message-State: AOAM533cQFUeavf9Db4i7sbcK+WGLkiUT/w7qsib28xtmlzXJCbWKnKb
+        9yc9dVgS1ZFKRqPTSVX8oN4=
+X-Google-Smtp-Source: ABdhPJxG1jalnbzXoi3kqMl/iSY7eOwvKfh1RA4pUNaLydQ9VUxO7IghTw6o/IsXk3VhlY59MFVmrw==
+X-Received: by 2002:a17:90a:2e85:: with SMTP id r5mr3198189pjd.232.1594109755410;
+        Tue, 07 Jul 2020 01:15:55 -0700 (PDT)
 Received: from localhost (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id n137sm21997748pfd.194.2020.07.07.01.14.46
+        by smtp.gmail.com with ESMTPSA id n15sm1780763pjf.12.2020.07.07.01.15.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 01:14:47 -0700 (PDT)
+        Tue, 07 Jul 2020 01:15:54 -0700 (PDT)
 From:   AceLan Kao <acelan.kao@canonical.com>
-To:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: usb: qmi_wwan: add support for Quectel EG95 LTE modem
-Date:   Tue,  7 Jul 2020 16:14:45 +0800
-Message-Id: <20200707081445.1064346-1-acelan.kao@canonical.com>
+Subject: [PATCH] USB: serial: option: add Quectel EG95 LTE modem
+Date:   Tue,  7 Jul 2020 16:15:53 +0800
+Message-Id: <20200707081553.1064456-1-acelan.kao@canonical.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -91,21 +90,30 @@ I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
 Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/option.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 31b1d4b959f6..07c42c0719f5 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1370,6 +1370,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E ++ */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
-+	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0195, 4)},	/* Quectel EG95 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
- 	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 254a8bbeea67..a12ad91a7e0b 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -245,6 +245,7 @@ static void option_instat_callback(struct urb *urb);
+ /* These Quectel products use Quectel's vendor ID */
+ #define QUECTEL_PRODUCT_EC21			0x0121
+ #define QUECTEL_PRODUCT_EC25			0x0125
++#define QUECTEL_PRODUCT_EG95			0x0195
+ #define QUECTEL_PRODUCT_BG96			0x0296
+ #define QUECTEL_PRODUCT_EP06			0x0306
+ #define QUECTEL_PRODUCT_EM12			0x0512
+@@ -1097,6 +1098,8 @@ static const struct usb_device_id option_ids[] = {
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
+ 	  .driver_info = RSVD(4) },
++	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
++	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0xff, 0xff),
 -- 
 2.25.1
 
