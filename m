@@ -2,132 +2,127 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B672065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278942065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pv2fPxp7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MobMyrjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgGGPtQ (ORCPT
+        id S1729015AbgGGPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
+        Tue, 7 Jul 2020 11:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728191AbgGGPtO (ORCPT
+        with ESMTP id S1728288AbgGGPtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 11:49:14 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D550C08C5E2
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5940CC061755
         for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:49:14 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d10so16906548pls.5
+Received: by mail-wr1-x441.google.com with SMTP id o11so45740861wrv.9
         for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e5vsrk7vEHY5/cQx0UlucywmyaBj8fW6BqF1VBBdS+A=;
-        b=Pv2fPxp7OIeEF3uKCol9thsCERjYulCcAkB8AUk4Gwl1bXaMqg3qeUpmuYbfoG9h9f
-         R5P3I1Ko6Ww0MIpmSFkLAAtMlFxfdZNVyLLOkErJST905aoYkJitnFGHHJ6iFlOuBYlK
-         CgPKunazaYPhxRQlwQCb+IDxN7kMA+6YmsRDU=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R/msZMHFZFhx7FtV1U4x6F/0CAVdjvMvgRT/NC78y40=;
+        b=MobMyrjR9AJycEk2mi5Sq3uQIiCVRztqdkLHqoXq0Xx+JZ8KAISUiDRjhN6Yn5A+22
+         ou+UdEg2G1508GrcMLY5tP0WR6yXgF/Lq1rO2kitGdj7AYtMvcA1bNIXOLyMqhBFvtqB
+         v0JWLpMJC9RF9i82bU6AnAS/QMK3zeBkaPqY7ZU9E64zNYFaCnQaeKapXxSZIZpre3dp
+         /gyo2768jJfR+LmEezi+LOQng8QSzxQrX2Qap40V9sfiOCe4fR80Ml/kxi8aF8NNT88Z
+         FdZdZKy++pzBg8IcMLZQnXm09IApuylDTWhDXD7+BCPQFDxa9uWVJdhTlXbcc0GHiQGQ
+         xIcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=e5vsrk7vEHY5/cQx0UlucywmyaBj8fW6BqF1VBBdS+A=;
-        b=S0ejZxIfjAS8UT0XaDuYuICx7hz00mxi62kJq+FTCqADDstxwBzYQ53rA0/H8VOjY5
-         LVbnytL53+ig4pebq0If9tdXDy/1uogXxAr4nFRD8cSafkq6M1VKyOdmblz7Ni7aVglw
-         OJjin/WBH6+HDZUZBFpB6RKY+tklLxyeIeh9DP+AlTIIyUsg/NAF3lTLO37qIVIO421f
-         SaEWGzrGQQOk2zTn4W6ivU9qwBSS4HclKRTag6Io1f7fZ2ZiUYoqPWekGMLOmWF11YSO
-         WoSHFXhmAbAdCQQ/9XN8pk3hTPUJJBUaL5qPpfzbC2X6jEkw3yKP8C3+Xrou4CJRzFnk
-         0ChA==
-X-Gm-Message-State: AOAM533quBkZZQm2H5Z/CWfZ0xpxSzDahV+g9SyrPrCvaFoyPc3tJMrF
-        ut7+Dpw+hI7XPeQqgfxM6hL5ww==
-X-Google-Smtp-Source: ABdhPJzLS/0a5ZIkTRnBJsarvJBHCyL5ykuVlth8AWwaID0VPkNo2x7wmAhQzmyPS9TNjQsw6QlLFA==
-X-Received: by 2002:a17:90a:cd01:: with SMTP id d1mr5071431pju.212.1594136953766;
-        Tue, 07 Jul 2020 08:49:13 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
-        by smtp.gmail.com with ESMTPSA id t5sm1360194pgl.38.2020.07.07.08.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 08:49:13 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        bh=R/msZMHFZFhx7FtV1U4x6F/0CAVdjvMvgRT/NC78y40=;
+        b=dgxpgD6TpChSuprQeaFemy4FfY5RK8gBftu5WU3ml+herSwEGalMhJwqD0d5Hq41U7
+         pShCD/FYCIqmWDJUotQbnJqMeb5ihXi3XvRRKi1tV1PrC4mx/ramdiOP3MGKz06KuZPv
+         uLJYHIAEDXkpdKMj3w8H2pnU1NIJZJeZmub4VeYre7kQo2ycqdmGeqBYCCFjphEhu8ne
+         GAXB0tyvg8gPyIHw8nlmPlRNiRopQ3csRxBMfF7JdeI3IxH/HqnmRNh73HJVYumMtM//
+         uwlvLUOMLi6PqXHvWIHziqcsFImChJBARcwHJfwZLulwVoEr70wjbruQ4eV7dvMWQHGb
+         V7Hg==
+X-Gm-Message-State: AOAM532uwek587EzKhE+DD57DjGE9iOc7IoIDLOHYbKzctfPYS+u3SWh
+        +1JS4azYoF4SQ751ZIlaswx06w==
+X-Google-Smtp-Source: ABdhPJzB2lzxg02HvDyZykAOfBzZtzV6VPnCvusD+uRECHuBlKqXlNPf6GpDDuc2YVRPuhXxaJQK6g==
+X-Received: by 2002:a5d:4992:: with SMTP id r18mr51805915wrq.323.1594136952944;
+        Tue, 07 Jul 2020 08:49:12 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b4ff:29eb:619e:318? ([2a01:e34:ed2f:f020:b4ff:29eb:619e:318])
+        by smtp.googlemail.com with ESMTPSA id i67sm1721005wma.12.2020.07.07.08.49.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 08:49:12 -0700 (PDT)
+Subject: Re: [PATCH] thermal: netlink: Fix compilation error when CONFIG_NET=n
+To:     Randy Dunlap <rdunlap@infradead.org>, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        rafael.j.wysocki@intel.com, swboyd@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH v3 0/1] power: Emit change uevent when updating sysfs
-Date:   Tue,  7 Jul 2020 08:49:04 -0700
-Message-Id: <20200707154905.2763616-1-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+References: <20200707090159.1018-1-daniel.lezcano@linaro.org>
+ <66b4c589-48e0-8975-b3b1-79168e3ea5e4@infradead.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <04a6904d-9220-9045-6816-12cf84781f4d@linaro.org>
+Date:   Tue, 7 Jul 2020 17:49:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <66b4c589-48e0-8975-b3b1-79168e3ea5e4@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/07/2020 17:47, Randy Dunlap wrote:
+> On 7/7/20 2:01 AM, Daniel Lezcano wrote:
+>> When the network is not configured, the netlink are disabled on all
+>> the system. The thermal framework assumed the netlink are always
+>> opt-in.
+>>
+>> Fix this by adding a Kconfig option for the netlink notification,
+>> defaulting to yes and depending on CONFIG_NET.
+>>
+>> As the change implies multiple stubs and in order to not pollute the
+>> internal thermal header, the thermal_nelink.h has been added and
+>> included in the thermal_core.h, so this one regain some kind of
+>> clarity.
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>  drivers/thermal/Kconfig           | 10 ++++
+>>  drivers/thermal/Makefile          |  5 +-
+>>  drivers/thermal/thermal_core.h    | 20 +------
+>>  drivers/thermal/thermal_netlink.h | 98 +++++++++++++++++++++++++++++++
+>>  4 files changed, 114 insertions(+), 19 deletions(-)
+>>  create mode 100644 drivers/thermal/thermal_netlink.h
+>>
+> 
+> 
+> Hm, now I get this:
+> 
+> ../drivers/thermal/thermal_helpers.c: In function ‘thermal_cdev_set_cur_state’:
+> ../drivers/thermal/thermal_helpers.c:182:2: error: implicit declaration of function ‘thermal_notify_cdev_update’; did you mean ‘thermal_notify_cdev_delete’? [-Werror=implicit-function-declaration]
+>   thermal_notify_cdev_update(cdev->id, target);
+> 
+> 
+> or should that call be to thermal_notify_cdev_state_update()?
 
-Hi linux-pm,
+Ah right, the patch applies on top of the v4 which is not yet in
+linux-next, I'm waiting for the kernelci loop result.
 
-ChromeOS has a udev rule to chown the `power/wakeup` attribute so that
-the power manager can modify it during runtime.
-
-(https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/platform2/power_manager/udev/99-powerd-permissions.rules)
-
-In our automated tests, we found that the `power/wakeup` attributes
-weren't being chown-ed for some boards. On investigating, I found that
-when the drivers probe and call device_set_wakeup_capable, no uevent was
-being emitted for the newly added power/wakeup attribute. This was
-manifesting at boot on some boards (Marvell SDIO bluetooth and Broadcom
-Serial bluetooth drivers) or during usb disconnects during resume
-(Realtek btusb driver with reset resume quirk).
-
-It seems reasonable to me that changes to the attributes of a device
-should cause a changed uevent so I have added that here.
-
-Here's an example of the kernel events after toggling the authorized
-bit of /sys/bus/usb/devices/1-3/
-
-$ echo 0 > /sys/bus/usb/devices/1-3/authorized
-KERNEL[27.357994] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0/rfkill1 (rfkill)
-KERNEL[27.358049] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0 (bluetooth)
-KERNEL[27.358458] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0 (usb)
-KERNEL[27.358486] remove   /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.1 (usb)
-KERNEL[27.358529] change   /devices/pci0000:00/0000:00:15.0/usb1/1-3 (usb)
-
-$ echo 1 > /sys/bus/usb/devices/1-3/authorized
-KERNEL[36.415749] change   /devices/pci0000:00/0000:00:15.0/usb1/1-3 (usb)
-KERNEL[36.415798] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0 (usb)
-KERNEL[36.417414] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0 (bluetooth)
-KERNEL[36.417447] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.0/bluetooth/hci0/rfkill2 (rfkill)
-KERNEL[36.417481] add      /devices/pci0000:00/0000:00:15.0/usb1/1-3/1-3:1.1 (usb)
-
-Thanks
-Abhishek
-
-Changes in v3:
-- Simplified error handling
-
-Changes in v2:
-- Add newline at end of bt_dev_err
-
-Abhishek Pandit-Subedi (1):
-  power: Emit changed uevent on wakeup_sysfs_add/remove
-
- drivers/base/power/sysfs.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
 -- 
-2.27.0.212.ge8ba1cc988-goog
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
