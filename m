@@ -2,120 +2,115 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7703EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44763C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDF720702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2256320738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gv+dojyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgGGFN0 (ORCPT
+        id S1728088AbgGGFO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:13:26 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53432 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbgGGFNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:13:23 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AF4CC200844;
-        Tue,  7 Jul 2020 07:13:21 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CDBD20084B;
-        Tue,  7 Jul 2020 07:13:12 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C35DE40305;
-        Tue,  7 Jul 2020 13:12:52 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        aisheng.dong@nxp.com, abel.vesa@nxp.com, peng.fan@nxp.com,
-        sfr@canb.auug.org.au, j.remmet@phytec.de,
-        georg.waibel@wiedemann-group.de, Georg.Waibel@wiedemann-group.com,
-        laurent.pinchart@ideasonboard.com, chen.fang@nxp.com,
-        fugang.duan@nxp.com, daniel.baluta@nxp.com, yuehaibing@huawei.com,
-        andrew.smirnov@gmail.com, horia.geanta@nxp.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V6 6/6] clk: imx6sl: Fix build warning reported by kernel test robot
-Date:   Tue,  7 Jul 2020 13:09:39 +0800
-Message-Id: <1594098579-25050-7-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594098579-25050-1-git-send-email-Anson.Huang@nxp.com>
-References: <1594098579-25050-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 7 Jul 2020 01:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgGGFO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 01:14:57 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6449DC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 22:14:57 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j20so2250601pfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 22:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VC1qC/chpLuPrnCtnXydy4WQQAWd7iJ2FZlZimJ5b6I=;
+        b=Gv+dojyI7QQfxRcDCRu4q8/4u57qSHg/i5SDWki0XXKBc1Py5nVmTLUtVcuZJ7KlyX
+         AZLx563OpopGbbMqB23Kln56ys2+XVKQUzE/ENalHLS05+08nhfGEbCcMrCjKDtw0V7l
+         qkg+0GKFNaVVnrpLHBidGE9EN3VE/fm8oBOpykwn/e1fU59Zr7oRNxWoLlYMuot/JKyI
+         3hiTggjRTXkbCAdF4kQ/P5DI90BFjq0CqHgafB0Nb7EDqR86xxQg+Jf7GX+cqA+USTk3
+         WImdsqv+VPPCBI+HTAAEfZsr/nAugjsUYl56q1b2uzcjIbDRlq74eireq2bXGezHT/np
+         Mh/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VC1qC/chpLuPrnCtnXydy4WQQAWd7iJ2FZlZimJ5b6I=;
+        b=HRU2rdhVNSr5sBdYfjo4o9Yqb4Ur2MO/9yJ0ugRIDMKpuQaGkwST/YQzvlFz9qMzt6
+         woako+3qITAJpixpZYxuV7AxsdgRif3h3+uzURm2QjbNVoAga1L7J2+wE2+gUOg0hiE3
+         uNjnP9y1oBJmQep/bz8yGW4EQeeYGTEuMBdRyW+ShYy5e0VbEzFXAJBG4i1Yq578a6W1
+         WF8K0JP1szQT5DFfTQdtvpENNuWMEWWeJ758Z72UbmdtFNrw/FWxVuM8OSBIg7ByyKUw
+         f2oC3NT5jx/ON3NVHUASjfIA/pigIrPmsuul4FpvYn1MC8Qne5KmcjEiqshWgvF4xag6
+         6Zow==
+X-Gm-Message-State: AOAM533e5DU0pRt73GeLUlGZcJOuYx+cqqVOnAQdyBQRGAJI0JIHCrGH
+        K10vZef9Zi7ZyFsqhuJ7iZ3OLw==
+X-Google-Smtp-Source: ABdhPJwBny1F67hBfUTcgvlntD95n8W52l3BO+5OX0uP6ElEwFRCGpsB+Nbv9jE3lXqwkCkrImEHNA==
+X-Received: by 2002:a63:515a:: with SMTP id r26mr46032087pgl.204.1594098895865;
+        Mon, 06 Jul 2020 22:14:55 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m1sm1097166pjy.0.2020.07.06.22.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 22:14:55 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 22:14:52 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     agross@kernel.org, linus.walleij@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaprak@codeaurora.org,
+        sricharan@codeaurora.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Subject: Re: [PATCH] pinctrl: qcom: ipq8074: route gpio interrupts to APPS
+Message-ID: <20200707051452.GO11847@yoga>
+References: <1594097915-26725-1-git-send-email-kathirav@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594097915-26725-1-git-send-email-kathirav@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use readl_relaxed() instead of __raw_readl(), and use BIT(x)
-instead of (1 << X) to fix below build warning reported by kernel
-test robot:
+On Mon 06 Jul 21:58 PDT 2020, Kathiravan T wrote:
 
-drivers/clk/imx/clk-imx6sl.c:149:49: warning: Shifting signed 32-bit
-value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
-     while (!(__raw_readl(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
+> set target proc as APPS to route the gpio interrupts to APPS
+> 
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reported-by: kernel test robot <lkp@intel.com>
----
-New patch.
----
- drivers/clk/imx/clk-imx6sl.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+This says "first Rajkumar certified the patch's origin, then you picked
+it up and certified its origin". As such I would expect that Rajkumar is
+the author of the patch.
 
-diff --git a/drivers/clk/imx/clk-imx6sl.c b/drivers/clk/imx/clk-imx6sl.c
-index 0f647d1..e69dba1 100644
---- a/drivers/clk/imx/clk-imx6sl.c
-+++ b/drivers/clk/imx/clk-imx6sl.c
-@@ -3,6 +3,7 @@
-  * Copyright 2013-2014 Freescale Semiconductor, Inc.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/clkdev.h>
- #include <linux/err.h>
-@@ -14,19 +15,19 @@
- #include "clk.h"
- 
- #define CCSR			0xc
--#define BM_CCSR_PLL1_SW_CLK_SEL	(1 << 2)
-+#define BM_CCSR_PLL1_SW_CLK_SEL	BIT(2)
- #define CACRR			0x10
- #define CDHIPR			0x48
--#define BM_CDHIPR_ARM_PODF_BUSY	(1 << 16)
-+#define BM_CDHIPR_ARM_PODF_BUSY	BIT(16)
- #define ARM_WAIT_DIV_396M	2
- #define ARM_WAIT_DIV_792M	4
- #define ARM_WAIT_DIV_996M	6
- 
- #define PLL_ARM			0x0
--#define BM_PLL_ARM_DIV_SELECT	(0x7f << 0)
--#define BM_PLL_ARM_POWERDOWN	(1 << 12)
--#define BM_PLL_ARM_ENABLE	(1 << 13)
--#define BM_PLL_ARM_LOCK		(1 << 31)
-+#define BM_PLL_ARM_DIV_SELECT	0x7f
-+#define BM_PLL_ARM_POWERDOWN	BIT(12)
-+#define BM_PLL_ARM_ENABLE	BIT(13)
-+#define BM_PLL_ARM_LOCK		BIT(31)
- #define PLL_ARM_DIV_792M	66
- 
- static const char *step_sels[]		= { "osc", "pll2_pfd2", };
-@@ -145,7 +146,7 @@ static void imx6sl_enable_pll_arm(bool enable)
- 		val |= BM_PLL_ARM_ENABLE;
- 		val &= ~BM_PLL_ARM_POWERDOWN;
- 		writel_relaxed(val, anatop_base + PLL_ARM);
--		while (!(__raw_readl(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
-+		while (!(readl_relaxed(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
- 			;
- 	} else {
- 		 writel_relaxed(saved_pll_arm, anatop_base + PLL_ARM);
--- 
-2.7.4
+If you both came up with the patch add a Co-developed-by: tag.
 
+Regards,
+Bjorn
+
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ipq8074.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> index 0edd41c..aec68b1 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> @@ -50,6 +50,7 @@
+>  		.intr_enable_bit = 0,		\
+>  		.intr_status_bit = 0,		\
+>  		.intr_target_bit = 5,		\
+> +		.intr_target_kpss_val = 3,	\
+>  		.intr_raw_status_bit = 4,	\
+>  		.intr_polarity_bit = 1,		\
+>  		.intr_detection_bit = 2,	\
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
