@@ -2,53 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE92C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E15C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B20220738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E265620773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134851;
-	bh=3mbvT9HzVHW218yxXDm/nZ4vmbiwkca2u22CcSJXKYc=;
+	s=default; t=1594134854;
+	bh=lYEr1dtF+6HbgexYBM0gBCUjUJD67Z+A66WNai15G1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNRSwZXDq2EuoLju2K79ohb3xzi4ZTIJfi3GTTMEm95cUyqjdk9CQI5AQQSw9ot1S
-	 wbqL52IFenQ2vAdRryQnqmDxLe6rA/z7u2sngc7kAPL3U6+ENn+N6kXQ+87xEvM9ld
-	 ov0s7q9BqJPYHsT3s2ec/VXzLT/wZH/VApgQ309s=
+	b=duwx0kqozFUb6NGeclcus3g17Y3KdaG2uTvEgdO+slCbFkH7/E8YkSmwCWcKPHJ3s
+	 flWkYSA2LKmZcNgEOI7mlRSRLI7oHa1dojIxppGnxMoU8h73lrBG3ul/bg6LZMh/XR
+	 V4lauWCU4xMrEURMt79v/FXs1OSGPu0mIBV5P0pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgGGPOJ (ORCPT
+        id S1728449AbgGGPON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53266 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgGGPOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:14:07 -0400
+        id S1728243AbgGGPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:14:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4923220663;
-        Tue,  7 Jul 2020 15:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A043820674;
+        Tue,  7 Jul 2020 15:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134846;
-        bh=3mbvT9HzVHW218yxXDm/nZ4vmbiwkca2u22CcSJXKYc=;
+        s=default; t=1594134849;
+        bh=lYEr1dtF+6HbgexYBM0gBCUjUJD67Z+A66WNai15G1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyXlJmmdnHkoGD2k3+kwrpvCft+kVaFniHbhBX22J1Sv1Nsb2OVw8DkR+wvUzaHVq
-         fRcN+OAaQw6WAUkBrvvL4tAQ1O3cy4I82xeGDhBnr8b97qxwFpukNaJWLS3cLmlSrp
-         VwUW6kKCRzRbjOYzZHPwcy3337u+llzhq+SVmyVg=
+        b=mtmnqYK36dggXbVHnBjVxsqrrAj8G77ulPXW9mMqIRISpytaAYYZB0QdlK6sx2wZ5
+         W8ZWnM5dzYSf5190SJCJMpgW6qJnqfqNyUQtPYst+yfJIglTgAhF/9H7XLbNI64tll
+         Wfld8FAVOjs6KVV8KhOC91bmS8rl/wX+CAYTEhNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/24] btrfs: cow_file_range() num_bytes and disk_num_bytes are same
-Date:   Tue,  7 Jul 2020 17:13:34 +0200
-Message-Id: <20200707145749.070771994@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Moyles <bmoyles@netflix.com>,
+        Mauricio Faria de Oliveira <mfo@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 11/24] crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+Date:   Tue,  7 Jul 2020 17:13:43 +0200
+Message-Id: <20200707145749.517115346@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
 References: <20200707145748.952502272@linuxfoundation.org>
@@ -61,86 +60,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <Anand.Jain@oracle.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 3752d22fcea160cc2493e34f5e0e41cdd7fdd921 ]
+commit 34c86f4c4a7be3b3e35aa48bd18299d4c756064d upstream.
 
-This patch deletes local variable disk_num_bytes as its value
-is same as num_bytes in the function cow_file_range().
+The locking in af_alg_release_parent is broken as the BH socket
+lock can only be taken if there is a code-path to handle the case
+where the lock is owned by process-context.  Instead of adding
+such handling, we can fix this by changing the ref counts to
+atomic_t.
 
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch also modifies the main refcnt to include both normal
+and nokey sockets.  This way we don't have to fudge the nokey
+ref count when a socket changes from nokey to normal.
+
+Credits go to Mauricio Faria de Oliveira who diagnosed this bug
+and sent a patch for it:
+
+https://lore.kernel.org/linux-crypto/20200605161657.535043-1-mfo@canonical.com/
+
+Reported-by: Brian Moyles <bmoyles@netflix.com>
+Reported-by: Mauricio Faria de Oliveira <mfo@canonical.com>
+Fixes: 37f96694cf73 ("crypto: af_alg - Use bh_lock_sock in...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/inode.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ crypto/af_alg.c         |   26 +++++++++++---------------
+ crypto/algif_aead.c     |    9 +++------
+ crypto/algif_hash.c     |    9 +++------
+ crypto/algif_skcipher.c |    9 +++------
+ include/crypto/if_alg.h |    4 ++--
+ 5 files changed, 22 insertions(+), 35 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index c425443c31fea..6d63050abe214 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -947,7 +947,6 @@ static noinline int cow_file_range(struct inode *inode,
- 	u64 alloc_hint = 0;
- 	u64 num_bytes;
- 	unsigned long ram_size;
--	u64 disk_num_bytes;
- 	u64 cur_alloc_size;
- 	u64 blocksize = root->sectorsize;
- 	struct btrfs_key ins;
-@@ -963,7 +962,6 @@ static noinline int cow_file_range(struct inode *inode,
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -130,21 +130,15 @@ EXPORT_SYMBOL_GPL(af_alg_release);
+ void af_alg_release_parent(struct sock *sk)
+ {
+ 	struct alg_sock *ask = alg_sk(sk);
+-	unsigned int nokey = ask->nokey_refcnt;
+-	bool last = nokey && !ask->refcnt;
++	unsigned int nokey = atomic_read(&ask->nokey_refcnt);
  
- 	num_bytes = ALIGN(end - start + 1, blocksize);
- 	num_bytes = max(blocksize,  num_bytes);
--	disk_num_bytes = num_bytes;
+ 	sk = ask->parent;
+ 	ask = alg_sk(sk);
  
- 	/* if this is a small write inside eof, kick off defrag */
- 	if (num_bytes < SZ_64K &&
-@@ -992,16 +990,15 @@ static noinline int cow_file_range(struct inode *inode,
- 		}
- 	}
+-	local_bh_disable();
+-	bh_lock_sock(sk);
+-	ask->nokey_refcnt -= nokey;
+-	if (!last)
+-		last = !--ask->refcnt;
+-	bh_unlock_sock(sk);
+-	local_bh_enable();
++	if (nokey)
++		atomic_dec(&ask->nokey_refcnt);
  
--	BUG_ON(disk_num_bytes >
--	       btrfs_super_total_bytes(root->fs_info->super_copy));
-+	BUG_ON(num_bytes > btrfs_super_total_bytes(root->fs_info->super_copy));
+-	if (last)
++	if (atomic_dec_and_test(&ask->refcnt))
+ 		sock_put(sk);
+ }
+ EXPORT_SYMBOL_GPL(af_alg_release_parent);
+@@ -189,7 +183,7 @@ static int alg_bind(struct socket *sock,
  
- 	alloc_hint = get_extent_allocation_hint(inode, start, num_bytes);
- 	btrfs_drop_extent_cache(inode, start, start + num_bytes - 1, 0);
+ 	err = -EBUSY;
+ 	lock_sock(sk);
+-	if (ask->refcnt | ask->nokey_refcnt)
++	if (atomic_read(&ask->refcnt))
+ 		goto unlock;
  
--	while (disk_num_bytes > 0) {
-+	while (num_bytes > 0) {
- 		unsigned long op;
+ 	swap(ask->type, type);
+@@ -238,7 +232,7 @@ static int alg_setsockopt(struct socket
+ 	int err = -EBUSY;
  
--		cur_alloc_size = disk_num_bytes;
-+		cur_alloc_size = num_bytes;
- 		ret = btrfs_reserve_extent(root, cur_alloc_size, cur_alloc_size,
- 					   root->sectorsize, 0, alloc_hint,
- 					   &ins, 1, 1);
-@@ -1058,7 +1055,7 @@ static noinline int cow_file_range(struct inode *inode,
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (atomic_read(&ask->refcnt) != atomic_read(&ask->nokey_refcnt))
+ 		goto unlock;
  
- 		btrfs_dec_block_group_reservations(root->fs_info, ins.objectid);
+ 	type = ask->type;
+@@ -305,12 +299,14 @@ int af_alg_accept(struct sock *sk, struc
  
--		if (disk_num_bytes < cur_alloc_size)
-+		if (num_bytes < cur_alloc_size)
- 			break;
+ 	sk2->sk_family = PF_ALG;
  
- 		/* we're not doing compressed IO, don't unlock the first
-@@ -1076,8 +1073,10 @@ static noinline int cow_file_range(struct inode *inode,
- 					     delalloc_end, locked_page,
- 					     EXTENT_LOCKED | EXTENT_DELALLOC,
- 					     op);
--		disk_num_bytes -= cur_alloc_size;
--		num_bytes -= cur_alloc_size;
-+		if (num_bytes < cur_alloc_size)
-+			num_bytes = 0;
-+		else
-+			num_bytes -= cur_alloc_size;
- 		alloc_hint = ins.objectid + ins.offset;
- 		start += cur_alloc_size;
- 	}
--- 
-2.25.1
-
+-	if (nokey || !ask->refcnt++)
++	if (atomic_inc_return_relaxed(&ask->refcnt) == 1)
+ 		sock_hold(sk);
+-	ask->nokey_refcnt += nokey;
++	if (nokey) {
++		atomic_inc(&ask->nokey_refcnt);
++		atomic_set(&alg_sk(sk2)->nokey_refcnt, 1);
++	}
+ 	alg_sk(sk2)->parent = sk;
+ 	alg_sk(sk2)->type = type;
+-	alg_sk(sk2)->nokey_refcnt = nokey;
+ 
+ 	newsock->ops = type->ops;
+ 	newsock->state = SS_CONNECTED;
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -747,7 +747,7 @@ static int aead_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -759,11 +759,8 @@ static int aead_check_key(struct socket
+ 	if (!tfm->has_key)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -308,7 +308,7 @@ static int hash_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -320,11 +320,8 @@ static int hash_check_key(struct socket
+ 	if (crypto_ahash_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -774,7 +774,7 @@ static int skcipher_check_key(struct soc
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -786,11 +786,8 @@ static int skcipher_check_key(struct soc
+ 	if (!tfm->has_key)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/include/crypto/if_alg.h
++++ b/include/crypto/if_alg.h
+@@ -30,8 +30,8 @@ struct alg_sock {
+ 
+ 	struct sock *parent;
+ 
+-	unsigned int refcnt;
+-	unsigned int nokey_refcnt;
++	atomic_t refcnt;
++	atomic_t nokey_refcnt;
+ 
+ 	const struct af_alg_type *type;
+ 	void *private;
 
 
