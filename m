@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB56DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A663C20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1792065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135109;
-	bh=9OmlKNqJ+4/nPvflKJ4ptgswRxfkQ/UEjIiDkbTSzw4=;
+	s=default; t=1594135113;
+	bh=CCHOmTsC/5jv7NIjZT6pK5bRiOEFNivl9c4TD5PpKVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Cowk3eMuXNFXpzGYUPdF/ovEzXe0AbijLhr2T/8SpkMcUFTHvw47vs92g1qogOT5
-	 +CNB9qmLnEctQyUXaxdRNWY/Y1+HbKxi9G/hNMlnh8oZFrPQFZypwtR5WPMA5AD8l4
-	 okB6yntvYI8wUjCPFCOleBm1r9Gir4/+3fFxDySU=
+	b=b+MFpdb12RgTddVssFfCOuY691t2am8CceoUkq6MAp38yrH2fIkD6naswLcjQKiGJ
+	 mB72VdMKO20JqRmTyb/gSUVnLKifaYje++CYmNLIpMyKVtYn3H7fhGYx4SIE/oS7yA
+	 7vg7MKYaLkCfdo/ay1JTZojj5G8EDNcCgfnoUrYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgGGPS1 (ORCPT
+        id S1729210AbgGGPSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgGGPSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:23 -0400
+        id S1729193AbgGGPSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B99520738;
-        Tue,  7 Jul 2020 15:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA4420738;
+        Tue,  7 Jul 2020 15:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135102;
-        bh=9OmlKNqJ+4/nPvflKJ4ptgswRxfkQ/UEjIiDkbTSzw4=;
+        s=default; t=1594135110;
+        bh=CCHOmTsC/5jv7NIjZT6pK5bRiOEFNivl9c4TD5PpKVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hv5ClVg4EGbPSvXvoftKjTzocf2+8WOH1tubpsyMTCpZ7T55sx3/Da7frh/Ejg4fP
-         Lb5Jq/1EtMcvq9lgh8TdezQcMfLOkMxCGwPxbrgQZ7+KEY2jlqYwshxme+eSkFxC9n
-         csYtOTLDbTiNxbatO2/kpC9fSS5wEJFPDAwOQRuA=
+        b=QuKjEjICG3nE/YlCAl9geD/j15zj9XYdWZPHszrsTj7A9Xs93491mH7gbDnOIb1Ud
+         O6aF+FvagXEyFdbIs2tX1cd08fKfPQ452rLy+zjFmBuB+9oXuW0Kmr/MN74XrVWMc0
+         4ky/1+iGpKg0ZU2XS29mFfVuSLpu36vptcBu3wkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 12/36] kgdb: Avoid suspicious RCU usage warning
-Date:   Tue,  7 Jul 2020 17:17:04 +0200
-Message-Id: <20200707145749.725908319@linuxfoundation.org>
+Subject: [PATCH 4.19 15/36] cxgb4: use unaligned conversion for fetching timestamp
+Date:   Tue,  7 Jul 2020 17:17:07 +0200
+Message-Id: <20200707145749.846982833@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -60,106 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
+[ Upstream commit 589b1c9c166dce120e27b32a83a78f55464a7ef9 ]
 
-At times when I'm using kgdb I see a splat on my console about
-suspicious RCU usage.  I managed to come up with a case that could
-reproduce this that looked like this:
+Use get_unaligned_be64() to fetch the timestamp needed for ns_to_ktime()
+conversion.
 
-  WARNING: suspicious RCU usage
-  5.7.0-rc4+ #609 Not tainted
-  -----------------------------
-  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
+Fixes following sparse warning:
+sge.c:3282:43: warning: cast to restricted __be64
 
-  other info that might help us debug this:
-
-    rcu_scheduler_active = 2, debug_locks = 1
-  3 locks held by swapper/0/1:
-   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-
-  stack backtrace:
-  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-  Hardware name: Google Cheza (rev3+) (DT)
-  Call trace:
-   dump_backtrace+0x0/0x1b8
-   show_stack+0x1c/0x24
-   dump_stack+0xd4/0x134
-   lockdep_rcu_suspicious+0xf0/0x100
-   find_task_by_pid_ns+0x5c/0x80
-   getthread+0x8c/0xb0
-   gdb_serial_stub+0x9d4/0xd04
-   kgdb_cpu_enter+0x284/0x7ac
-   kgdb_handle_exception+0x174/0x20c
-   kgdb_brk_fn+0x24/0x30
-   call_break_hook+0x6c/0x7c
-   brk_handler+0x20/0x5c
-   do_debug_exception+0x1c8/0x22c
-   el1_sync_handler+0x3c/0xe4
-   el1_sync+0x7c/0x100
-   rpmh_rsc_probe+0x38/0x420
-   platform_drv_probe+0x94/0xb4
-   really_probe+0x134/0x300
-   driver_probe_device+0x68/0x100
-   __device_attach_driver+0x90/0xa8
-   bus_for_each_drv+0x84/0xcc
-   __device_attach+0xb4/0x13c
-   device_initial_probe+0x18/0x20
-   bus_probe_device+0x38/0x98
-   device_add+0x38c/0x420
-
-If I understand properly we should just be able to blanket kgdb under
-one big RCU read lock and the problem should go away.  We'll add it to
-the beast-of-a-function known as kgdb_cpu_enter().
-
-With this I no longer get any splats and things seem to work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 6a1dc2613bb92..fbb1bfdd2fa53 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -489,6 +489,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		arch_kgdb_ops.disable_hw_break(regs);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 6807bc3a44fb7..3d4a765e9e61d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2742,7 +2742,7 @@ static noinline int t4_systim_to_hwstamp(struct adapter *adapter,
  
- acquirelock:
-+	rcu_read_lock();
- 	/*
- 	 * Interrupts will be restored by the 'trap return' code, except when
- 	 * single stepping.
-@@ -545,6 +546,7 @@ return_normal:
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -563,6 +565,7 @@ return_normal:
- 		raw_spin_unlock(&dbg_master_lock);
- 		dbg_touch_watchdogs();
- 		local_irq_restore(flags);
-+		rcu_read_unlock();
+ 	hwtstamps = skb_hwtstamps(skb);
+ 	memset(hwtstamps, 0, sizeof(*hwtstamps));
+-	hwtstamps->hwtstamp = ns_to_ktime(be64_to_cpu(*((u64 *)data)));
++	hwtstamps->hwtstamp = ns_to_ktime(get_unaligned_be64(data));
  
- 		goto acquirelock;
- 	}
-@@ -686,6 +689,7 @@ kgdb_restore:
- 	raw_spin_unlock(&dbg_master_lock);
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
-+	rcu_read_unlock();
- 
- 	return kgdb_info[cpu].ret_state;
+ 	return RX_PTP_PKT_SUC;
  }
 -- 
 2.25.1
