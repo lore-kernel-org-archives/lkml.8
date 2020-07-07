@@ -2,116 +2,193 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD81EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B33C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A99CA206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA8520672
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wld/FDLm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vu7obTCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgGGN3V (ORCPT
+        id S1727876AbgGGNan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:29:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46600 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727044AbgGGN3V (ORCPT
+        Tue, 7 Jul 2020 09:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGNam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594128560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=bpqV8ZGEfDigVwyXYOylVCt2pIZCMYHJKK1J8Iop6Ek=;
-        b=Wld/FDLmGkEFamjwzP97csEwuh729A/r4xzGZHHYHoZ9Ut1SLlQVbuqs5mIlZjxcf2ZL6E
-        A9SW79ltoIrZhJluFDY4x2eNuuTrLv88y0xQWrXE4jHzoS55JHax8Q3dTp54Qrs/rI3kjG
-        b3k5I9X7PAFL+rHok5QTEclricIfb18=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-6He1-iJlMpGx-i6_jZ8hWA-1; Tue, 07 Jul 2020 09:29:16 -0400
-X-MC-Unique: 6He1-iJlMpGx-i6_jZ8hWA-1
-Received: by mail-qk1-f198.google.com with SMTP id i3so22333270qkf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:29:16 -0700 (PDT)
+        Tue, 7 Jul 2020 09:30:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B220C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 06:30:42 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q7so36637328ljm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ytTXbUnpyEHr/PePdG9cbFm9zb2rnLmsICtm/Rte0aQ=;
+        b=vu7obTCv449t1/QABeXXxJQEQrPb1cGJ7lu2d97+PN05Ckxdy2ypFjDk9MEknqIegU
+         U57fxfbxMO2VNzRIXXQywb2JeakztpC62BtiCdVprMaReNIqQJcz1p+iTwqgsb9Cm3L7
+         xGcdQ9R6Zai5AO4F7Y6QhtO8O46Aayg6DtUnfixyIIG0o9FDTjEhHqFpPCI2ZfvLtRbX
+         D4u2xPayPxRcfHZSRQPffJxWfTPAXY34+xhXwkbbsx16ffyJM4KMklYSp4JLNgvkmyLs
+         4l/gXdPkNkgNkel5QnRe0lwCyUrNGPAxYxml/sRtfYcErqVT0VL3mNPf0fLTl3ESguVf
+         jmAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bpqV8ZGEfDigVwyXYOylVCt2pIZCMYHJKK1J8Iop6Ek=;
-        b=QRiiuKzZZd5+GFCMeM+KNPA5ctoFx4wdn8PfsiVk2BZSEFRID7T9p64kjQtHp5ZSaA
-         ZhYHejR7WruG0B6pCiWc0SsJhA0pEw1+qb6N+u1nCdA9sk+eEF/CIuHPhYX4FeAnWdJ4
-         BrZ2AQmypAWzH/FQ9UvPzefA1XReJdSWFh1+rAUuJs7n30qxUwCf37EKRzbHrd97uvDt
-         CBg/v/QGq5sw7CEAKfHGcg+fUrNleLws48RJyrsrfsai64LEHJ3hFu9odZXgvtoQ+AXt
-         GJXx9ZHBgt/eHOQaJEHk+8XLTdrRy2WBS3aVDy5weSIQVIQelIuz9UTS5rEhayYjHZc6
-         s1TA==
-X-Gm-Message-State: AOAM5306nk+mEOuYLEhq2Sk7RMvqiCg7JRiVq2Tz/nNxeodCHPJk/Se+
-        qeu8vc/nkXA8wzjFRooJQNVOj6nJNXOTWLbSPjJVTBqrNDTfpjqJMdItA7N2ySRdc5YqXlnGnCH
-        7xQD8BbGWPaSrSprOnHdMcf//
-X-Received: by 2002:ac8:6d24:: with SMTP id r4mr30664727qtu.43.1594128555741;
-        Tue, 07 Jul 2020 06:29:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy2O03gNYLOwDLCkyXntBfC1UDiAP5Lv/FxSrI+aXh9M2U49IWAz9aERDIYqKOl2j/VlTt3pg==
-X-Received: by 2002:ac8:6d24:: with SMTP id r4mr30664700qtu.43.1594128555462;
-        Tue, 07 Jul 2020 06:29:15 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id g41sm28492912qtb.37.2020.07.07.06.29.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 06:29:14 -0700 (PDT)
-From:   trix@redhat.com
-To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] btrfs : fix memory leak in add_block_entry
-Date:   Tue,  7 Jul 2020 06:29:08 -0700
-Message-Id: <20200707132908.10987-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ytTXbUnpyEHr/PePdG9cbFm9zb2rnLmsICtm/Rte0aQ=;
+        b=ImQ87cCPb2Rat3ARXr8HVTZXUBGnacSyIYRm63C4RI+mvhIKaT967RNqDy7NM80e3R
+         fF3lWqZaiaBHlmdMeBr6mTzLR9gXwRRHBPcBqeln/DGpJAH60CWCJIRLxnGMO8nc/1ZH
+         Nzw1aC5h+vXN38mwQgZXVWCKULiUfgfQxBmy4DZ3JUCBIYuKUt1QcduDlX0rbQM9lff1
+         aiNrhUoQHOOiS+OGlUvo4Y9AsP2/8wxmeOcLB9fg+UlcTXF5BVe7I1S9GrQZhjpQC9cE
+         V5q/K1iqjK9QSqSeB5+eDaYO3fKvx6xAiocpPx42t0/zUmjx8sDNEi0gG6Fd9w1bYBwK
+         smJw==
+X-Gm-Message-State: AOAM5321cj/o6OYWpjg/uy62uR45dI+C0yAloCIu9prpAaWbdNCJhZ/y
+        9SmnuudCUmJAGu4jmBCQ77wjBG0ZmzjxUOiBXlV1zwtg
+X-Google-Smtp-Source: ABdhPJyv/NY9PcCTyWJgQIuTmWnkweMm5rEOL2DL0iuA2rXDnLKtPfzuoCejsumtJyOo72W+9PrzTyk/D9exPOiA/PU=
+X-Received: by 2002:a2e:3c0e:: with SMTP id j14mr30747645lja.25.1594128640669;
+ Tue, 07 Jul 2020 06:30:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702144258.19326-1-vincent.guittot@linaro.org>
+ <jhjh7up99ss.mognet@arm.com> <CAKfTPtCxki8E=9DqistC32xZJ4ozufb9jUOR=ro34BNNNJtJiw@mail.gmail.com>
+In-Reply-To: <CAKfTPtCxki8E=9DqistC32xZJ4ozufb9jUOR=ro34BNNNJtJiw@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 7 Jul 2020 15:30:29 +0200
+Message-ID: <CAKfTPtA2RNc+XYMn0z_JyCgFswkUxHTS83uN_sJ8pjU7XPE4aA@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Thu, 2 Jul 2020 at 18:28, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>
+> On Thu, 2 Jul 2020 at 18:11, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+> >
+> >
+> > On 02/07/20 15:42, Vincent Guittot wrote:
+> > > task_h_load() can return 0 in some situations like running stress-ng
+> > > mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+> > > system. The load balance doesn't handle this correctly because
+> > > env->imbalance never decreases and it will stop pulling tasks only after
+> > > reaching loop_max, which can be equal to the number of running tasks of
+> > > the cfs. Make sure that imbalance will be decreased by at least 1.
+> > >
+> > > misfit task is the other feature that doesn't handle correctly such
+> > > situation although it's probably more difficult to face the problem
+> > > because of the smaller number of CPUs and running tasks on heterogenous
+> > > system.
+> > >
+> > > We can't simply ensure that task_h_load() returns at least one because it
+> > > would imply to handle underrun in other places.
+> >
+> > Nasty one, that...
+> >
+> > Random thought: isn't that the kind of thing we have scale_load() and
+> > scale_load_down() for? There's more uses of task_h_load() than I would like
+> > for this, but if we upscale its output (or introduce an upscaled variant),
+> > we could do something like:
+> >
+> > ---
+> > detach_tasks()
+> > {
+> >         long imbalance = env->imbalance;
+> >
+> >         if (env->migration_type == migrate_load)
+> >                 imbalance = scale_load(imbalance);
+> >
+> >         while (!list_empty(tasks)) {
+> >                 /* ... */
+> >                 switch (env->migration_type) {
+> >                 case migrate_load:
+> >                         load = task_h_load_upscaled(p);
+> >                         /* ... usual bits here ...*/
+> >                         lsub_positive(&env->imbalance, load);
+> >                         break;
+> >                         /* ... */
+> >                 }
+> >
+> >                 if (!scale_load_down(env->imbalance))
+> >                         break;
+> >         }
+> > }
+> > ---
+> >
+> > It's not perfect, and there's still the misfit situation to sort out -
+> > still, do you think this is something we could go towards?
+>
+> This will not work for 32bits system.
+>
+> For 64bits, I have to think a bit more if the upscale would fix all
+> cases and support propagation across a hierarchy. And in this case we
+> could also consider to make scale_load/scale_load_down a nop all the
+> time
 
-clang static analysis flags this error
+In addition that problem remains on 32bits, the problem can still
+happen after extending the scale so this current patch still makes
+sense.
 
-fs/btrfs/ref-verify.c:290:3: warning: Potential leak of memory pointed to by 're' [unix.Malloc]
-                kfree(be);
-                ^~~~~
-The problem is in this block of code
+Then if we want to reduce the cases where task_h_load returns 0, we
+should better make scale_load_down a nop otherwise we will have to
+maintain 2 values h_load and scale_h_load across the hierarchy
 
-		if (root_objectid) {
-			struct root_entry *exist_re;
-
-			exist_re = insert_root_entry(&exist->roots, re);
-			if (exist_re)
-				kfree(re);
-		}
-
-There is no 'else' block freeing when root_objectid == 0
-
-So add an 'else'
-
-Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- fs/btrfs/ref-verify.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/btrfs/ref-verify.c b/fs/btrfs/ref-verify.c
-index af92525dbb16..7f03dbe5b609 100644
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -286,6 +286,8 @@ static struct block_entry *add_block_entry(struct btrfs_fs_info *fs_info,
- 			exist_re = insert_root_entry(&exist->roots, re);
- 			if (exist_re)
- 				kfree(re);
-+		} else {
-+			kfree(re);
- 		}
- 		kfree(be);
- 		return exist;
--- 
-2.18.1
-
+>
+> >
+> > >
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > ---
+> > >  kernel/sched/fair.c | 18 +++++++++++++++++-
+> > >  1 file changed, 17 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 6fab1d17c575..62747c24aa9e 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -4049,7 +4049,13 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+> > >               return;
+> > >       }
+> > >
+> > > -     rq->misfit_task_load = task_h_load(p);
+> > > +     /*
+> > > +      * Make sure that misfit_task_load will not be null even if
+> > > +      * task_h_load() returns 0. misfit_task_load is only used to select
+> > > +      * rq with highest load so adding 1 will not modify the result
+> > > +      * of the comparison.
+> > > +      */
+> > > +     rq->misfit_task_load = task_h_load(p) + 1;
+> > >  }
+> > >
+> > >  #else /* CONFIG_SMP */
+> > > @@ -7664,6 +7670,16 @@ static int detach_tasks(struct lb_env *env)
+> > >                           env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+> > >                               goto next;
+> > >
+> > > +                     /*
+> > > +                      * Depending of the number of CPUs and tasks and the
+> > > +                      * cgroup hierarchy, task_h_load() can return a null
+> > > +                      * value. Make sure that env->imbalance decreases
+> > > +                      * otherwise detach_tasks() will stop only after
+> > > +                      * detaching up to loop_max tasks.
+> > > +                      */
+> > > +                     if (!load)
+> > > +                             load = 1;
+> > > +
+> > >                       env->imbalance -= load;
+> > >                       break;
