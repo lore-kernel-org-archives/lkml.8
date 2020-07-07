@@ -2,95 +2,131 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE67206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D79D20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cpTwCnUc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NvJeHCRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgGGDai (ORCPT
+        id S1728025AbgGGDdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:30:38 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31878 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726869AbgGGDai (ORCPT
+        Mon, 6 Jul 2020 23:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgGGDdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:30:38 -0400
-X-UUID: 37955c864bee42898962f30a4be32809-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xXfL3TuAtjkYQYWJISRyQ46uxdKVzkwh663c3FEQbZc=;
-        b=cpTwCnUcSL4cDbKP4noOOdf9lFJN9QiOHYVhjoJgp0t14ShDnO9W7lXeDBBsN+nW0NibxuIlcDRn3Msflf98BKtuG+PgMbvqL08+F3H+o6I0OKsXjyfgBcaD06yWW1rGDxy+WFnnmGw8r95cElrz9TbHHaoyNupaEnNQp8zs2ik=;
-X-UUID: 37955c864bee42898962f30a4be32809-20200707
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2059621264; Tue, 07 Jul 2020 11:30:34 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 11:30:30 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 11:30:31 +0800
-Message-ID: <1594092631.20820.4.camel@mtkswgap22>
+        Mon, 6 Jul 2020 23:33:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0867C061755;
+        Mon,  6 Jul 2020 20:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=vl6KXRcrocPNDZrmREX3V5N1vmHQHID4t2FGejDxCgc=; b=NvJeHCRqtpSeaNJDRjVwBsJm5Q
+        jySkdyljWzRDEmZVioCs/H6AEKMxaiOXD+fPzH713D2kdSGRL9GEwxQO4whMc8GQN4U9QcQpR8sgj
+        sRYmBbP/NwhbqzDKcT/GNcz90QAzYYy7OvOk7Ix8Tk0Lz3joEj8jtbMV0Z5x+Vl94YyWyKhI+qcZA
+        uL2quRo7w3XZ7uODPl93BGahhMyReZQvgGlKqWLsmaKM+KDS/o524yiXG4doBLxpb4gvc3KLKnHI6
+        z/iUTk0R9xoA7jlC8WNWcn2c1OxP29Ul8pltJoU45wTae4JIX6AqXvSLb7xObhCchW8WBdvMhVbGI
+        alL5m0zA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jseLt-0003lY-1z; Tue, 07 Jul 2020 03:33:02 +0000
 Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6779 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         lkml <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Tue, 7 Jul 2020 11:30:31 +0800
-In-Reply-To: <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 References: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
-         <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
-         <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+ <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
+ <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
+ <1594092631.20820.4.camel@mtkswgap22>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
+Date:   Mon, 6 Jul 2020 20:32:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 7C124BCAC688D580459B4BB001DA4F885A5228596ACC2F264F482A1C854A0E7C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1594092631.20820.4.camel@mtkswgap22>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUmFuZHksDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCk9uIE1vbiwgMjAyMC0wNy0w
-NiBhdCAwOToxMyAtMDcwMCwgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiBPbiA3LzYvMjAgMjoyOCBB
-TSwgTmVhbCBMaXUgd3JvdGU6DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVr
-L2RldmFwYy9LY29uZmlnIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcNCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmIwZjdkMGUNCj4gPiAt
-LS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25m
-aWcNCj4gPiBAQCAtMCwwICsxLDE3IEBADQo+ID4gK2NvbmZpZyBNVEtfREVWQVBDDQo+ID4gKwl0
-cmlzdGF0ZSAiTWVkaWF0ZWsgRGV2aWNlIEFQQyBTdXBwb3J0Ig0KPiA+ICsJaGVscA0KPiA+ICsJ
-ICBEZXZpY2UgQVBDIGlzIGEgSFcgSVAgY29udHJvbGxpbmcgaW50ZXJuYWwgZGV2aWNlIHNlY3Vy
-aXR5Lg0KPiANCj4gcHJlZmVyYWJseTogICAgICAgICAgICAgICBzL0hXL2hhcmR3YXJlLw0KPiAN
-Cj4gPiArCSAgTWVkaWFUZWsgYnVzIGZyYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5
-IHN1cHBvcnQgYW5kIGRhdGENCj4gDQo+IAkgICAgICAgICAgICAgICBmYWJyaWMNCj4gDQo+ID4g
-KwkgIHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1
-bmV4cGVjdGVkDQo+ID4gKwkgIGJ1cyBtYXN0ZXJzLg0KPiA+ICsJICBEZXZpY2UgQVBDIHByZXZl
-bnRzIG1hbGljaW91cyBhY2Nlc3MgdG8gaW50ZXJuYWwgZGV2aWNlcy4NCj4gPiArDQo+ID4gK2Nv
-bmZpZyBERVZBUENfTVQ2Nzc5DQo+ID4gKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2Nzc5IERldmlj
-ZSBBUEMgZHJpdmVyIg0KPiA+ICsJc2VsZWN0IE1US19ERVZBUEMNCj4gPiArCWhlbHANCj4gPiAr
-CSAgU2F5IHllcyBoZXJlIHRvIGVuYWJsZSBzdXBwb3J0IE1lZGlhdGVrIE1UNjc3OSBEZXZpY2Ug
-QVBDIGRyaXZlci4NCj4gDQo+IAkgICAgICAgICAgICAgICAgICAgICAgICAgc3VwcG9ydCBmb3Ig
-TWVkaWF0ZWsNCj4gDQo+ID4gKwkgIFRoaXMgZHJpdmVyIG1haW5seSB1c2VkIHRvIGhhbmRsZSB0
-aGUgdmlvbGF0aW9uIHdpdGggMSBERVZBUEMgQU8vUERzLg0KPiANCj4gCSAgVGhpcyBkcml2ZXIg
-aXMgbWFpbmx5IHVzZWQgICAgICAgICAgICAgICAgICAgICAgICAgICBeXl5eXl5eXl5eXl5eXl5e
-DQo+IA0KPiAJICAgICAgICAgICAgICAgICAgICAgIFdoYXQgaXMgdGhhdCBtZWFuaW5nbGVzcyBz
-dHJpbmcgb2YgY2hhcnM/IF5eXl5eXl4NCg0KSSBkaWQgbm90IHNlZSBhbnkgbWVhbmluZ2xlc3Mg
-c3RyaW5nIG9mIGNoYXJzIGZyb20gbXkgb3JpZ2luYWwgcGF0Y2guDQpJcyB0aGVyZSBzb21ldGhp
-bmcgd3Jvbmc/DQoNClsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC83LzYvMTY4DQoNCj4g
-DQo+ID4gKwkgIFRoZSB2aW9sYXRpb24gaW5mb3JtYXRpb24gYXJlIGxvZ2dlZCBmb3IgZnVydGhl
-ciBhbmFseXNpcyBvcg0KPiANCj4gCSAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcw0KPiAN
-Cj4gPiArCSAgY291bnRlcm1lYXN1cmVzLg0KPiANCj4gdGhhbmtzLg0KDQo=
+On 7/6/20 8:30 PM, Neal Liu wrote:
+> Hi Randy,
+> 
+> Thanks for your review.
+> 
+> On Mon, 2020-07-06 at 09:13 -0700, Randy Dunlap wrote:
+>> On 7/6/20 2:28 AM, Neal Liu wrote:
+>>> diff --git a/drivers/soc/mediatek/devapc/Kconfig b/drivers/soc/mediatek/devapc/Kconfig
+>>> new file mode 100644
+>>> index 0000000..b0f7d0e
+>>> --- /dev/null
+>>> +++ b/drivers/soc/mediatek/devapc/Kconfig
+>>> @@ -0,0 +1,17 @@
+>>> +config MTK_DEVAPC
+>>> +	tristate "Mediatek Device APC Support"
+>>> +	help
+>>> +	  Device APC is a HW IP controlling internal device security.
+>>
+>> preferably:               s/HW/hardware/
+>>
+>>> +	  MediaTek bus frabric provides TrustZone security support and data
+>>
+>> 	               fabric
+>>
+>>> +	  protection to prevent slaves from being accessed by unexpected
+>>> +	  bus masters.
+>>> +	  Device APC prevents malicious access to internal devices.
+>>> +
+>>> +config DEVAPC_MT6779
+>>> +	tristate "Mediatek MT6779 Device APC driver"
+>>> +	select MTK_DEVAPC
+>>> +	help
+>>> +	  Say yes here to enable support Mediatek MT6779 Device APC driver.
+>>
+>> 	                         support for Mediatek
+>>
+>>> +	  This driver mainly used to handle the violation with 1 DEVAPC AO/PDs.
+>>
+>> 	  This driver is mainly used                           ^^^^^^^^^^^^^^^^
+>>
+>> 	                      What is that meaningless string of chars? ^^^^^^^
+> 
+> I did not see any meaningless string of chars from my original patch.
+> Is there something wrong?
+
+To someone who is reading the Kconfig help text but is unfamiliar with this device,
+I would say that        "1 DEVAPC AO/PDs"                    is not helpful at all.
+
+> [1] https://lkml.org/lkml/2020/7/6/168
+> 
+>>
+>>> +	  The violation information are logged for further analysis or
+>>
+>> 	                            is
+>>
+>>> +	  countermeasures.
+>>
+>> thanks.
+> 
+
+
+thanks.
+-- 
+~Randy
 
