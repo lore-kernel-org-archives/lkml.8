@@ -2,91 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8557C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE59206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394E020720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H/h7YP57"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="HR0L6o45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgGGSie (ORCPT
+        id S1728665AbgGGSjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        Tue, 7 Jul 2020 14:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728318AbgGGSid (ORCPT
+        with ESMTP id S1728318AbgGGSjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:38:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FAAC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:38:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so176650wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:38:33 -0700 (PDT)
+        Tue, 7 Jul 2020 14:39:31 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56037C08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:39:31 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id o3so19510288ilo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=T7vFSEel4oLVA4XB/FO76KnP6lQuuSXwX+PPQ0MvZjk=;
-        b=H/h7YP570rJupuu08vx/zw4SHtaazmkpho+3o5QDVzyBXCxkJyTAeTHLkTNpDX3Mye
-         SQX5aSSAwbzBB0hnCmzWl+c4yDrW9c4mJ1A9nLKUBsPWP4VyXRKvI+zyj/TVb0ONGIQ3
-         G0L6rKYjcKBTDf0jSd33b27rJqsB5JBk/TmQE=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5xeeSJNl89hdKNZc1p2IwCwGKPk4JGxYiYMtbRQmKxI=;
+        b=HR0L6o45VkMPdZEhOiGtgwb0XyoPs1smLQhWsbJoJFM3270Dny+fsvO465OMms0KLl
+         cQkrkK2q6o6bnFjMkNwLcvhlO0Hm0ylhjSyQG8eGo44G83CAvKjF5PxmQS2HnI75yPPq
+         weVjhbIk7cUu7LM7sH5fIMJPy1/GVyMt+EuIKx3EMB7/VNGeOddk4itL0OYuHjzAWBfn
+         zHgXKV6M0ChVIhJB6K8gAqOjuxPxFa1TJfs4kpUDiYgPnhWdWLZyXIYGe6TjiWpJz2XB
+         OhcIYCsc2GYpQD/2zTI8sOCbvSuzPMgBmqPKyQ9MwYBdB2EPrMzpPitk++G4wT9utrVB
+         cnyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T7vFSEel4oLVA4XB/FO76KnP6lQuuSXwX+PPQ0MvZjk=;
-        b=hYFkgVkqNa8QNcJKw1cuIBKWZIPWZUgSZ2aN7WkmAUeUNiXJHckby0GVdTt7WItHo/
-         8o5KTneN9/0cGlMfUG1KzySMDsUxdHefd8D32855/4u8DgEjtlv1fKqaeHQJ1tCEZ9jG
-         RKwdIfW5ODQrUqPQckWE9u74geoxt7+BR54cSvvMYdP/0b09vcLXJI8doqfKqbYTzQHg
-         gyXWC3Lw8fG67SjhSQkjLJi0P4UkfkDulOLXqozdZiQcrhofFpHTHZ08FaLASJKufJ1h
-         MbD2o7+9PeI57OWVs3NqKCrzyyP6bHMmBVhpbKZxpabG6/YH9w8Ord4Dfa7Wzbg1xoRp
-         QdyQ==
-X-Gm-Message-State: AOAM5317MqFIrJIPGrXO41BiQiAcI5KkXu9UZCtvfmkhmRLYJAbdwtu/
-        jGlyoGntlO8egwvntQha+cIJxw==
-X-Google-Smtp-Source: ABdhPJz/stuM1uyxTuicq0iVKv1yy10n9tHX5m/8lSbaZ5NDwtB8c6jG3ixvY/ivZtqrgyJZQ8RGLA==
-X-Received: by 2002:a1c:16:: with SMTP id 22mr5357303wma.42.1594147111944;
-        Tue, 07 Jul 2020 11:38:31 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id d132sm2140015wmd.35.2020.07.07.11.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 11:38:31 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 18:38:30 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] media: exynos4-is: Remove unused struct member
- input_index
-Message-ID: <20200707183830.GI2621465@chromium.org>
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB0660C45D4EA577F9D5BD6434A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5xeeSJNl89hdKNZc1p2IwCwGKPk4JGxYiYMtbRQmKxI=;
+        b=rIHNGydj7XLkbqcJibffv8CT4jgHTuHyXrm2sU3WR0AZAPLNehzJrsA5nJ/EmUb+9o
+         lDAIFCskzPEf3+Mr5YA+HwPqjaR+PfAm0v11xXADOzgxt6EdsT8e4WJdtM/SV1Z70lZx
+         QgP+vBpyqQ4mAT0c94b1KqV3z0adBIP1VU+HTedpvMueslN1T6mAg3m+g3b0VnlUAG7m
+         T9t2V5kdm9Hejljow/PAi/ci54Kqg/abXdbAdT1zOeSWAAXG8y7V6vxXVaxjH1u/Xzwm
+         tED2fUBhLVnbWW5yObJPyK+XLrNSJnHFmNBiMhhx9URIleOwb6Izqb7oXsnV0g5qaFv6
+         VMdA==
+X-Gm-Message-State: AOAM530TdRFrUJemJT/Um5SRrxsAL7f4/pfnmUxgzuK6SAGxvscjKY1u
+        spfixLWXKuJbC5sNMtGBYOMLSks7E8e7yQ==
+X-Google-Smtp-Source: ABdhPJzXMYDY68ecmhBSVS35kxyxucMZrFavc7ZlIavGwuXlLW9FHoAZuz7G2RqaKLRDUCHGnuud7w==
+X-Received: by 2002:a92:cd01:: with SMTP id z1mr37863825iln.103.1594147170503;
+        Tue, 07 Jul 2020 11:39:30 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w5sm13211479ilm.46.2020.07.07.11.39.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 11:39:29 -0700 (PDT)
+Subject: Re: [RFC v3 1/2] fs: Add IOCB_NOIO flag for generic_file_read_iter
+To:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200707144457.1603400-1-agruenba@redhat.com>
+ <20200707144457.1603400-2-agruenba@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e49c5a2b-866f-14ae-9665-284726815bbd@kernel.dk>
+Date:   Tue, 7 Jul 2020 12:39:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660C45D4EA577F9D5BD6434A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200707144457.1603400-2-agruenba@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 07:26:48PM -0700, Jonathan Bakker wrote:
-> This is no longer used since the conversion to DT
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  drivers/media/platform/exynos4-is/fimc-core.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
+On 7/7/20 8:44 AM, Andreas Gruenbacher wrote:
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 3f881a892ea7..1ab2ea19e883 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -315,6 +315,7 @@ enum rw_hint {
+>  #define IOCB_SYNC		(1 << 5)
+>  #define IOCB_WRITE		(1 << 6)
+>  #define IOCB_NOWAIT		(1 << 7)
+> +#define IOCB_NOIO		(1 << 8)
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Just to make this even more trivial in terms of merge conflicts, could
+you do 1 << 9 instead?
 
-Best regards,
-Tomasz
+-- 
+Jens Axboe
+
