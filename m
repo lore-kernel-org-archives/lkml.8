@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D280C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC48C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3664220708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44C220656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgGGAG0 (ORCPT
+        id S1727831AbgGGAGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:06:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18975 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgGGAGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jul 2020 20:06:21 -0400
-IronPort-SDR: kqeO1Uf0DMO5TOIXh8YIKjCG398g6pereSuujFFWB5gAbPsDe0uP1VQU7FDFFN1WnxxdjjZJxO
- YdjPTE6o4oFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="212492296"
+Received: from mga07.intel.com ([134.134.136.100]:18972 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgGGAGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 20:06:20 -0400
+IronPort-SDR: /yLSR4MNBbWl9mGlh1x9s3mDPZTQp1/r6haq3or1OhGBRYjKvnRX/Kq5eK3x35gZpwcQtgPDVb
+ yY6gwYtTxZcA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="212492294"
 X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="212492296"
+   d="scan'208";a="212492294"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 17:06:17 -0700
-IronPort-SDR: byETdNW/224UmBOYzS3zHbETVpwz5e+HdlvUr99SU6x/40NTLeOCmHEdswnUeckyBzyAkl0eVr
- BZpFzyZP08PA==
+IronPort-SDR: fkYAVSxIRBBWJHkxRirdEJhXhbVqjRmHZAvxL6MDyaz2l7ogk1YhS1NXmigm5/LN9IrgVPSajd
+ UvY2RNpt3JCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="456913828"
+   d="scan'208";a="456913822"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga005.jf.intel.com with ESMTP; 06 Jul 2020 17:06:17 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -46,9 +45,9 @@ Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 5/7] iommu/vt-d: Fix devTLB flush for vSVA
-Date:   Mon,  6 Jul 2020 17:12:52 -0700
-Message-Id: <1594080774-33413-6-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 4/7] iommu/vt-d: Handle non-page aligned address
+Date:   Mon,  6 Jul 2020 17:12:51 -0700
+Message-Id: <1594080774-33413-5-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594080774-33413-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1594080774-33413-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -59,96 +58,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Liu Yi L <yi.l.liu@intel.com>
 
-For guest SVA usage, in order to optimize for less VMEXIT, guest request
-of IOTLB flush also includes device TLB.
+Address information for device TLB invalidation comes from userspace
+when device is directly assigned to a guest with vIOMMU support.
+VT-d requires page aligned address. This patch checks and enforce
+address to be page aligned, otherwise reserved bits can be set in the
+invalidation descriptor. Unrecoverable fault will be reported due to
+non-zero value in the reserved bits.
 
-On the host side, IOMMU driver performs IOTLB and implicit devTLB
-invalidation. When PASID-selective granularity is requested by the guest
-we need to derive the equivalent address range for devTLB instead of
-using the address information in the UAPI data. The reason for that is, unlike
-IOTLB flush, devTLB flush does not support PASID-selective granularity.
-This is to say, we need to set the following in the PASID based devTLB
-invalidation descriptor:
-- entire 64 bit range in address ~(0x1 << 63)
-- S bit = 1 (VT-d CH 6.5.2.6).
-
-Without this fix, device TLB flush range is not set properly for PASID
-selective granularity. This patch also merged devTLB flush code for both
-implicit and explicit cases.
-
-Fixes: 6ee1b77ba3ac ("iommu/vt-d: Add svm/sva invalidate function")
+Fixes: 61a06a16e36d8 ("iommu/vt-d: Support flushing more translation
+cache types")
 Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/iommu.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 96340da57075..3bf03c6cd15f 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -5408,7 +5408,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 	sid = PCI_DEVID(bus, devfn);
- 
- 	/* Size is only valid in address selective invalidation */
--	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
-+	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
- 		size = to_vtd_size(inv_info->addr_info.granule_size,
- 				   inv_info->addr_info.nb_granules);
- 
-@@ -5417,6 +5417,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 			 IOMMU_CACHE_INV_TYPE_NR) {
- 		int granu = 0;
- 		u64 pasid = 0;
-+		u64 addr = 0;
- 
- 		granu = to_vtd_granularity(cache_type, inv_info->granularity);
- 		if (granu == -EINVAL) {
-@@ -5456,24 +5457,33 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 					(granu == QI_GRAN_NONG_PASID) ? -1 : 1 << size,
- 					inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
- 
-+			if (!info->ats_enabled)
-+				break;
- 			/*
- 			 * Always flush device IOTLB if ATS is enabled. vIOMMU
- 			 * in the guest may assume IOTLB flush is inclusive,
- 			 * which is more efficient.
- 			 */
--			if (info->ats_enabled)
--				qi_flush_dev_iotlb_pasid(iommu, sid,
--						info->pfsid, pasid,
--						info->ats_qdep,
--						inv_info->addr_info.addr,
--						size);
--			break;
-+			fallthrough;
- 		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-+			/*
-+			 * PASID based device TLB invalidation does not support
-+			 * IOMMU_INV_GRANU_PASID granularity but only supports
-+			 * IOMMU_INV_GRANU_ADDR.
-+			 * The equivalent of that is we set the size to be the
-+			 * entire range of 64 bit. User only provides PASID info
-+			 * without address info. So we set addr to 0.
-+			 */
-+			if (inv_info->granularity == IOMMU_INV_GRANU_PASID) {
-+				size = 64 - VTD_PAGE_SHIFT;
-+				addr = 0;
-+			} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
-+				addr = inv_info->addr_info.addr;
+---
+ drivers/iommu/intel/dmar.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index d9f973fa1190..b2c53bada905 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1455,9 +1455,25 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+ 	 * Max Invs Pending (MIP) is set to 0 for now until we have DIT in
+ 	 * ECAP.
+ 	 */
+-	desc.qw1 |= addr & ~mask;
+-	if (size_order)
++	if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
++		pr_warn_ratelimited("Invalidate non-aligned address %llx, order %d\n", addr, size_order);
 +
- 			if (info->ats_enabled)
- 				qi_flush_dev_iotlb_pasid(iommu, sid,
- 						info->pfsid, pasid,
--						info->ats_qdep,
--						inv_info->addr_info.addr,
-+						info->ats_qdep, addr,
- 						size);
- 			else
- 				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
++	/* Take page address */
++	desc.qw1 = QI_DEV_EIOTLB_ADDR(addr);
++
++	if (size_order) {
++		/*
++		 * Existing 0s in address below size_order may be the least
++		 * significant bit, we must set them to 1s to avoid having
++		 * smaller size than desired.
++		 */
++		desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT,
++					VTD_PAGE_SHIFT);
++		/* Clear size_order bit to indicate size */
++		desc.qw1 &= ~mask;
++		/* Set the S bit to indicate flushing more than 1 page */
+ 		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
++	}
+ 
+ 	qi_submit_sync(iommu, &desc, 1, 0);
+ }
 -- 
 2.7.4
 
